@@ -1,0 +1,177 @@
+import { useState } from 'react';
+import { Alert, Tooltip, Dialog, Overlay, Glass, Button, Icon, toast } from 'premium-ui';
+import { Demo } from '../kit';
+
+export function AlertPage() {
+  return (
+    <>
+      <Demo label="tones · title + body" fill>
+        <div className="stack" style={{ gap: 'var(--space-3)', width: '100%', maxWidth: 560 }}>
+          <Alert tone="info" title="A new version is available">
+            Reload to get the latest improvements — your work is saved.
+          </Alert>
+          <Alert tone="success" title="Changes saved">
+            Everything is up to date across your devices.
+          </Alert>
+          <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: () => toast.info('Opening billing…') }}>
+            Add a plan to keep your team’s access uninterrupted.
+          </Alert>
+          <Alert tone="danger" title="Payment failed" action={{ label: 'Retry', onClick: () => toast.loading('Retrying payment…') }}>
+            Your card was declined. Update your billing details to continue.
+          </Alert>
+        </div>
+      </Demo>
+      <Demo label="banner · dismissible" fill>
+        <div className="stack" style={{ gap: 'var(--space-3)', width: '100%', maxWidth: 560 }}>
+          <Alert banner tone="warning" title="2 items need your review" action={{ label: 'Review', onClick: () => toast('Opening review…') }} />
+          <Alert tone="info" title="Tip: press ⌘K to jump anywhere" dismissible />
+        </div>
+      </Demo>
+    </>
+  );
+}
+
+export function ToastPage() {
+  const fakeSave = (ok: boolean) =>
+    new Promise<{ count: number }>((resolve, reject) => setTimeout(() => (ok ? resolve({ count: 12 }) : reject(new Error('network timeout'))), 1400));
+  return (
+    <>
+      <Demo label="tones">
+        <Button variant="secondary" onClick={() => toast('Copied to clipboard')}>
+          Neutral
+        </Button>
+        <Button variant="secondary" onClick={() => toast.success('Changes saved', { description: 'Synced to the cloud' })}>
+          Success
+        </Button>
+        <Button variant="secondary" onClick={() => toast.error('Upload failed', { description: 'File too large' })}>
+          Error
+        </Button>
+        <Button variant="secondary" onClick={() => toast.warning('You’re running low on storage')}>
+          Warning
+        </Button>
+        <Button variant="secondary" onClick={() => toast.info('A new version is available')}>
+          Info
+        </Button>
+      </Demo>
+      <Demo label="action · promise · loading">
+        <Button variant="secondary" onClick={() => toast('Item deleted', { description: 'Moved to trash', action: { label: 'Undo', onClick: () => toast.success('Restored') } })}>
+          With action
+        </Button>
+        <Button variant="secondary" onClick={() => toast.promise(fakeSave(true), { loading: 'Saving…', success: (v) => `Saved · ${v.count} items`, error: (e) => `Failed — ${(e as Error).message}` })}>
+          Promise · resolves
+        </Button>
+        <Button variant="secondary" onClick={() => toast.promise(fakeSave(false), { loading: 'Uploading…', success: 'Uploaded', error: (e) => `Upload failed — ${(e as Error).message}` })}>
+          Promise · rejects
+        </Button>
+        <Button variant="ghost" onClick={() => toast.dismiss()}>
+          Dismiss all
+        </Button>
+      </Demo>
+    </>
+  );
+}
+
+export function TooltipPage() {
+  return (
+    <>
+      <Demo label="content · shortcut">
+        <Tooltip content="Save changes" shortcut="⌘S">
+          <Button variant="primary">Save</Button>
+        </Tooltip>
+        <Tooltip content="Discard draft" shortcut="Esc">
+          <Button variant="secondary">Discard</Button>
+        </Tooltip>
+      </Demo>
+      <Demo label="placements">
+        <Tooltip placement="top" content="Shown above">
+          <Button variant="secondary">Top</Button>
+        </Tooltip>
+        <Tooltip placement="bottom" content="Shown below">
+          <Button variant="secondary">Bottom</Button>
+        </Tooltip>
+        <Tooltip placement="right" content="Re-runs the check and reports any new issues it finds.">
+          <Button variant="secondary" iconLeft={<Icon name="info" size="sm" />}>
+            Re-run
+          </Button>
+        </Tooltip>
+      </Demo>
+    </>
+  );
+}
+
+export function DialogPage() {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  return (
+    <Demo label="confirm · controlled">
+      <Button variant="danger" onClick={() => setConfirmOpen(true)}>
+        Delete project
+      </Button>
+      <Dialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        tone="danger"
+        icon="warning-circle"
+        title="Delete this project?"
+        description="All of its content will be removed. This can’t be undone."
+        footer={(close) => (
+          <>
+            <Button variant="secondary" onClick={close}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                close();
+                toast.success('Project deleted');
+              }}
+            >
+              Delete project
+            </Button>
+          </>
+        )}
+      >
+        <p style={{ margin: 0, color: 'var(--text-body)' }}>Members will lose access immediately. Other projects are unaffected.</p>
+      </Dialog>
+    </Demo>
+  );
+}
+
+export function OverlayPage() {
+  return (
+    <Demo label="popover menu">
+      <Overlay
+        side="bottom"
+        align="start"
+        trigger={
+          <Button variant="secondary" iconRight={<Icon name="caret-down" size="sm" />}>
+            Actions
+          </Button>
+        }
+      >
+        {({ close }) => (
+          <Glass strong role="menu" aria-label="Actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', padding: 'var(--space-2)', borderRadius: 'var(--radius-lg)', minWidth: 200 }}>
+            {[
+              { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming…' },
+              { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
+              { icon: 'trash', label: 'Delete', msg: 'Deleted' },
+            ].map((it) => (
+              <Button
+                key={it.label}
+                variant="ghost"
+                size="sm"
+                iconLeft={<Icon name={it.icon} size="sm" />}
+                style={{ justifyContent: 'flex-start', width: '100%' }}
+                onClick={() => {
+                  close();
+                  toast(it.msg);
+                }}
+              >
+                {it.label}
+              </Button>
+            ))}
+          </Glass>
+        )}
+      </Overlay>
+    </Demo>
+  );
+}

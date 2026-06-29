@@ -1,0 +1,72 @@
+'use client';
+
+// Button.tsx — button primitive.
+// All visual polish lives in button.css (variants, hover/active/focus, loading,
+// disabled). This component is the ergonomic React wrapper: it composes the
+// class vocabulary, renders optional leading/trailing icons, and manages the
+// loading affordance (content stays, spinner overlays, button is inert).
+
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /** Visual weight / intent. @default 'primary' */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link';
+  /** Control height. sm 28px · md 36px (default) · lg 40px. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
+  /** Loading — swaps content for a spinner and makes the button inert. */
+  loading?: boolean;
+  /** Leading icon node (e.g. a 16px <Icon>). Sized & aligned by the component. */
+  iconLeft?: ReactNode;
+  /** Trailing icon node. */
+  iconRight?: ReactNode;
+  /** Stretch to fill the container width. */
+  fullWidth?: boolean;
+}
+
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  disabled = false,
+  loading = false,
+  iconLeft = null,
+  iconRight = null,
+  fullWidth = false,
+  className = '',
+  children,
+  ...rest
+}: ButtonProps) {
+  const classes = [
+    'btn',
+    `btn--${variant}`,
+    size !== 'md' ? `btn--${size}` : '',
+    fullWidth ? 'btn--block' : '',
+    loading ? 'is-loading' : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <button
+      type={type}
+      className={classes}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...rest}
+    >
+      {iconLeft ? (
+        <span className="btn__icon" aria-hidden="true">
+          {iconLeft}
+        </span>
+      ) : null}
+      <span className="btn__label">{children}</span>
+      {iconRight ? (
+        <span className="btn__icon" aria-hidden="true">
+          {iconRight}
+        </span>
+      ) : null}
+      {loading ? <span className="btn__spinner" aria-hidden="true" /> : null}
+    </button>
+  );
+}

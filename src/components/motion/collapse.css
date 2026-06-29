@@ -1,0 +1,57 @@
+/* collapse.css — the layout-transition primitive.
+   ─────────────────────────────────────────────────────────────────────────
+   Animates a region open/closed along height (default) or width, smoothly,
+   WITHOUT ever touching `auto`. The mechanism: a grid whose single track
+   interpolates between `0fr` (collapsed) and `1fr` (its natural size). The
+   inner element clips with overflow:hidden + min-size:0 so content doesn't
+   spill during the transition.
+
+   This is the canonical way to animate a size change in this system. Use it for
+   disclosures, expandable rows, advanced-options panels, inline detail, a
+   sidebar that opens — anywhere a region appears, disappears, or resizes.
+
+   Modern-browser feature (animating grid-template-*: fr). Where unsupported it
+   degrades gracefully to an instant show/hide — no broken layout. */
+
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: var(--transition-layout);
+}
+.collapse[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+/* width axis */
+.collapse[data-axis='width'] {
+  grid-template-rows: 1fr;
+  grid-template-columns: 0fr;
+}
+.collapse[data-axis='width'][data-open='true'] {
+  grid-template-columns: 1fr;
+}
+
+/* the clipping wrapper — min-size:0 is what lets the grid track reach 0 */
+.collapse__inner {
+  overflow: hidden;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Optional: cross-fade the contents as they resize, for extra polish. Add
+   class `collapse--fade`. Opacity is cheap and reinforces the "settling" feel. */
+.collapse--fade .collapse__inner {
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+.collapse--fade[data-open='true'] .collapse__inner {
+  opacity: 1;
+  transition: opacity var(--duration-slow) var(--ease-entrance) 60ms; /* fade in slightly after the size opens */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapse,
+  .collapse--fade .collapse__inner {
+    transition-duration: 1ms;
+  }
+}

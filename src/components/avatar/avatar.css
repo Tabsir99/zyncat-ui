@@ -1,0 +1,250 @@
+/* avatar.css — Avatar (image · initials · icon) + AvatarGroup.
+   ─────────────────────────────────────────────────────────────────────────
+   Structure:
+     .avatar           — positioning context (position: relative)
+       .avatar__face   — clipped visual surface (overflow: hidden)
+       .avatar__status — status dot (absolute, outside the clip)
+
+   Sizes snap to existing tokens:
+     xs → --icon-md           (20 px)
+     sm → --space-5           (24 px)
+     md → --space-6           (32 px, default)
+     lg → --control-height-lg (40 px)
+     xl → --space-7           (48 px)
+
+   Palette note: six reserved identity slots — hue-only variation on one
+   shared lightness/chroma, deliberately offset from every status hue.
+   Tokens live in tokens/avatar.css. Identity ≠ status, ever.
+
+   Loaded via the styles.css manifest.                                      */
+
+/* ═══════════════════════════════════════════════════════════════ BASE ═══ */
+
+.avatar {
+  --avatar-size: 2rem; /* 32 px — md default               */
+  --avatar-bg: var(--bg-muted);
+  --avatar-fg: var(--text-muted);
+  /* --avatar-ring   injected by .avatar-group → cascades to .avatar__face  */
+
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  vertical-align: middle;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+}
+
+/* ── Face: the clipped, visible surface ─────────────────────────────────── */
+.avatar__face {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--avatar-bg);
+  color: var(--avatar-fg);
+
+  /* Lit from above — sheen settles from the top, shade rises from the bottom.
+     Veils sit OVER the slot tint; an image child paints over both, so photos
+     stay untouched. (§B3 gradient exception — stops are tokens/avatar.css.) */
+  background:
+    linear-gradient(to bottom, var(--avatar-sheen), transparent 55%),
+    linear-gradient(to top, var(--avatar-shade), transparent 45%), var(--avatar-bg);
+
+  /* Crisp 1px edge-catch + optional group separator ring via cascade */
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.5),
+    var(--avatar-ring, none);
+
+  /* Keyline — hairline keyed to the slot's OWN hue (fg at low alpha), so the
+     edge belongs to the tint instead of a stamped-on uniform black. Photos
+     and neutral faces inherit --avatar-fg: --text-muted → quiet grey edge.
+     Outline paints above children, so it rings photos too.                 */
+  outline: var(--border-hairline) solid color-mix(in oklch, var(--avatar-fg) 18%, transparent);
+  outline-offset: -1px;
+
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+/* ── Image ───────────────────────────────────────────────────────────────── */
+.avatar__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Initials ────────────────────────────────────────────────────────────── */
+/* Lettermark, not running text — sized as a fixed optical ratio of the face
+   (like --icon-* sizes, it lives outside the 9-step ramp; §A7 exception,
+   surfaced). text-box trims the em box to cap-height/baseline so flex
+   centering is true optical centering — no magic translate nudges.
+   Caps pairs get --tracking-caps; the negative margin returns the trailing
+   letter-space so the pair stays geometrically centered.                   */
+.avatar__initials {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  font-size: calc(var(--avatar-size) * 0.42);
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  letter-spacing: var(--tracking-caps);
+  margin-right: calc(-1 * var(--tracking-caps));
+  text-transform: uppercase;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── Icon slot (icon, anonymous placeholder) ─────────────────────────── */
+.avatar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56%;
+  height: 56%;
+  opacity: 0.5;
+}
+.avatar__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════ SIZES ═══ */
+
+.avatar--xs {
+  --avatar-size: 1.25rem;
+} /* 20 px */
+.avatar--sm {
+  --avatar-size: 1.5rem;
+} /* 24 px */
+/* md: default — 2 rem / 32 px / --space-6 */
+.avatar--lg {
+  --avatar-size: 2.5rem;
+} /* 40 px */
+.avatar--xl {
+  --avatar-size: 3rem;
+} /* 48 px */
+
+/* ═══════════════════════════════════════════════════════════════ SHAPE ═══ */
+
+/* Square — channels and brand pages; radius scales with size (concentric nesting) */
+.avatar--square .avatar__face {
+  border-radius: var(--radius-md);
+}
+
+.avatar--square.avatar--lg .avatar__face,
+.avatar--square.avatar--xl .avatar__face {
+  border-radius: var(--radius-lg);
+}
+
+/* ═════════════════════════════════════════════════════════════ PALETTE ═══ */
+/* data-palette="1"–"6": six reserved identity slots (tokens/avatar.css).
+   No attribute = neutral (anonymous, +N).
+   Identity colouring — never status signalling (see header note). */
+
+.avatar[data-palette='1'] {
+  --avatar-bg: var(--avatar-1-bg);
+  --avatar-fg: var(--avatar-1-fg);
+} /* blue   */
+.avatar[data-palette='2'] {
+  --avatar-bg: var(--avatar-2-bg);
+  --avatar-fg: var(--avatar-2-fg);
+} /* violet */
+.avatar[data-palette='3'] {
+  --avatar-bg: var(--avatar-3-bg);
+  --avatar-fg: var(--avatar-3-fg);
+} /* plum   */
+.avatar[data-palette='4'] {
+  --avatar-bg: var(--avatar-4-bg);
+  --avatar-fg: var(--avatar-4-fg);
+} /* rose   */
+.avatar[data-palette='5'] {
+  --avatar-bg: var(--avatar-5-bg);
+  --avatar-fg: var(--avatar-5-fg);
+} /* clay   */
+.avatar[data-palette='6'] {
+  --avatar-bg: var(--avatar-6-bg);
+  --avatar-fg: var(--avatar-6-fg);
+} /* moss   */
+
+/* ═══════════════════════════════════════════════════════════════ STATUS ══ */
+/* Bottom-right dot; lives outside .avatar__face so it is never clipped.
+   Sized at ~27 % of the avatar, minimum 6 px.                              */
+
+.avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  width: calc(var(--avatar-size) * 0.275);
+  height: calc(var(--avatar-size) * 0.275);
+  min-width: 6px;
+  min-height: 6px;
+
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 2px var(--bg-surface); /* white ring separates from face */
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.avatar__status--online {
+  background: var(--success);
+}
+.avatar__status--away {
+  background: var(--warning);
+}
+.avatar__status--busy {
+  background: var(--danger);
+}
+.avatar__status--offline {
+  background: var(--border-strong);
+}
+
+/* ══════════════════════════════════════════════════════════ AVATAR GROUP ══ */
+
+.avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Inject the group separator ring via CSS custom property → cascades to face */
+.avatar-group > .avatar {
+  --avatar-ring: 0 0 0 2px var(--bg-surface);
+}
+
+.avatar-group > .avatar + .avatar {
+  margin-left: calc(var(--avatar-size) * -0.3);
+  transition: margin-left var(--duration-base) var(--ease-entrance);
+}
+
+/* Hover: spread apart to reveal each face */
+.avatar-group:hover > .avatar + .avatar {
+  margin-left: var(--space-1);
+}
+
+/* Overflow "+N" chip — neutral, mono numerals; tracking off (mono is
+   already spaced), slightly smaller ratio to fit "+12" comfortably */
+.avatar--overflow .avatar__initials {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: calc(var(--avatar-size) * 0.36);
+  letter-spacing: var(--tracking-normal);
+  margin-right: 0;
+}
+
+/* ══════════════════════════════════════════════════════ REDUCED MOTION ═══ */
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar__face {
+    transition: none;
+  }
+  .avatar__status {
+    transition: none;
+  }
+  .avatar-group > .avatar + .avatar {
+    transition: none;
+  }
+}

@@ -1,0 +1,10 @@
+/* fonts.css — webfont declarations for the design system.
+   Geist is the locked brand face (UI); Geist Mono carries all numerals, data,
+   timestamps and code. Loaded here from Google Fonts for convenience.
+
+   SHIP NOTE: for production, self-host the woff2 binaries and replace this
+   @import with local @font-face rules — self-hosting removes a render-blocking
+   third-party request and guarantees the exact weights are present. Weights
+   used by the system: 400 / 500 / 600 (700 is reserved, rarely used). */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');

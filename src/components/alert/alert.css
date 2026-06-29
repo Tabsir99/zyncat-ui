@@ -1,0 +1,172 @@
+/* alert.css — Alert / Banner.
+   ─────────────────────────────────────────────────────────────────────────
+   The persistent, in-flow status message: billing locked, subscription
+   expired, failed publishes, expiring tokens. It is NOT a toast (it doesn't
+   float or time out) and NOT glass (glass is for surfaces floating OVER
+   content; the alert sits IN the page flow on a plain surface) — it is a
+   LIT tinted pane: the status-subtle tint given the Button's lighting
+   model (button.css) — a soft top-light gradient across the tint plus the
+   1px inner white highlight under the top edge — with a toned hairline
+   and one glyph. Same pastel, given dimension; no new vocabulary.
+
+   Tone carries hierarchy three ways, all from the status row in
+   tokens/semantic.css: the pane tint (--*-subtle), the glyph + hairline
+   (--* solid), the title (--*-text, AA on the tint). The DESCRIPTION
+   warms slightly toward the tone (a --alert-fg / --text-body mix) so the
+   prose belongs to the pane without shouting. Status hues here are
+   genuine status (§B-3).
+
+   Alignment: single-line alerts center everything on the one line; once a
+   description exists (:has), the glyph pins to the TITLE line (its box is
+   exactly one --leading-body tall) while action + close stay vertically
+   centered in the pane.
+
+   Motion lives in Alert.jsx: AnimatePresence owns existence (§C) — the
+   shell animates height 0 ↔ auto so dismissal eases shut and the content
+   below settles instead of teleporting. This file only strips the shell's
+   overflow. Banner = paint modifier (A9: no state of its own): square
+   corners, side/top borders dropped — a strip the consumer docks at the
+   top of the app or a view. */
+
+.alert-shell {
+  overflow: hidden;
+}
+
+.alert {
+  /* tone hooks — repointed by [data-tone] below; info is the default */
+  --alert-hue: var(--info); /* glyph + hairline                   */
+  --alert-fg: var(--info-text); /* title (AA on the tint)             */
+  --alert-bg: var(--info-subtle); /* the pane                           */
+  --alert-wash: var(--accent-wash); /* action hover (info = teal = accent)*/
+
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  /* the lit pane: top-light gradient over the tint + 1px inner top
+     highlight — the Button's solid-variant lighting model (button.css) */
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--bg-surface) 45%, var(--alert-bg)),
+    var(--alert-bg)
+  );
+  border: var(--border-hairline) solid color-mix(in oklab, var(--alert-hue) 30%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.55);
+}
+
+.alert[data-tone='success'] {
+  --alert-hue: var(--success);
+  --alert-fg: var(--success-text);
+  --alert-bg: var(--success-subtle);
+  --alert-wash: var(--success-wash);
+}
+.alert[data-tone='warning'] {
+  --alert-hue: var(--warning);
+  --alert-fg: var(--warning-text);
+  --alert-bg: var(--warning-subtle);
+  --alert-wash: var(--warning-wash);
+}
+.alert[data-tone='danger'] {
+  --alert-hue: var(--danger);
+  --alert-fg: var(--danger-text);
+  --alert-bg: var(--danger-subtle);
+  --alert-wash: var(--danger-wash);
+}
+
+/* with a description: glyph rides the title line, controls stay centered */
+.alert:has(.alert__desc) {
+  align-items: flex-start;
+}
+.alert:has(.alert__desc) .alert__action,
+.alert:has(.alert__desc) .alert__close {
+  align-self: center;
+}
+
+/* ── Banner · the app-level strip (paint modifier only) ────────────────────*/
+.alert--banner {
+  border-radius: 0;
+  border-block-start: 0;
+  border-inline: 0; /* keeps only the bottom hairline      */
+  padding-inline: var(--space-6);
+}
+
+/* ── Glyph · one --leading-body tall so it centers on the title line ──────*/
+.alert__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  height: var(--leading-body);
+  color: var(--alert-hue);
+}
+
+/* ── Text ──────────────────────────────────────────────────────────────────*/
+.alert__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.alert__title {
+  margin: 0;
+  font: var(--type-label);
+  color: var(--alert-fg);
+  text-wrap: pretty;
+}
+.alert__desc {
+  margin: var(--space-1) 0 0;
+  font: var(--type-caption);
+  color: color-mix(in oklab, var(--alert-fg) 56%, var(--text-body));
+  text-wrap: pretty;
+}
+
+/* ── Action · a quiet TONED button. Structure is the system's .btn .btn--sm
+   (A8 — height, radius, type, focus composition); the alert re-skins the
+   paint so the action participates in the pane's tone instead of sitting
+   on it as a neutral chip: text in --alert-fg, transparent at rest, the
+   tone's wash on hover. Alert-local chrome, not a new global Button
+   variant — same way Toast overrides glass. ───────────────────────────────*/
+.alert__action {
+  flex: none;
+  color: var(--alert-fg);
+  background: transparent;
+}
+.alert__action:hover:not(:disabled) {
+  color: var(--alert-fg);
+  background: var(--alert-wash);
+}
+.alert__action:active:not(:disabled) {
+  background: color-mix(in oklab, var(--alert-hue) 16%, transparent);
+  transform: translateY(var(--space-px));
+}
+.alert[data-tone='danger'] .alert__action {
+  --btn-ring: var(--ring-danger);
+}
+
+/* ── Dismiss · always visible (alerts persist; no hover-reveal like toast) ─*/
+.alert__close {
+  flex: none;
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: color-mix(in oklab, var(--alert-fg) 64%, transparent);
+  cursor: pointer;
+  transition: var(--transition-control);
+}
+.alert__close:hover {
+  background: color-mix(in oklab, var(--alert-fg) 9%, transparent);
+  color: var(--alert-fg);
+}
+.alert__close:active {
+  background: color-mix(in oklab, var(--alert-fg) 14%, transparent);
+}
+.alert__close:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

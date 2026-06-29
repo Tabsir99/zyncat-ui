@@ -1,0 +1,215 @@
+/* textarea.css — Textarea (multiline composer).
+   Reuses the .fld shell (label / message / validation states) from input.css;
+   adds the .txa box. Auto-grows to its content between min/max rows, meters an
+   optional char limit (ring + count), and highlights over-limit text. */
+
+.txa {
+  --txa-pad-y: var(--space-3);
+  --txa-pad-x: var(--space-4);
+  --txa-lh: var(--leading-body); /* line box height for the rows math */
+  --txa-min-rows: 3;
+  --txa-max-rows: 10;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-inset);
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-lg);
+  transition: var(--transition-control);
+}
+.txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+  border-color: var(--border-strong);
+}
+.txa:focus-within {
+  border-color: var(--accent);
+  background: var(--bg-surface);
+  box-shadow: var(--ring-accent);
+}
+.txa.is-disabled {
+  background: var(--bg-muted);
+}
+.txa.is-readonly {
+  background: var(--bg-subtle);
+}
+
+/* textarea (in flow — JS sets its height to scrollHeight) + mirror overlay.
+   The WRAPPER owns the height: it caps at max-rows and is the ONLY thing that
+   animates. It uses overflow:clip WHILE GROWING (clip is not a scroll container,
+   so the caret can never force a scroll → no jump); JS flips it to overflow:auto
+   only once content exceeds max-rows, where the height is pinned. The textarea
+   grows infinitely and can never scroll itself. */
+.txa__stack {
+  position: relative;
+  min-height: calc(var(--txa-min-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));
+  max-height: calc(var(--txa-max-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));
+  overflow: clip;
+  transition: height var(--duration-base) var(--ease-standard);
+}
+.txa__input,
+.txa__mirror {
+  box-sizing: border-box;
+  width: 100%;
+  font: var(--type-body);
+  padding: var(--txa-pad-y) var(--txa-pad-x);
+  border-radius: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.txa__input {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  resize: none;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  color: var(--text-strong);
+  overflow: hidden;
+}
+.txa__input::placeholder {
+  color: var(--text-disabled);
+}
+.txa__input:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+.txa__input[readonly] {
+  color: var(--text-body);
+}
+
+/* over-limit highlight: faint tint + a danger underline on the excess chars */
+.txa__mirror {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+.txa__mirror mark {
+  color: transparent;
+  background: var(--danger-subtle);
+  border-radius: var(--radius-sm);
+  text-decoration: underline;
+  text-decoration-color: var(--danger);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* footer bar: hint + character meter */
+.txa__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-top: var(--border-hairline) solid var(--border-subtle);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+.txa:focus-within .txa__bar {
+  border-top-color: var(--border-default);
+}
+.txa__hint {
+  font: var(--type-micro);
+  color: var(--text-subtle);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.txa__kbd {
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  line-height: 1;
+  color: var(--text-muted);
+  padding: var(--space-1);
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+}
+
+.txa__meter {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.txa__count {
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+.txa__ring {
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  flex: none;
+  transform: rotate(-90deg);
+}
+.txa__ring circle {
+  fill: none;
+  stroke-width: 2;
+}
+.txa__ring .txa__ring-trk {
+  stroke: var(--border-default);
+}
+.txa__ring .txa__ring-prg {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-dasharray: var(--txa-ring-c);
+  stroke-dashoffset: calc(var(--txa-ring-c) * (1 - var(--txa-ring-p, 0)));
+  transition:
+    stroke-dashoffset var(--duration-base) var(--ease-standard),
+    stroke var(--duration-fast) var(--ease-standard);
+}
+.txa__meter.is-near .txa__ring-prg {
+  stroke: var(--warning);
+}
+.txa__meter.is-near .txa__count {
+  color: var(--warning-text);
+}
+.txa__meter.is-over .txa__ring-prg {
+  stroke: var(--danger);
+}
+.txa__meter.is-over .txa__count {
+  color: var(--danger-text);
+  font-weight: var(--weight-medium);
+}
+
+/* validation (message colour comes from input.css) */
+.fld.is-error .txa {
+  border-color: var(--danger);
+}
+.fld.is-error .txa:focus-within {
+  box-shadow: var(--ring-danger);
+}
+.fld.is-warning .txa {
+  border-color: var(--warning);
+}
+.fld.is-success .txa {
+  border-color: var(--success);
+}
+
+/* large size */
+.fld--txa.fld--lg .txa {
+  --txa-pad-y: var(--space-4);
+  --txa-lh: var(--leading-body-lg);
+}
+.fld--txa.fld--lg .txa__input,
+.fld--txa.fld--lg .txa__mirror {
+  font: var(--type-body-lg);
+}

@@ -1,0 +1,13 @@
+/* icon.css — base layout for the <Icon> primitive.
+   ─────────────────────────────────────────────────────────────────────────
+   An icon has almost nothing to style: its SIZE comes from the `size` prop
+   (mapped to the --icon-* tokens) and its COLOR is `currentColor` (inherited
+   from the parent — button, link, status text). This file only governs how the
+   glyph SITS in a line or a flex row. No sizes, no colors here — those are
+   props/tokens. The file exists so the `.icon` class has a home and the
+   component pattern (every component ships a name.css) holds. */
+
+.icon {
+  flex: none; /* never squish inside a flex row of controls */
+  vertical-align: middle; /* align with adjacent text when used inline   */
+}

@@ -1,0 +1,107 @@
+/* tooltip.css — Tooltip (DRAFT · playground/tooltip).
+   ─────────────────────────────────────────────────────────────────────────
+   One floating surface, two content tiers: a snug one-liner (label +
+   optional mono shortcut) and a multi-line hint capped at a calm measure.
+   Arrowless — a tight --space-2 offset reads quieter than caret geometry.
+
+   ON-THEME: a raised LIGHT surface, same vocabulary as Select's menu and
+   Dialog (--bg-surface-raised + hairline + shadow). A tooltip is just another
+   floating surface; it does not invert the theme.
+
+   The bubble is NON-INTERACTIVE by contract (pointer-events: none): nothing
+   inside it can be hovered, clicked, or focused. Anything interactive belongs
+   to Popover, not here.
+
+   ONE bubble exists app-wide (the shared TooltipHost). Motion owns ALL of its
+   movement explicitly — no layout projection: position rides x/y transforms,
+   the box MORPHS by tweening measured width/height (px→px — a surfaced,
+   deliberate exception to the transform-only rule: scale-correction is what
+   distorts text), and the label swaps as one keyed node (cut + fast fade-in)
+   under the traveling box. This sheet sets only the look + the
+   transform-origin the enter grows from. */
+
+.tooltip {
+  position: fixed;
+  left: 0;
+  top: 0; /* Motion x/y (transforms) place it    */
+  box-sizing: border-box;
+  overflow: hidden; /* clips content while the box morphs  */
+  z-index: var(--layer-tooltip); /* above everything (tokens/layers.css) */
+  pointer-events: none; /* non-interactive, by contract       */
+  width: max-content; /* the live bubble gets an explicit
+                                          animated width; this sizes the
+                                          hidden measuring clone             */
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-surface-raised);
+  color: var(--text-body);
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font: var(--type-caption);
+  letter-spacing: var(--tracking-normal);
+}
+
+/* the hidden twin the host measures the NEXT box from (same styles, no motion) */
+.tooltip--measure {
+  visibility: hidden;
+  left: -9999px;
+  top: 0;
+}
+
+/* content wraps at the measure cap; the LIVE body additionally gets its
+   measured width inline (locked wrapping while the box morphs over it) */
+.tooltip__body {
+  display: block;
+  width: max-content;
+  max-inline-size: var(--measure-floating);
+  text-wrap: pretty;
+}
+
+/* grow from the trigger's edge (per placement) */
+.tooltip[data-placement='top'] {
+  transform-origin: center bottom;
+}
+.tooltip[data-placement='bottom'] {
+  transform-origin: center top;
+}
+.tooltip[data-placement='left'] {
+  transform-origin: right center;
+}
+.tooltip[data-placement='right'] {
+  transform-origin: left center;
+}
+
+/* ── One-liner row · label + optional shortcut ─────────────────────────────*/
+.tooltip__row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3); /* generous — the chip is metadata    */
+}
+.tooltip__shortcut {
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+  background: var(--bg-muted);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* ── Multi-line content ────────────────────────────────────────────────────
+   Rich nodes style themselves with these; keep hierarchy minimal — a hint
+   has at most a lead line and a body. */
+.tooltip strong {
+  font-weight: var(--weight-medium);
+  color: var(--text-strong);
+}
+.tooltip p {
+  margin: 0;
+}
+.tooltip p + p {
+  margin-top: var(--space-1);
+}
+.tooltip .tooltip__muted {
+  color: var(--text-muted);
+}

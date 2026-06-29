@@ -1,0 +1,60 @@
+/* pagination.css — Pagination (cursor strip).
+   ─────────────────────────────────────────────────────────────────────────
+   Built entirely on semantic tokens + the Button vocabulary (button.css owns
+   the arrows' hover/press/focus/disabled/spinner — nothing re-styled here).
+   This file only adds: the strip layout, the mono readout, the square arrow
+   geometry, and the caret's directional hover nudge (§D: path-level icon
+   interaction; trivial tier → CSS). */
+
+.pgn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── Readout · always mono, tabular (§E) ───────────────────────────────────
+   The range is strong-ish (medium, body color); "of N" recedes. The inner
+   .pgn__range is the node Motion slides on change — keep it transformable. */
+.pgn__readout {
+  font: var(--type-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+.pgn__range {
+  display: inline-block;
+}
+.pgn__range b {
+  font-weight: var(--weight-medium);
+  color: var(--text-body);
+}
+
+/* ── Arrow pair · square sm ghost buttons, kept adjacent ───────────────────
+   Adjacent (not flanking the readout) so repeated paging needs no mouse
+   travel, and a growing readout never shifts the arrows when the strip sits
+   at the end of its row. */
+.pgn__nav {
+  display: flex;
+  gap: var(--space-1);
+}
+.pgn__btn {
+  width: var(--control-height-sm);
+  padding: 0;
+}
+
+/* Caret nudges toward its direction on hover — a 1px optical cue. */
+.pgn__btn .icon {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+.pgn__btn--prev:hover:not(:disabled) .icon {
+  transform: translateX(calc(var(--space-px) * -1));
+}
+.pgn__btn--next:hover:not(:disabled) .icon {
+  transform: translateX(var(--space-px));
+}
+
+/* Loading: the clicked arrow carries Button's spinner; hide its caret the
+   same way button.css hides .btn__icon. */
+.pgn__btn.is-loading .icon {
+  opacity: 0;
+}

@@ -1,0 +1,20 @@
+/* radius.css — corner radii.
+   ─────────────────────────────────────────────────────────────────────────
+   A moderate, restrained set — sharp enough to read as "engineered," soft
+   enough to feel calm. --radius-md (6px) is the default for controls.
+
+   NESTING RULE (the detail that separates premium from amateur): when one
+   rounded box sits inside another with padding P, the outer radius should be
+   roughly inner-radius + P, so the corners stay concentric. e.g. an 8px input
+   inside a card padded by 16px → card radius ≈ 12–16px. Never nest a larger
+   radius inside a smaller one. */
+
+:root {
+  --radius-0: 0;
+  --radius-sm: 0.25rem; /*  4px — tags, chips, small inset                */
+  --radius-md: 0.375rem; /*  6px — DEFAULT: buttons, inputs, menu items    */
+  --radius-lg: 0.5rem; /*  8px — cards, popovers                         */
+  --radius-xl: 0.75rem; /* 12px — panels, modals, large cards             */
+  --radius-2xl: 1rem; /* 16px — feature surfaces, marketing             */
+  --radius-full: 624.9375rem; /* pills, avatars, switches                    */
+}

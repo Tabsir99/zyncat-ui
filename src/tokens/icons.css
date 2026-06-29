@@ -1,0 +1,14 @@
+/* icons.css — icon sizing tokens.
+   ─────────────────────────────────────────────────────────────────────────
+   Three sizes, paired to the type scale: 16 sits inline with body/caption,
+   20 is the default UI size (toolbars, rows, inputs), 24 for emphasis and
+   empty states. The <Icon> primitive maps size="sm|md|lg" onto these.
+
+   Hit targets: icon-only buttons use a control-height box (≥ --control-height-sm,
+   32px) AROUND a 16–20 glyph — never shrink the clickable area to the icon. */
+
+:root {
+  --icon-sm: 16px; /* inline with text · dense rows · sm buttons */
+  --icon-md: 20px; /* DEFAULT — toolbars, list rows, inputs       */
+  --icon-lg: 24px; /* section headers, empty states, emphasis     */
+}

@@ -1,0 +1,127 @@
+/* glass.css — the pure frosted-glass SURFACE. The brand's premium surface,
+   ─────────────────────────────────────────────────────────────────────────
+   decoupled from any one component so it can dress anything: chips, cards,
+   toolbars, popovers, overlays. Built from three pieces:
+
+     1. TINT  — a translucent fill (--glass-tint), so the frost reads.
+     2. BLUR  — backdrop-filter blur + saturate; frosts whatever sits behind.
+     3. SHEEN — a light-catching gradient on its OWN layer (::before). Gradients
+                cannot transition directly, so we animate only the layer's
+                opacity/transform (also keeps motion on the brand's
+                transform/opacity-only law).
+
+   TWO HOOKS the consumer sets in their OWN class (never inline, §F):
+     --glass-tint : the translucent fill  (a --glass-tint-* token, or a color-mix)
+     --glass-fg   : content color         (also drives the same-hue hairline)
+
+   Classes:
+     .glass               the surface (set radius on the element itself)
+     .glass--strong       the larger blur, for big surfaces
+     .glass--interactive  opt-in hover: the chip lifts and the sheen catches light
+
+   Tokens consumed: the staged --glass-* set (glass.tokens.css). Reduced motion
+   is honored at the bottom — no lift, no sheen travel. */
+
+.glass {
+  --glass-fg: var(--text-body);
+  --glass-tint: var(--glass-tint-neutral);
+
+  position: relative;
+  isolation: isolate; /* local stacking for the sheen */
+  color: var(--glass-fg);
+
+  background: var(--glass-tint);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow:
+    var(--glass-highlight),
+    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 22%, transparent),
+    var(--glass-shadow);
+
+  transition:
+    transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    background-color var(--duration-base) var(--ease-standard); /* tint cross-fades */
+}
+
+/* SHEEN — the glass gradient, on its own layer so hover animates opacity +
+   transform (gradients can't transition directly). Above the tint, below content. */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: var(--glass-sheen);
+  opacity: var(--glass-sheen-rest);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-entrance);
+}
+.glass > * {
+  position: relative;
+  z-index: 1;
+} /* content rides above the sheen */
+
+/* stronger frost for larger surfaces */
+.glass--strong {
+  --glass-blur: var(--glass-blur-strong);
+}
+
+/* interactive — opt-in lift + sheen catch (chips, buttons; not static cards) */
+.glass--interactive:hover {
+  transform: translateY(calc(var(--space-px) * -1));
+  box-shadow:
+    var(--glass-highlight),
+    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 26%, transparent),
+    var(--glass-shadow-hover);
+}
+.glass--interactive:hover::before {
+  opacity: var(--glass-sheen-hover);
+  transform: translateY(-8%);
+}
+
+/* GLINT — a one-shot light flicking across the glass (e.g. a status reaching a
+   terminal state). Reusable: add .glass-glint to fire once, remove after it ends.
+   Sits above content (z-index 2) so the light passes over it; transform/opacity. */
+.glass-glint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0; /* resting state is invisible — no mid-sweep flash */
+  background: linear-gradient(118deg, transparent 36%, rgb(255 255 255 / 0.7) 50%, transparent 64%);
+  animation: glass-glint var(--duration-slow) var(--ease-standard) 1 forwards;
+}
+@keyframes glass-glint {
+  0% {
+    opacity: 0;
+    transform: translateX(-28%);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(28%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass,
+  .glass::before {
+    transition: none;
+  }
+  .glass--interactive:hover {
+    transform: none;
+  }
+  .glass--interactive:hover::before {
+    transform: none;
+  }
+  .glass-glint::after {
+    animation: none;
+  }
+}

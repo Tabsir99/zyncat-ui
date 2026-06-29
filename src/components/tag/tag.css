@@ -1,0 +1,294 @@
+/* tag.css — Tag / Chip: the INTERACTIVE label.
+   ─────────────────────────────────────────────────────────────────────────
+   A tag is user-editable metadata — an applied filter, a saved
+   label, a value on a record. It is a CONTROL, which is exactly what
+   separates it from Badge:
+
+     Badge — read-only status/data. Mono type, glass surface, status hues,
+             never focusable. The system telling you something.
+     Tag   — editable. Sans type, BUTTON-family chrome (white surface, top
+             sheen, contact shadow — the .btn--secondary recipe), in the tab
+             order, removable or toggleable. You telling the system something.
+
+   The boundary, hard: a Tag ALWAYS carries an affordance (× / tick / toggle
+   paint). A label with no interaction is not a quiet Tag — it's a Badge
+   (outline variant). That rule is what keeps the two from reading as twins.
+
+   Two siblings share this paint (CLAUDE.md A9):
+     .tag            — base chip; optional leading icon, optional remove ×
+     .tag--toggle    — <button aria-pressed>; selected = accent wash + drawn
+                       tick (or icon weight flip when an icon is present)
+
+   Sizes: (default 28) · sm (24, dense rows).
+   Motion: removal/insertion choreography is Motion's (TagGroup → exit +
+   layout FLIP); the tick slot reuses the Collapse CSS mechanism
+   (components/motion/collapse.css — width 0fr ↔ 1fr, zero CSS duplicated).
+   NOTE: base .tag deliberately has NO CSS transform transition — Motion
+   writes transforms on grouped tags (§C). Press transforms live only on
+   .tag--toggle and the remove button, which Motion never animates. */
+
+.tag {
+  --tag-h: var(--control-height-sm); /* 28 */
+  /* button-family DNA: lit from above + a contact shadow (.btn--secondary) */
+  --tag-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6), 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1); /* 4 — icon ↔ label ↔ × */
+  height: var(--tag-h);
+  max-width: 100%;
+  padding-inline: var(--space-2); /* 8 */
+  border: var(--border-hairline) solid var(--border-default);
+  border-radius: var(--radius-sm); /* 4 — "tags, chips" per token */
+  background: var(--bg-surface);
+  color: var(--text-body);
+
+  font-family: var(--font-sans); /* labels are words, not data */
+  font-size: var(--size-caption); /* 13 */
+  line-height: 1;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-normal);
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: var(--tag-shadow);
+
+  transition: var(--transition-control);
+}
+
+.tag__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis; /* consumer caps width; we degrade */
+}
+
+/* ── Sizes ─────────────────────────────────────────────────────────────────*/
+.tag--sm {
+  --tag-h: var(--space-5); /* 24 */
+  font-size: var(--size-micro); /* 12 */
+}
+
+/* ── Leading icon · 16px token size, color follows the chip ────────────────*/
+.tag__icon {
+  display: inline-flex;
+  flex: none;
+}
+.tag__icon svg,
+.tag__icon i {
+  display: block;
+}
+
+/* dual-weight stack (ToggleTag) · the fill glyph BLOOMS in over the regular
+   one on select — a crossfade + spring overshoot instead of an instant font
+   swap. Transitions, not animations: nothing plays on first paint. */
+.tag__icon--dual {
+  display: inline-grid;
+}
+.tag__icon--dual > :is(i, svg) {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
+}
+.tag__icon--dual > :is(i, svg):last-child {
+  opacity: 0;
+  transform: scale(0.6);
+}
+.tag--toggle[aria-pressed='true'] .tag__icon--dual > :is(i, svg):first-child {
+  opacity: 0;
+}
+.tag--toggle[aria-pressed='true'] .tag__icon--dual > :is(i, svg):last-child {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-spring);
+}
+
+/* ── Count · numbers are data — mono, tabular (§E) ─────────────────────────*/
+.tag__count {
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-subtle);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+/* ── Remove × · a circular target tucked into the right edge ───────────────*/
+.tag__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: calc(var(--tag-h) - var(--space-2)); /* 20 (md) / 16 (sm) */
+  height: calc(var(--tag-h) - var(--space-2));
+  margin-right: calc(var(--space-1) * -1); /* optical tuck */
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-subtle);
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+.tag__remove svg {
+  display: block;
+  width: var(--space-3); /* 12 */
+  height: var(--space-3);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+.tag__remove:hover {
+  color: var(--text-strong);
+  background: var(--bg-muted);
+}
+.tag__remove:hover svg {
+  transform: rotate(90deg);
+} /* the × winds up */
+.tag__remove:active {
+  transform: scale(0.9);
+}
+.tag__remove:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Removal preview · the chip acknowledges what's about to happen ────────
+   Hover/focus the × and the WHOLE chip responds: the label recedes to muted
+   (content letting go) while the border firms up (the object is the target,
+   not the text). Neutral by design — status hues stay reserved (§B3). */
+.tag:has(.tag__remove:hover):not([data-disabled]),
+.tag:has(.tag__remove:focus-visible) {
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+}
+
+/* ═══ TOGGLE · <button aria-pressed> — filters, allowlists ══════════════════*/
+.tag--toggle {
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    var(--transition-control),
+    transform var(--duration-fast) var(--ease-standard);
+}
+.tag--toggle:hover:not(:disabled) {
+  color: var(--text-strong);
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+}
+.tag--toggle:active:not(:disabled) {
+  transform: translateY(var(--space-px));
+  background: var(--bg-muted);
+  --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07); /* pressed: light goes out */
+}
+/* composed ring — never erases the resting shadow (.btn pattern) */
+.tag--toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--tag-shadow), var(--focus-ring);
+}
+
+/* selected · accent wash, never a solid fill — the chip stays quiet.
+   The white top-sheen comes off (a wash is matte, not lit plastic);
+   the contact shadow stays so it keeps sitting on the page. */
+.tag--toggle[aria-pressed='true'] {
+  color: var(--text-accent);
+  border-color: var(--accent-border);
+  background: var(--accent-wash);
+  --tag-shadow: 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+}
+.tag--toggle[aria-pressed='true']:hover:not(:disabled) {
+  color: var(--accent-active);
+  border-color: var(--accent-border);
+  background: var(--accent-wash);
+}
+.tag--toggle[aria-pressed='true']:active:not(:disabled) {
+  background: var(--accent-subtle);
+}
+.tag--toggle[aria-pressed='true'] .tag__count {
+  color: inherit;
+}
+
+/* ── Tick slot · the Collapse width mechanism + a drawn check ──────────────
+   Outer span carries .collapse[data-axis="width"] from collapse.css; the
+   negative margin cancels the flex gap while collapsed so the label stays
+   optically flush with the padding edge. */
+.tag__check {
+  margin-right: calc(var(--space-1) * -1);
+}
+.tag__check svg {
+  display: block;
+  width: var(--space-3); /* 12 */
+  height: var(--space-3);
+  margin-right: var(--space-1); /* restores the gap when open */
+}
+.tag__check path {
+  stroke: currentColor;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--duration-base) var(--ease-standard);
+}
+.tag--toggle[aria-pressed='true'] .tag__check path {
+  stroke-dashoffset: 0; /* draws as the slot opens */
+  transition: stroke-dashoffset var(--duration-slow) var(--ease-entrance) 60ms;
+}
+
+/* ── Disabled · explicit, never a blanket fade ─────────────────────────────*/
+.tag[data-disabled],
+.tag--toggle:disabled {
+  color: var(--text-disabled);
+  border-color: var(--border-subtle);
+  background: var(--bg-surface);
+  cursor: default;
+  --tag-shadow: none;
+}
+.tag[data-disabled] .tag__count,
+.tag--toggle:disabled .tag__count {
+  color: var(--text-disabled);
+}
+.tag[data-disabled] .tag__remove {
+  color: var(--text-disabled);
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+.tag--toggle:disabled {
+  transform: none;
+}
+/* disabled while ON · keep the on-ness legible, but locked and muted */
+.tag--toggle:disabled[aria-pressed='true'] {
+  background: var(--bg-muted);
+  border-color: var(--border-subtle);
+}
+
+/* ═══ GROUP · the wrapping row removable tags live in ═══════════════════════*/
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2); /* 8 */
+}
+
+/* ── Reduced motion · no wind-up, no press scale, no bloom ─────────────────*/
+@media (prefers-reduced-motion: reduce) {
+  .tag__remove svg {
+    transition: none;
+  }
+  .tag__remove:hover svg {
+    transform: none;
+  }
+  .tag__remove:active {
+    transform: none;
+  }
+  .tag--toggle:active:not(:disabled) {
+    transform: none;
+  }
+  .tag__icon--dual > :is(i, svg) {
+    transition: none;
+  }
+}

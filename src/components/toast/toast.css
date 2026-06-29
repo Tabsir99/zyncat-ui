@@ -1,0 +1,268 @@
+/* toast.css — Toast (DRAFT · playground/toast).
+   ─────────────────────────────────────────────────────────────────────────
+   The global notification rail on the brand's premium surface: each card is
+   GLASS (components/glass — tint + frost + sheen), tinted per tone. The
+   toast DILUTES the shared --glass-tint-* tokens (~70%) and halves the sheen
+   — at full badge strength a toast-sized pane reads as a solid slab; the
+   consumer-set color-mix is the documented glass hook, not an off-ramp.
+   Regular frost (not --strong) so the backdrop stays legible through it.
+
+   Tone choreography (the win/lose split, §C — implemented in Toast.jsx):
+     success → the GLINT: glass's one-shot light sweep. Light = win.
+     error   → the HEADSHAKE: a damped x-settle after landing. Weight = loss.
+
+   THE RING: the timer is a hairline arc draining around the icon — clock and
+   status share one instrument instead of a bar floating under the content.
+   It is DATA (remaining time), so it runs linear: a surfaced exception to
+   the no-linear law (§C / A7) — easing a countdown would lie. It pauses
+   with the JS timers (.is-paused) and is keyed to them (remounts on
+   restart). Default-tone toasts show the bare dial, no glyph.
+
+   GLASS × MOTION: glass.css transitions transform for its hover lift; here
+   Motion owns transform (slot travel, swipe, headshake), so .toast overrides
+   the transition to colors/shadow only — never let CSS smooth Motion's writes.
+
+   Stack depth: behind cards lose their tone (tint → neutral), dim their
+   sheen, and quiet their content; Toast.jsx also sizes them to the front
+   card's frame so a short card never drowns behind a tall one.
+
+   z-index 1050: above select menus (1000), below the tooltip (1100). */
+
+.toast-viewport {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  width: min(22.5rem, calc(100vw - 2 * var(--space-6)));
+  z-index: var(--layer-toast); /* tokens/layers.css */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none; /* only the cards themselves are live */
+}
+
+/* ── The card · a glass consumer (.glass set in JSX) ───────────────────────*/
+.toast {
+  /* tone hooks — set by [data-tone] below */
+  --toast-hue: var(--text-subtle); /* ring + icon                        */
+  --glass-fg: var(--text-strong); /* content + same-hue hairline        */
+  --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
+  --glass-sheen-rest: 0.45; /* half the chip sheen — airier pane  */
+
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* custom content stays in the pane   */
+  pointer-events: auto;
+  transform-origin: center bottom; /* the stack recedes upward           */
+  border-radius: var(--radius-lg);
+
+  /* Motion owns transform — strip it from glass's transition, keep the
+     tone/depth cross-fades (background-color covers the tint blooms). */
+  transition:
+    background-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+/* rich panes for genuine status, diluted to stay glass; neutral otherwise */
+.toast[data-tone='success'] {
+  --toast-hue: var(--success);
+  --glass-fg: var(--success-text);
+  --glass-tint: color-mix(in oklab, var(--glass-tint-success) 70%, transparent);
+}
+.toast[data-tone='error'] {
+  --toast-hue: var(--danger);
+  --glass-fg: var(--danger-text);
+  --glass-tint: color-mix(in oklab, var(--glass-tint-danger) 70%, transparent);
+}
+.toast[data-tone='warning'] {
+  --toast-hue: var(--warning);
+  --glass-fg: var(--warning-text);
+  --glass-tint: color-mix(in oklab, var(--glass-tint-warning) 70%, transparent);
+}
+.toast[data-tone='info'] {
+  --toast-hue: var(--info);
+  --glass-fg: var(--info-text);
+  --glass-tint: color-mix(in oklab, var(--glass-tint-info) 70%, transparent);
+}
+
+/* receding cards fall quiet: tone drains out, sheen dims, content fades */
+.toast[data-behind] {
+  --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
+  --glass-sheen-rest: 0.3;
+}
+.toast[data-behind] .toast__inner,
+.toast[data-behind] .toast__custom {
+  opacity: 0;
+}
+
+/* ── Content row · dial | text | count | action | close ───────────────────*/
+.toast__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  transition: var(--transition-opacity);
+}
+
+/* the dial — glyph centered in the timer ring; one instrument, not two */
+.toast__icon {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(var(--icon-md) + 2 * var(--space-2));
+  height: calc(var(--icon-md) + 2 * var(--space-2));
+  color: var(--toast-hue);
+}
+.toast__icon-glyph {
+  display: grid;
+  place-items: center;
+}
+
+/* the ring · remaining time as a draining arc (linear — see header note).
+   animation-duration is set at runtime to the toast's lifetime: parametric
+   timing data, not styling — the §F carve-out Motion's writes also use. */
+.toast__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* arc starts at 12 o'clock           */
+  pointer-events: none;
+}
+.toast__ring circle {
+  fill: none;
+  stroke-width: var(--border-emphasis);
+}
+.toast__ring-track {
+  stroke: color-mix(in oklab, var(--toast-hue) 16%, transparent);
+}
+.toast__ring-arc {
+  stroke: var(--toast-hue);
+  stroke-linecap: round;
+  stroke-dasharray: 1; /* pathLength=1 — offset is a fraction */
+  animation-name: toast-ring;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+.toast-viewport.is-paused .toast__ring-arc {
+  animation-play-state: paused;
+}
+@keyframes toast-ring {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+
+.toast__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.toast__message {
+  margin: 0;
+  font: var(--type-label);
+  color: var(--glass-fg);
+  text-wrap: pretty;
+}
+.toast__desc {
+  margin: var(--space-1) 0 0;
+  font: var(--type-caption);
+  color: color-mix(in oklab, var(--glass-fg) 76%, transparent);
+  text-wrap: pretty;
+}
+
+/* coalesce counter — same toast fired again becomes ×n, mono per §E */
+.toast__count {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  line-height: var(--leading-micro);
+  font-variant-numeric: tabular-nums;
+  color: var(--glass-fg);
+  background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-1);
+}
+
+.toast__action {
+  flex: none;
+}
+
+/* dismiss — appears only while the card is hovered or holds focus */
+.toast__close {
+  flex: none;
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: var(--space-6);
+  height: var(--space-6);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: color-mix(in oklab, var(--glass-fg) 64%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    var(--transition-control),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+.toast:hover .toast__close,
+.toast:focus-within .toast__close {
+  opacity: 1;
+}
+.toast__close:hover {
+  background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
+  color: var(--glass-fg);
+}
+.toast__close:active {
+  background: color-mix(in oklab, var(--glass-fg) 14%, transparent);
+}
+.toast__close:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  opacity: 1;
+}
+
+/* ── Loading spinner · continuous loader, --duration-spin (linear is the
+   law's own carve-out for loops; reduced motion slows it, never freezes) ──*/
+.toast__spinner {
+  display: block;
+  box-sizing: border-box;
+  width: var(--icon-sm);
+  height: var(--icon-sm);
+  border-radius: var(--radius-full);
+  border: var(--border-emphasis) solid currentColor;
+  border-right-color: transparent;
+  color: var(--text-muted);
+  animation: toast-spin var(--duration-spin) linear infinite;
+}
+@keyframes toast-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* ── Custom slot · the rail seam (e.g. a future custom tray).
+   Bare neutral glass — the consumer owns the interior. ────────────────────*/
+.toast__custom {
+  padding: var(--space-3) var(--space-4);
+  transition: var(--transition-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* travel/gestures collapse via the motion tokens; the ring is a progress
+     indicator (data), so like --duration-spin it keeps running */
+  .toast,
+  .toast__close,
+  .toast__inner,
+  .toast__custom {
+    transition: none;
+  }
+}
