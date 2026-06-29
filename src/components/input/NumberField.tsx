@@ -110,7 +110,7 @@ export function NumberField({
       </div>
       {(error || helper) && (
         <div className="fld__msg">
-          {error && <Icon name="failed" size="sm" weight="fill" />}
+          {error && <Icon name="warning-circle" size="sm" weight="fill" />}
           {error || helper}
         </div>
       )}

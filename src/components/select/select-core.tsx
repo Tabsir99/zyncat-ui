@@ -18,9 +18,10 @@
    React can't remove a [popover] once promoted to the top layer — verified),
    positioned in JS because anchor() needs the top layer. */
 import * as React from 'react';
-import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
+import { m as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 const coreSM = UIMotion;
 const {
@@ -34,8 +35,8 @@ export interface SelectOption {
   value: string;
   label: string;
   description?: string;
-  /** Phosphor / alias glyph name shown before the label. */
-  icon?: string;
+  /** Your own icon node shown before the label. */
+  icon?: React.ReactNode;
   disabled?: boolean;
 }
 export interface SelectGroup {
@@ -282,7 +283,7 @@ export interface SelectTriggerProps {
   adId?: string;
   show: () => void;
   hide: () => void;
-  leading?: string | null;
+  leading?: React.ReactNode;
   text?: string;
   isPlaceholder?: boolean;
   count?: number;
@@ -327,7 +328,7 @@ export function SelectTrigger({
     >
       {leading && (
         <span className="select__leading">
-          <Icon name={leading} size="sm" />
+          <IconSlot size="sm">{leading}</IconSlot>
         </span>
       )}
       <span className="select__value" data-placeholder={isPlaceholder ? 'true' : undefined}>

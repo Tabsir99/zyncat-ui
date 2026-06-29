@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Avatar, AvatarGroup, Tag, ToggleTag, TagGroup, Table, Pagination, Badge, type TableColumn } from 'premium-ui';
 import { Demo } from '../kit';
+import { Icon } from '../icon';
 
 export function AvatarPage() {
   return (
@@ -39,10 +40,10 @@ export function AvatarPage() {
 }
 
 const INITIAL_LABELS = [
-  { id: 'a', name: 'design', icon: 'hash' },
-  { id: 'b', name: 'frontend', icon: 'hash' },
-  { id: 'c', name: 'urgent', icon: 'hash' },
-  { id: 'd', name: 'backlog', icon: 'hash' },
+  { id: 'a', name: 'design', icon: <Icon name="hash" /> },
+  { id: 'b', name: 'frontend', icon: <Icon name="hash" /> },
+  { id: 'c', name: 'urgent', icon: <Icon name="hash" /> },
+  { id: 'd', name: 'backlog', icon: <Icon name="hash" /> },
 ];
 
 const FILTERS = ['Open', 'In review', 'Merged', 'Closed'];
@@ -54,7 +55,7 @@ export function TagPage() {
     <>
       <Demo label="static · icon · sizes · disabled">
         <Tag>Spring 2026</Tag>
-        <Tag icon="hash">label</Tag>
+        <Tag icon={<Icon name="hash" />}>label</Tag>
         <Tag size="sm">dense row</Tag>
         <Tag disabled onRemove={() => undefined}>
           locked
@@ -77,10 +78,10 @@ export function TagPage() {
         ))}
       </Demo>
       <Demo label="ToggleTag · icon + count">
-        <ToggleTag icon="star" count={48} defaultSelected>
+        <ToggleTag icon={<Icon name="star" />} count={48} defaultSelected>
           Starred
         </ToggleTag>
-        <ToggleTag icon="archive" count={7}>
+        <ToggleTag icon={<Icon name="archive" />} count={7}>
           Archived
         </ToggleTag>
       </Demo>

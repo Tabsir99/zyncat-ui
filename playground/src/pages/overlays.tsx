@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Alert, Tooltip, Dialog, Overlay, Glass, Button, Icon, toast } from 'premium-ui';
+import { Alert, Tooltip, Dialog, Overlay, Glass, Button, toast } from 'premium-ui';
 import { Demo } from '../kit';
+import { Icon } from '../icon';
 
 export function AlertPage() {
   return (
@@ -110,7 +111,7 @@ export function DialogPage() {
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         tone="danger"
-        icon="warning-circle"
+        icon={<Icon name="warning-circle" />}
         title="Delete this project?"
         description="All of its content will be removed. This can’t be undone."
         footer={(close) => (
@@ -150,11 +151,11 @@ export function OverlayPage() {
       >
         {({ close }) => (
           <Glass strong role="menu" aria-label="Actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', padding: 'var(--space-2)', borderRadius: 'var(--radius-lg)', minWidth: 200 }}>
-            {[
+            {([
               { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming…' },
               { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
               { icon: 'trash', label: 'Delete', msg: 'Deleted' },
-            ].map((it) => (
+            ] as const).map((it) => (
               <Button
                 key={it.label}
                 variant="ghost"

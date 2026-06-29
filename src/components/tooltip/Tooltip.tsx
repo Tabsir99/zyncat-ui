@@ -31,7 +31,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import type { ReactElement, ReactNode } from 'react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
@@ -221,7 +221,7 @@ function TooltipHost() {
       )}
       <AnimatePresence>
         {active && box && (
-          <motion.div
+          <m.div
             key="tip"
             className="tooltip"
             id="scheduly-tooltip"
@@ -255,14 +255,14 @@ function TooltipHost() {
             {/* ONE content node, keyed by trigger: old cuts, new fades in fast
                 while the box travels. Fixed measured width = stable wrapping
                 through the whole morph (the moving box just reveals it). */}
-            <motion.span
+            <m.span
               key={active.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1, transition: SM.t.enter }}
             >
               <Body a={active} width={box.bodyW} />
-            </motion.span>
-          </motion.div>
+            </m.span>
+          </m.div>
         )}
       </AnimatePresence>
     </React.Fragment>,

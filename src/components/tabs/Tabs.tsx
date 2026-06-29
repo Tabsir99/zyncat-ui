@@ -40,9 +40,9 @@
 // scroll geometry), and the selected tab is kept in view.
 
 import * as React from 'react';
-import { motion as tabsMotion, animate as tabsAnimate } from 'motion/react';
+import { m as tabsMotion, animate as tabsAnimate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
-import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 const TabsSM = UIMotion;
 
@@ -51,8 +51,8 @@ export interface TabItem {
   /** Stable identity — also used in the tab/panel id pair. */
   value: string;
   label: React.ReactNode;
-  /** Phosphor kebab name or semantic alias. Fill weight marks the selected tab. */
-  icon?: string;
+  /** Leading icon — your own node. */
+  icon?: React.ReactNode;
   /** Rendered mono + tabular. Pass a number or a preformatted string. */
   count?: number | string;
   disabled?: boolean;
@@ -308,9 +308,7 @@ export function Tabs({
                     }}
                   ></tabsMotion.span>
                 )}
-                {it.icon && (
-                  <Icon name={it.icon} size="sm" weight={selected ? 'fill' : 'regular'} />
-                )}
+                {it.icon && <IconSlot size="sm">{it.icon}</IconSlot>}
                 <span className="tab__label">{it.label}</span>
                 {it.count != null && <span className="tab__count">{it.count}</span>}
               </span>

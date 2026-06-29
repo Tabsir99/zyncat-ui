@@ -78,7 +78,7 @@ export function Textarea({
 
   const state = error ? 'is-error' : warning ? 'is-warning' : success ? 'is-success' : '';
   const msg = error || warning || success || helper;
-  const msgIcon = error ? 'failed' : warning ? 'warning' : success ? 'published' : null;
+  const msgIcon = error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null;
 
   // Auto-grow without a caret jump. The textarea grows infinitely and never
   // scrolls itself; the .txa__stack wrapper animates its height. CRITICAL: the

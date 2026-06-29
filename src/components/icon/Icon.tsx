@@ -1,63 +1,78 @@
 'use client';
 
-// Icon.tsx — icon primitive (OPEN set, Phosphor only).
+// Icon.tsx — INTERNAL icon primitive (curated, static set).
 // ─────────────────────────────────────────────────────────────────────────
-// Renders ANY Phosphor glyph by name — pass Phosphor's kebab name
-// ("paper-plane-tilt") or one of the semantic aliases ("publish"). Phosphor is
-// the ONLY source — if a name isn't in Phosphor, the component warns so we can
-// flag it. Size maps to the --icon-* tokens (sm 16 · md 20 · lg 24); color is
-// currentColor; Fill weight marks active/selected.
+// The DS's own functional glyphs only — carets, check, close, the tone marks.
+// Imported statically by name so the bundle ships exactly these icons, never
+// the whole Phosphor library (a dynamic `Phosphor[name]` would defeat
+// tree-shaking and pull all ~9k glyphs). NOT exported from the package barrel:
+// consumers bring their own icons as nodes, sized by <IconSlot>.
+//
+// Add a glyph here (one import + one registry line) when a component needs it.
+// Size maps to --icon-* tokens; color is currentColor; Fill weight marks active.
 
-import type { ComponentType, SVGProps } from 'react';
-import * as Phosphor from '@phosphor-icons/react';
-import { aliases } from './aliases';
+import {
+  ArrowUp,
+  Calendar,
+  CalendarDot,
+  CaretDown,
+  CaretLeft,
+  CaretRight,
+  CaretUp,
+  Check,
+  CheckCircle,
+  Clock,
+  Globe,
+  Info,
+  MagnifyingGlass,
+  Warning,
+  WarningCircle,
+  X,
+} from '@phosphor-icons/react';
+import type { IconWeight } from '@phosphor-icons/react';
 
+type Glyph = typeof X;
+
+const REGISTRY = {
+  x: X,
+  close: X,
+  check: Check,
+  'arrow-up': ArrowUp,
+  'caret-up': CaretUp,
+  'caret-down': CaretDown,
+  'caret-left': CaretLeft,
+  'caret-right': CaretRight,
+  'magnifying-glass': MagnifyingGlass,
+  calendar: Calendar,
+  'calendar-dot': CalendarDot,
+  clock: Clock,
+  globe: Globe,
+  info: Info,
+  warning: Warning,
+  'warning-circle': WarningCircle,
+  'check-circle': CheckCircle,
+} satisfies Record<string, Glyph>;
+
+export type IconName = keyof typeof REGISTRY;
 export type IconSize = 'sm' | 'md' | 'lg';
-export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
+export type { IconWeight };
 
-export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'ref'> {
-  /** Phosphor kebab name ("paper-plane-tilt") or a semantic alias ("publish"). */
-  name: string;
+export interface IconProps {
+  /** A curated glyph name (see the registry in this file). */
+  name: IconName;
   /** Token size: sm 16 · md 20 (default) · lg 24. */
   size?: IconSize;
-  /** Phosphor weight. `fill` marks active/selected; Regular otherwise. */
+  /** `fill` marks active/selected; Regular otherwise. */
   weight?: IconWeight;
   /** If set, the icon is meaningful and exposed to AT; omit for decorative. */
   label?: string;
+  className?: string;
 }
 
 const SIZE_PX: Record<IconSize, number> = { sm: 16, md: 20, lg: 24 };
-const toPascal = (s: string) =>
-  s.replace(/(^|[-_ ])([a-z0-9])/g, (_, __, c: string) => c.toUpperCase());
 
-export function Icon({
-  name,
-  size = 'md',
-  weight = 'regular',
-  label,
-  className = '',
-  ...rest
-}: IconProps) {
-  const exportName = aliases[name] || toPascal(String(name || ''));
-  const Glyph = (
-    Phosphor as unknown as Record<string, ComponentType<Record<string, unknown>> | undefined>
-  )[exportName];
-  if (!Glyph) {
-    if (typeof console !== 'undefined') {
-      console.warn(
-        `<Icon>: "${name}" isn't in Phosphor — flag it so we can source an alternative.`,
-      );
-    }
-    return null;
-  }
+export function Icon({ name, size = 'md', weight = 'regular', label, className = '' }: IconProps) {
+  const Glyph = REGISTRY[name];
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
-  return (
-    <Glyph
-      size={SIZE_PX[size] || SIZE_PX.md}
-      weight={weight}
-      className={('icon ' + className).trim()}
-      {...a11y}
-      {...rest}
-    />
-  );
+  return <Glyph size={SIZE_PX[size]} weight={weight} className={('icon ' + className).trim()} {...a11y} />;
 }

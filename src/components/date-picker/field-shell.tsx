@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import type { ReactNode } from 'react';
-import { Icon } from '../icon/Icon';
+import { Icon, type IconName } from '../icon/Icon';
 
 const { useState, useCallback } = React;
 
@@ -45,7 +45,7 @@ export interface FieldShellProps {
   required?: boolean;
   invalid?: boolean;
   message?: ReactNode;
-  icon: string;
+  icon: IconName;
   className?: string;
   children?: ReactNode;
 }

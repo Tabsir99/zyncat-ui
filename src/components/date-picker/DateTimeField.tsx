@@ -166,7 +166,7 @@ export function DateTimeField({
       required={required}
       invalid={invalid}
       message={message}
-      icon="schedule"
+      icon="calendar"
       className={className}
     >
       <Overlay trigger={trigger} side="bottom" align="start">

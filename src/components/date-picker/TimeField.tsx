@@ -77,7 +77,7 @@ export function TimeField({
       required={required}
       invalid={invalid}
       message={message}
-      icon="time"
+      icon="clock"
       className={className}
     >
       <div

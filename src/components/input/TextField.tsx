@@ -7,6 +7,7 @@
 
 import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 import { Collapse } from '../motion/Collapse';
 
 export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -26,8 +27,8 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   warning?: ReactNode;
   /** Success message — green state. */
   success?: ReactNode;
-  /** Leading icon — an <Icon> name (e.g. "search"). Decorative. */
-  leadingIcon?: string;
+  /** Leading icon — your own icon node (sized to the control). Decorative. */
+  leadingIcon?: ReactNode;
   /** Show a clear (×) button when there's a value. */
   clearable?: boolean;
   /** Control height: sm 28 · md 36 (default) · lg 40. */
@@ -57,7 +58,7 @@ export function TextField({
 }: TextFieldProps) {
   const state = error ? 'is-error' : warning ? 'is-warning' : success ? 'is-success' : '';
   const msg = error || warning || success || helper;
-  const msgIcon = error ? 'failed' : warning ? 'warning' : success ? 'published' : null;
+  const msgIcon = error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null;
   const showClear = clearable && value;
   const cls = [
     'fld',
@@ -86,7 +87,7 @@ export function TextField({
       <div className="fld__control">
         {leadingIcon && (
           <span className="fld__icon fld__icon--lead">
-            <Icon name={leadingIcon} />
+            <IconSlot>{leadingIcon}</IconSlot>
           </span>
         )}
         <input

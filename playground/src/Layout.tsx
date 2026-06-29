@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Button, Icon } from 'premium-ui';
+import { Button } from 'premium-ui';
 import { GROUPS } from './registry';
+import { Icon } from './icon';
 
 // An accent preset writes the same semantic tokens a consumer would override.
 // Subtle/border are translucent and text sits mid-light, so a preset reads

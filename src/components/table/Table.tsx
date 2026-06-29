@@ -40,7 +40,7 @@
    (clear button), .odo (count odometer). Markup mirrors Checkbox.jsx exactly. */
 
 import * as React from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 
@@ -430,7 +430,7 @@ export function Table<Row = any>({
                   const k = keyOf(row);
                   const isSel = selected.has(k);
                   return (
-                    <motion.tr
+                    <m.tr
                       key={k}
                       layout="position"
                       transition={t.layout}
@@ -463,7 +463,7 @@ export function Table<Row = any>({
                             : (row as Record<string, React.ReactNode>)[c.key]}
                         </td>
                       ))}
-                    </motion.tr>
+                    </m.tr>
                   );
                 })
               )}

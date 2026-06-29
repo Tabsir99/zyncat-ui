@@ -19,9 +19,10 @@
    secondary small button (A8), one action max. */
 
 import * as React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
-import { Icon } from '../icon/Icon';
+import { Icon, type IconName } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -58,7 +59,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
 
 const { t } = UIMotion;
 
-const TONE_GLYPH: Record<AlertTone, string> = {
+const TONE_GLYPH: Record<AlertTone, IconName> = {
   info: 'info',
   success: 'check-circle',
   warning: 'warning',
@@ -97,7 +98,7 @@ export function Alert({
   return (
     <AnimatePresence initial={false}>
       {isOpen && (
-        <motion.div
+        <m.div
           key="alert-shell" /* explicit key — the 12.40 UMD presence bookkeeping
                                  drops/strands un-keyed conditional children
                                  (same family as the Tabs/Tooltip notes) */
@@ -110,7 +111,11 @@ export function Alert({
           <div className={classes} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...rest}>
             {icon === null ? null : (
               <span className="alert__icon" aria-hidden="true">
-                {icon !== undefined ? icon : <Icon name={TONE_GLYPH[tone] || 'info'} size="md" />}
+                {icon !== undefined ? (
+                  <IconSlot size="md">{icon}</IconSlot>
+                ) : (
+                  <Icon name={TONE_GLYPH[tone] || 'info'} size="md" />
+                )}
               </span>
             )}
             <div className="alert__body">
@@ -128,7 +133,7 @@ export function Alert({
               </button>
             )}
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

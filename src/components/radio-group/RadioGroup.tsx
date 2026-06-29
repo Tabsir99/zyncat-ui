@@ -22,8 +22,9 @@
 // sibling-uncheck. The native input stays for semantics, focus & keyboard.
 
 import * as React from 'react';
-import { motion, LayoutGroup } from 'motion/react';
+import { m, LayoutGroup } from 'motion/react';
 import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -35,8 +36,8 @@ export interface RadioOption {
   label: React.ReactNode;
   /** Optional secondary line (muted) explaining the choice. */
   description?: React.ReactNode;
-  /** Leading icon — an <Icon> name. CARDS only; ignored for rows. Fill weight when selected. */
-  icon?: string;
+  /** Leading icon — your own node. CARDS only; ignored for rows. */
+  icon?: React.ReactNode;
   /** Disable just this option. */
   disabled?: boolean;
 }
@@ -148,18 +149,18 @@ function RadioGroup({
                 />
                 {variant === 'cards' && opt.icon && (
                   <span className="rg-opt__icon">
-                    <Icon name={opt.icon} weight={selected ? 'fill' : 'regular'} />
+                    <IconSlot>{opt.icon}</IconSlot>
                   </span>
                 )}
                 <span className="rg-opt__control">
                   <span className="rg-opt__dot">
                     {selected && (
-                      <motion.span
+                      <m.span
                         className="rg__marker"
                         layoutId="marker"
                         transition={SM.t.layout}
                         aria-hidden="true"
-                      ></motion.span>
+                      ></m.span>
                     )}
                   </span>
                 </span>
@@ -180,7 +181,7 @@ function RadioGroup({
       >
         <div className="collapse__inner">
           <div className="rg__msg">
-            <Icon name="failed" size="sm" weight="fill" />
+            <Icon name="warning-circle" size="sm" weight="fill" />
             {error}
           </div>
         </div>

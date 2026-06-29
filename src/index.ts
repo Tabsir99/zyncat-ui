@@ -1,16 +1,16 @@
 /* premium-ui — public API barrel.
    ─────────────────────────────────────────────────────────────────────────
-   The ONE import surface for product code:  import { Button, Icon } from 'premium-ui'
-   Re-exports every shipped component + its prop types. Internal helpers
-   (*-core, field-shell, glide-pill, sheet-drag, date-utils, aliases) are
-   intentionally NOT re-exported — import them directly if you ever need them.
+   The ONE import surface for product code:  import { Button, TextField } from 'premium-ui'
+   Re-exports every shipped component + its prop types. The curated Icon
+   primitive and internal helpers (*-core, field-shell, glide-pill, sheet-drag,
+   date-utils) are intentionally NOT re-exported — components take icons as
+   nodes (bring-your-own), so consumers never reference our glyph set.
 
    The CSS is NOT imported here — link the token + component stylesheets once
    via `premium-ui/styles.css`. */
 
 // ── Primitives ────────────────────────────────────────────────────────────
 export * from './components/button/Button';
-export * from './components/icon/Icon';
 export * from './components/glass/Glass';
 export * from './components/motion/Collapse';
 

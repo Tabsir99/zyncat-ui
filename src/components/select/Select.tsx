@@ -26,6 +26,7 @@ import {
   type SelectGroup,
 } from './select-core';
 import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 export interface SelectProps {
   options: SelectOption[] | SelectGroup[];
@@ -43,9 +44,9 @@ export interface SelectProps {
   /** Type-to-filter field pinned above the list. */
   searchable?: boolean;
   searchPlaceholder?: string;
-  /** Phosphor / alias glyph pinned before the trigger label (otherwise the
+  /** Your own icon node pinned before the trigger label (otherwise the
       selected option's own icon shows). */
-  leadingIcon?: string | null;
+  leadingIcon?: React.ReactNode;
   id?: string;
   ariaLabel?: string;
 }
@@ -211,7 +212,7 @@ export function Select({
                       >
                         {opt.icon && (
                           <span className="select__option-icon">
-                            <Icon name={opt.icon} size="sm" weight={isSel ? 'fill' : 'regular'} />
+                            <IconSlot size="sm">{opt.icon}</IconSlot>
                           </span>
                         )}
                         <span className="select__option-text">

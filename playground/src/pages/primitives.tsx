@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Button, Icon, Glass, Collapse, Badge, StatusBadge, CountBadge, type PostStatus } from 'premium-ui';
+import { Button, Glass, Collapse, Badge, StatusBadge, CountBadge, type PostStatus } from 'premium-ui';
 import { Demo } from '../kit';
+import { Icon } from '../icon';
 
 export function ButtonPage() {
   return (

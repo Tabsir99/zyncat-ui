@@ -26,7 +26,7 @@ import {
   type SelectOption,
   type SelectGroup,
 } from './select-core';
-import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 export interface MultiSelectProps {
   options: SelectOption[] | SelectGroup[];
@@ -42,7 +42,8 @@ export interface MultiSelectProps {
   loading?: boolean;
   searchable?: boolean;
   searchPlaceholder?: string;
-  leadingIcon?: string | null;
+  /** Your own icon node pinned before the trigger label. */
+  leadingIcon?: React.ReactNode;
   id?: string;
   ariaLabel?: string;
 }
@@ -228,7 +229,7 @@ export function MultiSelect({
                       >
                         {opt.icon && (
                           <span className="select__option-icon">
-                            <Icon name={opt.icon} size="sm" weight={isSel ? 'fill' : 'regular'} />
+                            <IconSlot size="sm">{opt.icon}</IconSlot>
                           </span>
                         )}
                         <span className="select__option-text">

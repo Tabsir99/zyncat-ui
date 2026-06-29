@@ -11,16 +11,15 @@
      • no icon  → a tick slot slides open (the Collapse width mechanism,
        collapse.css classes reused directly — zero CSS duplicated) while the
        check DRAWS in (stroke-dashoffset, brand entrance curve).
-     • icon     → no tick; both weights render stacked and the fill BLOOMS
-       in over the regular glyph (crossfade + spring overshoot, CSS-only) —
-       the system-wide "selected" mark (§D) without an instant font swap.
-       No width change, nothing reflows.
+     • icon     → no tick; your icon node sits in a fixed slot and the accent
+       wash carries the selected state (the icon is consumer-supplied, so the
+       mark can't be a weight swap).
 
    Counts are data → mono tabular, via the `count` prop (§E).
    All styling lives in tag.css; this file composes class names only. */
 
 import * as React from 'react';
-import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 /** ToggleTag — the on/off filter chip (<button aria-pressed>). */
 export interface ToggleTagProps extends Omit<
@@ -35,9 +34,8 @@ export interface ToggleTagProps extends Omit<
   defaultSelected?: boolean;
   /** Fires with the next value on every toggle. */
   onChange?: (selected: boolean) => void;
-  /** Phosphor icon name or alias; weight flips regular → fill when selected
-   *  (replaces the tick — the icon IS the selected mark). */
-  icon?: string | null;
+  /** Your own icon node; replaces the tick. Selected state reads from the wash. */
+  icon?: React.ReactNode | null;
   /** Optional result count — rendered mono/tabular. */
   count?: React.ReactNode;
   /** 'md' = 28px (default) · 'sm' = 24px for dense rows. */
@@ -130,9 +128,8 @@ export function ToggleTag(props: ToggleTagProps) {
       {...rest}
     >
       {icon ? (
-        <span className="tag__icon tag__icon--dual">
-          <Icon name={icon} size="sm" weight="regular" />
-          <Icon name={icon} size="sm" weight="fill" />
+        <span className="tag__icon">
+          <IconSlot size="sm">{icon}</IconSlot>
         </span>
       ) : (
         <ToggleTagTick selected={selected} />

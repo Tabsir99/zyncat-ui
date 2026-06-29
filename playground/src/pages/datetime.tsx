@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from 'react';
 import { DateField, DateTimeField, DateRangeField, TimeField, Tabs, TabPanel, type DateRange, type TabItem } from 'premium-ui';
 import { Demo } from '../kit';
+import { Icon } from '../icon';
 
 const COL: CSSProperties = { minWidth: 240, maxWidth: 320 };
 
@@ -101,10 +102,10 @@ export function TimeFieldPage() {
 }
 
 const TABS: TabItem[] = [
-  { value: 'overview', label: 'Overview', icon: 'house', count: 12 },
-  { value: 'activity', label: 'Activity', icon: 'clock', count: 4 },
-  { value: 'members', label: 'Members', icon: 'users', count: 128 },
-  { value: 'settings', label: 'Settings', icon: 'gear', disabled: true },
+  { value: 'overview', label: 'Overview', icon: <Icon name="house" />, count: 12 },
+  { value: 'activity', label: 'Activity', icon: <Icon name="clock" />, count: 4 },
+  { value: 'members', label: 'Members', icon: <Icon name="users" />, count: 128 },
+  { value: 'settings', label: 'Settings', icon: <Icon name="gear" />, disabled: true },
 ];
 
 export function TabsPage() {

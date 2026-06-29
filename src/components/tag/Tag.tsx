@@ -17,16 +17,16 @@
    All styling lives in tag.css; this file composes class names only. */
 
 import * as React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { m, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
-import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 /** Tag — the removable, editable label (stateless; the parent owns the list). */
 export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** The label. */
   children: React.ReactNode;
-  /** Phosphor icon name or semantic alias, rendered via <Icon size="sm">. */
-  icon?: string | null;
+  /** Your own icon node, sized small and tinted to the tag's text. */
+  icon?: React.ReactNode | null;
   /** Presence adds the × button; called on click — remove the item yourself. */
   onRemove?: (() => void) | null;
   /** Accessible label for the ×. Defaults to "Remove {label}" for string labels. */
@@ -95,7 +95,7 @@ export function Tag(props: TagProps) {
     <React.Fragment>
       {icon && (
         <span className="tag__icon">
-          <Icon name={icon} size="sm" />
+          <IconSlot size="sm">{icon}</IconSlot>
         </span>
       )}
       <span className="tag__label">{children}</span>
@@ -123,7 +123,7 @@ export function Tag(props: TagProps) {
 
   const { t } = UIMotion;
   return (
-    <motion.span
+    <m.span
       layout
       className={classes}
       data-disabled={disabled ? 'true' : undefined}
@@ -134,7 +134,7 @@ export function Tag(props: TagProps) {
       {...rest}
     >
       {content}
-    </motion.span>
+    </m.span>
   );
 }
 

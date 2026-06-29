@@ -15,6 +15,7 @@
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';
+import { IconSlot } from '../icon/IconSlot';
 
 const { useRef: dlgUseRef, useEffect: dlgUseEffect, useId: dlgUseId } = React;
 
@@ -30,8 +31,8 @@ export interface DialogProps {
   size?: 'sm' | 'md' | 'lg';
   /** 'danger' tints the header icon badge + is the convention for destructive confirms. */
   tone?: 'default' | 'danger';
-  /** Phosphor / alias glyph name for the header badge (alert dialogs). */
-  icon?: string | null;
+  /** Your own icon node for the header badge (alert dialogs). */
+  icon?: React.ReactNode;
   /** Close button + backdrop/Esc dismissal. Default true. */
   dismissible?: boolean;
   /** Action row — a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
@@ -69,7 +70,7 @@ interface DialogSurfaceProps {
   baseId: string;
   size: 'sm' | 'md' | 'lg';
   tone: 'default' | 'danger';
-  icon: string | null;
+  icon: React.ReactNode;
   title: React.ReactNode;
   description: React.ReactNode;
   dismissible: boolean;
@@ -110,7 +111,7 @@ function DialogSurface({
       <header className="dialog__header">
         {icon && (
           <span className="dialog__icon">
-            <Icon name={icon} size="md" weight={tone === 'danger' ? 'fill' : 'regular'} />
+            <IconSlot size="md">{icon}</IconSlot>
           </span>
         )}
         <div className="dialog__heading">
@@ -155,7 +156,7 @@ export function Dialog({
   description = null,
   size = 'md', // 'sm' | 'md' | 'lg'
   tone = 'default', // 'default' | 'danger' → header icon + accent
-  icon = null, // optional Phosphor / alias glyph name (alert dialogs)
+  icon = null, // optional header badge icon node (alert dialogs)
   dismissible = true, // close button + scrim/Esc dismiss
   footer = null, // node OR (close) => node
   children,

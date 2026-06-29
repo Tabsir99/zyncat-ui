@@ -40,7 +40,7 @@
 
 import * as React from 'react';
 import type { RefObject } from 'react';
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -95,7 +95,7 @@ export function GlidePill({ className, rect, active }: GlidePillProps) {
   });
   const travel = wasActive.current && active ? SM.t.settle : { duration: 0 };
   return (
-    <motion.span
+    <m.span
       className={className}
       aria-hidden="true"
       initial={false}
@@ -113,6 +113,6 @@ export function GlidePill({ className, rect, active }: GlidePillProps) {
         height: travel,
         opacity: { duration: SM.dur.fast, ease: active ? SM.ease.standard : SM.ease.exit },
       }}
-    ></motion.span>
+    ></m.span>
   );
 }

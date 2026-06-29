@@ -33,7 +33,7 @@
    util at promotion if a third copy ever appears. */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { motion as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';
+import { m as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const ovSM = UIMotion;

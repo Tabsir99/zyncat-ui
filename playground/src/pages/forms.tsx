@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, NumberField, OtpField, Textarea, Checkbox, Toggle, RadioGroup, Select, MultiSelect, type RadioOption } from 'premium-ui';
 import { Demo } from '../kit';
+import { Icon } from '../icon';
 
 type Option = { value: string; label: string; description?: string; icon?: string; disabled?: boolean };
 
@@ -11,9 +12,9 @@ const ROLES: RadioOption[] = [
 ];
 
 const PLAN: RadioOption[] = [
-  { value: 'starter', label: 'Starter', description: 'For individuals', icon: 'cloud' },
-  { value: 'pro', label: 'Pro', description: 'For small teams', icon: 'lightning' },
-  { value: 'scale', label: 'Scale', description: 'For organizations', icon: 'crown' },
+  { value: 'starter', label: 'Starter', description: 'For individuals', icon: <Icon name="cloud" /> },
+  { value: 'pro', label: 'Pro', description: 'For small teams', icon: <Icon name="lightning" /> },
+  { value: 'scale', label: 'Scale', description: 'For organizations', icon: <Icon name="crown" /> },
 ];
 
 const PEOPLE: Option[] = [
@@ -44,7 +45,7 @@ export function TextFieldPage() {
         <TextField id="ws" label="Workspace name" required placeholder="e.g. Acme" helper="Shown to your team." value={name} onChange={(e) => setName(e.target.value)} style={{ width: W }} />
       </Demo>
       <Demo label="leading icon · clearable · optional">
-        <TextField id="search" label="Search" optional leadingIcon="magnifying-glass" clearable placeholder="Search…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: W }} />
+        <TextField id="search" label="Search" optional leadingIcon={<Icon name="magnifying-glass" />} clearable placeholder="Search…" value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: W }} />
       </Demo>
       <Demo label="error · warning · success">
         <TextField id="handle" label="Username" error="Must be at least 4 characters." value={handle} onChange={(e) => setHandle(e.target.value)} style={{ width: W }} />
@@ -219,12 +220,12 @@ export function SelectPage() {
     <>
       <Demo label="searchable · leading icon">
         <div style={{ width: W }}>
-          <Select options={TIMEZONES} value={tz} onChange={(v) => setTz(v)} searchable searchPlaceholder="Search time zones" leadingIcon="globe" placeholder="Choose a time zone" ariaLabel="Time zone" />
+          <Select options={TIMEZONES} value={tz} onChange={(v) => setTz(v)} searchable searchPlaceholder="Search time zones" leadingIcon={<Icon name="globe" />} placeholder="Choose a time zone" ariaLabel="Time zone" />
         </div>
       </Demo>
       <Demo label="placeholder · disabled option">
         <div style={{ width: W }}>
-          <Select options={PEOPLE} value={assignee} onChange={(v) => setAssignee(v)} placeholder="Assign reviewer" leadingIcon="user" ariaLabel="Assignee" />
+          <Select options={PEOPLE} value={assignee} onChange={(v) => setAssignee(v)} placeholder="Assign reviewer" leadingIcon={<Icon name="user" />} ariaLabel="Assignee" />
         </div>
       </Demo>
       <Demo label="sizes">
@@ -251,7 +252,7 @@ export function MultiSelectPage() {
     <>
       <Demo label="array value · summary">
         <div style={{ width: W }}>
-          <MultiSelect options={PEOPLE} value={labels} onChange={(v) => setLabels(v)} placeholder="Choose members" leadingIcon="users" ariaLabel="Members" />
+          <MultiSelect options={PEOPLE} value={labels} onChange={(v) => setLabels(v)} placeholder="Choose members" leadingIcon={<Icon name="users" />} ariaLabel="Members" />
         </div>
       </Demo>
       <Demo label="searchable">
