@@ -59,7 +59,7 @@ export default defineConfig({
   // source-map line numbers don't shift.
   async onSuccess() {
     const { readdir, readFile, writeFile, rm } = await import('node:fs/promises');
-    const isClientSrc = async (src) => {
+    const isClientSrc = async (src: string) => {
       try {
         return /^\s*['"]use client['"]/.test((await readFile(src, 'utf8')).slice(0, 48));
       } catch {
@@ -70,10 +70,12 @@ export default defineConfig({
       (f) => f.startsWith('metafile-') && f.endsWith('.json'),
     );
     if (!metaName) return;
-    const meta = JSON.parse(await readFile(`dist/${metaName}`, 'utf8'));
+    const meta = JSON.parse(await readFile(`dist/${metaName}`, 'utf8')) as {
+      outputs: Record<string, { inputs: Record<string, unknown>; imports?: { path: string }[] }>;
+    };
     const outputs = Object.entries(meta.outputs).filter(([o]) => o.endsWith('.js'));
 
-    const client = new Set();
+    const client = new Set<string>();
     for (const [out, info] of outputs) {
       const hits = await Promise.all(Object.keys(info.inputs).map(isClientSrc));
       if (hits.some(Boolean)) client.add(out);
