@@ -331,7 +331,9 @@ function ToastHost() {
           onRelease(false);
       }}
     >
-      <AnimatePresence initial={false}>
+      {/* initial stays true: the host mounts lazily WITH the first toast, so
+          it's on the first commit — initial={false} skipped its entrance */}
+      <AnimatePresence>
         {slice.map((t, i) => {
           const depth = n - 1 - i; // newest = 0, at the front
           let offset = depth * gap; // collapsed: peek per depth
