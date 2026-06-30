@@ -9,12 +9,16 @@ import * as D from './pages/data';
 import * as T from './pages/datetime';
 import * as O from './pages/overlays';
 import { ThemingPage } from './pages/theming';
+import { CONTENT } from './content';
+import type { PropRow } from './PropsTable';
 
 export interface Doc {
   slug: string;
   label: string;
   blurb: string;
   Component: ComponentType;
+  example?: string;
+  props?: PropRow[];
 }
 
 export interface DocGroup {
@@ -251,4 +255,7 @@ export const GROUPS: DocGroup[] = [
   },
 ];
 
-export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs);
+export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs).map((d) => ({
+  ...d,
+  ...CONTENT[d.slug],
+}));

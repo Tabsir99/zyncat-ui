@@ -19,3 +19,16 @@ export function Demo({
     </div>
   );
 }
+
+// Prerendered usage snippet shown above a component's live demos. Static text,
+// so the example is crawlable and visible before hydration.
+export function Example({ code, label = 'Usage' }: { code: string; label?: string }) {
+  return (
+    <section className="example" aria-label={label}>
+      <span className="example__label">{label}</span>
+      <pre className="example__code">
+        <code>{code}</code>
+      </pre>
+    </section>
+  );
+}

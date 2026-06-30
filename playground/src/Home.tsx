@@ -1,9 +1,27 @@
 import { Link } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import { GROUPS } from './registry';
+
+const SITE = 'https://premium-ds.vercel.app';
 
 export function Home() {
   return (
     <>
+      <Head>
+        <title>premium-ds - a calm, polished React 19 design system</title>
+        <meta
+          name="description"
+          content="A premium React 19 design system: accessible, animated components on a small, closed CSS token vocabulary. No Tailwind, no CSS-in-JS. Browse 30+ live components."
+        />
+        <link rel="canonical" href={SITE} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="premium-ds - a calm, polished React 19 design system" />
+        <meta
+          property="og:description"
+          content="Accessible, animated React 19 components on a small, closed CSS token vocabulary."
+        />
+        <meta property="og:url" content={SITE} />
+      </Head>
       <header className="hero">
         <p className="hero__eyebrow">premium-ds</p>
         <h1 className="hero__title">A calm, polished React design system.</h1>

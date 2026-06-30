@@ -1,19 +1,42 @@
-// Renders one component's page: the header from registry metadata, then the
-// component's own demos as the body. Only the active route mounts, so a page's
-// observers, portals, and date machinery exist only while you're looking at it.
+// Renders one component's page: prerendered SEO content (title, blurb, and the
+// code example plus props table from registry) followed by the live demos. The
+// demos are client-only: server rendering never touches their observers,
+// portals, or date machinery, while the static content above stays crawlable.
+import { Head, ClientOnly } from 'vite-react-ssg';
 import type { Doc } from './registry';
+import { Example } from './kit';
+import { PropsTable } from './PropsTable';
+
+const SITE = 'https://premium-ds.vercel.app';
 
 export function PageView({ doc }: { doc: Doc }) {
-  const { label, blurb, Component } = doc;
+  const { slug, label, blurb, Component, example, props } = doc;
+  const title = `${label} - premium-ds`;
+  const url = `${SITE}/${slug}`;
   return (
     <article className="page">
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={blurb} />
+        <link rel="canonical" href={url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={blurb} />
+        <meta property="og:url" content={url} />
+      </Head>
+
       <header className="page__head">
         <h1 className="page__title">{label}</h1>
         <p className="page__blurb">{blurb}</p>
       </header>
+
+      {example ? <Example code={example} /> : null}
+
       <div className="page__body">
-        <Component />
+        <ClientOnly>{() => <Component />}</ClientOnly>
       </div>
+
+      {props && props.length > 0 ? <PropsTable rows={props} /> : null}
     </article>
   );
 }

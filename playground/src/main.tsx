@@ -1,25 +1,9 @@
-// Playground entry. Imports the library's stylesheet exactly the way a consumer
-// would (`premium-ds/styles.css`), then the docs-only chrome on top. Routes are
-// built from the registry so each primitive renders on its own page.
-import { createRoot } from 'react-dom/client';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+// Playground entry. vite-react-ssg prerenders one static HTML file per route
+// (real URLs, per-page meta) and hydrates to the SPA. The library stylesheet is
+// linked first, exactly as a consumer would, then the docs-only chrome on top.
+import { ViteReactSSG } from 'vite-react-ssg';
 import 'premium-ds/styles.css';
 import './docs.css';
-import { Layout } from './Layout';
-import { Home } from './Home';
-import { PageView } from './PageView';
-import { DOCS } from './registry';
+import { routes } from './routes';
 
-createRoot(document.getElementById('root')!).render(
-  <HashRouter>
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        {DOCS.map((d) => (
-          <Route key={d.slug} path={d.slug} element={<PageView doc={d} />} />
-        ))}
-        <Route path="*" element={<Home />} />
-      </Route>
-    </Routes>
-  </HashRouter>,
-);
+export const createRoot = ViteReactSSG({ routes });

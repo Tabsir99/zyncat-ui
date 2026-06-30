@@ -33,10 +33,14 @@ const ACCENTS: {
 ];
 
 export function Layout() {
-  const [theme, setTheme] = useState<'light' | 'dark'>(
-    () => (localStorage.getItem('pui-theme') as 'light' | 'dark') || 'light',
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    typeof window === 'undefined'
+      ? 'light'
+      : (localStorage.getItem('pui-theme') as 'light' | 'dark') || 'light',
   );
-  const [accentKey, setAccentKey] = useState(() => localStorage.getItem('pui-accent') || 'teal');
+  const [accentKey, setAccentKey] = useState(() =>
+    typeof window === 'undefined' ? 'teal' : localStorage.getItem('pui-accent') || 'teal',
+  );
   const { pathname } = useLocation();
 
   useEffect(() => {
