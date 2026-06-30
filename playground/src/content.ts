@@ -1,11 +1,21 @@
 // Per-slug static docs: a canonical usage example and the prop reference for
 // each component. Read by registry.tsx and prerendered by PageView for SEO.
-// Authored from each component's exported prop interface in ../src.
-import type { PropRow } from './PropsTable';
+// One file per group, authored from each component's exported prop interface.
+import type { ComponentDoc } from './content/types';
+import { primitives } from './content/primitives';
+import { forms } from './content/forms';
+import { data } from './content/data';
+import { datetime } from './content/datetime';
+import { overlays } from './content/overlays';
+import { theming } from './content/theming';
 
-export interface ComponentDoc {
-  example: string;
-  props: PropRow[];
-}
+export type { ComponentDoc } from './content/types';
 
-export const CONTENT: Record<string, ComponentDoc> = {};
+export const CONTENT: Record<string, ComponentDoc> = {
+  ...primitives,
+  ...forms,
+  ...data,
+  ...datetime,
+  ...overlays,
+  ...theming,
+};

@@ -351,6 +351,107 @@ a {
   align-items: stretch;
 }
 
+/* -- Usage example (Example) ---------------------------------------------- */
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+.example__label {
+  font: var(--type-caption);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-subtle);
+}
+.example__code {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-inset, var(--bg-subtle));
+  overflow-x: auto;
+}
+.example__code code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--text-body);
+  white-space: pre;
+  tab-size: 2;
+}
+
+/* -- Props reference (PropsTable) ----------------------------------------- */
+.props {
+  margin-top: var(--space-8);
+}
+.props__title {
+  font: var(--type-heading);
+  color: var(--text-strong);
+  margin: 0 0 var(--space-4);
+}
+.props__scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+.props__table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--type-body);
+}
+.props__table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font: var(--type-caption);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-subtle);
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-default);
+  white-space: nowrap;
+}
+.props__table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+}
+.props__table tr:last-child td {
+  border-bottom: none;
+}
+.props__name code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: var(--weight-medium, 500);
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+.props__req {
+  margin-left: 2px;
+  color: var(--danger-text, var(--text-accent));
+}
+.props__type code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-accent);
+  word-break: break-word;
+}
+.props__default code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.props__dash {
+  color: var(--text-disabled);
+}
+.props__desc {
+  min-width: 220px;
+  color: var(--text-muted);
+}
+
 .stack {
   display: flex;
   flex-direction: column;
