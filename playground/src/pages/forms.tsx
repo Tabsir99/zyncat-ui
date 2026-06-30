@@ -105,7 +105,7 @@ export function TextareaPage() {
   const [note, setNote] = useState('Reviewed the latest draft — looks great to ship.');
   return (
     <>
-      <Demo label="char meter · hint">
+      <Demo label="char meter · hint" fill>
         <Textarea
           id="bio"
           label="Bio"
@@ -122,16 +122,15 @@ export function TextareaPage() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           onSubmit={(v) => setBio(v)}
-          style={{ width: W }}
         />
       </Demo>
-      <Demo label="helper · optional">
-        <Textarea id="note" label="Internal note" optional helper="Only your team sees this." value={note} onChange={(e) => setNote(e.target.value)} style={{ width: W }} />
+      <Demo label="helper · optional" fill>
+        <Textarea id="note" label="Internal note" optional helper="Only your team sees this." value={note} onChange={(e) => setNote(e.target.value)} />
       </Demo>
-      <Demo label="error · large · disabled">
-        <Textarea id="berr" label="Summary" max={280} error="Can't be empty." value="" onChange={() => {}} style={{ width: W }} />
-        <Textarea id="blg" label="Composer" size="lg" placeholder="Prominent composer" value="" onChange={() => {}} style={{ width: W }} />
-        <Textarea id="bdis" label="Template" disabled value="Read-only content" onChange={() => {}} style={{ width: W }} />
+      <Demo label="error · large · disabled" fill>
+        <Textarea id="berr" label="Summary" max={280} error="Can't be empty." value="" onChange={() => {}} />
+        <Textarea id="blg" label="Composer" size="lg" placeholder="Prominent composer" value="" onChange={() => {}} />
+        <Textarea id="bdis" label="Template" disabled value="Read-only content" onChange={() => {}} />
       </Demo>
     </>
   );

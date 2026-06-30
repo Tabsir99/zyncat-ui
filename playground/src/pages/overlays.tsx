@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Tooltip, Dialog, Overlay, Glass, Button, toast } from 'premium-ui';
+import { Alert, Tooltip, Dialog, Overlay, Button, toast } from 'premium-ui';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
@@ -150,7 +150,21 @@ export function OverlayPage() {
         }
       >
         {({ close }) => (
-          <Glass strong role="menu" aria-label="Actions" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', padding: 'var(--space-2)', borderRadius: 'var(--radius-lg)', minWidth: 200 }}>
+          <div
+            role="menu"
+            aria-label="Actions"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--space-1)',
+              padding: 'var(--space-2)',
+              background: 'var(--bg-surface-raised)',
+              border: 'var(--border-hairline) solid var(--border-default)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
+              minWidth: 200,
+            }}
+          >
             {([
               { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming…' },
               { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
@@ -170,7 +184,7 @@ export function OverlayPage() {
                 {it.label}
               </Button>
             ))}
-          </Glass>
+          </div>
         )}
       </Overlay>
     </Demo>

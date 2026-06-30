@@ -56,13 +56,30 @@ export function IconPage() {
 
 export function GlassPage() {
   return (
-    <Demo label="interactive · strong">
-      <Glass interactive style={{ padding: '8px 16px', borderRadius: 'var(--radius-md)' }}>
-        Interactive
-      </Glass>
-      <Glass strong style={{ padding: '8px 16px', borderRadius: 'var(--radius-md)' }}>
-        Strong blur
-      </Glass>
+    <Demo label="interactive · strong" fill>
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 'var(--space-4)',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 200,
+          padding: 'var(--space-7)',
+          borderRadius: 'var(--radius-lg)',
+          overflow: 'hidden',
+          background:
+            'radial-gradient(circle at 20% 25%, #a78bfa, transparent 48%), radial-gradient(circle at 80% 20%, #2dd4bf, transparent 44%), radial-gradient(circle at 65% 85%, #fb7185, transparent 48%), linear-gradient(125deg, #6366f1, #8b5cf6 50%, #14b8a6)',
+        }}
+      >
+        <Glass interactive style={{ padding: '8px 16px', borderRadius: 'var(--radius-md)' }}>
+          Interactive
+        </Glass>
+        <Glass strong style={{ padding: '8px 16px', borderRadius: 'var(--radius-md)' }}>
+          Strong blur
+        </Glass>
+      </div>
     </Demo>
   );
 }

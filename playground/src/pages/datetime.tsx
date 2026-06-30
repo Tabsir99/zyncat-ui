@@ -101,16 +101,22 @@ export function TimeFieldPage() {
   );
 }
 
-const TABS: TabItem[] = [
-  { value: 'overview', label: 'Overview', icon: <Icon name="house" />, count: 12 },
-  { value: 'activity', label: 'Activity', icon: <Icon name="clock" />, count: 4 },
-  { value: 'members', label: 'Members', icon: <Icon name="users" />, count: 128 },
-  { value: 'settings', label: 'Settings', icon: <Icon name="gear" />, disabled: true },
-];
+const TAB_DEFS = [
+  { value: 'overview', label: 'Overview', icon: 'house', count: 12 },
+  { value: 'activity', label: 'Activity', icon: 'clock', count: 4 },
+  { value: 'members', label: 'Members', icon: 'users', count: 128 },
+  { value: 'settings', label: 'Settings', icon: 'gear', disabled: true },
+] as const;
 
 export function TabsPage() {
   const [view, setView] = useState<string>('overview');
   const [dir, setDir] = useState<-1 | 0 | 1>(0);
+
+  // active tab fills its icon — selection-aware nodes built by the consumer
+  const items: TabItem[] = TAB_DEFS.map((t) => ({
+    ...t,
+    icon: <Icon name={t.icon} weight={view === t.value ? 'fill' : 'regular'} />,
+  }));
   return (
     <Demo label="controlled · with panels">
       <div className="stack" style={{ width: '100%', maxWidth: 560 }}>
@@ -122,7 +128,7 @@ export function TabsPage() {
             setView(v);
             setDir(d);
           }}
-          items={TABS}
+          items={items}
         />
         <TabPanel name="views" tab={view} dir={dir} style={{ padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}>
           {view === 'overview' && <span>A calm summary of everything at a glance.</span>}
