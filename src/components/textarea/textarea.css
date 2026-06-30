@@ -190,18 +190,28 @@
   font-weight: var(--weight-medium);
 }
 
-/* validation (message colour comes from input.css) */
-.fld.is-error .txa {
+/* validation (message colour comes from input.css) — each state holds its
+   border through hover and carries a matching focus ring */
+.fld.is-error .txa,
+.fld.is-error .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
   border-color: var(--danger);
 }
 .fld.is-error .txa:focus-within {
   box-shadow: var(--ring-danger);
 }
-.fld.is-warning .txa {
+.fld.is-warning .txa,
+.fld.is-warning .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
   border-color: var(--warning);
 }
-.fld.is-success .txa {
+.fld.is-warning .txa:focus-within {
+  box-shadow: var(--ring-warning);
+}
+.fld.is-success .txa,
+.fld.is-success .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
   border-color: var(--success);
+}
+.fld.is-success .txa:focus-within {
+  box-shadow: var(--ring-success);
 }
 
 /* large size */

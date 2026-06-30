@@ -29,5 +29,7 @@
      accent ring is the universal "this is focused/active" signal. */
   --ring-accent: 0 0 0 3px oklch(0.63 0.118 198 / 0.32);
   --ring-danger: 0 0 0 3px oklch(0.602 0.196 27 / 0.3);
+  --ring-warning: 0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent);
+  --ring-success: 0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent);
   --ring-offset: 0 0 0 2px var(--bg-surface), 0 0 0 4px oklch(0.63 0.118 198 / 0.4);
 }
