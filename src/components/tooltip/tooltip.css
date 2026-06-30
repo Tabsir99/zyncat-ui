@@ -48,6 +48,12 @@
   top: 0;
 }
 
+/* default trigger wrapper — box-less (display:contents), so it changes no
+   layout; it only carries the hover/focus listeners and the measured rect */
+.tooltip-anchor {
+  display: contents;
+}
+
 /* content wraps at the measure cap; the LIVE body additionally gets its
    measured width inline (locked wrapping while the box morphs over it) */
 .tooltip__body {

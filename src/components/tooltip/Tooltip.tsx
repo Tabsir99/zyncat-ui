@@ -8,7 +8,8 @@
 
    ONE bubble, explicit motion, deterministic sizing:
    · A single TooltipHost (mounted once) renders the one active bubble.
-     Each <Tooltip> clones its child and reports {content, rect} to a store.
+     Each <Tooltip> wraps (or, with asChild, clones) its child and reports
+     {content, rect} to a store.
    · A hidden CLONE of the next content is measured first, so the target box
      (x, y, w, h) AND the body's exact line wrapping are known BEFORE anything
      animates. The live body gets that measured width inline — live and clone
@@ -286,10 +287,11 @@ const chain = (theirs: ((e: any) => void) | undefined, mine: (e: any) => void) =
   mine(e);
 };
 
-/* ── Trigger · clones its child, reports to the store ───────────────────────*/
-/* ── Trigger · clones its child, reports to the store. STATELESS — Motion owns
-   all animation; the only hooks left are an id and a timer-cleanup effect.
-   aria-describedby is set imperatively in show/hide (no render needed). ─────*/
+/* ── Trigger · reports to the store, stateless (Motion owns animation; the only
+   hooks are an id + a timer-cleanup effect). Default: a display:contents anchor
+   wraps the child and owns the listeners + measured rect, so ANY element works
+   with no ref. asChild: clone the child instead — zero wrapper, child takes the
+   ref. aria-describedby is set imperatively on whichever element we anchor. ──*/
 export interface TooltipProps {
   /** The hint: a string one-liner, or a small node (lead line + body) capped
       at --measure-floating. Never interactive content. */
@@ -306,8 +308,14 @@ export interface TooltipProps {
   /** ms the bubble lingers after leaving the trigger (bridges moving to a
       neighbour). Default 140. */
   closeDelay?: number;
+  /** Skip the wrapper — clone the child and merge the trigger handlers + ref
+      onto it instead (zero extra DOM, but the child must be a DOM element or
+      forward its ref). Default false. */
+  asChild?: boolean;
   id?: string;
-  /** Exactly one element; it must accept a ref (DOM element or forwardRef). */
+  /** Exactly one element. By default any element works (a display:contents
+      wrapper carries the trigger, so no ref is needed); with `asChild` the
+      child itself must accept a ref. */
   children: ReactElement;
 }
 
@@ -318,12 +326,19 @@ function Tooltip({
   disabled = false,
   openDelay = OPEN_DELAY, // ms before a cold hover shows (focus is always instant)
   closeDelay = CLOSE_GRACE, // ms the bubble lingers after leave
+  asChild = false,
   id,
   children,
 }: TooltipProps) {
   const triggerRef = useRef<HTMLElement | null>(null);
+  const wrapRef = useRef<HTMLSpanElement | null>(null);
   const openTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
   const myId = id || 'tip-' + useId();
+
+  // The element we anchor the bubble to and set aria-describedby on: the cloned
+  // child in asChild mode, else the display:contents wrapper's only child.
+  const anchorEl = (): HTMLElement | null =>
+    asChild ? triggerRef.current : ((wrapRef.current?.firstElementChild as HTMLElement) ?? null);
 
   useEffect(
     () => () => {
@@ -338,26 +353,54 @@ function Tooltip({
     if (disabled) return;
     ensureHost();
     clearTimeout(openTimer.current);
-    const t = triggerRef.current;
-    if (t) t.setAttribute('aria-describedby', 'scheduly-tooltip');
+    const el = anchorEl();
+    if (!el) return;
+    el.setAttribute('aria-describedby', 'scheduly-tooltip');
     const open = () =>
       store.open({
         id: myId,
         content,
         shortcut,
         placement,
-        rect: () => triggerRef.current.getBoundingClientRect(),
+        rect: () => anchorEl()!.getBoundingClientRect(),
       });
     if (immediate || store.isWarm()) open();
     else openTimer.current = setTimeout(open, openDelay);
   }
   function hide() {
     clearTimeout(openTimer.current);
-    const t = triggerRef.current;
-    if (t) t.removeAttribute('aria-describedby');
+    const el = anchorEl();
+    if (el) el.removeAttribute('aria-describedby');
     store.close(myId, closeDelay);
   }
 
+  const onEnter = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'touch') show(false);
+  };
+  const onFocusIn = (e: React.FocusEvent) => {
+    if ((e.target as HTMLElement).matches(':focus-visible')) show(true);
+  };
+
+  // Default: a display:contents wrapper carries the listeners + the measured
+  // rect, so the child stays untouched and needs no ref of its own.
+  if (!asChild) {
+    return (
+      <span
+        ref={wrapRef}
+        className="tooltip-anchor"
+        onPointerEnter={onEnter}
+        onPointerLeave={hide}
+        onPointerDown={hide}
+        onFocus={onFocusIn}
+        onBlur={hide}
+      >
+        {children}
+      </span>
+    );
+  }
+
+  // asChild: no wrapper — clone the child and merge our handlers + ref onto it
+  // (a press dismisses: activating ≠ hinting).
   const child = React.Children.only(children) as ReactElement & { ref?: any };
   const childRef = child.ref;
   const childProps = child.props as any;
@@ -367,15 +410,11 @@ function Tooltip({
       if (typeof childRef === 'function') childRef(node);
       else if (childRef && typeof childRef === 'object') childRef.current = node;
     },
-    onPointerEnter: chain(childProps.onPointerEnter, (e: React.PointerEvent) => {
-      if (e.pointerType !== 'touch') show(false);
-    }),
-    onPointerLeave: chain(childProps.onPointerLeave, () => hide()),
-    onPointerDown: chain(childProps.onPointerDown, () => hide()), // activating ≠ hinting
-    onFocus: chain(childProps.onFocus, (e: React.FocusEvent) => {
-      if ((e.target as HTMLElement).matches(':focus-visible')) show(true);
-    }),
-    onBlur: chain(childProps.onBlur, () => hide()),
+    onPointerEnter: chain(childProps.onPointerEnter, onEnter),
+    onPointerLeave: chain(childProps.onPointerLeave, hide),
+    onPointerDown: chain(childProps.onPointerDown, hide),
+    onFocus: chain(childProps.onFocus, onFocusIn),
+    onBlur: chain(childProps.onBlur, hide),
   } as any);
 }
 
