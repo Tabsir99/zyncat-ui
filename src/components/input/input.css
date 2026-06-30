@@ -198,12 +198,14 @@
 }
 
 /* ── Validation states ──────────────────────────────────────────────────────
-   Each state holds its border through hover — the generic .fld__input:hover
-   rule outranks a plain state border, so hover needs its own per-state rule —
-   and carries a matching focus ring. */
-.fld.is-error .fld__input,
-.fld.is-error .fld__input:hover:not(:disabled):not(:focus) {
+   Resting border = the state hue; hover darkens one step to the -text token
+   (same feedback as default→strong); focus swaps in the ring. The per-state
+   hover rule is required — the generic .fld__input:hover would otherwise win. */
+.fld.is-error .fld__input {
   border-color: var(--danger);
+}
+.fld.is-error .fld__input:hover:not(:disabled):not(:focus) {
+  border-color: var(--danger-text);
 }
 .fld.is-error .fld__input:focus {
   box-shadow: var(--ring-danger);
@@ -212,9 +214,11 @@
 .fld.is-error .fld__icon {
   color: var(--danger-text);
 }
-.fld.is-warning .fld__input,
-.fld.is-warning .fld__input:hover:not(:disabled):not(:focus) {
+.fld.is-warning .fld__input {
   border-color: var(--warning);
+}
+.fld.is-warning .fld__input:hover:not(:disabled):not(:focus) {
+  border-color: var(--warning-text);
 }
 .fld.is-warning .fld__input:focus {
   box-shadow: var(--ring-warning);
@@ -222,9 +226,11 @@
 .fld.is-warning .fld__msg {
   color: var(--warning-text);
 }
-.fld.is-success .fld__input,
-.fld.is-success .fld__input:hover:not(:disabled):not(:focus) {
+.fld.is-success .fld__input {
   border-color: var(--success);
+}
+.fld.is-success .fld__input:hover:not(:disabled):not(:focus) {
+  border-color: var(--success-text);
 }
 .fld.is-success .fld__input:focus {
   box-shadow: var(--ring-success);
@@ -353,9 +359,11 @@
   height: 44px;
   font-size: var(--size-heading);
 }
-.otp.is-error .otp__slot,
-.otp.is-error .otp__slot:hover:not(:disabled):not(:focus) {
+.otp.is-error .otp__slot {
   border-color: var(--danger);
+}
+.otp.is-error .otp__slot:hover:not(:disabled):not(:focus) {
+  border-color: var(--danger-text);
 }
 .otp.is-error .otp__slot:focus {
   box-shadow: var(--ring-danger);

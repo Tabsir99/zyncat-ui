@@ -190,25 +190,31 @@
   font-weight: var(--weight-medium);
 }
 
-/* validation (message colour comes from input.css) — each state holds its
-   border through hover and carries a matching focus ring */
-.fld.is-error .txa,
-.fld.is-error .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+/* validation (message colour comes from input.css) — resting border is the
+   state hue, hover darkens one step to the -text token, focus adds the ring */
+.fld.is-error .txa {
   border-color: var(--danger);
+}
+.fld.is-error .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+  border-color: var(--danger-text);
 }
 .fld.is-error .txa:focus-within {
   box-shadow: var(--ring-danger);
 }
-.fld.is-warning .txa,
-.fld.is-warning .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+.fld.is-warning .txa {
   border-color: var(--warning);
+}
+.fld.is-warning .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+  border-color: var(--warning-text);
 }
 .fld.is-warning .txa:focus-within {
   box-shadow: var(--ring-warning);
 }
-.fld.is-success .txa,
-.fld.is-success .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+.fld.is-success .txa {
   border-color: var(--success);
+}
+.fld.is-success .txa:hover:not(.is-disabled):not(.is-readonly):not(:focus-within) {
+  border-color: var(--success-text);
 }
 .fld.is-success .txa:focus-within {
   box-shadow: var(--ring-success);

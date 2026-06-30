@@ -679,6 +679,9 @@
 .tfd.is-error .tfd__box {
   border-color: var(--danger);
 }
+.tfd.is-error .tfd__box:hover:not(.is-disabled):not(:focus-within) {
+  border-color: var(--danger-text);
+}
 .tfd.is-error .tfd__box:focus-within {
   box-shadow: var(--ring-danger);
 }
