@@ -147,6 +147,14 @@ function RadioGroup({
                   disabled={isDisabled}
                   onChange={() => onChange && onChange(opt.value)}
                 />
+                {variant === 'cards' && selected && (
+                  <motion.span
+                    className="rg__card-fill"
+                    layoutId="card-fill"
+                    transition={SM.t.layout}
+                    aria-hidden="true"
+                  ></motion.span>
+                )}
                 {variant === 'cards' && opt.icon && (
                   <span className="rg-opt__icon">
                     <IconSlot>{opt.icon}</IconSlot>

@@ -241,6 +241,7 @@
    selected marker. Unlike rows, the indicator is centred vertically in the tile
    (a card isn't a single text line), so icon + body + dot share a centre line. */
 .rg--cards .rg-opt {
+  position: relative;
   align-items: center;
   padding: var(--space-4);
   background: var(--bg-surface);
@@ -276,11 +277,25 @@
   display: block;
 }
 
-/* Selected card (.is-selected — see the rows note on why not :has(:checked)) */
-.rg--cards .rg-opt.is-selected {
-  border-color: var(--accent);
+/* Selected card — the accent fill is a SHARED-ELEMENT layer (rg__card-fill,
+   layoutId) that GLIDES between cards, so the card paints no selected border or
+   background of its own; the content sits above it, only the icon recolours. */
+.rg__card-fill {
+  position: absolute;
+
+  /* cover the card's own hairline border so the accent edge replaces it */
+  inset: calc(-1 * var(--border-hairline));
+  z-index: 0;
+  border: var(--border-hairline) solid var(--accent);
+  border-radius: var(--radius-lg);
   background: var(--accent-subtle);
-  box-shadow: var(--shadow-xs);
+  pointer-events: none;
+}
+.rg--cards .rg-opt > .rg-opt__icon,
+.rg--cards .rg-opt > .rg-opt__control,
+.rg--cards .rg-opt > .rg-opt__body {
+  position: relative;
+  z-index: 1;
 }
 .rg--cards .rg-opt.is-selected .rg-opt__icon {
   color: var(--text-accent);
