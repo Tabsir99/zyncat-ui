@@ -1,6 +1,6 @@
 'use client';
 
-// StatusBadge — a status as a badge; canonical tone+label mapping; morph tweens width in place.
+// StatusBadge - a status as a badge; canonical tone+label mapping; morph tweens width in place.
 
 import * as React from 'react';
 import { Badge, type BadgeProps } from './Badge';
@@ -76,7 +76,7 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
 
     // add the new word primed below (invisible); the current word stays settled
     setWords((ws) => ws.concat({ key: nk, label: next.label, cls: 'badge__word--in' }));
-    // next frame: roll the new word in, the old out, ease the box — one tween; clip hides the wider word
+    // next frame: roll the new word in, the old out, ease the box - one tween; clip hides the wider word
     const raf = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         setWords((ws) =>
@@ -85,7 +85,7 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
         if (nextW) setBoxW(nextW);
       }),
     );
-    // old word done rolling out → drop it; width already settled in the rAF, so this only prunes the DOM
+    // old word done rolling out - drop it; width already settled in the rAF, so this only prunes the DOM
     const drop = setTimeout(
       () => setWords((ws) => ws.filter((w) => !w.cls.includes('--out'))),
       SM.dur.base * 1000 + 80,

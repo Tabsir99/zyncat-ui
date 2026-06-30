@@ -1,6 +1,6 @@
 'use client';
 
-/* select-core — shared listbox mechanics for Select + MultiSelect; holds no selection state. */
+/* select-core - shared listbox mechanics for Select + MultiSelect; holds no selection state. */
 import * as React from 'react';
 import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
@@ -101,7 +101,7 @@ export interface UseSelectMenuArgs {
   searchable: boolean;
 }
 
-/* The open-menu interaction machine — variant-blind; selection stays with the caller (isSelected/commit). */
+/* The open-menu interaction machine - variant-blind; selection stays with the caller (isSelected/commit). */
 export function useSelectMenu({
   open,
   close,
@@ -173,7 +173,7 @@ export function useSelectMenu({
     }, 0); // after the menu paints
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // keep the active row in view (manual — never scrollIntoView)
+  // keep the active row in view (manual - never scrollIntoView)
   coreUseEffect(() => {
     const list = listRef.current;
     if (!open || activeIdx < 0 || !list) return;
@@ -382,7 +382,7 @@ export interface FilterRowProps {
   children?: React.ReactNode;
 }
 
-/* Collapse wrapper for filterable rows — rows ease out instead of popping. */
+/* Collapse wrapper for filterable rows - rows ease out instead of popping. */
 export function FilterRow({ visible, children }: FilterRowProps) {
   return (
     <div
@@ -398,7 +398,7 @@ export function FilterRow({ visible, children }: FilterRowProps) {
 export function EmptyRow({ query }: { query: string }) {
   return (
     <div className="select__empty">
-      {query ? 'No matches for “' + query + '”' : 'No options available'}
+      {query ? 'No matches for "' + query + '"' : 'No options available'}
     </div>
   );
 }

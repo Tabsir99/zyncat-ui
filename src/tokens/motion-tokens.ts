@@ -1,11 +1,11 @@
-/* motion-tokens.ts — the JS↔CSS motion bridge; Motion code reads these token values, never hardcodes them. */
+/* motion-tokens.ts - the JSandCSS motion bridge; Motion code reads these token values, never hardcodes them. */
 
 import type { Transition } from 'motion/react';
 
 export type Bezier = [number, number, number, number];
 
 export interface MotionTokens {
-  /** seconds — fast 0.12 · base 0.18 · slow 0.26 */
+  /** seconds - fast 0.12 - base 0.18 - slow 0.26 */
   dur: { fast: number; base: number; slow: number };
   ease: { standard: Bezier; entrance: Bezier; exit: Bezier; spring: Bezier; glide: Bezier };
   /** ready-made Motion transitions */

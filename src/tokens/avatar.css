@@ -1,4 +1,4 @@
-/* Avatar tokens — reserved identity palette + lit-from-above face finish. */
+/* Avatar tokens - reserved identity palette + lit-from-above face finish. */
 
 :root {
   --avatar-1-bg: oklch(0.945 0.04 250);
@@ -14,7 +14,7 @@
   --avatar-6-bg: oklch(0.945 0.04 125);
   --avatar-6-fg: oklch(0.45 0.08 125);
 
-  /* Surface finish — white sheen from top, cool near-black shade from bottom (never pure black). */
+  /* Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). */
   --avatar-sheen: oklch(1 0 0 / 0.35);
   --avatar-shade: oklch(0.225 0.012 264 / 0.05);
 }

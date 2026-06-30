@@ -1,6 +1,6 @@
 'use client';
 
-/* Alert — the persistent, in-flow status message (banner is a paint modifier). */
+/* Alert - the persistent, in-flow status message (banner is a paint modifier). */
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -19,15 +19,15 @@ export interface AlertAction {
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Status of the message; info/success are polite, warning/danger assertive. Default 'info'. */
   tone?: AlertTone;
-  /** The message — sentence case, ideally one line. */
+  /** The message - sentence case, ideally one line. */
   title: React.ReactNode;
-  /** Optional description; stays neutral — tone marks the message, not the prose. */
+  /** Optional description; stays neutral - tone marks the message, not the prose. */
   children?: React.ReactNode;
   /** One action max, rendered as the system secondary small button. */
   action?: AlertAction;
-  /** Renders the always-visible ×. Uncontrolled unless `open` is given. */
+  /** Renders the always-visible close button. Uncontrolled unless `open` is given. */
   dismissible?: boolean;
-  /** Fires on ×. With `open` set, the parent owns hiding the alert. */
+  /** Fires on dismiss. With `open` set, the parent owns hiding the alert. */
   onDismiss?: () => void;
   /** Controlled visibility; omit for uncontrolled. Exit eases shut (height collapse). */
   open?: boolean;
@@ -79,7 +79,7 @@ export function Alert({
     <AnimatePresence initial={false}>
       {isOpen && (
         <motion.div
-          key="alert-shell" /* explicit key — AnimatePresence strands un-keyed conditional children */
+          key="alert-shell" /* explicit key - AnimatePresence strands un-keyed conditional children */
           className="alert-shell"
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}

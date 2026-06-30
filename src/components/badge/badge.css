@@ -1,4 +1,4 @@
-/* Badge / status pill — shape, tones, dot, status morph. */
+/* Badge / status pill - shape, tones, dot, status morph. */
 
 .badge {
   /* wire the tone vars into the glass surface hooks */
@@ -106,7 +106,7 @@
   --badge-dot: var(--danger);
 }
 
-/* Outline variant — deliberately NOT glass: a flat, engraved hairline chip. */
+/* Outline variant - deliberately NOT glass: a flat, engraved hairline chip. */
 .badge--outline {
   position: relative;
   isolation: isolate;
@@ -132,7 +132,7 @@
     var(--shadow-sm);
 }
 
-/* Status morph — a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
+/* Status morph - a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
 .badge__morph {
   position: relative;
   display: inline-grid;
@@ -164,7 +164,7 @@
   transition: none;
 }
 
-/* Odometer — each digit is a column clipping a 0–9 strip; .odo__strip--N sets the translateY (no inline styles). */
+/* Odometer - each digit is a column clipping a 0-9 strip; .odo__strip--N sets the translateY (no inline styles). */
 .odo {
   display: inline-flex;
   align-items: center;

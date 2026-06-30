@@ -1,6 +1,6 @@
 'use client';
 
-/* MultiSelect — many-of custom listbox; committing toggles a row, the menu stays open. */
+/* MultiSelect - many-of custom listbox; committing toggles a row, the menu stays open. */
 import * as React from 'react';
 import {
   useControllable as useMsControllable,
@@ -152,7 +152,7 @@ export function MultiSelect({
         show={show}
         hide={hide}
         leading={leadingIcon || (selectedOptions.length === 1 && selectedOptions[0].icon) || null}
-        text={loading ? 'Loading…' : isPlaceholder ? placeholder : selectedOptions[0].label}
+        text={loading ? 'Loading...' : isPlaceholder ? placeholder : selectedOptions[0].label}
         isPlaceholder={isPlaceholder}
         count={selectedOptions.length - 1}
       />

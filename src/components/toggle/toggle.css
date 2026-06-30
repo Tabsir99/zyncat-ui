@@ -1,4 +1,4 @@
-/* Toggle (switch) — immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
+/* Toggle (switch) - immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
 
 .sw {
   --sw-on-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
@@ -98,7 +98,7 @@
   transform: translateX(var(--tx)) scaleX(var(--sx));
   transition: transform var(--duration-base) var(--ease-spring);
 }
-/* React-set [data-on] drives travel — no :has() twin to move the thumb out from under the spring and snap it */
+/* React-set [data-on] drives travel - no :has() twin to move the thumb out from under the spring and snap it */
 .sw__track[data-on='true'] .sw__thumb {
   --tx: calc(var(--sw-w) - var(--sw-h));
 }

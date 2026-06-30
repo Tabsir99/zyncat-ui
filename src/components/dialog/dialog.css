@@ -1,6 +1,6 @@
-/* dialog.css — the styled dialog surface (Overlay owns modality + motion). */
+/* dialog.css - the styled dialog surface (Overlay owns modality + motion). */
 
-/* The panel — flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
+/* The panel - flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
 .dialog {
   --dialog-w: 32rem;
   position: relative;
@@ -28,7 +28,7 @@
   --dialog-w: 40rem;
 }
 
-/* Header — icon · heading · close; flex-start keeps a tall heading top-aligned with the badge. */
+/* Header - icon - heading - close; flex-start keeps a tall heading top-aligned with the badge. */
 .dialog__header {
   flex: 0 0 auto;
   display: flex;
@@ -85,7 +85,7 @@
   text-wrap: pretty;
 }
 
-/* close — a quiet ghost icon button; the hit box is bigger than the glyph */
+/* close - a quiet ghost icon button; the hit box is bigger than the glyph */
 .dialog__close {
   flex: 0 0 auto;
   appearance: none;
@@ -116,7 +116,7 @@
   box-shadow: var(--ring-accent);
 }
 
-/* Body — the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
+/* Body - the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
 .dialog__body {
   flex: 1 1 auto;
   min-height: 0;
@@ -153,7 +153,7 @@
   background-clip: padding-box;
 }
 
-/* Footer — right-aligned actions; gains a top divider only when the body scrolls under it. */
+/* Footer - right-aligned actions; gains a top divider only when the body scrolls under it. */
 .dialog__footer {
   flex: 0 0 auto;
   display: flex;

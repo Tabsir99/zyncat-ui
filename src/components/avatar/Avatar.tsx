@@ -1,6 +1,6 @@
 'use client';
 
-// Avatar — identity mark; content priority: image → icon → initials → silhouette.
+// Avatar - identity mark; content priority: image - icon - initials - silhouette.
 
 import * as React from 'react';
 
@@ -12,9 +12,9 @@ export type AvatarPaletteIndex = 1 | 2 | 3 | 4 | 5 | 6;
 export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Image URL. Falls back to initials / icon / silhouette if absent or fails. */
   src?: string | null;
-  /** Display name — drives initials generation, palette hash, and aria-label. */
+  /** Display name - drives initials generation, palette hash, and aria-label. */
   name?: string | null;
-  /** Content override — any React node (e.g. <Icon name="globe" />). */
+  /** Content override - any React node (e.g. <Icon name="globe" />). */
   icon?: React.ReactNode | null;
   /** 'circle' for people; 'square' for channels / brand pages. Default 'circle'. */
   shape?: AvatarShape;
@@ -22,7 +22,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: AvatarSize;
   /** Presence indicator dot at bottom-right. Default null (hidden). */
   status?: AvatarStatus | null;
-  /** Override identity slot 1–6 (blue · violet · plum · rose · clay · moss); auto from name hash when null, neutral when anonymous. */
+  /** Override identity slot 1-6 (blue - violet - plum - rose - clay - moss); auto from name hash when null, neutral when anonymous. */
   paletteIndex?: AvatarPaletteIndex | null;
 }
 

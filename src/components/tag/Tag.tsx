@@ -1,29 +1,29 @@
 'use client';
 
-/* Tag (+ TagGroup) — removable/editable label; stateless, the parent owns the list. */
+/* Tag (+ TagGroup) - removable/editable label; stateless, the parent owns the list. */
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
 
-/** Tag — the removable, editable label (stateless; the parent owns the list). */
+/** Tag - the removable, editable label (stateless; the parent owns the list). */
 export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** The label. */
   children: React.ReactNode;
   /** Your own icon node, sized small and tinted to the tag's text. */
   icon?: React.ReactNode | null;
-  /** Presence adds the × button; called on click — remove the item yourself. */
+  /** Presence adds the remove button; called on click - remove the item yourself. */
   onRemove?: (() => void) | null;
-  /** Accessible label for the ×. Defaults to "Remove {label}" for string labels. */
+  /** Accessible label for the remove button. Defaults to "Remove {label}" for string labels. */
   removeLabel?: string;
-  /** 'md' = 28px (default) · 'sm' = 24px for dense rows. */
+  /** 'md' = 28px (default) - 'sm' = 24px for dense rows. */
   size?: 'md' | 'sm';
   disabled?: boolean;
   className?: string;
 }
 
-/** TagGroup — wrapping flex row + removal/insertion choreography. */
+/** TagGroup - wrapping flex row + removal/insertion choreography. */
 export interface TagGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Accessible name for the group (role="group"). */
   label?: string;
@@ -51,7 +51,7 @@ function tagRestProps(props: Record<string, unknown>, own: Record<string, number
   return rest;
 }
 
-/* The × — drawn inline (path-level, per §D) so it can wind up on hover. */
+/* The remove glyph - drawn inline (path-level, per section D) so it can wind up on hover. */
 function TagRemoveGlyph() {
   return (
     <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">

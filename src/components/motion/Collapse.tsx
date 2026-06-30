@@ -1,6 +1,6 @@
 'use client';
 
-// Collapse — open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
+// Collapse - open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
 
 import type { HTMLAttributes } from 'react';
 

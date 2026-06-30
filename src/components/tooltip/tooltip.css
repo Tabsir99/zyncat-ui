@@ -1,4 +1,4 @@
-/* tooltip.css — the floating tooltip surface (one shared bubble). */
+/* tooltip.css - the floating tooltip surface (one shared bubble). */
 
 .tooltip {
   position: fixed;
@@ -26,7 +26,7 @@
   top: 0;
 }
 
-/* default trigger wrapper — display:contents, so it adds no layout; carries the listeners + rect */
+/* default trigger wrapper - display:contents, so it adds no layout; carries the listeners + rect */
 .tooltip-anchor {
   display: contents;
 }
@@ -70,7 +70,7 @@
   white-space: nowrap;
 }
 
-/* Multi-line content — rich nodes style themselves with these; keep hierarchy minimal. */
+/* Multi-line content - rich nodes style themselves with these; keep hierarchy minimal. */
 .tooltip strong {
   font-weight: var(--weight-medium);
   color: var(--text-strong);

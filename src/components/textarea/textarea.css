@@ -1,4 +1,4 @@
-/* textarea.css — Textarea (multiline composer): the .txa box over the .fld shell, auto-grow, char meter, over-limit highlight. */
+/* textarea.css - Textarea (multiline composer): the .txa box over the .fld shell, auto-grow, char meter, over-limit highlight. */
 
 .txa {
   --txa-pad-y: var(--space-3);
@@ -29,7 +29,7 @@
   background: var(--bg-subtle);
 }
 
-/* The .txa__stack wrapper owns the height and is the only thing that animates; overflow:clip while growing (a clip box can't scroll to the caret → no jump), flipped to auto by JS only past max-rows. */
+/* The .txa__stack wrapper owns the height and is the only thing that animates; overflow:clip while growing (a clip box can't scroll to the caret - no jump), flipped to auto by JS only past max-rows. */
 .txa__stack {
   position: relative;
   min-height: calc(var(--txa-min-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));

@@ -5,10 +5,10 @@ export function Home() {
   return (
     <>
       <header className="hero">
-        <p className="hero__eyebrow">premium-ui</p>
+        <p className="hero__eyebrow">premium-ds</p>
         <h1 className="hero__title">A calm, polished React design system.</h1>
         <p className="hero__lede">
-          Modern CSS and a small, closed token vocabulary — restraint over decoration, motion that
+          Modern CSS and a small, closed token vocabulary - restraint over decoration, motion that
           never teleports. Everything here is rendered live from the package.
         </p>
         <div className="chips">
@@ -22,7 +22,7 @@ export function Home() {
             <b>0</b> deps beyond peers
           </span>
           <span className="chip">token-driven theming</span>
-          <span className="chip">Next · Vite · Remix</span>
+          <span className="chip">Next - Vite - Remix</span>
         </div>
       </header>
 

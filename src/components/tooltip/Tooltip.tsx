@@ -1,6 +1,6 @@
 'use client';
 
-/* Tooltip — a transient, non-interactive hint on hover/focus (one shared bubble). */
+/* Tooltip - a transient, non-interactive hint on hover/focus (one shared bubble). */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -43,7 +43,7 @@ const TIP_GAP =
     ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--space-2')) || 8
     : 8;
 
-/* Store — what's showing, where; triggers write, the host renders. */
+/* Store - what's showing, where; triggers write, the host renders. */
 const store = {
   active: null as ActivePayload | null,
   closeTimer: 0 as ReturnType<typeof setTimeout> | 0,
@@ -133,7 +133,7 @@ function Body({ a, width }: { a: ActivePayload; width?: number }) {
   );
 }
 
-/* Host — the one bubble + its hidden measuring twin. */
+/* Host - the one bubble + its hidden measuring twin. */
 function TooltipHost() {
   const active = useSyncExternalStore(store.subscribe, store.get);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -246,9 +246,9 @@ const chain = (theirs: ((e: any) => void) | undefined, mine: (e: any) => void) =
   mine(e);
 };
 
-/* Trigger — reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
+/* Trigger - reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
 export interface TooltipProps {
-  /** The hint — a string or small node; never interactive content. */
+  /** The hint - a string or small node; never interactive content. */
   content: ReactNode;
   /** Optional keyboard hint, rendered as mono metadata ("⌘↩", "S"). */
   shortcut?: string | null;
@@ -260,7 +260,7 @@ export interface TooltipProps {
   openDelay?: number;
   /** ms the bubble lingers after leaving (bridges moving to a neighbour). Default 140. */
   closeDelay?: number;
-  /** Skip the wrapper — clone the child and merge handlers + ref onto it (child must take a ref). Default false. */
+  /** Skip the wrapper - clone the child and merge handlers + ref onto it (child must take a ref). Default false. */
   asChild?: boolean;
   id?: string;
   /** Exactly one element; any element works by default, asChild requires one that accepts a ref. */
@@ -344,7 +344,7 @@ function Tooltip({
     );
   }
 
-  // asChild: clone the child, merging our handlers + ref (a press dismisses: activating ≠ hinting).
+  // asChild: clone the child, merging our handlers + ref (a press dismisses: activating != hinting).
   const child = React.Children.only(children) as ReactElement & { ref?: any };
   const childRef = child.ref;
   const childProps = child.props as any;

@@ -11,7 +11,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "paths": { "premium-ui": ["../src/index.ts"] }
+    "paths": { "premium-ds": ["../src/index.ts"] }
   },
   "include": ["src", "vite.config.ts"]
 }

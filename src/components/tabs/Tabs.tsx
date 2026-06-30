@@ -1,40 +1,40 @@
 'use client';
 
-// Tabs.tsx — Tabs: line tabs for view switching.
+// Tabs.tsx - Tabs: line tabs for view switching.
 // Sits on a hairline baseline; a single accent ink marks the active view.
 // `TabPanel` is the matching content wrapper (aria wiring + directional
 // entrance). All styling lives in tabs.css; this file composes class names
 // and drives the ink.
 //
-// TWO MOTIONS, BOTH IMPLICIT — consumers configure neither.
+// TWO MOTIONS, BOTH IMPLICIT - consumers configure neither.
 //
-// 1 — "the ink reaches, then releases" (selection).
+// 1 - "the ink reaches, then releases" (selection).
 // One persistent ink node. On selection, the edge facing the destination
 // travels FIRST (the ink stretches across the gap, ease-standard), then the
 // trailing edge releases and settles (ease-entrance). Implemented as Motion
-// keyframes on x (transform) + width (measured px → measured px — the
-// surfaced §C morph exception, Tooltip precedent: the destination width is
+// keyframes on x (transform) + width (measured px - measured px - the
+// surfaced section C morph exception, Tooltip precedent: the destination width is
 // unknowable to transforms, and scaleX would distort the radius). Interrupts
 // are honest: a new travel starts from the ink's LIVE rect, not the last
 // target. Reduced motion: tokens collapse durations, and placement falls
 // back to an instant set.
 //
-// 2 — the gliding hover. ONE shared pill instead of per-tab hover
-// backgrounds: it fades in under the first tab the pointer touches, GLIDES —
-// morphing position and width — as the pointer moves along the row, and
+// 2 - the gliding hover. ONE shared pill instead of per-tab hover
+// backgrounds: it fades in under the first tab the pointer touches, GLIDES -
+// morphing position and width - as the pointer moves along the row, and
 // fades out when it leaves. Declarative: a `layoutId` node conditionally
-// rendered inside the hovered tab — Motion's FLIP owns the travel. Tab-to-tab
+// rendered inside the hovered tab - Motion's FLIP owns the travel. Tab-to-tab
 // is an ATOMIC remount: old pill out + new pill in within one commit, so
 // exactly one node carries the layoutId per frame. (AnimatePresence is
 // deliberately NOT used here: it holds the exiting pill for a tick, two
-// same-layoutId nodes overlap, and the handoff can hide both for a frame —
+// same-layoutId nodes overlap, and the handoff can hide both for a frame -
 // an intermittent white flicker.) True leave keeps the pill MOUNTED in the
 // last tab and fades it via `animate`; the engine's completion callback
-// unmounts it — no hand-rolled exit timer. Hover state is per-tab
-// pointerenter (disabled buttons don't fire it, so the pill holds — same for
+// unmounts it - no hand-rolled exit timer. Hover state is per-tab
+// pointerenter (disabled buttons don't fire it, so the pill holds - same for
 // the gaps); only pointerleave of the LIST starts the fade-out.
 //
-// Keyboard (WAI-ARIA tabs, automatic activation): roving tabindex; ←/→ cycle
+// Keyboard (WAI-ARIA tabs, automatic activation): roving tabindex; left/right arrows cycle
 // (wrapping, skipping disabled), Home/End jump; selection follows focus.
 // Overflow is honest: the row scrolls, clipped edges fade (data-fade set from
 // scroll geometry), and the selected tab is kept in view.
@@ -48,10 +48,10 @@ const TabsSM = UIMotion;
 
 /** One tab in the row. */
 export interface TabItem {
-  /** Stable identity — also used in the tab/panel id pair. */
+  /** Stable identity - also used in the tab/panel id pair. */
   value: string;
   label: React.ReactNode;
-  /** Leading icon — your own node. */
+  /** Leading icon - your own node. */
   icon?: React.ReactNode;
   /** Rendered mono + tabular. Pass a number or a preformatted string. */
   count?: number | string;
@@ -60,16 +60,16 @@ export interface TabItem {
 
 export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   items: TabItem[];
-  /** Controlled — the value of the active tab (null/undefined hides the ink). */
+  /** Controlled - the value of the active tab (null/undefined hides the ink). */
   value: string | null | undefined;
   /**
    * Fires on click and on arrow-key travel (automatic activation).
-   * `dir` is the direction of travel (+1 right / −1 left) — hand it to
+   * `dir` is the direction of travel (+1 right / -1 left) - hand it to
    * TabPanel so content enters from the side the user moved toward.
    */
   onChange?: (value: string, dir: 1 | -1) => void;
   /**
-   * Shared id prefix wiring tab ↔ panel aria. Give Tabs and its TabPanel the
+   * Shared id prefix wiring tab and panel aria. Give Tabs and its TabPanel the
    * same `name`; omit it when the tabs have no managed panel.
    */
   name?: string;
@@ -77,10 +77,10 @@ export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'o
   label?: string;
 }
 
-/* Scroll-geometry constants (px) — measurement math, not styling.
-   EDGE_PAD ≈ --space-6: breathing room kept between the selected tab and a
+/* Scroll-geometry constants (px) - measurement math, not styling.
+   EDGE_PAD ~ --space-6: breathing room kept between the selected tab and a
    faded edge. ENTER_X: TabPanel's entrance travel (bespoke motion geometry,
-   like Tooltip's offsets — there is no spatial motion token). */
+   like Tooltip's offsets - there is no spatial motion token). */
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 10;
 
@@ -104,7 +104,7 @@ export function Tabs({
   const valueRef = React.useRef(value);
   valueRef.current = value;
 
-  /* The gliding hover — the only state here. `hovered` is STICKY (the last
+  /* The gliding hover - the only state here. `hovered` is STICKY (the last
      tab the pointer touched; it outlives the pointer so the leave-fade plays
      in place), `inList` is whether the pointer is currently in the row.
      wasInRef (one render behind) picks the entrance: fresh entry = fade in
@@ -117,7 +117,7 @@ export function Tabs({
     wasInRef.current = inList;
   });
 
-  /* Place the ink under the active tab — instantly (mount, resize, reduced
+  /* Place the ink under the active tab - instantly (mount, resize, reduced
      motion) or as the reach-then-release travel. Coordinates are offsetLeft
      space (layout, scroll-independent) since the ink lives in the scroller. */
   const place = (animated: boolean) => {
@@ -165,7 +165,7 @@ export function Tabs({
     placedRef.current = true;
   };
 
-  /* Edge fades: pure scroll geometry → data-fade="start end" on the list. */
+  /* Edge fades: pure scroll geometry - data-fade="start end" on the list. */
   const updateEdges = () => {
     const l = listRef.current;
     if (!l) return;
@@ -232,7 +232,7 @@ export function Tabs({
     if (el) el.focus();
   };
 
-  /* Roving tabindex — the selected tab is the stop; if nothing is selected
+  /* Roving tabindex - the selected tab is the stop; if nothing is selected
      yet, the first enabled tab takes it so the list stays reachable. */
   const focusValue = items.some((i) => i.value === value && !i.disabled)
     ? value
@@ -242,7 +242,7 @@ export function Tabs({
     <div className={('tabs ' + className).trim()} {...rest}>
       {/* layoutScroll: the pill FLIPs correctly even while this row is being
           scrolled. NOTE: framer-motion@12.40.0's UMD dev build prints a
-          spurious React key warning when any motion component mounts —
+          spurious React key warning when any motion component mounts -
           pre-existing and system-wide (stable Toggle prints the same one at
           load), harmless, dev-only. Not caused by, or fixable in, this code. */}
       <tabsMotion.div
@@ -291,7 +291,7 @@ export function Tabs({
                     initial={wasInRef.current ? false : { opacity: 0 }}
                     animate={{ opacity: inList ? 1 : 0 }}
                     transition={{
-                      /* glide: slow travel, soft-start (ease.standard) — for
+                      /* glide: slow travel, soft-start (ease.standard) - for
                          continuous hover sweeps the early gentle pickup reads
                          better than the fuller in-out (--ease-glide). Fresh
                          entry snaps in place instead of gliding from a stale
@@ -322,20 +322,20 @@ export function Tabs({
 }
 
 export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'dir'> {
-  /** The active tab's value — changing it cuts to the new content. */
+  /** The active tab's value - changing it cuts to the new content. */
   tab: string;
-  /** Same `name` as the paired Tabs — wires role/id/aria-labelledby. */
+  /** Same `name` as the paired Tabs - wires role/id/aria-labelledby. */
   name?: string;
   /** Direction of travel from Tabs' onChange; 0 = plain fade. */
   dir?: -1 | 0 | 1;
   children?: React.ReactNode;
 }
 
-// TabPanel — the content side of a Tabs pair. The ROOT is static chrome:
+// TabPanel - the content side of a Tabs pair. The ROOT is static chrome:
 // whatever border/padding/background the consumer styles it with never
 // moves. Switching `tab` cuts to the new content, then ONLY the inner
 // content node enters from the direction of travel (pass Tabs' onChange dir
-// through) via an imperative Motion tween on one persistent node — same
+// through) via an imperative Motion tween on one persistent node - same
 // resolved pattern as Tooltip's content: cut + entrance, no exit
 // choreography, and no remount, so first paint is naturally static.
 export function TabPanel({ tab, name, dir = 0, className = '', children, ...rest }: TabPanelProps) {

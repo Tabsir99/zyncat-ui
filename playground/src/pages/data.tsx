@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Avatar, AvatarGroup, Tag, ToggleTag, TagGroup, Table, Pagination, Badge, type TableColumn } from 'premium-ui';
+import {
+  Avatar,
+  AvatarGroup,
+  Tag,
+  ToggleTag,
+  TagGroup,
+  Table,
+  Pagination,
+  Badge,
+  type TableColumn,
+} from 'premium-ds';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
@@ -19,13 +29,13 @@ export function AvatarPage() {
         <Avatar name="Dee Okafor" status="busy" />
         <Avatar name="Eli Stone" status="offline" />
       </Demo>
-      <Demo label="image · initials · square · anonymous">
+      <Demo label="image - initials - square - anonymous">
         <Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" status="online" />
         <Avatar name="Bo Park" paletteIndex={5} />
         <Avatar name="Acme" shape="square" icon={<span>AC</span>} />
         <Avatar />
       </Demo>
-      <Demo label="AvatarGroup · overflow +N">
+      <Demo label="AvatarGroup - overflow +N">
         <AvatarGroup max={4} size="sm">
           <Avatar name="Ana Ng" />
           <Avatar name="Bo Park" />
@@ -53,7 +63,7 @@ export function TagPage() {
   const [filters, setFilters] = useState<string[]>(['Open', 'Merged']);
   return (
     <>
-      <Demo label="static · icon · sizes · disabled">
+      <Demo label="static - icon - sizes - disabled">
         <Tag>Spring 2026</Tag>
         <Tag icon={<Icon name="hash" />}>label</Tag>
         <Tag size="sm">dense row</Tag>
@@ -61,23 +71,34 @@ export function TagPage() {
           locked
         </Tag>
       </Demo>
-      <Demo label="TagGroup · removable">
+      <Demo label="TagGroup - removable">
         <TagGroup label="Labels">
           {labels.map((l) => (
-            <Tag key={l.id} icon={l.icon} removeLabel={`Remove ${l.name}`} onRemove={() => setLabels((list) => list.filter((x) => x.id !== l.id))}>
+            <Tag
+              key={l.id}
+              icon={l.icon}
+              removeLabel={`Remove ${l.name}`}
+              onRemove={() => setLabels((list) => list.filter((x) => x.id !== l.id))}
+            >
               {l.name}
             </Tag>
           ))}
         </TagGroup>
       </Demo>
-      <Demo label="ToggleTag · many-of-many (controlled)">
+      <Demo label="ToggleTag - many-of-many (controlled)">
         {FILTERS.map((label) => (
-          <ToggleTag key={label} selected={filters.includes(label)} onChange={(next) => setFilters((sel) => (next ? [...sel, label] : sel.filter((x) => x !== label)))}>
+          <ToggleTag
+            key={label}
+            selected={filters.includes(label)}
+            onChange={(next) =>
+              setFilters((sel) => (next ? [...sel, label] : sel.filter((x) => x !== label)))
+            }
+          >
             {label}
           </ToggleTag>
         ))}
       </Demo>
-      <Demo label="ToggleTag · icon + count">
+      <Demo label="ToggleTag - icon + count">
         <ToggleTag icon={<Icon name="star" />} count={48} defaultSelected>
           Starred
         </ToggleTag>
@@ -108,10 +129,42 @@ const STATUS_TONE: Record<InvoiceStatus, 'success' | 'warning' | 'danger' | unde
 };
 
 const INVOICES: Invoice[] = [
-  { id: 'i1', number: 'INV-2041', customer: 'Northwind', status: 'paid', date: 'Jun 12', ts: 1718, amount: 4820 },
-  { id: 'i2', number: 'INV-2042', customer: 'Acme Inc', status: 'pending', date: 'Jun 14', ts: 1718.2, amount: 1290 },
-  { id: 'i3', number: 'INV-2043', customer: 'Globex', status: 'draft', date: '—', ts: 0, amount: 0 },
-  { id: 'i4', number: 'INV-2044', customer: 'Initech', status: 'overdue', date: 'May 30', ts: 1717, amount: 760 },
+  {
+    id: 'i1',
+    number: 'INV-2041',
+    customer: 'Northwind',
+    status: 'paid',
+    date: 'Jun 12',
+    ts: 1718,
+    amount: 4820,
+  },
+  {
+    id: 'i2',
+    number: 'INV-2042',
+    customer: 'Acme Inc',
+    status: 'pending',
+    date: 'Jun 14',
+    ts: 1718.2,
+    amount: 1290,
+  },
+  {
+    id: 'i3',
+    number: 'INV-2043',
+    customer: 'Globex',
+    status: 'draft',
+    date: '-',
+    ts: 0,
+    amount: 0,
+  },
+  {
+    id: 'i4',
+    number: 'INV-2044',
+    customer: 'Initech',
+    status: 'overdue',
+    date: 'May 30',
+    ts: 1717,
+    amount: 760,
+  },
 ];
 
 const COLUMNS: TableColumn<Invoice>[] = [
@@ -127,19 +180,28 @@ const COLUMNS: TableColumn<Invoice>[] = [
     ),
   },
   { key: 'date', label: 'Date', mono: true, sortable: true, sortBy: (r) => r.ts },
-  { key: 'amount', label: 'Amount', mono: true, align: 'end', sortable: true, render: (r) => (r.amount ? `$${r.amount.toLocaleString()}` : '—') },
+  {
+    key: 'amount',
+    label: 'Amount',
+    mono: true,
+    align: 'end',
+    sortable: true,
+    render: (r) => (r.amount ? `$${r.amount.toLocaleString()}` : '-'),
+  },
 ];
 
 export function TablePage() {
   return (
-    <Demo label="sortable · status cell · selectable · footer" fill>
+    <Demo label="sortable - status cell - selectable - footer" fill>
       <Table<Invoice>
         label="Invoices"
         columns={COLUMNS}
         rows={INVOICES}
         selectable
         defaultSort={{ key: 'amount', dir: 'desc' }}
-        footer={<Pagination label="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />}
+        footer={
+          <Pagination label="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />
+        }
       />
     </Demo>
   );
@@ -165,7 +227,7 @@ export function PaginationPage() {
           onNext={() => setStart((s) => s + PAGE_SIZE)}
         />
       </Demo>
-      <Demo label="endless · no total">
+      <Demo label="endless - no total">
         <Pagination label="Activity" range={[101, 125]} hasPrev hasNext />
       </Demo>
     </>

@@ -1,4 +1,4 @@
-/* Type system — two families, three weights, a 9-step ramp with matched leading + tracking. */
+/* Type system - two families, three weights, a 9-step ramp with matched leading + tracking. */
 
 :root {
   --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -28,7 +28,7 @@
   --leading-display: 2.375rem;
   --leading-display-lg: 2.875rem;
 
-  /* Measure — line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. */
+  /* Measure - line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. */
   --measure-floating: 36ch;
 
   --tracking-caps: 0.04em;
@@ -37,7 +37,7 @@
   --tracking-tighter: -0.016em;
   --tracking-display: -0.021em;
 
-  /* Role bundles — size + leading + weight + tracking, pre-composed; reach for these first. */
+  /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. */
   --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg)
     var(--font-sans);
   --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans);

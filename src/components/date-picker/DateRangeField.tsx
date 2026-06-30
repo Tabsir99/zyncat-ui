@@ -1,6 +1,6 @@
 'use client';
 
-/* DateRangeField — DateField's sibling for { start, end }: a Linear/Notion two-click range; the Overlay switches popover↔sheet by viewport. */
+/* DateRangeField - DateField's sibling for { start, end }: a Linear/Notion two-click range; the Overlay switches popoverandsheet by viewport. */
 
 import * as React from 'react';
 import { motion } from 'motion/react';
@@ -49,7 +49,7 @@ function drpRangeText(start: string, end: string): string {
   const curYear = new Date().getFullYear();
   const startYr = !sameYear || drpParse(start).getFullYear() !== curYear;
   const endYr = drpParse(end).getFullYear() !== curYear;
-  return drpDisplay(start, startYr) + ' – ' + drpDisplay(end, endYr);
+  return drpDisplay(start, startYr) + ' - ' + drpDisplay(end, endYr);
 }
 const drpDays = (start: string, end: string): number =>
   Math.round((+drpParse(end) - +drpParse(start)) / 86400000) + 1;
@@ -119,7 +119,7 @@ function DrpPanel({
     m: seed.getMonth(),
   });
 
-  /* anchor !== null ⇒ a range is being dragged open (awaiting the 2nd pick) */
+  /* anchor !== null - a range is being dragged open (awaiting the 2nd pick) */
   const [anchor, setAnchor] = useState<string | null>(null);
   const [hoverKey, setHoverKey] = useState<string | null>(null);
   const [focusKey, setFocusKey] = useState<string>(seedKey);
@@ -128,13 +128,13 @@ function DrpPanel({
   const presetsRef = useRef<HTMLDivElement>(null);
   const pendingFocusRef = useRef(false);
 
-  /* gliding hover pill per zone (see glide-pill); hoverKey drives the preview band, not the pill — the pill idles once an anchor is set. */
+  /* gliding hover pill per zone (see glide-pill); hoverKey drives the preview band, not the pill - the pill idles once an anchor is set. */
   const grid = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
 
   const inBounds = (key: string): boolean => (!min || key >= min) && (!max || key <= max);
 
-  /* effective lo/hi for PAINT: mid-selection ⇒ anchor↔hover; else committed */
+  /* effective lo/hi for PAINT: mid-selection - anchorandhover; else committed */
   let lo: string | null = null,
     hi: string | null = null,
     provisional = false;
@@ -178,7 +178,7 @@ function DrpPanel({
     });
   }
 
-  /* directional month slide via CSS keyframe on a keyed grid remount — Motion animate() fights the layoutId caps; direction from the viewIdx delta, the first mount gets none. */
+  /* directional month slide via CSS keyframe on a keyed grid remount - Motion animate() fights the layoutId caps; direction from the viewIdx delta, the first mount gets none. */
   const viewIdx = view.y * 12 + view.m;
   const prevViewIdxRef = useRef(viewIdx);
   const navDir = prevViewIdxRef.current === viewIdx ? 0 : viewIdx > prevViewIdxRef.current ? 1 : -1;
@@ -257,7 +257,7 @@ function DrpPanel({
     const extL = band && !isLo && col !== 0;
     const extR = band && !isHi && col !== 6;
 
-    /* a boundary date shows in two cells (two-month view); the cap is a shared-layoutId node, so render it in exactly one — the in-month cell. */
+    /* a boundary date shows in two cells (two-month view); the cap is a shared-layoutId node, so render it in exactly one - the in-month cell. */
     const capHere = months === 1 || !out;
     const loCap = isLo && capHere;
     const hiCap = isHi && !single && capHere;
@@ -426,7 +426,7 @@ function DrpPanel({
             <React.Fragment>
               {drpRangeText(lo, hi)}{' '}
               <span className="drp__count">
-                · {drpDays(lo, hi)} {drpDays(lo, hi) === 1 ? 'day' : 'days'}
+                - {drpDays(lo, hi)} {drpDays(lo, hi) === 1 ? 'day' : 'days'}
               </span>
             </React.Fragment>
           ) : anchor ? (
@@ -446,14 +446,14 @@ function DrpPanel({
 }
 
 export interface DateRangeFieldProps {
-  /** Controlled value — both endpoints, or null when empty. */
+  /** Controlled value - both endpoints, or null when empty. */
   value?: DateRange | null;
   defaultValue?: DateRange | null;
   /** Fires only on a COMPLETE range (a lone anchor never commits). */
   onChange?: (value: DateRange) => void;
   label?: string;
   placeholder?: string;
-  /** IANA timezone (e.g. 'Europe/Riga') — display context, shown in the footer. */
+  /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
   timezone?: string;
   /** Earliest pickable date, 'YYYY-MM-DD', inclusive. */
   min?: string;

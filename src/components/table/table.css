@@ -1,4 +1,4 @@
-/* Table — geometry + paint: sticky header, sortable columns, row selection + bulk bar, pinned identity column. */
+/* Table - geometry + paint: sticky header, sortable columns, row selection + bulk bar, pinned identity column. */
 
 .tbl,
 .tbl * {
@@ -9,7 +9,7 @@
   --tbl-pad-y: var(--space-3);
   --tbl-head-py: var(--space-3);
   --tbl-head-h: calc(var(--leading-caption) + 2 * var(--tbl-head-py));
-  /* checkbox column: pad 8 + (8 + 18 + 8 hit area) + pad 8 — all tokens */
+  /* checkbox column: pad 8 + (8 + 18 + 8 hit area) + pad 8 - all tokens */
   --tbl-check-w: calc(var(--control-box) + 4 * var(--space-2));
 
   position: relative;
@@ -31,7 +31,7 @@
 
 .tbl__viewport {
   position: relative;
-  display: flex; /* flex sizing, not % height — % inside a max-height parent resolves to auto, scroller would grow to content */
+  display: flex; /* flex sizing, not % height - % inside a max-height parent resolves to auto, scroller would grow to content */
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
@@ -76,14 +76,14 @@
   font: var(--type-body);
   color: var(--text-body);
   vertical-align: middle;
-  white-space: nowrap; /* data tables don't wrap — grow column absorbs slack; overflow scrolls + pins */
+  white-space: nowrap; /* data tables don't wrap - grow column absorbs slack; overflow scrolls + pins */
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
 .tbl__table tbody tr:last-child td {
   border-bottom: 0;
 }
 
-/* outermost cells breathe a step more (16) — sortables do it via the button */
+/* outermost cells breathe a step more (16) - sortables do it via the button */
 .tbl__table th:first-child:not(.tbl__cell--check):not(.tbl__cell--sortable),
 .tbl__table td:first-child:not(.tbl__cell--check) {
   padding-inline-start: var(--space-4);
@@ -93,7 +93,7 @@
   padding-inline-end: var(--space-4);
 }
 
-/* one opaque --row-bg per row, read by every cell — stays opaque so sticky cells cover scrolled content */
+/* one opaque --row-bg per row, read by every cell - stays opaque so sticky cells cover scrolled content */
 .tbl__row {
   --row-bg: var(--bg-surface);
 }
@@ -203,7 +203,7 @@
 }
 .tbl__cbx .cbx__box {
   margin-top: 0;
-} /* no label → no baseline offset */
+} /* no label - no baseline offset */
 
 /* bulk bar: absolute overlay that morphs from the header; the delayed visibility flip removes it from paint + tab order only after the exit fade, while pointer-events dies on close */
 .tbl__bulk {
@@ -268,7 +268,7 @@
   left: var(--tbl-check-w);
 }
 
-/* soft cast off the pinned edge once content scrolls behind it (gradient exception, §B3) */
+/* soft cast off the pinned edge once content scrolls behind it (gradient exception, section B3) */
 .tbl--pin .tbl__cell--pinEdge::after {
   content: '';
   position: absolute;
@@ -335,7 +335,7 @@
   border-top: var(--border-hairline) solid var(--border-subtle);
 }
 
-/* column collapse at container breakpoints — 30rem / 42rem are intentional constants (no breakpoint tokens yet) */
+/* column collapse at container breakpoints - 30rem / 42rem are intentional constants (no breakpoint tokens yet) */
 @container (max-width: 42rem) {
   .tbl__cell--hide-md {
     display: none;

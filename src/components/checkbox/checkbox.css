@@ -1,4 +1,4 @@
-/* Checkbox — on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
+/* Checkbox - on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
 
 .cbx {
   --cbx-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
@@ -7,7 +7,7 @@
   --cbx-ring: var(--ring-accent);
   --cbx-size: var(--control-box);
   --cbx-radius: var(--radius-sm);
-  --tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ≈ the polyline path length */
+  --tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ~ the polyline path length */
   --fill: 0;
   --tick: 0;
   --dash: 0;
@@ -85,7 +85,7 @@
     position: absolute;
     inset: 0;
 
-    /* inner corner = outer radius − border, so the fill reaches the corners (no --bg-inset showing) */
+    /* inner corner = outer radius - border, so the fill reaches the corners (no --bg-inset showing) */
     border-radius: calc(var(--cbx-radius) - var(--border-hairline));
     background: var(--cbx-fill);
     opacity: var(--fill);
@@ -96,7 +96,7 @@
   }
 }
 
-/* stagger lives in the delay: draw-on waits a beat (calc · --tick), retract fires immediately */
+/* stagger lives in the delay: draw-on waits a beat (calc - --tick), retract fires immediately */
 .cbx__mark {
   position: relative;
   display: block;

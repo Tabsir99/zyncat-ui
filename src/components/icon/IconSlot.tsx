@@ -1,6 +1,6 @@
 'use client';
 
-// IconSlot — sizes a consumer-supplied icon node to the --icon-* tokens and currentColor.
+// IconSlot - sizes a consumer-supplied icon node to the --icon-* tokens and currentColor.
 
 import type { ReactNode } from 'react';
 import type { IconSize } from './Icon';

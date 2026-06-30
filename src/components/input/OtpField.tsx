@@ -1,6 +1,6 @@
 'use client';
 
-// OtpField.tsx — segmented one-time-code input: mono slots, auto-advance, arrow nav, paste-to-fill, grouping.
+// OtpField.tsx - segmented one-time-code input: mono slots, auto-advance, arrow nav, paste-to-fill, grouping.
 
 import { useRef } from 'react';
 import type {
@@ -19,7 +19,7 @@ export interface OtpFieldProps {
   value?: string;
   /** Called with the next value string. */
   onChange?: (value: string) => void;
-  /** Insert a separator every N slots (e.g. 3 → "•••–•••"). */
+  /** Insert a separator every N slots (e.g. 3 - "-------"). */
   group?: number;
   /** Error state (red slots + ring). */
   error?: boolean;

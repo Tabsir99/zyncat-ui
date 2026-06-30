@@ -1,4 +1,4 @@
-/* Glass surface — translucent tint + backdrop blur + a sheen layer; consumer sets --glass-tint and --glass-fg. */
+/* Glass surface - translucent tint + backdrop blur + a sheen layer; consumer sets --glass-tint and --glass-fg. */
 
 .glass {
   --glass-fg: var(--text-body);
@@ -22,7 +22,7 @@
     background-color var(--duration-base) var(--ease-standard);
 }
 
-/* Sheen on its own layer so hover animates opacity/transform — gradients can't transition directly. */
+/* Sheen on its own layer so hover animates opacity/transform - gradients can't transition directly. */
 .glass::before {
   content: '';
   position: absolute;
@@ -57,7 +57,7 @@
   transform: translateY(-8%);
 }
 
-/* Glint — one-shot light sweep; add .glass-glint to fire, remove after it ends (sits above content, z-index 2). */
+/* Glint - one-shot light sweep; add .glass-glint to fire, remove after it ends (sits above content, z-index 2). */
 .glass-glint::after {
   content: '';
   position: absolute;
@@ -65,7 +65,7 @@
   z-index: 2;
   border-radius: inherit;
   pointer-events: none;
-  opacity: 0; /* resting state is invisible — no mid-sweep flash */
+  opacity: 0; /* resting state is invisible - no mid-sweep flash */
   background: linear-gradient(118deg, transparent 36%, rgb(255 255 255 / 0.7) 50%, transparent 64%);
   animation: glass-glint var(--duration-slow) var(--ease-standard) 1 forwards;
 }

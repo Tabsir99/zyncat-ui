@@ -1,4 +1,4 @@
-/* toast.css — the glass notification card, tinted per tone (a draining timer ring). */
+/* toast.css - the glass notification card, tinted per tone (a draining timer ring). */
 
 .toast-viewport {
   position: fixed;
@@ -12,9 +12,9 @@
   pointer-events: none; /* only the cards themselves are live */
 }
 
-/* The card — a glass consumer (.glass is set in JSX). */
+/* The card - a glass consumer (.glass is set in JSX). */
 .toast {
-  /* tone hooks — set by [data-tone] below */
+  /* tone hooks - set by [data-tone] below */
   --toast-hue: var(--text-subtle);
   --glass-fg: var(--text-strong);
   --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
@@ -30,7 +30,7 @@
   transform-origin: center bottom; /* the stack recedes upward           */
   border-radius: var(--radius-lg);
 
-  /* Motion owns transform — keep only the color/shadow transitions (never smooth Motion's writes) */
+  /* Motion owns transform - keep only the color/shadow transitions (never smooth Motion's writes) */
   transition:
     background-color var(--duration-base) var(--ease-standard),
     box-shadow var(--duration-base) var(--ease-standard);
@@ -76,7 +76,7 @@
   transition: var(--transition-opacity);
 }
 
-/* the dial — glyph centered in the timer ring; one instrument, not two */
+/* the dial - glyph centered in the timer ring; one instrument, not two */
 .toast__icon {
   position: relative;
   flex: none;
@@ -91,7 +91,7 @@
   place-items: center;
 }
 
-/* the ring — a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
+/* the ring - a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
 .toast__ring {
   position: absolute;
   inset: 0;
@@ -110,7 +110,7 @@
 .toast__ring-arc {
   stroke: var(--toast-hue);
   stroke-linecap: round;
-  stroke-dasharray: 1; /* pathLength=1 — offset is a fraction */
+  stroke-dasharray: 1; /* pathLength=1 - offset is a fraction */
   animation-name: toast-ring;
   animation-timing-function: linear;
   animation-fill-mode: both;
@@ -144,7 +144,7 @@
   text-wrap: pretty;
 }
 
-/* coalesce counter — same toast refired becomes ×n (mono) */
+/* coalesce counter - same toast refired becomes a xN counter (mono) */
 .toast__count {
   flex: none;
   font-family: var(--font-mono);
@@ -161,7 +161,7 @@
   flex: none;
 }
 
-/* dismiss — appears only while the card is hovered or holds focus */
+/* dismiss - appears only while the card is hovered or holds focus */
 .toast__close {
   flex: none;
   appearance: none;
@@ -198,7 +198,7 @@
   opacity: 1;
 }
 
-/* Loading spinner — continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
+/* Loading spinner - continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
 .toast__spinner {
   display: block;
   box-sizing: border-box;
@@ -216,7 +216,7 @@
   }
 }
 
-/* Custom slot — bare neutral glass; the consumer owns the interior. */
+/* Custom slot - bare neutral glass; the consumer owns the interior. */
 .toast__custom {
   padding: var(--space-3) var(--space-4);
   transition: var(--transition-opacity);

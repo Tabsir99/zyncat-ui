@@ -1,4 +1,4 @@
-/* Avatar (image · initials · icon) + AvatarGroup — face/status structure, token sizes, 6 identity slots. */
+/* Avatar (image - initials - icon) + AvatarGroup - face/status structure, token sizes, 6 identity slots. */
 
 .avatar {
   --avatar-size: 2rem;
@@ -27,7 +27,7 @@
   background: var(--avatar-bg);
   color: var(--avatar-fg);
 
-  /* sheen from top, shade from bottom over the slot tint; an image child paints over both (§B3 gradient exception) */
+  /* sheen from top, shade from bottom over the slot tint; an image child paints over both (section B3 gradient exception) */
   background:
     linear-gradient(to bottom, var(--avatar-sheen), transparent 55%),
     linear-gradient(to top, var(--avatar-shade), transparent 45%), var(--avatar-bg);
@@ -51,7 +51,7 @@
   object-fit: cover;
 }
 
-/* lettermark, ratio-sized (§A7 exception); text-box trim = true optical centering; negative margin returns the trailing --tracking-caps so the pair stays centered */
+/* lettermark, ratio-sized (section A7 exception); text-box trim = true optical centering; negative margin returns the trailing --tracking-caps so the pair stays centered */
 .avatar__initials {
   font-family: var(--font-sans);
   font-weight: var(--weight-semibold);
@@ -92,7 +92,7 @@
   --avatar-size: 3rem;
 }
 
-/* square — radius scales with size (concentric nesting) */
+/* square - radius scales with size (concentric nesting) */
 .avatar--square .avatar__face {
   border-radius: var(--radius-md);
 }
@@ -102,7 +102,7 @@
   border-radius: var(--radius-lg);
 }
 
-/* data-palette 1–6: identity slots (tokens/avatar.css); no attr = neutral; identity colouring, never status */
+/* data-palette 1-6: identity slots (tokens/avatar.css); no attr = neutral; identity colouring, never status */
 
 .avatar[data-palette='1'] {
   --avatar-bg: var(--avatar-1-bg);
@@ -164,7 +164,7 @@
   align-items: center;
 }
 
-/* inject --avatar-ring on group children → cascades to .avatar__face */
+/* inject --avatar-ring on group children - cascades to .avatar__face */
 .avatar-group > .avatar {
   --avatar-ring: 0 0 0 2px var(--bg-surface);
 }
@@ -178,7 +178,7 @@
   margin-left: var(--space-1);
 }
 
-/* "+N" chip — mono numerals, tracking off (mono is already spaced), smaller ratio to fit "+12" */
+/* "+N" chip - mono numerals, tracking off (mono is already spaced), smaller ratio to fit "+12" */
 .avatar--overflow .avatar__initials {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;

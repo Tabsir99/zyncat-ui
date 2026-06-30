@@ -1,44 +1,44 @@
-# premium-ui — LLM usage guide
+# premium-ds - LLM usage guide
 
 Premium React 19 design system, shipped as built ESM + types. This is a compact per-component
-index; full prop types (with docs) live in node_modules/premium-ui/dist/*.d.ts.
+index; full prop types (with docs) live in node_modules/premium-ds/dist/*.d.ts.
 
 Setup:
-  import { Button, toast } from 'premium-ui';   // barrel — or a subpath: premium-ui/button
-  import 'premium-ui/styles.css';               // link ONCE at the app root
-Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in — not a peer.)
-No bundler/transpile config — built ESM keeps 'use client' intact for the Next.js App Router.
+  import { Button, toast } from 'premium-ds';   // barrel - or a subpath: premium-ds/button
+  import 'premium-ds/styles.css';               // link ONCE at the app root
+Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
+No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 
 Conventions:
 - Sentence case everywhere; no emoji or exclamation marks in UI. One primary <Button> per view.
-- Numbers, times, IDs, status read mono + tabular. Status words: Scheduled · Draft · Published · Failed.
+- Numbers, times, IDs, status read mono + tabular. Status words: Scheduled, Draft, Published, Failed.
 - Status hues (info/success/warning/danger) only for genuine status; hierarchy from the neutral ramp.
-- Icons: premium-ui renders its own glyphs from a bundled curated Phosphor set, but does NOT
-  export an Icon component. Where an example below shows <Icon name="…" />, that is YOUR OWN icon
-  node — any ReactNode you pass into the prop (e.g. an @phosphor-icons/react element).
+- Icons: premium-ds renders its own glyphs from a bundled curated Phosphor set, but does NOT
+  export an Icon component. Where an example below shows <Icon name="..." />, that is YOUR OWN icon
+  node - any ReactNode you pass into the prop (e.g. an @phosphor-icons/react element).
 
-Every named export is also a subpath: premium-ui/<kebab-name> (e.g. premium-ui/status-badge).
+Every named export is also a subpath: premium-ds/<kebab-name> (e.g. premium-ds/status-badge).
 
 ============================================================ PRIMITIVES
 
-Button — premium-ui/button
+Button - premium-ds/button
   One control for every click; exactly one primary per view. variant primary|secondary|ghost|danger|link, size sm|md|lg, iconLeft/iconRight (ReactNode), loading, disabled.
   <Button variant="primary" iconLeft={<Icon name="plus" size="sm" />}>Schedule post</Button>
 
-Collapse — premium-ui/collapse
+Collapse - premium-ds/collapse
   Layout-transition primitive; eases height open/closed, never teleports.
-  <Collapse open={open}><div>…revealed content…</div></Collapse>
+  <Collapse open={open}><div>...revealed content...</div></Collapse>
 
-Badge — premium-ui/badge
+Badge - premium-ds/badge
   Glass or outline chip. tone neutral|info|success|warning|danger, dot, live, variant="outline", pill, size="sm".
   <Badge tone="success" pill>Published</Badge>
 
-StatusBadge — premium-ui/status-badge
-  Canonical post status → tone + one-word label. status draft|scheduled|processing|published|failed; add `morph` to animate in place as status changes.
+StatusBadge - premium-ds/status-badge
+  Canonical post status - tone + one-word label. status draft|scheduled|processing|published|failed; add `morph` to animate in place as status changes.
   <StatusBadge status="published" />
   <StatusBadge status={s} morph />
 
-CountBadge — premium-ui/count-badge
+CountBadge - premium-ds/count-badge
   Mono tabular count; `roll` animates digits like an odometer. value: number | string.
   <CountBadge value="7 / 10" />
   <CountBadge value={count} roll tone="info" />
@@ -46,120 +46,120 @@ CountBadge — premium-ui/count-badge
 ============================================================ FORMS
 (all take label, helper/error/warning/success, size sm|md|lg, disabled)
 
-TextField — premium-ui/text-field
+TextField - premium-ds/text-field
   Base text input; states disclose via Collapse. leadingIcon, clearable, optional/required.
   <TextField id="ws" label="Workspace name" required value={v} onChange={(e) => set(e.target.value)} />
-  <TextField id="h" label="Username" error="Must be at least 4 characters." value={v} onChange={…} />
+  <TextField id="h" label="Username" error="Must be at least 4 characters." value={v} onChange={...} />
 
-NumberField — premium-ui/number-field
+NumberField - premium-ds/number-field
   Tabular figures, caret steppers, unit suffix, clamp to [min,max]. onChange(value: number).
   <NumberField id="seats" label="Seats" unit="users" min={1} max={50} value={n} onChange={setN} />
 
-OtpField — premium-ui/otp-field
+OtpField - premium-ds/otp-field
   Segmented one-time code; auto-advance, paste-to-fill. length, group, error, size.
   <OtpField length={6} group={3} value={code} onChange={setCode} />
 
-Textarea — premium-ui/textarea
+Textarea - premium-ds/textarea
   Auto-grow, char meter (max), ⌘/Ctrl+↵ submit (onSubmit). minRows/maxRows.
   <Textarea id="bio" label="Bio" max={280} minRows={4} value={v} onChange={(e) => set(e.target.value)} onSubmit={save} />
 
-Checkbox — premium-ui/checkbox
+Checkbox - premium-ds/checkbox
   Stages a choice. label, description, indeterminate, invalid, required, disabled. Standard checked/onChange.
   <Checkbox label="Email me about product updates" checked={on} onChange={(e) => set(e.target.checked)} />
 
-Toggle — premium-ui/toggle
+Toggle - premium-ds/toggle
   Actuates a setting on the spot. label, description; checked/onChange like a checkbox.
   <Toggle label="Auto-save drafts" checked={on} onChange={(e) => set(e.target.checked)} />
 
-RadioGroup — premium-ui/radio-group
+RadioGroup - premium-ds/radio-group
   Pick exactly one. options: RadioOption[] ({ value, label, description?, icon?, disabled? }); variant rows|cards, orientation; value/onChange(value).
   <RadioGroup name="role" label="Member role" value={role} onChange={setRole} options={ROLES} />
 
-Select — premium-ui/select
+Select - premium-ds/select
   Single-select listbox. options: SelectOption[]; value: string|null, onChange(value); searchable, leadingIcon, placeholder, invalid, loading, ariaLabel.
   <Select options={TIMEZONES} value={tz} onChange={setTz} searchable placeholder="Choose a time zone" ariaLabel="Time zone" />
 
-MultiSelect — premium-ui/multi-select
+MultiSelect - premium-ds/multi-select
   Many-of listbox; stays open while toggling, trigger summarises as first +N. value: string[], onChange(string[]); searchable.
   <MultiSelect options={PEOPLE} value={ids} onChange={setIds} placeholder="Choose members" ariaLabel="Members" />
 
 ============================================================ DATA DISPLAY
 
-Avatar — premium-ui/avatar
+Avatar - premium-ds/avatar
   Identity mark: image, initials, or silhouette. name, src, size xs|sm|md|lg|xl, status online|away|busy|offline, shape, paletteIndex, icon.
-  <Avatar name="Ana Ng" src="…" status="online" />
+  <Avatar name="Ana Ng" src="..." status="online" />
 
-AvatarGroup — premium-ui/avatar-group
+AvatarGroup - premium-ds/avatar-group
   Overlapping avatars with +N overflow. max, size; children are <Avatar>s.
-  <AvatarGroup max={4} size="sm"><Avatar name="Ana Ng" />…</AvatarGroup>
+  <AvatarGroup max={4} size="sm"><Avatar name="Ana Ng" />...</AvatarGroup>
 
-Tag / TagGroup — premium-ui/tag
+Tag / TagGroup - premium-ds/tag
   User-owned label (a control, not a status). icon, size, disabled, onRemove + removeLabel (removable). TagGroup wraps a labelled set.
   <Tag icon={<Icon name="hash" />} onRemove={fn} removeLabel="Remove design">design</Tag>
 
-ToggleTag — premium-ui/toggle-tag
+ToggleTag - premium-ds/toggle-tag
   Many-of-many filter chip. selected/onChange(next) or defaultSelected; icon, count.
   <ToggleTag selected={on} onChange={setOn} icon={<Icon name="star" />} count={48}>Starred</ToggleTag>
 
-Table — premium-ui/table
+Table - premium-ds/table
   Declare columns + rows; owns sort, selection, stickiness, overflow. columns: TableColumn<T>[] ({ key, label, render?, sortable?, sortBy?, align?, mono?, strong?, grow? }); selectable, defaultSort, footer.
   <Table<Invoice> label="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
 
-Pagination — premium-ui/pagination
+Pagination - premium-ds/pagination
   Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext.
-  <Pagination label="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={…} onNext={…} />
+  <Pagination label="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={...} onNext={...} />
 
 ============================================================ DATE, TIME & TABS
 (value is a string; onChange(value | null); timezone, min/max, disabled)
 
-DateField — premium-ui/date-field
+DateField - premium-ds/date-field
   Month calendar in a popover; value 'YYYY-MM-DD'.
   <DateField label="Start date" value={d} onChange={setD} timezone="Europe/Riga" min="2026-06-01" />
 
-DateTimeField — premium-ui/datetime-field
+DateTimeField - premium-ds/datetime-field
   Calendar + segmented HH:MM; value 'YYYY-MM-DDTHH:mm'. format 12h|24h, minuteStep.
   <DateTimeField label="Due at" value={v} onChange={setV} format="12h" minuteStep={15} />
 
-DateRangeField — premium-ui/date-range-field
+DateRangeField - premium-ds/date-range-field
   Two-tap auto-ordering window; value DateRange { start, end } | null; commits when both ends exist.
   <DateRangeField label="Reporting period" value={r} onChange={setR} />
 
-TimeField — premium-ui/time-field
+TimeField - premium-ds/time-field
   Standalone segmented time; value 'HH:mm'; bounds saturate. format, minuteStep.
   <TimeField label="Send at" value={t} onChange={setT} format="12h" minuteStep={15} />
 
-Tabs / TabPanel — premium-ui/tabs
+Tabs / TabPanel - premium-ds/tabs
   Line tabs; the ink reaches then releases; panels enter from the side you moved toward. items: TabItem[]; value/onChange(value, dir). Pair with <TabPanel name tab dir>.
   <Tabs name="views" label="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
-  <TabPanel name="views" tab={view} dir={dir}>…</TabPanel>
+  <TabPanel name="views" tab={view} dir={dir}>...</TabPanel>
 
 ============================================================ OVERLAYS & FEEDBACK
 
-Alert — premium-ui/alert
+Alert - premium-ds/alert
   Persistent, in-flow status. tone, title, children (body), action { label, onClick }, dismissible, banner, open/onDismiss (controlled).
-  <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: fn }}>Add a plan…</Alert>
+  <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: fn }}>Add a plan...</Alert>
 
-Toast — premium-ui/toast  (imperative; the host self-mounts — no <Toaster> needed)
-  toast(msg) · toast.success/error/warning/info(msg, { description, action }) · toast.promise(p, { loading, success, error }) · toast.loading · toast.dismiss().
-  import { toast } from 'premium-ui';
+Toast - premium-ds/toast  (imperative; the host self-mounts - no <Toaster> needed)
+  toast(msg) - toast.success/error/warning/info(msg, { description, action }) - toast.promise(p, { loading, success, error }) - toast.loading - toast.dismiss().
+  import { toast } from 'premium-ds';
   toast.success('Changes saved', { description: 'Synced to the cloud' });
-  toast.promise(save(), { loading: 'Saving…', success: (v) => `Saved · ${v.count}`, error: (e) => `Failed — ${e.message}` });
+  toast.promise(save(), { loading: 'Saving...', success: (v) => `Saved - ${v.count}`, error: (e) => `Failed - ${e.message}` });
 
-Tooltip — premium-ui/tooltip
+Tooltip - premium-ds/tooltip
   Transient hint on hover/focus; wraps any child (no ref wiring needed). content, shortcut, placement top|bottom|left|right.
   <Tooltip content="Save changes" shortcut="⌘S"><Button>Save</Button></Tooltip>
 
-Dialog — premium-ui/dialog
+Dialog - premium-ds/dialog
   Styled modal: scrim, focus trap, scroll lock. open/onOpenChange, tone, icon, title, description, footer: (close) => node.
-  <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>…</>}>…</Dialog>
+  <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
 
-Overlay — premium-ui/overlay
+Overlay - premium-ds/overlay
   Headless floating surface. mode popover|sheet, side, align, trigger (node), asChild; children: ({ close }) => node.
-  <Overlay side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>…</menu>}</Overlay>
-  Sheet = <Overlay mode="sheet" side="right|bottom"> — edge-docked, drag-to-dismiss.
+  <Overlay side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>...</menu>}</Overlay>
+  Sheet = <Overlay mode="sheet" side="right|bottom"> - edge-docked, drag-to-dismiss.
 
 ============================================================ THEMING
   Re-skin by overriding the CSS custom properties (tokens) in your own stylesheet, loaded after
-  premium-ui/styles.css — never fork the source. Token groups: spacing --space-*, type --type-*,
+  premium-ds/styles.css - never fork the source. Token groups: spacing --space-*, type --type-*,
   color (--bg-*, --text-*, --border-*, --accent), --radius-*, elevation --shadow-*, motion
   (--duration-*, --ease-*).

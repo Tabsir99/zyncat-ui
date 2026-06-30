@@ -1,11 +1,11 @@
-/* alert.css — the persistent in-flow status message: a lit tinted pane per tone. */
+/* alert.css - the persistent in-flow status message: a lit tinted pane per tone. */
 
 .alert-shell {
   overflow: hidden;
 }
 
 .alert {
-  /* tone hooks — repointed by [data-tone] below; info is the default */
+  /* tone hooks - repointed by [data-tone] below; info is the default */
   --alert-hue: var(--info);
   --alert-fg: var(--info-text);
   --alert-bg: var(--info-subtle);
@@ -62,7 +62,7 @@
   padding-inline: var(--space-6);
 }
 
-/* Glyph — one --leading-body tall so it centers on the title line. */
+/* Glyph - one --leading-body tall so it centers on the title line. */
 .alert__icon {
   flex: none;
   display: grid;
@@ -88,7 +88,7 @@
   text-wrap: pretty;
 }
 
-/* Action — the system .btn .btn--sm re-skinned to the pane's tone (alert-local chrome, not a global Button variant). */
+/* Action - the system .btn .btn--sm re-skinned to the pane's tone (alert-local chrome, not a global Button variant). */
 .alert__action {
   flex: none;
   color: var(--alert-fg);
@@ -106,7 +106,7 @@
   --btn-ring: var(--ring-danger);
 }
 
-/* Dismiss — always visible (alerts persist; no hover-reveal like toast). */
+/* Dismiss - always visible (alerts persist; no hover-reveal like toast). */
 .alert__close {
   flex: none;
   appearance: none;

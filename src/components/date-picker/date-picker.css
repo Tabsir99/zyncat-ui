@@ -1,4 +1,4 @@
-/* date-picker domain — geometry + paint for DateField/DateTimeField (.dtp*), DateRangeField (.drp*), TimeField (.tfd*, .tsg*). */
+/* date-picker domain - geometry + paint for DateField/DateTimeField (.dtp*), DateRangeField (.drp*), TimeField (.tfd*, .tsg*). */
 
 .dtf__trigger {
   display: flex;
@@ -19,7 +19,7 @@
   color: var(--text-disabled);
 }
 
-/* open — focus moves into the panel, so the trigger holds the focus look itself while expanded. */
+/* open - focus moves into the panel, so the trigger holds the focus look itself while expanded. */
 .dtf__trigger[aria-expanded='true']:not(:disabled) {
   border-color: var(--accent);
   background: var(--bg-surface);
@@ -39,7 +39,7 @@
   padding: var(--space-3) var(--space-3) var(--space-2);
 }
 
-/* header — month flush-left (semibold sans), year as a quiet mono chip; carets + today-jump grouped right. */
+/* header - month flush-left (semibold sans), year as a quiet mono chip; carets + today-jump grouped right. */
 .dtp__head {
   display: flex;
   align-items: center;
@@ -122,12 +122,12 @@
   gap: var(--space-1);
   isolation: isolate; /* the hover pill's z:-1 must resolve here, above the panel bg, below cell content */
 }
-/* ARIA rows — no boxes; the buttons stay direct grid items */
+/* ARIA rows - no boxes; the buttons stay direct grid items */
 .dtp__row {
   display: contents;
 }
 
-/* day cell — the button must create no stacking context, so the pill (z0) / numeral (z1) resolve at grid level. */
+/* day cell - the button must create no stacking context, so the pill (z0) / numeral (z1) resolve at grid level. */
 .dtp__day {
   position: relative;
   width: var(--dtp-cell);
@@ -160,7 +160,7 @@
   cursor: default;
 }
 
-/* gliding hover pill (useGlide) — bg-muted (not -subtle, else ≈ invisible on the raised surface); z:-1 under numerals + selection tint. */
+/* gliding hover pill (useGlide) - bg-muted (not -subtle, else ~ invisible on the raised surface); z:-1 under numerals + selection tint. */
 .dtp__hover {
   position: absolute;
   top: 0;
@@ -171,7 +171,7 @@
   will-change: transform, opacity;
 }
 
-/* selection — a quiet tint, not a solid fill (so it never outshouts Done); the layoutId node, so fill + border travel together. */
+/* selection - a quiet tint, not a solid fill (so it never outshouts Done); the layoutId node, so fill + border travel together. */
 .dtp__pill {
   position: absolute;
   inset: 0;
@@ -189,7 +189,7 @@
   font-weight: var(--weight-semibold);
 }
 
-/* today — accent numeral + a short bar, never a fill (fill means "picked"); reads on the selection tint too. */
+/* today - accent numeral + a short bar, never a fill (fill means "picked"); reads on the selection tint too. */
 .dtp__day.is-today .dtp__num {
   color: var(--text-accent);
   font-weight: var(--weight-semibold);
@@ -212,7 +212,7 @@
   background: var(--text-disabled);
 }
 
-/* time row — DateTimeField's slot, between the grid and the footer */
+/* time row - DateTimeField's slot, between the grid and the footer */
 .dtp__time {
   display: flex;
   align-items: center;
@@ -227,7 +227,7 @@
   margin-right: auto;
 }
 
-/* keyboard hint — shown only on focus-within; asymmetric easing (eases in, leaves fast). */
+/* keyboard hint - shown only on focus-within; asymmetric easing (eases in, leaves fast). */
 .dtp__timeHint {
   display: inline-flex;
   gap: var(--space-1);
@@ -294,7 +294,7 @@
 
 .drp__presets {
   flex: none;
-  width: max-content; /* sized by the longest preset label — no magic width number */
+  width: max-content; /* sized by the longest preset label - no magic width number */
   display: flex;
   flex-direction: column;
   gap: var(--space-px);
@@ -329,7 +329,7 @@
   color: var(--text-accent);
   font-weight: var(--weight-medium);
 }
-/* gliding hover indicator — one pill that glides between presets (see glide-pill); the active tint is separate. */
+/* gliding hover indicator - one pill that glides between presets (see glide-pill); the active tint is separate. */
 .drp__presetGlide {
   position: absolute;
   top: 0;
@@ -352,7 +352,7 @@
   border-left: var(--border-hairline) solid var(--border-subtle);
 }
 
-/* directional month slide — CSS keyframe on the keyed grid remount (can't fight Motion's layoutId caps); gated on reduced-motion. */
+/* directional month slide - CSS keyframe on the keyed grid remount (can't fight Motion's layoutId caps); gated on reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
   .drp .dtp__days[data-enter='1'] {
     animation: drp-month-in-l var(--duration-base) var(--ease-entrance);
@@ -382,7 +382,7 @@
   }
 }
 
-/* month header — prev caret hugs the left edge, next caret the right; the label centers between. */
+/* month header - prev caret hugs the left edge, next caret the right; the label centers between. */
 .drp__mhead {
   display: flex;
   align-items: center;
@@ -402,7 +402,7 @@
   justify-content: space-between;
 }
 
-/* range band — extends 1px into the 4px gap toward an in-range neighbour (kills the subpixel seam), rounds where it stops. */
+/* range band - extends 1px into the 4px gap toward an in-range neighbour (kills the subpixel seam), rounds where it stops. */
 .drp__band {
   position: absolute;
   inset: 0;
@@ -426,7 +426,7 @@
   border-bottom-right-radius: var(--radius-md);
 }
 
-/* endpoint cap — a Motion layoutId node that glides between cells; the ghost variant (outline, no fill) marks the tentative end. */
+/* endpoint cap - a Motion layoutId node that glides between cells; the ghost variant (outline, no fill) marks the tentative end. */
 .drp__cap {
   position: absolute;
   inset: 0;
@@ -434,7 +434,7 @@
   border-radius: var(--radius-md);
   background: var(
     --accent-border
-  ); /* more opaque than the band — a clear selection marker, not a heavy solid fill */
+  ); /* more opaque than the band - a clear selection marker, not a heavy solid fill */
 }
 .drp__cap--ghost {
   background: transparent;
@@ -491,7 +491,7 @@
   flex: 1 1 auto;
 }
 
-/* bottom-sheet skin (mobile) — sheds border/shadow (the sheet supplies elevation), rounds only top corners, one month. */
+/* bottom-sheet skin (mobile) - sheds border/shadow (the sheet supplies elevation), rounds only top corners, one month. */
 .drp--sheet {
   --dtp-cell: var(--control-height-lg);
 } /* 40px touch targets */
@@ -541,7 +541,7 @@
   user-select: none;
   transition: var(--transition-colors);
 }
-/* :focus, not :focus-visible, on purpose — a clicked segment reads selected like keyboard entry. */
+/* :focus, not :focus-visible, on purpose - a clicked segment reads selected like keyboard entry. */
 .tsg__seg:focus {
   background: var(--accent-subtle);
   color: var(--text-accent);
@@ -565,7 +565,7 @@
   cursor: not-allowed;
 }
 
-/* .tfd__box is a DIV wearing .fld__input chrome, so input's :focus can't reach it — re-stated as :focus-within, scoped under .tfd to win the cascade. */
+/* .tfd__box is a DIV wearing .fld__input chrome, so input's :focus can't reach it - re-stated as :focus-within, scoped under .tfd to win the cascade. */
 .tfd__box {
   display: inline-flex;
   align-items: center;

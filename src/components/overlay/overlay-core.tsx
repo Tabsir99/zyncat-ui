@@ -1,6 +1,6 @@
 'use client';
 
-/* overlay-core — the headless mechanics under popover, dialog and sheet. */
+/* overlay-core - the headless mechanics under popover, dialog and sheet. */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { motion as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';
@@ -29,7 +29,7 @@ function useControllable<T>(
   return [value, setValue];
 }
 
-/* Token length → px; parseFloat alone reads "0.5rem" as 0.5px, so convert rem. */
+/* Token length - px; parseFloat alone reads "0.5rem" as 0.5px, so convert rem. */
 function ovReadPx(token: string): number {
   const root = document.documentElement;
   const v = getComputedStyle(root).getPropertyValue(token).trim();
@@ -147,7 +147,7 @@ function useOverlayEntry({
   return ref.current;
 }
 
-/* Light dismiss — close on a press outside the panel, trigger, and any overlay above. */
+/* Light dismiss - close on a press outside the panel, trigger, and any overlay above. */
 function useOutsidePress({
   entry,
   refs,
@@ -353,7 +353,7 @@ function useAnchorPosition({
         y = Math.max(
           Math.min(y, vh - ph - edge),
           edge,
-        ); /* main-axis clamp: keep the leading edge on-screen (max last → may cover the trigger) */
+        ); /* main-axis clamp: keep the leading edge on-screen (max last - may cover the trigger) */
       } else {
         x = s === 'left' ? r.left - pw - gap : r.right + gap;
         y =
@@ -439,7 +439,7 @@ function OverlayScrim({
   );
 }
 
-/* Render the panel: a motion.div wrapper, or with asChild the child's own tag (host element required — component children can't take a ref here). */
+/* Render the panel: a motion.div wrapper, or with asChild the child's own tag (host element required - component children can't take a ref here). */
 function ovPanelElement({
   asChild,
   children,
@@ -478,7 +478,7 @@ function ovPanelElement({
         </Tag>
       );
     }
-    console.warn('[Overlay] asChild requires a DOM-element child — falling back to a wrapper');
+    console.warn('[Overlay] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
     <ovMotion.div

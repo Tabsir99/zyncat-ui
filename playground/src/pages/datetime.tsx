@@ -1,5 +1,14 @@
 import { useState, type CSSProperties } from 'react';
-import { DateField, DateTimeField, DateRangeField, TimeField, Tabs, TabPanel, type DateRange, type TabItem } from 'premium-ui';
+import {
+  DateField,
+  DateTimeField,
+  DateRangeField,
+  TimeField,
+  Tabs,
+  TabPanel,
+  type DateRange,
+  type TabItem,
+} from 'premium-ds';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
@@ -15,9 +24,16 @@ export function DateFieldPage() {
           <DateField label="Start date" value={date} onChange={setDate} timezone="Europe/Riga" />
         </div>
       </Demo>
-      <Demo label="preset · bounded">
+      <Demo label="preset - bounded">
         <div style={COL}>
-          <DateField label="Start date" value={datePreset} onChange={setDatePreset} timezone="Europe/Riga" min="2026-06-01" max="2026-12-31" />
+          <DateField
+            label="Start date"
+            value={datePreset}
+            onChange={setDatePreset}
+            timezone="Europe/Riga"
+            min="2026-06-01"
+            max="2026-12-31"
+          />
         </div>
       </Demo>
       <Demo label="disabled">
@@ -36,12 +52,25 @@ export function DateTimeFieldPage() {
     <>
       <Demo label="empty">
         <div style={COL}>
-          <DateTimeField label="Due at" value={dateTime} onChange={setDateTime} timezone="Europe/Riga" />
+          <DateTimeField
+            label="Due at"
+            value={dateTime}
+            onChange={setDateTime}
+            timezone="Europe/Riga"
+          />
         </div>
       </Demo>
-      <Demo label="preset · 12h · 15-min steps">
+      <Demo label="preset - 12h - 15-min steps">
         <div style={COL}>
-          <DateTimeField label="Due at" value={dateTimePreset} onChange={setDateTimePreset} timezone="Europe/Riga" format="12h" minuteStep={15} min="2026-06-12T08:00" />
+          <DateTimeField
+            label="Due at"
+            value={dateTimePreset}
+            onChange={setDateTimePreset}
+            timezone="Europe/Riga"
+            format="12h"
+            minuteStep={15}
+            min="2026-06-12T08:00"
+          />
         </div>
       </Demo>
       <Demo label="disabled">
@@ -55,22 +84,40 @@ export function DateTimeFieldPage() {
 
 export function DateRangePage() {
   const [range, setRange] = useState<DateRange | null>(null);
-  const [rangePreset, setRangePreset] = useState<DateRange | null>({ start: '2026-06-01', end: '2026-06-30' });
+  const [rangePreset, setRangePreset] = useState<DateRange | null>({
+    start: '2026-06-01',
+    end: '2026-06-30',
+  });
   return (
     <>
       <Demo label="empty">
         <div style={COL}>
-          <DateRangeField label="Reporting period" value={range} onChange={setRange} timezone="Europe/Riga" />
+          <DateRangeField
+            label="Reporting period"
+            value={range}
+            onChange={setRange}
+            timezone="Europe/Riga"
+          />
         </div>
       </Demo>
-      <Demo label="preset · bounded">
+      <Demo label="preset - bounded">
         <div style={COL}>
-          <DateRangeField label="Reporting period" value={rangePreset} onChange={setRangePreset} min="2026-01-01" max="2026-12-31" />
+          <DateRangeField
+            label="Reporting period"
+            value={rangePreset}
+            onChange={setRangePreset}
+            min="2026-01-01"
+            max="2026-12-31"
+          />
         </div>
       </Demo>
       <Demo label="disabled">
         <div style={COL}>
-          <DateRangeField label="Reporting period" defaultValue={{ start: '2026-06-01', end: '2026-06-30' }} disabled />
+          <DateRangeField
+            label="Reporting period"
+            defaultValue={{ start: '2026-06-01', end: '2026-06-30' }}
+            disabled
+          />
         </div>
       </Demo>
     </>
@@ -87,9 +134,17 @@ export function TimeFieldPage() {
           <TimeField label="Send at" value={time} onChange={setTime} />
         </div>
       </Demo>
-      <Demo label="preset · 12h · 15-min · bounded">
+      <Demo label="preset - 12h - 15-min - bounded">
         <div style={COL}>
-          <TimeField label="Send at" value={timePreset} onChange={setTimePreset} format="12h" minuteStep={15} min="09:00" max="17:30" />
+          <TimeField
+            label="Send at"
+            value={timePreset}
+            onChange={setTimePreset}
+            format="12h"
+            minuteStep={15}
+            min="09:00"
+            max="17:30"
+          />
         </div>
       </Demo>
       <Demo label="disabled">
@@ -112,13 +167,13 @@ export function TabsPage() {
   const [view, setView] = useState<string>('overview');
   const [dir, setDir] = useState<-1 | 0 | 1>(0);
 
-  // active tab fills its icon — selection-aware nodes built by the consumer
+  // active tab fills its icon - selection-aware nodes built by the consumer
   const items: TabItem[] = TAB_DEFS.map((t) => ({
     ...t,
     icon: <Icon name={t.icon} weight={view === t.value ? 'fill' : 'regular'} />,
   }));
   return (
-    <Demo label="controlled · with panels">
+    <Demo label="controlled - with panels">
       <div className="stack" style={{ width: '100%', maxWidth: 560 }}>
         <Tabs
           name="views"
@@ -130,7 +185,12 @@ export function TabsPage() {
           }}
           items={items}
         />
-        <TabPanel name="views" tab={view} dir={dir} style={{ padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}>
+        <TabPanel
+          name="views"
+          tab={view}
+          dir={dir}
+          style={{ padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}
+        >
           {view === 'overview' && <span>A calm summary of everything at a glance.</span>}
           {view === 'activity' && <span>4 events in the last hour.</span>}
           {view === 'members' && <span>128 people across your workspace.</span>}

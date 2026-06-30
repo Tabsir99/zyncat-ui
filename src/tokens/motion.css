@@ -1,4 +1,4 @@
-/* Motion system — durations, brand curves, and pre-composed transitions; smooths every layout shift by default. */
+/* Motion system - durations, brand curves, and pre-composed transitions; smooths every layout shift by default. */
 
 :root {
   --duration-fast: 120ms;
@@ -16,7 +16,7 @@
     0,
     0.15,
     1
-  ); /* in-out travel — persistent element gliding between siblings; not for enter/exit */
+  ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
 
   --transition-control:
     color var(--duration-fast) var(--ease-standard),
@@ -30,7 +30,7 @@
   --transition-opacity: opacity var(--duration-base) var(--ease-standard);
   --transition-transform: transform var(--duration-base) var(--ease-standard);
 
-  /* Layout transition — animatable stand-ins for width/height; apply wherever size may change. */
+  /* Layout transition - animatable stand-ins for width/height; apply wherever size may change. */
   --transition-layout:
     grid-template-rows var(--duration-slow) var(--ease-entrance),
     grid-template-columns var(--duration-slow) var(--ease-entrance),
@@ -38,7 +38,7 @@
     max-width var(--duration-slow) var(--ease-entrance);
 }
 
-/* Accessibility: honor reduced-motion globally — every consumer gets it free. */
+/* Accessibility: honor reduced-motion globally - every consumer gets it free. */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-fast: 1ms;

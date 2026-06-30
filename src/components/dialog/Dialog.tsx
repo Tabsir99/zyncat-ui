@@ -1,6 +1,6 @@
 'use client';
 
-/* Dialog — styled modal surface; a thin consumer of <Overlay mode="dialog">. */
+/* Dialog - styled modal surface; a thin consumer of <Overlay mode="dialog">. */
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';
@@ -24,7 +24,7 @@ export interface DialogProps {
   icon?: React.ReactNode;
   /** Close button + backdrop/Esc dismissal. Default true. */
   dismissible?: boolean;
-  /** Action row — a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
+  /** Action row - a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
   footer?: React.ReactNode | ((close: () => void) => React.ReactNode);
   children?: React.ReactNode;
   id?: string;

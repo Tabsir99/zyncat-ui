@@ -1,6 +1,6 @@
 'use client';
 
-// Textarea.tsx — multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
+// Textarea.tsx - multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
 
 import * as React from 'react';
 import { Icon } from '../icon/Icon';
@@ -17,7 +17,7 @@ export interface TextareaProps extends Omit<
   label?: React.ReactNode;
   required?: boolean;
   optional?: boolean;
-  /** Neutral helper — shown when there's no validation message. */
+  /** Neutral helper - shown when there's no validation message. */
   helper?: React.ReactNode;
   /** Sets the matching state (border + icon + colour). error wins over warning/success/helper. */
   error?: React.ReactNode;
@@ -34,9 +34,9 @@ export interface TextareaProps extends Omit<
   maxRows?: number;
   /** Remaining-chars threshold that flips the meter amber. Default 20. */
   warnAt?: number;
-  /** Footer hint, left of the meter — e.g. a ⌘↵ affordance. */
+  /** Footer hint, left of the meter - e.g. a ⌘↵ affordance. */
   hint?: React.ReactNode;
-  /** md (default) · lg (prominent composer). */
+  /** md (default) - lg (prominent composer). */
   size?: 'md' | 'lg';
 }
 

@@ -1,34 +1,34 @@
-/* tabs.css — Tabs.
-   ─────────────────────────────────────────────────────────────────────────
-   Line tabs for VIEW SWITCHING (overview / activity / settings) — peers
+/* tabs.css - Tabs.
+   -------------------------------------------------------------------------
+   Line tabs for VIEW SWITCHING (overview / activity / settings) - peers
    of the content below them, sitting on a hairline baseline. NOT a form
-   control: pick Segmented control for 2–3 short filter options.
+   control: pick Segmented control for 2-3 short filter options.
 
    Anatomy:  .tabs > .tabs__list[role=tablist] > .tab* + .tabs__ink
              .tab > .tab__pad ( .tab__hover? + Icon? + .tab__label + .tab__count? )
-   States:   :hover · :active · :focus-visible · :disabled · .is-selected
+   States:   :hover - :active - :focus-visible - :disabled - .is-selected
 
-   THE SIGNATURE MOTION — "the ink reaches, then releases."
+   THE SIGNATURE MOTION - "the ink reaches, then releases."
    The active underline is ONE persistent node (.tabs__ink). On selection the
-   edge facing the destination travels first — the ink stretches across the
-   gap — then the trailing edge releases and settles. Direction-aware, always
+   edge facing the destination travels first - the ink stretches across the
+   gap - then the trailing edge releases and settles. Direction-aware, always
    decelerating. Motion (animate(), Tabs.jsx) owns the travel; there is NO css
-   transition on the ink. Width is animated measured-px → measured-px — the
-   surfaced §C morph exception (Tooltip precedent), since the destination tab
+   transition on the ink. Width is animated measured-px - measured-px - the
+   surfaced section C morph exception (Tooltip precedent), since the destination tab
    width is unknowable to transforms and scaleX would distort the radius.
 
-   THE SECOND MOTION — the gliding hover. Hover feedback is ONE shared pill
+   THE SECOND MOTION - the gliding hover. Hover feedback is ONE shared pill
    (.tab__hover), not a per-tab background: it fades in under the first tab
-   you touch, then GLIDES — morphing position and width — as the pointer
+   you touch, then GLIDES - morphing position and width - as the pointer
    moves along the row, and fades out when it leaves. Implicit: consumers get
    it for free, there is no API. It is a `layoutId` node rendered inside the
-   hovered tab — Motion's FLIP owns the travel; tab-to-tab is an atomic
-   remount (one node per frame — no AnimatePresence, which caused a flicker),
-   and the leave-fade plays on the still-mounted pill before it unmounts —
+   hovered tab - Motion's FLIP owns the travel; tab-to-tab is an atomic
+   remount (one node per frame - no AnimatePresence, which caused a flicker),
+   and the leave-fade plays on the still-mounted pill before it unmounts -
    so this file only gives it paint. No CSS transition on it.
    Label color, icon weight and press dip remain trivial-tier CSS. */
 
-/* ── Shell · owns the full-width baseline ──────────────────────────────────
+/* -- Shell - owns the full-width baseline ----------------------------------
    The hairline is a ::after on the shell (not a border on the scroller) so it
    spans edge-to-edge while the scroller above it clips, masks and scrolls
    freely. The scroller gets z-index:1 so the ink paints OVER the hairline. */
@@ -44,10 +44,10 @@
   background: var(--border-default);
 }
 
-/* ── Scroller · the tablist ────────────────────────────────────────────────
+/* -- Scroller - the tablist ------------------------------------------------
    Overflow is honest: the row scrolls (scrollbar hidden) and the clipped edge
    fades out via a mask. The fade lengths are two custom props flipped by
-   data-fade (set from scroll geometry in Tabs.jsx) — at 0px the mask is fully
+   data-fade (set from scroll geometry in Tabs.jsx) - at 0px the mask is fully
    opaque, i.e. a no-op. Negative margin + matching padding align the first
    label flush with the container edge while the hover pill still has room. */
 .tabs__list {
@@ -80,7 +80,7 @@
   --tabs-fade-end: var(--space-8);
 }
 
-/* ── Tab · the hit target ──────────────────────────────────────────────────
+/* -- Tab - the hit target --------------------------------------------------
    The button is pill + a bottom gap down to the baseline (total height 36px).
    All visual feedback lives on the inner pill so hover/press/focus read as a
    soft inset shape, while the ink below stays anchored to the baseline. */
@@ -101,13 +101,13 @@
 }
 
 .tab__pad {
-  position: relative; /* containing block for the pill — NO isolation: the
+  position: relative; /* containing block for the pill - NO isolation: the
                              pill's z-index:-1 must resolve in the LIST's
                              stacking context (z-index:1), so the in-flight
                              pill paints beneath EVERY tab's content. Isolating
-                             here traps it per-tab — a later (right) sibling's
+                             here traps it per-tab - a later (right) sibling's
                              pill then paints OVER an earlier tab's label while
-                             traveling left→right. */
+                             traveling left-right. */
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -117,7 +117,7 @@
   font-size: var(--size-body);
   font-weight: var(
     --weight-medium
-  ); /* constant weight — selection
+  ); /* constant weight - selection
                                                      never reflows the row      */
   line-height: 1;
   white-space: nowrap;
@@ -130,7 +130,7 @@
   display: inline-flex;
 }
 
-/* States — hover strengthens the label (the shared glide pill supplies the
+/* States - hover strengthens the label (the shared glide pill supplies the
    background), press dips 1px on a darker fill (tactile, like Button), focus
    is the composed accent ring, selection is text-strong + the ink. */
 .tab:hover:not(:disabled) .tab__pad {
@@ -154,7 +154,7 @@
   color: var(--text-disabled);
 }
 
-/* ── Count · always mono, always tabular ───────────────────────────────────*/
+/* -- Count - always mono, always tabular -----------------------------------*/
 .tab__count {
   font-family: var(--font-mono);
   font-size: var(--size-micro);
@@ -175,8 +175,8 @@
   background: var(--bg-subtle);
 }
 
-/* ── The gliding hover ──────────────────────────────────────────────────────
-   One shared pill, rendered inside whichever tab is hovered (layoutId — FLIP
+/* -- The gliding hover ------------------------------------------------------
+   One shared pill, rendered inside whichever tab is hovered (layoutId - FLIP
    moves it between tabs). Paint only: geometry is inset 0 of the pad; the
    negative z-index resolves in the LIST's stacking context (see .tab__pad),
    keeping the pill under every tab's label in BOTH travel directions. Motion
@@ -186,16 +186,16 @@
   inset: 0;
   z-index: -1;
   border-radius: var(--radius-md);
-  background: var(--bg-muted); /* not -subtle: ≈ invisible on --bg-app */
+  background: var(--bg-muted); /* not -subtle: ~ invisible on --bg-app */
   will-change: transform, opacity;
 }
 
-/* ── The ink ───────────────────────────────────────────────────────────────
+/* -- The ink ---------------------------------------------------------------
    Positioned in the scroller's layout coordinates (offsetLeft space), so it
    scrolls WITH its tab. Motion writes transform + width at runtime; resting
    geometry is set the same way, so there is nothing to transition here.
    EXCEPTION (intentional, mirrors RadioGroup's dot dims): 2px ink height is a
-   bespoke control dim — elevation.css reserves 2px for selected emphasis, but
+   bespoke control dim - elevation.css reserves 2px for selected emphasis, but
    ships no width token for it (--border-emphasis is 1.5px, which renders as
    sub-pixel fuzz on 1x screens). Do not "fix" it to a token. */
 .tabs__ink {
@@ -210,8 +210,8 @@
   will-change: transform, width;
 }
 
-/* ── Panel ─────────────────────────────────────────────────────────────────
-   The panel ROOT is static chrome — borders, padding, background put on it
+/* -- Panel -----------------------------------------------------------------
+   The panel ROOT is static chrome - borders, padding, background put on it
    by the consumer never move. Only .tab-panel__inner (the content) enters
    from the direction of travel (Motion, TabPanel). The root is focusable per
    the APG (tabindex=0) so keyboard users land on content right after the

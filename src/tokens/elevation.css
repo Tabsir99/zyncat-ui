@@ -1,4 +1,4 @@
-/* Elevation — two-layer shadows, focus/selection rings, border widths. */
+/* Elevation - two-layer shadows, focus/selection rings, border widths. */
 
 :root {
   --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
@@ -7,11 +7,11 @@
   --shadow-lg: 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1);
   --shadow-xl: 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14);
 
-  /* Borders — one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
+  /* Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
   --border-hairline: 1px;
   --border-emphasis: 1.5px;
 
-  /* Focus & selection rings — box-shadows (not outlines) so they follow border-radius. */
+  /* Focus & selection rings - box-shadows (not outlines) so they follow border-radius. */
   --ring-accent: 0 0 0 3px oklch(0.63 0.118 198 / 0.32);
   --ring-danger: 0 0 0 3px oklch(0.602 0.196 27 / 0.3);
   --ring-warning: 0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent);

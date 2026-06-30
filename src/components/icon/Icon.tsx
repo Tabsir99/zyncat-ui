@@ -1,6 +1,6 @@
 'use client';
 
-// Icon — internal, curated glyph set; statically imported so the bundle ships only these (tree-shaking).
+// Icon - internal, curated glyph set; statically imported so the bundle ships only these (tree-shaking).
 
 import {
   ArrowUp,
@@ -51,7 +51,7 @@ export type { IconWeight };
 export interface IconProps {
   /** A curated glyph name (see the registry in this file). */
   name: IconName;
-  /** Token size: sm 16 · md 20 (default) · lg 24. */
+  /** Token size: sm 16 - md 20 (default) - lg 24. */
   size?: IconSize;
   /** `fill` marks active/selected; Regular otherwise. */
   weight?: IconWeight;

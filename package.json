@@ -1,9 +1,36 @@
 {
-  "name": "premium-ui",
+  "name": "premium-ds",
   "version": "0.1.0",
-  "description": "Premium design system, modern CSS + a small closed token vocabulary, React 19 components. Stripe/Notion calm.",
+  "description": "A React 19 design system: accessible, animated UI components built on a small, closed CSS design-token vocabulary. No Tailwind, no CSS-in-JS.",
+  "keywords": [
+    "react",
+    "react-19",
+    "design-system",
+    "component-library",
+    "react-components",
+    "ui-components",
+    "ui-kit",
+    "design-tokens",
+    "css",
+    "typescript",
+    "accessible",
+    "a11y",
+    "motion",
+    "animation",
+    "headless-ui",
+    "esm"
+  ],
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": "Tabsir Ahammed",
+  "homepage": "https://github.com/Tabsir99/premium-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tabsir99/premium-ds.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tabsir99/premium-ds/issues"
+  },
   "sideEffects": [
     "*.css"
   ],

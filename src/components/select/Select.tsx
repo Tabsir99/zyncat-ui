@@ -1,6 +1,6 @@
 'use client';
 
-/* Select — single-select custom listbox; committing closes the menu and returns focus. */
+/* Select - single-select custom listbox; committing closes the menu and returns focus. */
 import * as React from 'react';
 import {
   useControllable,
@@ -30,7 +30,7 @@ export interface SelectProps {
   disabled?: boolean;
   /** Danger ring + border. */
   invalid?: boolean;
-  /** Skeleton rows in the menu; trigger reads "Loading…". */
+  /** Skeleton rows in the menu; trigger reads "Loading...". */
   loading?: boolean;
   /** Type-to-filter field pinned above the list. */
   searchable?: boolean;
@@ -138,7 +138,7 @@ export function Select({
         show={show}
         hide={hide}
         leading={leadingIcon || (selected && selected.icon) || null}
-        text={loading ? 'Loading…' : isPlaceholder ? placeholder : selected.label}
+        text={loading ? 'Loading...' : isPlaceholder ? placeholder : selected.label}
         isPlaceholder={isPlaceholder}
       />
 

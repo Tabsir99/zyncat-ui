@@ -1,6 +1,6 @@
 'use client';
 
-/* Table — opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
+/* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
 import * as React from 'react';
 import { motion } from 'motion/react';
@@ -18,13 +18,13 @@ export interface TableColumn<Row = any> {
   label?: React.ReactNode;
   /** Cell + header alignment. Default 'start'. */
   align?: TableAlign;
-  /** Mono + tabular numerals (timestamps, counts, IDs — §E). */
+  /** Mono + tabular numerals (timestamps, counts, IDs - section E). */
   mono?: boolean;
   /** Identity emphasis: strong text, medium weight. */
   strong?: boolean;
-  /** The one greedy column — absorbs slack width. Others size to content. */
+  /** The one greedy column - absorbs slack width. Others size to content. */
   grow?: boolean;
-  /** Header becomes a sort control. Sort is local; asc ⇄ desc, no third state. */
+  /** Header becomes a sort control. Sort is local; asc - desc, no third state. */
   sortable?: boolean;
   /** Sort accessor: a row property name, or a function. Defaults to row[key]. */
   sortBy?: string | ((row: Row) => unknown);
@@ -57,7 +57,7 @@ export interface TableProps<Row = any> {
 
   /** Initial sort; sorting stays local and uncontrolled after that. */
   defaultSort?: TableSort | null;
-  /** Notification only — fires after the local sort updates. */
+  /** Notification only - fires after the local sort updates. */
   onSortChange?: (sort: TableSort) => void;
 
   /** Row rhythm. Default 'cozy' (46px rows); 'compact' is 38px. */
@@ -69,12 +69,12 @@ export interface TableProps<Row = any> {
   loading?: boolean;
   /** Shown when rows is empty and not loading. Default 'Nothing to show'. */
   empty?: React.ReactNode;
-  /** Footer strip — pagination, summaries. */
+  /** Footer strip - pagination, summaries. */
   footer?: React.ReactNode;
 
   /** Makes rows clickable (checkbox cell excluded). */
   onRowClick?: (row: Row) => void;
-  /** Size the table here — the internal scroller absorbs the constraint. */
+  /** Size the table here - the internal scroller absorbs the constraint. */
   className?: string;
 }
 
@@ -95,7 +95,7 @@ interface TblCheckboxProps {
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
-/* the Checkbox primitive's exact DOM minus label — its CSS state machine paints it */
+/* the Checkbox primitive's exact DOM minus label - its CSS state machine paints it */
 function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: TblCheckboxProps) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -122,7 +122,7 @@ function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: T
   );
 }
 
-/* count odometer — reuses badge.css's .odo vocabulary: each digit clips a 0–9 strip */
+/* count odometer - reuses badge.css's .odo vocabulary: each digit clips a 0-9 strip */
 const TBL_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 function TblOdo({ value }: { value: number }) {
   const str = String(value);
@@ -236,7 +236,7 @@ export function Table<Row = any>({
     commitSelection(next);
   }
 
-  /* live scroll → data attrs that CSS reads for header elevation, pin cast, edge fades */
+  /* live scroll - data attrs that CSS reads for header elevation, pin cast, edge fades */
   useEffect(() => {
     const el = scrollRef.current;
     const w = wrapRef.current;
@@ -279,7 +279,7 @@ export function Table<Row = any>({
   const showEmpty = !loading && sortedRows.length === 0;
   const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
 
-  /* one persistent node, CSS open/close — AnimatePresence ghosted here; count frozen so exit doesn't roll to 0 */
+  /* one persistent node, CSS open/close - AnimatePresence ghosted here; count frozen so exit doesn't roll to 0 */
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 

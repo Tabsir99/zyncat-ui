@@ -1,4 +1,4 @@
-/* Collapse — animates open/closed via a grid track interpolating 0fr↔1fr (never `auto`). */
+/* Collapse - animates open/closed via a grid track interpolating 0frand1fr (never `auto`). */
 
 .collapse {
   display: grid;

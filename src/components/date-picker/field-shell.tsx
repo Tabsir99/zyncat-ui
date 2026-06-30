@@ -1,6 +1,6 @@
 'use client';
 
-/* FieldShell + useControllable — the variant-blind .fld chrome and a controlled/uncontrolled state hook. */
+/* FieldShell + useControllable - the variant-blind .fld chrome and a controlled/uncontrolled state hook. */
 
 import * as React from 'react';
 import type { ReactNode } from 'react';

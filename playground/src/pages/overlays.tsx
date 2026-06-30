@@ -1,30 +1,43 @@
 import { useState } from 'react';
-import { Alert, Tooltip, Dialog, Overlay, Button, toast } from 'premium-ui';
+import { Alert, Tooltip, Dialog, Overlay, Button, toast } from 'premium-ds';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
 export function AlertPage() {
   return (
     <>
-      <Demo label="tones · title + body" fill>
+      <Demo label="tones - title + body" fill>
         <div className="stack" style={{ gap: 'var(--space-3)', width: '100%', maxWidth: 560 }}>
           <Alert tone="info" title="A new version is available">
-            Reload to get the latest improvements — your work is saved.
+            Reload to get the latest improvements - your work is saved.
           </Alert>
           <Alert tone="success" title="Changes saved">
             Everything is up to date across your devices.
           </Alert>
-          <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: () => toast.info('Opening billing…') }}>
-            Add a plan to keep your team’s access uninterrupted.
+          <Alert
+            tone="warning"
+            title="Your trial ends in 5 days"
+            action={{ label: 'Upgrade', onClick: () => toast.info('Opening billing...') }}
+          >
+            Add a plan to keep your team's access uninterrupted.
           </Alert>
-          <Alert tone="danger" title="Payment failed" action={{ label: 'Retry', onClick: () => toast.loading('Retrying payment…') }}>
+          <Alert
+            tone="danger"
+            title="Payment failed"
+            action={{ label: 'Retry', onClick: () => toast.loading('Retrying payment...') }}
+          >
             Your card was declined. Update your billing details to continue.
           </Alert>
         </div>
       </Demo>
-      <Demo label="banner · dismissible" fill>
+      <Demo label="banner - dismissible" fill>
         <div className="stack" style={{ gap: 'var(--space-3)', width: '100%', maxWidth: 560 }}>
-          <Alert banner tone="warning" title="2 items need your review" action={{ label: 'Review', onClick: () => toast('Opening review…') }} />
+          <Alert
+            banner
+            tone="warning"
+            title="2 items need your review"
+            action={{ label: 'Review', onClick: () => toast('Opening review...') }}
+          />
           <Alert tone="info" title="Tip: press ⌘K to jump anywhere" dismissible />
         </div>
       </Demo>
@@ -34,35 +47,69 @@ export function AlertPage() {
 
 export function ToastPage() {
   const fakeSave = (ok: boolean) =>
-    new Promise<{ count: number }>((resolve, reject) => setTimeout(() => (ok ? resolve({ count: 12 }) : reject(new Error('network timeout'))), 1400));
+    new Promise<{ count: number }>((resolve, reject) =>
+      setTimeout(() => (ok ? resolve({ count: 12 }) : reject(new Error('network timeout'))), 1400),
+    );
   return (
     <>
       <Demo label="tones">
         <Button variant="secondary" onClick={() => toast('Copied to clipboard')}>
           Neutral
         </Button>
-        <Button variant="secondary" onClick={() => toast.success('Changes saved', { description: 'Synced to the cloud' })}>
+        <Button
+          variant="secondary"
+          onClick={() => toast.success('Changes saved', { description: 'Synced to the cloud' })}
+        >
           Success
         </Button>
-        <Button variant="secondary" onClick={() => toast.error('Upload failed', { description: 'File too large' })}>
+        <Button
+          variant="secondary"
+          onClick={() => toast.error('Upload failed', { description: 'File too large' })}
+        >
           Error
         </Button>
-        <Button variant="secondary" onClick={() => toast.warning('You’re running low on storage')}>
+        <Button variant="secondary" onClick={() => toast.warning("You're running low on storage")}>
           Warning
         </Button>
         <Button variant="secondary" onClick={() => toast.info('A new version is available')}>
           Info
         </Button>
       </Demo>
-      <Demo label="action · promise · loading">
-        <Button variant="secondary" onClick={() => toast('Item deleted', { description: 'Moved to trash', action: { label: 'Undo', onClick: () => toast.success('Restored') } })}>
+      <Demo label="action - promise - loading">
+        <Button
+          variant="secondary"
+          onClick={() =>
+            toast('Item deleted', {
+              description: 'Moved to trash',
+              action: { label: 'Undo', onClick: () => toast.success('Restored') },
+            })
+          }
+        >
           With action
         </Button>
-        <Button variant="secondary" onClick={() => toast.promise(fakeSave(true), { loading: 'Saving…', success: (v) => `Saved · ${v.count} items`, error: (e) => `Failed — ${(e as Error).message}` })}>
-          Promise · resolves
+        <Button
+          variant="secondary"
+          onClick={() =>
+            toast.promise(fakeSave(true), {
+              loading: 'Saving...',
+              success: (v) => `Saved - ${v.count} items`,
+              error: (e) => `Failed - ${(e as Error).message}`,
+            })
+          }
+        >
+          Promise - resolves
         </Button>
-        <Button variant="secondary" onClick={() => toast.promise(fakeSave(false), { loading: 'Uploading…', success: 'Uploaded', error: (e) => `Upload failed — ${(e as Error).message}` })}>
-          Promise · rejects
+        <Button
+          variant="secondary"
+          onClick={() =>
+            toast.promise(fakeSave(false), {
+              loading: 'Uploading...',
+              success: 'Uploaded',
+              error: (e) => `Upload failed - ${(e as Error).message}`,
+            })
+          }
+        >
+          Promise - rejects
         </Button>
         <Button variant="ghost" onClick={() => toast.dismiss()}>
           Dismiss all
@@ -75,7 +122,7 @@ export function ToastPage() {
 export function TooltipPage() {
   return (
     <>
-      <Demo label="content · shortcut">
+      <Demo label="content - shortcut">
         <Tooltip content="Save changes" shortcut="⌘S">
           <Button variant="primary">Save</Button>
         </Tooltip>
@@ -103,7 +150,7 @@ export function TooltipPage() {
 export function DialogPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
-    <Demo label="confirm · controlled">
+    <Demo label="confirm - controlled">
       <Button variant="danger" onClick={() => setConfirmOpen(true)}>
         Delete project
       </Button>
@@ -113,7 +160,7 @@ export function DialogPage() {
         tone="danger"
         icon={<Icon name="warning-circle" />}
         title="Delete this project?"
-        description="All of its content will be removed. This can’t be undone."
+        description="All of its content will be removed. This can't be undone."
         footer={(close) => (
           <>
             <Button variant="secondary" onClick={close}>
@@ -131,7 +178,9 @@ export function DialogPage() {
           </>
         )}
       >
-        <p style={{ margin: 0, color: 'var(--text-body)' }}>Members will lose access immediately. Other projects are unaffected.</p>
+        <p style={{ margin: 0, color: 'var(--text-body)' }}>
+          Members will lose access immediately. Other projects are unaffected.
+        </p>
       </Dialog>
     </Demo>
   );
@@ -165,11 +214,13 @@ export function OverlayPage() {
               minWidth: 200,
             }}
           >
-            {([
-              { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming…' },
-              { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
-              { icon: 'trash', label: 'Delete', msg: 'Deleted' },
-            ] as const).map((it) => (
+            {(
+              [
+                { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming...' },
+                { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
+                { icon: 'trash', label: 'Delete', msg: 'Deleted' },
+              ] as const
+            ).map((it) => (
               <Button
                 key={it.label}
                 variant="ghost"
@@ -194,8 +245,13 @@ export function OverlayPage() {
 export function SheetPage() {
   return (
     <>
-      <Demo label="right · drag-to-dismiss">
-        <Overlay mode="sheet" side="right" asChild trigger={<Button variant="secondary">Open panel</Button>}>
+      <Demo label="right - drag-to-dismiss">
+        <Overlay
+          mode="sheet"
+          side="right"
+          asChild
+          trigger={<Button variant="secondary">Open panel</Button>}
+        >
           {({ close }) => (
             <div
               role="dialog"
@@ -214,10 +270,21 @@ export function SheetPage() {
               }}
             >
               <div className="stack" style={{ gap: 'var(--space-1)' }}>
-                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Filters</h2>
-                <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>Drag toward the edge, press Esc, or tap the scrim to dismiss.</p>
+                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>
+                  Filters
+                </h2>
+                <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
+                  Drag toward the edge, press Esc, or tap the scrim to dismiss.
+                </p>
               </div>
-              <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
+              <div
+                style={{
+                  marginTop: 'auto',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 'var(--space-2)',
+                }}
+              >
                 <Button variant="secondary" onClick={close}>
                   Cancel
                 </Button>
@@ -235,7 +302,12 @@ export function SheetPage() {
         </Overlay>
       </Demo>
       <Demo label="bottom">
-        <Overlay mode="sheet" side="bottom" asChild trigger={<Button variant="secondary">Open bottom sheet</Button>}>
+        <Overlay
+          mode="sheet"
+          side="bottom"
+          asChild
+          trigger={<Button variant="secondary">Open bottom sheet</Button>}
+        >
           {({ close }) => (
             <div
               role="dialog"
@@ -253,9 +325,22 @@ export function SheetPage() {
                 boxShadow: 'var(--shadow-xl)',
               }}
             >
-              <span aria-hidden="true" style={{ width: 36, height: 4, borderRadius: 'var(--radius-full)', background: 'var(--border-strong)', alignSelf: 'center' }} />
-              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Quick actions</h2>
-              <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>The bottom sheet spans the full width and drags down to dismiss.</p>
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 36,
+                  height: 4,
+                  borderRadius: 'var(--radius-full)',
+                  background: 'var(--border-strong)',
+                  alignSelf: 'center',
+                }}
+              />
+              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>
+                Quick actions
+              </h2>
+              <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
+                The bottom sheet spans the full width and drags down to dismiss.
+              </p>
               <Button onClick={close} style={{ alignSelf: 'flex-start' }}>
                 Done
               </Button>

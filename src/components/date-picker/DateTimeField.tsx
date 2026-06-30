@@ -1,6 +1,6 @@
 'use client';
 
-/* DateTimeField — DateField's sibling for 'YYYY-MM-DDTHH:mm': the calendar panel plus the segmented time machine; commits only complete datetimes. */
+/* DateTimeField - DateField's sibling for 'YYYY-MM-DDTHH:mm': the calendar panel plus the segmented time machine; commits only complete datetimes. */
 
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
@@ -27,7 +27,7 @@ function dttfDisplayTime(t: string, format?: '24h' | '12h'): string {
   const mer = p[0] >= 12 ? 'PM' : 'AM';
   return ((p[0] + 11) % 12) + 1 + ':' + dttfPad(p[1]) + ' ' + mer;
 }
-/* value: 'YYYY-MM-DDTHH:mm' → parts. Limits may be date-only. */
+/* value: 'YYYY-MM-DDTHH:mm' - parts. Limits may be date-only. */
 function dttfSplit(v: string | null | undefined): DateTimeParts {
   if (!v) return { date: null, time: null };
   const i = v.indexOf('T');
@@ -41,11 +41,11 @@ export interface DateTimeFieldProps {
   onChange?: (value: string) => void;
   label?: string;
   placeholder?: string;
-  /** IANA timezone (e.g. 'Europe/Riga') — display context, shown in the footer. */
+  /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
   timezone?: string;
-  /** Lower bound — 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:mm', inclusive. */
+  /** Lower bound - 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:mm', inclusive. */
   min?: string;
-  /** Upper bound — 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:mm', inclusive. */
+  /** Upper bound - 'YYYY-MM-DD' or 'YYYY-MM-DDTHH:mm', inclusive. */
   max?: string;
   /** Time display only; storage stays 24h. Default '24h'. */
   format?: '24h' | '12h';

@@ -1,6 +1,6 @@
 'use client';
 
-// Checkbox — checkbox primitive; on/off + indeterminate select-all.
+// Checkbox - checkbox primitive; on/off + indeterminate select-all.
 
 import * as React from 'react';
 
@@ -12,19 +12,19 @@ export interface CheckboxProps extends Omit<
   checked?: boolean;
   /** Uncontrolled initial state. */
   defaultChecked?: boolean;
-  /** Indeterminate — the "some, not all" select-all state; visually wins over `checked`. @default false */
+  /** Indeterminate - the "some, not all" select-all state; visually wins over `checked`. @default false */
   indeterminate?: boolean;
   /** Single error state for consent gates ("you must agree"); also sets `aria-invalid`. @default false */
   invalid?: boolean;
-  /** Disabled — inert and de-emphasized (distinct fill when checked). */
+  /** Disabled - inert and de-emphasized (distinct fill when checked). */
   disabled?: boolean;
-  /** Box size: `md` 18px · `sm` 16px for dense table rows. @default 'md' */
+  /** Box size: `md` 18px - `sm` 16px for dense table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the box. */
   label?: React.ReactNode;
   /** Optional secondary line under the label (settings rows). */
   description?: React.ReactNode;
-  /** Fires on toggle — read `e.target.checked`. */
+  /** Fires on toggle - read `e.target.checked`. */
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
@@ -43,7 +43,7 @@ export function Checkbox({
 }: CheckboxProps) {
   const ref = React.useRef<HTMLInputElement>(null);
 
-  // `indeterminate` is not an HTML attribute — push it onto the node directly.
+  // `indeterminate` is not an HTML attribute - push it onto the node directly.
   React.useEffect(() => {
     if (ref.current) ref.current.indeterminate = indeterminate;
   }, [indeterminate, checked]);

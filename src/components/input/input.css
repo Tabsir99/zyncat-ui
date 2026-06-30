@@ -1,6 +1,6 @@
-/* input.css — inputs: TextField · NumberField · OtpField. */
+/* input.css - inputs: TextField - NumberField - OtpField. */
 
-/* No row-gap — the label and message each own their adjacent gap, so an absent message reserves zero. */
+/* No row-gap - the label and message each own their adjacent gap, so an absent message reserves zero. */
 .fld {
   display: grid;
 }
@@ -63,7 +63,7 @@
   color: var(--text-body);
 }
 
-/* On message TEXT change (normal↔error↔warning), JS re-triggers .fld__msg--enter to fade and rise — never a hard pop. */
+/* On message TEXT change (normalanderrorandwarning), JS re-triggers .fld__msg--enter to fade and rise - never a hard pop. */
 .fld__msg {
   font: var(--type-caption);
   color: var(--text-subtle);
@@ -170,7 +170,7 @@
   padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
 }
 
-/* Per-state hover rule is required — the generic .fld__input:hover would otherwise win on specificity. */
+/* Per-state hover rule is required - the generic .fld__input:hover would otherwise win on specificity. */
 .fld.is-error .fld__input {
   border-color: var(--danger);
 }
@@ -209,7 +209,7 @@
   color: var(--success-text);
 }
 
-/* Stepper column width is the single source of truth — every clearance derives from it via calc(), so geometry can't drift. */
+/* Stepper column width is the single source of truth - every clearance derives from it via calc(), so geometry can't drift. */
 .numf {
   --numf-stepper-w: var(--space-6);
 }
@@ -274,7 +274,7 @@
   border-color: var(--accent);
 }
 
-/* Intentional exception: slot (44×52 · sm 38×44) and separator (10×2) are bespoke px — the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
+/* Intentional exception: slot (44x52 - sm 38x44) and separator (10x2) are bespoke px - the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
 .otp {
   display: inline-flex;
   align-items: center;

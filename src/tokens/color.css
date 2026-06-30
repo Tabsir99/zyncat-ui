@@ -1,4 +1,4 @@
-/* Color primitives — the closed neutral + status ramps. */
+/* Color primitives - the closed neutral + status ramps. */
 
 :root {
   --gray-0: oklch(1 0 0);
@@ -44,13 +44,13 @@
   --red-600: oklch(0.545 0.196 27);
   --red-700: oklch(0.478 0.172 27);
 
-  /* Wash tints — glassy active/selected fills that let the surface show through; low alpha per hue. */
+  /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue. */
   --gray-wash: oklch(0.42 0.012 264 / 0.06);
   --teal-wash: oklch(0.63 0.118 198 / 0.05);
   --green-wash: oklch(0.62 0.13 152 / 0.1);
   --amber-wash: oklch(0.76 0.14 75 / 0.12);
   --red-wash: oklch(0.602 0.196 27 / 0.1);
 
-  /* Cool near-black shadow ink — pure black looks muddy on a cool canvas. */
+  /* Cool near-black shadow ink - pure black looks muddy on a cool canvas. */
   --shadow-rgb: 13 18 30;
 }

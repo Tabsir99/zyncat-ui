@@ -1,11 +1,11 @@
 'use client';
 
-/* ToggleTag — on/off filter chip (<button aria-pressed>); owns its selection state. */
+/* ToggleTag - on/off filter chip (<button aria-pressed>); owns its selection state. */
 
 import * as React from 'react';
 import { IconSlot } from '../icon/IconSlot';
 
-/** ToggleTag — the on/off filter chip (<button aria-pressed>). */
+/** ToggleTag - the on/off filter chip (<button aria-pressed>). */
 export interface ToggleTagProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'onChange' | 'children'
@@ -20,9 +20,9 @@ export interface ToggleTagProps extends Omit<
   onChange?: (selected: boolean) => void;
   /** Your own icon node; replaces the tick. Selected state reads from the wash. */
   icon?: React.ReactNode | null;
-  /** Optional result count — rendered mono/tabular. */
+  /** Optional result count - rendered mono/tabular. */
   count?: React.ReactNode;
-  /** 'md' = 28px (default) · 'sm' = 24px for dense rows. */
+  /** 'md' = 28px (default) - 'sm' = 24px for dense rows. */
   size?: 'md' | 'sm';
   disabled?: boolean;
   className?: string;
@@ -49,7 +49,7 @@ function toggleTagRestProps(props: Record<string, unknown>, own: Record<string, 
 }
 
 function ToggleTagTick({ selected }: { selected: boolean }) {
-  /* collapse.css mechanism on spans — width 0fr ↔ 1fr, content clipped */
+  /* collapse.css mechanism on spans - width 0fr and 1fr, content clipped */
   return (
     <span
       className="tag__check collapse"

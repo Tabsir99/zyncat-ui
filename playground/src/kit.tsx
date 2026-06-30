@@ -3,7 +3,15 @@
 // pure demos. Not part of the library.
 import type { ReactNode } from 'react';
 
-export function Demo({ label, fill, children }: { label?: string; fill?: boolean; children: ReactNode }) {
+export function Demo({
+  label,
+  fill,
+  children,
+}: {
+  label?: string;
+  fill?: boolean;
+  children: ReactNode;
+}) {
   return (
     <div className={fill ? 'demo demo--fill' : 'demo'}>
       {label ? <span className="demo__label">{label}</span> : null}

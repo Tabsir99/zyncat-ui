@@ -1,6 +1,6 @@
 'use client';
 
-/* Toast — the React render layer (queue + clocks live in toast-store.ts). */
+/* Toast - the React render layer (queue + clocks live in toast-store.ts). */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -19,7 +19,7 @@ const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
 const SWIPE_V = 480;
 
-// expanded gap AND collapsed peek — read lazily (post-stylesheet), once
+// expanded gap AND collapsed peek - read lazily (post-stylesheet), once
 let GAP = 0;
 function stackGap() {
   if (GAP) return GAP;
@@ -37,7 +37,7 @@ const TONE_ICON: Record<string, IconName> = {
   info: 'info',
 };
 
-/* useToneGesture — success glint, error headshake; the glint class is toggled with a reflow (remove → offsetWidth → add) to restart the one-shot. */
+/* useToneGesture - success glint, error headshake; the glint class is toggled with a reflow (remove - offsetWidth - add) to restart the one-shot. */
 function useToneGesture(
   tone: ToastTone,
   ref: React.RefObject<HTMLElement>,
@@ -85,10 +85,10 @@ function ToastItem({
   onHeight: (id: string, h: number) => void;
 }) {
   const ref = useRef<HTMLLIElement>(null);
-  const x = useMotionValue(0); // swipe travel — ours, so dismissal can finish it
+  const x = useMotionValue(0); // swipe travel - ours, so dismissal can finish it
   useToneGesture(t.tone, ref, x);
 
-  // report the CONTENT height (firstChild — the li's own height is animated, so it'd read mid-tween)
+  // report the CONTENT height (firstChild - the li's own height is animated, so it'd read mid-tween)
   useLayoutEffect(() => {
     if (ref.current && ref.current.firstElementChild)
       onHeight(t.id, (ref.current.firstElementChild as HTMLElement).offsetHeight);
@@ -96,7 +96,7 @@ function ToastItem({
 
   const swipe = (_e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-      // fling out the right edge, THEN remove — the exit fade plays where it landed, no snap-back
+      // fling out the right edge, THEN remove - the exit fade plays where it landed, no snap-back
       animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() =>
         store.dismiss(t.id),
       );
@@ -163,7 +163,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
             </motion.span>
           )}
           {isFinite(t.duration) && (
-            /* the ring — keyed to the timer so a restart re-fills it; pathLength=1 makes dashoffset a fraction */
+            /* the ring - keyed to the timer so a restart re-fills it; pathLength=1 makes dashoffset a fraction */
             <svg
               key={'ring-' + t.timerKey}
               className="toast__ring"
@@ -184,7 +184,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
         </span>
       )}
       <motion.div
-        key={String(t.message) + '·' + String(t.description)}
+        key={String(t.message) + '-' + String(t.description)}
         className="toast__text"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -258,7 +258,7 @@ function ToastHost() {
     );
   };
 
-  // tab hidden → freeze clocks, visible → resume (visibility, not window focus: an embedded preview blurs on outside clicks).
+  // tab hidden - freeze clocks, visible - resume (visibility, not window focus: an embedded preview blurs on outside clicks).
   useEffect(() => {
     const onVis = () => {
       if (document.hidden) store.pause();
@@ -299,7 +299,7 @@ function ToastHost() {
           onRelease(false);
       }}
     >
-      {/* initial stays true — the host mounts with the first toast, so initial={false} would skip its entrance */}
+      {/* initial stays true - the host mounts with the first toast, so initial={false} would skip its entrance */}
       <AnimatePresence>
         {slice.map((t, i) => {
           const depth = n - 1 - i; // newest = 0, at the front
@@ -340,7 +340,7 @@ function ensureToastHost() {
 store.host = ensureToastHost;
 if (store.toasts.length) ensureToastHost(); // toasts fired before we loaded
 
-/* Toaster — mount once near the app root so this module loads client-side and the lazy host is registered (toast() also auto-mounts). */
+/* Toaster - mount once near the app root so this module loads client-side and the lazy host is registered (toast() also auto-mounts). */
 export function Toaster(): null {
   useEffect(() => {
     ensureToastHost();

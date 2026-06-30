@@ -1,8 +1,8 @@
 import { defineConfig } from 'tsup';
 
-// One entry per public module → one dist file + .d.ts each, so consumers can
-// deep-import (`premium-ui/button`) without pulling the barrel. splitting:true
-// hoists shared internals (overlay-core, select-core, field-shell, …) into
+// One entry per public module - one dist file + .d.ts each, so consumers can
+// deep-import (`premium-ds/button`) without pulling the barrel. splitting:true
+// hoists shared internals (overlay-core, select-core, field-shell, ...) into
 // shared chunks instead of duplicating them per entry.
 export default defineConfig({
   entry: {
@@ -51,7 +51,7 @@ export default defineConfig({
   clean: true,
   target: 'es2022',
   // Bundle the ~16 curated Phosphor glyphs the components import (static, tree-shaken).
-  // react/react-dom/motion stay external — stateful singletons the app must own one of.
+  // react/react-dom/motion stay external - stateful singletons the app must own one of.
   external: ['react', 'react-dom', 'motion'],
   metafile: true,
 
@@ -61,9 +61,9 @@ export default defineConfig({
   silent: true,
 
   // esbuild strips the per-file `'use client'` when bundling and tsup's banner never
-  // reaches split chunks. Re-assert it on every output that is a client boundary —
-  // a chunk holding a client source, or an entry/chunk that imports one — while pure
-  // data/util modules (motion-tokens, …) stay server-importable. Prepend same-line so
+  // reaches split chunks. Re-assert it on every output that is a client boundary -
+  // a chunk holding a client source, or an entry/chunk that imports one - while pure
+  // data/util modules (motion-tokens, ...) stay server-importable. Prepend same-line so
   // source-map line numbers don't shift.
   async onSuccess() {
     const { readdir, readFile, writeFile, rm } = await import('node:fs/promises');
@@ -103,6 +103,6 @@ export default defineConfig({
       if (!/^['"]use client['"]/.test(code)) await writeFile(out, `'use client';${code}`);
     }
     await rm(`dist/${metaName}`);
-    console.log(`tsup: built ${outputs.length} JS outputs · 'use client' on ${client.size}`);
+    console.log(`tsup: built ${outputs.length} JS outputs - 'use client' on ${client.size}`);
   },
 });

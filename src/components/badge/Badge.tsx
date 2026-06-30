@@ -1,6 +1,6 @@
 'use client';
 
-// Base badge chip — glass surface by default; the outline variant is flat (no glass classes).
+// Base badge chip - glass surface by default; the outline variant is flat (no glass classes).
 
 import type { HTMLAttributes, ReactNode } from 'react';
 
@@ -15,7 +15,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   size?: 'sm' | 'md';
   /** Leading status dot. */
   dot?: boolean;
-  /** Dot pulses (implies dot) — for in-progress status. */
+  /** Dot pulses (implies dot) - for in-progress status. */
   live?: boolean;
   /** Fully-rounded shape. */
   pill?: boolean;

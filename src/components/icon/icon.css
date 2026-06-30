@@ -1,11 +1,11 @@
-/* Icon — base layout (inline/flex seating); size and color come from props/tokens. */
+/* Icon - base layout (inline/flex seating); size and color come from props/tokens. */
 
 .icon {
   flex: none;
   vertical-align: middle;
 }
 
-/* icon-slot — locks a consumer icon node to the token size and currentColor. */
+/* icon-slot - locks a consumer icon node to the token size and currentColor. */
 .icon-slot {
   display: inline-flex;
   align-items: center;

@@ -1,6 +1,6 @@
 'use client';
 
-/* TimeSegments — the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
+/* TimeSegments - the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
 
 import * as React from 'react';
 
@@ -57,7 +57,7 @@ export function TimeSegments({
   const [mer, setMer] = useState<Meridiem>(seed[0] != null && seed[0] >= 12 ? 'PM' : 'AM');
   const [pend, setPendState] = useState<Pending | null>(null);
 
-  /* live mirrors — blur fires synchronously before re-render, so blur-commit reads refs, not stale closure state. */
+  /* live mirrors - blur fires synchronously before re-render, so blur-commit reads refs, not stale closure state. */
   const hLive = useRef<number | null>(seed[0]);
   const mLive = useRef<number | null>(seed[1]);
   const pendLive = useRef<Pending | null>(null);

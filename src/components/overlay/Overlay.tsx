@@ -1,6 +1,6 @@
 'use client';
 
-/* Overlay — one headless component, three modes: popover · dialog · sheet. */
+/* Overlay - one headless component, three modes: popover - dialog - sheet. */
 import * as React from 'react';
 import {
   OvAnimatePresence as AnimatePresence,
@@ -35,19 +35,19 @@ export interface OverlayProps {
 
   /** Popover side (default 'bottom', flips) / sheet edge (default 'right'). */
   side?: 'top' | 'bottom' | 'left' | 'right';
-  /** Popover only — cross-axis alignment. Default 'start'. */
+  /** Popover only - cross-axis alignment. Default 'start'. */
   align?: 'start' | 'center' | 'end';
-  /** Popover only — caret tracking the trigger center. */
+  /** Popover only - caret tracking the trigger center. */
   arrow?: boolean;
 
   /** Light/scrim + Esc dismissal (sheet adds drag-to-edge). Default true. */
   dismissible?: boolean;
 
-  /** Render no wrapper — your DOM-element child becomes the panel. Default false. */
+  /** Render no wrapper - your DOM-element child becomes the panel. Default false. */
   asChild?: boolean;
 
   id?: string;
-  /** The ENTIRE surface — paint AND semantics. Function form receives { close }. */
+  /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
   children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode);
 }
 
@@ -72,7 +72,7 @@ const dialogVariants = {
   },
 };
 
-/* entrance curve, not a spring — overshoot would show a gap behind the panel */
+/* entrance curve, not a spring - overshoot would show a gap behind the panel */
 function sheetVariants(side: 'right' | 'bottom') {
   const axis = side === 'bottom' ? 'y' : 'x';
   return {
@@ -88,7 +88,7 @@ interface PanelShared {
   requestClose: () => void;
 }
 
-/* Popover panel — lifecycle hooks live here so dismiss/placement hold until exit ends. */
+/* Popover panel - lifecycle hooks live here so dismiss/placement hold until exit ends. */
 function PopoverPanel({
   panelId,
   side,
@@ -134,7 +134,7 @@ function PopoverPanel({
   });
 }
 
-/* Sheet shell — owns the drag hook; slotRef must exist before the shell renders. */
+/* Sheet shell - owns the drag hook; slotRef must exist before the shell renders. */
 function SheetShell({
   side,
   panelId,

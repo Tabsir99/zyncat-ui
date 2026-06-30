@@ -1,6 +1,6 @@
 'use client';
 
-/* DateField — opinionated single-date picker: a .fld trigger opens a month-calendar popover, commit is live on day pick. */
+/* DateField - opinionated single-date picker: a .fld trigger opens a month-calendar popover, commit is live on day pick. */
 
 import * as React from 'react';
 import type { ReactNode } from 'react';
@@ -46,7 +46,7 @@ export interface DtpPanelProps {
   slot?: ReactNode;
 }
 
-/* the popover panel, mounted only while open — owns view + roving focus, so each open starts at the picked month. */
+/* the popover panel, mounted only while open - owns view + roving focus, so each open starts at the picked month. */
 export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }: DtpPanelProps) {
   const seed = val ? dtfParse(val) : new Date();
   const [view, setView] = useState<{ y: number; m: number }>({
@@ -106,7 +106,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     );
   }, [viewIdx]);
 
-  /* seed focus into the grid on open — the panel portals to <body>, unreachable from the trigger otherwise. */
+  /* seed focus into the grid on open - the panel portals to <body>, unreachable from the trigger otherwise. */
   useEffect(() => {
     const el = daysRef.current;
     if (!el) return;
@@ -290,7 +290,7 @@ export interface DateFieldProps {
   onChange?: (value: string) => void;
   label?: string;
   placeholder?: string;
-  /** IANA timezone name (e.g. 'Europe/Riga') — display context only, shown with its GMT offset in the footer. */
+  /** IANA timezone name (e.g. 'Europe/Riga') - display context only, shown with its GMT offset in the footer. */
   timezone?: string;
   /** Earliest pickable date, 'YYYY-MM-DD', inclusive. */
   min?: string;

@@ -1,4 +1,4 @@
-/* Spacing spine — one 4px base and a short scale; every gap snaps to a step. */
+/* Spacing spine - one 4px base and a short scale; every gap snaps to a step. */
 
 :root {
   --space-px: 1px;
@@ -22,5 +22,5 @@
   --control-height: 2.25rem;
   --control-height-lg: 2.5rem;
   --control-box: 1.125rem;
-  --control-switch: 1.25rem; /* switch track (md); the one control size off the scale — width reuses --control-height(-sm), sm height reuses --space-4 */
+  --control-switch: 1.25rem; /* switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4 */
 }

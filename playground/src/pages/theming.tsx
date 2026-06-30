@@ -1,6 +1,6 @@
 import { Demo } from '../kit';
 
-const OVERRIDE = `/* your app — after \`import 'premium-ui/styles.css'\` */
+const OVERRIDE = `/* your app - after \`import 'premium-ds/styles.css'\` */
 :root {
   --accent: oklch(0.55 0.21 285);   /* primary action fill   */
   --accent-hover: oklch(0.50 0.21 285);
@@ -33,8 +33,8 @@ export function ThemingPage() {
       <Demo label="try it live" fill>
         <span style={{ color: 'var(--text-muted)' }}>
           The accent swatches and the theme toggle in the top bar set exactly these variables on{' '}
-          <code style={{ font: 'var(--type-mono)', color: 'var(--text-strong)' }}>:root</code> — no source, no rebuild. That’s the
-          whole theming story.
+          <code style={{ font: 'var(--type-mono)', color: 'var(--text-strong)' }}>:root</code> - no
+          source, no rebuild. That's the whole theming story.
         </span>
       </Demo>
     </>

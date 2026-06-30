@@ -1,4 +1,4 @@
-// toast-store — the Toast machinery: queue, clocks, coalescing, imperative API (zero React).
+// toast-store - the Toast machinery: queue, clocks, coalescing, imperative API (zero React).
 
 export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'custom';
 
@@ -66,7 +66,7 @@ interface ToastStore {
   setExpanded(v: boolean): void;
 }
 
-/* Store — the queue; the API writes, the host renders. */
+/* Store - the queue; the API writes, the host renders. */
 const store: ToastStore = {
   toasts: [],
   paused: false,
@@ -85,7 +85,7 @@ const store: ToastStore = {
   },
 
   add(t) {
-    // coalesce: an identical visible toast becomes ×n instead of a duplicate
+    // coalesce: an identical visible toast becomes a xN counter instead of a duplicate
     const twin = store.toasts.find(
       (x) =>
         !x.node &&
@@ -231,7 +231,7 @@ toast.update = (id, patch = {}) => {
 };
 
 toast.promise = function <T>(promise: Promise<T>, msgs: ToastPromiseMsgs<T> = {}): Promise<T> {
-  const id = make('loading', msgs.loading != null ? msgs.loading : 'Working…');
+  const id = make('loading', msgs.loading != null ? msgs.loading : 'Working...');
   const text = <V>(m: PromiseMsg<V> | undefined, fallback: string, v: V): string =>
     typeof m === 'function' ? (m as (x: V) => string)(v) : m != null ? m : fallback;
   promise.then(

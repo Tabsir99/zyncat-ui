@@ -1,9 +1,9 @@
 // Playground entry. Imports the library's stylesheet exactly the way a consumer
-// would (`premium-ui/styles.css`), then the docs-only chrome on top. Routes are
+// would (`premium-ds/styles.css`), then the docs-only chrome on top. Routes are
 // built from the registry so each primitive renders on its own page.
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
-import 'premium-ui/styles.css';
+import 'premium-ds/styles.css';
 import './docs.css';
 import { Layout } from './Layout';
 import { Home } from './Home';

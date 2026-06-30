@@ -1,4 +1,4 @@
-/* premium-ui entry — @import manifest; order matters: fonts → primitives → semantics → components. */
+/* premium-ds entry - @import manifest; order matters: fonts - primitives - semantics - components. */
 
 @import url('./tokens/fonts.css');
 

@@ -1,6 +1,6 @@
 'use client';
 
-/* Pagination — pure cursor strip: mono range readout + prev/next, no page numbers. */
+/* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
 
 import * as React from 'react';
 import { animate } from 'motion/react';
@@ -8,11 +8,11 @@ import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 
 export interface PaginationProps {
-  /** Accessible name for the nav landmark — name the list ("Posts"), not "pagination". @default 'Pagination' */
+  /** Accessible name for the nav landmark - name the list ("Posts"), not "pagination". @default 'Pagination' */
   label?: string;
   /** Items currently shown, 1-based inclusive: `[from, to]` (e.g. `[26, 50]`). */
   range: [number, number];
-  /** Total item count — render `of N` only when the API reports one; omit for endless lists. */
+  /** Total item count - render `of N` only when the API reports one; omit for endless lists. */
   total?: number | null;
   /** A previous cursor exists. @default false */
   hasPrev?: boolean;
@@ -29,7 +29,7 @@ export interface PaginationProps {
 
 const { useEffect, useRef } = React;
 
-/* --space-2 in real px — tokens resolve to "0.5rem"; bare parseFloat gives 0.5, so convert rem→px */
+/* --space-2 in real px - tokens resolve to "0.5rem"; bare parseFloat gives 0.5, so convert rem-px */
 let pgnTravelPx: number | null = null;
 function pgnTravel() {
   if (pgnTravelPx == null) {
@@ -41,7 +41,7 @@ function pgnTravel() {
   return pgnTravelPx;
 }
 
-/* thin-space thousands grouping ("48 210") — §E mono-numeral convention */
+/* thin-space thousands grouping ("48 210") - section E mono-numeral convention */
 function pgnFormat(n: number) {
   return n.toLocaleString('en-US').replace(/,/g, '\u2009');
 }
@@ -61,7 +61,7 @@ export function Pagination({
   const prevBtnRef = useRef<HTMLButtonElement>(null);
   const nextBtnRef = useRef<HTMLButtonElement>(null);
   const shownRef = useRef<[number, number]>(range); // last range rendered (skip first mount)
-  const lastDirRef = useRef(0); // -1 prev · +1 next — last arrow fired
+  const lastDirRef = useRef(0); // -1 prev - +1 next - last arrow fired
 
   const from = range[0];
   const to = range[1];
@@ -76,7 +76,7 @@ export function Pagination({
     animate(rangeRef.current, { x: [dir * pgnTravel(), 0], opacity: [0, 1] }, UIMotion.t.enter);
   }, [from, to]);
 
-  /* edge disables the focused arrow and focus falls to <body> — hand it to the surviving direction; activeElement guard avoids stealing focus */
+  /* edge disables the focused arrow and focus falls to <body> - hand it to the surviving direction; activeElement guard avoids stealing focus */
   useEffect(() => {
     if (loading || document.activeElement !== document.body) return;
     const d = lastDirRef.current;
@@ -96,7 +96,7 @@ export function Pagination({
       <span className="pgn__readout" aria-live="polite">
         <span className="pgn__range" ref={rangeRef}>
           <b>
-            {pgnFormat(from)}–{pgnFormat(to)}
+            {pgnFormat(from)}-{pgnFormat(to)}
           </b>
           {total != null ? <span className="pgn__total"> of {pgnFormat(total)}</span> : null}
         </span>

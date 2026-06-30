@@ -1,4 +1,4 @@
-/* Pagination — cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
+/* Pagination - cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
 
 .pgn {
   display: inline-flex;
@@ -6,7 +6,7 @@
   gap: var(--space-3);
 }
 
-/* mono tabular readout; .pgn__range is the node Motion slides — keep it transformable (inline-block) */
+/* mono tabular readout; .pgn__range is the node Motion slides - keep it transformable (inline-block) */
 .pgn__readout {
   font: var(--type-mono);
   font-variant-numeric: tabular-nums;
@@ -31,7 +31,7 @@
   padding: 0;
 }
 
-/* Caret nudges toward its direction on hover — a 1px optical cue. */
+/* Caret nudges toward its direction on hover - a 1px optical cue. */
 .pgn__btn .icon {
   transition: transform var(--duration-fast) var(--ease-standard);
 }
@@ -42,7 +42,7 @@
   transform: translateX(var(--space-px));
 }
 
-/* loading: clicked arrow shows Button's spinner — hide its caret like button.css hides .btn__icon */
+/* loading: clicked arrow shows Button's spinner - hide its caret like button.css hides .btn__icon */
 .pgn__btn.is-loading .icon {
   opacity: 0;
 }

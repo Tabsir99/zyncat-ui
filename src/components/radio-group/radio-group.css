@@ -1,6 +1,6 @@
-/* RadioGroup — single-select in two skins: rows (dot + label) and cards (selectable tiles). */
+/* RadioGroup - single-select in two skins: rows (dot + label) and cards (selectable tiles). */
 
-/* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps — don't "fix" to a token */
+/* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps - don't "fix" to a token */
 .rg {
   --rg-dot: 18px;
   --rg-dot-inner: 8px;
@@ -107,7 +107,7 @@
   width: var(--rg-dot);
   height: var(--rg-dot);
   border-radius: var(--radius-full);
-  /* transparent so the ring→centre gap shows the surface behind (card tint), never a white halo */
+  /* transparent so the ring-centre gap shows the surface behind (card tint), never a white halo */
   background: transparent;
   border: var(--border-hairline) solid var(--border-strong);
   /* transform stays in the bundle so the press scale eases instead of snapping */
@@ -115,7 +115,7 @@
     var(--transition-control),
     transform var(--duration-fast) var(--ease-standard);
 }
-/* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here — Motion owns the move */
+/* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here - Motion owns the move */
 .rg__marker {
   position: absolute;
   inset: 0;
@@ -154,7 +154,7 @@
   transform: scale(0.92);
 }
 
-/* .is-selected (React) drives selection, not :checked/:has — Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
+/* .is-selected (React) drives selection, not :checked/:has - Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
 .rg-opt.is-selected .rg-opt__dot {
   border-color: var(--accent);
 }
@@ -220,7 +220,7 @@
   display: block;
 }
 
-/* selected fill is a shared layoutId layer that glides between cards — the card paints no selected bg/border of its own */
+/* selected fill is a shared layoutId layer that glides between cards - the card paints no selected bg/border of its own */
 .rg__card-fill {
   position: absolute;
 
@@ -254,7 +254,7 @@
   color: var(--text-disabled);
 }
 
-/* in a <Collapse>: absent = zero reserved space; the padding-top is the options→message gap, inside the collapsible area */
+/* in a <Collapse>: absent = zero reserved space; the padding-top is the options-message gap, inside the collapsible area */
 .rg__msg {
   font: var(--type-caption);
   color: var(--danger-text);

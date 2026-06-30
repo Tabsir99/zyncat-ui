@@ -1,6 +1,6 @@
 'use client';
 
-// RadioGroup — single-select rows or cards; one marker glides between dots via Motion layoutId.
+// RadioGroup - single-select rows or cards; one marker glides between dots via Motion layoutId.
 
 import * as React from 'react';
 import { motion, LayoutGroup } from 'motion/react';
@@ -11,13 +11,13 @@ import { UIMotion } from '../../tokens/motion-tokens';
 const SM = UIMotion;
 
 export interface RadioOption {
-  /** The stored value — what `onChange` returns and `value` matches. */
+  /** The stored value - what `onChange` returns and `value` matches. */
   value: string;
   /** Visible label (sentence case). */
   label: React.ReactNode;
   /** Optional secondary line (muted) explaining the choice. */
   description?: React.ReactNode;
-  /** Leading icon — your own node. CARDS only; ignored for rows. */
+  /** Leading icon - your own node. CARDS only; ignored for rows. */
   icon?: React.ReactNode;
   /** Disable just this option. */
   disabled?: boolean;
@@ -27,7 +27,7 @@ export interface RadioGroupProps extends Omit<
   React.FieldsetHTMLAttributes<HTMLFieldSetElement>,
   'onChange'
 > {
-  /** Shared radio name — ties the options into one keyboard group. Required. */
+  /** Shared radio name - ties the options into one keyboard group. Required. */
   name: string;
   /** The selected value (controlled). */
   value?: string;
@@ -47,7 +47,7 @@ export interface RadioGroupProps extends Omit<
   variant?: 'rows' | 'cards';
   /** Lay options out in a line instead of a stack. */
   orientation?: 'vertical' | 'horizontal';
-  /** Control size: sm (dot 16) · md (default, dot 18). */
+  /** Control size: sm (dot 16) - md (default, dot 18). */
   size?: 'sm' | 'md';
   /** Disable the whole group. */
   disabled?: boolean;

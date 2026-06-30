@@ -1,6 +1,6 @@
 'use client';
 
-// Toggle — binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
+// Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
 import * as React from 'react';
 
@@ -14,15 +14,15 @@ export interface ToggleProps extends Omit<
   checked?: boolean;
   /** Uncontrolled initial state. */
   defaultChecked?: boolean;
-  /** Disabled — inert and de-emphasized (faded track, retains its position). */
+  /** Disabled - inert and de-emphasized (faded track, retains its position). */
   disabled?: boolean;
-  /** Track size: `md` 36×20 · `sm` 28×16 for dense settings/table rows. @default 'md' */
+  /** Track size: `md` 36x20 - `sm` 28x16 for dense settings/table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the track. */
   label?: React.ReactNode;
   /** Optional secondary line under the label (settings rows). */
   description?: React.ReactNode;
-  /** Fires on flip — read `e.target.checked`. */
+  /** Fires on flip - read `e.target.checked`. */
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 

@@ -1,4 +1,4 @@
-/* premium-ui public barrel — shipped components + prop types; internal helpers (*-core, field-shell, glide-pill, sheet-drag, date-utils) are intentionally not re-exported. */
+/* premium-ds public barrel - shipped components + prop types; internal helpers (*-core, field-shell, glide-pill, sheet-drag, date-utils) are intentionally not re-exported. */
 
 export * from './components/button/Button';
 export * from './components/motion/Collapse';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Collapse, Badge, StatusBadge, CountBadge, type PostStatus } from 'premium-ui';
+import { Button, Collapse, Badge, StatusBadge, CountBadge, type PostStatus } from 'premium-ds';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
@@ -18,7 +18,7 @@ export function ButtonPage() {
         <Button size="md">Medium</Button>
         <Button size="lg">Large</Button>
       </Demo>
-      <Demo label="icon · loading · disabled">
+      <Demo label="icon - loading - disabled">
         <Button iconLeft={<Icon name="plus" size="sm" />}>New project</Button>
         <Button variant="secondary" iconRight={<Icon name="more" size="sm" />}>
           More
@@ -64,7 +64,7 @@ export function CollapsePage() {
         </Button>
         <Collapse open={open}>
           <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
-            This region eases open and closed without an abrupt layout shift — the
+            This region eases open and closed without an abrupt layout shift - the
             decelerate-and-settle curve, never a teleport.
           </div>
         </Collapse>
@@ -83,7 +83,7 @@ export function BadgePage() {
         <Badge tone="warning">Warning</Badge>
         <Badge tone="danger">Danger</Badge>
       </Demo>
-      <Demo label="dot · live · outline · pill">
+      <Demo label="dot - live - outline - pill">
         <Badge dot tone="info">
           Dot
         </Badge>
@@ -111,7 +111,11 @@ export function StatusBadgePage() {
         ))}
       </Demo>
       <Demo label="morph in place">
-        <Button size="sm" variant="secondary" onClick={() => setSi((i) => (i + 1) % STATUSES.length)}>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => setSi((i) => (i + 1) % STATUSES.length)}
+        >
           Advance
         </Button>
         <StatusBadge status={STATUSES[si]} morph />
@@ -123,7 +127,7 @@ export function StatusBadgePage() {
 export function CountBadgePage() {
   const [count, setCount] = useState(7);
   return (
-    <Demo label="static · roll">
+    <Demo label="static - roll">
       <CountBadge value="7 / 10" />
       <CountBadge value={count} roll tone="info" />
       <Button size="sm" variant="secondary" onClick={() => setCount((c) => c + 1)}>

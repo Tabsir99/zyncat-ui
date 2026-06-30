@@ -1,6 +1,6 @@
 'use client';
 
-/* sheet-drag — drag-to-dismiss for Overlay's sheet mode (dismiss · scrim · rubber-band · scroll handoff). */
+/* sheet-drag - drag-to-dismiss for Overlay's sheet mode (dismiss - scrim - rubber-band - scroll handoff). */
 import * as React from 'react';
 import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
@@ -87,7 +87,7 @@ function useSheetDrag({
         if (axis === 'y' ? scrollable.scrollTop > 0 : scrollable.scrollLeft > 0) return;
       }
       suspendSelection();
-      /* framer may not fire onDragEnd (release exactly at threshold), so restore here too — idempotent with the onDragEnd restore */
+      /* framer may not fire onDragEnd (release exactly at threshold), so restore here too - idempotent with the onDragEnd restore */
       window.addEventListener('pointerup', restoreSelection, { once: true });
       window.addEventListener('pointercancel', restoreSelection, { once: true });
       controls.start(ev);
@@ -102,7 +102,7 @@ function useSheetDrag({
     window.addEventListener('pointercancel', cleanup);
   }
 
-  /* overdrag away from the edge → damped, capped stretch (info.offset is raw; travel is clamped) */
+  /* overdrag away from the edge - damped, capped stretch (info.offset is raw; travel is clamped) */
   function onDrag(_ev: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) {
     const el = slotRef.current;
     if (!el) return;

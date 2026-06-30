@@ -1,6 +1,6 @@
 'use client';
 
-// TextField.tsx — text input: label · control · message, leading icon, clear action, sizes, validation states.
+// TextField.tsx - text input: label - control - message, leading icon, clear action, sizes, validation states.
 
 import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
@@ -16,19 +16,19 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   required?: boolean;
   /** Show a muted "(optional)" after the label. */
   optional?: boolean;
-  /** Neutral helper text — shown when there's no validation message. */
+  /** Neutral helper text - shown when there's no validation message. */
   helper?: ReactNode;
-  /** Error message — sets the error state (red border/ring + icon). Wins over warning/success/helper. */
+  /** Error message - sets the error state (red border/ring + icon). Wins over warning/success/helper. */
   error?: ReactNode;
-  /** Warning message — amber state. */
+  /** Warning message - amber state. */
   warning?: ReactNode;
-  /** Success message — green state. */
+  /** Success message - green state. */
   success?: ReactNode;
-  /** Leading icon — your own icon node (sized to the control). Decorative. */
+  /** Leading icon - your own icon node (sized to the control). Decorative. */
   leadingIcon?: ReactNode;
-  /** Show a clear (×) button when there's a value. */
+  /** Show a clear button when there's a value. */
   clearable?: boolean;
-  /** Control height: sm 28 · md 36 (default) · lg 40. */
+  /** Control height: sm 28 - md 36 (default) - lg 40. */
   size?: 'sm' | 'md' | 'lg';
 }
 

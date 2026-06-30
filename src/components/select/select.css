@@ -1,4 +1,4 @@
-/* Select family — <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
+/* Select family - <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
 
 .select {
   position: relative;
@@ -137,10 +137,10 @@
 .select__menu {
   position: fixed;
   margin: 0;
-  inset: auto; /* JS sets top/left/min-width — anchor() needs the top layer, which we don't use */
+  inset: auto; /* JS sets top/left/min-width - anchor() needs the top layer, which we don't use */
   z-index: var(
     --layer-overlay
-  ); /* base of the overlay band (tokens/layers.css) — plain React-owned node, not the top layer */
+  ); /* base of the overlay band (tokens/layers.css) - plain React-owned node, not the top layer */
   width: max-content;
   max-width: min(22rem, 92vw);
   background: var(--bg-surface-raised);
@@ -253,7 +253,7 @@
   transition: var(--transition-opacity);
 }
 
-/* No selected+active rule needed — the selected rules follow active, so source order wins. */
+/* No selected+active rule needed - the selected rules follow active, so source order wins. */
 .select__option[data-active='true'] {
   background-color: var(--neutral-wash);
   color: var(--text-strong);
@@ -297,7 +297,7 @@
   }
 }
 
-/* Multi-select: the reused Checkbox box IS the indicator — no row fill (avoid double-encoding); strip the .cbx standalone chrome. */
+/* Multi-select: the reused Checkbox box IS the indicator - no row fill (avoid double-encoding); strip the .cbx standalone chrome. */
 .select[data-multiple='true'] .select__option-check {
   opacity: 1;
 }

@@ -1,4 +1,4 @@
-/* date-picker shared pure helpers — 'YYYY-MM-DD' civil-date math, month/weekday constants, tz-offset label. */
+/* date-picker shared pure helpers - 'YYYY-MM-DD' civil-date math, month/weekday constants, tz-offset label. */
 
 export const MONTHS: string[] = [
   'January',
@@ -29,7 +29,7 @@ export const add = (k: string, days: number): string => {
   d.setDate(d.getDate() + days);
   return key(d);
 };
-export const col = (d: Date): number => (d.getDay() + 6) % 7; // Monday-first column 0–6
+export const col = (d: Date): number => (d.getDay() + 6) % 7; // Monday-first column 0-6
 
 /* 42 cells, Monday-first, covering the month of (y, m) */
 export function grid(y: number, m: number): Date[] {
@@ -39,7 +39,7 @@ export function grid(y: number, m: number): Date[] {
   return days;
 }
 
-/* 'Europe/Riga' → 'Europe/Riga · GMT+3'; dateKey gives the DST-correct offset for that date, else now. */
+/* 'Europe/Riga' - 'Europe/Riga - GMT+3'; dateKey gives the DST-correct offset for that date, else now. */
 export function tzLabel(tz: string, dateKey?: string): string {
   try {
     const at = dateKey ? parse(dateKey) : new Date();
@@ -48,7 +48,7 @@ export function tzLabel(tz: string, dateKey?: string): string {
       timeZoneName: 'shortOffset',
     }).formatToParts(at);
     const name = parts.find((p) => p.type === 'timeZoneName');
-    return tz.replace(/_/g, ' ') + (name ? ' · ' + name.value : '');
+    return tz.replace(/_/g, ' ') + (name ? ' - ' + name.value : '');
   } catch (_e) {
     return tz;
   }

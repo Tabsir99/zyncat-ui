@@ -1,4 +1,4 @@
-/* Button — variants, sizes, states; lit gradient, tactile press, composed focus ring. */
+/* Button - variants, sizes, states; lit gradient, tactile press, composed focus ring. */
 
 .btn {
   --btn-shadow: none;
@@ -164,7 +164,7 @@
   box-shadow: var(--btn-ring);
 }
 
-/* Disabled — explicit per variant, never a blanket fade. */
+/* Disabled - explicit per variant, never a blanket fade. */
 .btn:disabled,
 .btn.is-loading {
   cursor: default;
@@ -197,7 +197,7 @@
   text-decoration: none;
 }
 
-/* Loading — content holds its width, spinner overlays. */
+/* Loading - content holds its width, spinner overlays. */
 .btn.is-loading .btn__label,
 .btn.is-loading .btn__icon {
   opacity: 0;

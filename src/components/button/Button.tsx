@@ -1,15 +1,15 @@
 'use client';
 
-// Button — primitive; composes button.css classes, renders icons, manages loading.
+// Button - primitive; composes button.css classes, renders icons, manages loading.
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Visual weight / intent. @default 'primary' */
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link';
-  /** Control height. sm 28px · md 36px (default) · lg 40px. @default 'md' */
+  /** Control height. sm 28px - md 36px (default) - lg 40px. @default 'md' */
   size?: 'sm' | 'md' | 'lg';
-  /** Loading — swaps content for a spinner and makes the button inert. */
+  /** Loading - swaps content for a spinner and makes the button inert. */
   loading?: boolean;
   /** Leading icon node (e.g. a 16px <Icon>). Sized & aligned by the component. */
   iconLeft?: ReactNode;

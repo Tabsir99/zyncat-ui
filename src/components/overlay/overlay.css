@@ -1,6 +1,6 @@
-/* overlay.css — headless paint for the overlay domain (popover · dialog · sheet). */
+/* overlay.css - headless paint for the overlay domain (popover - dialog - sheet). */
 
-/* Modal geometry — fixed full-viewport layer; scrim fills it; slot is the panel's grid cell (min 0 + max 100% give a scroll constraint chain). */
+/* Modal geometry - fixed full-viewport layer; scrim fills it; slot is the panel's grid cell (min 0 + max 100% give a scroll constraint chain). */
 .overlay-layer {
   position: fixed;
   inset: 0;
@@ -29,7 +29,7 @@
   max-height: 100%;
 }
 
-/* sheets dock flush — no layer padding; the slot spans the docked edge */
+/* sheets dock flush - no layer padding; the slot spans the docked edge */
 .overlay-layer--sheet-right {
   align-items: stretch;
   justify-items: end;
@@ -48,7 +48,7 @@
   max-height: 100%;
 }
 
-/* Anchored panel (popover) — fixed coords from useAnchorPosition; entrance origin = arrow tip, else the aligned edge (inset --space-4), else center. */
+/* Anchored panel (popover) - fixed coords from useAnchorPosition; entrance origin = arrow tip, else the aligned edge (inset --space-4), else center. */
 .overlay-popover {
   position: fixed;
   top: 0;
@@ -80,7 +80,7 @@
   transform-origin: right var(--overlay-arrow-y, var(--ov-origin));
 }
 
-/* Arrow — a rotated square on the panel edge (--overlay-arrow-x/y); only its two outward edges keep the hairline, the panel covers the rest (must be opaque). */
+/* Arrow - a rotated square on the panel edge (--overlay-arrow-x/y); only its two outward edges keep the hairline, the panel covers the rest (must be opaque). */
 .overlay-popover__arrow {
   position: absolute;
   width: 10px;
