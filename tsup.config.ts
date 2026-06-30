@@ -41,7 +41,10 @@ export default defineConfig({
     'motion-tokens': 'src/tokens/motion-tokens.ts',
   },
   format: ['esm'],
-  dts: true,
+
+  // tsup injects a (now-deprecated) baseUrl into the dts compiler; silence it here
+  // so tsconfig.json stays clean for editors pinned to an older TypeScript.
+  dts: { compilerOptions: { ignoreDeprecations: '6.0' } },
   splitting: true,
   treeshake: true,
   sourcemap: true,
