@@ -328,6 +328,12 @@
 .select[data-multiple='true'] .select__option .cbx__box {
   margin-top: 0;
 }
+
+/* the row owns the press (the .cbx is pointer-events:none), so dip the box
+   from the row's :active — --press inherits down into .cbx__box */
+.select[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx {
+  --press: 0.88;
+}
 .select[data-multiple='true'] .select__option[data-selected='true'] {
   background-color: transparent;
 }

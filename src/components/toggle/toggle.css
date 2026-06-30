@@ -100,10 +100,12 @@
     color-mix(in oklab, var(--sw-on-border) calc(var(--on) * 100%), var(--sw-off-border));
   border-radius: var(--radius-full);
   background: var(--sw-off-fill);
+  transform: scale(1);
   transition:
     border-color var(--duration-base) var(--ease-standard),
     background-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard);
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-spring);
 
   /* on-fill — sits over the off track, opacity tracks --on */
   &::before {
@@ -141,6 +143,9 @@
    nothing moves the thumb out from under the transition and makes it snap). */
 .sw__track[data-on='true'] .sw__thumb {
   --tx: calc(var(--sw-w) - var(--sw-h));
+}
+.sw__track[data-pressed='true'] {
+  transform: scale(0.96);
 }
 .sw__track[data-pressed='true'] .sw__thumb {
   --sx: 1.16;

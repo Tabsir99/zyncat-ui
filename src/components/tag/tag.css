@@ -148,8 +148,8 @@
   background: var(--bg-muted);
 }
 .tag__remove:hover svg {
-  transform: rotate(90deg);
-} /* the × winds up */
+  transform: rotate(30deg);
+} /* the × tilts on hover */
 .tag__remove:active {
   transform: scale(0.9);
 }
