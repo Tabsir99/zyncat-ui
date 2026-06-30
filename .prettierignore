@@ -1,0 +1,5 @@
+dist
+.vite-react-ssg-temp
+pnpm-lock.yaml
+*.txt
+playground/public
