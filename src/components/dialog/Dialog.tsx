@@ -1,17 +1,6 @@
 'use client';
 
-/* Dialog.tsx — styled modal: a thin consumer of <Overlay mode="dialog">.
-   ─────────────────────────────────────────────────────────────────────────
-   The overlay primitive owns ALL machinery — portal, scrim, Motion existence
-   (enter/exit + unmount-after-exit), hard focus trap, inert page, scroll
-   lock, Esc-topmost, stacking. This file owns only the dialog
-   SURFACE: header (icon · title · description · close), scrollable body with
-   earned dividers, footer actions — and the semantics (role="dialog",
-   aria-modal, labelled-by), per the headless contract.
-
-   The native <dialog> era is over: no showModal(), no ::backdrop hack, no
-   AnimatePresence plumbing here. Public API is unchanged from the previous
-   stable Dialog — callers notice nothing. */
+/* Dialog — styled modal surface; a thin consumer of <Overlay mode="dialog">. */
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';
@@ -41,9 +30,7 @@ export interface DialogProps {
   id?: string;
 }
 
-/* Flags the scrollable body when scrolled off the top / has more below, so the
-   header gains a divider+lift and the footer a divider only when they earn it.
-   :has() in dialog.css turns these into the visible chrome. */
+/* Flag the body's scroll edges (data-scroll-top/-bottom) so dialog.css :has() can earn the header lift + footer divider. */
 function useScrollEdges(ref: React.RefObject<HTMLElement>) {
   dlgUseEffect(() => {
     const el = ref.current;
@@ -79,7 +66,6 @@ interface DialogSurfaceProps {
   children?: React.ReactNode;
 }
 
-/* The visible panel — a plain <section> inside Overlay's centered slot. */
 function DialogSurface({
   baseId,
   size,
@@ -151,14 +137,14 @@ export function Dialog({
   open,
   defaultOpen = false,
   onOpenChange,
-  trigger = null, // optional element; cloned to open on click
+  trigger = null,
   title,
   description = null,
-  size = 'md', // 'sm' | 'md' | 'lg'
-  tone = 'default', // 'default' | 'danger' → header icon + accent
-  icon = null, // optional header badge icon node (alert dialogs)
-  dismissible = true, // close button + scrim/Esc dismiss
-  footer = null, // node OR (close) => node
+  size = 'md',
+  tone = 'default',
+  icon = null,
+  dismissible = true,
+  footer = null,
   children,
   id,
 }: DialogProps) {

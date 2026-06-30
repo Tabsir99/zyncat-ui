@@ -1,12 +1,4 @@
-/* date-utils.ts — date-picker shared PURE helpers.
-   ─────────────────────────────────────────────────────────────────────────
-   The variant-blind, stateless layer (A9: "pure helpers" — the one kind of
-   material siblings may legitimately share). Civil-date math on 'YYYY-MM-DD'
-   keys, the month/weekday constants, and the timezone-offset label. Every
-   sibling in the domain (DateField, DateRangeField, DateTimeField) reads from
-   here instead of carrying its own dtf / drp / dttf copy. NO state lives here —
-   siblings still own their value shape and commit semantics end-to-end.
-   Buildless global was window.DateUtils; a bundled app imports these instead. */
+/* date-picker shared pure helpers — 'YYYY-MM-DD' civil-date math, month/weekday constants, tz-offset label. */
 
 export const MONTHS: string[] = [
   'January',
@@ -47,8 +39,7 @@ export function grid(y: number, m: number): Date[] {
   return days;
 }
 
-/* 'Europe/Riga' → 'Europe/Riga · GMT+3'. dateKey optional → DST-correct
-   offset for that date; omit for the offset right now. */
+/* 'Europe/Riga' → 'Europe/Riga · GMT+3'; dateKey gives the DST-correct offset for that date, else now. */
 export function tzLabel(tz: string, dateKey?: string): string {
   try {
     const at = dateKey ? parse(dateKey) : new Date();

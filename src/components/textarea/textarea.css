@@ -1,12 +1,9 @@
-/* textarea.css — Textarea (multiline composer).
-   Reuses the .fld shell (label / message / validation states) from input.css;
-   adds the .txa box. Auto-grows to its content between min/max rows, meters an
-   optional char limit (ring + count), and highlights over-limit text. */
+/* textarea.css — Textarea (multiline composer): the .txa box over the .fld shell, auto-grow, char meter, over-limit highlight. */
 
 .txa {
   --txa-pad-y: var(--space-3);
   --txa-pad-x: var(--space-4);
-  --txa-lh: var(--leading-body); /* line box height for the rows math */
+  --txa-lh: var(--leading-body);
   --txa-min-rows: 3;
   --txa-max-rows: 10;
   position: relative;
@@ -32,12 +29,7 @@
   background: var(--bg-subtle);
 }
 
-/* textarea (in flow — JS sets its height to scrollHeight) + mirror overlay.
-   The WRAPPER owns the height: it caps at max-rows and is the ONLY thing that
-   animates. It uses overflow:clip WHILE GROWING (clip is not a scroll container,
-   so the caret can never force a scroll → no jump); JS flips it to overflow:auto
-   only once content exceeds max-rows, where the height is pinned. The textarea
-   grows infinitely and can never scroll itself. */
+/* The .txa__stack wrapper owns the height and is the only thing that animates; overflow:clip while growing (a clip box can't scroll to the caret → no jump), flipped to auto by JS only past max-rows. */
 .txa__stack {
   position: relative;
   min-height: calc(var(--txa-min-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));
@@ -104,7 +96,6 @@
   box-decoration-break: clone;
 }
 
-/* footer bar: hint + character meter */
 .txa__bar {
   display: flex;
   align-items: center;
@@ -190,8 +181,6 @@
   font-weight: var(--weight-medium);
 }
 
-/* validation (message colour comes from input.css) — resting border is the
-   state hue, hover darkens one step to the -text token, focus adds the ring */
 .fld.is-error .txa {
   border-color: var(--danger);
 }
@@ -220,7 +209,6 @@
   box-shadow: var(--ring-success);
 }
 
-/* large size */
 .fld--txa.fld--lg .txa {
   --txa-pad-y: var(--space-4);
   --txa-lh: var(--leading-body-lg);

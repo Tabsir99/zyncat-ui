@@ -1,58 +1,23 @@
-/* motion.css — the motion system. MOTION IS PART OF THE BRAND.
-   ─────────────────────────────────────────────────────────────────────────
-   The brand moves a specific way: calm, decelerating, never linear, never
-   abrupt. A data-dense interface is constantly re-arranging — lists fill,
-   sections expand, rows insert, panels disclose. Every one of those changes is
-   SMOOTHED BY DEFAULT, so the product feels composed instead of janky. That
-   easing-into-place is as much the brand as the teal or the type.
-
-   Three principles encoded here:
-     1. Nothing teleports. Layout shifts ease; they don't cut.
-     2. Decelerate. Things arrive softly (ease-entrance is the brand curve);
-        linear motion is banned.
-     3. Cheap & honest. Animate transform / opacity / grid-fr / max-* only —
-        never raw width/height/top/left, and never animate to/from `auto`.
-
-   THE `auto` PROBLEM (read this): CSS cannot transition to/from `auto`, so
-   width:auto and height:auto changes snap. To animate them, use the tricks the
-   tokens below are built for — `grid-template-rows: 0fr → 1fr` (height),
-   `0fr → 1fr` columns (width), or `max-height` / `max-width`. The <Collapse>
-   component (components/motion/) wraps the grid-fr trick so you never hand-roll
-   it. Reach for it whenever a region appears, disappears, or resizes. */
+/* Motion system — durations, brand curves, and pre-composed transitions; smooths every layout shift by default. */
 
 :root {
-  /* ── Durations ───────────────────────────────────────────────────────────*/
-  --duration-fast: 120ms; /* hover, press, color & icon swaps              */
-  --duration-base: 180ms; /* DEFAULT: dropdowns, toggles, tabs             */
-  --duration-slow: 260ms; /* layout shifts, disclosures, modals, drawers   */
-  --duration-spin: 600ms; /* continuous loaders ONLY — one full rotation;
-                               deliberately outside the UI-transition scale    */
-  --duration-pulse: 1600ms; /* ambient "live/processing" breathing — slower than
-                               the transition scale; like --duration-spin it is
-                               NOT collapsed under reduced motion (consumers
-                               disable the loop instead of speeding it up)      */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 260ms;
+  --duration-spin: 600ms; /* continuous loaders only; deliberately outside the UI-transition scale */
+  --duration-pulse: 1600ms; /* ambient live/processing breathing; not collapsed under reduced motion */
 
-  /* ── Curves ──────────────────────────────────────────────────────────────
-     ease-entrance is the brand's signature: decelerate and settle. Use it for
-     anything appearing or resizing. ease-spring is an OPTIONAL expressive
-     curve (a gentle overshoot) for rare brand moments — confirmations, a freshly
-     inserted item landing. Never use linear. */
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* productive state change */
-  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1); /* ★ brand · decelerate    */
-  --ease-exit: cubic-bezier(0.4, 0, 1, 1); /* accelerate away         */
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1); /* gentle overshoot · rare */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
   --ease-glide: cubic-bezier(
     0.55,
     0,
     0.15,
     1
-  ); /* in-out travel — a persistent
-                       element gliding between siblings (hover pill, segmented
-                       thumb, reorder): soft pickup, decel-weighted settle.
-                       NOT for enter/exit — things that appear use --ease-entrance,
-                       things that leave use --ease-exit. */
+  ); /* in-out travel — persistent element gliding between siblings; not for enter/exit */
 
-  /* ── Pre-composed transitions · the everyday API ─────────────────────────*/
   --transition-control:
     color var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
@@ -65,9 +30,7 @@
   --transition-opacity: opacity var(--duration-base) var(--ease-standard);
   --transition-transform: transform var(--duration-base) var(--ease-standard);
 
-  /* ── LAYOUT transition · the smoothing default ───────────────────────────
-     Targets the animatable stand-ins for width/height. Apply to any element
-     whose size may change. (<Collapse> applies this for you.) */
+  /* Layout transition — animatable stand-ins for width/height; apply wherever size may change. */
   --transition-layout:
     grid-template-rows var(--duration-slow) var(--ease-entrance),
     grid-template-columns var(--duration-slow) var(--ease-entrance),

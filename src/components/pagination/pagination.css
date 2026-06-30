@@ -1,10 +1,4 @@
-/* pagination.css — Pagination (cursor strip).
-   ─────────────────────────────────────────────────────────────────────────
-   Built entirely on semantic tokens + the Button vocabulary (button.css owns
-   the arrows' hover/press/focus/disabled/spinner — nothing re-styled here).
-   This file only adds: the strip layout, the mono readout, the square arrow
-   geometry, and the caret's directional hover nudge (§D: path-level icon
-   interaction; trivial tier → CSS). */
+/* Pagination — cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
 
 .pgn {
   display: inline-flex;
@@ -12,9 +6,7 @@
   gap: var(--space-3);
 }
 
-/* ── Readout · always mono, tabular (§E) ───────────────────────────────────
-   The range is strong-ish (medium, body color); "of N" recedes. The inner
-   .pgn__range is the node Motion slides on change — keep it transformable. */
+/* mono tabular readout; .pgn__range is the node Motion slides — keep it transformable (inline-block) */
 .pgn__readout {
   font: var(--type-mono);
   font-variant-numeric: tabular-nums;
@@ -29,10 +21,7 @@
   color: var(--text-body);
 }
 
-/* ── Arrow pair · square sm ghost buttons, kept adjacent ───────────────────
-   Adjacent (not flanking the readout) so repeated paging needs no mouse
-   travel, and a growing readout never shifts the arrows when the strip sits
-   at the end of its row. */
+/* arrows kept adjacent (not flanking the readout) so repeated paging needs no mouse travel and a growing readout never shifts them */
 .pgn__nav {
   display: flex;
   gap: var(--space-1);
@@ -53,8 +42,7 @@
   transform: translateX(var(--space-px));
 }
 
-/* Loading: the clicked arrow carries Button's spinner; hide its caret the
-   same way button.css hides .btn__icon. */
+/* loading: clicked arrow shows Button's spinner — hide its caret like button.css hides .btn__icon */
 .pgn__btn.is-loading .icon {
   opacity: 0;
 }

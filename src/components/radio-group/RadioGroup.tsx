@@ -1,25 +1,6 @@
 'use client';
 
-// RadioGroup.tsx — single-select.
-// Pick exactly one of a small, closed set. Two skins share one anatomy:
-//   variant="rows"  (default) — quiet dot + label (+ optional description)
-//   variant="cards"           — bordered selectable tiles (+ optional icon)
-//
-// Built on native <input type="radio">, so the browser gives roving tabindex +
-// arrow-key cycling for free; we only compose class names + the icon weight.
-// All styling lives in radio-group.css. A constrained-choice control carries
-// only a single group-level `error` (required) + disabled — no warning/success
-// (CLAUDE.md A4). Numbers in labels/descriptions should be --font-mono.
-//
-// SELECTION + MOTION: a group has exactly ONE selection, so the filled centre
-// is a SINGLE marker that GLIDES from the old dot to the new — "nothing
-// teleports." This was a hand-rolled FLIP (rect capture + WAAPI tween); it is
-// now ONE Motion `layoutId` — Motion does the measure/invert/play, scoped per
-// group by <LayoutGroup id>. The marker still rests dead-centre by pure CSS
-// (inset:0 + margin:auto), so if the tween never runs it's still concentric.
-// The .is-selected class (React-rendered) drives the highlight — NOT CSS
-// :checked/:has(), which radios don't reliably invalidate on the implicit
-// sibling-uncheck. The native input stays for semantics, focus & keyboard.
+// RadioGroup — single-select rows or cards; one marker glides between dots via Motion layoutId.
 
 import * as React from 'react';
 import { motion, LayoutGroup } from 'motion/react';

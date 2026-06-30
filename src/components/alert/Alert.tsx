@@ -1,22 +1,6 @@
 'use client';
 
-/* Alert.jsx — Alert / Banner.
-   ─────────────────────────────────────────────────────────────────────────
-   The persistent, in-flow status message. All paint lives in alert.css;
-   this file composes the class vocabulary and owns the ONE motion:
-   existence. Per §C, AnimatePresence owns enter/exit — the shell animates
-   height 0 ↔ auto (+ fade) so a dismissed alert eases shut and the layout
-   below settles instead of teleporting. `initial={false}` keeps alerts
-   already on the page at load from re-entering — they're simply there.
-
-   Open state is controllable: pass `open` (+ `onDismiss`) to own it, or
-   omit it and `dismissible` manages itself. Banner is a paint modifier
-   (A9 — it carries no state of its own).
-
-   Semantics: warning/danger render role="alert" (assertive — failures,
-   expirations), info/success role="status" (polite). The action follows
-   Toast's contract — `{ label, onClick }` rendered as the system's
-   secondary small button (A8), one action max. */
+/* Alert — the persistent, in-flow status message (banner is a paint modifier). */
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -33,13 +17,11 @@ export interface AlertAction {
 }
 
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
-  /** Status of the message. info/success announce politely (role="status");
-      warning/danger assertively (role="alert"). Default 'info'. */
+  /** Status of the message; info/success are polite, warning/danger assertive. Default 'info'. */
   tone?: AlertTone;
   /** The message — sentence case, ideally one line. */
   title: React.ReactNode;
-  /** Optional description (plain text / inline content). Stays neutral
-      --text-body — tone marks the message, not the prose. */
+  /** Optional description; stays neutral — tone marks the message, not the prose. */
   children?: React.ReactNode;
   /** One action max, rendered as the system secondary small button. */
   action?: AlertAction;
@@ -47,11 +29,9 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   dismissible?: boolean;
   /** Fires on ×. With `open` set, the parent owns hiding the alert. */
   onDismiss?: () => void;
-  /** Controlled visibility. Omit for uncontrolled. Exit eases shut
-      (height collapse) — nothing teleports. */
+  /** Controlled visibility; omit for uncontrolled. Exit eases shut (height collapse). */
   open?: boolean;
-  /** App-level strip: square corners, hairline below only. Paint modifier —
-      same component, same state. Dock it above the view yourself. */
+  /** App-level strip: square corners, hairline below only. Paint modifier. */
   banner?: boolean;
   /** Override the tone glyph; pass null to render no glyph. */
   icon?: React.ReactNode | null;
@@ -73,15 +53,15 @@ const TONE_ROLE: Record<AlertTone, string> = {
 };
 
 export function Alert({
-  tone = 'info', // 'info' | 'success' | 'warning' | 'danger'
-  title, // the message — sentence case, one line ideally
-  children = null, // optional description (plain/inline content)
-  action = null, // { label, onClick } — one action max
-  dismissible = false, // renders the × ; uncontrolled unless `open` given
+  tone = 'info',
+  title,
+  children = null,
+  action = null,
+  dismissible = false,
   onDismiss,
-  open, // controlled visibility (omit = uncontrolled)
-  banner = false, // app-level strip: square, hairline below only
-  icon, // override glyph node; null = no glyph
+  open,
+  banner = false,
+  icon,
   className = '',
   ...rest
 }: AlertProps) {
@@ -99,9 +79,7 @@ export function Alert({
     <AnimatePresence initial={false}>
       {isOpen && (
         <motion.div
-          key="alert-shell" /* explicit key — the 12.40 UMD presence bookkeeping
-                                 drops/strands un-keyed conditional children
-                                 (same family as the Tabs/Tooltip notes) */
+          key="alert-shell" /* explicit key — AnimatePresence strands un-keyed conditional children */
           className="alert-shell"
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}

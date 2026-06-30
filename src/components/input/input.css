@@ -1,22 +1,6 @@
-/* input.css — inputs: TextField · NumberField · OtpField.
-   ─────────────────────────────────────────────────────────────────────────
-   One field anatomy, three flavors. Everything is token-driven; the polish is
-   in the details: an inset interior that lifts to a surface on focus, a
-   composed accent ring, hairline borders that strengthen on hover, a clear
-   label/helper/message hierarchy, and first-class error / warning / success.
+/* input.css — inputs: TextField · NumberField · OtpField. */
 
-   Anatomy:  .fld  >  .fld__label  +  .fld__control (the box)  +  .fld__msg
-   States:   :hover · :focus(-within) · :disabled · .is-error · .is-warning · .is-success
-   Sizes:    .fld--sm (28) · default (36) · .fld--lg (40)
-
-   NumberField (.numf) adds stacked caret steppers + a unit suffix, tabular figures.
-   OtpField (.otp) is a row of single-char mono slots with active/filled/error states. */
-
-/* ── Field shell ────────────────────────────────────────────────────────────
-   No grid row-gap: spacing is placed where it can be collapsed. The label owns
-   the label→control gap (margin-bottom); the message owns the control→message
-   gap (padding-top, INSIDE the collapsible area) — so a closed/absent message
-   reserves exactly zero, and the gap animates in with it. */
+/* No row-gap — the label and message each own their adjacent gap, so an absent message reserves zero. */
 .fld {
   display: grid;
 }
@@ -79,10 +63,7 @@
   color: var(--text-body);
 }
 
-/* ── Helper / message row ───────────────────────────────────────────────────
-   Color cross-fades with state (--transition-control). When the message TEXT
-   changes (normal↔error↔warning), JS re-triggers .fld__msg--enter so it fades
-   and rises 2px on the brand entrance curve — never a hard pop. */
+/* On message TEXT change (normal↔error↔warning), JS re-triggers .fld__msg--enter to fade and rise — never a hard pop. */
 .fld__msg {
   font: var(--type-caption);
   color: var(--text-subtle);
@@ -115,17 +96,11 @@
   }
 }
 
-/* ── Message as a Collapse ───────────────────────────────────────────────────
-   The message lives inside a <Collapse> (.fld__msg-wrap), so an absent message
-   reserves NO space and an appearing one eases the layout down (--transition-
-   layout) instead of popping. The control→message gap is the message's OWN
-   padding-top, so it's part of the collapsible area: clipped to zero when
-   closed, animated in when open. (Applies to plain always-on messages too.) */
+/* Gap is the message's padding-top (not margin) so it lives inside the Collapse and clips to zero when closed. */
 .fld .fld__msg {
   padding-top: var(--space-2);
 }
 
-/* ── Sizes ──────────────────────────────────────────────────────────────────*/
 .fld--sm .fld__input {
   height: var(--control-height-sm);
   font-size: var(--size-caption);
@@ -136,7 +111,6 @@
   height: var(--control-height-lg);
 }
 
-/* ── Inline icons (decorative, inside the box) ──────────────────────────────*/
 .fld__icon {
   position: absolute;
   display: inline-flex;
@@ -165,7 +139,6 @@
   padding-right: calc(var(--space-3) + var(--icon-md) + var(--space-2));
 }
 
-/* ── Trailing action (clear, reveal) — clickable ────────────────────────────*/
 .fld__action {
   position: absolute;
   right: var(--space-2);
@@ -197,10 +170,7 @@
   padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
 }
 
-/* ── Validation states ──────────────────────────────────────────────────────
-   Resting border = the state hue; hover darkens one step to the -text token
-   (same feedback as default→strong); focus swaps in the ring. The per-state
-   hover rule is required — the generic .fld__input:hover would otherwise win. */
+/* Per-state hover rule is required — the generic .fld__input:hover would otherwise win on specificity. */
 .fld.is-error .fld__input {
   border-color: var(--danger);
 }
@@ -239,16 +209,14 @@
   color: var(--success-text);
 }
 
-/* ═══ NumberField ═══════════════════════════════════════════════════════════
-   The stepper column width is the SINGLE source of truth: every clearance (text
-   padding, unit offset) derives from it via calc(), so the geometry can't drift. */
+/* Stepper column width is the single source of truth — every clearance derives from it via calc(), so geometry can't drift. */
 .numf {
   --numf-stepper-w: var(--space-6);
-} /* 32px caret column */
+}
 .numf .fld__input {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum';
-  padding-right: calc(var(--numf-stepper-w) + var(--space-2)); /* clear the steppers */
+  padding-right: calc(var(--numf-stepper-w) + var(--space-2));
 }
 .numf--unit .fld__input {
   padding-right: calc(
@@ -306,10 +274,7 @@
   border-color: var(--accent);
 }
 
-/* ═══ OtpField ══════════════════════════════════════════════════════════════*/
-/* EXCEPTION (intentional): the slot box (44×52 · sm 38×44) and separator (10×2) are
-   bespoke dims. The type ramp & control heights don't yield a correctly-proportioned
-   code-entry cell, so these stay hard-coded on purpose — do not "fix" to a token. */
+/* Intentional exception: slot (44×52 · sm 38×44) and separator (10×2) are bespoke px — the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
 .otp {
   display: inline-flex;
   align-items: center;

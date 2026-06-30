@@ -1,9 +1,6 @@
 'use client';
 
-// Badge.tsx — the base badge. Glass surface by default (composes the .glass
-// vocabulary from glass.css); the `outline` variant is flat and does NOT carry
-// the glass classes. Styling lives in glass.css + badge.css; this composes
-// classes only.
+// Base badge chip — glass surface by default; the outline variant is flat (no glass classes).
 
 import type { HTMLAttributes, ReactNode } from 'react';
 

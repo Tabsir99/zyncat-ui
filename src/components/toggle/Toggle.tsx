@@ -1,24 +1,6 @@
 'use client';
 
-// Toggle.tsx — switch.
-// ─────────────────────────────────────────────────────────────────────────
-// A binary on/off control for an IMMEDIATE setting — flipping it actuates state
-// now (enable sync, archive an item, mute alerts). For a choice you stage
-// and submit later, that's a Checkbox.
-//
-// MOTION — the thumb's travel and press-stretch are a CSS spring transition on
-// `transform` (toggle.css), driven by React-set hooks on the track:
-//   • data-on      → slides the thumb across (translateX 0 → TRAVEL)
-//   • data-pressed → momentary scaleX while held
-// Position is owned SOLELY by data-on (a React render), so there's no competing
-// CSS `:has(:checked)` flip to move the thumb out from under the transition and
-// make it snap. The brand's decelerate-and-settle comes from --ease-spring;
-// reduced motion collapses the duration automatically (tokens/motion.css). This
-// is a small, fixed transform — the same pure-CSS class as Input / Button — so
-// it stays off the Motion engine and out of its dev tooling.
-//
-// The native <input type="checkbox"> stays (focus, keyboard, form value); the
-// component mirrors checked state into React so a render drives the transition.
+// Toggle — binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
 import * as React from 'react';
 
@@ -34,10 +16,7 @@ export interface ToggleProps extends Omit<
   defaultChecked?: boolean;
   /** Disabled — inert and de-emphasized (faded track, retains its position). */
   disabled?: boolean;
-  /**
-   * Track size. `md` 36×20 (default) · `sm` 28×16 for dense settings/table rows.
-   * @default 'md'
-   */
+  /** Track size: `md` 36×20 · `sm` 28×16 for dense settings/table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the track. */
   label?: React.ReactNode;
@@ -48,10 +27,10 @@ export interface ToggleProps extends Omit<
 }
 
 export function Toggle({
-  checked, // controlled; omit for uncontrolled
+  checked,
   defaultChecked = false,
   disabled = false,
-  size = 'md', // 'sm' | 'md'
+  size = 'md',
   label,
   description,
   className = '',

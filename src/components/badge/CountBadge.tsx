@@ -1,13 +1,6 @@
 'use client';
 
-// CountBadge.tsx — a count chip: counts, totals, deltas. All badges are
-// mono + tabular by default (CLAUDE.md §E), so this just specializes for counts.
-//
-//   <CountBadge value="7 / 10" />        static
-//   <CountBadge value={n} roll />        ODOMETER: digits roll vertically on change
-//
-// roll mode (transform only): each digit is a column clipping a 0–9 strip; the
-// strip's position is set by an .odo__strip--N class (no inline styles).
+// CountBadge — count chip (counts, totals, deltas); roll mode is an odometer, digits roll on change.
 
 import { Badge, type BadgeProps } from './Badge';
 

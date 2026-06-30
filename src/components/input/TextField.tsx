@@ -1,9 +1,6 @@
 'use client';
 
-// TextField.tsx — base text input.
-// Label · control · message, with leading icon, optional clear action, sizes,
-// and error/warning/success states. Styling lives in input.css; this composes
-// classes only. Color/size come from tokens.
+// TextField.tsx — text input: label · control · message, leading icon, clear action, sizes, validation states.
 
 import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';

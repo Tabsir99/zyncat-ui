@@ -1,44 +1,13 @@
-/* checkbox.css — Checkbox.
-   ─────────────────────────────────────────────────────────────────────────
-   A constrained-choice control: on/off + an indeterminate "some of a group"
-   state for select-all rows. Native <input> stays (focus, keyboard, form
-   semantics, :checked/:indeterminate) but is hidden; we paint a custom .cbx__box.
-
-   ── ARCHITECTURE: state machine, not state rules ───────────────────────────
-   The component's whole visual state is carried by THREE inherited custom-prop
-   FLAGS set on .cbx, once, via :has():
-
-       --fill   0│1   box filled? (checked OR indeterminate)
-       --tick   0│1   draw the checkmark? (checked, not indeterminate)
-       --dash   0│1   show the indeterminate dash?
-       --press  scale on active
-
-   Every paint rule below READS those flags through calc()/color-mix() and just
-   transitions its own property — it never repeats a `:checked ~ .cbx__box`
-   selector. Adding a state = setting flags in one place, not duplicating paint.
-   Modifiers (--invalid, --disabled) only REPOINT color hooks; the paint is shared.
-
-   ── Two documented departures (see Checkbox.prompt.md) ─────────────────────
-   1. 18px box via the --control-box token (a deliberate step between the
-      16→24 spacing grid; sits beside --control-height-* in spacing.css).
-   2. Bespoke STROKED tick polyline (Phosphor renders filled paths that can't
-      stroke-draw); a control's tick is intrinsic chrome, not an icon.
-
-   Motion: fill SPRINGS from center, then the tick DRAWS ON (delayed so it
-   writes after the fill lands). Animates transform/opacity/dashoffset/color
-   only; flag=end-state, so reduced-motion + no-JS render the final look. */
+/* Checkbox — on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
 
 .cbx {
-  /* color hooks — modifiers repoint these */
   --cbx-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  --cbx-on: var(--accent); /* border when filled  */
-  --cbx-off: var(--border-strong); /* border when empty   */
+  --cbx-on: var(--accent);
+  --cbx-off: var(--border-strong);
   --cbx-ring: var(--ring-accent);
-  /* geometry */
-  --cbx-size: var(--control-box); /* 18px indicator token */
+  --cbx-size: var(--control-box);
   --cbx-radius: var(--radius-sm);
-  --tick-len: 14px; /* ≈ polyline path length (px = SVG user units; MUST carry a unit so the calc() below is a valid <length>) */
-  /* state flags (the machine) */
+  --tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ≈ the polyline path length */
   --fill: 0;
   --tick: 0;
   --dash: 0;
@@ -53,7 +22,7 @@
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  /* ── the state machine · later rule wins, so indeterminate beats checked ──*/
+  /* later rule wins, so indeterminate beats checked */
   &:has(:checked) {
     --fill: 1;
     --tick: 1;
@@ -67,7 +36,7 @@
   &:not(.cbx--disabled):hover {
     background: var(--bg-subtle);
   }
-  /* accent the empty box on hover (repoints the OFF border) */
+  /* accent the empty box on hover */
   &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
     --cbx-off: var(--cbx-on);
   }
@@ -79,7 +48,6 @@
   }
 }
 
-/* ── Hidden native input · the real focus / form target ─────────────────────*/
 .cbx__input {
   position: absolute;
   width: 1px;
@@ -93,7 +61,6 @@
   overflow: hidden;
 }
 
-/* ── The box · border/fill/press all read the flags ─────────────────────────*/
 .cbx__box {
   position: relative;
   flex: none;
@@ -113,14 +80,12 @@
     box-shadow var(--duration-fast) var(--ease-standard),
     transform var(--duration-base) var(--ease-spring);
 
-  /* fill — springs out from center; opacity tracks --fill */
   &::before {
     content: '';
     position: absolute;
     inset: 0;
 
-    /* match the inner corner (outer radius minus the border) so the fill
-       reaches the corners instead of revealing --bg-inset behind it */
+    /* inner corner = outer radius − border, so the fill reaches the corners (no --bg-inset showing) */
     border-radius: calc(var(--cbx-radius) - var(--border-hairline));
     background: var(--cbx-fill);
     opacity: var(--fill);
@@ -131,9 +96,7 @@
   }
 }
 
-/* ── Tick · bespoke stroked polyline; dashoffset = full when --tick 0 ────────
-   Stagger lives in the delay: drawing-on waits a beat (calc · --tick), the
-   retract fires immediately (delay → 0). */
+/* stagger lives in the delay: draw-on waits a beat (calc · --tick), retract fires immediately */
 .cbx__mark {
   position: relative;
   display: block;
@@ -154,7 +117,6 @@
     calc(var(--tick) * var(--duration-fast));
 }
 
-/* ── Indeterminate dash · grows from center ─────────────────────────────────*/
 .cbx__dash {
   position: absolute;
   width: 56%;
@@ -169,7 +131,6 @@
     opacity var(--duration-fast) var(--ease-standard);
 }
 
-/* ── Text ───────────────────────────────────────────────────────────────────*/
 .cbx__text {
   display: grid;
   gap: var(--space-1);
@@ -183,9 +144,6 @@
   color: var(--text-muted);
 }
 
-/* ═══ MODIFIERS · repoint hooks only; paint above is shared ═════════════════*/
-
-/* sm (16, on-grid) */
 .cbx--sm {
   --cbx-size: var(--space-4);
   & .cbx__label {
@@ -198,7 +156,6 @@
   }
 }
 
-/* invalid · single error state for consent gates (no warning/success triad) */
 .cbx--invalid {
   --cbx-fill: linear-gradient(180deg, var(--danger), var(--danger));
   --cbx-on: var(--danger);
@@ -206,7 +163,7 @@
   --cbx-ring: var(--ring-danger);
 }
 
-/* disabled · grey fill, muted box, no press/hover (flags untouched → correct mark) */
+/* disabled leaves the state flags untouched, so the mark still matches checked state */
 .cbx--disabled {
   cursor: not-allowed;
   --cbx-fill: var(--border-strong);

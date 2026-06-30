@@ -1,8 +1,4 @@
-/* select.css — the Select family: <Select> (single) + <MultiSelect>, two
-   components on one class vocabulary (.select__*). Native <select> rejected:
-   the OS paints the open menu and we can't make it premium (A3). Trigger =
-   button, menu = our popover. Multi-only paint lives under [data-multiple].
-   Token-driven classes only; no inline style in the JSX. */
+/* Select family — <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
 
 .select {
   position: relative;
@@ -11,7 +7,6 @@
   font-family: var(--font-sans);
 }
 
-/* ── Trigger ── closed control; rests in an inset well like the fields, lifts on focus/open */
 .select__trigger {
   appearance: none;
   margin: 0;
@@ -87,12 +82,10 @@
   color: var(--text-disabled);
 }
 
-/* loading — the trigger label reads milder than committed body text */
 .select[data-loading='true'] .select__value {
   color: var(--text-muted);
 }
 
-/* ── Trigger parts ── */
 .select__leading {
   display: inline-flex;
   flex: 0 0 auto;
@@ -132,7 +125,6 @@
   border-radius: var(--radius-sm);
 }
 
-/* shared single-line truncation */
 .select__value,
 .select__option-label,
 .select__option-desc {
@@ -141,10 +133,7 @@
   white-space: nowrap;
 }
 
-/* ── Menu ── a plain React-owned node lifted by z-index; mounted through
-   Motion's <AnimatePresence>. Enter/exit (opacity + y + scale) are Motion-owned
-   inline styles — see selectMenuVariants in Select.jsx; this sheet only sets
-   the look + the transform origin the motion grows from. */
+/* Menu enter/exit are Motion-owned inline styles (selectMenuVariants); this sheet only sets the look + transform-origin. */
 .select__menu {
   position: fixed;
   margin: 0;
@@ -162,7 +151,6 @@
   transform-origin: top left;
 }
 
-/* ── Search (searchable) ── type-to-filter field pinned above the scroll region */
 .select__search {
   display: flex;
   align-items: center;
@@ -189,8 +177,7 @@
   color: var(--text-disabled);
 }
 
-/* ── Scroll region ── scrollbar removed, smooth roam (row height motion is the
-   <Collapse> primitive, not this container). */
+/* Row-height motion is the Collapse primitive, not this scroll container. */
 .select__list {
   max-height: 16.5rem;
   overflow-y: auto;
@@ -204,7 +191,6 @@
   display: none;
 }
 
-/* ── Group header ── */
 .select__group-label {
   position: sticky;
   top: 0;
@@ -221,7 +207,6 @@
   margin-top: var(--space-1);
 }
 
-/* ── Option row ── */
 .select__option {
   display: flex;
   align-items: center;
@@ -268,8 +253,7 @@
   transition: var(--transition-opacity);
 }
 
-/* active = neutral glass (cursor); selected = teal glass + check + accent label.
-   selected+active needs no rule — selected follows active so it wins by source order. */
+/* No selected+active rule needed — the selected rules follow active, so source order wins. */
 .select__option[data-active='true'] {
   background-color: var(--neutral-wash);
   color: var(--text-strong);
@@ -313,10 +297,7 @@
   }
 }
 
-/* ── Multi-select ── selection carried by the reused Checkbox visual
-   (components/checkbox/checkbox.css) — the box IS the indicator, so the row gets
-   no teal fill (avoid double-encoding). The .cbx is decorative: strip its
-   standalone layout chrome so it sits as a bare indicator. */
+/* Multi-select: the reused Checkbox box IS the indicator — no row fill (avoid double-encoding); strip the .cbx standalone chrome. */
 .select[data-multiple='true'] .select__option-check {
   opacity: 1;
 }
@@ -329,8 +310,7 @@
   margin-top: 0;
 }
 
-/* the row owns the press (the .cbx is pointer-events:none), so dip the box
-   from the row's :active — --press inherits down into .cbx__box */
+/* Row owns the press (.cbx is pointer-events:none); --press inherits down to dip .cbx__box. */
 .select[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx {
   --press: 0.88;
 }
@@ -341,7 +321,6 @@
   background-color: var(--neutral-wash);
 }
 
-/* ── Empty ── */
 .select__empty {
   padding: var(--space-4) var(--space-3);
   text-align: center;
@@ -349,7 +328,6 @@
   color: var(--text-subtle);
 }
 
-/* ── Loading skeleton ── opacity-only pulse */
 .select__loading {
   display: flex;
   flex-direction: column;

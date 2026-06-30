@@ -1,20 +1,10 @@
-/* glass.css — frosted-glass SURFACE tokens.
-   ─────────────────────────────────────────────────────────────────────────
-   The brand's premium surface treatment: tint + blur + a light-catching sheen.
-   These are the STRUCTURAL, tone-agnostic pieces; the per-tone translucent
-   tints (--glass-tint-*) live in semantic.css beside the status hues, since
-   they're derived from them. Consumed by components/glass/glass.css.
-
-   The sheen is a gradient — gradients cannot transition directly, so consumers
-   paint it on a layer and animate only its opacity/transform. */
+/* Glass tokens — structural frosted-surface pieces; per-tone tints live in semantic.css. */
 
 :root {
-  /* structural */
-  --glass-blur: 9px; /* frost radius — chips, controls          */
-  --glass-blur-strong: 16px; /* larger surfaces — cards, popovers       */
-  --glass-saturate: 1.5; /* lift the color of what sits behind      */
+  --glass-blur: 9px;
+  --glass-blur-strong: 16px;
+  --glass-saturate: 1.5;
 
-  /* sheen — the glass gradient (painted on a layer; opacity/transform animated) */
   --glass-sheen: linear-gradient(
     145deg,
     rgb(255 255 255 / 0.55) 0%,
@@ -24,7 +14,6 @@
   --glass-sheen-rest: 0.8;
   --glass-sheen-hover: 1;
 
-  /* lit edge + ambient lift (cool shadow tint, never pure black) */
   --glass-highlight: inset 0 1px 0 0 rgb(255 255 255 / 0.55);
   --glass-shadow: 0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05);
   --glass-shadow-hover:

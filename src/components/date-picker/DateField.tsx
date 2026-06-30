@@ -1,41 +1,6 @@
 'use client';
 
-/* DateField.tsx — date picker.
-   ─────────────────────────────────────────────────────────────────────────
-   Opinionated, not a public API: ONE way to pick a date. A field (the Input
-   vocabulary on a button) opens a popover — a month calendar with timezone
-   context — and commits LIVE on day pick; Done just closes.
-
-     <DateField
-       label="Start date"
-       value="2026-06-12"            // wall-clock 'YYYY-MM-DD'
-       onChange={(v) => …}
-       timezone="Europe/Riga"        // display context (IANA name)
-       min="2026-06-11"
-     />
-
-   OPINIONS (documented in DateField.prompt.md):
-     • the value is a WALL-CLOCK date string in the target timezone.
-       Converting to an instant is the app's job; the panel footer shows
-       which timezone the date belongs to.
-     • commit is LIVE — picking a day updates the value immediately.
-     • weeks start Monday; the grid is ALWAYS 6 rows so the panel never
-       changes height; adjacent-month days stay visible (quiet) and pickable.
-     • selection travels — the tinted pill FLIPs between days (layoutId,
-       t.settle); month changes slide directionally (imperative keyframes on
-       the persistent grid — the Tabs remount lesson); hover is Tabs' gliding
-       pill, grid edition (one shared layoutId node, atomic remount).
-
-   STRUCTURE: the panel is its OWN component (DtpPanel), mounted by Overlay
-   only while open — so every open starts fresh (view re-seeds from the
-   value) and the mount effect can seed focus into the day grid (the panel
-   portals to <body>; without this, keyboard users could never reach it).
-   Esc/outside-press close via the overlay stack; useReturnFocus puts focus
-   back on the trigger.
-
-   Primitives consumed (A8): Overlay (popover existence/placement/dismiss),
-   the .fld Input vocabulary (trigger chrome + label/message states), .btn
-   (Done), Icon. */
+/* DateField — opinionated single-date picker: a .fld trigger opens a month-calendar popover, commit is live on day pick. */
 
 import * as React from 'react';
 import type { ReactNode } from 'react';
@@ -81,9 +46,7 @@ export interface DtpPanelProps {
   slot?: ReactNode;
 }
 
-/* ── the popover panel · mounted only while open ─────────────────────────
-   Owns view + roving focus, so each open starts at the picked month.
-   `val` (a 'YYYY-MM-DD' key or null) and `commit` come from the field. */
+/* the popover panel, mounted only while open — owns view + roving focus, so each open starts at the picked month. */
 export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }: DtpPanelProps) {
   const seed = val ? dtfParse(val) : new Date();
   const [view, setView] = useState<{ y: number; m: number }>({
@@ -98,15 +61,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
   const uid = useId();
   const pillId = 'dtp-pill-' + uid;
 
-  /* the gliding hover (Tabs' second motion, grid edition): ONE PERSISTENT
-     pill that TRAVELS to the hovered cell. It never remounts, so the spring
-     retargets mid-flight (velocity carries) instead of re-easing a fresh
-     tween from rest at every cell boundary — that remount-restart was the
-     stop-start stutter (and the reason setTimeout(0) "helped": it only
-     dodged the remount-timing race; a persistent node removes it outright).
-     useGlide owns the geometry, measured against the grid; the grid's
-     pointerleave fades the pill out in place. Disabled days don't fire
-     pointerenter, so the pill HOLDS over them — same as Tabs. */
+  /* gliding hover: one persistent pill that travels to the hovered cell (see glide-pill). */
   const glide = useGlide(daysRef);
 
   const inRange = (key: string): boolean => (!min || key >= min) && (!max || key <= max);
@@ -120,7 +75,6 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     commit(key);
   }
 
-  /* ── month navigation + directional slide (persistent node) ────────────*/
   function goToMonth(y: number, m: number) {
     setView((v) => (v.y === y && v.m === m ? v : { y: y, m: m }));
   }
@@ -128,10 +82,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     const d = new Date(view.y, view.m + dir, 1);
     goToMonth(d.getFullYear(), d.getMonth());
   }
-  /* today-jump — NAVIGATION, not commit (it lives in the nav cluster):
-     slides the view home and seats keyboard focus on today's cell.
-     Disabled while already viewing the current month — the button
-     doubles as a "you are here" signal. */
+  /* today-jump is navigation, not commit: slides home + focuses today; disabled while viewing the current month. */
   const dtfNow = new Date();
   const viewIsCurrent = view.y === dtfNow.getFullYear() && view.m === dtfNow.getMonth();
   function goToToday() {
@@ -155,8 +106,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     );
   }, [viewIdx]);
 
-  /* seed focus into the grid on open — the panel lives in a portal at the
-     end of <body>, so without this it is unreachable from the trigger */
+  /* seed focus into the grid on open — the panel portals to <body>, unreachable from the trigger otherwise. */
   useEffect(() => {
     const el = daysRef.current;
     if (!el) return;
@@ -198,7 +148,6 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     e.preventDefault();
   }
 
-  /* ── render ───────────────────────────────────────────────────────────*/
   const days = dtfGrid(view.y, view.m);
   const todayKey = dtfToday();
   const selKey = val || null;
@@ -341,8 +290,7 @@ export interface DateFieldProps {
   onChange?: (value: string) => void;
   label?: string;
   placeholder?: string;
-  /** IANA timezone name (e.g. 'Europe/Riga') — display context only, shown
-      with its GMT offset in the panel footer. */
+  /** IANA timezone name (e.g. 'Europe/Riga') — display context only, shown with its GMT offset in the footer. */
   timezone?: string;
   /** Earliest pickable date, 'YYYY-MM-DD', inclusive. */
   min?: string;
@@ -358,15 +306,14 @@ export interface DateFieldProps {
   className?: string;
 }
 
-/* ── the field ───────────────────────────────────────────────────────────*/
 export function DateField({
-  value, // controlled: 'YYYY-MM-DD' | null
+  value,
   defaultValue = null,
   onChange,
   label,
   placeholder = 'Pick a date',
-  timezone, // IANA name — display context only
-  min, // 'YYYY-MM-DD' (inclusive)
+  timezone,
+  min,
   max,
   required = false,
   invalid = false,

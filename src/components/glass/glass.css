@@ -1,26 +1,4 @@
-/* glass.css — the pure frosted-glass SURFACE. The brand's premium surface,
-   ─────────────────────────────────────────────────────────────────────────
-   decoupled from any one component so it can dress anything: chips, cards,
-   toolbars, popovers, overlays. Built from three pieces:
-
-     1. TINT  — a translucent fill (--glass-tint), so the frost reads.
-     2. BLUR  — backdrop-filter blur + saturate; frosts whatever sits behind.
-     3. SHEEN — a light-catching gradient on its OWN layer (::before). Gradients
-                cannot transition directly, so we animate only the layer's
-                opacity/transform (also keeps motion on the brand's
-                transform/opacity-only law).
-
-   TWO HOOKS the consumer sets in their OWN class (never inline, §F):
-     --glass-tint : the translucent fill  (a --glass-tint-* token, or a color-mix)
-     --glass-fg   : content color         (also drives the same-hue hairline)
-
-   Classes:
-     .glass               the surface (set radius on the element itself)
-     .glass--strong       the larger blur, for big surfaces
-     .glass--interactive  opt-in hover: the chip lifts and the sheen catches light
-
-   Tokens consumed: the staged --glass-* set (glass.tokens.css). Reduced motion
-   is honored at the bottom — no lift, no sheen travel. */
+/* Glass surface — translucent tint + backdrop blur + a sheen layer; consumer sets --glass-tint and --glass-fg. */
 
 .glass {
   --glass-fg: var(--text-body);
@@ -41,11 +19,10 @@
   transition:
     transform var(--duration-base) var(--ease-standard),
     box-shadow var(--duration-base) var(--ease-standard),
-    background-color var(--duration-base) var(--ease-standard); /* tint cross-fades */
+    background-color var(--duration-base) var(--ease-standard);
 }
 
-/* SHEEN — the glass gradient, on its own layer so hover animates opacity +
-   transform (gradients can't transition directly). Above the tint, below content. */
+/* Sheen on its own layer so hover animates opacity/transform — gradients can't transition directly. */
 .glass::before {
   content: '';
   position: absolute;
@@ -64,12 +41,10 @@
   z-index: 1;
 } /* content rides above the sheen */
 
-/* stronger frost for larger surfaces */
 .glass--strong {
   --glass-blur: var(--glass-blur-strong);
 }
 
-/* interactive — opt-in lift + sheen catch (chips, buttons; not static cards) */
 .glass--interactive:hover {
   transform: translateY(calc(var(--space-px) * -1));
   box-shadow:
@@ -82,9 +57,7 @@
   transform: translateY(-8%);
 }
 
-/* GLINT — a one-shot light flicking across the glass (e.g. a status reaching a
-   terminal state). Reusable: add .glass-glint to fire once, remove after it ends.
-   Sits above content (z-index 2) so the light passes over it; transform/opacity. */
+/* Glint — one-shot light sweep; add .glass-glint to fire, remove after it ends (sits above content, z-index 2). */
 .glass-glint::after {
   content: '';
   position: absolute;

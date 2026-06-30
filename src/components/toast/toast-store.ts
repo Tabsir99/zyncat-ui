@@ -1,14 +1,4 @@
-// toast-store.ts — Toast MACHINERY.
-// ─────────────────────────────────────────────────────────────────────────
-// Pure TS, zero React. This module owns everything that is not rendering: the
-// queue, the clocks (schedule / pause / resume), coalescing, and the public
-// imperative API. A module-level singleton — `toast.success()` is callable from
-// anywhere, the host mounts itself, zero app wiring. Rendering lives in
-// Toast.tsx; it registers its lazy mount via `store.host` and reads the queue
-// through the exported `UIToast` store.
-//
-// Buildless pages exposed this as window.toast / window.UIToast; a bundled
-// app imports { toast, UIToast } instead.
+// toast-store — the Toast machinery: queue, clocks, coalescing, imperative API (zero React).
 
 export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'custom';
 
@@ -50,12 +40,12 @@ const DURATION: Record<string, number> = {
   success: 5000,
   info: 5000,
   warning: 8000,
-  error: 8000, // problems get longer to be seen
+  error: 8000,
   loading: Infinity, // sticky until updated/dismissed
 };
 
 let uid = 0;
-const timers = new Map<string, ReturnType<typeof setTimeout>>(); // toast id → timeout handle
+const timers = new Map<string, ReturnType<typeof setTimeout>>();
 
 interface ToastStore {
   toasts: ToastRecord[];
@@ -76,12 +66,12 @@ interface ToastStore {
   setExpanded(v: boolean): void;
 }
 
-/* ── Store · the queue. The API writes, the host renders. ───────────────*/
+/* Store — the queue; the API writes, the host renders. */
 const store: ToastStore = {
   toasts: [],
   paused: false,
   expanded: false,
-  host: null, // Toast.tsx assigns the lazy mount here
+  host: null,
   snap: { toasts: [], paused: false, expanded: false },
   listeners: new Set(),
   subscribe(l) {
@@ -116,8 +106,8 @@ const store: ToastStore = {
     if (!t) return id;
     Object.assign(t, patch);
     if ('tone' in patch || 'duration' in patch || 'count' in patch) {
-      t.remaining = t.duration; // restart the clock…
-      t.timerKey++; // …and re-key the ring to match
+      t.remaining = t.duration;
+      t.timerKey++; // re-key the ring so it re-fills
       store.schedule(t);
     }
     store.emit();
@@ -174,7 +164,6 @@ const store: ToastStore = {
   },
 };
 
-/* ── API · toast() ──────────────────────────────────────────────────────*/
 function make(tone: ToastTone, message: string | null, opts: ToastOptions = {}): string {
   if (store.host) store.host();
   const id = opts.id != null ? String(opts.id) : 'toast-' + ++uid;
@@ -274,4 +263,4 @@ toast.custom = (node, opts = {}) => {
 };
 
 export { toast };
-export const UIToast = store; // consumed by Toast.tsx only
+export const UIToast = store;

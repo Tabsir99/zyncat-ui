@@ -1,20 +1,4 @@
-/* badge.css — Badge / status pill: GEOMETRY + TONES.
-   ─────────────────────────────────────────────────────────────────────────
-   The frosted SURFACE comes from glass.css — a glass badge carries
-   class="glass glass--interactive badge badge--<tone>". This file owns only the
-   badge's shape, the tone vocabulary (which feeds the glass hooks), the dot, the
-   numeric treatment, and the OUTLINE variant (deliberately NOT glass).
-
-   Each TONE sets --badge-fg (text) · --badge-tint (glass fill) · --badge-dot
-   (the solid hue). The base wires those into the glass hooks --glass-fg/-tint.
-
-   Tones:    neutral · info · success · warning · danger   (status-hue vocabulary)
-   Variants: (default = glass, from glass.css) · outline (flat, engraved hairline)
-   Sizes:    sm · (default md)
-   Extras:   dot (+ live pulse) · pill · icon slot.  All badges are MONO + tabular
-             (status is data — CLAUDE.md §E).
-
-   Load order: glass.tokens.css → glass.css → badge.tokens.css → badge.css. */
+/* Badge / status pill — shape, tones, dot, status morph. */
 
 .badge {
   /* wire the tone vars into the glass surface hooks */
@@ -23,16 +7,16 @@
 
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1); /* 4 — dot/icon ↔ label */
-  padding-block: var(--space-1); /* 4 → height 24 (md) */
-  padding-inline: var(--space-2); /* 8 */
-  border-radius: var(--radius-sm); /* 4 — engineered, not a full pill */
+  gap: var(--space-1);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
 
-  font-family: var(--font-mono); /* status is data — mono (§E) */
-  font-size: var(--size-micro); /* 12 */
-  line-height: var(--leading-micro); /* 16 */
-  font-weight: var(--weight-medium); /* 500 */
-  font-variant-numeric: tabular-nums; /* counts & status read precise */
+  font-family: var(--font-mono);
+  font-size: var(--size-micro);
+  line-height: var(--leading-micro);
+  font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0;
   white-space: nowrap;
   vertical-align: middle;
@@ -41,28 +25,25 @@
   -webkit-user-select: none;
 }
 
-/* ── Sizes ─────────────────────────────────────────────────────────────────*/
 .badge--sm {
   padding-block: 0;
   gap: var(--space-px);
-} /* height 16 — dense rows */
+}
 
-/* ── Shape ───────────────────────────────────────────────────────────────── */
 .badge--pill {
   border-radius: var(--radius-full);
 }
 
-/* ── Dot · the status signal ─────────────────────────────────────────────── */
 .badge__dot {
   position: relative;
   width: 0.5em;
-  height: 0.5em; /* 6px at 12 — tracks font-size */
+  height: 0.5em;
   flex: none;
   border-radius: var(--radius-full);
   background: var(--badge-dot, var(--badge-fg));
-  transition: background-color var(--duration-base) var(--ease-standard); /* hue cross-fades on morph */
+  /* hue cross-fades as the status morphs */
+  transition: background-color var(--duration-base) var(--ease-standard);
 }
-/* live · a calm expanding ripple for "processing" — motion is brand */
 .badge__dot--live::after {
   content: '';
   position: absolute;
@@ -86,7 +67,6 @@
   }
 }
 
-/* ── Icon slot · sized to the text, ready for the <Icon> primitive ──────────*/
 .badge__icon {
   display: inline-flex;
   flex: none;
@@ -100,7 +80,6 @@
   height: 100%;
 }
 
-/* ═══ TONES — feed --badge-fg / --badge-tint (→ glass) and the dot ══════════*/
 .badge--neutral {
   --badge-fg: var(--text-muted);
   --badge-tint: var(--glass-tint-neutral);
@@ -127,10 +106,7 @@
   --badge-dot: var(--danger);
 }
 
-/* ═══ OUTLINE — NOT glass: a flat, engraved hairline chip ═══════════════════
-   An inset hue hairline + a 1px top white sheen (the engraving) + a soft contact
-   shadow, so it reads crisp and lifted rather than a bare ring. Hover washes a
-   whisper of tint in and lifts. Lives on its own; never carries the .glass class. */
+/* Outline variant — deliberately NOT glass: a flat, engraved hairline chip. */
 .badge--outline {
   position: relative;
   isolation: isolate;
@@ -144,7 +120,6 @@
     box-shadow var(--duration-base) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard);
 }
-/* the dot gains a faint same-hue halo so it reads as deliberate */
 .badge--outline .badge__dot {
   box-shadow: 0 0 0 2.5px color-mix(in oklab, var(--badge-dot) 16%, transparent);
 }
@@ -157,18 +132,13 @@
     var(--shadow-sm);
 }
 
-/* ═══ STATUS MORPH (StatusBadge morph mode) — clipped real-width tween ═══════
-   The label is a one-cell grid STACK that CLIPS (overflow): a hidden "ghost"
-   carries the next label so JS can measure its width, the box eases its REAL
-   width to it, and the active word ROLLS while the outgoing one rolls out —
-   both masked by the clip, so a shrink is the exact mirror of a grow. The dot
-   hue + glass tint cross-fade (above / glass.css); a glint fires on terminal. */
+/* Status morph — a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
 .badge__morph {
   position: relative;
   display: inline-grid;
   align-items: center;
-  justify-items: start; /* anchor left so the box resizes from the right edge */
-  overflow: hidden; /* clip the rolling word to the pill edge — shrink mirrors grow */
+  justify-items: start;
+  overflow: hidden;
   transition: width var(--duration-base) var(--ease-entrance);
 }
 .badge__morph > * {
@@ -187,17 +157,14 @@
 .badge__word--out {
   transform: translateY(-52%);
   opacity: 0;
-} /* leaving: rolls up */
+}
 .badge__word--in {
   transform: translateY(52%);
   opacity: 0;
   transition: none;
-} /* primed below */
+}
 
-/* ═══ ODOMETER (CountBadge roll) — digit strips slide; transform only ════════
-   Each digit is a column clipping a 0–9 strip; the strip's translateY is set by
-   an .odo__strip--N class so there are no inline styles. Mono tabular keeps the
-   columns aligned. Non-digit chars (/ % + space) sit static in .odo__fixed. */
+/* Odometer — each digit is a column clipping a 0–9 strip; .odo__strip--N sets the translateY (no inline styles). */
 .odo {
   display: inline-flex;
   align-items: center;
@@ -254,7 +221,6 @@
   transform: translateY(-9em);
 }
 
-/* ── Reduced motion · no lift, no pulse, no roll ────────────────────────────*/
 @media (prefers-reduced-motion: reduce) {
   .badge--outline {
     transition: none;

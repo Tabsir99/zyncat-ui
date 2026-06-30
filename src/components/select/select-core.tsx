@@ -1,22 +1,6 @@
 'use client';
 
-/* select-core.tsx — the shared MECHANICS under Select + MultiSelect.
-   ─────────────────────────────────────────────────────────────────────────
-   Per CLAUDE.md A9, the two selects are SEPARATE components: they own their
-   selection state, commit semantics, and row indicators themselves. This core
-   holds only what is genuinely variant-blind, and it holds NO selection state:
-
-     hooks      useControllable (value plumbing) · useSelectMenu (the listbox
-                machinery: roving active row, keyboard model, typeahead,
-                outside-dismiss, fixed-coords placement + flip, focus seeding,
-                keep-active-in-view)
-     pure fns   normalize (flat|grouped options) · matches (filter predicate)
-     chrome     SelectTrigger · SelectMenu (Motion existence) · SearchField ·
-                FilterRow · EmptyRow · LoadingRows — presentational only
-
-   The menu is a plain React-owned node lifted by z-index (NOT the Popover API:
-   React can't remove a [popover] once promoted to the top layer — verified),
-   positioned in JS because anchor() needs the top layer. */
+/* select-core — shared listbox mechanics for Select + MultiSelect; holds no selection state. */
 import * as React from 'react';
 import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
@@ -49,8 +33,6 @@ interface NormalizedGroup {
   options: SelectOption[];
 }
 
-/* Controlled/uncontrolled value in one line. setValue writes internal only
-   when uncontrolled, always fires onChange. */
 export function useControllable<T, O = SelectOption>(
   controlled: T | undefined,
   initial: T,
@@ -66,7 +48,6 @@ export function useControllable<T, O = SelectOption>(
   return [value, setValue];
 }
 
-/* Flat list OR grouped input → uniform [{label?, options}] groups + flat array. */
 export function normalize(options: SelectOption[] | SelectGroup[]): {
   groups: NormalizedGroup[];
   flat: SelectOption[];
@@ -82,8 +63,7 @@ export function normalize(options: SelectOption[] | SelectGroup[]): {
 export const matches = (o: SelectOption, q: string) =>
   !q || (o.label + ' ' + (o.description || '')).toLowerCase().includes(q.toLowerCase());
 
-/* Enter: decelerate-and-settle from the trigger; exit: accelerate away.
-   Opacity rides a faster clock than the slide. */
+/* Enter decelerates from the trigger, exit accelerates away; opacity rides a faster clock than the slide. */
 const selectMenuVariants = {
   closed: {
     opacity: 0,
@@ -121,10 +101,7 @@ export interface UseSelectMenuArgs {
   searchable: boolean;
 }
 
-/* The whole open-menu interaction machine. Variant-blind: it roams rows,
-   handles keys, places and dismisses the menu — selection itself stays with
-   the caller (isSelected reads it, commit writes it).
-   Returns { activeIdx, setActiveIdx, onMenuKeyDown }. */
+/* The open-menu interaction machine — variant-blind; selection stays with the caller (isSelected/commit). */
 export function useSelectMenu({
   open,
   close,
@@ -158,9 +135,7 @@ export function useSelectMenu({
     return () => document.removeEventListener('pointerdown', onDocPointer, true);
   }, [open, menuId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // fixed-coords placement under the trigger; flips above when out of room;
-  // re-measures on scroll/resize. Layout effect: coords land before first
-  // paint, so Motion's entrance plays at the final position.
+  // placement under the trigger, flips above when cramped; layout effect lands coords before paint so the entrance plays in place
   coreUseLayoutEffect(() => {
     if (!open) return undefined;
     const place = () => {
@@ -187,7 +162,6 @@ export function useSelectMenu({
     };
   }, [open, menuId, navItems.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // on open: seed active at the selection (or first enabled) + move focus in
   coreUseEffect(() => {
     if (!open) return;
     const sel = navItems.findIndex((o) => isSelected(o.value) && !o.disabled);
@@ -232,7 +206,6 @@ export function useSelectMenu({
     if (i >= 0) setActiveIdx(i);
   }
 
-  // keyboard while OPEN (shared by search input + list)
   function onMenuKeyDown(e: React.KeyboardEvent) {
     switch (e.key) {
       case 'Escape':
@@ -270,8 +243,6 @@ export function useSelectMenu({
 
   return { activeIdx, setActiveIdx, onMenuKeyDown };
 }
-
-/* ── Presentational chrome (stateless) ─────────────────────────────────────*/
 
 export interface SelectTriggerProps {
   triggerRef: React.RefObject<HTMLButtonElement | null>;
@@ -348,7 +319,6 @@ export interface SelectMenuProps {
   children?: React.ReactNode;
 }
 
-/* Existence: mounted only while open, unmounted after the exit plays. */
 export function SelectMenu({ open, menuId, children }: SelectMenuProps) {
   return (
     <CoreAnimatePresence>

@@ -1,16 +1,6 @@
 'use client';
 
-/* MultiSelect.tsx — MultiSelect (custom listbox, many-of).
-   ─────────────────────────────────────────────────────────────────────────
-   Pick SEVERAL options; committing TOGGLES a row and the menu stays open.
-   Value is an array; the trigger summarises as "first label +N"; each row
-   carries the real Checkbox VISUAL (components/checkbox/checkbox.css —
-   same fill-spring + tick-draw, zero CSS duplicated; the row keeps listbox
-   semantics, the checkbox is decorative). Optional type-to-filter.
-
-   Sibling of <Select> (single) per CLAUDE.md A9: own state shape, own commit
-   semantics, own indicator — shared listbox machinery from select-core.
-   Styling is select.css ([data-multiple] block); classes + data-* flags only. */
+/* MultiSelect — many-of custom listbox; committing toggles a row, the menu stays open. */
 import * as React from 'react';
 import {
   useControllable as useMsControllable,
@@ -48,7 +38,6 @@ export interface MultiSelectProps {
   ariaLabel?: string;
 }
 
-/* The decorative tick — the Checkbox visual, driven by this row's selection. */
 function CheckboxTick({ checked }: { checked: boolean }) {
   return (
     <span className="cbx" aria-hidden="true">
@@ -112,7 +101,6 @@ export function MultiSelect({
   const hide = () => setOpen(false);
   const returnFocus = () => triggerRef.current && triggerRef.current.focus();
 
-  // multi-select commit: TOGGLE the row, keep the menu open
   function commit(opt: SelectOption) {
     if (!opt || opt.disabled) return;
     const next = isSelected(opt.value)
@@ -123,7 +111,7 @@ export function MultiSelect({
 
   useEffect(() => {
     if (!open) setQuery('');
-  }, [open]); // filter resets on close
+  }, [open]);
 
   const { activeIdx, setActiveIdx, onMenuKeyDown } = useMsMenu({
     open,

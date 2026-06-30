@@ -1,29 +1,6 @@
 'use client';
 
-/* Overlay.tsx — ONE headless component, three modes. Overlay domain.
-   ─────────────────────────────────────────────────────────────────────────
-     <Overlay mode="popover|dialog|sheet" trigger={…}>{({ close }) => …}</Overlay>
-
-   All modes share the same state shape — one open boolean, same trigger
-   cloning, same Motion-owned existence (exit always plays before unmount),
-   same stack (Esc topmost-first, z by depth, full nesting). `mode` switches
-   only geometry + modality:
-
-     popover   anchored to the trigger (side/align/flip/clamp, optional
-               arrow), light dismiss, focus never stolen
-     dialog    centered, scrim, hard focus trap, inert page, scroll lock
-     sheet     same modality, docked to an edge (side: right|bottom), with
-               drag-to-dismiss / coupled scrim / rubber-band / scroll
-               handoff when dismissible (sheet-drag.tsx)
-
-   FULLY headless: paints nothing but the scrim, sets no role and no label —
-   your child is the entire surface AND its semantics (put role="dialog"
-   aria-modal="true" + a label on your own panel for modal content).
-   `asChild` removes the panel wrapper entirely: your single DOM-element
-   child becomes the animated panel itself.
-
-   Mechanics live in overlay-core.tsx + sheet-drag.tsx (A9: variant-blind
-   hooks + chrome). */
+/* Overlay — one headless component, three modes: popover · dialog · sheet. */
 import * as React from 'react';
 import {
   OvAnimatePresence as AnimatePresence,
@@ -44,10 +21,7 @@ import { useSheetDrag } from './sheet-drag';
 const { useRef, useId } = React;
 
 export interface OverlayProps {
-  /** Skin + modality. Default 'popover'.
-   *  popover — anchored to trigger, light dismiss, no scrim, focus untouched
-   *  dialog  — centered modal: scrim, hard focus trap, inert page, scroll lock
-   *  sheet   — same modality, docked to an edge */
+  /** Skin + modality. Default 'popover'. */
   mode?: 'popover' | 'dialog' | 'sheet';
 
   /** Controlled open state. Omit to stay uncontrolled. */
@@ -56,25 +30,20 @@ export interface OverlayProps {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 
-  /** Cloned: toggles (popover) or opens (modal) on click; gets
-   *  aria-haspopup/-expanded/-controls; your ref on it is preserved.
-   *  REQUIRED for mode="popover" — it is the anchor. */
+  /** Cloned to toggle (popover) / open (modal); required as the popover anchor. */
   trigger?: React.ReactElement | null;
 
-  /** popover: 'top'|'bottom'|'left'|'right' (default 'bottom'; flips when out
-   *  of room). sheet: 'right'|'bottom' (default 'right'). Ignored by dialog. */
+  /** Popover side (default 'bottom', flips) / sheet edge (default 'right'). */
   side?: 'top' | 'bottom' | 'left' | 'right';
   /** Popover only — cross-axis alignment. Default 'start'. */
   align?: 'start' | 'center' | 'end';
   /** Popover only — caret tracking the trigger center. */
   arrow?: boolean;
 
-  /** popover: outside press + Esc · dialog: scrim press + Esc · sheet: scrim
-   *  press + Esc + drag toward the docked edge. Default true. */
+  /** Light/scrim + Esc dismissal (sheet adds drag-to-edge). Default true. */
   dismissible?: boolean;
 
-  /** Render NO panel wrapper: your single DOM-element child becomes the
-   *  animated panel itself. Default false. */
+  /** Render no wrapper — your DOM-element child becomes the panel. Default false. */
   asChild?: boolean;
 
   id?: string;
@@ -82,16 +51,12 @@ export interface OverlayProps {
   children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode);
 }
 
-/* ── per-mode motion ── all tokens via the bridge, never hardcoded ──────*/
-
-/* popover scales open from the anchored edge (transform-origin set by
-   data-side/data-align in overlay.css) */
+/* scales open from the anchored edge (transform-origin set in overlay.css) */
 const popoverVariants = {
   closed: { opacity: 0, scale: 0.96, transition: SM.t.exit },
   open: { opacity: 1, scale: 1, transition: SM.t.enter },
 };
 
-/* the brand surface arrival: slow + entrance in, soft dissolve out */
 const dialogVariants = {
   closed: {
     opacity: 0,
@@ -107,8 +72,7 @@ const dialogVariants = {
   },
 };
 
-/* full-distance travel on the entrance curve — a bouncy spring would
-   overshoot past the edge and show a gap behind the panel */
+/* entrance curve, not a spring — overshoot would show a gap behind the panel */
 function sheetVariants(side: 'right' | 'bottom') {
   const axis = side === 'bottom' ? 'y' : 'x';
   return {
@@ -124,8 +88,7 @@ interface PanelShared {
   requestClose: () => void;
 }
 
-/* ── popover panel ── mounted only while open (or exiting); lifecycle
-   hooks live here so dismiss/placement hold until the exit finishes ─────*/
+/* Popover panel — lifecycle hooks live here so dismiss/placement hold until exit ends. */
 function PopoverPanel({
   panelId,
   side,
@@ -171,8 +134,7 @@ function PopoverPanel({
   });
 }
 
-/* ── sheet shell ── owns the drag hook (slotRef must exist before the
-   shell renders); everything else is the shared ModalShell ──────────────*/
+/* Sheet shell — owns the drag hook; slotRef must exist before the shell renders. */
 function SheetShell({
   side,
   panelId,
@@ -209,23 +171,19 @@ function SheetShell({
   );
 }
 
-/* ── the one component ──────────────────────────────────────────────────*/
 export function Overlay({
-  mode = 'popover', // 'popover' | 'dialog' | 'sheet'
+  mode = 'popover',
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
-  trigger = null, // element; cloned to open (modal) / toggle (popover).
-  // REQUIRED for popover — it is the anchor.
-  side, // popover: 'top|bottom|left|right' (default bottom)
-  // sheet:   'right|bottom'          (default right)
-  align = 'start', // popover only: 'start' | 'center' | 'end'
-  arrow = false, // popover only: caret tracking the trigger center
-  dismissible = true, // popover: outside press + Esc · dialog: scrim + Esc
-  // sheet: scrim + Esc + drag toward the edge
-  asChild = false, // no wrapper: your single DOM-element child IS the panel
+  trigger = null,
+  side,
+  align = 'start',
+  arrow = false,
+  dismissible = true,
+  asChild = false,
   id,
-  children, // node OR ({ close }) => node — the ENTIRE surface
+  children,
 }: OverlayProps) {
   const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
   const triggerRef = useRef<HTMLElement>(null);

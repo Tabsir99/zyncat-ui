@@ -1,36 +1,6 @@
 'use client';
 
-/* overlay-core.tsx — the headless mechanics under Popover / Dialog / Sheet.
-   ─────────────────────────────────────────────────────────────────────────
-   Per CLAUDE.md A9 these are SEPARATE sibling components; this core holds only
-   variant-blind material — no open state, no content, no surface paint:
-
-     stack      one module-level stack of every open overlay (modal and
-                non-modal interleaved). Drives: Esc → topmost dismissible only;
-                z-index = --layer-overlay + depth; "is this press/focus inside
-                an overlay above me?" checks for nesting.
-     hooks      useControllable · useOverlayEntry (join/leave the stack + z)
-                useOutsidePress (light dismiss) · useReturnFocus
-                useFocusTrap (hard Tab cycle + focus recapture, topmost only)
-                useScrollLock (refcounted, scrollbar-gutter compensated)
-                useInertOutside (refcounted `inert` on the page behind modals)
-                useAnchorPosition (fixed coords, side/align, flip, clamp, arrow)
-     chrome     OverlayPortal (a [data-overlay-root] host on <body>) ·
-                OverlayScrim · ModalShell (layer > scrim + slot — shared by
-                Dialog and Sheet, which differ only in classes + variants)
-
-   Mount-while-open: each skin renders its panel through <AnimatePresence>, and
-   the lifecycle hooks live INSIDE the mounted panel — so locks, inert and
-   focus restore release only after the exit animation finishes.
-
-   No native <dialog> / [popover]: Motion owns existence end-to-end (the scrim
-   is a real motion.div, not a ::backdrop hack), and React can't unmount a
-   top-layer node cleanly (verified in select-core). Modality is hand-rolled:
-   portal to <body> + scrim + hard focus trap + `inert` + scroll lock.
-
-   useControllable is duplicated from select-core (6 lines) — importing the
-   select domain here would entangle domains; propose lifting to a shared
-   util at promotion if a third copy ever appears. */
+/* overlay-core — the headless mechanics under popover, dialog and sheet. */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { motion as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';
@@ -43,8 +13,6 @@ const {
   useLayoutEffect: ovUseLayoutEffect,
   useRef: ovUseRef,
 } = React;
-
-/* ── tiny shared helpers ──────────────────────────────────────────────────*/
 
 function useControllable<T>(
   controlled: T | undefined,
@@ -61,8 +29,7 @@ function useControllable<T>(
   return [value, setValue];
 }
 
-/* Token length → px. parseFloat alone reads "0.5rem" as 0.5px — the bug that
-   bit Tooltip and Toast (progress.md 2026-06-10); always convert rem here. */
+/* Token length → px; parseFloat alone reads "0.5rem" as 0.5px, so convert rem. */
 function ovReadPx(token: string): number {
   const root = document.documentElement;
   const v = getComputedStyle(root).getPropertyValue(token).trim();
@@ -71,8 +38,6 @@ function ovReadPx(token: string): number {
   return v.endsWith('rem') ? n * parseFloat(getComputedStyle(root).fontSize) : n;
 }
 
-/* children may be a node or ({ close }) => node — headless consumers usually
-   need `close` to wire their own actions. */
 function ovResolveChildren(
   children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode),
   close: () => void,
@@ -80,8 +45,6 @@ function ovResolveChildren(
   return typeof children === 'function' ? children({ close }) : children;
 }
 
-/* Clone the consumer's trigger element: wire open/close + ARIA, and keep any
-   ref the consumer already attached. */
 function ovCloneTrigger(
   trigger: React.ReactElement | null,
   {
@@ -118,11 +81,7 @@ function ovCloneTrigger(
   });
 }
 
-/* ── the overlay stack ────────────────────────────────────────────────────
-   One array for every open overlay, in opening order. Single document-level
-   Esc listener: closes the TOPMOST overlay only, and only if it is
-   dismissible — and defers to anything inner that already handled the key
-   (e.defaultPrevented: an open Select menu inside a dialog eats its own Esc). */
+/* The overlay stack: one Esc listener closes only the topmost dismissible, and defers to inner handlers that already consumed the key (defaultPrevented). */
 interface OverlayEntry {
   contains: (t: EventTarget | null) => boolean;
   isDismissible: () => boolean;
@@ -145,15 +104,13 @@ function ovIsTop(entry: OverlayEntry) {
   return ovStack[ovStack.length - 1] === entry;
 }
 
-/* true if `target` sits inside an overlay opened AFTER `entry` — i.e. a child
-   overlay (popover in a dialog, dialog over a dialog) that owns the event. */
+/* true if `target` sits in an overlay opened after `entry` (a nested child owns it). */
 function ovInOverlayAbove(entry: OverlayEntry, target: EventTarget | null) {
   const i = ovStack.indexOf(entry);
   return i >= 0 && ovStack.slice(i + 1).some((e) => e.contains(target));
 }
 
-/* Join the stack for this panel's lifetime (mounted = open or exiting).
-   Sets z = --layer-overlay + depth on the root node before first paint. */
+/* Join the stack for the panel's lifetime; set z = --layer-overlay + depth. */
 function useOverlayEntry({
   nodeRef,
   dismissible,
@@ -190,9 +147,7 @@ function useOverlayEntry({
   return ref.current;
 }
 
-/* ── light dismiss (Popover) ──────────────────────────────────────────────
-   Close on a press that lands outside the panel, outside the trigger (its own
-   click toggles), and outside any overlay stacked above this one. */
+/* Light dismiss — close on a press outside the panel, trigger, and any overlay above. */
 function useOutsidePress({
   entry,
   refs,
@@ -219,11 +174,7 @@ function useOutsidePress({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-/* ── focus ────────────────────────────────────────────────────────────────*/
-
-/* Remember the opener; put focus back when the panel unmounts — but only if
-   focus would otherwise be lost (on <body>, gone, or still inside the dying
-   panel). A microtask dodges unmount-ordering races with inert release. */
+/* Restore focus to the opener on unmount, but only if it would otherwise be lost; a microtask dodges the inert-release ordering race. */
 function useReturnFocus(nodeRef: React.RefObject<HTMLElement>) {
   ovUseEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
@@ -244,9 +195,7 @@ const OV_FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/* Hard trap, showModal()-style: seed focus in, Tab/Shift+Tab cycle inside,
-   and recapture focus that lands outside — unless this modal is no longer the
-   topmost overlay, or the focus sits in an overlay above it (nested popover). */
+/* Hard focus trap: seed in, cycle Tab inside, recapture stray focus unless not topmost or it's in an overlay above. */
 function useFocusTrap({
   panelRef,
   entry,
@@ -299,8 +248,6 @@ function useFocusTrap({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-/* ── modality: scroll lock + inert page ───────────────────────────────────*/
-
 let ovLocks = 0;
 let ovSavedOverflow = '';
 let ovSavedPad = '';
@@ -325,10 +272,7 @@ function useScrollLock() {
   }, []);
 }
 
-/* `inert` on every <body> child that isn't an overlay portal — what the top
-   layer gave us for free. Refcounted across stacked modals; restores exactly
-   what it set. (Content mounted on <body> WHILE a modal is up is not swept —
-   acceptable: the app mounts everything transient through OverlayPortal.) */
+/* `inert` on every non-overlay <body> child (refcounted); content mounted while a modal is already up is not swept. */
 let ovInertCount = 0;
 const ovInerted = new Set<HTMLElement>();
 function useInertOutside() {
@@ -357,12 +301,7 @@ function useInertOutside() {
   }, []);
 }
 
-/* ── anchored placement (Popover) ─────────────────────────────────────────
-   Fixed coords like select-core: measure, place on the requested side, flip
-   to the opposite side when out of room, clamp the cross axis to the
-   viewport. Writes data-side/data-align (CSS reads them for transform-origin
-   and the arrow) and --overlay-arrow-x/y (arrow tracks the trigger center).
-   Runs in a layout effect so the entrance plays at the final position. */
+/* Anchored placement: measure, place on the side, flip when cramped, clamp the cross axis; writes data-side/-align + arrow vars in a layout effect. */
 function useAnchorPosition({
   side,
   align,
@@ -411,15 +350,16 @@ function useAnchorPosition({
         x =
           align === 'start' ? r.left : align === 'end' ? r.right - pw : r.left + (r.width - pw) / 2;
         x = Math.min(Math.max(x, edge), vw - pw - edge);
-        y = Math.max(Math.min(y, vh - ph - edge), edge); /* clamp the MAIN axis too: a tall
-             popover flipped up in a short viewport must keep its leading edge (header/nav)
-             on-screen — max() last, so it may cover the trigger rather than clip off-screen */
+        y = Math.max(
+          Math.min(y, vh - ph - edge),
+          edge,
+        ); /* main-axis clamp: keep the leading edge on-screen (max last → may cover the trigger) */
       } else {
         x = s === 'left' ? r.left - pw - gap : r.right + gap;
         y =
           align === 'start' ? r.top : align === 'end' ? r.bottom - ph : r.top + (r.height - ph) / 2;
         y = Math.min(Math.max(y, edge), vh - ph - edge);
-        x = Math.max(Math.min(x, vw - pw - edge), edge); /* main-axis clamp (see vertical branch) */
+        x = Math.max(Math.min(x, vw - pw - edge), edge);
       }
       p.style.left = Math.round(x) + 'px';
       p.style.top = Math.round(y) + 'px';
@@ -451,15 +391,10 @@ function useAnchorPosition({
   }, [side, align, arrow]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-/* ── chrome ───────────────────────────────────────────────────────────────*/
-
-/* A per-instance host on <body>: escapes ancestor transforms/overflow, and is
-   what useInertOutside skips. Persists across open/close (AnimatePresence
-   needs to stay mounted to play exits); holds no layout box of its own. */
+/* Per-instance <body> host (escapes ancestor transforms; skipped by inert); persists across open/close so AnimatePresence can play exits. */
 function OverlayPortal({ children }: { children: React.ReactNode }) {
   const hostRef = ovUseRef<HTMLDivElement | null>(null);
-  // Guard document for SSR (this component is reached during server render even
-  // when the overlay is closed). Hooks below stay unconditional.
+  // SSR guard: reached during server render; hooks below stay unconditional.
   if (typeof document !== 'undefined' && !hostRef.current) {
     hostRef.current = document.createElement('div');
     hostRef.current.setAttribute('data-overlay-root', '');
@@ -470,15 +405,11 @@ function OverlayPortal({ children }: { children: React.ReactNode }) {
     document.body.appendChild(el);
     return () => el.remove();
   }, []);
-  if (!hostRef.current) return null; // server / pre-DOM: render nothing
+  if (!hostRef.current) return null;
   return createPortal(children, hostRef.current);
 }
 
-/* Scrim — a real motion.div (no ::backdrop). Two clocks: dialogs fade it via
-   variant propagation from the shell; sheets pass `opacity` (a MotionValue
-   derived from the panel's travel) so the scrim tracks entrance, drag and
-   exit physically. Press must START and END on the scrim to dismiss, so a
-   text-drag out of the panel can't close it. */
+/* Scrim (real motion.div): dialogs fade via variants, sheets via a travel-derived MotionValue; a press must start AND end on it to dismiss. */
 const ovScrimVariants = {
   closed: { opacity: 0, transition: { duration: ovSM.dur.base, ease: ovSM.ease.standard } },
   open: { opacity: 1, transition: { duration: ovSM.dur.slow, ease: ovSM.ease.entrance } },
@@ -508,13 +439,7 @@ function OverlayScrim({
   );
 }
 
-/* Render a panel node. Default: our own motion.div wrapper around the
-   consumer's children. `asChild`: NO extra wrapper — the consumer's single
-   DOM-element child IS the panel: we re-render it as a motion component of
-   the same tag with our mechanics merged in (classes + style + ref composed,
-   consumer's own handlers kept unless ours collide — ours win; they carry
-   dismiss/drag mechanics). Component children can't take a ref reliably in
-   this buildless setup, so asChild requires a host element (<div>, <form>…). */
+/* Render the panel: a motion.div wrapper, or with asChild the child's own tag (host element required — component children can't take a ref here). */
 function ovPanelElement({
   asChild,
   children,
@@ -567,12 +492,7 @@ function ovPanelElement({
   );
 }
 
-/* The one modal shell behind dialog and sheet modes: fixed full-viewport
-   layer > scrim + slot. Variant-blind — the caller passes classes and slot
-   variants (plus, for sheets, a slotRef + drag slotProps + coupled scrim
-   opacity). Sets NO role and NO label: the consumer's panel owns its own
-   semantics (role="dialog" aria-modal="true" + a label). All modality hooks
-   live here so they hold until the exit finishes. */
+/* Shared modal shell (dialog + sheet): layer > scrim + slot; sets no role/label (the consumer's panel owns semantics); modality hooks live here so they hold until exit. */
 function ModalShell({
   layerClass,
   slotClass,

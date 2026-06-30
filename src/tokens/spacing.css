@@ -1,46 +1,26 @@
-/* spacing.css — the spacing spine.
-   ─────────────────────────────────────────────────────────────────────────
-   ONE base unit (4px) and a deliberately SHORT scale. Every margin, padding,
-   gap, and offset in the system snaps to a step on this ramp — there is no
-   `13px`, no `1.5rem` typed by hand. Consistent rhythm is the single biggest
-   contributor to a product feeling "expensive."
-
-   The scale is sub-linear at the top (jumps widen) because layout gaps want
-   coarse control while component padding wants fine control.
-
-   ESCAPE HATCH (pragmatic, not strict): --space-px (1px) exists only for
-   optical 1px nudges (e.g. aligning a border to a baseline). If you reach for
-   it more than rarely, the layout is wrong — fix the layout. */
+/* Spacing spine — one 4px base and a short scale; every gap snaps to a step. */
 
 :root {
-  --space-px: 1px; /* hairline optical nudge — escape hatch            */
+  --space-px: 1px;
   --space-0: 0;
-  --space-1: 0.25rem; /*  4px — icon gap, tight inset                     */
-  --space-2: 0.5rem; /*  8px — control inner padding                     */
-  --space-3: 0.75rem; /* 12px — compact gap                               */
-  --space-4: 1rem; /* 16px — DEFAULT gap / card padding                */
-  --space-5: 1.5rem; /* 24px — group spacing                             */
-  --space-6: 2rem; /* 32px — section padding                          */
-  --space-7: 3rem; /* 48px — block spacing                             */
-  --space-8: 4rem; /* 64px — major section break                       */
-  --space-9: 6rem; /* 96px — page rhythm                               */
-  --space-10: 8rem; /* 128px — hero / marketing whitespace             */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
 
-  /* ── Layout primitives ───────────────────────────────────────────────────*/
-  --container-max: 72rem; /* 1152px — max content measure                  */
-  --measure-prose: 38rem; /* 608px — comfortable reading line length       */
-  --sidebar-width: 16rem; /* 256px                                         */
+  --container-max: 72rem;
+  --measure-prose: 38rem;
+  --sidebar-width: 16rem;
 
-  /* ── Control sizing · fixed heights keep rows aligned everywhere ──────────
-     Hit targets never go below 32px (compact) in dense UI; 36/40 are default
-     and comfortable. Anything interactive on touch should use ≥40. */
-  --control-height-sm: 1.75rem; /* 28px — inline / table-dense              */
-  --control-height: 2.25rem; /* 36px — DEFAULT button / input            */
-  --control-height-lg: 2.5rem; /* 40px — primary / touch                   */
-  --control-box: 1.125rem; /* 18px — checkbox / radio indicator        */
-  --control-switch: 1.25rem; /* 20px — switch track height (md). The one
-                                     control size with no equivalent on the
-                                     scale; the switch's width reuses
-                                     --control-height(-sm) and its sm height
-                                     reuses --space-4.                         */
+  --control-height-sm: 1.75rem;
+  --control-height: 2.25rem;
+  --control-height-lg: 2.5rem;
+  --control-box: 1.125rem;
+  --control-switch: 1.25rem; /* switch track (md); the one control size off the scale — width reuses --control-height(-sm), sm height reuses --space-4 */
 }

@@ -1,20 +1,6 @@
 'use client';
 
-// AvatarGroup.jsx — stacks <Avatar> components with overlap + overflow count.
-// ─────────────────────────────────────────────────────────────────────────
-// Clones each child with the given `size` so all members are uniform.
-// The CSS drives the hover-spread interaction (margin-left transition on
-// --ease-entrance); no JS required for that behaviour.
-// Shows a mono "+N" chip for any avatars beyond `max`.
-//
-// Usage:
-//   <AvatarGroup max={4} size="sm">
-//     <Avatar name="Nadia Petrov" />
-//     <Avatar name="Marcus Kim" />
-//     <Avatar name="Lena Sørensen" />
-//     <Avatar name="Tomás Ruiz" />
-//     <Avatar name="Yuki Tanaka" />   ← becomes "+1"
-//   </AvatarGroup>
+// AvatarGroup — stacks Avatars with overlap + a "+N" overflow chip; CSS drives the hover-spread.
 
 import * as React from 'react';
 import type { AvatarSize } from './Avatar';
@@ -29,8 +15,8 @@ export interface AvatarGroupProps extends React.HTMLAttributes<HTMLSpanElement> 
 
 export function AvatarGroup({
   children,
-  max = 5, // max visible avatars before "+N" overflow chip
-  size = 'md', // uniform size applied to all children
+  max = 5,
+  size = 'md',
   className = '',
   ...rest
 }: AvatarGroupProps) {

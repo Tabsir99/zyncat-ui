@@ -1,54 +1,34 @@
-/* semantic.css — the SEMANTIC layer. This is the API you code against.
-   ─────────────────────────────────────────────────────────────────────────
-   Components reference ONLY these aliases (--bg-surface, --text-body,
-   --border-default…), never the raw --gray-200 / --teal-500 primitives. This
-   indirection is what makes the system themeable: dark mode = repoint these
-   ~40 names at different primitives, and the entire product follows. It's also
-   what makes the system READABLE — `--text-muted` says intent; `--gray-600`
-   says nothing.
-
-   Everything below is the LIGHT theme, declared on :root so it's the default.
-   A dark theme would live under [data-theme="dark"] (scaffolded at the bottom,
-   left commented until we build it — light-first, per the brief). */
+/* Semantic layer — the intent-named aliases components consume; repoint these to re-theme. */
 
 :root {
-  /* ── Backgrounds / surfaces ──────────────────────────────────────────────
-     A layered model: the app canvas sits lowest, cards/surfaces lift above it
-     in white, insets (inputs, wells) recede below. */
-  --bg-app: var(--gray-25); /* the page canvas                   */
-  --bg-surface: var(--gray-0); /* cards, panels, the default sheet  */
-  --bg-surface-raised: var(--gray-0); /* overlays/menus (pair w/ shadow)   */
-  --bg-subtle: var(--gray-50); /* hovered rows, quiet zones         */
-  --bg-muted: var(--gray-100); /* pressed / selected row, wells     */
-  --bg-inset: var(--gray-50); /* input interior                    */
-  --bg-overlay: oklch(0.225 0.01 264 / 0.44); /* modal scrim         */
+  --bg-app: var(--gray-25);
+  --bg-surface: var(--gray-0);
+  --bg-surface-raised: var(--gray-0);
+  --bg-subtle: var(--gray-50);
+  --bg-muted: var(--gray-100);
+  --bg-inset: var(--gray-50);
+  --bg-overlay: oklch(0.225 0.01 264 / 0.44);
 
-  /* ── Text · a five-step hierarchy ────────────────────────────────────────
-     Hierarchy comes from the NEUTRAL ramp, not from color. Use strong→subtle
-     to rank information; reserve accent text for genuinely actionable words. */
-  --text-strong: var(--gray-950); /* headings, primary numbers            */
-  --text-body: var(--gray-800); /* DEFAULT body / UI text               */
-  --text-muted: var(--gray-600); /* secondary, supporting                */
-  --text-subtle: var(--gray-500); /* meta, captions, timestamps           */
-  --text-disabled: var(--gray-400); /* disabled, placeholder                */
-  --text-accent: var(--teal-700); /* links, accent text (AA on white)     */
-  --text-on-accent: var(--gray-0); /* text on a solid accent fill          */
-  --text-inverse: var(--gray-0); /* text on dark surfaces                */
+  --text-strong: var(--gray-950);
+  --text-body: var(--gray-800);
+  --text-muted: var(--gray-600);
+  --text-subtle: var(--gray-500);
+  --text-disabled: var(--gray-400);
+  --text-accent: var(--teal-700);
+  --text-on-accent: var(--gray-0);
+  --text-inverse: var(--gray-0);
 
-  /* ── Borders ─────────────────────────────────────────────────────────────*/
-  --border-subtle: var(--gray-150); /* internal dividers, quiet edges      */
-  --border-default: var(--gray-200); /* DEFAULT control & card border       */
-  --border-strong: var(--gray-300); /* emphasis, hovered input             */
+  --border-subtle: var(--gray-150);
+  --border-default: var(--gray-200);
+  --border-strong: var(--gray-300);
 
-  /* ── Accent (interactive) ────────────────────────────────────────────────*/
-  --accent: var(--teal-500); /* primary action fill                 */
+  --accent: var(--teal-500);
   --accent-hover: var(--teal-600);
   --accent-active: var(--teal-700);
-  --accent-subtle: var(--teal-50); /* selected/active background tint      */
-  --accent-border: var(--teal-200); /* border on a tinted accent surface    */
-  --accent-disabled: var(--teal-300); /* faded accent fill (disabled button)  */
+  --accent-subtle: var(--teal-50);
+  --accent-border: var(--teal-200);
+  --accent-disabled: var(--teal-300);
 
-  /* ── Status · background tint / solid fill / text — one row per intent ────*/
   --success-subtle: var(--green-50);
   --success: var(--green-600);
   --success-text: var(--green-700);
@@ -61,24 +41,21 @@
   --info-subtle: var(--teal-50);
   --info: var(--teal-600);
   --info-text: var(--teal-700);
-  --danger-disabled: var(--red-300); /* faded danger fill (disabled button)  */
+  --danger-disabled: var(--red-300);
 
-  /* ── Wash · translucent active/selected fills (let the surface show through)*/
   --neutral-wash: var(--gray-wash);
   --accent-wash: var(--teal-wash);
   --success-wash: var(--green-wash);
   --warning-wash: var(--amber-wash);
   --danger-wash: var(--red-wash);
 
-  /* ── Glass · per-tone translucent tints (frosted surface; see tokens/glass.css)
-     Derived from the status hues, alpha kept low so the frost reads through. */
+  /* Glass tints — per-tone translucent fills derived from the status hues; alpha kept low so the frost reads through. */
   --glass-tint-neutral: color-mix(in oklab, var(--gray-600) 13%, transparent);
   --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
   --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);
   --glass-tint-warning: color-mix(in oklab, var(--warning) 21%, transparent);
   --glass-tint-danger: color-mix(in oklab, var(--danger) 17%, transparent);
 
-  /* ── Focus ───────────────────────────────────────────────────────────────*/
   --focus-ring: var(--ring-accent);
 }
 

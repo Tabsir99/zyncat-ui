@@ -1,16 +1,8 @@
-/* dialog.css — Dialog (styled surface).
-   The panel is a plain <section class="dialog"> inside Overlay's centered
-   modal slot — Overlay (components/overlay/) owns the scrim, focus trap,
-   inert page, scroll lock and the enter/exit motion (on the slot). This
-   sheet paints ONLY the surface; nothing here transitions opacity or
-   transform. */
+/* dialog.css — the styled dialog surface (Overlay owns modality + motion). */
 
-/* ── The panel ──────────────────────────────────────────────────────────────
-   Flex column so the body scrolls between a pinned header + footer. Width is
-   capped by the slot (viewport minus --space-6 padding); height by the
-   viewport-relative max. Padding lives on the parts, never the panel. */
+/* The panel — flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
 .dialog {
-  --dialog-w: 32rem; /* md — overridden per size */
+  --dialog-w: 32rem;
   position: relative;
   margin: 0;
   display: flex;
@@ -36,8 +28,7 @@
   --dialog-w: 40rem;
 }
 
-/* ── Header ── icon · heading · close. flex-start so a tall heading + multi-line
-   description stay top-aligned with the icon badge and the close button. */
+/* Header — icon · heading · close; flex-start keeps a tall heading top-aligned with the badge. */
 .dialog__header {
   flex: 0 0 auto;
   display: flex;
@@ -125,9 +116,7 @@
   box-shadow: var(--ring-accent);
 }
 
-/* ── Body ── the scroll region. min-height:0 lets it actually shrink so the
-   header/footer stay pinned. When an icon is present the copy aligns under the
-   heading column, not the badge. */
+/* Body — the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
 .dialog__body {
   flex: 1 1 auto;
   min-height: 0;
@@ -150,7 +139,6 @@
   margin-bottom: 0;
 }
 
-/* thin, calm scrollbar (matches Select's quiet roam) */
 .dialog__body {
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
@@ -165,8 +153,7 @@
   background-clip: padding-box;
 }
 
-/* ── Footer ── action row, right-aligned. Gains a top divider only when the body
-   has more content below it (otherwise the actions sit flush with short copy). */
+/* Footer — right-aligned actions; gains a top divider only when the body scrolls under it. */
 .dialog__footer {
   flex: 0 0 auto;
   display: flex;

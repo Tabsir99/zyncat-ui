@@ -1,8 +1,6 @@
 'use client';
 
-// NumberField.tsx — tuned numeric input.
-// Tabular figures, stacked caret steppers, optional unit suffix, clamp to
-// min/max, and ArrowUp/ArrowDown stepping. Styling in input.css.
+// NumberField.tsx — numeric input: tabular figures, caret steppers, unit suffix, min/max clamp, arrow stepping.
 
 import type { ChangeEvent, InputHTMLAttributes, KeyboardEvent, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';

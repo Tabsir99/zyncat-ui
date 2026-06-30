@@ -1,36 +1,20 @@
-/* avatar.css — TOKENS · reserved identity palette + face finish.
-   ─────────────────────────────────────────────────────────────────────────
-   Identity needs its own hue set: status hues (red 27 · amber 75 · green 152)
-   and the accent (teal 198) are reserved for genuine status and interaction
-   (§B3) — a person's colour must never impersonate either.
-
-   Six identity slots. Every bg shares ONE lightness + chroma (0.945 / 0.040),
-   every fg shares ONE (0.450 / 0.080) — hue is the only variable, so all six
-   read as the same "material". Hues sit ≥20° off every status hue and the
-   accent.
-
-   Consumed by components/avatar/. Avatar-reserved and SEMANTIC: identity
-   colouring only — never use a slot to signal state.                       */
+/* Avatar tokens — reserved identity palette + lit-from-above face finish. */
 
 :root {
-  /* ── Identity slots · bg / fg pairs — hue-only variation ─────────────────*/
   --avatar-1-bg: oklch(0.945 0.04 250);
-  --avatar-1-fg: oklch(0.45 0.08 250); /* blue   */
+  --avatar-1-fg: oklch(0.45 0.08 250);
   --avatar-2-bg: oklch(0.945 0.04 292);
-  --avatar-2-fg: oklch(0.45 0.08 292); /* violet */
+  --avatar-2-fg: oklch(0.45 0.08 292);
   --avatar-3-bg: oklch(0.945 0.04 334);
-  --avatar-3-fg: oklch(0.45 0.08 334); /* plum   */
+  --avatar-3-fg: oklch(0.45 0.08 334);
   --avatar-4-bg: oklch(0.945 0.04 5);
-  --avatar-4-fg: oklch(0.45 0.08 5); /* rose   */
+  --avatar-4-fg: oklch(0.45 0.08 5);
   --avatar-5-bg: oklch(0.945 0.04 55);
-  --avatar-5-fg: oklch(0.45 0.08 55); /* clay   */
+  --avatar-5-fg: oklch(0.45 0.08 55);
   --avatar-6-bg: oklch(0.945 0.04 125);
-  --avatar-6-fg: oklch(0.45 0.08 125); /* moss   */
+  --avatar-6-fg: oklch(0.45 0.08 125);
 
-  /* ── Surface finish · lit-from-above ─────────────────────────────────────
-     Two gradient veils layered over the slot tint: a white sheen settling
-     from the top, a cool near-black shade rising from the bottom (same ink
-     as the shadow family — never pure black on a cool canvas).             */
+  /* Surface finish — white sheen from top, cool near-black shade from bottom (never pure black). */
   --avatar-sheen: oklch(1 0 0 / 0.35);
   --avatar-shade: oklch(0.225 0.012 264 / 0.05);
 }

@@ -1,14 +1,6 @@
-/* layers.css — z-index bands. One stacking contract for the whole app.
-   ─────────────────────────────────────────────────────────────────────────
-   --layer-overlay is a BAND, not a single plane: every open overlay (popover,
-   dialog, sheet — modal or not, they interleave) takes
-   `calc(var(--layer-overlay) + stack depth)`, so an overlay opened later
-   always paints above one opened earlier (overlay-core.jsx writes it).
-   Select menus sit at the band's base. Toasts stay above all overlays
-   (toast feedback must read over a dialog); tooltips above
-   everything. Promoted from playground/overlay/ (2026-06-11). */
+/* Z-index bands — one stacking contract; --layer-overlay is a BAND (base + stack depth) so a later overlay paints above an earlier one. */
 :root {
-  --layer-overlay: 1000; /* overlays band: 1000 + stack depth */
-  --layer-toast: 1050; /* above any overlay */
-  --layer-tooltip: 1100; /* above everything */
+  --layer-overlay: 1000;
+  --layer-toast: 1050;
+  --layer-tooltip: 1100;
 }

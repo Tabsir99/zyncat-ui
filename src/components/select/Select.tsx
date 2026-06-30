@@ -1,15 +1,6 @@
 'use client';
 
-/* Select.tsx — Select, SINGLE-select (custom listbox).
-   ─────────────────────────────────────────────────────────────────────────
-   Pick ONE option; committing closes the menu and returns focus. Optional
-   type-to-filter (`searchable`). For picking SEVERAL, use <MultiSelect>
-   (same domain, own component — CLAUDE.md A9): different value shape, commit
-   semantics, trigger summary and row indicator, so it is not a flag here.
-
-   All listbox machinery (keyboard model, placement, dismiss, focus seeding)
-   comes from select-core — this file owns only single-selection state and
-   the menu markup. Styling is select.css; classes + data-* flags only. */
+/* Select — single-select custom listbox; committing closes the menu and returns focus. */
 import * as React from 'react';
 import {
   useControllable,
@@ -44,8 +35,7 @@ export interface SelectProps {
   /** Type-to-filter field pinned above the list. */
   searchable?: boolean;
   searchPlaceholder?: string;
-  /** Your own icon node pinned before the trigger label (otherwise the
-      selected option's own icon shows). */
+  /** Your own icon node pinned before the trigger label; else the selected option's icon. */
   leadingIcon?: React.ReactNode;
   id?: string;
   ariaLabel?: string;
@@ -99,7 +89,6 @@ export function Select({
   const hide = () => setOpen(false);
   const returnFocus = () => triggerRef.current && triggerRef.current.focus();
 
-  // single-select commit: set, close, hand focus back
   function commit(opt: SelectOption) {
     if (!opt || opt.disabled) return;
     setValue(opt.value, opt);
@@ -109,7 +98,7 @@ export function Select({
 
   useEffect(() => {
     if (!open) setQuery('');
-  }, [open]); // filter resets on close
+  }, [open]);
 
   const { activeIdx, setActiveIdx, onMenuKeyDown } = useSelectMenu({
     open,
@@ -226,7 +215,6 @@ export function Select({
                         </span>
                       </div>
                     );
-                    // filterable rows ease out via Collapse; plain lists skip the wrapper
                     return searchable ? (
                       <FilterRow key={opt.value} visible={visible}>
                         {row}

@@ -1,18 +1,6 @@
 'use client';
 
-// Checkbox.tsx — checkbox primitive.
-// ─────────────────────────────────────────────────────────────────────────
-// All visual polish + motion live in checkbox.css. This wrapper composes the
-// token class vocabulary, renders the bespoke stroked tick + indeterminate
-// dash, and bridges `indeterminate` (a DOM PROPERTY, not an attribute — it can
-// only be set imperatively) onto the real <input>.
-//
-// Consumes ONLY the design-system token classes — no inline styles, no CSS-in-JS.
-//
-//   <Checkbox label="Enable notifications" defaultChecked />
-//   <Checkbox label="Select all" indeterminate onChange={toggleAll} />
-//   <Checkbox label="I agree to the terms" invalid required />
-//   <Checkbox size="sm" label="Remember this device" description="Stays signed in on this browser." />
+// Checkbox — checkbox primitive; on/off + indeterminate select-all.
 
 import * as React from 'react';
 
@@ -24,26 +12,13 @@ export interface CheckboxProps extends Omit<
   checked?: boolean;
   /** Uncontrolled initial state. */
   defaultChecked?: boolean;
-  /**
-   * Indeterminate — the "some, not all" state for a select-all parent. This is
-   * a DOM property (not an attribute); the component sets it on the node for you.
-   * Visually wins over `checked`.
-   * @default false
-   */
+  /** Indeterminate — the "some, not all" select-all state; visually wins over `checked`. @default false */
   indeterminate?: boolean;
-  /**
-   * Single error state, for genuine consent gates ("you must agree"). NOT the
-   * warning/success triad of a text field — a binary control carries no
-   * free-text validation. Also sets `aria-invalid`.
-   * @default false
-   */
+  /** Single error state for consent gates ("you must agree"); also sets `aria-invalid`. @default false */
   invalid?: boolean;
   /** Disabled — inert and de-emphasized (distinct fill when checked). */
   disabled?: boolean;
-  /**
-   * Box size. `md` 18px (default) · `sm` 16px for dense table rows.
-   * @default 'md'
-   */
+  /** Box size: `md` 18px · `sm` 16px for dense table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the box. */
   label?: React.ReactNode;
@@ -54,12 +29,12 @@ export interface CheckboxProps extends Omit<
 }
 
 export function Checkbox({
-  checked, // controlled; omit for uncontrolled
+  checked,
   defaultChecked,
-  indeterminate = false, // DOM property — set via ref
+  indeterminate = false,
   invalid = false,
   disabled = false,
-  size = 'md', // 'sm' | 'md'
+  size = 'md',
   label,
   description,
   className = '',

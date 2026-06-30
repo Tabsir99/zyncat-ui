@@ -1,82 +1,56 @@
-/* color.css — PRIMITIVE color ramps. Raw material only.
-   ─────────────────────────────────────────────────────────────────────────
-   These are the only colors that exist in the system. Components NEVER consume
-   these directly — they consume the SEMANTIC aliases in semantic.css, which
-   point at these. Keeping primitives and semantics separate is what lets the
-   whole product re-theme (e.g. dark mode) by repointing ~40 aliases instead
-   of editing thousands of usages.
-
-   All values are OKLCH for perceptually-even steps. Two families do the work:
-   a cool blue-grey NEUTRAL ramp (the backbone) and the TEAL accent (the
-   scalpel). Status hues are tuned to sit at the same chroma family so nothing
-   ever clashes. */
+/* Color primitives — the closed neutral + status ramps. */
 
 :root {
-  /* ── Neutral · cool blue-grey (hue 264) ──────────────────────────────────
-     Carries ~90% of every surface. Chroma stays tiny (≤0.012) so it reads as
-     "grey with a temperature," never blue. White → near-black ink. */
-  --gray-0: oklch(1 0 0); /* pure white — raised surfaces      */
-  --gray-25: oklch(0.992 0.0015 264); /* app canvas tint                   */
-  --gray-50: oklch(0.984 0.003 264); /* subtle fill / hovered row         */
-  --gray-100: oklch(0.968 0.004 264); /* muted fill / inset well           */
-  --gray-150: oklch(0.948 0.005 264); /* hairline border (subtle)          */
-  --gray-200: oklch(0.922 0.006 264); /* default border                    */
-  --gray-300: oklch(0.872 0.008 264); /* strong border / divider           */
-  --gray-400: oklch(0.765 0.01 264); /* disabled text · placeholder       */
-  --gray-500: oklch(0.642 0.012 264); /* subtle text                       */
-  --gray-600: oklch(0.532 0.013 264); /* muted text                        */
-  --gray-700: oklch(0.422 0.013 264); /* secondary text                    */
-  --gray-800: oklch(0.305 0.012 264); /* body text                         */
-  --gray-900: oklch(0.225 0.01 264); /* strong text / headings            */
-  --gray-950: oklch(0.165 0.008 264); /* max ink — locked brand ink        */
+  --gray-0: oklch(1 0 0);
+  --gray-25: oklch(0.992 0.0015 264);
+  --gray-50: oklch(0.984 0.003 264);
+  --gray-100: oklch(0.968 0.004 264);
+  --gray-150: oklch(0.948 0.005 264);
+  --gray-200: oklch(0.922 0.006 264);
+  --gray-300: oklch(0.872 0.008 264);
+  --gray-400: oklch(0.765 0.01 264);
+  --gray-500: oklch(0.642 0.012 264);
+  --gray-600: oklch(0.532 0.013 264);
+  --gray-700: oklch(0.422 0.013 264);
+  --gray-800: oklch(0.305 0.012 264);
+  --gray-900: oklch(0.225 0.01 264);
+  --gray-950: oklch(0.165 0.008 264);
 
-  /* ── Accent · teal (hue 198) ─────────────────────────────────────────────
-     The single accent. 500 is the locked brand teal. Use sparingly: primary
-     actions, selection, focus, the one number that matters on a screen. */
-  --teal-50: oklch(0.972 0.02 198); /* tinted background                 */
-  --teal-100: oklch(0.935 0.04 198); /* hover background / subtle fill     */
-  --teal-200: oklch(0.88 0.066 198); /* border on tinted surface          */
-  --teal-300: oklch(0.795 0.092 198); /* decorative / disabled accent      */
-  --teal-400: oklch(0.705 0.112 198); /* hover on solid (lighter)          */
-  --teal-500: oklch(0.63 0.118 198); /* ★ BRAND ACCENT — solid fill        */
-  --teal-600: oklch(0.56 0.114 198); /* solid hover                       */
-  --teal-700: oklch(0.478 0.1 198); /* accent TEXT on light (AA on white)*/
-  --teal-800: oklch(0.4 0.082 198); /* pressed / deep                    */
-  --teal-900: oklch(0.32 0.062 198); /* darkest                           */
+  --teal-50: oklch(0.972 0.02 198);
+  --teal-100: oklch(0.935 0.04 198);
+  --teal-200: oklch(0.88 0.066 198);
+  --teal-300: oklch(0.795 0.092 198);
+  --teal-400: oklch(0.705 0.112 198);
+  --teal-500: oklch(0.63 0.118 198);
+  --teal-600: oklch(0.56 0.114 198);
+  --teal-700: oklch(0.478 0.1 198);
+  --teal-800: oklch(0.4 0.082 198);
+  --teal-900: oklch(0.32 0.062 198);
 
-  /* ── Status · success (green, hue 152) ───────────────────────────────────*/
   --green-50: oklch(0.965 0.028 152);
   --green-500: oklch(0.62 0.13 152);
   --green-600: oklch(0.548 0.122 152);
-  --green-700: oklch(0.462 0.1 152); /* success text on light             */
+  --green-700: oklch(0.462 0.1 152);
 
-  /* ── Status · warning (amber, hue 75) ────────────────────────────────────*/
   --amber-50: oklch(0.972 0.034 75);
   --amber-500: oklch(0.76 0.14 75);
   --amber-600: oklch(0.7 0.142 75);
-  --amber-700: oklch(0.56 0.118 75); /* warning text on light             */
+  --amber-700: oklch(0.56 0.118 75);
 
-  /* ── Status · danger (red, hue 27) ───────────────────────────────────────*/
   --red-50: oklch(0.968 0.02 27);
-  --red-300: oklch(0.8 0.09 27); /* disabled danger fill              */
-  --red-400: oklch(0.64 0.2 27); /* danger hover · lighter grad stop   */
+  --red-300: oklch(0.8 0.09 27);
+  --red-400: oklch(0.64 0.2 27);
   --red-500: oklch(0.602 0.196 27);
   --red-600: oklch(0.545 0.196 27);
-  --red-700: oklch(0.478 0.172 27); /* danger text on light              */
+  --red-700: oklch(0.478 0.172 27);
 
-  /* ── Translucent "wash" tints ────────────────────────────────────────────
-     Glassy active/selected fills that let the surface (and any neutral hover
-     under them) show through — the opaque ramp can't, a solid -50 reads blocky.
-     Low alpha (0.05–0.12), tuned per hue. Consumed via the semantic --*-wash
-     aliases in semantic.css; gradients may reference these directly. */
-  --gray-wash: oklch(0.42 0.012 264 / 0.06); /* neutral glass — hover/active */
-  --teal-wash: oklch(0.63 0.118 198 / 0.05); /* accent selection tint        */
-  --green-wash: oklch(0.62 0.13 152 / 0.1); /* success                      */
-  --amber-wash: oklch(0.76 0.14 75 / 0.12); /* warning (lighter hue → +α)   */
-  --red-wash: oklch(0.602 0.196 27 / 0.1); /* danger                       */
+  /* Wash tints — glassy active/selected fills that let the surface show through; low alpha per hue. */
+  --gray-wash: oklch(0.42 0.012 264 / 0.06);
+  --teal-wash: oklch(0.63 0.118 198 / 0.05);
+  --green-wash: oklch(0.62 0.13 152 / 0.1);
+  --amber-wash: oklch(0.76 0.14 75 / 0.12);
+  --red-wash: oklch(0.602 0.196 27 / 0.1);
 
-  /* ── Shadow tint ─────────────────────────────────────────────────────────
-     Shadows are built from a cool near-black, never pure black — pure black
-     shadows look muddy on a cool-neutral canvas. Consumed by elevation.css. */
+  /* Cool near-black shadow ink — pure black looks muddy on a cool canvas. */
   --shadow-rgb: 13 18 30;
 }

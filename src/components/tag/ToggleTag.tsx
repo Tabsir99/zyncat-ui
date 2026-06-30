@@ -1,22 +1,6 @@
 'use client';
 
-/* ToggleTag.jsx — ToggleTag: the on/off filter chip.
-   ─────────────────────────────────────────────────────────────────────────
-   A <button aria-pressed> for many-of-many filtering — content types,
-   tags, saved segments. Sibling of <Tag> per CLAUDE.md A9:
-   it OWNS selection state (controllable `selected` / `defaultSelected`),
-   which the stateless removable Tag never does.
-
-   Selected paint is the accent wash — and the indicator adapts:
-     • no icon  → a tick slot slides open (the Collapse width mechanism,
-       collapse.css classes reused directly — zero CSS duplicated) while the
-       check DRAWS in (stroke-dashoffset, brand entrance curve).
-     • icon     → no tick; your icon node sits in a fixed slot and the accent
-       wash carries the selected state (the icon is consumer-supplied, so the
-       mark can't be a weight swap).
-
-   Counts are data → mono tabular, via the `count` prop (§E).
-   All styling lives in tag.css; this file composes class names only. */
+/* ToggleTag — on/off filter chip (<button aria-pressed>); owns its selection state. */
 
 import * as React from 'react';
 import { IconSlot } from '../icon/IconSlot';
@@ -90,13 +74,13 @@ function ToggleTagTick({ selected }: { selected: boolean }) {
 
 export function ToggleTag(props: ToggleTagProps) {
   const {
-    children, // the label
-    selected: controlledSelected, // controlled value (optional)
-    defaultSelected = false, // uncontrolled initial value
-    onChange, // (next: boolean) — fires on every toggle
-    icon = null, // Phosphor name or alias — fill when selected
-    count = null, // optional result count — mono tabular
-    size = 'md', // 'md' (28) | 'sm' (24)
+    children,
+    selected: controlledSelected,
+    defaultSelected = false,
+    onChange,
+    icon = null,
+    count = null,
+    size = 'md',
     disabled = false,
     className = '',
   } = props;

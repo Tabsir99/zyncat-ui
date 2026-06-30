@@ -1,45 +1,6 @@
 'use client';
 
-/* time-core.tsx — TimeSegments: the segmented HH:MM machine.
-   ─────────────────────────────────────────────────────────────────────────
-   A time is not text — it's two bounded numbers. So this is NOT an input
-   with validation-after: it's a pair of caret-less segments where every
-   keystroke is INTERPRETED, never inserted. Letters never echo; there are
-   only four digit positions in existence.
-
-     <TimeSegments
-       value="09:30"            // canonical 'HH:mm' (24h) | null
-       onCommit={(t) => …}      // fires LIVE, the instant both segments exist
-       format="24h"             // '24h' | '12h' (display only — storage is 24h)
-       minuteStep={5}           // ↑/↓ granularity for minutes (typing is exact)
-       min="09:00" max="17:30"  // clamp bounds — saturate, never error
-     />
-
-   THE KEYSTROKE MACHINE (per segment, react-aria/native semantics):
-     digit    — extends the pending digit when the pair stays in range
-                (1 → 13), else starts fresh; a digit that can't start a
-                valid pair auto-completes and ADVANCES (hours '3' → 03:,
-                minutes '6' → :06). ':' also advances.
-     ↑ / ↓    — steps (hours by 1, minutes by minuteStep snapped to its
-                grid, meridiem toggles); wraps; an empty segment seeds
-                from the current time.
-     ⌫        — clears the segment; on an already-empty minutes segment it
-                hops back to hours.
-     paste    — liberal in ('9:30 pm', '0930'), strict out ('21:30').
-
-   Commit is LIVE-ON-COMPLETION and CLAMPED: a clamp may only judge a
-   COMPLETED entry — commits fire when a segment's entry completes (second
-   digit, or a first digit that can't extend), on arrow-step, on paste, and
-   on blur of a half-entered segment — never while a digit is pending, or
-   the clamp would eat the pending digit and make in-range times like 14:00
-   untypeable under min=09:00. min/max are saturation bounds, not validity
-   tests — a constrained control never shows an error. Clamps reflect back
-   into the segments.
-
-   Variant-blind on purpose (A9): no flags, no knowledge of who mounts it —
-   TimeField wraps it in the Input vocabulary, DateTimeField seats it in
-   the calendar panel. Paint lives in time.css (.tsg). Buildless global was
-   window.TimeSegments; a bundled app imports it. */
+/* TimeSegments — the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
 
 import * as React from 'react';
 
@@ -53,11 +14,11 @@ interface Pending {
 }
 
 export interface TimeSegmentsProps {
-  value?: string | null; // 'HH:mm' | null
+  value?: string | null;
   onCommit?: (value: string) => void;
   format?: '24h' | '12h';
   minuteStep?: number;
-  min?: string | null; // 'HH:mm' — clamp bounds (lexical compare is safe)
+  min?: string | null;
   max?: string | null;
   disabled?: boolean;
   ariaLabel?: string;
@@ -68,9 +29,7 @@ const tsgPad = (n: number): string => String(n).padStart(2, '0');
 const tsgDisp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
 const tsgToH24 = (d12: number, mer: Meridiem): number => (d12 % 12) + (mer === 'PM' ? 12 : 0);
 
-/* one digit into a bounded two-digit segment.
-   pend = previously typed digit (or null). Returns the new value and
-   whether the segment is saturated (can't accept another digit). */
+/* feed one digit into a bounded two-digit segment; done = saturated (can't take another). */
 function tsgFeed(pend: number | null, d: number, hi: number): { val: number; done: boolean } {
   if (pend != null) {
     const n = pend * 10 + d;
@@ -80,11 +39,11 @@ function tsgFeed(pend: number | null, d: number, hi: number): { val: number; don
 }
 
 export function TimeSegments({
-  value = null, // 'HH:mm' | null
+  value = null,
   onCommit,
   format = '24h',
   minuteStep = 5,
-  min = null, // 'HH:mm' — clamp bounds (lexical compare is safe)
+  min = null,
   max = null,
   disabled = false,
   ariaLabel = 'Time',
@@ -93,14 +52,12 @@ export function TimeSegments({
   const is12 = format === '12h';
   const seed = value ? value.split(':').map(Number) : [null, null];
 
-  const [h, setHState] = useState<number | null>(seed[0]); // canonical 0–23
+  const [h, setHState] = useState<number | null>(seed[0]);
   const [m, setMState] = useState<number | null>(seed[1]);
   const [mer, setMer] = useState<Meridiem>(seed[0] != null && seed[0] >= 12 ? 'PM' : 'AM');
-  const [pend, setPendState] = useState<Pending | null>(null); // { seg, d } — mid-entry digit
+  const [pend, setPendState] = useState<Pending | null>(null);
 
-  /* live mirrors — blur fires SYNCHRONOUSLY (before React re-renders) when
-     focus moves between segments, so blur-commit must read these refs,
-     never possibly-stale closure state */
+  /* live mirrors — blur fires synchronously before re-render, so blur-commit reads refs, not stale closure state. */
   const hLive = useRef<number | null>(seed[0]);
   const mLive = useRef<number | null>(seed[1]);
   const pendLive = useRef<Pending | null>(null);
@@ -120,11 +77,9 @@ export function TimeSegments({
   const hRef = useRef<HTMLSpanElement>(null);
   const mRef = useRef<HTMLSpanElement>(null);
   const merRef = useRef<HTMLSpanElement>(null);
-  const lastRef = useRef<string | null>(value || null); // last committed — guards the sync
+  const lastRef = useRef<string | null>(value || null);
 
-  /* external value changes (controlled resets) re-seed the segments;
-     our own commits are recognized via lastRef and left alone, so a
-     commit never clobbers in-flight typing. */
+  /* external value changes re-seed; our own commits (matched via lastRef) are left alone, never clobbering in-flight typing. */
   useEffect(() => {
     if ((value || null) === lastRef.current) return;
     lastRef.current = value || null;
@@ -138,7 +93,7 @@ export function TimeSegments({
   function tryCommit(nh: number | null, nm: number | null) {
     if (nh == null || nm == null) return;
     let t = tsgPad(nh) + ':' + tsgPad(nm);
-    if (min && t < min) t = min; /* saturate, never error */
+    if (min && t < min) t = min;
     if (max && t > max) t = max;
     const p = t.split(':').map(Number);
     if (p[0] !== nh) {
@@ -156,7 +111,6 @@ export function TimeSegments({
     if (r.current) r.current.focus();
   };
 
-  /* ── hours ────────────────────────────────────────────────────────────*/
   function onHKey(e: React.KeyboardEvent<HTMLSpanElement>) {
     const k = e.key;
     if (/^[0-9]$/.test(k)) {
@@ -190,7 +144,6 @@ export function TimeSegments({
     e.preventDefault();
   }
 
-  /* ── minutes ──────────────────────────────────────────────────────────*/
   function onMKey(e: React.KeyboardEvent<HTMLSpanElement>) {
     const k = e.key;
     if (/^[0-9]$/.test(k)) {
@@ -237,7 +190,6 @@ export function TimeSegments({
     e.preventDefault();
   }
 
-  /* ── meridiem (12h only) — a toggle, never empty ──────────────────────*/
   function setMeridiem(next: Meridiem) {
     setMer(next);
     if (h != null) {
@@ -260,7 +212,6 @@ export function TimeSegments({
     e.preventDefault();
   }
 
-  /* ── paste: liberal in, strict out ────────────────────────────────────*/
   function onPaste(e: React.ClipboardEvent<HTMLDivElement>) {
     if (disabled) return;
     const txt = (e.clipboardData.getData('text') || '').trim();
@@ -280,8 +231,6 @@ export function TimeSegments({
     tryCommit(hh, mm);
   }
 
-  /* leaving a half-entered segment completes its entry: clear the pending
-     digit and commit (clamped) what was typed so far */
   const onSegBlur = (seg: Segment) => () => {
     if (pendLive.current && pendLive.current.seg === seg) {
       setPend(null);
@@ -289,8 +238,7 @@ export function TimeSegments({
     }
   };
 
-  /* pending digit overrides the canonical display, so typing '0' in 12h
-     shows '00' (awaiting its pair), not a premature '12' */
+  /* pending digit overrides canonical display, so typing '0' in 12h shows '00', not a premature '12'. */
   const hText =
     pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? tsgDisp12(h) : h);
   const mText = pend && pend.seg === 'm' ? tsgPad(pend.d) : m == null ? '--' : tsgPad(m);

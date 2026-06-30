@@ -1,11 +1,6 @@
 'use client';
 
-// Collapse.tsx — layout-transition primitive.
-// Smoothly animates a region open/closed without ever touching `auto`, using
-// the grid-fr trick (0fr ↔ 1fr). This is how the system keeps layout shifts from
-// being abrupt — wrap anything that appears, disappears, or resizes in it.
-// All motion lives in collapse.css via --transition-layout; reduced motion is
-// honored there. This component just toggles the data-attributes.
+// Collapse — open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
 
 import type { HTMLAttributes } from 'react';
 

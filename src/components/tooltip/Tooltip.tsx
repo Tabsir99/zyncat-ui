@@ -1,34 +1,6 @@
 'use client';
 
-/* Tooltip.tsx — Tooltip.
-   ─────────────────────────────────────────────────────────────────────────
-   A transient, NON-INTERACTIVE hint on hover/focus. One-liner (+ optional
-   mono `shortcut`) or a small multi-line node. Anything clickable belongs to
-   Popover — the bubble takes no pointer events, ever.
-
-   ONE bubble, explicit motion, deterministic sizing:
-   · A single TooltipHost (mounted once) renders the one active bubble.
-     Each <Tooltip> wraps (or, with asChild, clones) its child and reports
-     {content, rect} to a store.
-   · A hidden CLONE of the next content is measured first, so the target box
-     (x, y, w, h) AND the body's exact line wrapping are known BEFORE anything
-     animates. The live body gets that measured width inline — live and clone
-     can never disagree, so the settled bubble can never clip its own text.
-   · Travel = one tween of x/y (transforms) + width/height (measured px→px).
-     Width/height is a DELIBERATE, surfaced §C exception: scale-correction is
-     exactly what distorts text, and one small fixed element can't jank.
-   · Content swap is a SINGLE node keyed by trigger: the old label cuts, the
-     new one fades in fast while the box travels. No exit choreography —
-     a previous nested-AnimatePresence crossfade left permanent ghost spans
-     (broken exit bookkeeping, verified by frame trace) and read as a flash.
-     One node = nothing to leak, nothing to mistime.
-
-   Timing: cold hover waits OPEN_DELAY; while open (or shortly after), the
-   next trigger is instant and the bubble travels; leaving lingers
-   CLOSE_GRACE so neighbour-to-neighbour never blinks out.
-
-   Bundled app: imports motion from 'motion/react' and the ESM <Icon>; React /
-   ReactDOM come from the package, the motion tokens from the shared bridge. */
+/* Tooltip — a transient, non-interactive hint on hover/focus (one shared bubble). */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -62,26 +34,18 @@ interface RenderedBox extends TargetBox {
   bodyW: number;
 }
 
-/* WHY ANY HOOKS AT ALL, with Motion in the house? Motion owns ANIMATION.
-   What's left is not animation: hover-intent timing (module timers), DOM
-   measurement before paint (one layout effect), global dismiss listeners
-   (one effect), and the measured target box (one state the host renders
-   from). The TRIGGERS are fully stateless — one cleanup effect each. */
-
-const OPEN_DELAY = 350; // ms before a COLD hover shows (override per instance: openDelay)
-const CLOSE_GRACE = 140; // ms the bubble lingers on leave (override: closeDelay) —
-// just enough to bridge a pointer crossing the gap
-// between adjacent triggers without reading as lag
-const WARM_WINDOW = 300; // ms after a close during which the next hover is instant
+const OPEN_DELAY = 350;
+const CLOSE_GRACE = 140;
+const WARM_WINDOW = 300;
 
 const TIP_GAP =
   typeof document !== 'undefined'
     ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--space-2')) || 8
     : 8;
 
-/* ── Store · what's showing, where. Triggers write, the host renders. ───────*/
+/* Store — what's showing, where; triggers write, the host renders. */
 const store = {
-  active: null as ActivePayload | null, // { id, content, shortcut, placement, rect } | null
+  active: null as ActivePayload | null,
   closeTimer: 0 as ReturnType<typeof setTimeout> | 0,
   warmUntil: 0,
   listeners: new Set<() => void>(),
@@ -115,8 +79,7 @@ const store = {
   },
 };
 
-/* Target box from the trigger rect + the MEASURED size of the next content.
-   Flips when out of room, clamps to the viewport. */
+/* Target box from the trigger rect + the measured content size; flips + clamps. */
 function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
   const vw = window.innerWidth,
     vh = window.innerHeight,
@@ -170,15 +133,13 @@ function Body({ a, width }: { a: ActivePayload; width?: number }) {
   );
 }
 
-/* ── Host · the ONE bubble + its hidden measuring twin ──────────────────────*/
+/* Host — the one bubble + its hidden measuring twin. */
 function TooltipHost() {
   const active = useSyncExternalStore(store.subscribe, store.get);
   const measureRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState<RenderedBox | null>(null);
 
-  // Measure the clone (already rendered with the NEW content) before paint:
-  // box = clone's border box; bodyW = the body's exact width, locked onto the
-  // live body so live wrapping ≡ clone wrapping, always.
+  // Measure the clone before paint: box = its border box; bodyW locks the live body's wrapping to the clone's.
   useLayoutEffect(() => {
     if (!active) {
       setBox(null);
@@ -253,9 +214,7 @@ function TooltipHost() {
               scale: SM.t.enter,
             }}
           >
-            {/* ONE content node, keyed by trigger: old cuts, new fades in fast
-                while the box travels. Fixed measured width = stable wrapping
-                through the whole morph (the moving box just reveals it). */}
+            {/* one node keyed by trigger: old cuts, new fades in while the box travels (fixed width keeps wrapping stable) */}
             <motion.span
               key={active.id}
               initial={{ opacity: 0 }}
@@ -287,14 +246,9 @@ const chain = (theirs: ((e: any) => void) | undefined, mine: (e: any) => void) =
   mine(e);
 };
 
-/* ── Trigger · reports to the store, stateless (Motion owns animation; the only
-   hooks are an id + a timer-cleanup effect). Default: a display:contents anchor
-   wraps the child and owns the listeners + measured rect, so ANY element works
-   with no ref. asChild: clone the child instead — zero wrapper, child takes the
-   ref. aria-describedby is set imperatively on whichever element we anchor. ──*/
+/* Trigger — reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
 export interface TooltipProps {
-  /** The hint: a string one-liner, or a small node (lead line + body) capped
-      at --measure-floating. Never interactive content. */
+  /** The hint — a string or small node; never interactive content. */
   content: ReactNode;
   /** Optional keyboard hint, rendered as mono metadata ("⌘↩", "S"). */
   shortcut?: string | null;
@@ -302,20 +256,14 @@ export interface TooltipProps {
   placement?: Placement;
   /** Suppress the tooltip entirely (trigger renders untouched). */
   disabled?: boolean;
-  /** ms before a COLD hover shows. Warm hovers and keyboard focus are always
-      instant. Default 350. */
+  /** ms before a cold hover shows; warm hovers + focus are instant. Default 350. */
   openDelay?: number;
-  /** ms the bubble lingers after leaving the trigger (bridges moving to a
-      neighbour). Default 140. */
+  /** ms the bubble lingers after leaving (bridges moving to a neighbour). Default 140. */
   closeDelay?: number;
-  /** Skip the wrapper — clone the child and merge the trigger handlers + ref
-      onto it instead (zero extra DOM, but the child must be a DOM element or
-      forward its ref). Default false. */
+  /** Skip the wrapper — clone the child and merge handlers + ref onto it (child must take a ref). Default false. */
   asChild?: boolean;
   id?: string;
-  /** Exactly one element. By default any element works (a display:contents
-      wrapper carries the trigger, so no ref is needed); with `asChild` the
-      child itself must accept a ref. */
+  /** Exactly one element; any element works by default, asChild requires one that accepts a ref. */
   children: ReactElement;
 }
 
@@ -324,8 +272,8 @@ function Tooltip({
   shortcut = null,
   placement = 'top',
   disabled = false,
-  openDelay = OPEN_DELAY, // ms before a cold hover shows (focus is always instant)
-  closeDelay = CLOSE_GRACE, // ms the bubble lingers after leave
+  openDelay = OPEN_DELAY,
+  closeDelay = CLOSE_GRACE,
   asChild = false,
   id,
   children,
@@ -335,14 +283,12 @@ function Tooltip({
   const openTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
   const myId = id || 'tip-' + useId();
 
-  // The element we anchor the bubble to and set aria-describedby on: the cloned
-  // child in asChild mode, else the display:contents wrapper's only child.
+  // The element we anchor to + set aria-describedby on (clone, or the wrapper's child).
   const anchorEl = (): HTMLElement | null =>
     asChild ? triggerRef.current : ((wrapRef.current?.firstElementChild as HTMLElement) ?? null);
 
   useEffect(
     () => () => {
-      // unmount: drop pending timers, release the bubble
       clearTimeout(openTimer.current);
       store.close(myId, 0);
     },
@@ -381,8 +327,7 @@ function Tooltip({
     if ((e.target as HTMLElement).matches(':focus-visible')) show(true);
   };
 
-  // Default: a display:contents wrapper carries the listeners + the measured
-  // rect, so the child stays untouched and needs no ref of its own.
+  // Default: a display:contents wrapper carries the listeners + rect; the child needs no ref.
   if (!asChild) {
     return (
       <span
@@ -399,8 +344,7 @@ function Tooltip({
     );
   }
 
-  // asChild: no wrapper — clone the child and merge our handlers + ref onto it
-  // (a press dismisses: activating ≠ hinting).
+  // asChild: clone the child, merging our handlers + ref (a press dismisses: activating ≠ hinting).
   const child = React.Children.only(children) as ReactElement & { ref?: any };
   const childRef = child.ref;
   const childProps = child.props as any;

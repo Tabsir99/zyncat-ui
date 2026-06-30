@@ -1,21 +1,6 @@
-/* button.css — Button.
-   ─────────────────────────────────────────────────────────────────────────
-   Built ENTIRELY from semantic tokens. Polish lives in the details:
-     • a lit-from-above gradient + 1px inner top-highlight on solid variants
-     • a brand-tinted ambient shadow (not pure black) for a premium "glow"
-     • a tactile 1px press (translateY) with the shadow tightening underfoot
-     • a composed focus ring (var(--btn-shadow), <ring>) so the ring never
-       erases the resting shadow
-
-   Variants: primary · secondary · ghost · danger · link
-   Sizes:    sm · (default) · lg
-   States:   rest · hover · active · focus-visible · disabled · loading
-
-   Every transition uses the motion tokens; transform + box-shadow + color only.
-   Disabled & reduced-motion are handled here so consumers never think about them. */
+/* Button — variants, sizes, states; lit gradient, tactile press, composed focus ring. */
 
 .btn {
-  /* per-instance hooks the variants set */
   --btn-shadow: none;
   --btn-ring: var(--ring-accent);
 
@@ -26,13 +11,13 @@
   justify-content: center;
   gap: var(--space-2);
 
-  height: var(--control-height); /* 36 — default */
+  height: var(--control-height);
   padding: 0 var(--space-4);
   border: var(--border-hairline) solid transparent;
   border-radius: var(--radius-md);
 
   font-family: var(--font-sans);
-  font-size: var(--size-body); /* 14 */
+  font-size: var(--size-body);
   font-weight: var(--weight-semibold);
   line-height: 1;
   letter-spacing: var(--tracking-normal);
@@ -59,16 +44,15 @@
   box-shadow: var(--btn-shadow), var(--btn-ring);
 }
 
-/* ── Sizes ─────────────────────────────────────────────────────────────────*/
 .btn--sm {
-  height: var(--control-height-sm); /* 28 */
+  height: var(--control-height-sm);
   padding: 0 var(--space-3);
-  font-size: var(--size-caption); /* 13 */
+  font-size: var(--size-caption);
   border-radius: var(--radius-sm);
   gap: var(--space-1);
 }
 .btn--lg {
-  height: var(--control-height-lg); /* 40 */
+  height: var(--control-height-lg);
   padding: 0 var(--space-5);
   border-radius: var(--radius-md);
 }
@@ -76,7 +60,6 @@
   width: 100%;
 }
 
-/* ── Icons ─────────────────────────────────────────────────────────────────*/
 .btn__icon {
   display: inline-flex;
   flex: none;
@@ -88,7 +71,6 @@
   width: 100%;
   height: 100%;
 }
-/* size is inferred from the button's font-size (1em) — no per-size icon overrides */
 /* optical: pull icons slightly toward the label */
 .btn__icon:first-child {
   margin-left: calc(var(--space-1) * -1);
@@ -97,12 +79,10 @@
   margin-right: calc(var(--space-1) * -1);
 }
 
-/* ═══ PRIMARY — solid teal, lit from above ═════════════════════════════════*/
 .btn--primary {
   color: var(--text-on-accent);
   background: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.16), /* top highlight */ var(--shadow-sm); /* neutral ladder */
+  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
 }
 .btn--primary:hover:not(:disabled):not(.is-loading) {
   background: linear-gradient(180deg, var(--teal-400), var(--teal-500));
@@ -112,11 +92,9 @@
   background: linear-gradient(180deg, var(--accent-hover), var(--accent-active));
   transform: translateY(var(--space-px));
   --btn-shadow:
-    inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4),
-    /* pressed inner */ 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
+    inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
 }
 
-/* ═══ SECONDARY — the neutral workhorse ════════════════════════════════════*/
 .btn--secondary {
   color: var(--text-body);
   background: var(--bg-surface);
@@ -134,7 +112,6 @@
   --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
 }
 
-/* ═══ GHOST — quiet, for toolbars & tertiary actions ═══════════════════════*/
 .btn--ghost {
   color: var(--text-body);
   background: transparent;
@@ -148,12 +125,11 @@
   transform: translateY(var(--space-px));
 }
 
-/* ═══ DANGER — solid red, same lit treatment as primary ════════════════════*/
 .btn--danger {
   color: var(--text-on-accent);
   background: linear-gradient(180deg, var(--red-500), var(--red-600));
   --btn-ring: var(--ring-danger);
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm); /* neutral ladder */
+  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
 }
 .btn--danger:hover:not(:disabled):not(.is-loading) {
   background: linear-gradient(180deg, var(--red-400), var(--red-500));
@@ -166,7 +142,6 @@
     inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
 }
 
-/* ═══ LINK — text-only, inline ═════════════════════════════════════════════*/
 .btn--link {
   height: auto;
   padding: 0;
@@ -189,7 +164,7 @@
   box-shadow: var(--btn-ring);
 }
 
-/* ── Disabled · explicit per variant (never just a blanket fade) ────────────*/
+/* Disabled — explicit per variant, never a blanket fade. */
 .btn:disabled,
 .btn.is-loading {
   cursor: default;
@@ -222,7 +197,7 @@
   text-decoration: none;
 }
 
-/* ── Loading · content holds its width, spinner overlays ────────────────────*/
+/* Loading — content holds its width, spinner overlays. */
 .btn.is-loading .btn__label,
 .btn.is-loading .btn__icon {
   opacity: 0;
@@ -232,7 +207,7 @@
   top: 50%;
   left: 50%;
   width: 1em;
-  height: 1em; /* tracks the button's text/icon size */
+  height: 1em;
   margin: -0.5em 0 0 -0.5em;
   border-radius: var(--radius-full);
   border: var(--border-emphasis) solid currentColor;

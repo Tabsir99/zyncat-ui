@@ -1,43 +1,6 @@
 'use client';
 
-/* Table.tsx — data table.
-   ─────────────────────────────────────────────────────────────────────────
-   Opinionated, not a public API: columns + rows in, one finished table out.
-   The consumer never composes thead/td; it declares columns and the table
-   owns sort, selection, stickiness, overflow and motion end-to-end.
-
-     <Table
-       label="Recent orders"
-       columns={[
-         { key: 'title', label: 'Item', strong: true, grow: true, sortable: true },
-         { key: 'when',  label: 'Date', mono: true, sortable: true, sortBy: (r) => r.ts },
-         { key: 'total', label: 'Total', mono: true, align: 'end', sortable: true },
-       ]}
-       rows={rows}                      // each row carries rowKey (default 'id')
-       selectable
-       bulkActions={(ids, clear) => <button className="btn btn--ghost btn--sm">…</button>}
-       footer={<Pagination … />}
-     />
-
-   Column def: key · label · align ('start'|'end'|'center') · mono · strong ·
-   grow (the one greedy column) · sortable · sortBy (fn or key; defaults to
-   row[key]) · hideBelow ('sm'|'md' container breakpoints) · render(row).
-
-   OPINIONS (deliberate, documented in Table.prompt.md):
-     • sort is LOCAL and uncontrolled — asc ⇄ desc, no "unsorted" third state;
-       rows FLIP to their new order (Motion layout — nothing teleports).
-     • selection is a Set of row keys; shift-click extends a range; selecting
-       morphs the header into the bulk bar (count odometer — badge.css's .odo
-       vocabulary — consumer actions, clear).
-     • the header is always sticky; elevation appears only once rows actually
-       pass under it. The first column (+ checkbox) pins under horizontal
-       overflow (pinFirst, default true).
-     • height is the consumer's: size the root via className; the scroller
-       absorbs it.
-
-   Primitives consumed by CLASS VOCABULARY (A8, the Pagination precedent —
-   the ESM Checkbox/Button can't load buildless): .cbx (checkbox), .btn
-   (clear button), .odo (count odometer). Markup mirrors Checkbox.jsx exactly. */
+/* Table — opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
 import * as React from 'react';
 import { motion } from 'motion/react';
@@ -115,8 +78,7 @@ export interface TableProps<Row = any> {
   className?: string;
 }
 
-/* smart compare: numbers numerically, everything else natural-order text;
-   null/undefined always sink to the end of the ascending order */
+/* numbers compare numerically, else natural-order text; null/undefined sink to the end */
 function tblCompare(a: unknown, b: unknown) {
   if (a == null && b == null) return 0;
   if (a == null) return 1;
@@ -133,8 +95,7 @@ interface TblCheckboxProps {
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
-/* the Checkbox primitive's exact DOM (Checkbox.jsx), minus label — its CSS
-   state machine (:has, flags) does all the painting */
+/* the Checkbox primitive's exact DOM minus label — its CSS state machine paints it */
 function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: TblCheckboxProps) {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -161,9 +122,7 @@ function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: T
   );
 }
 
-/* selection count odometer — badge.css's .odo class vocabulary (CountBadge's
-   mechanism): each digit is a column clipping a 0–9 strip; value change
-   swaps the strip class and it eases to the new digit */
+/* count odometer — reuses badge.css's .odo vocabulary: each digit clips a 0–9 strip */
 const TBL_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 function TblOdo({ value }: { value: number }) {
   const str = String(value);
@@ -192,19 +151,19 @@ export function Table<Row = any>({
   columns = [],
   rows = [],
   rowKey = 'id',
-  label, // aria-label for the <table>
+  label,
   selectable = false,
-  onSelectionChange, // (keys: Array) — fires on every change
-  bulkActions, // (keys, clear) => node — rendered in the bulk bar
-  selectionLabel, // (row) => string — per-row checkbox aria-label
-  defaultSort = null, // { key, dir: 'asc'|'desc' }
-  onSortChange, // ({ key, dir }) — notification only; sort is local
-  density = 'cozy', // 'cozy' | 'compact'
-  pinFirst = true, // pin checkbox + first column under x-overflow
+  onSelectionChange,
+  bulkActions,
+  selectionLabel,
+  defaultSort = null,
+  onSortChange,
+  density = 'cozy',
+  pinFirst = true,
   loading = false,
-  empty, // node — shown when rows is empty (not loading)
-  footer, // node — pagination / summary strip
-  onRowClick, // (row) — rows become clickable
+  empty,
+  footer,
+  onRowClick,
   className = '',
 }: TableProps<Row>) {
   const [sort, setSort] = useState<TableSort | null>(defaultSort);
@@ -217,7 +176,6 @@ export function Table<Row = any>({
 
   const keyOf = (row: Row): string | number => (row as Record<string, string | number>)[rowKey];
 
-  /* ── local sort ─────────────────────────────────────────────────────────*/
   const sortedRows = useMemo(() => {
     if (!sort) return rows;
     const col = columns.find((c) => c.key === sort.key);
@@ -241,7 +199,6 @@ export function Table<Row = any>({
     if (onSortChange) onSortChange(next);
   }
 
-  /* ── selection ──────────────────────────────────────────────────────────*/
   const allSelected = sortedRows.length > 0 && sortedRows.every((r) => selected.has(keyOf(r)));
   const someSelected = selected.size > 0 && !allSelected;
 
@@ -279,7 +236,7 @@ export function Table<Row = any>({
     commitSelection(next);
   }
 
-  /* ── live scroll attrs · drive header elevation, pin cast, edge fades ───*/
+  /* live scroll → data attrs that CSS reads for header elevation, pin cast, edge fades */
   useEffect(() => {
     const el = scrollRef.current;
     const w = wrapRef.current;
@@ -304,7 +261,6 @@ export function Table<Row = any>({
     };
   }, []);
 
-  /* ── cell class plumbing ────────────────────────────────────────────────*/
   function cellMods(col: TableColumn<Row>, i: number) {
     const a: string[] = [];
     if (col.align === 'end') a.push('tbl__cell--end');
@@ -323,10 +279,7 @@ export function Table<Row = any>({
   const showEmpty = !loading && sortedRows.length === 0;
   const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
 
-  /* bulk bar: ONE PERSISTENT NODE (the Tabs lesson — the UMD AnimatePresence
-     wedged on this conditional child and left a ghost over the header).
-     Open/close is CSS (trivial-tier fade + nudge, delayed visibility flip);
-     the count freezes at its last value so the exit doesn't roll to 0. */
+  /* one persistent node, CSS open/close — AnimatePresence ghosted here; count frozen so exit doesn't roll to 0 */
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 

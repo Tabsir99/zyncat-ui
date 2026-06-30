@@ -1,18 +1,7 @@
-/* ════════════════════════════════════════════════════════════════════════
-   premium-ui — global entry point.
-
-   This is the ONE file consumers link. It is a manifest of @import lines and
-   nothing else (no rules live here). Everything it reaches is the shippable
-   token surface.
-
-   Order: fonts → primitives (raw values) → semantics (intent aliases). The
-   semantic layer references primitives via var(), so it must load knowing they
-   exist; var() resolves at use-time, but we keep the order legible anyway.
-   ════════════════════════════════════════════════════════════════════════ */
+/* premium-ui entry — @import manifest; order matters: fonts → primitives → semantics → components. */
 
 @import url('./tokens/fonts.css');
 
-/* Primitives — the closed vocabulary of raw values */
 @import url('./tokens/color.css');
 @import url('./tokens/typography.css');
 @import url('./tokens/spacing.css');
@@ -24,10 +13,8 @@
 @import url('./tokens/layers.css');
 @import url('./tokens/avatar.css');
 
-/* Semantics — intent-named aliases that components consume */
 @import url('./tokens/semantic.css');
 
-/* Components — primitives built strictly from the tokens above */
 @import url('./components/button/button.css');
 @import url('./components/motion/collapse.css');
 @import url('./components/icon/icon.css');

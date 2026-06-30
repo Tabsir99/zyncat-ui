@@ -1,36 +1,14 @@
-/* tooltip.css — Tooltip (DRAFT · playground/tooltip).
-   ─────────────────────────────────────────────────────────────────────────
-   One floating surface, two content tiers: a snug one-liner (label +
-   optional mono shortcut) and a multi-line hint capped at a calm measure.
-   Arrowless — a tight --space-2 offset reads quieter than caret geometry.
-
-   ON-THEME: a raised LIGHT surface, same vocabulary as Select's menu and
-   Dialog (--bg-surface-raised + hairline + shadow). A tooltip is just another
-   floating surface; it does not invert the theme.
-
-   The bubble is NON-INTERACTIVE by contract (pointer-events: none): nothing
-   inside it can be hovered, clicked, or focused. Anything interactive belongs
-   to Popover, not here.
-
-   ONE bubble exists app-wide (the shared TooltipHost). Motion owns ALL of its
-   movement explicitly — no layout projection: position rides x/y transforms,
-   the box MORPHS by tweening measured width/height (px→px — a surfaced,
-   deliberate exception to the transform-only rule: scale-correction is what
-   distorts text), and the label swaps as one keyed node (cut + fast fade-in)
-   under the traveling box. This sheet sets only the look + the
-   transform-origin the enter grows from. */
+/* tooltip.css — the floating tooltip surface (one shared bubble). */
 
 .tooltip {
   position: fixed;
   left: 0;
-  top: 0; /* Motion x/y (transforms) place it    */
+  top: 0;
   box-sizing: border-box;
   overflow: hidden; /* clips content while the box morphs  */
-  z-index: var(--layer-tooltip); /* above everything (tokens/layers.css) */
-  pointer-events: none; /* non-interactive, by contract       */
-  width: max-content; /* the live bubble gets an explicit
-                                          animated width; this sizes the
-                                          hidden measuring clone             */
+  z-index: var(--layer-tooltip);
+  pointer-events: none;
+  width: max-content; /* the live bubble gets an animated width; this also sizes the measuring clone */
   padding: var(--space-2) var(--space-3);
   background: var(--bg-surface-raised);
   color: var(--text-body);
@@ -48,14 +26,12 @@
   top: 0;
 }
 
-/* default trigger wrapper — box-less (display:contents), so it changes no
-   layout; it only carries the hover/focus listeners and the measured rect */
+/* default trigger wrapper — display:contents, so it adds no layout; carries the listeners + rect */
 .tooltip-anchor {
   display: contents;
 }
 
-/* content wraps at the measure cap; the LIVE body additionally gets its
-   measured width inline (locked wrapping while the box morphs over it) */
+/* wraps at the measure cap; the live body also gets its measured width inline (locked wrapping during the morph) */
 .tooltip__body {
   display: block;
   width: max-content;
@@ -77,11 +53,10 @@
   transform-origin: left center;
 }
 
-/* ── One-liner row · label + optional shortcut ─────────────────────────────*/
 .tooltip__row {
   display: flex;
   align-items: baseline;
-  gap: var(--space-3); /* generous — the chip is metadata    */
+  gap: var(--space-3);
 }
 .tooltip__shortcut {
   flex: 0 0 auto;
@@ -95,9 +70,7 @@
   white-space: nowrap;
 }
 
-/* ── Multi-line content ────────────────────────────────────────────────────
-   Rich nodes style themselves with these; keep hierarchy minimal — a hint
-   has at most a lead line and a body. */
+/* Multi-line content — rich nodes style themselves with these; keep hierarchy minimal. */
 .tooltip strong {
   font-weight: var(--weight-medium);
   color: var(--text-strong);

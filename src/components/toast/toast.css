@@ -1,52 +1,24 @@
-/* toast.css — Toast (DRAFT · playground/toast).
-   ─────────────────────────────────────────────────────────────────────────
-   The global notification rail on the brand's premium surface: each card is
-   GLASS (components/glass — tint + frost + sheen), tinted per tone. The
-   toast DILUTES the shared --glass-tint-* tokens (~70%) and halves the sheen
-   — at full badge strength a toast-sized pane reads as a solid slab; the
-   consumer-set color-mix is the documented glass hook, not an off-ramp.
-   Regular frost (not --strong) so the backdrop stays legible through it.
-
-   Tone choreography (the win/lose split, §C — implemented in Toast.jsx):
-     success → the GLINT: glass's one-shot light sweep. Light = win.
-     error   → the HEADSHAKE: a damped x-settle after landing. Weight = loss.
-
-   THE RING: the timer is a hairline arc draining around the icon — clock and
-   status share one instrument instead of a bar floating under the content.
-   It is DATA (remaining time), so it runs linear: a surfaced exception to
-   the no-linear law (§C / A7) — easing a countdown would lie. It pauses
-   with the JS timers (.is-paused) and is keyed to them (remounts on
-   restart). Default-tone toasts show the bare dial, no glyph.
-
-   GLASS × MOTION: glass.css transitions transform for its hover lift; here
-   Motion owns transform (slot travel, swipe, headshake), so .toast overrides
-   the transition to colors/shadow only — never let CSS smooth Motion's writes.
-
-   Stack depth: behind cards lose their tone (tint → neutral), dim their
-   sheen, and quiet their content; Toast.jsx also sizes them to the front
-   card's frame so a short card never drowns behind a tall one.
-
-   z-index 1050: above select menus (1000), below the tooltip (1100). */
+/* toast.css — the glass notification card, tinted per tone (a draining timer ring). */
 
 .toast-viewport {
   position: fixed;
   bottom: var(--space-6);
   right: var(--space-6);
   width: min(22.5rem, calc(100vw - 2 * var(--space-6)));
-  z-index: var(--layer-toast); /* tokens/layers.css */
+  z-index: var(--layer-toast);
   margin: 0;
   padding: 0;
   list-style: none;
   pointer-events: none; /* only the cards themselves are live */
 }
 
-/* ── The card · a glass consumer (.glass set in JSX) ───────────────────────*/
+/* The card — a glass consumer (.glass is set in JSX). */
 .toast {
   /* tone hooks — set by [data-tone] below */
-  --toast-hue: var(--text-subtle); /* ring + icon                        */
-  --glass-fg: var(--text-strong); /* content + same-hue hairline        */
+  --toast-hue: var(--text-subtle);
+  --glass-fg: var(--text-strong);
   --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
-  --glass-sheen-rest: 0.45; /* half the chip sheen — airier pane  */
+  --glass-sheen-rest: 0.45;
 
   position: absolute;
   bottom: 0;
@@ -58,8 +30,7 @@
   transform-origin: center bottom; /* the stack recedes upward           */
   border-radius: var(--radius-lg);
 
-  /* Motion owns transform — strip it from glass's transition, keep the
-     tone/depth cross-fades (background-color covers the tint blooms). */
+  /* Motion owns transform — keep only the color/shadow transitions (never smooth Motion's writes) */
   transition:
     background-color var(--duration-base) var(--ease-standard),
     box-shadow var(--duration-base) var(--ease-standard);
@@ -97,7 +68,6 @@
   opacity: 0;
 }
 
-/* ── Content row · dial | text | count | action | close ───────────────────*/
 .toast__inner {
   display: flex;
   align-items: center;
@@ -121,9 +91,7 @@
   place-items: center;
 }
 
-/* the ring · remaining time as a draining arc (linear — see header note).
-   animation-duration is set at runtime to the toast's lifetime: parametric
-   timing data, not styling — the §F carve-out Motion's writes also use. */
+/* the ring — a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
 .toast__ring {
   position: absolute;
   inset: 0;
@@ -176,7 +144,7 @@
   text-wrap: pretty;
 }
 
-/* coalesce counter — same toast fired again becomes ×n, mono per §E */
+/* coalesce counter — same toast refired becomes ×n (mono) */
 .toast__count {
   flex: none;
   font-family: var(--font-mono);
@@ -230,8 +198,7 @@
   opacity: 1;
 }
 
-/* ── Loading spinner · continuous loader, --duration-spin (linear is the
-   law's own carve-out for loops; reduced motion slows it, never freezes) ──*/
+/* Loading spinner — continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
 .toast__spinner {
   display: block;
   box-sizing: border-box;
@@ -249,16 +216,14 @@
   }
 }
 
-/* ── Custom slot · the rail seam (e.g. a future custom tray).
-   Bare neutral glass — the consumer owns the interior. ────────────────────*/
+/* Custom slot — bare neutral glass; the consumer owns the interior. */
 .toast__custom {
   padding: var(--space-3) var(--space-4);
   transition: var(--transition-opacity);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* travel/gestures collapse via the motion tokens; the ring is a progress
-     indicator (data), so like --duration-spin it keeps running */
+  /* travel/gestures collapse via the tokens; the ring is data, so it keeps running */
   .toast,
   .toast__close,
   .toast__inner,

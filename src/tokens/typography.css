@@ -1,63 +1,43 @@
-/* typography.css — the type system.
-   ─────────────────────────────────────────────────────────────────────────
-   Two families, three weights, a nine-step size ramp, and matched line-height
-   + tracking for every step. This is the entire typographic vocabulary —
-   there are no other sizes. Premium type is not about more options; it's about
-   the same few decisions made identically every time.
-
-   Use the ROLE tokens (--type-body, --type-title…) as a `font:`-style bundle,
-   or compose from the size/leading/weight/tracking primitives. Numerals,
-   timestamps, counts, IDs and code ALWAYS use --font-mono. */
+/* Type system — two families, three weights, a 9-step ramp with matched leading + tracking. */
 
 :root {
-  /* ── Families ────────────────────────────────────────────────────────────*/
   --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
 
-  /* ── Weights · restricted to three (700 reserved) ────────────────────────*/
-  --weight-regular: 400; /* body, long-form                                */
-  --weight-medium: 500; /* UI labels, emphasis, table headers            */
-  --weight-semibold: 600; /* headings, buttons, the brand wordmark         */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
 
-  /* ── Size ramp · 9 steps, intentional (12 → 40) ──────────────────────────
-     14 is the UI default. Nothing between these values is permitted. */
-  --size-micro: 0.75rem; /* 12px — uppercase labels, legal           */
-  --size-caption: 0.8125rem; /* 13px — captions, helper text, meta        */
-  --size-body: 0.875rem; /* 14px — DEFAULT UI text                     */
-  --size-body-lg: 1rem; /* 16px — reading / comfortable body         */
-  --size-heading: 1.125rem; /* 18px — card & group headings              */
-  --size-title: 1.3125rem; /* 21px — section titles                     */
-  --size-title-lg: 1.625rem; /* 26px — view titles                        */
-  --size-display: 2rem; /* 32px — page display                       */
-  --size-display-lg: 2.5rem; /* 40px — hero / marketing display           */
+  --size-micro: 0.75rem;
+  --size-caption: 0.8125rem;
+  --size-body: 0.875rem;
+  --size-body-lg: 1rem;
+  --size-heading: 1.125rem;
+  --size-title: 1.3125rem;
+  --size-title-lg: 1.625rem;
+  --size-display: 2rem;
+  --size-display-lg: 2.5rem;
 
-  /* ── Line-height · paired to each size (px-locked for UI precision) ───────*/
-  --leading-micro: 1rem; /* 16 */
-  --leading-caption: 1.125rem; /* 18 */
-  --leading-body: 1.375rem; /* 22 */
-  --leading-body-lg: 1.625rem; /* 26 */
-  --leading-heading: 1.625rem; /* 26 */
-  --leading-title: 1.75rem; /* 28 */
-  --leading-title-lg: 2rem; /* 32 */
-  --leading-display: 2.375rem; /* 38 */
-  --leading-display-lg: 2.875rem; /* 46 */
+  --leading-micro: 1rem;
+  --leading-caption: 1.125rem;
+  --leading-body: 1.375rem;
+  --leading-body-lg: 1.625rem;
+  --leading-heading: 1.625rem;
+  --leading-title: 1.75rem;
+  --leading-title-lg: 2rem;
+  --leading-display: 2.375rem;
+  --leading-display-lg: 2.875rem;
 
-  /* ── Measure · line-length caps ──────────────────────────────────────────
-     Type tokens fix size/leading; measure fixes LINE LENGTH. Floating text
-     surfaces (tooltip, toast, popover hints) wrap at this cap instead of
-     running a long ribbon. */
+  /* Measure — line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. */
   --measure-floating: 36ch;
 
-  /* ── Tracking · tighten as size grows, open up for caps ──────────────────*/
-  --tracking-caps: 0.04em; /* uppercase micro labels ONLY               */
-  --tracking-normal: 0em; /* body & UI                                 */
-  --tracking-tight: -0.011em; /* headings / titles                         */
-  --tracking-tighter: -0.016em; /* title-lg                                  */
-  --tracking-display: -0.021em; /* display                                   */
+  --tracking-caps: 0.04em;
+  --tracking-normal: 0em;
+  --tracking-tight: -0.011em;
+  --tracking-tighter: -0.016em;
+  --tracking-display: -0.021em;
 
-  /* ── ROLE bundles · the everyday API ─────────────────────────────────────
-     Each role = size + leading + weight + tracking, pre-composed. Reach for
-     these first; drop to primitives only for one-off fine-tuning. */
+  /* Role bundles — size + leading + weight + tracking, pre-composed; reach for these first. */
   --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg)
     var(--font-sans);
   --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans);

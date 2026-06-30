@@ -1,21 +1,6 @@
 'use client';
 
-/* Toast.tsx — Toast RENDERING.
-   ─────────────────────────────────────────────────────────────────────────
-   The machinery (queue, clocks, toast API) lives in toast-store.ts. This file
-   is only the React layer:
-
-     useToneGesture  the win/lose choreography (success glint, error headshake)
-     ToastItem       one glass card: dial + ring, text, action, swipe, exit
-     ToastHost       the viewport: stack math, fan-out, hover/visibility pause
-
-   STACK MODEL (sonner-style, Motion-rendered): every card is absolutely
-   anchored to the corner; Motion animates it to its slot with EXPLICIT
-   y/scale values — collapsed: depth × peek, receding scale, 3 visible,
-   behind-cards sized to the front card's frame; expanded (hover/focus):
-   real offsets summed from measured content heights. Explicit-over-layout-
-   projection is the house pattern (Tooltip): one spring serves entrance,
-   restack, and fan-out — nothing teleports. */
+/* Toast — the React render layer (queue + clocks live in toast-store.ts). */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
@@ -28,10 +13,10 @@ const SM = UIMotion;
 const store = UIToast;
 const { useRef, useEffect, useLayoutEffect, useState, useSyncExternalStore } = React;
 
-const VISIBLE = 3; // collapsed cards shown (rest hide behind)
-const RENDERED = 6; // hard render cap (older wait their turn)
-const COLLAPSE_GRACE = 140; // ms before the fan folds after leave
-const SWIPE_X = 64; // px — or fling past SWIPE_V px/s
+const VISIBLE = 3;
+const RENDERED = 6;
+const COLLAPSE_GRACE = 140;
+const SWIPE_X = 64;
 const SWIPE_V = 480;
 
 // expanded gap AND collapsed peek — read lazily (post-stylesheet), once
@@ -39,7 +24,7 @@ let GAP = 0;
 function stackGap() {
   if (GAP) return GAP;
   const cs = getComputedStyle(document.documentElement);
-  const raw = cs.getPropertyValue('--space-3').trim(); // "0.75rem" — rem→px
+  const raw = cs.getPropertyValue('--space-3').trim();
   const n = parseFloat(raw) || 0;
   GAP = (raw.endsWith('rem') ? n * (parseFloat(cs.fontSize) || 16) : n) || 12;
   return GAP;
@@ -52,12 +37,7 @@ const TONE_ICON: Record<string, IconName> = {
   info: 'info',
 };
 
-/* ── useToneGesture · the win/lose split (§C) ──────────────────────────────
-   Success (on entrance or morph) fires glass's one-shot GLINT: light sweeps
-   the pane as it lands. Error gets the HEADSHAKE: a damped x-settle after
-   landing — weight, not jitter. Both ride the motion tokens, so reduced
-   motion collapses them for free. The glint class is toggled imperatively
-   on our own ref (remove → reflow → add restarts the one-shot animation). */
+/* useToneGesture — success glint, error headshake; the glint class is toggled with a reflow (remove → offsetWidth → add) to restart the one-shot. */
 function useToneGesture(
   tone: ToastTone,
   ref: React.RefObject<HTMLElement>,
@@ -80,14 +60,13 @@ function useToneGesture(
       const fall = animate(x, [0, -7, 5, -2, 0], {
         duration: SM.dur.slow,
         ease: SM.ease.standard,
-        delay: SM.dur.base, // let the card land first
+        delay: SM.dur.base,
       });
       return () => fall.stop();
     }
   }, [tone]);
 }
 
-/* ── ToastItem · one glass card ────────────────────────────────────────────*/
 function ToastItem({
   t,
   depth,
@@ -109,8 +88,7 @@ function ToastItem({
   const x = useMotionValue(0); // swipe travel — ours, so dismissal can finish it
   useToneGesture(t.tone, ref, x);
 
-  // report the CONTENT height (first child — the li itself animates height
-  // for the collapsed stack, so measuring it would record mid-tween values)
+  // report the CONTENT height (firstChild — the li's own height is animated, so it'd read mid-tween)
   useLayoutEffect(() => {
     if (ref.current && ref.current.firstElementChild)
       onHeight(t.id, (ref.current.firstElementChild as HTMLElement).offsetHeight);
@@ -118,8 +96,7 @@ function ToastItem({
 
   const swipe = (_e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-      // finish the gesture out the right edge, THEN remove — the exit fade
-      // happens where the card landed, never a snap-back fight
+      // fling out the right edge, THEN remove — the exit fade plays where it landed, no snap-back
       animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() =>
         store.dismiss(t.id),
       );
@@ -140,8 +117,7 @@ function ToastItem({
         opacity: hidden ? 0 : 1,
         y: -offset,
         scale: 1 - depth * 0.05,
-        /* collapsed behind-cards adopt the FRONT card's frame height (their
-           content is faded out) — a short card never drowns behind a tall one */
+        /* behind-cards adopt the front card's frame height (content faded) so a short card never drowns behind a tall one */
         height: frameHeight || 'auto',
         pointerEvents: hidden ? 'none' : 'auto',
       }}
@@ -165,15 +141,13 @@ function ToastItem({
   );
 }
 
-/* ── ToastBody · dial + ring | text | ×n | action | close ─────────────────*/
 function ToastBody({ t }: { t: ToastRecord }) {
   return (
     <div className="toast__inner">
       {(t.tone !== 'default' || isFinite(t.duration)) && (
         <span className="toast__icon">
           {t.tone !== 'default' && (
-            /* keyed remount, not nested AnimatePresence (Tooltip's lesson):
-               old glyph cuts, the new one springs in under the same slot */
+            /* keyed remount (not nested AnimatePresence): old glyph cuts, new springs in */
             <motion.span
               key={t.tone}
               className="toast__icon-glyph"
@@ -189,9 +163,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
             </motion.span>
           )}
           {isFinite(t.duration) && (
-            /* the ring — the clock, keyed to the timer so a restart re-fills
-               it; animation-duration is parametric timing data (see
-               toast.css). pathLength=1 → dashoffset is a fraction. */
+            /* the ring — keyed to the timer so a restart re-fills it; pathLength=1 makes dashoffset a fraction */
             <svg
               key={'ring-' + t.timerKey}
               className="toast__ring"
@@ -258,7 +230,6 @@ function ToastBody({ t }: { t: ToastRecord }) {
   );
 }
 
-/* ── ToastHost · the one viewport ──────────────────────────────────────────*/
 function ToastHost() {
   const { toasts, paused, expanded } = useSyncExternalStore(store.subscribe, store.get);
   const [heights, setHeights] = useState<Record<string, number>>({});
@@ -287,9 +258,7 @@ function ToastHost() {
     );
   };
 
-  // tab hidden → clocks freeze; visible again → they resume (unless hovered).
-  // Visibility, NOT window focus — in an embedded preview the window blurs on
-  // any click outside the page while the toasts stay fully visible.
+  // tab hidden → freeze clocks, visible → resume (visibility, not window focus: an embedded preview blurs on outside clicks).
   useEffect(() => {
     const onVis = () => {
       if (document.hidden) store.pause();
@@ -299,8 +268,7 @@ function ToastHost() {
     return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
 
-  // safety net: if the last card leaves while hovered (swipe/dismiss removes
-  // the node under the cursor, so no pointerout fires), release everything
+  // safety net: last card removed under the cursor fires no pointerout, so release here
   useEffect(() => {
     if (toasts.length === 0) {
       hovering.current = false;
@@ -331,8 +299,7 @@ function ToastHost() {
           onRelease(false);
       }}
     >
-      {/* initial stays true: the host mounts lazily WITH the first toast, so
-          it's on the first commit — initial={false} skipped its entrance */}
+      {/* initial stays true — the host mounts with the first toast, so initial={false} would skip its entrance */}
       <AnimatePresence>
         {slice.map((t, i) => {
           const depth = n - 1 - i; // newest = 0, at the front
@@ -361,7 +328,6 @@ function ToastHost() {
   );
 }
 
-/* ── Mount · exactly once, lazily, registered with the store ──────────────*/
 let hostMounted = false;
 function ensureToastHost() {
   if (hostMounted) return;
@@ -374,9 +340,7 @@ function ensureToastHost() {
 store.host = ensureToastHost;
 if (store.toasts.length) ensureToastHost(); // toasts fired before we loaded
 
-/* Toaster — mount once near the app root (bundled apps). The imperative
-   `toast()` API mounts the host lazily on first call; rendering <Toaster/>
-   guarantees this module is evaluated client-side so the host is registered. */
+/* Toaster — mount once near the app root so this module loads client-side and the lazy host is registered (toast() also auto-mounts). */
 export function Toaster(): null {
   useEffect(() => {
     ensureToastHost();

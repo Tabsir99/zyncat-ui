@@ -1,41 +1,4 @@
-/* table.css — Table: GEOMETRY + PAINT.
-   ─────────────────────────────────────────────────────────────────────────
-   The data surface for posts, batches, members, invoices. Opinionated, not a
-   public API: one look, one behavior set — sticky header, sortable columns,
-   row selection with a bulk bar that takes over the header, mono numerals,
-   pinned identity column under horizontal overflow.
-
-   ── Architecture ───────────────────────────────────────────────────────────
-   .tbl                 the card frame; a CONTAINER (inline-size) — column
-                        visibility responds to the table's own width, not the
-                        viewport. Flex column: [bulk overlay] viewport → foot.
-   .tbl__viewport       positioning context for the edge fades.
-   .tbl__scroll         the one scroll surface (x and y). The thead sticks to
-                        its top; pinned cells stick to its left. The consumer
-                        constrains height by sizing the ROOT (className) —
-                        .tbl is max-height:100% and the scroller absorbs it.
-   .tbl__bulk           absolute overlay, exactly --tbl-head-h tall, so the
-                        header appears to MORPH into the selection toolbar.
-
-   ── Row paint ──────────────────────────────────────────────────────────────
-   One custom prop, --row-bg, set on .tbl__row per state and read by every td
-   (the Checkbox flag-machine pattern). It stays OPAQUE so pinned (sticky)
-   cells cover scrolled content with no layering tricks. The selected tint is
-   the --teal-wash recipe re-expressed as a solid: color-mix 5% accent over
-   the surface — same ink, composited by hand because sticky cells can't be
-   translucent.
-
-   ── Responsiveness ─────────────────────────────────────────────────────────
-   Three cooperating mechanisms, all driven by the container or live scroll
-   attrs (data-scrolled / data-x-back / data-x-more, set by Table.jsx):
-     1. per-column collapse — .tbl__cell--hide-sm/-md vanish below the
-        container breakpoints (30rem / 42rem; documented constants — the
-        system has no breakpoint tokens yet, surfaced in Table.prompt.md);
-     2. pinned first column (+ checkbox) under horizontal overflow, with a
-        soft cast (--gray-wash gradient — the §B3 gradient exception);
-     3. edge fades that signal off-screen columns.
-
-   Load order: imported by styles.css (the one entry point). */
+/* Table — geometry + paint: sticky header, sortable columns, row selection + bulk bar, pinned identity column. */
 
 .tbl,
 .tbl * {
@@ -43,9 +6,8 @@
 }
 
 .tbl {
-  /* density hooks — compact repoints these */
-  --tbl-pad-y: var(--space-3); /* 12 — row */
-  --tbl-head-py: var(--space-3); /* 12 — header */
+  --tbl-pad-y: var(--space-3);
+  --tbl-head-py: var(--space-3);
   --tbl-head-h: calc(var(--leading-caption) + 2 * var(--tbl-head-py));
   /* checkbox column: pad 8 + (8 + 18 + 8 hit area) + pad 8 — all tokens */
   --tbl-check-w: calc(var(--control-box) + 4 * var(--space-2));
@@ -59,21 +21,17 @@
   border: var(--border-hairline) solid var(--border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xs);
-  overflow: hidden; /* clip scroller + bulk to the radius */
+  overflow: hidden;
 }
 
 .tbl--compact {
-  --tbl-pad-y: var(--space-2); /* 8 */
+  --tbl-pad-y: var(--space-2);
   --tbl-head-py: var(--space-2);
 }
 
-/* ── Viewport · scroll surface ──────────────────────────────────────────────*/
 .tbl__viewport {
-  position: relative; /* anchors the edge fades */
-  display: flex; /* flex sizing, NOT % height — a %
-                                             inside a max-height parent
-                                             resolves to auto and the scroller
-                                             would grow to its content */
+  position: relative;
+  display: flex; /* flex sizing, not % height — % inside a max-height parent resolves to auto, scroller would grow to content */
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
@@ -85,14 +43,12 @@
   overscroll-behavior: contain;
 }
 
-/* ── Table box ──────────────────────────────────────────────────────────────*/
 .tbl__table {
   width: 100%;
   border-collapse: separate; /* collapse breaks sticky borders */
   border-spacing: 0;
 }
 
-/* ── Header · sticky, gains elevation once rows pass under it ───────────────*/
 .tbl__table thead th {
   position: sticky;
   top: 0;
@@ -113,7 +69,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Cells ──────────────────────────────────────────────────────────────────*/
 .tbl__table td {
   padding: var(--tbl-pad-y) var(--space-3);
   border-bottom: var(--border-hairline) solid var(--border-subtle);
@@ -121,9 +76,7 @@
   font: var(--type-body);
   color: var(--text-body);
   vertical-align: middle;
-  white-space: nowrap; /* data tables don't wrap; the grow
-                                             column absorbs slack, overflow
-                                             scrolls + pins instead */
+  white-space: nowrap; /* data tables don't wrap — grow column absorbs slack; overflow scrolls + pins */
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
 .tbl__table tbody tr:last-child td {
@@ -140,7 +93,7 @@
   padding-inline-end: var(--space-4);
 }
 
-/* ── Row states · one opaque --row-bg, read by every cell ───────────────────*/
+/* one opaque --row-bg per row, read by every cell — stays opaque so sticky cells cover scrolled content */
 .tbl__row {
   --row-bg: var(--bg-surface);
 }
@@ -157,7 +110,6 @@
   cursor: pointer;
 }
 
-/* ── Column modifiers ───────────────────────────────────────────────────────*/
 .tbl__table td.tbl__cell--mono {
   font: var(--type-mono);
   font-variant-numeric: tabular-nums;
@@ -174,10 +126,9 @@
 }
 .tbl__cell--grow {
   width: 100%;
-} /* the one greedy column; others size
-                                             to content (auto table layout) */
+} /* greedy column; auto table layout sizes the others to content */
 
-/* ── Sort · full-cell button, inset pill so the focus ring fits ─────────────*/
+/* sort: full-cell button, inset by a margin so its focus ring isn't clipped */
 .tbl__table th.tbl__cell--sortable {
   padding: 0;
 }
@@ -224,8 +175,6 @@
   color: var(--text-strong);
 }
 
-/* the arrow: hidden → ghost on hover → solid when active; FLIPS for desc.
-   Appearing uses opacity only (trivial tier); the flip glides (in-out travel). */
 .tbl__sortIcon {
   display: inline-flex;
   flex: none;
@@ -245,7 +194,6 @@
   transform: rotate(180deg);
 }
 
-/* ── Checkbox column · the Checkbox primitive's class vocabulary (A8) ───────*/
 .tbl__table .tbl__cell--check {
   width: var(--tbl-check-w);
   padding: 0 var(--space-2);
@@ -257,17 +205,7 @@
   margin-top: 0;
 } /* no label → no baseline offset */
 
-/* ── Bulk bar · the header morphs into a selection toolbar ──────────────────
-   Absolute overlay sized to the header (+ its hairline, which it repaints in
-   accent), checkbox pixel-aligned with the header checkbox so the surface
-   appears to change MODE, not content.
-
-   ONE PERSISTENT NODE (the Tabs lesson, progress.md 2026-06-10): the UMD
-   AnimatePresence's exit bookkeeping wedged on this conditional child (ghost
-   bar left covering the header — verified live). Open/close is a trivial-tier
-   CSS fade + nudge; the delayed `visibility` flip removes it from paint AND
-   tab order after the exit, and pointer-events dies the instant it closes —
-   correctness never waits on an animation callback. */
+/* bulk bar: absolute overlay that morphs from the header; the delayed visibility flip removes it from paint + tab order only after the exit fade, while pointer-events dies on close */
 .tbl__bulk {
   position: absolute;
   top: 0;
@@ -318,7 +256,6 @@
   flex: 1 1 auto;
 }
 
-/* ── Pinned region · checkbox + first data column stick left (.tbl--pin) ────*/
 .tbl--pin .tbl__cell--pin {
   position: sticky;
   left: 0;
@@ -331,8 +268,7 @@
   left: var(--tbl-check-w);
 }
 
-/* soft cast off the pinned edge once content has scrolled behind it —
-   gradient exception (§B3): wash primitive as a gradient stop */
+/* soft cast off the pinned edge once content scrolls behind it (gradient exception, §B3) */
 .tbl--pin .tbl__cell--pinEdge::after {
   content: '';
   position: absolute;
@@ -349,7 +285,6 @@
   opacity: 1;
 }
 
-/* ── Edge fades · "there's more table" ──────────────────────────────────────*/
 .tbl__edge {
   position: absolute;
   top: 0;
@@ -373,10 +308,8 @@
 }
 .tbl[data-x-back]:not(.tbl--pin) .tbl__edge--l {
   opacity: 1;
-} /* pinned column
-                                                IS the left edge signal */
+} /* when pinned, the pinned column itself is the left-edge signal */
 
-/* ── Empty · calm, centered; consumer overrides the copy ────────────────────*/
 .tbl__emptyCell {
   padding: var(--space-7) var(--space-4);
   text-align: center;
@@ -384,7 +317,6 @@
   color: var(--text-muted);
 }
 
-/* ── Loading · rows recede and go inert (the list-fetch convention) ─────────*/
 .tbl__table tbody {
   transition: var(--transition-opacity);
 }
@@ -393,7 +325,6 @@
   pointer-events: none;
 }
 
-/* ── Footer · pagination / summaries live here ──────────────────────────────*/
 .tbl__foot {
   display: flex;
   align-items: center;
@@ -404,7 +335,7 @@
   border-top: var(--border-hairline) solid var(--border-subtle);
 }
 
-/* ── Column collapse · container breakpoints (constants — see prompt.md) ────*/
+/* column collapse at container breakpoints — 30rem / 42rem are intentional constants (no breakpoint tokens yet) */
 @container (max-width: 42rem) {
   .tbl__cell--hide-md {
     display: none;

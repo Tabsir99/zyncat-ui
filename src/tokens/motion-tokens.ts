@@ -1,15 +1,4 @@
-/* motion-tokens.ts — the ONE bridge between tokens/motion.css and Motion (framer).
-   ─────────────────────────────────────────────────────────────────────────
-   Ported from the design system's buildless `motion-tokens.js`. The motion
-   vocabulary lives in CSS custom properties; JS animation code consumes the
-   SAME values through this module — never hardcode a duration or curve in a
-   component. Buildless pages read `window.UIMotion`; a bundled app (this
-   one) imports { UIMotion } instead.
-
-   SSR-safe: the literal token values (mirrors of tokens/motion.css) are used
-   until the DOM exists; on the client the live custom properties are read at
-   module load so a token change still flows through. Reduced motion is honored
-   by <MotionConfig reducedMotion="user"> at the app root. */
+/* motion-tokens.ts — the JS↔CSS motion bridge; Motion code reads these token values, never hardcodes them. */
 
 import type { Transition } from 'motion/react';
 
@@ -18,7 +7,6 @@ export type Bezier = [number, number, number, number];
 export interface MotionTokens {
   /** seconds — fast 0.12 · base 0.18 · slow 0.26 */
   dur: { fast: number; base: number; slow: number };
-  /** cubic-bezier control points */
   ease: { standard: Bezier; entrance: Bezier; exit: Bezier; spring: Bezier; glide: Bezier };
   /** ready-made Motion transitions */
   t: { enter: Transition; exit: Transition; layout: Transition; settle: Transition };

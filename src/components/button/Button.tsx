@@ -1,10 +1,6 @@
 'use client';
 
-// Button.tsx — button primitive.
-// All visual polish lives in button.css (variants, hover/active/focus, loading,
-// disabled). This component is the ergonomic React wrapper: it composes the
-// class vocabulary, renders optional leading/trailing icons, and manages the
-// loading affordance (content stays, spinner overlays, button is inert).
+// Button — primitive; composes button.css classes, renders icons, manages loading.
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 

@@ -1,20 +1,6 @@
 'use client';
 
-/* Tag.jsx — Tag (+ TagGroup): the removable, editable label.
-   ─────────────────────────────────────────────────────────────────────────
-   A Tag is user-owned metadata — an applied filter, a saved label,
-   a value on a record. Stateless: the PARENT owns the list; `onRemove` just
-   reports the click. Distinct from Badge (read-only status, mono, glass) —
-   a Tag is a control: sans type, control chrome, focusable remove target.
-
-   TagGroup is the choreography wrapper (CLAUDE.md §C — nothing teleports):
-   it provides AnimatePresence so a removed tag plays its exit (fade + slight
-   shrink, ease-exit) while the survivors FLIP into place (layout, t.layout).
-   Inside a group, give every Tag a stable `key`. A standalone Tag (outside
-   any group) renders a plain <span> — no Motion involved.
-
-   Sibling `ToggleTag` (selection state) lives in ToggleTag.jsx per A9.
-   All styling lives in tag.css; this file composes class names only. */
+/* Tag (+ TagGroup) — removable/editable label; stateless, the parent owns the list. */
 
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -47,8 +33,7 @@ export interface TagGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const TagGroupContext = React.createContext(false);
 
-/* GOTCHA (fleet-wide, buildless pages): split props manually with a
-   uniquely-named helper instead of object-rest. */
+/* GOTCHA (buildless pages): split props manually, not object-rest. */
 const TAG_OWN_PROPS: Record<string, number> = {
   children: 1,
   icon: 1,
@@ -77,11 +62,11 @@ function TagRemoveGlyph() {
 
 export function Tag(props: TagProps) {
   const {
-    children, // the label
-    icon = null, // Phosphor name or alias — rendered via <Icon>
-    onRemove = null, // presence adds the × button; parent owns the list
-    removeLabel, // a11y label for the ×; defaults from a string label
-    size = 'md', // 'md' (28) | 'sm' (24)
+    children,
+    icon = null,
+    onRemove = null,
+    removeLabel,
+    size = 'md',
     disabled = false,
     className = '',
   } = props;

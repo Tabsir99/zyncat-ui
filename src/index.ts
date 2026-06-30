@@ -1,19 +1,8 @@
-/* premium-ui — public API barrel.
-   ─────────────────────────────────────────────────────────────────────────
-   The ONE import surface for product code:  import { Button, TextField } from 'premium-ui'
-   Re-exports every shipped component + its prop types. The curated Icon
-   primitive and internal helpers (*-core, field-shell, glide-pill, sheet-drag,
-   date-utils) are intentionally NOT re-exported — components take icons as
-   nodes (bring-your-own), so consumers never reference our glyph set.
+/* premium-ui public barrel — shipped components + prop types; internal helpers (*-core, field-shell, glide-pill, sheet-drag, date-utils) are intentionally not re-exported. */
 
-   The CSS is NOT imported here — link the token + component stylesheets once
-   via `premium-ui/styles.css`. */
-
-// ── Primitives ────────────────────────────────────────────────────────────
 export * from './components/button/Button';
 export * from './components/motion/Collapse';
 
-// ── Data display ──────────────────────────────────────────────────────────
 export * from './components/badge/Badge';
 export * from './components/badge/StatusBadge';
 export * from './components/badge/CountBadge';
@@ -24,7 +13,6 @@ export * from './components/tag/ToggleTag';
 export * from './components/table/Table';
 export * from './components/pagination/Pagination';
 
-// ── Inputs & forms ────────────────────────────────────────────────────────
 export * from './components/input/TextField';
 export * from './components/input/NumberField';
 export * from './components/input/OtpField';
@@ -36,23 +24,19 @@ export * from './components/select/Select';
 export * from './components/select/MultiSelect';
 export type { SelectOption, SelectGroup } from './components/select/select-core';
 
-// ── Date & time ───────────────────────────────────────────────────────────
 export * from './components/date-picker/DateField';
 export * from './components/date-picker/DateTimeField';
 export * from './components/date-picker/DateRangeField';
 export * from './components/date-picker/TimeField';
 
-// ── Navigation ────────────────────────────────────────────────────────────
 export * from './components/tabs/Tabs';
 
-// ── Overlays & feedback ───────────────────────────────────────────────────
 export * from './components/overlay/Overlay';
 export * from './components/dialog/Dialog';
 export * from './components/tooltip/Tooltip';
 export * from './components/alert/Alert';
-export * from './components/toast/Toast'; // <Toaster/> mount + host
-export * from './components/toast/toast-store'; // toast() API, UIToast, types
+export * from './components/toast/Toast';
+export * from './components/toast/toast-store';
 
-// ── Motion tokens (shared JS↔CSS bridge) ──────────────────────────────────
 export { UIMotion } from './tokens/motion-tokens';
 export type { MotionTokens, Bezier } from './tokens/motion-tokens';

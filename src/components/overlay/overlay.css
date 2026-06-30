@@ -1,17 +1,6 @@
-/* overlay.css — overlay domain (Popover · Dialog · Sheet).
-   ─────────────────────────────────────────────────────────────────────────
-   The components are HEADLESS: this sheet paints only what the primitive
-   itself owns — the scrim, the optional popover arrow — and lays out the
-   invisible geometry (layers, slots, anchored panel). The visible surface
-   (background, border, radius, shadow, padding) is the consumer's child.
+/* overlay.css — headless paint for the overlay domain (popover · dialog · sheet). */
 
-   Enter/exit (opacity / transform) are Motion-owned inline styles — nothing
-   here transitions those properties (CLAUDE.md §C). z-index is written by
-   overlay-core at mount: calc(--layer-overlay + stack depth). */
-
-/* ── Modal geometry ── a fixed full-viewport layer; the scrim fills it; the
-   slot is a grid cell the consumer's panel lives in. min-* 0 + max-* 100%
-   give the consumer a working constraint chain for internal scrolling. */
+/* Modal geometry — fixed full-viewport layer; scrim fills it; slot is the panel's grid cell (min 0 + max 100% give a scroll constraint chain). */
 .overlay-layer {
   position: fixed;
   inset: 0;
@@ -59,10 +48,7 @@
   max-height: 100%;
 }
 
-/* ── Anchored panel (Popover) ── fixed coords written by useAnchorPosition;
-   data-side/data-align land before first paint. The entrance scales from the
-   anchored edge: origin = the arrow tip when present, else the aligned edge
-   (inset by --space-4), else center. */
+/* Anchored panel (popover) — fixed coords from useAnchorPosition; entrance origin = arrow tip, else the aligned edge (inset --space-4), else center. */
 .overlay-popover {
   position: fixed;
   top: 0;
@@ -94,10 +80,7 @@
   transform-origin: right var(--overlay-arrow-y, var(--ov-origin));
 }
 
-/* ── Arrow ── a rotated square riding the panel edge, tracking the trigger
-   center (--overlay-arrow-x/y from core). Only its two outward edges keep the
-   hairline; the consumer's panel paints over the inner half — it must be
-   opaque and match --overlay-arrow-bg (defaults to the raised surface). */
+/* Arrow — a rotated square on the panel edge (--overlay-arrow-x/y); only its two outward edges keep the hairline, the panel covers the rest (must be opaque). */
 .overlay-popover__arrow {
   position: absolute;
   width: 10px;

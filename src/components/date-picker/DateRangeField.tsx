@@ -1,38 +1,6 @@
 'use client';
 
-/* DateRangeField.tsx — date-range picker.
-   ─────────────────────────────────────────────────────────────────────────
-   A9 SIBLING of DateField: a different value shape ({ start, end }) owns its
-   own component. It reuses DateField's day-cell vocabulary (the .dtp__*
-   classes) but the STATE is range-native and lives here end-to-end — there is
-   no shared core that knows "which variant is calling".
-
-     <DateRangeField
-       label="Reporting period"
-       value={{ start: '2026-06-12', end: '2026-06-18' }}   // | null
-       onChange={(r) => …}                                   // { start, end }
-       min="2026-01-01" max="2026-12-31"
-     />
-
-   THE SELECTION MODEL (Linear/Notion, the expected one):
-     • 1st click sets the ANCHOR. While only the anchor exists, hover (or
-       arrow-key) shows a LIVE PREVIEW band from anchor to that day, with a
-       tentative outlined cap on the provisional end.
-     • 2nd click commits — and AUTO-ORDERS: clicking before the anchor makes
-       the earlier day the start. No rejection, no error state, ever.
-     • clicking a COMPLETE range starts fresh. Commit is HONEST — onChange
-       fires only when both ends exist (a lone anchor never commits).
-     • presets (analytics) commit immediately and move the view to show the
-       result.
-
-   RESPONSIVE: the SAME Overlay switches mode by viewport — anchored popover
-   with two months ≥640px, bottom SHEET with one month below it. The
-   breakpoint is read through useResponsiveOverlayMode() — STAGED as a shared
-   util proposal (A6): every overlay-bearing field wants this, so it belongs
-   in the shared layer, not hardcoded per component.
-
-   Primitives consumed (A8): Overlay (popover|sheet existence/placement/
-   dismiss/drag), the .fld Input vocabulary, Icon. */
+/* DateRangeField — DateField's sibling for { start, end }: a Linear/Notion two-click range; the Overlay switches popover↔sheet by viewport. */
 
 import * as React from 'react';
 import { motion } from 'motion/react';
@@ -86,7 +54,6 @@ function drpRangeText(start: string, end: string): string {
 const drpDays = (start: string, end: string): number =>
   Math.round((+drpParse(end) - +drpParse(start)) / 86400000) + 1;
 
-/* ── presets (analytics) — relative to today ───────────────────────────────*/
 function drpPresets(): DrpPreset[] {
   const t = drpToday();
   const now = new Date();
@@ -106,7 +73,6 @@ function drpPresets(): DrpPreset[] {
   ];
 }
 
-/* ── responsive overlay mode — STAGED shared-util proposal (A6) ────────────*/
 function useResponsiveOverlayMode(query?: string): boolean {
   const q = query || '(max-width: 640px)';
   const [narrow, setNarrow] = useState(() =>
@@ -134,7 +100,7 @@ interface DrpPanelProps {
   layout: 'popover' | 'sheet';
 }
 
-/* ── the popover/sheet panel · mounted only while open ─────────────────────*/
+/* the popover/sheet panel, mounted only while open */
 function DrpPanel({
   value,
   commit,
@@ -162,13 +128,7 @@ function DrpPanel({
   const presetsRef = useRef<HTMLDivElement>(null);
   const pendingFocusRef = useRef(false);
 
-  /* gliding hover — ONE PERSISTENT pill per zone (grid + presets): it
-     TRAVELS to the hovered cell/preset and never remounts, so the spring
-     retargets in flight instead of re-easing a fresh tween at each boundary
-     (that remount-restart was the stutter). Each zone's geometry lives in a
-     useGlide; `hoverKey` below stays — it drives the preview BAND, not the
-     pill. The grid pill rides only while idle (no anchor); once an anchor is
-     set the band is the feedback, so the pill steps aside (fades in place). */
+  /* gliding hover pill per zone (see glide-pill); hoverKey drives the preview band, not the pill — the pill idles once an anchor is set. */
   const grid = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
 
@@ -211,7 +171,6 @@ function DrpPanel({
     commit({ start: p.start, end: p.end });
   }
 
-  /* ── month navigation (steps every visible month together) ──────────────*/
   function nav(dir: number) {
     setView((v) => {
       const d = new Date(v.y, v.m + dir, 1);
@@ -219,12 +178,7 @@ function DrpPanel({
     });
   }
 
-  /* directional month slide — a CSS keyframe on a KEYED remount of each day
-     grid (see renderMonth). Imperative Motion animate() stalls here because
-     it fights the layoutId endpoint caps inside the grid; a CSS animation on
-     a fresh-mounted node can't conflict with Motion's layout projection.
-     Direction is derived from the viewIdx delta so nav, presets and keyboard
-     month jumps all slide; the very first mount (open) gets no slide. */
+  /* directional month slide via CSS keyframe on a keyed grid remount — Motion animate() fights the layoutId caps; direction from the viewIdx delta, the first mount gets none. */
   const viewIdx = view.y * 12 + view.m;
   const prevViewIdxRef = useRef(viewIdx);
   const navDir = prevViewIdxRef.current === viewIdx ? 0 : viewIdx > prevViewIdxRef.current ? 1 : -1;
@@ -254,7 +208,7 @@ function DrpPanel({
     const d = drpParse(key);
     pendingFocusRef.current = true;
     setFocusKey(key);
-    if (anchor) setHoverKey(key); // keyboard preview
+    if (anchor) setHoverKey(key);
     const first = months === 2 ? view.y * 12 + view.m : view.y * 12 + view.m;
     const idx = d.getFullYear() * 12 + d.getMonth();
     const last = first + (months - 1);
@@ -284,7 +238,6 @@ function DrpPanel({
     e.preventDefault();
   }
 
-  /* ── one day cell — the band/cap class computation lives here ────────────*/
   const todayKey = drpToday();
   function renderDay(d: Date, viewMonth: number) {
     const key = drpKey(d);
@@ -296,8 +249,7 @@ function DrpPanel({
     const isHi = hi && key === hi;
     const single = lo && hi && lo === hi;
     const inRange = lo && hi && key >= lo && key <= hi;
-    /* the provisional (un-committed) end gets the outlined ghost cap; the
-       anchor stays solid so committed-vs-tentative reads at a glance */
+    /* the provisional (un-committed) end gets the outlined ghost cap; the anchor stays solid. */
     const loGhost = provisional && isLo && lo !== anchor;
     const hiGhost = provisional && isHi && !single && hi !== anchor;
 
@@ -305,10 +257,7 @@ function DrpPanel({
     const extL = band && !isLo && col !== 0;
     const extR = band && !isHi && col !== 6;
 
-    /* a range endpoint that lands on a BOUNDARY date appears in two cells in
-       the two-month view (in-day here, out-day in the neighbour). The cap is
-       a shared-layoutId node, so it must render in exactly ONE — its home
-       (in-month) cell; in one-month view the out-day is the only cell. */
+    /* a boundary date shows in two cells (two-month view); the cap is a shared-layoutId node, so render it in exactly one — the in-month cell. */
     const capHere = months === 1 || !out;
     const loCap = isLo && capHere;
     const hiCap = isHi && !single && capHere;
@@ -324,9 +273,6 @@ function DrpPanel({
     if (extR) bandCls.push('drp__band--extR');
     if (!extL) bandCls.push('drp__band--roundL');
     if (!extR) bandCls.push('drp__band--roundR');
-
-    /* pill rides only while idle; once an anchor exists the preview band is
-       the feedback, so the pill steps aside (fades in place) */
 
     return (
       <button
@@ -347,9 +293,6 @@ function DrpPanel({
         }}
       >
         {band ? <span className={bandCls.join(' ')} aria-hidden="true"></span> : null}
-        {/* endpoint caps are layoutId nodes — they GLIDE between cells (spring
-           settle) as the range is dragged open or recommitted, exactly like
-           the single-date selection pill travels */}
         {loCap ? (
           <drpMotion.span
             className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')}
@@ -523,9 +466,8 @@ export interface DateRangeFieldProps {
   className?: string;
 }
 
-/* ── the field ─────────────────────────────────────────────────────────────*/
 export function DateRangeField({
-  value, // controlled: { start, end } | null
+  value,
   defaultValue = null,
   onChange,
   label,

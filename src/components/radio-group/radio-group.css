@@ -1,29 +1,6 @@
-/* radio-group.css — RadioGroup (DRAFT · playground).
-   ─────────────────────────────────────────────────────────────────────────
-   One logical control — pick exactly one of a small, closed set — in two
-   skins that share an anatomy:
-     • rows  (default) — dot + label (+ optional description)
-     • cards           — bordered selectable tiles (+ optional leading icon)
+/* RadioGroup — single-select in two skins: rows (dot + label) and cards (selectable tiles). */
 
-   Everything is token-driven. The polish lives in the details: the selected
-   dot LANDS (scales in on the brand spring, never pops), the whole row/tile is
-   the hit target, hover strengthens the edge, press gives a 1px tactile dip,
-   and focus is a composed accent ring that follows the border-radius.
-
-   Anatomy:  .rg > .rg__head(.rg__label + .rg__helper) + .rg__options + .rg__msg
-   Option:   .rg-opt > input + .rg-opt__control(.rg-opt__dot) + .rg-opt__body
-   Variants: .rg--cards · .rg--horizontal
-   Sizes:    .rg--sm (dot 16) · default (dot 18)
-   States:   :hover · :focus-visible · :disabled · .is-selected · .is-error
-
-   EXCEPTION (intentional, mirrors OtpField): the dot diameter (18 / sm 16) and
-   its inner indicator (8 / sm 7) are bespoke control dims. The type & spacing
-   ramps don't yield a correctly-proportioned radio cell, so these few px live
-   as local custom props — do NOT "fix" them to a token. Everything else snaps. */
-
-/* ── Group shell ────────────────────────────────────────────────────────────
-   A real <fieldset>/<legend> for semantics; reset its native chrome. The dot
-   geometry is declared once here as local props so sizes only re-point them. */
+/* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps — don't "fix" to a token */
 .rg {
   --rg-dot: 18px;
   --rg-dot-inner: 8px;
@@ -32,16 +9,13 @@
   border: 0;
   margin: 0;
   padding: 0;
-  min-width: 0; /* fieldset reset */
+  min-width: 0;
 }
 .rg--sm {
   --rg-dot: 16px;
   --rg-dot-inner: 7px;
 }
 
-/* ── Head · legend + optional group helper ──────────────────────────────────
-   Helper sits UNDER the legend (persistent context you read before choosing),
-   not below the options where the error lives. Different timing, different job. */
 .rg__head {
   margin-bottom: var(--space-4);
 }
@@ -53,7 +27,7 @@
   align-items: center;
   gap: var(--space-1);
   line-height: 1;
-  padding: 0; /* legend reset */
+  padding: 0;
 }
 .rg__req {
   color: var(--danger);
@@ -69,9 +43,6 @@
   max-width: var(--measure-prose);
 }
 
-/* ── Options container ───────────────────────────────────────────────────────
-   Rows stack tight (each row owns its padding); cards get a real gap. Horizontal
-   wraps rows into a line, or lays cards out as equal-width columns. */
 .rg__options {
   display: grid;
   gap: var(--space-1);
@@ -94,9 +65,7 @@
   min-width: 12rem;
 }
 
-/* ── Option · the clickable label ────────────────────────────────────────────
-   The label is the whole hit target. align-items:flex-start so the dot pins to
-   the first text line even when a description wraps below. */
+/* align-items:flex-start pins the dot to the first text line when a description wraps below */
 .rg-opt {
   position: relative;
   display: flex;
@@ -112,8 +81,6 @@
   background: var(--bg-subtle);
 }
 
-/* The native control: present for semantics + form behavior, visually hidden.
-   It stays focusable — the ring is painted on the dot via the sibling combinator. */
 .rg-opt__input {
   position: absolute;
   width: 1px;
@@ -124,8 +91,7 @@
   pointer-events: none;
 }
 
-/* Alignment box — height = the label's line-box so the dot optically centers on
-   the first line with zero magic numbers. */
+/* height = the label's line-box, so the dot optically centers on the first line */
 .rg-opt__control {
   flex: none;
   height: var(--leading-body);
@@ -136,30 +102,20 @@
   height: var(--leading-caption);
 }
 
-/* The dot itself */
 .rg-opt__dot {
   position: relative;
   width: var(--rg-dot);
   height: var(--rg-dot);
   border-radius: var(--radius-full);
-  /* transparent interior: the ring→centre gap shows whatever's behind (white
-     row, or the selected card's accent tint) — never a white halo on tint. */
+  /* transparent so the ring→centre gap shows the surface behind (card tint), never a white halo */
   background: transparent;
   border: var(--border-hairline) solid var(--border-strong);
-  /* transform is in the bundle so the press (:active scale) eases instead of snapping */
+  /* transform stays in the bundle so the press scale eases instead of snapping */
   transition:
     var(--transition-control),
     transform var(--duration-fast) var(--ease-standard);
 }
-/* ── The travelling indicator ────────────────────────────────────────────────
-   A group has exactly ONE selection, so the filled centre is a SINGLE shared
-   marker that GLIDES from the old dot to the new — "nothing teleports." It lives
-   INSIDE the selected dot and is centred by pure CSS (inset:0 + margin:auto), so
-   it is ALWAYS perfectly concentric with the ring — zero coordinate math, no
-   sub-pixel drift. Travel is a Motion `layoutId` (see RadioGroup.jsx): Motion
-   measures, inverts, and plays the glide on the layout transition from the
-   motion-tokens bridge. If the tween never runs, the marker is still dead-centre.
-   No transition here — Motion owns the marker's movement. */
+/* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here — Motion owns the move */
 .rg__marker {
   position: absolute;
   inset: 0;
@@ -172,7 +128,6 @@
   will-change: transform;
 }
 
-/* ── Body · label + optional description ─────────────────────────────────────*/
 .rg-opt__body {
   display: grid;
   gap: var(--space-px);
@@ -192,7 +147,6 @@
   text-wrap: pretty;
 }
 
-/* ── States (rows) ───────────────────────────────────────────────────────────*/
 .rg-opt:hover:not(.is-disabled):not(.is-selected) .rg-opt__dot {
   border-color: var(--text-muted);
 }
@@ -200,12 +154,7 @@
   transform: scale(0.92);
 }
 
-/* Selection is driven by a JS/React-applied .is-selected class, NOT :checked /
-   :has(). WHY: on radios, checking one option implicitly UNCHECKS its sibling,
-   and Chromium doesn't reliably invalidate :has(:checked) / :checked-combinator
-   styles on that implicit uncheck — the highlight lags one selection behind.
-   (Checkbox can use :has(:checked) safely because checkboxes toggle
-   independently.) The native input stays for semantics, focus & keyboard. */
+/* .is-selected (React) drives selection, not :checked/:has — Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
 .rg-opt.is-selected .rg-opt__dot {
   border-color: var(--accent);
 }
@@ -215,7 +164,6 @@
   box-shadow: var(--ring-accent);
 }
 
-/* Disabled — explicit, never a blanket fade */
 .rg-opt.is-disabled {
   cursor: not-allowed;
 }
@@ -236,10 +184,6 @@
   background: var(--text-disabled);
 }
 
-/* ── Cards ───────────────────────────────────────────────────────────────────
-   A tile: leading icon (optional) · body (flex) · dot pinned right as the
-   selected marker. Unlike rows, the indicator is centred vertically in the tile
-   (a card isn't a single text line), so icon + body + dot share a centre line. */
 .rg--cards .rg-opt {
   position: relative;
   align-items: center;
@@ -262,7 +206,6 @@
   box-shadow: var(--shadow-xs);
 }
 
-/* In a card the dot moves to the end; icon + body lead. */
 .rg--cards .rg-opt__control {
   order: 3;
   margin-left: auto;
@@ -277,13 +220,11 @@
   display: block;
 }
 
-/* Selected card — the accent fill is a SHARED-ELEMENT layer (rg__card-fill,
-   layoutId) that GLIDES between cards, so the card paints no selected border or
-   background of its own; the content sits above it, only the icon recolours. */
+/* selected fill is a shared layoutId layer that glides between cards — the card paints no selected bg/border of its own */
 .rg__card-fill {
   position: absolute;
 
-  /* cover the card's own hairline border so the accent edge replaces it */
+  /* negative inset covers the card's hairline so the accent edge replaces it */
   inset: calc(-1 * var(--border-hairline));
   z-index: 0;
   border: var(--border-hairline) solid var(--accent);
@@ -304,7 +245,6 @@
   box-shadow: var(--ring-accent);
 }
 
-/* Disabled card */
 .rg--cards .rg-opt.is-disabled {
   background: var(--bg-subtle);
   border-color: var(--border-subtle);
@@ -314,11 +254,7 @@
   color: var(--text-disabled);
 }
 
-/* ── Group error · the single group-level message ────────────────────────────
-   Mirrors the Input message: lives in a <Collapse>, so absent = zero reserved
-   space and an appearing message eases the layout down. Its OWN padding-top is
-   the options→message gap, inside the collapsible area. A constrained control
-   carries ONLY error (required) + disabled — no warning/success (CLAUDE.md A4). */
+/* in a <Collapse>: absent = zero reserved space; the padding-top is the options→message gap, inside the collapsible area */
 .rg__msg {
   font: var(--type-caption);
   color: var(--danger-text);
@@ -333,7 +269,6 @@
   flex: none;
 }
 
-/* When the group is invalid, the resting (unselected) edges signal it. */
 .rg.is-error .rg-opt:not(.is-selected) .rg-opt__dot {
   border-color: var(--danger);
 }

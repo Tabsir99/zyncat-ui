@@ -1,9 +1,6 @@
 'use client';
 
-// OtpField.tsx — segmented one-time-code input.
-// Single-char mono slots with auto-advance, backspace-to-previous, arrow nav,
-// and paste-to-fill. Optional grouping (e.g. 3·3), error and disabled states.
-// Styling in input.css. Controlled via `value` (string) + `onChange`.
+// OtpField.tsx — segmented one-time-code input: mono slots, auto-advance, arrow nav, paste-to-fill, grouping.
 
 import { useRef } from 'react';
 import type {

@@ -1,9 +1,6 @@
 'use client';
 
-// Textarea.tsx — multiline input. Same anatomy as TextField
-// (label · control · message) plus: auto-grow, an optional character meter
-// (ring + count), an over-limit highlight, and ⌘/Ctrl+↵ submit. Styling in
-// textarea.css; this composes classes only.
+// Textarea.tsx — multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
 
 import * as React from 'react';
 import { Icon } from '../icon/Icon';
@@ -80,18 +77,14 @@ export function Textarea({
   const msg = error || warning || success || helper;
   const msgIcon = error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null;
 
-  // Auto-grow without a caret jump. The textarea grows infinitely and never
-  // scrolls itself; the .txa__stack wrapper animates its height. CRITICAL: the
-  // wrapper is overflow:clip while growing — a clip box is NOT a scroll
-  // container, so the browser can't scroll it to the caret mid-animation (that
-  // scroll was the jump). Scroll (auto) is enabled only past max-height.
+  // Auto-grow without a caret jump: the .txa__stack wrapper animates its height and is overflow:clip while growing (a clip box can't scroll to the caret); scroll is enabled only past max-height.
   const resize = () => {
     const el = taRef.current,
       stack = stackRef.current;
     if (!el || !stack) return;
-    const start = stack.offsetHeight; // measure FIRST
+    const start = stack.offsetHeight; // capture the start height before mutating layout below
     el.style.height = 'auto';
-    el.style.height = el.scrollHeight + 'px'; // textarea fits content (grows infinitely)
+    el.style.height = el.scrollHeight + 'px';
     const content = el.offsetHeight;
     const maxPx = parseFloat(getComputedStyle(stack).maxHeight) || Infinity;
     const target = Math.min(content, maxPx);
@@ -99,10 +92,10 @@ export function Textarea({
       stack.style.overflowY = content > maxPx ? 'auto' : 'clip';
       return;
     }
-    stack.style.overflowY = 'clip'; // never scroll while animating → no jump
-    stack.style.height = start + 'px'; // from
-    void stack.offsetHeight; // flush baseline
-    stack.style.height = target + 'px'; // to → animates (height only)
+    stack.style.overflowY = 'clip';
+    stack.style.height = start + 'px';
+    void stack.offsetHeight; // force a reflow so the height transition runs from start
+    stack.style.height = target + 'px';
   };
   React.useLayoutEffect(resize, [text, size]);
   React.useEffect(() => {

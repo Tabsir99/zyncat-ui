@@ -1,47 +1,18 @@
-/* toggle.css — Toggle (switch).
-   ─────────────────────────────────────────────────────────────────────────
-   A binary on/off control for an IMMEDIATE setting — flip it and the thing
-   happens now (enable sync, archive an item, mute alerts). That's the line
-   vs. Checkbox: a checkbox selects/stages a choice you later submit; a switch
-   actuates state on the spot. So the switch has no indeterminate and no
-   "invalid" — there's nothing to validate in a thing that's already done.
-
-   The native <input type="checkbox"> stays (focus, keyboard, form semantics,
-   :checked) but is visually hidden; we paint a custom .sw__track + .sw__thumb.
-
-   ── MOTION (§C) ──────────────────────────────────────────────────────────────
-   The thumb's TRAVEL + press-stretch are a CSS spring transition on `transform`
-   (see .sw__thumb): React sets [data-on] / [data-pressed] on the track, and the
-   transition springs the thumb across (--ease-spring, the brand's decelerate-
-   and-settle). A small fixed transform like this stays pure CSS — same class as
-   Input / Button — rather than riding the Motion engine. COLOR is also pure CSS:
-   the --on flag, set off :has(:checked), drives border-color + on-fill opacity.
-   Reduced motion: the duration token collapses via motion.css, so it snaps.
-
-   ── Geometry, derived from the track size ──────────────────────────────────
-   Track width reuses --control-height(-sm); md track height is --control-switch,
-   sm reuses --space-4. The thumb is the inner track height minus the optical
-   inset each side. Travel is (track width − track height) — the exact distance
-   from flex-start to flex-end — applied as the thumb's translateX. */
+/* Toggle (switch) — immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
 
 .sw {
-  /* color hooks — modifiers repoint these */
   --sw-on-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  --sw-off-fill: var(--bg-muted); /* the empty track               */
+  --sw-off-fill: var(--bg-muted);
   --sw-on-border: var(--accent);
   --sw-off-border: var(--border-strong);
   --sw-ring: var(--ring-accent);
-  /* geometry — track size is the only input; thumb + travel derive from it.
-     Width reuses the control-height tokens (36/28 == default/sm control height);
-     the md track height is --control-switch (20px, the one switch-specific size);
-     the sm track height is --space-4 (16px). */
+  /* track size is the only input; thumb + travel derive from it */
   --sw-w: var(--control-height);
   --sw-h: var(--control-switch);
-  --sw-inset: calc(2 * var(--space-px)); /* optical thumb gap   */
-  /* thumb fills the INNER track (height minus both borders) minus the gap each
-     side, so the inset is uniform on all four edges. */
+  --sw-inset: calc(2 * var(--space-px));
+  /* inner track height minus both borders and the gap each side, so the inset is uniform on all edges */
   --sw-thumb: calc(var(--sw-h) - 2 * var(--border-hairline) - 2 * var(--sw-inset));
-  /* state flag — colors read it (the thumb itself is moved by transform) */
+  /* colors read this flag; the thumb is moved by transform, not by it */
   --on: 0;
 
   display: inline-flex;
@@ -53,7 +24,6 @@
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--duration-fast) var(--ease-standard);
 
-  /* ── the machine ──────────────────────────────────────────────────────────*/
   &:has(:checked) {
     --on: 1;
   }
@@ -61,7 +31,6 @@
   &:not(.sw--disabled):hover {
     background: var(--bg-muted);
   }
-  /* deepen the empty track edge on hover (repoints the OFF border) */
   &:not(.sw--disabled):hover:not(:has(:checked)) {
     --sw-off-border: var(--text-subtle);
   }
@@ -70,7 +39,6 @@
   }
 }
 
-/* ── Hidden native input · the real focus / form target ─────────────────────*/
 .sw__input {
   position: absolute;
   width: 1px;
@@ -84,15 +52,13 @@
   overflow: hidden;
 }
 
-/* ── The track · a flex row holding the thumb at flex-start; [data-on] springs
-   the thumb across via its transform. Border + off-fill read --on; on-fill fades in above. */
 .sw__track {
   position: relative;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: var(--sw-inset); /* the optical thumb gap, all four edges */
+  padding: var(--sw-inset);
   width: var(--sw-w);
   height: var(--sw-h);
   margin-top: calc((var(--leading-body) - var(--sw-h)) / 2);
@@ -107,7 +73,6 @@
     box-shadow var(--duration-fast) var(--ease-standard),
     transform var(--duration-fast) var(--ease-spring);
 
-  /* on-fill — sits over the off track, opacity tracks --on */
   &::before {
     content: '';
     position: absolute;
@@ -118,17 +83,11 @@
     transition: opacity var(--duration-base) var(--ease-standard);
   }
 }
-/* ── The thumb · rests at flex-start; a CSS spring transition on `transform`
-   owns BOTH moves, composed from two custom-property hooks so press and travel
-   never fight over the transform:
-     --tx  the journey   (0 → track width − track height, the exact flex-end offset)
-     --sx  the press-stretch
-   --ease-spring is the brand's decelerate-and-settle (slight overshoot); the
-   duration token collapses under reduced motion, so it snaps there for free. */
+/* --tx (travel) + --sx (press-stretch) compose one transform, so press and travel never fight over it */
 .sw__thumb {
   --tx: 0px;
   --sx: 1;
-  position: relative; /* lift above the ::before on-fill */
+  position: relative;
   z-index: 1;
   flex: none;
   width: var(--sw-thumb);
@@ -139,8 +98,7 @@
   transform: translateX(var(--tx)) scaleX(var(--sx));
   transition: transform var(--duration-base) var(--ease-spring);
 }
-/* React-set hooks on the track drive the spring (no :has() position twin, so
-   nothing moves the thumb out from under the transition and makes it snap). */
+/* React-set [data-on] drives travel — no :has() twin to move the thumb out from under the spring and snap it */
 .sw__track[data-on='true'] .sw__thumb {
   --tx: calc(var(--sw-w) - var(--sw-h));
 }
@@ -151,7 +109,6 @@
   --sx: 1.16;
 }
 
-/* ── Text ───────────────────────────────────────────────────────────────────*/
 .sw__text {
   display: grid;
   gap: var(--space-1);
@@ -165,9 +122,6 @@
   color: var(--text-muted);
 }
 
-/* ═══ MODIFIERS · repoint hooks only; paint above is shared ═════════════════*/
-
-/* sm · dense rows */
 .sw--sm {
   --sw-w: var(--control-height-sm);
   --sw-h: var(--space-4);
@@ -181,7 +135,7 @@
   }
 }
 
-/* disabled · muted track + thumb, no press/hover (flags untouched → correct position) */
+/* disabled leaves the flag untouched, so the thumb keeps its correct position */
 .sw--disabled {
   cursor: not-allowed;
   --sw-on-fill: var(--accent-disabled);
