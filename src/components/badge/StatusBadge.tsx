@@ -6,9 +6,9 @@
 //   <StatusBadge status="published" />            static, content-width
 //   <StatusBadge status={s} morph />              MORPHS in place as `s` changes
 //
-// morph mode (transform/opacity only): the chip holds a steady width (a hidden
-// ghost of every reachable label sets it), the label ROLLS on change, the dot
-// hue + glass tint cross-fade, and a one-shot glint fires on a terminal state.
+// morph mode (transform/opacity + width): the chip eases to the active label's
+// width (measured from a hidden ghost), the label ROLLS on change, the dot hue
+// + glass tint cross-fade, and a one-shot glint fires on a terminal state.
 
 import * as React from 'react';
 import { Badge, type BadgeProps } from './Badge';
@@ -26,18 +26,15 @@ export const POST_STATUS: Record<
   failed: { tone: 'danger', label: 'Failed' },
 };
 
-const ORDER: PostStatus[] = ['draft', 'scheduled', 'processing', 'published', 'failed'];
 const TERMINAL: Partial<Record<PostStatus, boolean>> = { published: true, failed: true };
 
 export interface StatusBadgeProps extends Omit<BadgeProps, 'children' | 'tone'> {
   status: PostStatus;
   /** Morph in place as `status` changes instead of swapping. */
   morph?: boolean;
-  /** Reachable statuses used to size the morph chip. */
-  slots?: PostStatus[];
 }
 
-export function StatusBadge({ status, morph = false, slots, ...rest }: StatusBadgeProps) {
+export function StatusBadge({ status, morph = false, ...rest }: StatusBadgeProps) {
   if (!morph) {
     const s = POST_STATUS[status] || POST_STATUS.draft;
     return (
@@ -46,12 +43,11 @@ export function StatusBadge({ status, morph = false, slots, ...rest }: StatusBad
       </Badge>
     );
   }
-  return <StatusMorph status={status} slots={slots} {...rest} />;
+  return <StatusMorph status={status} {...rest} />;
 }
 
 interface StatusMorphProps extends Omit<BadgeProps, 'children' | 'tone'> {
   status: PostStatus;
-  slots?: PostStatus[];
 }
 
 interface Word {
@@ -60,14 +56,21 @@ interface Word {
   cls: string;
 }
 
-function StatusMorph({ status, slots, className = '', ...rest }: StatusMorphProps) {
+function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   const s = POST_STATUS[status] || POST_STATUS.draft;
-  const candidates = slots && slots.length ? slots : ORDER;
 
   const prev = React.useRef(status);
   const keyRef = React.useRef(1);
   const labelRef = React.useRef<HTMLSpanElement>(null);
+  const ghostRef = React.useRef<HTMLSpanElement>(null);
   const [words, setWords] = React.useState<Word[]>([{ key: 0, label: s.label, cls: '' }]);
+  const [boxW, setBoxW] = React.useState<number>();
+
+  // size the chip to the active label (the ghost holds its natural width) so it
+  // eases between widths as the status changes instead of pinning to the widest
+  React.useLayoutEffect(() => {
+    if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth);
+  }, [status]);
 
   React.useEffect(() => {
     if (prev.current === status) return;
@@ -118,12 +121,10 @@ function StatusMorph({ status, slots, className = '', ...rest }: StatusMorphProp
       className={['badge--morph', className].filter(Boolean).join(' ')}
       {...rest}
     >
-      <span className="badge__morph" ref={labelRef}>
-        {candidates.map((c) => (
-          <span key={'ghost-' + c} className="badge__ghost" aria-hidden="true">
-            {POST_STATUS[c].label}
-          </span>
-        ))}
+      <span className="badge__morph" ref={labelRef} style={boxW ? { width: boxW } : undefined}>
+        <span className="badge__ghost" ref={ghostRef} aria-hidden="true">
+          {s.label}
+        </span>
         {words.map((w) => (
           <span key={w.key} className={['badge__word', w.cls].filter(Boolean).join(' ')}>
             {w.label}

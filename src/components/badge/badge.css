@@ -166,7 +166,8 @@
   position: relative;
   display: inline-grid;
   align-items: center;
-  justify-items: start;
+  justify-items: center;
+  transition: width var(--duration-base) var(--ease-entrance);
 }
 .badge__morph > * {
   grid-area: 1 / 1;
