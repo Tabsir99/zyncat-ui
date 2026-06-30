@@ -52,6 +52,11 @@ export default defineConfig({
   external: ['react', 'react-dom', 'motion'],
   metafile: true,
 
+  // Silence tsup/rollup logs: the d.ts pass emits a benign MODULE_LEVEL_DIRECTIVE
+  // warning for every `'use client'` source and there's no finer filter. onSuccess
+  // prints a short summary instead. Drop this to see full build logs when debugging.
+  silent: true,
+
   // esbuild strips the per-file `'use client'` when bundling and tsup's banner never
   // reaches split chunks. Re-assert it on every output that is a client boundary —
   // a chunk holding a client source, or an entry/chunk that imports one — while pure
@@ -95,5 +100,6 @@ export default defineConfig({
       if (!/^['"]use client['"]/.test(code)) await writeFile(out, `'use client';${code}`);
     }
     await rm(`dist/${metaName}`);
+    console.log(`tsup: built ${outputs.length} JS outputs · 'use client' on ${client.size}`);
   },
 });
