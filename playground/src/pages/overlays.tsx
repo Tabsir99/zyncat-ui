@@ -190,3 +190,79 @@ export function OverlayPage() {
     </Demo>
   );
 }
+
+export function SheetPage() {
+  return (
+    <>
+      <Demo label="right · drag-to-dismiss">
+        <Overlay mode="sheet" side="right" asChild trigger={<Button variant="secondary">Open panel</Button>}>
+          {({ close }) => (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filters"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-4)',
+                width: 'min(400px, 92vw)',
+                height: '100%',
+                padding: 'var(--space-6)',
+                background: 'var(--bg-surface)',
+                boxShadow: 'var(--shadow-xl)',
+                overflowY: 'auto',
+              }}
+            >
+              <div className="stack" style={{ gap: 'var(--space-1)' }}>
+                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Filters</h2>
+                <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>Drag toward the edge, press Esc, or tap the scrim to dismiss.</p>
+              </div>
+              <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
+                <Button variant="secondary" onClick={close}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    close();
+                    toast.success('Filters applied');
+                  }}
+                >
+                  Apply
+                </Button>
+              </div>
+            </div>
+          )}
+        </Overlay>
+      </Demo>
+      <Demo label="bottom">
+        <Overlay mode="sheet" side="bottom" asChild trigger={<Button variant="secondary">Open bottom sheet</Button>}>
+          {({ close }) => (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Quick actions"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-3)',
+                width: '100%',
+                maxHeight: '80vh',
+                padding: 'var(--space-6)',
+                background: 'var(--bg-surface)',
+                borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+                boxShadow: 'var(--shadow-xl)',
+              }}
+            >
+              <span aria-hidden="true" style={{ width: 36, height: 4, borderRadius: 'var(--radius-full)', background: 'var(--border-strong)', alignSelf: 'center' }} />
+              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Quick actions</h2>
+              <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>The bottom sheet spans the full width and drags down to dismiss.</p>
+              <Button onClick={close} style={{ alignSelf: 'flex-start' }}>
+                Done
+              </Button>
+            </div>
+          )}
+        </Overlay>
+      </Demo>
+    </>
+  );
+}

@@ -82,6 +82,7 @@ export const GROUPS: DocGroup[] = [
       { slug: 'tooltip', label: 'Tooltip', blurb: 'Transient hint on hover/focus. One bubble travels between triggers.', Component: O.TooltipPage },
       { slug: 'dialog', label: 'Dialog', blurb: 'Styled modal over the headless overlay — scrim, focus trap, scroll lock.', Component: O.DialogPage },
       { slug: 'overlay', label: 'Overlay', blurb: 'The headless floating-surface primitive (popover mode). The render-prop gets { close }.', Component: O.OverlayPage },
+      { slug: 'sheet', label: 'Sheet', blurb: 'Overlay docked to an edge — drag-to-dismiss, coupled scrim, scroll handoff.', Component: O.SheetPage },
     ],
   },
   {
