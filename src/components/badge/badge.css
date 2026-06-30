@@ -157,16 +157,18 @@
     var(--shadow-sm);
 }
 
-/* ═══ STATUS MORPH (StatusBadge morph mode) — transform/opacity only ════════
-   The label area is a grid STACK: hidden "ghost" words for every reachable
-   status hold a steady width (the chip never reflows as a post progresses),
-   while the active word ROLLS. The dot hue and glass tint cross-fade via their
-   own transitions (above / in glass.css); a glint fires on a terminal state. */
+/* ═══ STATUS MORPH (StatusBadge morph mode) — clipped real-width tween ═══════
+   The label is a one-cell grid STACK that CLIPS (overflow): a hidden "ghost"
+   carries the next label so JS can measure its width, the box eases its REAL
+   width to it, and the active word ROLLS while the outgoing one rolls out —
+   both masked by the clip, so a shrink is the exact mirror of a grow. The dot
+   hue + glass tint cross-fade (above / glass.css); a glint fires on terminal. */
 .badge__morph {
   position: relative;
   display: inline-grid;
   align-items: center;
-  justify-items: center;
+  justify-items: start; /* anchor left so the box resizes from the right edge */
+  overflow: hidden; /* clip the rolling word to the pill edge — shrink mirrors grow */
   transition: width var(--duration-base) var(--ease-entrance);
 }
 .badge__morph > * {
@@ -262,6 +264,9 @@
   }
   .badge__dot--live::after {
     animation: none;
+  }
+  .badge__morph {
+    transition: none;
   }
   .badge__word {
     transition: none;

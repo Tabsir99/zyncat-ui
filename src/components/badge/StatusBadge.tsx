@@ -6,12 +6,16 @@
 //   <StatusBadge status="published" />            static, content-width
 //   <StatusBadge status={s} morph />              MORPHS in place as `s` changes
 //
-// morph mode (transform/opacity + width): the chip eases to the active label's
-// width (measured from a hidden ghost), the label ROLLS on change, the dot hue
-// + glass tint cross-fade, and a one-shot glint fires on a terminal state.
+// morph mode: the chip eases its REAL width to the active label's (measured from a
+// hidden ghost) while the label ROLLS, and the box CLIPS its content so a shrink is
+// the exact mirror of a grow — neither word ever spills. The dot hue + glass tint
+// cross-fade; a one-shot glint fires on a terminal state.
 
 import * as React from 'react';
 import { Badge, type BadgeProps } from './Badge';
+import { UIMotion } from '../../tokens/motion-tokens';
+
+const SM = UIMotion;
 
 export type PostStatus = 'draft' | 'scheduled' | 'processing' | 'published' | 'failed';
 
@@ -66,34 +70,36 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   const [words, setWords] = React.useState<Word[]>([{ key: 0, label: s.label, cls: '' }]);
   const [boxW, setBoxW] = React.useState<number>();
 
-  // size the chip to the active label (the ghost holds its natural width) so it
-  // eases between widths as the status changes instead of pinning to the widest
+  // initial width only; on CHANGE the width eases in the rAF below, synced to
+  // the word roll, so the chip never resizes ahead of the text.
   React.useLayoutEffect(() => {
     if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth);
-  }, [status]);
+  }, []);
 
   React.useEffect(() => {
     if (prev.current === status) return;
     prev.current = status;
     const next = POST_STATUS[status] || POST_STATUS.draft;
     const nk = keyRef.current++;
+    const nextW = ghostRef.current?.offsetWidth; // ghost already holds the new label
 
-    // current word(s) roll out; new word enters from below
-    setWords((ws) =>
-      ws
-        .map((w) => ({ ...w, cls: 'badge__word--out' }))
-        .concat({ key: nk, label: next.label, cls: 'badge__word--in' }),
-    );
-    // paint the primed (--in) state, then release it so it eases to settled
+    // add the new word primed below (invisible); the current word stays settled
+    setWords((ws) => ws.concat({ key: nk, label: next.label, cls: 'badge__word--in' }));
+    // next frame: roll the new word in, the old one out, and ease the box to the new
+    // width — one symmetric tween; the overflow-clip hides the momentarily-wider word.
     const raf = requestAnimationFrame(() =>
-      requestAnimationFrame(() =>
-        setWords((ws) => ws.map((w) => (w.key === nk ? { ...w, cls: '' } : w))),
-      ),
+      requestAnimationFrame(() => {
+        setWords((ws) =>
+          ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'badge__word--out' })),
+        );
+        if (nextW) setBoxW(nextW);
+      }),
     );
-    // drop the outgoing word after its transition
+    // the old word has finished rolling out → drop it. Width already settled in the
+    // rAF, identically for grow and shrink — the drop only prunes the DOM.
     const drop = setTimeout(
       () => setWords((ws) => ws.filter((w) => !w.cls.includes('--out'))),
-      280,
+      SM.dur.base * 1000 + 80,
     );
     // glint when a post lands on a terminal state
     let glintT: ReturnType<typeof setTimeout> | undefined;
@@ -103,7 +109,7 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
         chip.classList.remove('glass-glint');
         void chip.offsetWidth; // restart the one-shot
         chip.classList.add('glass-glint');
-        glintT = setTimeout(() => chip.classList.remove('glass-glint'), 360);
+        glintT = setTimeout(() => chip.classList.remove('glass-glint'), SM.dur.slow * 1000 + 80);
       }
     }
     return () => {
