@@ -47,19 +47,51 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   target: 'es2022',
-  external: ['react', 'react-dom', 'motion', '@phosphor-icons/react'],
+  // Bundle the ~16 curated Phosphor glyphs the components import (static, tree-shaken).
+  // react/react-dom/motion stay external — stateful singletons the app must own one of.
+  external: ['react', 'react-dom', 'motion'],
+  metafile: true,
 
-  // esbuild strips the per-file `'use client'` when bundling and tsup's banner
-  // never reaches the split chunks, so re-assert it on every emitted file. Prepend
-  // same-line so source-map line numbers don't shift. Data-only modules get it too
-  // — harmless; they're never imported from a Server Component.
+  // esbuild strips the per-file `'use client'` when bundling and tsup's banner never
+  // reaches split chunks. Re-assert it on every output that is a client boundary —
+  // a chunk holding a client source, or an entry/chunk that imports one — while pure
+  // data/util modules (motion-tokens, …) stay server-importable. Prepend same-line so
+  // source-map line numbers don't shift.
   async onSuccess() {
-    const { readdir, readFile, writeFile } = await import('node:fs/promises');
-    for (const f of await readdir('dist')) {
-      if (!f.endsWith('.js')) continue;
-      const p = `dist/${f}`;
-      const code = await readFile(p, 'utf8');
-      if (!/^['"]use client['"]/.test(code)) await writeFile(p, `'use client';${code}`);
+    const { readdir, readFile, writeFile, rm } = await import('node:fs/promises');
+    const isClientSrc = async (src) => {
+      try {
+        return /^\s*['"]use client['"]/.test((await readFile(src, 'utf8')).slice(0, 48));
+      } catch {
+        return false;
+      }
+    };
+    const metaName = (await readdir('dist')).find(
+      (f) => f.startsWith('metafile-') && f.endsWith('.json'),
+    );
+    if (!metaName) return;
+    const meta = JSON.parse(await readFile(`dist/${metaName}`, 'utf8'));
+    const outputs = Object.entries(meta.outputs).filter(([o]) => o.endsWith('.js'));
+
+    const client = new Set();
+    for (const [out, info] of outputs) {
+      const hits = await Promise.all(Object.keys(info.inputs).map(isClientSrc));
+      if (hits.some(Boolean)) client.add(out);
     }
+    for (let changed = true; changed;) {
+      changed = false;
+      for (const [out, info] of outputs) {
+        if (client.has(out)) continue;
+        if ((info.imports || []).some((i) => client.has(i.path))) {
+          client.add(out);
+          changed = true;
+        }
+      }
+    }
+    for (const out of client) {
+      const code = await readFile(out, 'utf8');
+      if (!/^['"]use client['"]/.test(code)) await writeFile(out, `'use client';${code}`);
+    }
+    await rm(`dist/${metaName}`);
   },
 });
