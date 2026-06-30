@@ -30,7 +30,6 @@ export const GROUPS: DocGroup[] = [
     docs: [
       { slug: 'button', label: 'Button', blurb: 'One control for every click action. Exactly one primary per view.', Component: P.ButtonPage },
       { slug: 'icon', label: 'Icon', blurb: 'Any Phosphor glyph by name or semantic alias; fill marks active.', Component: P.IconPage },
-      { slug: 'glass', label: 'Glass', blurb: 'The frosted surface primitive — any element can become glass.', Component: P.GlassPage },
       { slug: 'collapse', label: 'Collapse', blurb: 'Layout-transition primitive — grid-fr open/close, never touches auto.', Component: P.CollapsePage },
       { slug: 'badge', label: 'Badge', blurb: 'Glass or outline. Status hues reserved for genuine status.', Component: P.BadgePage },
       { slug: 'status-badge', label: 'StatusBadge', blurb: 'Canonical status → tone + one-word label; morph animates in place.', Component: P.StatusBadgePage },

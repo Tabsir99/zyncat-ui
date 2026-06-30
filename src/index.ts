@@ -11,7 +11,6 @@
 
 // ── Primitives ────────────────────────────────────────────────────────────
 export * from './components/button/Button';
-export * from './components/glass/Glass';
 export * from './components/motion/Collapse';
 
 // ── Data display ──────────────────────────────────────────────────────────
