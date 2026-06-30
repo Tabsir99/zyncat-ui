@@ -3,18 +3,21 @@
 /* Toast - the React render layer (queue + clocks live in toast-store.ts). */
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
-import { UIToast, type ToastRecord, type ToastTone } from './toast-store';
+import {
+  UIToast,
+  DEFAULT_TOASTER_CONFIG,
+  type ToastRecord,
+  type ToastTone,
+  type ToasterConfig,
+} from './toast-store';
 
 const SM = UIMotion;
 const store = UIToast;
 const { useRef, useEffect, useLayoutEffect, useState, useSyncExternalStore } = React;
 
-const VISIBLE = 3;
-const RENDERED = 6;
 const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
 const SWIPE_V = 480;
@@ -74,6 +77,7 @@ function ToastItem({
   hidden,
   behind,
   frameHeight,
+  isTop,
   onHeight,
 }: {
   t: ToastRecord;
@@ -82,6 +86,7 @@ function ToastItem({
   hidden: boolean;
   behind: boolean;
   frameHeight: number | null;
+  isTop: boolean;
   onHeight: (id: string, h: number) => void;
 }) {
   const ref = useRef<HTMLLIElement>(null);
@@ -112,10 +117,10 @@ function ToastItem({
       role={t.tone === 'error' ? 'alert' : 'status'}
       aria-atomic="true"
       style={{ x }}
-      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      initial={{ opacity: 0, y: isTop ? -24 : 24, scale: 0.97 }}
       animate={{
         opacity: hidden ? 0 : 1,
-        y: -offset,
+        y: isTop ? offset : -offset,
         scale: 1 - depth * 0.05,
         /* behind-cards adopt the front card's frame height (content faded) so a short card never drowns behind a tall one */
         height: frameHeight || 'auto',
@@ -230,11 +235,23 @@ function ToastBody({ t }: { t: ToastRecord }) {
   );
 }
 
-function ToastHost() {
-  const { toasts, paused, expanded } = useSyncExternalStore(store.subscribe, store.get);
+function ToastHost({ config }: { config: ToasterConfig }) {
+  const {
+    toasts,
+    paused,
+    expanded: hoverExpanded,
+  } = useSyncExternalStore(
+    store.subscribe,
+    store.get,
+    store.get, // server snapshot - the host renders nothing until mounted anyway
+  );
   const [heights, setHeights] = useState<Record<string, number>>({});
+  const [ready, setReady] = useState(false);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
   const hovering = useRef(false);
+
+  // Portals into document.body, so render nothing until mounted (SSR-safe, no hydration mismatch).
+  useEffect(() => setReady(true), []);
 
   const onHeight = (id: string, h: number) =>
     setHeights((prev) => (prev[id] === h ? prev : { ...prev, [id]: h }));
@@ -278,14 +295,27 @@ function ToastHost() {
     }
   }, [toasts.length]);
 
-  const slice = toasts.slice(-RENDERED);
+  if (!ready) return null;
+
+  const isTop = config.position.startsWith('top');
+  const visible = config.visibleToasts;
+  const rendered = visible * 2;
+  const gap = config.gap || stackGap();
+  const expanded = config.expand || hoverExpanded;
+
+  const slice = toasts.slice(-rendered);
   const n = slice.length;
   const frontH = n ? heights[slice[n - 1].id] || 0 : 0;
-  const gap = stackGap();
 
   return createPortal(
     <ol
       className={'toast-viewport' + (paused ? ' is-paused' : '')}
+      data-position={config.position}
+      style={
+        config.offset
+          ? ({ '--toast-offset': `${config.offset}px` } as React.CSSProperties)
+          : undefined
+      }
       aria-label="Notifications"
       onPointerOver={(e) => {
         if (e.pointerType !== 'touch') onHold();
@@ -299,7 +329,6 @@ function ToastHost() {
           onRelease(false);
       }}
     >
-      {/* initial stays true - the host mounts with the first toast, so initial={false} would skip its entrance */}
       <AnimatePresence>
         {slice.map((t, i) => {
           const depth = n - 1 - i; // newest = 0, at the front
@@ -315,9 +344,10 @@ function ToastHost() {
               t={t}
               depth={expanded ? 0 : depth}
               offset={offset}
-              hidden={!expanded && depth >= VISIBLE}
+              hidden={!expanded && depth >= visible}
               behind={!expanded && depth > 0}
               frameHeight={!expanded && depth > 0 && frontH ? frontH : null}
+              isTop={isTop}
               onHeight={onHeight}
             />
           );
@@ -328,22 +358,36 @@ function ToastHost() {
   );
 }
 
-let hostMounted = false;
-function ensureToastHost() {
-  if (hostMounted) return;
-  hostMounted = true;
-  const el = document.createElement('div');
-  el.setAttribute('data-toast-host', '');
-  document.body.appendChild(el);
-  createRoot(el).render(<ToastHost />);
+function stripUndefined<T extends object>(o: T): Partial<T> {
+  const out: Partial<T> = {};
+  (Object.keys(o) as (keyof T)[]).forEach((k) => {
+    if (o[k] !== undefined) out[k] = o[k];
+  });
+  return out;
 }
-store.host = ensureToastHost;
-if (store.toasts.length) ensureToastHost(); // toasts fired before we loaded
 
-/* Toaster - mount once near the app root so this module loads client-side and the lazy host is registered (toast() also auto-mounts). */
-export function Toaster(): null {
+export interface ToasterProps extends Partial<ToasterConfig> {}
+
+/* Toaster - mount once near the app root. It owns the toast viewport and registers the queue;
+   without it, toast() renders nothing (and warns once in the browser). */
+export function Toaster(props: ToasterProps): React.ReactElement {
+  const config: ToasterConfig = { ...DEFAULT_TOASTER_CONFIG, ...stripUndefined(props) };
+
   useEffect(() => {
-    ensureToastHost();
-  }, []);
-  return null;
+    store.config = config;
+    store.mounted = true;
+    if (config.expand) store.setExpanded(true);
+    return () => {
+      store.mounted = false;
+    };
+  }, [
+    config.position,
+    config.duration,
+    config.visibleToasts,
+    config.gap,
+    config.offset,
+    config.expand,
+  ]);
+
+  return <ToastHost config={config} />;
 }

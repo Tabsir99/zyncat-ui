@@ -7,7 +7,6 @@ import { forms } from './content/forms';
 import { data } from './content/data';
 import { datetime } from './content/datetime';
 import { overlays } from './content/overlays';
-import { theming } from './content/theming';
 
 export type { ComponentDoc } from './content/types';
 
@@ -17,5 +16,4 @@ export const CONTENT: Record<string, ComponentDoc> = {
   ...data,
   ...datetime,
   ...overlays,
-  ...theming,
 };

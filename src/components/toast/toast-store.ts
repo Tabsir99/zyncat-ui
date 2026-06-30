@@ -35,6 +35,28 @@ export interface ToastSnapshot {
   expanded: boolean;
 }
 
+export type ToastPosition =
+  'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+
+/* Root-level options - set once on <Toaster /> and read by the queue + host. */
+export interface ToasterConfig {
+  position: ToastPosition;
+  duration: number; // default auto-dismiss ms for timed tones; 0 keeps the per-tone defaults
+  visibleToasts: number; // cards shown before the rest recede behind
+  gap: number; // px between cards; 0 reads --space-3 from the stylesheet
+  offset: number; // px inset from the viewport edge; 0 reads --space-6
+  expand: boolean; // start the stack fanned open instead of collapsed
+}
+
+export const DEFAULT_TOASTER_CONFIG: ToasterConfig = {
+  position: 'bottom-right',
+  duration: 0,
+  visibleToasts: 3,
+  gap: 0,
+  offset: 0,
+  expand: false,
+};
+
 const DURATION: Record<string, number> = {
   default: 5000,
   success: 5000,
@@ -51,7 +73,8 @@ interface ToastStore {
   toasts: ToastRecord[];
   paused: boolean;
   expanded: boolean;
-  host: null | (() => void);
+  mounted: boolean; // a <Toaster /> is live; toasts no-op until it is
+  config: ToasterConfig;
   snap: ToastSnapshot;
   listeners: Set<() => void>;
   subscribe(l: () => void): () => void;
@@ -71,7 +94,8 @@ const store: ToastStore = {
   toasts: [],
   paused: false,
   expanded: false,
-  host: null,
+  mounted: false,
+  config: { ...DEFAULT_TOASTER_CONFIG },
   snap: { toasts: [], paused: false, expanded: false },
   listeners: new Set(),
   subscribe(l) {
@@ -164,10 +188,36 @@ const store: ToastStore = {
   },
 };
 
+let warned = false;
+let warnScheduled = false;
+
+/* A toast with no <Toaster /> mounted renders nothing. Warn once, deferred a tick so a
+   toast fired during the same render that mounts <Toaster /> is not a false positive. */
+function warnIfDetached(): void {
+  if (store.mounted || warned || warnScheduled || typeof window === 'undefined') return;
+  warnScheduled = true;
+  setTimeout(() => {
+    warnScheduled = false;
+    if (store.mounted || warned) return;
+    warned = true;
+    console.warn(
+      'premium-ds: a toast was triggered but no <Toaster /> is mounted, so nothing will render. Mount <Toaster /> once near your app root.',
+    );
+  });
+}
+
+/* Per-tone default unless the root sets a global duration; loading stays sticky (Infinity). */
+function resolveDuration(tone: ToastTone, opt?: number): number {
+  if (opt != null) return opt;
+  const toneDefault = DURATION[tone];
+  if (toneDefault === Infinity || store.config.duration <= 0) return toneDefault;
+  return store.config.duration;
+}
+
 function make(tone: ToastTone, message: string | null, opts: ToastOptions = {}): string {
-  if (store.host) store.host();
+  warnIfDetached();
   const id = opts.id != null ? String(opts.id) : 'toast-' + ++uid;
-  const duration = opts.duration != null ? opts.duration : DURATION[tone];
+  const duration = resolveDuration(tone, opts.duration);
   if (store.toasts.some((t) => t.id === id)) {
     return store.update(id, {
       tone,
@@ -243,7 +293,7 @@ toast.promise = function <T>(promise: Promise<T>, msgs: ToastPromiseMsgs<T> = {}
 };
 
 toast.custom = (node, opts = {}) => {
-  if (store.host) store.host();
+  warnIfDetached();
   const id = opts.id != null ? String(opts.id) : 'toast-' + ++uid;
   const duration = opts.duration != null ? opts.duration : Infinity;
   if (store.toasts.some((t) => t.id === id)) return store.update(id, { node });

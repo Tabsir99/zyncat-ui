@@ -76,8 +76,19 @@ export const overlays: Record<string, ComponentDoc> = {
   },
 
   toast: {
-    example: `import { toast } from 'premium-ds';
+    example: `import { Toaster, toast } from 'premium-ds';
 
+// Mount <Toaster /> once near your app root. Without it, toast() renders nothing.
+function App() {
+  return (
+    <>
+      <Toaster position="bottom-right" />
+      <YourApp />
+    </>
+  );
+}
+
+// Then call toast() from anywhere - no context, no provider.
 toast.success('Post scheduled', { description: '10 posts added to the Monday queue.' });
 
 toast.promise(publishBatch(), {
@@ -86,6 +97,43 @@ toast.promise(publishBatch(), {
   error: (e) => 'Batch failed: ' + e.message,
 });`,
     props: [
+      {
+        name: '<Toaster />',
+        type: 'ToasterProps',
+        required: true,
+        description:
+          'Mount once at the app root. Owns the viewport; toast() no-ops until it is mounted.',
+      },
+      {
+        name: 'Toaster position',
+        type: "'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'",
+        default: "'bottom-right'",
+        description: 'Corner the stack anchors to.',
+      },
+      {
+        name: 'Toaster duration',
+        type: 'number',
+        default: '0',
+        description: 'Default auto-dismiss in ms for timed toasts; 0 keeps the per-tone defaults.',
+      },
+      {
+        name: 'Toaster visibleToasts',
+        type: 'number',
+        default: '3',
+        description: 'How many cards stay visible before the rest recede behind.',
+      },
+      {
+        name: 'Toaster expand',
+        type: 'boolean',
+        default: 'false',
+        description: 'Start the stack fanned open instead of collapsed.',
+      },
+      {
+        name: 'Toaster gap, offset',
+        type: 'number',
+        default: '0',
+        description: 'Px between cards and inset from the edge; 0 uses the token defaults.',
+      },
       {
         name: 'toast(msg, opts?)',
         type: '(msg: string, opts?: ToastOptions) => string',

@@ -2,14 +2,30 @@
 
 .toast-viewport {
   position: fixed;
-  bottom: var(--space-6);
-  right: var(--space-6);
-  width: min(22.5rem, calc(100vw - 2 * var(--space-6)));
+  width: min(22.5rem, calc(100vw - 2 * var(--toast-offset, var(--space-6))));
   z-index: var(--layer-toast);
   margin: 0;
   padding: 0;
   list-style: none;
   pointer-events: none; /* only the cards themselves are live */
+}
+
+/* Anchored by [data-position]; --toast-offset (set by <Toaster offset>) overrides the edge inset. */
+.toast-viewport[data-position^='top'] {
+  top: var(--toast-offset, var(--space-6));
+}
+.toast-viewport[data-position^='bottom'] {
+  bottom: var(--toast-offset, var(--space-6));
+}
+.toast-viewport[data-position$='right'] {
+  right: var(--toast-offset, var(--space-6));
+}
+.toast-viewport[data-position$='left'] {
+  left: var(--toast-offset, var(--space-6));
+}
+.toast-viewport[data-position$='center'] {
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* The card - a glass consumer (.glass is set in JSX). */
@@ -21,19 +37,27 @@
   --glass-sheen-rest: 0.45;
 
   position: absolute;
-  bottom: 0;
-  right: 0;
+  left: 0;
   width: 100%;
   box-sizing: border-box;
   overflow: hidden; /* custom content stays in the pane   */
   pointer-events: auto;
-  transform-origin: center bottom; /* the stack recedes upward           */
   border-radius: var(--radius-lg);
 
   /* Motion owns transform - keep only the color/shadow transitions (never smooth Motion's writes) */
   transition:
     background-color var(--duration-base) var(--ease-standard),
     box-shadow var(--duration-base) var(--ease-standard);
+}
+
+/* Cards pin to the stack's edge; Motion offsets each one away from it (up from bottom, down from top). */
+.toast-viewport[data-position^='bottom'] .toast {
+  bottom: 0;
+  transform-origin: center bottom;
+}
+.toast-viewport[data-position^='top'] .toast {
+  top: 0;
+  transform-origin: center top;
 }
 
 /* rich panes for genuine status, diluted to stay glass; neutral otherwise */

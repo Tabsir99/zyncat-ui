@@ -85,7 +85,7 @@
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
 }
 .btn--primary:hover:not(:disabled):not(.is-loading) {
-  background: linear-gradient(180deg, var(--teal-400), var(--teal-500));
+  background: linear-gradient(180deg, var(--accent-lift), var(--accent));
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.22), var(--shadow-md);
 }
 .btn--primary:active:not(:disabled):not(.is-loading) {

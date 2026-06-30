@@ -22,6 +22,7 @@
   --border-default: var(--gray-200);
   --border-strong: var(--gray-300);
 
+  --accent-lift: var(--teal-400);
   --accent: var(--teal-500);
   --accent-hover: var(--teal-600);
   --accent-active: var(--teal-700);
@@ -58,18 +59,3 @@
 
   --focus-ring: var(--ring-accent);
 }
-
-/* -- Dark theme - scaffold (light-first; build this next pass) --------------
-[data-theme="dark"] {
-  --bg-app:            var(--gray-950);
-  --bg-surface:        var(--gray-900);
-  --bg-subtle:         var(--gray-800);
-  --text-strong:       var(--gray-25);
-  --text-body:         var(--gray-200);
-  --text-muted:        var(--gray-400);
-  --border-default:    var(--gray-800);
-  --accent:            var(--teal-400);
-  --text-accent:       var(--teal-300);
-  ...
-}
-*/

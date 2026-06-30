@@ -139,9 +139,11 @@ Alert - premium-ds/alert
   Persistent, in-flow status. tone, title, children (body), action { label, onClick }, dismissible, banner, open/onDismiss (controlled).
   <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: fn }}>Add a plan...</Alert>
 
-Toast - premium-ds/toast  (imperative; the host self-mounts - no <Toaster> needed)
+Toast - premium-ds/toast  (imperative; mount <Toaster /> once at the app root, then call toast() from anywhere)
+  <Toaster /> props: position ('bottom-right' default), duration, visibleToasts, gap, offset, expand. Without it, toast() no-ops.
   toast(msg) - toast.success/error/warning/info(msg, { description, action }) - toast.promise(p, { loading, success, error }) - toast.loading - toast.dismiss().
-  import { toast } from 'premium-ds';
+  import { Toaster, toast } from 'premium-ds';
+  // once at the root: <Toaster position="bottom-right" />
   toast.success('Changes saved', { description: 'Synced to the cloud' });
   toast.promise(save(), { loading: 'Saving...', success: (v) => `Saved - ${v.count}`, error: (e) => `Failed - ${e.message}` });
 

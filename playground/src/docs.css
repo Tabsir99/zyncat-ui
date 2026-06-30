@@ -25,62 +25,6 @@ a {
   text-decoration: none;
 }
 
-/* ------------------------------------------------------------------------
-   Dark theme - supplied by the CONSUMER (this playground), purely by repointing
-   the semantic tokens; the library source ships only the light theme. This is
-   the whole theming story, and the worked example of it.
-
-   The neutral ramp is light-first, so dark surfaces interpolate between its
-   bottom stops; the status -subtle tints (near-white in light) become dark
-   translucent veils, with their text lifted to read on top. The solid accent
-   ramp is kept identical to light so a primary button's white label always
-   holds - only the accent TEXT and selection tints lift for the dark canvas.
-   ------------------------------------------------------------------------ */
-[data-theme='dark'] {
-  /* Surfaces - canvas lowest; cards and overlays lift toward light. */
-  --bg-app: var(--gray-950);
-  --bg-surface: color-mix(in oklab, var(--gray-900) 72%, var(--gray-950));
-  --bg-surface-raised: var(--gray-900);
-  --bg-subtle: color-mix(in oklab, white 5%, var(--gray-900));
-  --bg-muted: color-mix(in oklab, white 9%, var(--gray-900));
-  --bg-inset: color-mix(in oklab, black 24%, var(--gray-950));
-  --bg-overlay: oklch(0.12 0.01 264 / 0.62);
-
-  /* Text - near-white strong, stepping down the cool ramp. */
-  --text-strong: var(--gray-25);
-  --text-body: var(--gray-200);
-  --text-muted: var(--gray-400);
-  --text-subtle: var(--gray-500);
-  --text-disabled: var(--gray-600);
-  --text-accent: var(--teal-300);
-
-  /* Borders - translucent white so an edge reads on any surface beneath it. */
-  --border-subtle: color-mix(in oklab, white 6%, transparent);
-  --border-default: color-mix(in oklab, white 11%, transparent);
-  --border-strong: color-mix(in oklab, white 18%, transparent);
-
-  /* Accent - solid ramp matches light (white label holds); tints/text lift. */
-  --accent-subtle: color-mix(in oklab, var(--teal-400) 20%, transparent);
-  --accent-border: color-mix(in oklab, var(--teal-400) 38%, transparent);
-
-  /* Status - dark translucent veils; text lifted to read on them. */
-  --success-subtle: color-mix(in oklab, var(--green-500) 20%, transparent);
-  --success-text: color-mix(in oklab, var(--green-500) 52%, white);
-  --warning-subtle: color-mix(in oklab, var(--amber-500) 22%, transparent);
-  --warning-text: color-mix(in oklab, var(--amber-500) 48%, white);
-  --danger-subtle: color-mix(in oklab, var(--red-500) 22%, transparent);
-  --danger-text: color-mix(in oklab, var(--red-400) 56%, white);
-  --info-subtle: color-mix(in oklab, var(--teal-400) 20%, transparent);
-  --info: var(--teal-400);
-  --info-text: var(--teal-300);
-
-  /* Neutral wash (hover/active fills) lifts with a little white on dark. */
-  --neutral-wash: color-mix(in oklab, white 8%, transparent);
-
-  /* Focus ring - a touch brighter to carry on the dark canvas. */
-  --focus-ring: 0 0 0 3px oklch(0.705 0.112 198 / 0.45);
-}
-
 /* -- App shell ------------------------------------------------------------ */
 .app {
   display: grid;
@@ -172,34 +116,6 @@ a {
   font-family: var(--font-mono);
   color: var(--text-subtle);
 }
-.controls {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-.swatches {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.swatch {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid var(--bg-surface);
-  outline: 1px solid var(--border-default);
-  cursor: pointer;
-  padding: 0;
-  transition: transform 120ms var(--ease-entrance, ease);
-}
-.swatch:hover {
-  transform: scale(1.12);
-}
-.swatch--on {
-  outline: 2px solid var(--text-strong);
-  outline-offset: 1px;
-}
-
 .wrap {
   max-width: 1000px;
   margin: 0 auto;

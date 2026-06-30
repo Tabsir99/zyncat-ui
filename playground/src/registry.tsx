@@ -8,7 +8,6 @@ import * as F from './pages/forms';
 import * as D from './pages/data';
 import * as T from './pages/datetime';
 import * as O from './pages/overlays';
-import { ThemingPage } from './pages/theming';
 import { CONTENT } from './content';
 import type { PropRow } from './PropsTable';
 
@@ -211,7 +210,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'toast',
         label: 'Toast',
         blurb:
-          'Imperative toast() API - the host self-mounts. Fire one to watch it land bottom-right.',
+          'Imperative toast() API. Mount <Toaster /> once at the root, then fire one from anywhere.',
         Component: O.ToastPage,
       },
       {
@@ -238,18 +237,6 @@ export const GROUPS: DocGroup[] = [
         label: 'Sheet',
         blurb: 'Overlay docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',
         Component: O.SheetPage,
-      },
-    ],
-  },
-  {
-    id: 'theming',
-    title: 'Theming',
-    docs: [
-      {
-        slug: 'theming',
-        label: 'Token override',
-        blurb: 'Re-skin by overriding tokens in your own CSS - never fork the source.',
-        Component: ThemingPage,
       },
     ],
   },
