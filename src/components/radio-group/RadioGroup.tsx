@@ -22,7 +22,7 @@
 // sibling-uncheck. The native input stays for semantics, focus & keyboard.
 
 import * as React from 'react';
-import { m, LayoutGroup } from 'motion/react';
+import { motion, LayoutGroup } from 'motion/react';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
 import { UIMotion } from '../../tokens/motion-tokens';
@@ -155,12 +155,12 @@ function RadioGroup({
                 <span className="rg-opt__control">
                   <span className="rg-opt__dot">
                     {selected && (
-                      <m.span
+                      <motion.span
                         className="rg__marker"
                         layoutId="marker"
                         transition={SM.t.layout}
                         aria-hidden="true"
-                      ></m.span>
+                      ></motion.span>
                     )}
                   </span>
                 </span>

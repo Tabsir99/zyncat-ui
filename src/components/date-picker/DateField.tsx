@@ -39,7 +39,7 @@
 
 import * as React from 'react';
 import type { ReactNode } from 'react';
-import { m, animate } from 'motion/react';
+import { motion, animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { Overlay } from '../overlay/Overlay';
@@ -57,7 +57,7 @@ import {
 } from './date-utils';
 
 const { useState, useRef, useEffect, useId } = React;
-const dtfMotion = m;
+const dtfMotion = motion;
 const dtfAnimate = animate;
 const dtfSM = UIMotion;
 

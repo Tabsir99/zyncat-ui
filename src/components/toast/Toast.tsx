@@ -19,7 +19,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
-import { m, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
+import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
 import { UIToast, type ToastRecord, type ToastTone } from './toast-store';
@@ -127,7 +127,7 @@ function ToastItem({
   };
 
   return (
-    <m.li
+    <motion.li
       ref={ref}
       className="toast glass"
       data-tone={t.tone}
@@ -161,7 +161,7 @@ function ToastItem({
       ) : (
         <ToastBody t={t} />
       )}
-    </m.li>
+    </motion.li>
   );
 }
 
@@ -174,7 +174,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
           {t.tone !== 'default' && (
             /* keyed remount, not nested AnimatePresence (Tooltip's lesson):
                old glyph cuts, the new one springs in under the same slot */
-            <m.span
+            <motion.span
               key={t.tone}
               className="toast__icon-glyph"
               initial={{ scale: 0.5, opacity: 0 }}
@@ -186,7 +186,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
               ) : (
                 <Icon name={TONE_ICON[t.tone]} weight="fill" />
               )}
-            </m.span>
+            </motion.span>
           )}
           {isFinite(t.duration) && (
             /* the ring — the clock, keyed to the timer so a restart re-fills
@@ -211,7 +211,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
           )}
         </span>
       )}
-      <m.div
+      <motion.div
         key={String(t.message) + '·' + String(t.description)}
         className="toast__text"
         initial={{ opacity: 0 }}
@@ -220,9 +220,9 @@ function ToastBody({ t }: { t: ToastRecord }) {
       >
         <p className="toast__message">{t.message}</p>
         {t.description != null && <p className="toast__desc">{t.description}</p>}
-      </m.div>
+      </motion.div>
       {t.count > 1 && (
-        <m.span
+        <motion.span
           key={t.count}
           className="toast__count"
           initial={{ scale: 0.6 }}
@@ -230,7 +230,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
           transition={SM.t.settle}
         >
           ×{t.count}
-        </m.span>
+        </motion.span>
       )}
       {t.action && (
         <button

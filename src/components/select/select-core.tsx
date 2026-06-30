@@ -18,7 +18,7 @@
    React can't remove a [popover] once promoted to the top layer — verified),
    positioned in JS because anchor() needs the top layer. */
 import * as React from 'react';
-import { m as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
+import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';

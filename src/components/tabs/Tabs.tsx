@@ -40,7 +40,7 @@
 // scroll geometry), and the selected tab is kept in view.
 
 import * as React from 'react';
-import { m as tabsMotion, animate as tabsAnimate } from 'motion/react';
+import { motion as tabsMotion, animate as tabsAnimate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
 

@@ -35,7 +35,7 @@
    dismiss/drag), the .fld Input vocabulary, Icon. */
 
 import * as React from 'react';
-import { m } from 'motion/react';
+import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { Overlay } from '../overlay/Overlay';
@@ -55,7 +55,7 @@ import {
 } from './date-utils';
 
 const { useState, useRef, useEffect } = React;
-const drpMotion = m;
+const drpMotion = motion;
 const drpSM = UIMotion;
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */

@@ -19,7 +19,7 @@
    secondary small button (A8), one action max. */
 
 import * as React from 'react';
-import { m, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
@@ -98,7 +98,7 @@ export function Alert({
   return (
     <AnimatePresence initial={false}>
       {isOpen && (
-        <m.div
+        <motion.div
           key="alert-shell" /* explicit key — the 12.40 UMD presence bookkeeping
                                  drops/strands un-keyed conditional children
                                  (same family as the Tabs/Tooltip notes) */
@@ -133,7 +133,7 @@ export function Alert({
               </button>
             )}
           </div>
-        </m.div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

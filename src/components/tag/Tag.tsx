@@ -17,7 +17,7 @@
    All styling lives in tag.css; this file composes class names only. */
 
 import * as React from 'react';
-import { m, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
 
@@ -123,7 +123,7 @@ export function Tag(props: TagProps) {
 
   const { t } = UIMotion;
   return (
-    <m.span
+    <motion.span
       layout
       className={classes}
       data-disabled={disabled ? 'true' : undefined}
@@ -134,7 +134,7 @@ export function Tag(props: TagProps) {
       {...rest}
     >
       {content}
-    </m.span>
+    </motion.span>
   );
 }
 
