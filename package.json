@@ -1,6 +1,6 @@
 {
   "name": "premium-ds",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A React 19 design system: accessible, animated UI components built on a small, closed CSS design-token vocabulary. No Tailwind, no CSS-in-JS.",
   "keywords": [
     "react",
