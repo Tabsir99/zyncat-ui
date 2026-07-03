@@ -2,6 +2,7 @@
 
 /* Alert - the persistent, in-flow status message (banner is a paint modifier). */
 
+import './alert.css';
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

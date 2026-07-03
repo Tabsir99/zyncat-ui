@@ -2,6 +2,7 @@
 
 // Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
+import './toggle.css';
 import * as React from 'react';
 
 const { useState } = React;

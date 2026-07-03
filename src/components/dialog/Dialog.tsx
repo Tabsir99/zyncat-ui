@@ -1,6 +1,7 @@
 'use client';
 
 /* Dialog - styled modal surface; a thin consumer of <Overlay mode="dialog">. */
+import './dialog.css';
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';

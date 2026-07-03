@@ -2,6 +2,7 @@
 
 // Button - primitive; composes button.css classes, renders icons, manages loading.
 
+import './button.css';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

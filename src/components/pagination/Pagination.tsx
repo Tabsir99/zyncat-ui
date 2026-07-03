@@ -2,6 +2,7 @@
 
 /* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
 
+import './pagination.css';
 import * as React from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

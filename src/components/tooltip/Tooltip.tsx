@@ -1,6 +1,7 @@
 'use client';
 
 /* Tooltip - a transient, non-interactive hint on hover/focus (one shared bubble). */
+import './tooltip.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';

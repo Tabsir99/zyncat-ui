@@ -1,6 +1,7 @@
 'use client';
 
 /* select-core - shared listbox mechanics for Select + MultiSelect; holds no selection state. */
+import './select.css';
 import * as React from 'react';
 import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

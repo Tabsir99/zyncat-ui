@@ -2,6 +2,7 @@
 
 // Icon - internal, curated glyph set; statically imported so the bundle ships only these (tree-shaking).
 
+import './icon.css';
 import {
   ArrowUp,
   Calendar,

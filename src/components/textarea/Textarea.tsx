@@ -2,6 +2,7 @@
 
 // Textarea.tsx - multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
 
+import './textarea.css';
 import * as React from 'react';
 import { Icon } from '../icon/Icon';
 import { Collapse } from '../motion/Collapse';

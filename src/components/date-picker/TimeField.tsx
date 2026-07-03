@@ -19,6 +19,7 @@
    .fld__input - clicking its empty area seats focus in the hours segment.
    Buildless global was window.TimeField; a bundled app imports it. */
 
+import './date-picker.css';
 import type { PointerEvent } from 'react';
 import { FieldShell, useControllable } from './field-shell';
 import { TimeSegments } from './time-core';

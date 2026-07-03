@@ -1,6 +1,7 @@
 'use client';
 
 /* Overlay - one headless component, three modes: popover - dialog - sheet. */
+import './overlay.css';
 import * as React from 'react';
 import {
   OvAnimatePresence as AnimatePresence,

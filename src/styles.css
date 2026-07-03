@@ -1,4 +1,10 @@
-/* premium-ds entry - @import manifest; order matters: fonts - primitives - semantics - components. */
+/* premium-ds base layer - import ONCE at your app root:  import 'premium-ds/styles.css';
+   Fonts, design tokens (:root variables) and the shared `glass` utility.
+
+   Per-component CSS is NOT here on purpose: every component imports its own
+   stylesheet, so the consumer's bundler code-splits and lazy-loads it with the
+   component. This file is only the always-needed global layer.
+   Order matters: fonts - primitives - semantics - shared utilities. */
 
 @import url('./tokens/fonts.css');
 
@@ -15,25 +21,6 @@
 
 @import url('./tokens/semantic.css');
 
-@import url('./components/button/button.css');
-@import url('./components/motion/collapse.css');
-@import url('./components/icon/icon.css');
-@import url('./components/input/input.css');
-@import url('./components/textarea/textarea.css');
-@import url('./components/checkbox/checkbox.css');
-@import url('./components/radio-group/radio-group.css');
-@import url('./components/toggle/toggle.css');
-@import url('./components/dialog/dialog.css');
-@import url('./components/select/select.css');
+/* Cross-cutting frosted-surface utility shared by several unrelated components
+   (badge, toast, select, icon); kept global instead of duplicated per component. */
 @import url('./components/glass/glass.css');
-@import url('./components/badge/badge.css');
-@import url('./components/tag/tag.css');
-@import url('./components/tooltip/tooltip.css');
-@import url('./components/toast/toast.css');
-@import url('./components/tabs/tabs.css');
-@import url('./components/overlay/overlay.css');
-@import url('./components/pagination/pagination.css');
-@import url('./components/alert/alert.css');
-@import url('./components/avatar/avatar.css');
-@import url('./components/table/table.css');
-@import url('./components/date-picker/date-picker.css');

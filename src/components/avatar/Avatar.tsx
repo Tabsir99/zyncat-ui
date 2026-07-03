@@ -2,6 +2,7 @@
 
 // Avatar - identity mark; content priority: image - icon - initials - silhouette.
 
+import './avatar.css';
 import * as React from 'react';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

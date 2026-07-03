@@ -2,6 +2,7 @@
 
 /* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
+import './table.css';
 import * as React from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

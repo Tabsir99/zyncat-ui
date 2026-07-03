@@ -2,6 +2,7 @@
 
 // StatusBadge - a status as a badge; canonical tone+label mapping; morph tweens width in place.
 
+import './badge.css';
 import * as React from 'react';
 import { Badge, type BadgeProps } from './Badge';
 import { UIMotion } from '../../tokens/motion-tokens';

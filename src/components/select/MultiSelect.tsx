@@ -1,6 +1,7 @@
 'use client';
 
 /* MultiSelect - many-of custom listbox; committing toggles a row, the menu stays open. */
+import './select.css';
 import * as React from 'react';
 import {
   useControllable as useMsControllable,

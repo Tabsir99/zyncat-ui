@@ -1,6 +1,7 @@
 'use client';
 
 /* Select - single-select custom listbox; committing closes the menu and returns focus. */
+import './select.css';
 import * as React from 'react';
 import {
   useControllable,

@@ -2,6 +2,7 @@
 
 // Checkbox - checkbox primitive; on/off + indeterminate select-all.
 
+import './checkbox.css';
 import * as React from 'react';
 
 export interface CheckboxProps extends Omit<

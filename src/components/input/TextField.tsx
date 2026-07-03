@@ -2,6 +2,7 @@
 
 // TextField.tsx - text input: label - control - message, leading icon, clear action, sizes, validation states.
 
+import './input.css';
 import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';

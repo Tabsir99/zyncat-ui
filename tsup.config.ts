@@ -52,7 +52,7 @@ export default defineConfig({
   target: 'es2022',
   // Bundle the ~16 curated Phosphor glyphs the components import (static, tree-shaken).
   // react/react-dom/motion stay external - stateful singletons the app must own one of.
-  external: ['react', 'react-dom', 'motion'],
+  external: ['react', 'react-dom', 'motion', /\.css$/],
   metafile: true,
 
   // Silence tsup/rollup logs: the d.ts pass emits a benign MODULE_LEVEL_DIRECTIVE
@@ -66,7 +66,7 @@ export default defineConfig({
   // data/util modules (motion-tokens, ...) stay server-importable. Prepend same-line so
   // source-map line numbers don't shift.
   async onSuccess() {
-    const { readdir, readFile, writeFile, rm } = await import('node:fs/promises');
+    const { readdir, readFile, writeFile, rm, copyFile } = await import('node:fs/promises');
     const isClientSrc = async (src: string) => {
       try {
         return /^\s*['"]use client['"]/.test((await readFile(src, 'utf8')).slice(0, 48));
@@ -102,7 +102,20 @@ export default defineConfig({
       const code = await readFile(out, 'utf8');
       if (!/^['"]use client['"]/.test(code)) await writeFile(out, `'use client';${code}`);
     }
+    // Ship each component stylesheet flat into dist so the (external) `./x.css`
+    // side-effect imports in the emitted chunks resolve to a sibling file - which is
+    // what lets a consumer's bundler code-split/lazy-load CSS per component. glass.css
+    // is a cross-cutting utility served by the base manifest (styles.css), so skip it.
+    const cssFiles = (await readdir('src/components', { recursive: true })).filter(
+      (f) => f.endsWith('.css') && !f.endsWith('glass.css'),
+    );
+    await Promise.all(
+      cssFiles.map((f) => copyFile(`src/components/${f}`, `dist/${f.split('/').pop()}`)),
+    );
+
     await rm(`dist/${metaName}`);
-    console.log(`tsup: built ${outputs.length} JS outputs - 'use client' on ${client.size}`);
+    console.log(
+      `tsup: ${outputs.length} JS (${client.size} client) + ${cssFiles.length} component CSS`,
+    );
   },
 });

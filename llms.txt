@@ -5,7 +5,7 @@ index; full prop types (with docs) live in node_modules/premium-ds/dist/*.d.ts.
 
 Setup:
   import { Button, toast } from 'premium-ds';   // barrel - or a subpath: premium-ds/button
-  import 'premium-ds/styles.css';               // link ONCE at the app root
+  import 'premium-ds/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 

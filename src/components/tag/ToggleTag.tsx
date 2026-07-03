@@ -2,6 +2,7 @@
 
 /* ToggleTag - on/off filter chip (<button aria-pressed>); owns its selection state. */
 
+import './tag.css';
 import * as React from 'react';
 import { IconSlot } from '../icon/IconSlot';
 

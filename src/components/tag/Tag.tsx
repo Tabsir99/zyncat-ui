@@ -2,6 +2,7 @@
 
 /* Tag (+ TagGroup) - removable/editable label; stateless, the parent owns the list. */
 
+import './tag.css';
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

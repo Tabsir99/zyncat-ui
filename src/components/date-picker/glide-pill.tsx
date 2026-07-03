@@ -2,6 +2,7 @@
 
 /* GlidePill + useGlide - one persistent pill that springs between hovered cells, never a per-cell remount. */
 
+import './date-picker.css';
 import * as React from 'react';
 import type { RefObject } from 'react';
 import { motion } from 'motion/react';

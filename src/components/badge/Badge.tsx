@@ -2,6 +2,7 @@
 
 // Base badge chip - glass surface by default; the outline variant is flat (no glass classes).
 
+import './badge.css';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 export type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';

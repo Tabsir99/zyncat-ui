@@ -2,6 +2,7 @@
 
 /* DateTimeField - DateField's sibling for 'YYYY-MM-DDTHH:mm': the calendar panel plus the segmented time machine; commits only complete datetimes. */
 
+import './date-picker.css';
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { FieldShell } from './field-shell';

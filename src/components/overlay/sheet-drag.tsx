@@ -1,6 +1,7 @@
 'use client';
 
 /* sheet-drag - drag-to-dismiss for Overlay's sheet mode (dismiss - scrim - rubber-band - scroll handoff). */
+import './overlay.css';
 import * as React from 'react';
 import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

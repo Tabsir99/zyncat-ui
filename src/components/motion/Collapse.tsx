@@ -2,6 +2,7 @@
 
 // Collapse - open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
 
+import './collapse.css';
 import type { HTMLAttributes } from 'react';
 
 export interface CollapseProps extends HTMLAttributes<HTMLDivElement> {

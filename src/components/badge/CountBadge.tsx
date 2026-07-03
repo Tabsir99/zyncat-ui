@@ -2,6 +2,7 @@
 
 // CountBadge - count chip (counts, totals, deltas); roll mode is an odometer, digits roll on change.
 
+import './badge.css';
 import { Badge, type BadgeProps } from './Badge';
 
 function Digit({ d }: { d: number }) {

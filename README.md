@@ -4,7 +4,7 @@ A premium React design system - modern CSS + a small, closed token vocabulary, a
 consistently. Restraint, calm motion, no Tailwind, no CSS-in-JS, no UI libraries.
 
 **React 19 - TypeScript - ships compiled ESM + types.** Import the whole library or a single
-component; link one stylesheet.
+component; link one base stylesheet - each component loads its own CSS automatically.
 
 ## Install
 
@@ -28,11 +28,16 @@ directives intact, so Next.js App Router boundaries just work.
 
 ```tsx
 import { Button, toast } from 'premium-ds';
-import 'premium-ds/styles.css'; // link once, at the app root
+import 'premium-ds/styles.css'; // base layer - link once, at the app root
 ```
 
-Link `styles.css` exactly once - it's the full token + component manifest
-(fonts - primitives - semantics - components).
+`styles.css` is the **base layer only** - fonts, design tokens (the `:root` custom
+properties) and the shared `glass` utility. Link it exactly once at the app root.
+
+You never import per-component CSS: every component imports its own stylesheet, so your
+bundler code-splits and lazy-loads it with the component. Import `premium-ds/dialog` and
+only `dialog.css` ships (plus the `overlay`/`icon` styles it reuses, deduped) - not the
+other 20 components' CSS.
 
 ### Import a single component
 
@@ -44,7 +49,8 @@ import { DateField } from 'premium-ds/date-field';
 ```
 
 The barrel is side-effect-free and tree-shakes, so `import { Button } from 'premium-ds'` is
-equally lean in a bundler - subpaths help in non-bundled or explicit setups.
+equally lean in a bundler - subpaths help in non-bundled or explicit setups. CSS follows the
+same module graph: components you don't use drop their stylesheets too.
 
 ## Components
 
@@ -90,9 +96,9 @@ to install. premium-ds does **not** export an `Icon` component, so where a prop 
 ```
 src/                source (also shipped, for copy-paste)
 -- index.ts         public barrel
--- styles.css       @import manifest (link once)
+-- styles.css       base layer: fonts + tokens + glass (link once)
 -- tokens/          CSS custom properties + motion-tokens.ts (JS and CSS motion bridge)
--- components/      <domain>/Name.tsx + name.css
+-- components/      <domain>/Name.tsx + name.css (each Tsx imports its own CSS -> lazy-loaded)
 dist/               compiled ESM + .d.ts - what you import
 ```
 

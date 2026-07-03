@@ -2,6 +2,7 @@
 
 // NumberField.tsx - numeric input: tabular figures, caret steppers, unit suffix, min/max clamp, arrow stepping.
 
+import './input.css';
 import type { ChangeEvent, InputHTMLAttributes, KeyboardEvent, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
 

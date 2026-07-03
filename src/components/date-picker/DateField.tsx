@@ -2,6 +2,7 @@
 
 /* DateField - opinionated single-date picker: a .fld trigger opens a month-calendar popover, commit is live on day pick. */
 
+import './date-picker.css';
 import * as React from 'react';
 import type { ReactNode } from 'react';
 import { motion, animate } from 'motion/react';

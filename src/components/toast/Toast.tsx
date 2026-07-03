@@ -1,6 +1,7 @@
 'use client';
 
 /* Toast - the React render layer (queue + clocks live in toast-store.ts). */
+import './toast.css';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';

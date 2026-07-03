@@ -39,6 +39,7 @@
 // Overflow is honest: the row scrolls, clipped edges fade (data-fade set from
 // scroll geometry), and the selected tab is kept in view.
 
+import './tabs.css';
 import * as React from 'react';
 import { motion as tabsMotion, animate as tabsAnimate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';

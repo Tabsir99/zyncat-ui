@@ -1,6 +1,7 @@
 'use client';
 
 /* overlay-core - the headless mechanics under popover, dialog and sheet. */
+import './overlay.css';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { motion as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';

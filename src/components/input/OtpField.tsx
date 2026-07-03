@@ -2,6 +2,7 @@
 
 // OtpField.tsx - segmented one-time-code input: mono slots, auto-advance, arrow nav, paste-to-fill, grouping.
 
+import './input.css';
 import { useRef } from 'react';
 import type {
   ChangeEvent,
