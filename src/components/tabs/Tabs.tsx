@@ -51,15 +51,18 @@ const TabsSM = UIMotion;
 export interface TabItem {
   /** Stable identity - also used in the tab/panel id pair. */
   value: string;
+  /** Visible tab text. */
   label: React.ReactNode;
   /** Leading icon - your own node. */
   icon?: React.ReactNode;
   /** Rendered mono + tabular. Pass a number or a preformatted string. */
   count?: number | string;
+  /** Dims the tab, blocks selection, and skips it during arrow-key travel. */
   disabled?: boolean;
 }
 
 export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  /** The tab row, in order. @default [] */
   items: TabItem[];
   /** Controlled - the value of the active tab (null/undefined hides the ink). */
   value: string | null | undefined;
@@ -329,6 +332,7 @@ export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   name?: string;
   /** Direction of travel from Tabs' onChange; 0 = plain fade. */
   dir?: -1 | 0 | 1;
+  /** Panel content - only this inner node animates in on `tab` change; the root chrome stays static. */
   children?: React.ReactNode;
 }
 

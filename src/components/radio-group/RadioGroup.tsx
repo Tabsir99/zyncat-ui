@@ -54,6 +54,7 @@ export interface RadioGroupProps extends Omit<
   disabled?: boolean;
   /** The options to choose between. */
   options: RadioOption[];
+  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 

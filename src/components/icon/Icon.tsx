@@ -58,6 +58,7 @@ export interface IconProps {
   weight?: IconWeight;
   /** If set, the icon is meaningful and exposed to AT; omit for decorative. */
   label?: string;
+  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 

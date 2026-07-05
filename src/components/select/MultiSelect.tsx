@@ -21,22 +21,33 @@ import { GlidePill, useGlide } from '../motion/glide';
 import { IconSlot } from '../icon/IconSlot';
 
 export interface MultiSelectProps {
+  /** The choices - a flat `SelectOption[]`, or `SelectGroup[]` to render labeled sections. @default [] */
   options: SelectOption[] | SelectGroup[];
-  /** Controlled value. */
+  /** Controlled value - the array of selected option `value`s. Omit for uncontrolled (use `defaultValue`). */
   value?: string[];
+  /** Initial selection when uncontrolled. @default [] */
   defaultValue?: string[];
-  /** Fires with the NEXT array and the option that was toggled. */
+  /** Fires with the NEXT array and the option that was toggled. Committing keeps the menu open. */
   onChange?: (value: string[], toggled: SelectOption) => void;
+  /** Trigger text when nothing is selected. @default 'Select options' */
   placeholder?: string;
+  /** Control height. @default 'default' */
   size?: 'sm' | 'default' | 'lg';
+  /** Disabled - trigger is inert and the menu cannot open. @default false */
   disabled?: boolean;
+  /** Danger ring + border. @default false */
   invalid?: boolean;
+  /** Skeleton rows in the menu; trigger reads "Loading...". @default false */
   loading?: boolean;
+  /** Type-to-filter field pinned above the list. @default false */
   searchable?: boolean;
+  /** Placeholder for the `searchable` filter input. @default 'Filter options' */
   searchPlaceholder?: string;
-  /** Your own icon node pinned before the trigger label. */
+  /** Your own icon node pinned before the trigger label; else the sole selected option's icon. */
   leadingIcon?: React.ReactNode;
+  /** Base id for the trigger/menu/list ids and a11y wiring; auto-generated if omitted. */
   id?: string;
+  /** Accessible name for the trigger and listbox - supply when there is no visible label. */
   ariaLabel?: string;
 }
 

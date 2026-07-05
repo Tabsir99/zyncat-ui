@@ -263,6 +263,7 @@ export interface TooltipProps {
   closeDelay?: number;
   /** Skip the wrapper - clone the child and merge handlers + ref onto it (child must take a ref). Default false. */
   asChild?: boolean;
+  /** Stable id for this trigger's store entry + `aria-describedby`. Auto-generated when omitted. */
   id?: string;
   /** Exactly one element; any element works by default, asChild requires one that accepts a ref. */
   children: ReactElement;

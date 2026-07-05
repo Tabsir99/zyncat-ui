@@ -287,9 +287,13 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
 export interface DateFieldProps {
   /** Controlled value, 'YYYY-MM-DD'. */
   value?: string | null;
+  /** Uncontrolled initial value, 'YYYY-MM-DD'. Use instead of `value`. @default null */
   defaultValue?: string | null;
+  /** Fires on each day pick (commit is live), with the picked 'YYYY-MM-DD'. */
   onChange?: (value: string) => void;
+  /** Field label rendered above the trigger. */
   label?: string;
+  /** Trigger text shown when no date is picked. @default 'Pick a date' */
   placeholder?: string;
   /** IANA timezone name (e.g. 'Europe/Riga') - display context only, shown with its GMT offset in the footer. */
   timezone?: string;
@@ -303,7 +307,9 @@ export interface DateFieldProps {
   invalid?: boolean;
   /** Helper / error text under the field. */
   message?: string;
+  /** Disable the field. @default false */
   disabled?: boolean;
+  /** Extra class on the field shell root. */
   className?: string;
 }
 

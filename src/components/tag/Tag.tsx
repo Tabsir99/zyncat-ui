@@ -10,7 +10,7 @@ import { IconSlot } from '../icon/IconSlot';
 
 /** Tag - the removable, editable label (stateless; the parent owns the list). */
 export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
-  /** The label. */
+  /** Tag content; a string label also seeds the default remove-button `aria-label`. */
   children: React.ReactNode;
   /** Your own icon node, sized small and tinted to the tag's text. */
   icon?: React.ReactNode | null;
@@ -20,7 +20,9 @@ export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'c
   removeLabel?: string;
   /** 'md' = 28px (default) - 'sm' = 24px for dense rows. */
   size?: 'md' | 'sm';
+  /** Set `data-disabled` on the tag and disable its remove button. @default false */
   disabled?: boolean;
+  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 
@@ -28,7 +30,9 @@ export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'c
 export interface TagGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Accessible name for the group (role="group"). */
   label?: string;
+  /** The `Tag`s; wrapped in `AnimatePresence` so adds/removes animate. */
   children?: React.ReactNode;
+  /** Extra class(es) merged onto the group wrapper. */
   className?: string;
 }
 

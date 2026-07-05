@@ -22,24 +22,33 @@ import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
 
 export interface SelectProps {
+  /** The choices - a flat `SelectOption[]`, or `SelectGroup[]` to render labeled sections. @default [] */
   options: SelectOption[] | SelectGroup[];
-  /** Controlled value. */
+  /** Controlled value - matches an option's `value`, or `null` for none. Omit for uncontrolled (use `defaultValue`). */
   value?: string | null;
+  /** Initial value when uncontrolled. @default null */
   defaultValue?: string | null;
+  /** Fires on commit - gets the new `value` and its full `SelectOption`. Committing closes the menu. */
   onChange?: (value: string, option: SelectOption) => void;
+  /** Trigger text when nothing is selected. @default 'Select an option' */
   placeholder?: string;
+  /** Control height. @default 'default' */
   size?: 'sm' | 'default' | 'lg';
+  /** Disabled - trigger is inert and the menu cannot open. @default false */
   disabled?: boolean;
-  /** Danger ring + border. */
+  /** Danger ring + border. @default false */
   invalid?: boolean;
-  /** Skeleton rows in the menu; trigger reads "Loading...". */
+  /** Skeleton rows in the menu; trigger reads "Loading...". @default false */
   loading?: boolean;
-  /** Type-to-filter field pinned above the list. */
+  /** Type-to-filter field pinned above the list. @default false */
   searchable?: boolean;
+  /** Placeholder for the `searchable` filter input. @default 'Filter options' */
   searchPlaceholder?: string;
   /** Your own icon node pinned before the trigger label; else the selected option's icon. */
   leadingIcon?: React.ReactNode;
+  /** Base id for the trigger/menu/list ids and a11y wiring; auto-generated if omitted. */
   id?: string;
+  /** Accessible name for the trigger and listbox - supply when there is no visible label. */
   ariaLabel?: string;
 }
 

@@ -25,6 +25,7 @@ export const POST_STATUS: Record<
 const TERMINAL: Partial<Record<PostStatus, boolean>> = { published: true, failed: true };
 
 export interface StatusBadgeProps extends Omit<BadgeProps, 'children' | 'tone'> {
+  /** Lifecycle state - maps to a canonical `tone` + label (`processing` also pulses live). Unknown falls back to `draft`. */
   status: PostStatus;
   /** Morph in place as `status` changes instead of swapping. */
   morph?: boolean;

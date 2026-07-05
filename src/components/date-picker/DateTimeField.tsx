@@ -38,9 +38,13 @@ function dttfSplit(v: string | null | undefined): DateTimeParts {
 export interface DateTimeFieldProps {
   /** Controlled value, 'YYYY-MM-DDTHH:mm'. */
   value?: string | null;
+  /** Uncontrolled initial value, 'YYYY-MM-DDTHH:mm'. Use instead of `value`. @default null */
   defaultValue?: string | null;
+  /** Fires once both date and time are set, with 'YYYY-MM-DDTHH:mm' (an incomplete half never commits). */
   onChange?: (value: string) => void;
+  /** Field label rendered above the trigger. */
   label?: string;
+  /** Trigger text shown when no value is picked. @default 'Pick date & time' */
   placeholder?: string;
   /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
   timezone?: string;
@@ -52,10 +56,15 @@ export interface DateTimeFieldProps {
   format?: '24h' | '12h';
   /** ↑/↓ step granularity in minutes (typing is exact). Default 5. */
   minuteStep?: number;
+  /** Asterisk on the label. @default false */
   required?: boolean;
+  /** Danger border + message color (.fld is-error). @default false */
   invalid?: boolean;
+  /** Helper / error text under the field. */
   message?: string;
+  /** Disable the field. @default false */
   disabled?: boolean;
+  /** Extra class on the field shell root. */
   className?: string;
 }
 

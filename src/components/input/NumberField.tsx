@@ -10,21 +10,27 @@ export interface NumberFieldProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'size' | 'value' | 'onChange' | 'min' | 'max' | 'step'
 > {
+  /** Id wired to the input and the label's `htmlFor`. */
   id?: string;
+  /** Label text (sentence case). */
   label?: ReactNode;
+  /** Neutral helper text - shown below when there's no error. */
   helper?: ReactNode;
   /** Error message + error state. */
   error?: ReactNode;
   /** Unit suffix shown inside the field (e.g. "days", "%"). */
   unit?: string;
-  /** Bounds + step. Steppers disable at min/max; value clamps on blur. */
+  /** Minimum value - typed and stepped values clamp up to this; the decrease stepper disables here. @default 0 */
   min?: number;
+  /** Maximum value - typed and stepped values clamp down to this; the increase stepper disables here. @default Infinity */
   max?: number;
+  /** Amount added/removed per ArrowUp/ArrowDown press and per caret stepper click. @default 1 */
   step?: number;
   /** Controlled numeric value. */
   value?: number | string;
   /** Called with the next clamped number. */
   onChange?: (value: number) => void;
+  /** Control height: sm - md (default) - lg. */
   size?: 'sm' | 'md' | 'lg';
 }
 

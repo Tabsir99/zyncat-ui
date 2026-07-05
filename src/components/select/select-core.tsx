@@ -17,15 +17,21 @@ const {
 } = React;
 
 export interface SelectOption {
+  /** The stored value - what `onChange` returns and `value` matches; must be unique. */
   value: string;
+  /** Primary row text, and the trigger label once selected; also matched by `searchable`. */
   label: string;
+  /** Optional secondary line under the label; also matched by `searchable`. */
   description?: string;
   /** Your own icon node shown before the label. */
   icon?: React.ReactNode;
+  /** Not selectable - skipped by keyboard nav and typeahead, and marked `aria-disabled`. @default false */
   disabled?: boolean;
 }
 export interface SelectGroup {
+  /** Section heading rendered above the options; omit for an unlabeled group. */
   label?: string;
+  /** The options in this section. */
   options: SelectOption[];
 }
 

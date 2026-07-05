@@ -25,6 +25,7 @@ export interface PaginationProps {
   onNext?: () => void;
   /** A page fetch is in flight: both arrows go inert, the clicked arrow carries the spinner. @default false */
   loading?: boolean;
+  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 

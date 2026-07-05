@@ -18,6 +18,7 @@ function Digit({ d }: { d: number }) {
 }
 
 export interface CountBadgeProps extends Omit<BadgeProps, 'children'> {
+  /** The chip content - stringified; in `roll` mode each digit becomes an odometer column. */
   value: string | number;
   /** Odometer: digits roll vertically on change. */
   roll?: boolean;

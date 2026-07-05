@@ -7,6 +7,7 @@ import * as React from 'react';
 import type { AvatarSize } from './Avatar';
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** The `Avatar` elements to stack; each is cloned to force `size`, then sliced to `max`. */
   children: React.ReactNode;
   /** Max visible avatars before "+N" overflow chip. Default 5. */
   max?: number;

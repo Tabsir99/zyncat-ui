@@ -27,9 +27,11 @@ import { TimeSegments } from './time-core';
 export interface TimeFieldProps {
   /** Controlled value, canonical 'HH:mm' (24h). */
   value?: string | null;
+  /** Uncontrolled initial value, 'HH:mm' (24h). Use instead of `value`. @default null */
   defaultValue?: string | null;
   /** Fires live - the instant both segments exist. */
   onChange?: (value: string) => void;
+  /** Field label rendered above the box; also the segments' `aria-label` fallback. */
   label?: string;
   /** Display only; storage stays 24h. Default '24h'. */
   format?: '24h' | '12h';
@@ -39,10 +41,15 @@ export interface TimeFieldProps {
   min?: string;
   /** Upper bound 'HH:mm' - saturates, never errors. */
   max?: string;
+  /** Asterisk on the label. @default false */
   required?: boolean;
+  /** Danger border + message color (.fld is-error). @default false */
   invalid?: boolean;
+  /** Helper / error text under the field. */
   message?: string;
+  /** Disable the field (box + segments). @default false */
   disabled?: boolean;
+  /** Extra class on the field shell root. */
   className?: string;
 }
 

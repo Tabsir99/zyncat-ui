@@ -29,7 +29,9 @@ const drpSM = UIMotion;
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {
+  /** Range start, inclusive - `'YYYY-MM-DD'`. */
   start: string;
+  /** Range end, inclusive - `'YYYY-MM-DD'`. Never before `start`. */
   end: string;
 }
 
@@ -449,10 +451,13 @@ function DrpPanel({
 export interface DateRangeFieldProps {
   /** Controlled value - both endpoints, or null when empty. */
   value?: DateRange | null;
+  /** Uncontrolled initial range. Use instead of `value`. @default null */
   defaultValue?: DateRange | null;
   /** Fires only on a COMPLETE range (a lone anchor never commits). */
   onChange?: (value: DateRange) => void;
+  /** Field label rendered above the trigger. */
   label?: string;
+  /** Trigger text shown when no range is picked. @default 'Pick a date range' */
   placeholder?: string;
   /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
   timezone?: string;
@@ -460,10 +465,15 @@ export interface DateRangeFieldProps {
   min?: string;
   /** Latest pickable date, 'YYYY-MM-DD', inclusive. */
   max?: string;
+  /** Asterisk on the label. @default false */
   required?: boolean;
+  /** Danger border + message color (.fld is-error). @default false */
   invalid?: boolean;
+  /** Helper / error text under the field. */
   message?: string;
+  /** Disable the field. @default false */
   disabled?: boolean;
+  /** Extra class on the field shell root. */
   className?: string;
 }
 

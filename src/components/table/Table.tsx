@@ -16,6 +16,7 @@ export type TableHideBelow = 'sm' | 'md';
 export interface TableColumn<Row = any> {
   /** Unique column id; also the default data accessor (row[key]). */
   key: string;
+  /** Header cell content; omit for a header-less column (e.g. an actions column). */
   label?: React.ReactNode;
   /** Cell + header alignment. Default 'start'. */
   align?: TableAlign;
@@ -36,12 +37,16 @@ export interface TableColumn<Row = any> {
 }
 
 export interface TableSort {
+  /** `key` of the column being sorted by. */
   key: string;
+  /** Sort direction - `asc` or `desc`. */
   dir: 'asc' | 'desc';
 }
 
 export interface TableProps<Row = any> {
+  /** Column defs, rendered left to right. */
   columns: TableColumn<Row>[];
+  /** The row data; sorted locally per the active sort before render. */
   rows: Row[];
   /** Row identity property. Default 'id'. Must be unique and stable. */
   rowKey?: string;
@@ -50,6 +55,7 @@ export interface TableProps<Row = any> {
 
   /** Checkbox column + bulk bar. Selection is a Set of row keys, owned here. */
   selectable?: boolean;
+  /** Fires with the selected row keys after every selection change. */
   onSelectionChange?: (keys: Array<string | number>) => void;
   /** Rendered in the bulk bar between the count and the built-in Clear. */
   bulkActions?: (keys: Array<string | number>, clear: () => void) => React.ReactNode;

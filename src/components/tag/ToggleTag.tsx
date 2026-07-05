@@ -11,7 +11,7 @@ export interface ToggleTagProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   'onChange' | 'children'
 > {
-  /** The label. */
+  /** Chip content; the label shown beside the tick or `icon`. */
   children: React.ReactNode;
   /** Controlled selected value. Omit for uncontrolled. */
   selected?: boolean;
@@ -25,7 +25,9 @@ export interface ToggleTagProps extends Omit<
   count?: React.ReactNode;
   /** 'md' = 28px (default) - 'sm' = 24px for dense rows. */
   size?: 'md' | 'sm';
+  /** Disable the button, blocking toggles. @default false */
   disabled?: boolean;
+  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 

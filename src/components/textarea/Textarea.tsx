@@ -13,25 +13,33 @@ export interface TextareaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   'size' | 'rows' | 'onSubmit'
 > {
+  /** Id wired to the textarea and the label's `htmlFor`. */
   id?: string;
   /** Label text (sentence case). */
   label?: React.ReactNode;
+  /** Show a danger `*` after the label. */
   required?: boolean;
+  /** Show a muted "(optional)" after the label. */
   optional?: boolean;
   /** Neutral helper - shown when there's no validation message. */
   helper?: React.ReactNode;
   /** Sets the matching state (border + icon + colour). error wins over warning/success/helper. */
   error?: React.ReactNode;
+  /** Warning message - warning state. Loses to `error`; wins over `success`/`helper`. */
   warning?: React.ReactNode;
+  /** Success message - success state. Loses to `error`/`warning`; wins over `helper`. */
   success?: React.ReactNode;
+  /** Controlled text value. @default '' */
   value?: string;
+  /** Change handler - fired on each edit with the textarea change event. */
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
   /** Fired on ⌘/Ctrl+Enter with the current text. */
   onSubmit?: (value: string) => void;
   /** Soft char limit: shows the meter + over-limit highlight. Does NOT truncate (use native maxLength for a hard stop). */
   max?: number;
-  /** Visible rows before growing (default 3) and the cap before it scrolls (default 10). */
+  /** Rows shown before auto-grow kicks in. @default 3 */
   minRows?: number;
+  /** Row cap - grows up to this, then the box scrolls. @default 10 */
   maxRows?: number;
   /** Remaining-chars threshold that flips the meter amber. Default 20. */
   warnAt?: number;

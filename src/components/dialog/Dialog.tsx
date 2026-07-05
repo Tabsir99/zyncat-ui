@@ -12,12 +12,17 @@ const { useRef: dlgUseRef, useEffect: dlgUseEffect, useId: dlgUseId } = React;
 export interface DialogProps {
   /** Controlled open state. Omit for uncontrolled (use defaultOpen + trigger). */
   open?: boolean;
+  /** Initial open state when uncontrolled. @default false */
   defaultOpen?: boolean;
+  /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
   /** Optional element cloned to open the dialog on click (uncontrolled ergonomics). */
   trigger?: React.ReactElement | null;
+  /** Header title - rendered as the `<h2>` and wired to `aria-labelledby`. */
   title?: React.ReactNode;
+  /** Subtext under the title - wired to `aria-describedby`. @default null */
   description?: React.ReactNode;
+  /** Panel width. @default 'md' */
   size?: 'sm' | 'md' | 'lg';
   /** 'danger' tints the header icon badge + is the convention for destructive confirms. */
   tone?: 'default' | 'danger';
@@ -27,7 +32,9 @@ export interface DialogProps {
   dismissible?: boolean;
   /** Action row - a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
   footer?: React.ReactNode | ((close: () => void) => React.ReactNode);
+  /** Dialog body - scrolls when tall; its scroll edges flag the header lift + footer divider. */
   children?: React.ReactNode;
+  /** Base id for the surface + its title/desc aria ids. Auto-generated when omitted. */
   id?: string;
 }
 

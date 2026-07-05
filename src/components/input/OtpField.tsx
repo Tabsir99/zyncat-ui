@@ -24,8 +24,11 @@ export interface OtpFieldProps {
   group?: number;
   /** Error state (red slots + ring). */
   error?: boolean;
+  /** Disable every slot. */
   disabled?: boolean;
+  /** Compact slot sizing. Only `sm`; omit for default. */
   size?: 'sm';
+  /** Extra class(es) appended to the root wrapper. */
   className?: string;
 }
 

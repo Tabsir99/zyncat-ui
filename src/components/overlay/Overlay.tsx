@@ -29,6 +29,7 @@ export interface OverlayProps {
   open?: boolean;
   /** Initial state when uncontrolled. Default false. */
   defaultOpen?: boolean;
+  /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
 
   /** Cloned to toggle (popover) / open (modal); required as the popover anchor. */
@@ -47,6 +48,7 @@ export interface OverlayProps {
   /** Render no wrapper - your DOM-element child becomes the panel. Default false. */
   asChild?: boolean;
 
+  /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
   /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
   children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode);
