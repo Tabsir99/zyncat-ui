@@ -190,6 +190,11 @@
     "react": "^19",
     "react-dom": "^19"
   },
+  "peerDependenciesMeta": {
+    "motion": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@types/node": "^26.0.1",
