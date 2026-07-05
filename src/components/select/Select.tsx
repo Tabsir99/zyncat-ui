@@ -17,6 +17,7 @@ import {
   type SelectOption,
   type SelectGroup,
 } from './select-core';
+import { GlidePill, useGlide } from '../motion/glide';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
 
@@ -73,6 +74,7 @@ export function Select({
   const baseId = id || 'select-' + useId();
   const menuId = baseId + '-menu';
   const listId = baseId + '-list';
+  const glide = useGlide(listRef);
 
   const { groups, flat } = normalize(options);
   const selected = flat.find((o) => o.value === value) || null;
@@ -114,6 +116,20 @@ export function Select({
     commit,
     searchable,
   });
+
+  // Drive the glide pill from the active row. It lives in the scroll list (not per-option), so it
+  // is never clipped by the searchable rows' collapse wrapper and animates real size between rows.
+  React.useLayoutEffect(() => {
+    const list = listRef.current;
+    const el =
+      open &&
+      activeIdx >= 0 &&
+      list &&
+      list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
+    if (el) glide.enter(el);
+    else glide.leave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, activeIdx, query]);
 
   const isPlaceholder = !loading && !selected;
   const adId = open && activeIdx >= 0 ? baseId + '-opt-' + activeIdx : undefined;
@@ -165,6 +181,7 @@ export function Select({
           aria-label={ariaLabel}
           onKeyDown={searchable ? undefined : onMenuKeyDown}
         >
+          <GlidePill className="select__glide" rect={glide.rect} active={glide.active} />
           {loading ? (
             <LoadingRows />
           ) : (

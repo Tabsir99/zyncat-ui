@@ -75,6 +75,7 @@ function RadioGroup({
   ...rest
 }: RadioGroupProps) {
   const groupId = React.useId();
+  const [hovered, setHovered] = React.useState<string | null>(null);
 
   const cls = [
     'rg',
@@ -105,7 +106,7 @@ function RadioGroup({
       )}
 
       <LayoutGroup id={groupId}>
-        <div className="rg__options">
+        <div className="rg__options" onPointerLeave={() => setHovered(null)}>
           {options.map((opt) => {
             const selected = opt.value === value;
             const isDisabled = disabled || opt.disabled;
@@ -119,6 +120,7 @@ function RadioGroup({
                 ]
                   .filter(Boolean)
                   .join(' ')}
+                onPointerEnter={isDisabled ? undefined : () => setHovered(opt.value)}
               >
                 <input
                   className="rg-opt__input"
@@ -129,6 +131,24 @@ function RadioGroup({
                   disabled={isDisabled}
                   onChange={() => onChange && onChange(opt.value)}
                 />
+                {variant === 'rows' && hovered === opt.value && (
+                  <motion.span
+                    className="rg__hover"
+                    layoutId="hover"
+                    layout="position"
+                    transition={SM.t.layout}
+                    aria-hidden="true"
+                  ></motion.span>
+                )}
+                {variant === 'cards' && hovered === opt.value && !selected && (
+                  <motion.span
+                    className="rg__card-hover"
+                    layoutId="card-hover"
+                    layout="position"
+                    transition={SM.t.layout}
+                    aria-hidden="true"
+                  ></motion.span>
+                )}
                 {variant === 'cards' && selected && (
                   <motion.span
                     className="rg__card-fill"

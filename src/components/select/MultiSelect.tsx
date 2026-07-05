@@ -17,6 +17,7 @@ import {
   type SelectOption,
   type SelectGroup,
 } from './select-core';
+import { GlidePill, useGlide } from '../motion/glide';
 import { IconSlot } from '../icon/IconSlot';
 
 export interface MultiSelectProps {
@@ -84,6 +85,7 @@ export function MultiSelect({
   const baseId = id || 'mselect-' + useId();
   const menuId = baseId + '-menu';
   const listId = baseId + '-list';
+  const glide = useGlide(listRef);
 
   const { groups, flat } = msNormalize(options);
   const values = Array.isArray(value) ? value : [];
@@ -127,6 +129,20 @@ export function MultiSelect({
     commit,
     searchable,
   });
+
+  // Glide pill lives in the scroll list (not per-option), so the searchable rows' collapse wrapper
+  // never clips it; it tracks the active row and animates real size between rows.
+  React.useLayoutEffect(() => {
+    const list = listRef.current;
+    const el =
+      open &&
+      activeIdx >= 0 &&
+      list &&
+      list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
+    if (el) glide.enter(el);
+    else glide.leave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, activeIdx, query]);
 
   const isPlaceholder = !loading && selectedOptions.length === 0;
   const adId = open && activeIdx >= 0 ? baseId + '-opt-' + activeIdx : undefined;
@@ -181,6 +197,7 @@ export function MultiSelect({
           aria-label={ariaLabel}
           onKeyDown={searchable ? undefined : onMenuKeyDown}
         >
+          <GlidePill className="select__glide" rect={glide.rect} active={glide.active} />
           {loading ? (
             <MsLoadingRows />
           ) : (

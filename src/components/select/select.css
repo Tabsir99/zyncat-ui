@@ -177,8 +177,10 @@
   color: var(--text-disabled);
 }
 
-/* Row-height motion is the Collapse primitive, not this scroll container. */
+/* Row-height motion is the Collapse primitive, not this scroll container.
+   position: relative anchors the glide pill (a single absolute child) to the scrolled content. */
 .select__list {
+  position: relative;
   max-height: 16.5rem;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -208,6 +210,7 @@
 }
 
 .select__option {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -253,9 +256,21 @@
   transition: var(--transition-opacity);
 }
 
-/* No selected+active rule needed - the selected rules follow active, so source order wins. */
+/* Hover pill - one persistent fill in the list (../motion/glide) that travels to the active row and
+   animates its real size, so it's never clipped by the searchable rows' collapse and never scales.
+   GlidePill sets x/y/width/height inline; the option (position: relative) paints above it. */
+.select__glide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--radius-md);
+  background: var(--neutral-wash);
+  pointer-events: none;
+}
+
+/* Active row: the pill carries the fill; here we only lift the text. Selected rules follow, so source order wins. */
 .select__option[data-active='true'] {
-  background-color: var(--neutral-wash);
   color: var(--text-strong);
 }
 .select__option[data-active='true'] .select__option-icon {
@@ -316,9 +331,6 @@
 }
 .select[data-multiple='true'] .select__option[data-selected='true'] {
   background-color: transparent;
-}
-.select[data-multiple='true'] .select__option[data-selected='true'][data-active='true'] {
-  background-color: var(--neutral-wash);
 }
 
 .select__empty {
