@@ -5,7 +5,7 @@
 import './pagination.css';
 /* The nav arrows render .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { tokenPx } from '../token-px';
@@ -31,8 +31,6 @@ export interface PaginationProps {
   /** Extra class(es) merged onto the root element. */
   className?: string;
 }
-
-const { useEffect, useRef } = React;
 
 /* range-swap travel distance - resolved once, on first use */
 let pgnTravelPx: number | null = null;

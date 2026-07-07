@@ -5,17 +5,17 @@
 import './tag.css';
 /* The tick clip renders .collapse classes - collapse.css must ride along. */
 import '../motion/collapse.css';
-import * as React from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { IconSlot } from '../icon/IconSlot';
 import { useControllable } from '../use-controllable';
 
 /** ToggleTag - the on/off filter chip (<button aria-pressed>). */
 export interface ToggleTagProps extends Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  ButtonHTMLAttributes<HTMLButtonElement>,
   'onChange' | 'children'
 > {
   /** Chip content; the label shown beside the tick or `icon`. */
-  children: React.ReactNode;
+  children: ReactNode;
   /** Controlled selected value. Omit for uncontrolled. */
   selected?: boolean;
   /** Uncontrolled initial value. */
@@ -23,9 +23,9 @@ export interface ToggleTagProps extends Omit<
   /** Fires with the next value on every toggle. */
   onChange?: (selected: boolean) => void;
   /** Your own icon node; replaces the tick. Selected state reads from the wash. */
-  icon?: React.ReactNode | null;
+  icon?: ReactNode | null;
   /** Optional result count - rendered mono/tabular. */
-  count?: React.ReactNode;
+  count?: ReactNode;
   /** 'md' = 28px (default) - 'sm' = 24px for dense rows. */
   size?: 'md' | 'sm';
   /** Disable the button, blocking toggles. @default false */

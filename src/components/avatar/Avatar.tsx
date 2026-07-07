@@ -3,20 +3,20 @@
 // Avatar - identity mark; content priority: image - icon - initials - silhouette.
 
 import './avatar.css';
-import * as React from 'react';
+import { useState, type HTMLAttributes, type ReactNode } from 'react';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy' | 'offline';
 export type AvatarPaletteIndex = 1 | 2 | 3 | 4 | 5 | 6;
 
-export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   /** Image URL. Falls back to initials / icon / silhouette if absent or fails. */
   src?: string | null;
   /** Display name - drives initials generation, palette hash, and aria-label. */
   name?: string | null;
   /** Content override - any React node (e.g. <Icon name="globe" />). */
-  icon?: React.ReactNode | null;
+  icon?: ReactNode | null;
   /** 'circle' for people; 'square' for channels / brand pages. Default 'circle'. */
   shape?: AvatarShape;
   /** Size step. Default 'md' (32 px). */
@@ -64,7 +64,7 @@ export function Avatar({
   style = {},
   ...rest
 }: AvatarProps) {
-  const [imgError, setImgError] = React.useState(false);
+  const [imgError, setImgError] = useState(false);
   const showImg = Boolean(src) && !imgError;
 
   const maxInits = size === 'xs' ? 1 : 2;

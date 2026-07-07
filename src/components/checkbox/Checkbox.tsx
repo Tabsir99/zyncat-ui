@@ -3,11 +3,11 @@
 // Checkbox - checkbox primitive; on/off + indeterminate select-all.
 
 import './checkbox.css';
-import * as React from 'react';
+import type { ChangeEventHandler, InputHTMLAttributes, ReactNode } from 'react';
 import { CheckGlyph } from './check-glyph';
 
 export interface CheckboxProps extends Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
+  InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type'
 > {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
@@ -23,11 +23,11 @@ export interface CheckboxProps extends Omit<
   /** Box size: `md` 18px - `sm` 16px for dense table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the box. */
-  label?: React.ReactNode;
+  label?: ReactNode;
   /** Optional secondary line under the label (settings rows). */
-  description?: React.ReactNode;
+  description?: ReactNode;
   /** Fires on toggle - read `e.target.checked`. */
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
 export function Checkbox({

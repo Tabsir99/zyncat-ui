@@ -6,24 +6,26 @@
    the class contract without the stylesheet is how a lone `premium-ds/table`
    import ends up with naked native checkboxes. */
 import './checkbox.css';
-import * as React from 'react';
+import { Fragment, useEffect, useRef, type InputHTMLAttributes } from 'react';
 
-export interface CheckGlyphProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
+export interface CheckGlyphProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'size'
+> {
   /** The "some, not all" select-all state - a DOM property, not an attribute. */
   indeterminate?: boolean;
 }
 
 export function CheckGlyph({ indeterminate = false, ...inputProps }: CheckGlyphProps) {
-  const ref = React.useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
   // `indeterminate` is not an HTML attribute - push it onto the node directly.
-  React.useEffect(() => {
+  useEffect(() => {
     if (ref.current) ref.current.indeterminate = indeterminate;
   }, [indeterminate, inputProps.checked]);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <input ref={ref} type="checkbox" className="cbx__input" {...inputProps} />
       <span className="cbx__box" aria-hidden="true">
         <svg className="cbx__mark" viewBox="0 0 16 16" fill="none">
@@ -31,6 +33,6 @@ export function CheckGlyph({ indeterminate = false, ...inputProps }: CheckGlyphP
         </svg>
         <span className="cbx__dash" />
       </span>
-    </React.Fragment>
+    </Fragment>
   );
 }

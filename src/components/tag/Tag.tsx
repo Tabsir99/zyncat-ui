@@ -3,17 +3,17 @@
 /* Tag (+ TagGroup) - removable/editable label; stateless, the parent owns the list. */
 
 import './tag.css';
-import * as React from 'react';
+import { createContext, useContext, Fragment, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
 
 /** Tag - the removable, editable label (stateless; the parent owns the list). */
-export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
+export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** Tag content; a string label also seeds the default remove-button `aria-label`. */
-  children: React.ReactNode;
+  children: ReactNode;
   /** Your own icon node, sized small and tinted to the tag's text. */
-  icon?: React.ReactNode | null;
+  icon?: ReactNode | null;
   /** Presence adds the remove button; called on click - remove the item yourself. */
   onRemove?: (() => void) | null;
   /** Accessible label for the remove button. Defaults to "Remove {label}" for string labels. */
@@ -27,16 +27,16 @@ export interface TagProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'c
 }
 
 /** TagGroup - wrapping flex row + removal/insertion choreography. */
-export interface TagGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TagGroupProps extends HTMLAttributes<HTMLDivElement> {
   /** Accessible name for the group (role="group"). */
   label?: string;
   /** The `Tag`s; wrapped in `AnimatePresence` so adds/removes animate. */
-  children?: React.ReactNode;
+  children?: ReactNode;
   /** Extra class(es) merged onto the group wrapper. */
   className?: string;
 }
 
-const TagGroupContext = React.createContext(false);
+const TagGroupContext = createContext(false);
 
 /* The remove glyph - drawn inline (path-level, per section D) so it can wind up on hover. */
 function TagRemoveGlyph() {
@@ -57,13 +57,13 @@ export function Tag({
   className = '',
   ...rest
 }: TagProps) {
-  const grouped = React.useContext(TagGroupContext);
+  const grouped = useContext(TagGroupContext);
   const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
 
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
 
   const content = (
-    <React.Fragment>
+    <Fragment>
       {icon && (
         <span className="tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>
@@ -81,7 +81,7 @@ export function Tag({
           <TagRemoveGlyph />
         </button>
       )}
-    </React.Fragment>
+    </Fragment>
   );
 
   if (!grouped) {

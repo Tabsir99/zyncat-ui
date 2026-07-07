@@ -5,7 +5,7 @@
 // Motion layoutId (kept inside each card - its own bg/transform layering needs them there).
 
 import './radio-group.css';
-import * as React from 'react';
+import { useId, useRef, useState, type FieldsetHTMLAttributes, type ReactNode } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
@@ -19,17 +19,17 @@ export interface RadioOption {
   /** The stored value - what `onChange` returns and `value` matches. */
   value: string;
   /** Visible label (sentence case). */
-  label: React.ReactNode;
+  label: ReactNode;
   /** Optional secondary line (muted) explaining the choice. */
-  description?: React.ReactNode;
+  description?: ReactNode;
   /** Leading icon - your own node. CARDS only; ignored for rows. */
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   /** Disable just this option. */
   disabled?: boolean;
 }
 
 export interface RadioGroupProps extends Omit<
-  React.FieldsetHTMLAttributes<HTMLFieldSetElement>,
+  FieldsetHTMLAttributes<HTMLFieldSetElement>,
   'onChange'
 > {
   /** Shared radio name - ties the options into one keyboard group. Required. */
@@ -39,11 +39,11 @@ export interface RadioGroupProps extends Omit<
   /** Called with the chosen option's `value`. */
   onChange?: (value: string) => void;
   /** Group label / legend (sentence case). */
-  label?: React.ReactNode;
+  label?: ReactNode;
   /** Persistent context shown under the legend, before the options. */
-  helper?: React.ReactNode;
+  helper?: ReactNode;
   /** Group-level error (e.g. required). Sets the error state + reveals the message. */
-  error?: React.ReactNode;
+  error?: ReactNode;
   /** Show a danger `*` after the label. */
   required?: boolean;
   /** Show a muted "(optional)" after the label. */
@@ -79,10 +79,10 @@ function RadioGroup({
   className = '',
   ...rest
 }: RadioGroupProps) {
-  const groupId = React.useId();
+  const groupId = useId();
   /* cards keep hovered state for their layoutId spans; rows drive the glide pill directly */
-  const [hovered, setHovered] = React.useState<string | null>(null);
-  const optionsRef = React.useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
   const glide = useGlide(optionsRef);
   const healMarker = useLayoutSelfHeal<HTMLSpanElement>();
   const healFill = useLayoutSelfHeal<HTMLSpanElement>();

@@ -7,13 +7,11 @@
    as collapse/expand between differently sized items. Its look comes from the passed className;
    this module ships no CSS. */
 
-import * as React from 'react';
-import type { RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
-const { useRef, useState, useEffect, useCallback } = React;
 
 export interface GlideRect {
   x: number;

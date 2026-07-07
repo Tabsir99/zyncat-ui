@@ -2,7 +2,7 @@
 
 /* Dialog - styled modal surface; a thin consumer of <Overlay mode="dialog">. */
 import './dialog.css';
-import * as React from 'react';
+import { useId, useRef, type ReactElement, type ReactNode } from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
@@ -16,23 +16,23 @@ export interface DialogProps {
   /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
   /** Optional element cloned to open the dialog on click (uncontrolled ergonomics). */
-  trigger?: React.ReactElement | null;
+  trigger?: ReactElement | null;
   /** Header title - rendered as the `<h2>` and wired to `aria-labelledby`. */
-  title?: React.ReactNode;
+  title?: ReactNode;
   /** Subtext under the title - wired to `aria-describedby`. @default null */
-  description?: React.ReactNode;
+  description?: ReactNode;
   /** Panel width. @default 'md' */
   size?: 'sm' | 'md' | 'lg';
   /** 'danger' tints the header icon badge + is the convention for destructive confirms. */
   tone?: 'default' | 'danger';
   /** Your own icon node for the header badge (alert dialogs). */
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   /** Close button + backdrop/Esc dismissal. Default true. */
   dismissible?: boolean;
   /** Action row - a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
-  footer?: React.ReactNode | ((close: () => void) => React.ReactNode);
+  footer?: ReactNode | ((close: () => void) => ReactNode);
   /** Dialog body - scrolls when tall; its scroll edges flag the header lift + footer divider. */
-  children?: React.ReactNode;
+  children?: ReactNode;
   /** Base id for the surface + its title/desc aria ids. Auto-generated when omitted. */
   id?: string;
 }
@@ -41,13 +41,13 @@ interface DialogSurfaceProps {
   baseId: string;
   size: 'sm' | 'md' | 'lg';
   tone: 'default' | 'danger';
-  icon: React.ReactNode;
-  title: React.ReactNode;
-  description: React.ReactNode;
+  icon: ReactNode;
+  title: ReactNode;
+  description: ReactNode;
   dismissible: boolean;
-  footerContent: React.ReactNode;
+  footerContent: ReactNode;
   onRequestClose: () => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 function DialogSurface({
@@ -62,7 +62,7 @@ function DialogSurface({
   onRequestClose,
   children,
 }: DialogSurfaceProps) {
-  const bodyRef = React.useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const titleId = baseId + '-title';
   const descId = baseId + '-desc';
 
@@ -136,7 +136,7 @@ export function Dialog({
   children,
   id,
 }: DialogProps) {
-  const autoId = React.useId();
+  const autoId = useId();
   const baseId = id || 'dialog-' + autoId;
 
   return (

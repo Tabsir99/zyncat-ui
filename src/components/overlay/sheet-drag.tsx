@@ -2,12 +2,13 @@
 
 /* sheet-drag - drag-to-dismiss for Overlay's sheet mode (dismiss - scrim - rubber-band - scroll handoff). */
 import './overlay.css';
-import * as React from 'react';
+/* PointerEvent is aliased: React's synthetic type for the React handler below,
+   the DOM global (bare `PointerEvent`) for the native window listeners. */
+import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
 import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
-const { useEffect, useRef } = React;
 
 const DISMISS_RATIO = 0.4;
 const DISMISS_VELOCITY = 500;
@@ -36,7 +37,7 @@ function useSheetDrag({
   requestClose,
 }: {
   side: 'right' | 'bottom';
-  slotRef: React.RefObject<HTMLElement>;
+  slotRef: RefObject<HTMLElement>;
   enabled: boolean;
   requestClose: () => void;
 }) {
@@ -70,7 +71,7 @@ function useSheetDrag({
   const scrimOpacity = useTransform(progress, (p) => 1 - p);
 
   /* pointer intent: watch the first few px, then hand off to drag or to scroll/selection */
-  function onPointerDown(e: React.PointerEvent) {
+  function onPointerDown(e: ReactPointerEvent) {
     if (e.button !== 0) return;
     const startX = e.clientX,
       startY = e.clientY;

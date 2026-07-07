@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useCallback, useEffect, useRef, type RefObject } from 'react';
 
 export interface ScrollEdges {
   /** More content above / below / left / right of the viewport (1px tolerance). */
@@ -15,13 +15,13 @@ export interface ScrollEdges {
    scrollWidth/Height changes the box itself doesn't see), and hands the consumer the raw
    element so it can derive its own attributes. Returns the sync fn for imperative re-runs. */
 export function useScrollEdges(
-  ref: React.RefObject<HTMLElement | null>,
+  ref: RefObject<HTMLElement | null>,
   onChange: (edges: ScrollEdges, el: HTMLElement) => void,
   { content = false }: { content?: boolean } = {},
 ): () => void {
-  const cb = React.useRef(onChange);
+  const cb = useRef(onChange);
   cb.current = onChange;
-  const sync = React.useCallback(() => {
+  const sync = useCallback(() => {
     const el = ref.current;
     if (!el) return;
     cb.current(
@@ -34,7 +34,7 @@ export function useScrollEdges(
       el,
     );
   }, [ref]);
-  React.useEffect(() => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
     sync();

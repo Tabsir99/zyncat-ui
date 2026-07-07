@@ -4,7 +4,17 @@
    Selection stays with the public components: they own their value shape and hand
    this module two opaque callbacks (isSelected / onCommit) plus a close policy. */
 import './select.css';
-import * as React from 'react';
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
@@ -12,8 +22,6 @@ import { IconSlot } from '../icon/IconSlot';
 import { Collapse } from '../motion/Collapse';
 import { GlidePill, useGlide } from '../motion/glide';
 import { OverlayPortal, useOverlayEntry, useOutsidePress } from '../overlay/layer';
-
-const { useState, useEffect, useLayoutEffect, useRef } = React;
 
 export interface SelectOption {
   /** The stored value - what `onChange` returns and `value` matches; must be unique. */
@@ -23,7 +31,7 @@ export interface SelectOption {
   /** Optional secondary line under the label; also matched by `searchable`. */
   description?: string;
   /** Your own icon node shown before the label. */
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   /** Not selectable - skipped by keyboard nav and typeahead, and marked `aria-disabled`. @default false */
   disabled?: boolean;
 }
@@ -82,9 +90,9 @@ export interface UseSelectMenuArgs {
   open: boolean;
   close: () => void;
   returnFocus: () => void;
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
-  listRef: React.RefObject<HTMLDivElement | null>;
-  searchRef: React.RefObject<HTMLInputElement | null>;
+  triggerRef: RefObject<HTMLButtonElement | null>;
+  listRef: RefObject<HTMLDivElement | null>;
+  searchRef: RefObject<HTMLInputElement | null>;
   menuId: string;
   navItems: SelectOption[];
   isSelected: (value: string) => boolean;
@@ -183,7 +191,7 @@ export function useSelectMenu({
     if (i >= 0) setActiveIdx(i);
   }
 
-  function onMenuKeyDown(e: React.KeyboardEvent) {
+  function onMenuKeyDown(e: KeyboardEvent) {
     switch (e.key) {
       case 'Escape':
         e.preventDefault();
@@ -222,7 +230,7 @@ export function useSelectMenu({
 }
 
 export interface SelectTriggerProps {
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  triggerRef: RefObject<HTMLButtonElement | null>;
   baseId: string;
   open: boolean;
   disabled?: boolean;
@@ -231,7 +239,7 @@ export interface SelectTriggerProps {
   adId?: string;
   show: () => void;
   hide: () => void;
-  leading?: React.ReactNode;
+  leading?: ReactNode;
   text?: string;
   isPlaceholder?: boolean;
   count?: number;
@@ -294,14 +302,20 @@ export interface SelectMenuProps {
   open: boolean;
   menuId: string;
   close: () => void;
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  triggerRef: RefObject<HTMLButtonElement | null>;
   multiple?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /* The mounted surface joins the overlay stack: dialog focus traps defer to it,
    Escape unwinds menu-then-dialog, and light dismiss comes from the stack too. */
-function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<SelectMenuProps, 'open'>) {
+function MenuSurface({
+  menuId,
+  close,
+  triggerRef,
+  multiple,
+  children,
+}: Omit<SelectMenuProps, 'open'>) {
   const menuRef = useRef<HTMLDivElement>(null);
   const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
   useOutsidePress({ entry, refs: [menuRef, triggerRef], enabled: true, onPress: close });
@@ -325,7 +339,14 @@ function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<Sel
 /* Body-portaled (via layer.tsx) so an ancestor transform/filter can never become
    the containing block of the fixed-position menu - the playground could not
    catch that; any transformed wrapper in a real app would. */
-export function SelectMenu({ open, menuId, close, triggerRef, multiple, children }: SelectMenuProps) {
+export function SelectMenu({
+  open,
+  menuId,
+  close,
+  triggerRef,
+  multiple,
+  children,
+}: SelectMenuProps) {
   return (
     <OverlayPortal>
       <AnimatePresence>
@@ -340,10 +361,10 @@ export function SelectMenu({ open, menuId, close, triggerRef, multiple, children
 }
 
 export interface SearchFieldProps {
-  searchRef: React.RefObject<HTMLInputElement | null>;
+  searchRef: RefObject<HTMLInputElement | null>;
   query: string;
   onQuery: (value: string) => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
+  onKeyDown: (e: KeyboardEvent) => void;
   placeholder?: string;
   listId: string;
   adId?: string;
@@ -379,7 +400,7 @@ export function SearchField({
 
 export interface FilterRowProps {
   visible: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /* Collapse wrapper for filterable rows - rows ease out instead of popping. */
@@ -424,7 +445,6 @@ export interface UseListboxArgs {
   closeOnCommit: boolean;
 }
 
-
 export type ListboxState = ReturnType<typeof useListbox>;
 
 /* One listbox brain for both variants: open/query/refs/ids, option filtering,
@@ -446,7 +466,7 @@ export function useListbox({
   const triggerRef = useRef<HTMLButtonElement>(null),
     listRef = useRef<HTMLDivElement>(null),
     searchRef = useRef<HTMLInputElement>(null);
-  const baseId = id || idPrefix + React.useId();
+  const baseId = id || idPrefix + useId();
   const menuId = baseId + '-menu';
   const listId = baseId + '-list';
   const glide = useGlide(listRef);
@@ -546,7 +566,7 @@ export interface ListboxPanelProps {
   ariaLabel?: string;
   multiple?: boolean;
   /** Row check-slot renderer; the default is the single-select checkmark. */
-  check?: (selected: boolean) => React.ReactNode;
+  check?: (selected: boolean) => ReactNode;
 }
 
 const defaultCheck = (selected: boolean) =>
@@ -597,7 +617,7 @@ export function ListboxPanel({
         {loading ? (
           <LoadingRows />
         ) : (
-          <React.Fragment>
+          <Fragment>
             {lb.groups.map((g, gi) => (
               <div
                 className="select__group"
@@ -654,7 +674,7 @@ export function ListboxPanel({
               </div>
             ))}
             {lb.navItems.length === 0 && <EmptyRow query={lb.query} />}
-          </React.Fragment>
+          </Fragment>
         )}
       </div>
     </SelectMenu>

@@ -4,7 +4,15 @@
    The portal + stack + light-dismiss primitives live in layer.tsx (shared with
    select-core); this file adds the modal machinery on top. */
 import './overlay.css';
-import * as React from 'react';
+import {
+  Children,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { tokenPx } from '../token-px';
@@ -19,17 +27,16 @@ import {
 } from './layer';
 
 const SM = UIMotion;
-const { useEffect, useLayoutEffect, useRef } = React;
 
 function ovResolveChildren(
-  children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode),
+  children: ReactNode | ((api: { close: () => void }) => ReactNode),
   close: () => void,
-): React.ReactNode {
+): ReactNode {
   return typeof children === 'function' ? children({ close }) : children;
 }
 
 function ovCloneTrigger(
-  trigger: React.ReactElement | null,
+  trigger: ReactElement | null,
   {
     open,
     onPress,
@@ -41,9 +48,9 @@ function ovCloneTrigger(
     onPress: () => void;
     panelId: string;
     haspopup: string;
-    triggerRef: React.RefObject<HTMLElement>;
+    triggerRef: RefObject<HTMLElement>;
   },
-): React.ReactElement | null {
+): ReactElement | null {
   if (!trigger) return null;
   return cloneTrigger(
     trigger,
@@ -60,7 +67,7 @@ function ovCloneTrigger(
 }
 
 /* Restore focus to the opener on unmount, but only if it would otherwise be lost; a microtask dodges the inert-release ordering race. */
-function useReturnFocus(nodeRef: React.RefObject<HTMLElement>) {
+function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     return () => {
@@ -85,7 +92,7 @@ function useFocusTrap({
   panelRef,
   entry,
 }: {
-  panelRef: React.RefObject<HTMLElement>;
+  panelRef: RefObject<HTMLElement>;
   entry: OverlayEntry;
 }) {
   useEffect(() => {
@@ -197,8 +204,8 @@ function useAnchorPosition({
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   arrow: boolean;
-  triggerRef: React.RefObject<HTMLElement>;
-  panelRef: React.RefObject<HTMLElement>;
+  triggerRef: RefObject<HTMLElement>;
+  panelRef: RefObject<HTMLElement>;
 }) {
   useLayoutEffect(() => {
     const place = () => {
@@ -316,14 +323,14 @@ function ovPanelElement({
   motionProps,
 }: {
   asChild: boolean;
-  children: React.ReactNode;
-  prepend?: React.ReactNode;
-  nodeRef: React.RefObject<HTMLElement>;
+  children: ReactNode;
+  prepend?: ReactNode;
+  nodeRef: RefObject<HTMLElement>;
   className: string;
   motionProps: Record<string, any>;
-}): React.ReactElement {
+}): ReactElement {
   if (asChild) {
-    const child = React.Children.only(children) as React.ReactElement<any>;
+    const child = Children.only(children) as ReactElement<any>;
     if (typeof child.type === 'string') {
       const Tag = (motion as any)[child.type];
       const composedRef = (node: HTMLElement | null) => {
@@ -348,11 +355,7 @@ function ovPanelElement({
     console.warn('[Overlay] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
-    <motion.div
-      {...motionProps}
-      ref={nodeRef as React.RefObject<HTMLDivElement>}
-      className={className}
-    >
+    <motion.div {...motionProps} ref={nodeRef as RefObject<HTMLDivElement>} className={className}>
       {prepend}
       {children}
     </motion.div>
@@ -380,10 +383,10 @@ function ModalShell({
   dismissible: boolean;
   requestClose: () => void;
   asChild?: boolean;
-  slotRef?: React.RefObject<HTMLElement> | null;
+  slotRef?: RefObject<HTMLElement> | null;
   slotProps?: Record<string, any>;
   scrimOpacity?: any;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const layerRef = useRef<HTMLDivElement>(null);
   const internalSlotRef = useRef<HTMLElement>(null);

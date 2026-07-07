@@ -5,8 +5,7 @@
 import './date-picker.css';
 /* The footer Done renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
-import type { ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
@@ -20,14 +19,13 @@ import {
   DOW,
   key as toKey,
   parse,
+  col,
   today,
   grid,
   tzLabel,
   within,
   displayDay,
 } from './date-utils';
-
-const { useState, useRef, useEffect, useId } = React;
 
 export interface DtpPanelProps {
   val: string | null;
@@ -112,7 +110,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     setFocusKey(key);
     goToMonth(d.getFullYear(), d.getMonth());
   }
-  function onGridKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  function onGridKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const k = e.key;
     if (k === 'ArrowLeft') moveFocus(-1, 0);
     else if (k === 'ArrowRight') moveFocus(1, 0);
@@ -120,8 +118,8 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     else if (k === 'ArrowDown') moveFocus(7, 0);
     else if (k === 'PageUp') moveFocus(0, -1);
     else if (k === 'PageDown') moveFocus(0, 1);
-    else if (k === 'Home') moveFocus(-((parse(focusKey).getDay() + 6) % 7), 0);
-    else if (k === 'End') moveFocus(6 - ((parse(focusKey).getDay() + 6) % 7), 0);
+    else if (k === 'Home') moveFocus(-col(parse(focusKey)), 0);
+    else if (k === 'End') moveFocus(6 - col(parse(focusKey)), 0);
     else if (k === 'Enter' || k === ' ') pickDay(focusKey);
     else return;
     e.preventDefault();
@@ -222,9 +220,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                     disabled={!inRange(key)}
                     tabIndex={key === tabKey ? 0 : -1}
                     aria-selected={sel || undefined}
-                    aria-label={
-                      MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()
-                    }
+                    aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
                     onClick={() => pickDay(key)}
                     onPointerEnter={(e) => glide.enter(e.currentTarget)}
                   >

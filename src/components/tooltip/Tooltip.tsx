@@ -2,16 +2,27 @@
 
 /* Tooltip - a transient, non-interactive hint on hover/focus (one shared bubble). */
 import './tooltip.css';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import {
+  Children,
+  Fragment,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type FocusEvent,
+  type PointerEvent,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import type { ReactElement, ReactNode } from 'react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { cloneTrigger } from '../overlay/layer';
 import { tokenPx } from '../token-px';
 
 const SM = UIMotion;
-const { useRef, useEffect, useLayoutEffect, useState, useId, useSyncExternalStore } = React;
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -39,7 +50,6 @@ interface RenderedBox extends TargetBox {
 const OPEN_DELAY = 350;
 const CLOSE_GRACE = 140;
 const WARM_WINDOW = 300;
-
 
 /* Store - what's showing, where; triggers write, the host renders. */
 const store = {
@@ -175,8 +185,8 @@ function TooltipHost() {
 
   const off = box ? fromEdge(box.placement) : { x: 0, y: 0 };
 
-  return ReactDOM.createPortal(
-    <React.Fragment>
+  return createPortal(
+    <Fragment>
       {active && (
         <div className="tooltip tooltip--measure" ref={measureRef} aria-hidden="true">
           <Body a={active} />
@@ -226,7 +236,7 @@ function TooltipHost() {
           </motion.div>
         )}
       </AnimatePresence>
-    </React.Fragment>,
+    </Fragment>,
     document.body,
   );
 }
@@ -339,10 +349,10 @@ function Tooltip({
     store.close(myId, closeDelay);
   }
 
-  const onEnter = (e: React.PointerEvent) => {
+  const onEnter = (e: PointerEvent) => {
     if (e.pointerType !== 'touch') show(false);
   };
-  const onFocusIn = (e: React.FocusEvent) => {
+  const onFocusIn = (e: FocusEvent) => {
     if ((e.target as HTMLElement).matches(':focus-visible')) show(true);
   };
 
@@ -351,7 +361,7 @@ function Tooltip({
   // nesting it inside the anchor would feed the bubble's own pointer events back into show/hide.
   if (!asChild) {
     return (
-      <React.Fragment>
+      <Fragment>
         <span
           ref={wrapRef}
           className="tooltip-anchor"
@@ -364,15 +374,15 @@ function Tooltip({
           {children}
         </span>
         {isHost && <TooltipHost />}
-      </React.Fragment>
+      </Fragment>
     );
   }
 
   // asChild: clone the child, merging our handlers + ref (a press dismisses: activating != hinting).
   return (
-    <React.Fragment>
+    <Fragment>
       {cloneTrigger(
-        React.Children.only(children),
+        Children.only(children),
         {
           onPointerEnter: onEnter,
           onPointerLeave: hide,
@@ -385,7 +395,7 @@ function Tooltip({
         },
       )}
       {isHost && <TooltipHost />}
-    </React.Fragment>
+    </Fragment>
   );
 }
 

@@ -3,12 +3,19 @@
 // AvatarGroup - stacks Avatars with overlap + a "+N" overflow chip; CSS drives the hover-spread.
 
 import './avatar.css';
-import * as React from 'react';
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type HTMLAttributes,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import type { AvatarSize } from './Avatar';
 
-export interface AvatarGroupProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface AvatarGroupProps extends HTMLAttributes<HTMLSpanElement> {
   /** The `Avatar` elements to stack; each is cloned to force `size`, then sliced to `max`. */
-  children: React.ReactNode;
+  children: ReactNode;
   /** Max visible avatars before "+N" overflow chip. Default 5. */
   max?: number;
   /** Uniform size applied to all children. Default 'md'. */
@@ -22,15 +29,15 @@ export function AvatarGroup({
   className = '',
   ...rest
 }: AvatarGroupProps) {
-  const items = React.Children.toArray(children);
+  const items = Children.toArray(children);
   const visible = max > 0 ? items.slice(0, max) : items;
   const overflow = items.length - visible.length;
 
   return (
     <span className={['avatar-group', className].filter(Boolean).join(' ')} {...rest}>
       {visible.map((child, i) =>
-        React.isValidElement(child)
-          ? React.cloneElement(child as React.ReactElement<{ size?: AvatarSize }>, {
+        isValidElement(child)
+          ? cloneElement(child as ReactElement<{ size?: AvatarSize }>, {
               size,
               key: child.key ?? i,
             })

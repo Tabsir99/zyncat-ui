@@ -2,7 +2,7 @@
 
 /* Overlay - one headless component, three modes: popover - dialog - sheet. */
 import './overlay.css';
-import * as React from 'react';
+import { Fragment, useId, useRef, type ReactElement, type ReactNode, type RefObject } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import {
@@ -20,7 +20,6 @@ import { useControllable } from '../use-controllable';
 import { useSheetDrag } from './sheet-drag';
 
 const SM = UIMotion;
-const { useRef, useId } = React;
 
 export interface OverlayProps {
   /** Skin + modality. Default 'popover'. */
@@ -34,7 +33,7 @@ export interface OverlayProps {
   onOpenChange?: (open: boolean) => void;
 
   /** Cloned to toggle (popover) / open (modal); required as the popover anchor. */
-  trigger?: React.ReactElement | null;
+  trigger?: ReactElement | null;
 
   /** Popover side (default 'bottom', flips) / sheet edge (default 'right'). */
   side?: 'top' | 'bottom' | 'left' | 'right';
@@ -52,7 +51,7 @@ export interface OverlayProps {
   /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
   /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
-  children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode);
+  children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
 /* scales open from the anchored edge (transform-origin set in overlay.css) */
@@ -107,8 +106,8 @@ function PopoverPanel({
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   arrow: boolean;
-  triggerRef: React.RefObject<HTMLElement>;
-  children: React.ReactNode;
+  triggerRef: RefObject<HTMLElement>;
+  children: ReactNode;
 }) {
   const panelRef = useRef<HTMLElement>(null);
   const entry = useOverlayEntry({ nodeRef: panelRef, dismissible, requestClose });
@@ -148,7 +147,7 @@ function SheetShell({
   children,
 }: PanelShared & {
   side: 'right' | 'bottom';
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const slotRef = useRef<HTMLElement>(null);
   const { slotProps, scrimOpacity } = useSheetDrag({
@@ -199,7 +198,7 @@ export function Overlay({
   const shared: PanelShared = { panelId, dismissible, asChild, requestClose: close };
 
   return (
-    <React.Fragment>
+    <Fragment>
       {ovCloneTrigger(trigger, {
         open,
         onPress: () => setOpen(modal ? true : !open),
@@ -238,6 +237,6 @@ export function Overlay({
             ))}
         </AnimatePresence>
       </OverlayPortal>
-    </React.Fragment>
+    </Fragment>
   );
 }

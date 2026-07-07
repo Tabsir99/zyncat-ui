@@ -3,15 +3,16 @@
 // Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
 import './toggle.css';
-import * as React from 'react';
+import {
+  useState,
+  type ChangeEvent,
+  type ChangeEventHandler,
+  type InputHTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { useControllable } from '../use-controllable';
 
-const { useState } = React;
-
-export interface ToggleProps extends Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  'size' | 'type'
-> {
+export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
   checked?: boolean;
   /** Uncontrolled initial state. */
@@ -21,11 +22,11 @@ export interface ToggleProps extends Omit<
   /** Track size: `md` 36x20 - `sm` 28x16 for dense settings/table rows. @default 'md' */
   size?: 'sm' | 'md';
   /** Label text beside the track. */
-  label?: React.ReactNode;
+  label?: ReactNode;
   /** Optional secondary line under the label (settings rows). */
-  description?: React.ReactNode;
+  description?: ReactNode;
   /** Fires on flip - read `e.target.checked`. */
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
 export function Toggle({
@@ -53,7 +54,7 @@ export function Toggle({
     };
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setOn(e.target.checked);
     if (onChange) onChange(e);
   }

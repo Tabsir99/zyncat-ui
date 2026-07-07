@@ -4,10 +4,16 @@
    a body-portal host, the overlay stack (Escape + focus-trap deference), and
    light dismiss. overlay-core builds dialogs/sheets on top; select-core mounts
    its menu through here so ancestor transforms can't hijack its coords. */
-import * as React from 'react';
+import {
+  cloneElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { createPortal } from 'react-dom';
-
-const { useEffect, useLayoutEffect, useRef } = React;
 
 /* The overlay stack: one Esc listener closes only the topmost dismissible, and defers to inner handlers that already consumed the key (defaultPrevented). */
 interface OverlayEntry {
@@ -44,7 +50,7 @@ function useOverlayEntry({
   dismissible,
   requestClose,
 }: {
-  nodeRef: React.RefObject<HTMLElement>;
+  nodeRef: RefObject<HTMLElement>;
   dismissible: boolean;
   requestClose: () => void;
 }): OverlayEntry {
@@ -83,7 +89,7 @@ function useOutsidePress({
   onPress,
 }: {
   entry: OverlayEntry;
-  refs: React.RefObject<HTMLElement>[];
+  refs: RefObject<HTMLElement>[];
   enabled: boolean;
   onPress: () => void;
 }) {
@@ -106,10 +112,10 @@ function useOutsidePress({
    child's own, everything else overrides, and `setNode` composes with the child's ref
    (fn or object, incl. React 19 ref-as-prop). Overlay and Tooltip both clone through here. */
 function cloneTrigger(
-  child: React.ReactElement,
+  child: ReactElement,
   props: Record<string, unknown>,
   setNode?: (node: HTMLElement | null) => void,
-): React.ReactElement {
+): ReactElement {
   const own = child.props as Record<string, unknown>;
   const merged: Record<string, unknown> = { ...props };
   for (const key of Object.keys(props)) {
@@ -123,7 +129,7 @@ function cloneTrigger(
     }
   }
   if (setNode) {
-    const childRef = (child as React.ReactElement & { ref?: unknown }).ref;
+    const childRef = (child as ReactElement & { ref?: unknown }).ref;
     merged.ref = (node: HTMLElement | null) => {
       setNode(node);
       if (typeof childRef === 'function') childRef(node);
@@ -131,11 +137,11 @@ function cloneTrigger(
         (childRef as { current: unknown }).current = node;
     };
   }
-  return React.cloneElement(child, merged);
+  return cloneElement(child, merged);
 }
 
 /* Per-instance <body> host (escapes ancestor transforms; skipped by inert); persists across open/close so AnimatePresence can play exits. */
-function OverlayPortal({ children }: { children: React.ReactNode }) {
+function OverlayPortal({ children }: { children: ReactNode }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   // SSR guard: reached during server render; hooks below stay unconditional.
   if (typeof document !== 'undefined' && !hostRef.current) {

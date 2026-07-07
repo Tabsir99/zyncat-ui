@@ -3,15 +3,13 @@
 /* DateTimeField - DateField's sibling for 'YYYY-MM-DDTHH:mm': the calendar panel plus the segmented time machine; commits only complete datetimes. */
 
 import './date-picker.css';
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../use-controllable';
-import { TimeSegments } from './time-core';
+import { TimeSegments, disp12 } from './time-core';
 import { DtpPanel } from './DateField';
 import { pad, displayDay } from './date-utils';
-
-const { useState, useEffect } = React;
 
 interface DateTimeParts {
   date: string | null;
@@ -22,7 +20,7 @@ function displayTime(t: string, format?: '24h' | '12h'): string {
   if (format !== '12h') return t;
   const p = t.split(':').map(Number);
   const mer = p[0] >= 12 ? 'PM' : 'AM';
-  return ((p[0] + 11) % 12) + 1 + ':' + pad(p[1]) + ' ' + mer;
+  return disp12(p[0]) + ':' + pad(p[1]) + ' ' + mer;
 }
 /* value: 'YYYY-MM-DDTHH:mm' - parts. Limits may be date-only. */
 function dttfSplit(v: string | null | undefined): DateTimeParts {

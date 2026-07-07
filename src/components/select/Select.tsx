@@ -2,7 +2,7 @@
 
 /* Select - single-select custom listbox; committing closes the menu and returns focus. */
 import './select.css';
-import * as React from 'react';
+import type { ReactNode } from 'react';
 import { useControllable } from '../use-controllable';
 import {
   useListbox,
@@ -39,7 +39,7 @@ export interface SelectProps {
   /** Placeholder for the `searchable` filter input. @default 'Filter options' */
   searchPlaceholder?: string;
   /** Your own icon node pinned before the trigger label; else the selected option's icon. */
-  leadingIcon?: React.ReactNode;
+  leadingIcon?: ReactNode;
   /** Base id for the trigger/menu/list ids and a11y wiring; auto-generated if omitted. */
   id?: string;
   /** Accessible name for the trigger and listbox - supply when there is no visible label. */

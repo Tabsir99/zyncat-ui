@@ -5,15 +5,20 @@
 import './table.css';
 /* The bulk bar's Clear button renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
+import {
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type MouseEvent,
+  type ReactNode,
+} from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { CheckGlyph } from '../checkbox/check-glyph';
 import { Odometer } from '../badge/odometer';
 import { useScrollEdges } from '../use-scroll-edges';
-
-const { useState, useRef, useMemo } = React;
 
 export type TableAlign = 'start' | 'end' | 'center';
 export type TableHideBelow = 'sm' | 'md';
@@ -22,7 +27,7 @@ export interface TableColumn<Row = any> {
   /** Unique column id; also the default data accessor (row[key]). */
   key: string;
   /** Header cell content; omit for a header-less column (e.g. an actions column). */
-  label?: React.ReactNode;
+  label?: ReactNode;
   /** Cell + header alignment. Default 'start'. */
   align?: TableAlign;
   /** Mono + tabular numerals (timestamps, counts, IDs - section E). */
@@ -38,7 +43,7 @@ export interface TableColumn<Row = any> {
   /** Collapse this column below a container breakpoint (30rem / 42rem). */
   hideBelow?: TableHideBelow;
   /** Custom cell renderer. Defaults to row[key]. */
-  render?: (row: Row) => React.ReactNode;
+  render?: (row: Row) => ReactNode;
 }
 
 export interface TableSort {
@@ -63,7 +68,7 @@ export interface TableProps<Row = any> {
   /** Fires with the selected row keys after every selection change. */
   onSelectionChange?: (keys: Array<string | number>) => void;
   /** Rendered in the bulk bar between the count and the built-in Clear. */
-  bulkActions?: (keys: Array<string | number>, clear: () => void) => React.ReactNode;
+  bulkActions?: (keys: Array<string | number>, clear: () => void) => ReactNode;
   /** Per-row checkbox aria-label. Default 'Select row'. */
   selectionLabel?: (row: Row) => string;
 
@@ -80,9 +85,9 @@ export interface TableProps<Row = any> {
   /** Rows recede and go inert (list-fetch convention). */
   loading?: boolean;
   /** Shown when rows is empty and not loading. Default 'Nothing to show'. */
-  empty?: React.ReactNode;
+  empty?: ReactNode;
   /** Footer strip - pagination, summaries. */
-  footer?: React.ReactNode;
+  footer?: ReactNode;
 
   /** Makes rows clickable (checkbox cell excluded). */
   onRowClick?: (row: Row) => void;
@@ -103,8 +108,8 @@ interface TblCheckboxProps {
   checked?: boolean;
   indeterminate?: boolean;
   ariaLabel?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
 }
 
 /* the Checkbox primitive minus its label wrapper - CheckGlyph carries checkbox.css */
@@ -378,9 +383,7 @@ export function Table<Row = any>({
                             .concat(c.strong ? ['tbl__cell--strong'] : [])
                             .join(' ')}
                         >
-                          {c.render
-                            ? c.render(row)
-                            : (row as Record<string, React.ReactNode>)[c.key]}
+                          {c.render ? c.render(row) : (row as Record<string, ReactNode>)[c.key]}
                         </td>
                       ))}
                     </motion.tr>

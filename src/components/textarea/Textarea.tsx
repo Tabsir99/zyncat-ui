@@ -3,7 +3,16 @@
 // Textarea.tsx - multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
 
 import './textarea.css';
-import * as React from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ChangeEventHandler,
+  type CSSProperties,
+  type KeyboardEvent,
+  type ReactNode,
+  type TextareaHTMLAttributes,
+} from 'react';
 import {
   FieldLabel,
   FieldMessage,
@@ -13,14 +22,14 @@ import {
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
-export interface TextareaProps extends Omit<
-  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-  'size' | 'rows' | 'onSubmit'
->, FieldMessagingProps {
+export interface TextareaProps
+  extends
+    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'rows' | 'onSubmit'>,
+    FieldMessagingProps {
   /** Controlled text value. @default '' */
   value?: string;
   /** Change handler - fired on each edit with the textarea change event. */
-  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
   /** Fired on ⌘/Ctrl+Enter with the current text. */
   onSubmit?: (value: string) => void;
   /** Soft char limit: shows the meter + over-limit highlight. Does NOT truncate (use native maxLength for a hard stop). */
@@ -32,7 +41,7 @@ export interface TextareaProps extends Omit<
   /** Remaining-chars threshold that flips the meter amber. Default 20. */
   warnAt?: number;
   /** Footer hint, left of the meter - e.g. a ⌘↵ affordance. */
-  hint?: React.ReactNode;
+  hint?: ReactNode;
   /** md (default) - lg (prominent composer). */
   size?: 'md' | 'lg';
 }
@@ -61,9 +70,9 @@ export function Textarea({
   className = '',
   ...rest
 }: TextareaProps) {
-  const taRef = React.useRef<HTMLTextAreaElement>(null);
-  const stackRef = React.useRef<HTMLDivElement>(null);
-  const mirrorRef = React.useRef<HTMLDivElement>(null);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const mirrorRef = useRef<HTMLDivElement>(null);
   const text = value ?? '';
   const count = text.length;
   const over = max ? Math.max(count - max, 0) : 0;
@@ -92,10 +101,10 @@ export function Textarea({
     void stack.offsetHeight; // force a reflow so the height transition runs from start
     stack.style.height = target + 'px';
   };
-  React.useLayoutEffect(resize, [text, size]);
+  useLayoutEffect(resize, [text, size]);
   /* re-measure on WIDTH changes only (window, splitter, panel collapse); the observer must
      ignore the height mutations resize() itself makes, or it would feed back on itself. */
-  React.useEffect(() => {
+  useEffect(() => {
     const stack = stackRef.current;
     if (!stack) return undefined;
     let w = stack.offsetWidth;
@@ -109,7 +118,7 @@ export function Textarea({
     return () => ro.disconnect();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (onSubmit && (e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
       onSubmit(text);
@@ -129,7 +138,7 @@ export function Textarea({
       <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div
         className={boxCls}
-        style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as React.CSSProperties}
+        style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as CSSProperties}
       >
         <div className="txa__stack" ref={stackRef}>
           <div className="txa__mirror" ref={mirrorRef} aria-hidden="true">
@@ -171,7 +180,7 @@ export function Textarea({
                     {
                       '--txa-ring-c': RING_C,
                       '--txa-ring-p': Math.min(count / max, 1),
-                    } as React.CSSProperties
+                    } as CSSProperties
                   }
                 >
                   <circle className="txa__ring-trk" cx="8" cy="8" r="7" />

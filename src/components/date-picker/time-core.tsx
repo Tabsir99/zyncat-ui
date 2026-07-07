@@ -3,9 +3,14 @@
 /* TimeSegments - the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
 
 import './date-picker.css';
-import * as React from 'react';
-
-const { useState, useRef, useEffect } = React;
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ClipboardEvent,
+  type KeyboardEvent,
+  type RefObject,
+} from 'react';
 
 type Meridiem = 'AM' | 'PM';
 type Segment = 'h' | 'm';
@@ -27,7 +32,7 @@ export interface TimeSegmentsProps {
 }
 
 const tsgPad = (n: number): string => String(n).padStart(2, '0');
-const tsgDisp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
+export const disp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
 const tsgToH24 = (d12: number, mer: Meridiem): number => (d12 % 12) + (mer === 'PM' ? 12 : 0);
 
 /* feed one digit into a bounded two-digit segment; done = saturated (can't take another). */
@@ -108,11 +113,11 @@ export function TimeSegments({
     if (onCommit) onCommit(t);
   }
 
-  const focusSeg = (r: React.RefObject<HTMLSpanElement | null>) => {
+  const focusSeg = (r: RefObject<HTMLSpanElement | null>) => {
     if (r.current) r.current.focus();
   };
 
-  function onHKey(e: React.KeyboardEvent<HTMLSpanElement>) {
+  function onHKey(e: KeyboardEvent<HTMLSpanElement>) {
     const k = e.key;
     if (/^[0-9]$/.test(k)) {
       const pd = pend && pend.seg === 'h' ? pend.d : null;
@@ -145,7 +150,7 @@ export function TimeSegments({
     e.preventDefault();
   }
 
-  function onMKey(e: React.KeyboardEvent<HTMLSpanElement>) {
+  function onMKey(e: KeyboardEvent<HTMLSpanElement>) {
     const k = e.key;
     if (/^[0-9]$/.test(k)) {
       const pd = pend && pend.seg === 'm' ? pend.d : null;
@@ -194,12 +199,12 @@ export function TimeSegments({
   function setMeridiem(next: Meridiem) {
     setMer(next);
     if (h != null) {
-      const nh = tsgToH24(tsgDisp12(h), next);
+      const nh = tsgToH24(disp12(h), next);
       setH(nh);
       tryCommit(nh, mLive.current);
     }
   }
-  function onMerKey(e: React.KeyboardEvent<HTMLSpanElement>) {
+  function onMerKey(e: KeyboardEvent<HTMLSpanElement>) {
     const k = e.key;
     if (k === 'a' || k === 'A') setMeridiem('AM');
     else if (k === 'p' || k === 'P') setMeridiem('PM');
@@ -213,7 +218,7 @@ export function TimeSegments({
     e.preventDefault();
   }
 
-  function onPaste(e: React.ClipboardEvent<HTMLDivElement>) {
+  function onPaste(e: ClipboardEvent<HTMLDivElement>) {
     if (disabled) return;
     const txt = (e.clipboardData.getData('text') || '').trim();
     const mt =
@@ -241,7 +246,7 @@ export function TimeSegments({
 
   /* pending digit overrides canonical display, so typing '0' in 12h shows '00', not a premature '12'. */
   const hText =
-    pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? tsgDisp12(h) : h);
+    pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? disp12(h) : h);
   const mText = pend && pend.seg === 'm' ? tsgPad(pend.d) : m == null ? '--' : tsgPad(m);
 
   const segCls = (empty: boolean): string => 'tsg__seg' + (empty ? ' is-empty' : '');
@@ -263,7 +268,7 @@ export function TimeSegments({
         aria-label="Hours"
         aria-valuemin={is12 ? 1 : 0}
         aria-valuemax={is12 ? 12 : 23}
-        aria-valuenow={h == null ? undefined : is12 ? tsgDisp12(h) : h}
+        aria-valuenow={h == null ? undefined : is12 ? disp12(h) : h}
         aria-valuetext={h == null ? 'Empty' : hText}
         onKeyDown={disabled ? undefined : onHKey}
         onBlur={onSegBlur('h')}

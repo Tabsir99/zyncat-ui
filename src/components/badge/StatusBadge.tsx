@@ -3,9 +3,10 @@
 // StatusBadge - a status as a badge; canonical tone+label mapping; morph tweens width in place.
 
 import './badge.css';
-import * as React from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Badge, type BadgeProps } from './Badge';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { fireGlint } from '../glass/glint';
 
 const SM = UIMotion;
 
@@ -56,19 +57,19 @@ interface Word {
 function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   const s = POST_STATUS[status] || POST_STATUS.draft;
 
-  const prev = React.useRef(status);
-  const keyRef = React.useRef(1);
-  const labelRef = React.useRef<HTMLSpanElement>(null);
-  const ghostRef = React.useRef<HTMLSpanElement>(null);
-  const [words, setWords] = React.useState<Word[]>([{ key: 0, label: s.label, cls: '' }]);
-  const [boxW, setBoxW] = React.useState<number>();
+  const prev = useRef(status);
+  const keyRef = useRef(1);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const ghostRef = useRef<HTMLSpanElement>(null);
+  const [words, setWords] = useState<Word[]>([{ key: 0, label: s.label, cls: '' }]);
+  const [boxW, setBoxW] = useState<number>();
 
   // initial width only; on change the width eases in the rAF below, synced to the word roll
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth);
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (prev.current === status) return;
     prev.current = status;
     const next = POST_STATUS[status] || POST_STATUS.draft;
@@ -93,21 +94,15 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
       SM.dur.base * 1000 + 80,
     );
     // glint when a post lands on a terminal state
-    let glintT: ReturnType<typeof setTimeout> | undefined;
+    let stopGlint: (() => void) | undefined;
     if (TERMINAL[status] && labelRef.current) {
       const chip = labelRef.current.closest('.badge') as HTMLElement | null;
-      if (chip) {
-        chip.classList.remove('glass-glint');
-        // restart the one-shot
-        void chip.offsetWidth;
-        chip.classList.add('glass-glint');
-        glintT = setTimeout(() => chip.classList.remove('glass-glint'), SM.dur.slow * 1000 + 80);
-      }
+      if (chip) stopGlint = fireGlint(chip);
     }
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(drop);
-      clearTimeout(glintT);
+      stopGlint?.();
     };
   }, [status]);
 

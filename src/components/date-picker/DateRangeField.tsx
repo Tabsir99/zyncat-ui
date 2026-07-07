@@ -5,7 +5,7 @@
 import './date-picker.css';
 /* The footer Done renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
@@ -27,8 +27,6 @@ import {
   tzLabel,
   within,
 } from './date-utils';
-
-const { useState, useRef, useEffect } = React;
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {
@@ -210,7 +208,7 @@ function DrpPanel({
       setView({ y: back.getFullYear(), m: back.getMonth() });
     }
   }
-  function onGridKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+  function onGridKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const k = e.key;
     if (k === 'ArrowLeft') moveFocus(-1);
     else if (k === 'ArrowRight') moveFocus(1);
@@ -419,12 +417,12 @@ function DrpPanel({
       <div className="drp__foot">
         <span className={'drp__readout' + (lo && hi ? '' : ' is-empty')}>
           {lo && hi ? (
-            <React.Fragment>
+            <Fragment>
               {drpRangeText(lo, hi)}{' '}
               <span className="drp__count">
                 - {drpDays(lo, hi)} {drpDays(lo, hi) === 1 ? 'day' : 'days'}
               </span>
-            </React.Fragment>
+            </Fragment>
           ) : anchor ? (
             'Pick the end date'
           ) : (

@@ -4,10 +4,21 @@
 import './toast.css';
 /* The action renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { fireGlint } from '../glass/glint';
 import { tokenPx } from '../token-px';
 import { Icon, type IconName } from '../icon/Icon';
 import {
@@ -20,7 +31,6 @@ import {
 
 const SM = UIMotion;
 const store = UIToast;
-const { useRef, useEffect, useLayoutEffect, useState, useSyncExternalStore } = React;
 
 const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
@@ -43,7 +53,7 @@ const TONE_ICON: Record<string, IconName> = {
 /* useToneGesture - success glint, error headshake; the glint class is toggled with a reflow (remove - offsetWidth - add) to restart the one-shot. */
 function useToneGesture(
   tone: ToastTone,
-  ref: React.RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement>,
   x: ReturnType<typeof useMotionValue<number>>,
 ) {
   const prevTone = useRef<ToastTone | null>(null);
@@ -51,14 +61,7 @@ function useToneGesture(
     const prev = prevTone.current;
     prevTone.current = tone;
     if (tone === prev) return;
-    if (tone === 'success') {
-      const el = ref.current;
-      el.classList.remove('glass-glint');
-      void el.offsetWidth;
-      el.classList.add('glass-glint');
-      const id = setTimeout(() => el.classList.remove('glass-glint'), SM.dur.slow * 1000 + 80);
-      return () => clearTimeout(id);
-    }
+    if (tone === 'success') return fireGlint(ref.current);
     if (tone === 'error') {
       const fall = animate(x, [0, -7, 5, -2, 0], {
         duration: SM.dur.slow,
@@ -137,11 +140,7 @@ function ToastItem({
         if (e.key === 'Escape' && t.dismissible) store.dismiss(t.id);
       }}
     >
-      {t.node ? (
-        <div className="toast__custom">{t.node as React.ReactNode}</div>
-      ) : (
-        <ToastBody t={t} />
-      )}
+      {t.node ? <div className="toast__custom">{t.node as ReactNode}</div> : <ToastBody t={t} />}
     </motion.li>
   );
 }
@@ -312,9 +311,7 @@ function ToastHost({ config }: { config: ToasterConfig }) {
       className={'toast-viewport' + (paused ? ' is-paused' : '')}
       data-position={config.position}
       style={
-        config.offset
-          ? ({ '--toast-offset': `${config.offset}px` } as React.CSSProperties)
-          : undefined
+        config.offset ? ({ '--toast-offset': `${config.offset}px` } as CSSProperties) : undefined
       }
       aria-label="Notifications"
       onPointerOver={(e) => {
@@ -370,7 +367,7 @@ export interface ToasterProps extends Partial<ToasterConfig> {}
 
 /* Toaster - mount once near the app root. It owns the toast viewport and registers the queue;
    without it, toast() renders nothing (and warns once in the browser). */
-export function Toaster(props: ToasterProps): React.ReactElement {
+export function Toaster(props: ToasterProps): ReactElement {
   const config: ToasterConfig = { ...DEFAULT_TOASTER_CONFIG, ...stripUndefined(props) };
 
   useEffect(() => {

@@ -21,7 +21,14 @@
 // geometry), and the selected tab is kept in view.
 
 import './tabs.css';
-import * as React from 'react';
+import {
+  useId,
+  useLayoutEffect,
+  useRef,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
@@ -35,16 +42,16 @@ export interface TabItem {
   /** Stable identity - also used in the tab/panel id pair. */
   value: string;
   /** Visible tab text. */
-  label: React.ReactNode;
+  label: ReactNode;
   /** Leading icon - your own node. */
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   /** Rendered mono + tabular. Pass a number or a preformatted string. */
   count?: number | string;
   /** Dims the tab, blocks selection, and skips it during arrow-key travel. */
   disabled?: boolean;
 }
 
-export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** The tab row, in order. @default [] */
   items: TabItem[];
   /** Controlled - the value of the active tab (null/undefined hides the ink). */
@@ -80,15 +87,15 @@ export function Tabs({
   className = '',
   ...rest
 }: TabsProps) {
-  const autoId = React.useId();
+  const autoId = useId();
   const base = name || autoId;
 
-  const listRef = React.useRef<HTMLDivElement>(null);
-  const inkRef = React.useRef<HTMLSpanElement>(null);
-  const tabRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
-  const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-  const placedRef = React.useRef(false);
-  const valueRef = React.useRef(value);
+  const listRef = useRef<HTMLDivElement>(null);
+  const inkRef = useRef<HTMLSpanElement>(null);
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const animRef = useRef<ReturnType<typeof animate> | null>(null);
+  const placedRef = useRef(false);
+  const valueRef = useRef(value);
   valueRef.current = value;
 
   /* The gliding hover - one persistent pill; fresh entry fades in place,
@@ -149,7 +156,7 @@ export function Tabs({
   });
 
   /* Selection drives the travel + keeps the active tab clear of a faded edge. */
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     place(true);
     const l = listRef.current,
       el = value != null ? tabRefs.current[value] : null;
@@ -168,7 +175,7 @@ export function Tabs({
 
   /* Any size change (fonts arriving, container resize, label edits) re-seats
      the ink instantly and re-derives the edge fades. */
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const ro = new ResizeObserver(() => {
       place(false);
       syncEdges();
@@ -185,7 +192,7 @@ export function Tabs({
     onChange(v, idx(v) >= idx(value) ? 1 : -1);
   };
 
-  const onKeyDown = (e: React.KeyboardEvent) => {
+  const onKeyDown = (e: KeyboardEvent) => {
     const enabled = items.filter((i) => !i.disabled);
     if (!enabled.length) return;
     let next: TabItem | null = null;
@@ -260,7 +267,7 @@ export function Tabs({
   );
 }
 
-export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'dir'> {
+export interface TabPanelProps extends Omit<HTMLAttributes<HTMLDivElement>, 'dir'> {
   /** The active tab's value - changing it cuts to the new content. */
   tab: string;
   /** Same `name` as the paired Tabs - wires role/id/aria-labelledby. */
@@ -268,7 +275,7 @@ export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   /** Direction of travel from Tabs' onChange; 0 = plain fade. */
   dir?: -1 | 0 | 1;
   /** Panel content - only this inner node animates in on `tab` change; the root chrome stays static. */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 // TabPanel - the content side of a Tabs pair. The ROOT is static chrome (consumer
@@ -276,9 +283,9 @@ export interface TabPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>
 // from the direction of travel (pass Tabs' onChange dir through) via one imperative
 // tween on a persistent node - cut + entrance, no exit choreography, no remount.
 export function TabPanel({ tab, name, dir = 0, className = '', children, ...rest }: TabPanelProps) {
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const firstRef = React.useRef(true);
-  React.useLayoutEffect(() => {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const firstRef = useRef(true);
+  useLayoutEffect(() => {
     if (firstRef.current) {
       firstRef.current = false;
       return;

@@ -5,7 +5,7 @@
 import './alert.css';
 /* The action renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import * as React from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
@@ -20,13 +20,13 @@ export interface AlertAction {
   onClick?: () => void;
 }
 
-export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   /** Status of the message; info/success are polite, warning/danger assertive. Default 'info'. */
   tone?: AlertTone;
   /** The message - sentence case, ideally one line. */
-  title: React.ReactNode;
+  title: ReactNode;
   /** Optional description; stays neutral - tone marks the message, not the prose. */
-  children?: React.ReactNode;
+  children?: ReactNode;
   /** One action max, rendered as the system secondary small button. */
   action?: AlertAction;
   /** Renders the always-visible close button. Uncontrolled unless `open` is given. */
@@ -38,7 +38,7 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   /** App-level strip: square corners, hairline below only. Paint modifier. */
   banner?: boolean;
   /** Override the tone glyph; pass null to render no glyph. */
-  icon?: React.ReactNode | null;
+  icon?: ReactNode | null;
 }
 
 const { t } = UIMotion;
