@@ -4,7 +4,7 @@ Premium React 19 design system, shipped as built ESM + types. This is a compact 
 index; full prop types (with docs) live in node_modules/premium-ds/dist/*.d.ts.
 
 Setup:
-  import { Button, toast } from 'premium-ds';   // barrel - or a subpath: premium-ds/button
+  import { Button } from 'premium-ds/button';   // one subpath per component - there is no barrel entry
   import 'premium-ds/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
@@ -142,7 +142,7 @@ Alert - premium-ds/alert
 Toast - premium-ds/toast  (imperative; mount <Toaster /> once at the app root, then call toast() from anywhere)
   <Toaster /> props: position ('bottom-right' default), duration, visibleToasts, gap, offset, expand. Without it, toast() no-ops.
   toast(msg) - toast.success/error/warning/info(msg, { description, action }) - toast.promise(p, { loading, success, error }) - toast.loading - toast.dismiss().
-  import { Toaster, toast } from 'premium-ds';
+  import { Toaster, toast } from 'premium-ds/toast';
   // once at the root: <Toaster position="bottom-right" />
   toast.success('Changes saved', { description: 'Synced to the cloud' });
   toast.promise(save(), { loading: 'Saving...', success: (v) => `Saved - ${v.count}`, error: (e) => `Failed - ${e.message}` });

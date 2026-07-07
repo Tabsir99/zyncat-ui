@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { Alert, Tooltip, Dialog, Overlay, Button, toast } from 'premium-ds';
+import { Alert } from 'premium-ds/alert';
+import { Tooltip } from 'premium-ds/tooltip';
+import { Dialog } from 'premium-ds/dialog';
+import { Overlay } from 'premium-ds/overlay';
+import { Button } from 'premium-ds/button';
+import { toast } from 'premium-ds/toast';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

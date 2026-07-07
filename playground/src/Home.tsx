@@ -13,14 +13,14 @@ export function Home() {
           name="description"
           content="A premium React 19 design system: accessible, animated components on a small, closed CSS token vocabulary. No Tailwind, no CSS-in-JS. Browse 30+ live components."
         />
-        <link rel="canonical" href={SITE} />
+        <link rel="canonical" href={`${SITE}/components`} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="premium-ds - a calm, polished React 19 design system" />
         <meta
           property="og:description"
           content="Accessible, animated React 19 components on a small, closed CSS token vocabulary."
         />
-        <meta property="og:url" content={SITE} />
+        <meta property="og:url" content={`${SITE}/components`} />
       </Head>
       <header className="hero">
         <p className="hero__eyebrow">premium-ds</p>

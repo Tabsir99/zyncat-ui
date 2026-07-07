@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Toaster } from 'premium-ds';
+import { Toaster } from 'premium-ds/toast';
 import { GROUPS } from './registry';
 
 export function Layout() {

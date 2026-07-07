@@ -2,7 +2,7 @@ import type { ComponentDoc } from './types';
 
 export const primitives: Record<string, ComponentDoc> = {
   button: {
-    example: `import { Button } from 'premium-ds';
+    example: `import { Button } from 'premium-ds/button';
 
 <Button variant="primary" onClick={schedulePost}>Schedule post</Button>`,
     props: [
@@ -45,7 +45,7 @@ export const primitives: Record<string, ComponentDoc> = {
   },
 
   icon: {
-    example: `import { Button } from 'premium-ds';
+    example: `import { Button } from 'premium-ds/button';
 // bring your own icon library
 
 <Button iconLeft={<PaperPlaneTilt />}>Publish</Button>`,
@@ -53,7 +53,7 @@ export const primitives: Record<string, ComponentDoc> = {
   },
 
   collapse: {
-    example: `import { Collapse } from 'premium-ds';
+    example: `import { Collapse } from 'premium-ds/collapse';
 
 <Collapse open={showRules}>
   <div>Additional scheduling rules for this batch.</div>
@@ -87,7 +87,7 @@ export const primitives: Record<string, ComponentDoc> = {
   },
 
   badge: {
-    example: `import { Badge } from 'premium-ds';
+    example: `import { Badge } from 'premium-ds/badge';
 
 <Badge tone="success" pill>Published</Badge>
 <Badge tone="warning" dot>Review pending</Badge>`,
@@ -133,7 +133,7 @@ export const primitives: Record<string, ComponentDoc> = {
   },
 
   'status-badge': {
-    example: `import { StatusBadge } from 'premium-ds';
+    example: `import { StatusBadge } from 'premium-ds/status-badge';
 
 <StatusBadge status="scheduled" />
 <StatusBadge status={currentStatus} morph />`,
@@ -188,7 +188,7 @@ export const primitives: Record<string, ComponentDoc> = {
   },
 
   'count-badge': {
-    example: `import { CountBadge } from 'premium-ds';
+    example: `import { CountBadge } from 'premium-ds/count-badge';
 
 <CountBadge value="7 / 10" />
 <CountBadge value={queued} roll tone="info" />`,

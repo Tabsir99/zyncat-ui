@@ -21,6 +21,9 @@ import { GlidePill, useGlide } from '../motion/glide';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
 
+/* Option shapes belong to this subpath's public API; select-core is not an entry point. */
+export type { SelectOption, SelectGroup } from './select-core';
+
 export interface SelectProps {
   /** The choices - a flat `SelectOption[]`, or `SelectGroup[]` to render labeled sections. @default [] */
   options: SelectOption[] | SelectGroup[];

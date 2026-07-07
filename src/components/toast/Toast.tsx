@@ -392,3 +392,6 @@ export function Toaster(props: ToasterProps): React.ReactElement {
 
   return <ToastHost config={config} />;
 }
+
+/* The imperative API ships from the same subpath as <Toaster /> - one import for both. */
+export { toast } from './toast-store';

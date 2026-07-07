@@ -7,6 +7,8 @@
 // error until you add its import and one line below.
 import {
   Archive,
+  ArrowRight,
+  ArrowsClockwise,
   Bell,
   CaretDown,
   Clock,
@@ -15,6 +17,7 @@ import {
   Crown,
   DotsThreeOutline,
   Gear,
+  GithubLogo,
   Globe,
   Hash,
   Heart,
@@ -25,6 +28,7 @@ import {
   MagnifyingGlass,
   Moon,
   PencilSimple,
+  Play,
   Plus,
   Star,
   Sun,
@@ -39,7 +43,11 @@ type Glyph = typeof Gear;
 
 const REGISTRY = {
   archive: Archive,
+  'arrow-right': ArrowRight,
   bell: Bell,
+  github: GithubLogo,
+  play: Play,
+  shuffle: ArrowsClockwise,
   'caret-down': CaretDown,
   clock: Clock,
   cloud: Cloud,

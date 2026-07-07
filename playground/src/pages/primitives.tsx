@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { Button, Collapse, Badge, StatusBadge, CountBadge, type PostStatus } from 'premium-ds';
+import { Button } from 'premium-ds/button';
+import { Collapse } from 'premium-ds/collapse';
+import { Badge } from 'premium-ds/badge';
+import { StatusBadge, type PostStatus } from 'premium-ds/status-badge';
+import { CountBadge } from 'premium-ds/count-badge';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

@@ -2,7 +2,7 @@ import type { ComponentDoc } from './types';
 
 export const datetime: Record<string, ComponentDoc> = {
   'date-field': {
-    example: `import { DateField } from 'premium-ds';
+    example: `import { DateField } from 'premium-ds/date-field';
 
 <DateField
   label="Start date"
@@ -80,7 +80,7 @@ export const datetime: Record<string, ComponentDoc> = {
   },
 
   'datetime-field': {
-    example: `import { DateTimeField } from 'premium-ds';
+    example: `import { DateTimeField } from 'premium-ds/datetime-field';
 
 <DateTimeField
   label="Schedule post"
@@ -174,7 +174,7 @@ export const datetime: Record<string, ComponentDoc> = {
   },
 
   'date-range': {
-    example: `import { DateRangeField } from 'premium-ds';
+    example: `import { DateRangeField } from 'premium-ds/date-range-field';
 
 <DateRangeField
   label="Reporting period"
@@ -256,7 +256,7 @@ export const datetime: Record<string, ComponentDoc> = {
   },
 
   'time-field': {
-    example: `import { TimeField } from 'premium-ds';
+    example: `import { TimeField } from 'premium-ds/time-field';
 
 <TimeField
   label="Send at"
@@ -340,7 +340,7 @@ export const datetime: Record<string, ComponentDoc> = {
   },
 
   tabs: {
-    example: `import { Tabs, TabPanel } from 'premium-ds';
+    example: `import { Tabs, TabPanel } from 'premium-ds/tabs';
 
 const items = [
   { value: 'scheduled', label: 'Scheduled', count: 12 },

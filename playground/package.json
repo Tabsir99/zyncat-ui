@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite-react-ssg dev",
     "build": "vite-react-ssg build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "standalone": "vite build --config vite.standalone.config.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

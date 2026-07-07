@@ -1,15 +1,11 @@
 import { useState } from 'react';
-import {
-  Avatar,
-  AvatarGroup,
-  Tag,
-  ToggleTag,
-  TagGroup,
-  Table,
-  Pagination,
-  Badge,
-  type TableColumn,
-} from 'premium-ds';
+import { Avatar } from 'premium-ds/avatar';
+import { AvatarGroup } from 'premium-ds/avatar-group';
+import { Tag, TagGroup } from 'premium-ds/tag';
+import { ToggleTag } from 'premium-ds/toggle-tag';
+import { Table, type TableColumn } from 'premium-ds/table';
+import { Pagination } from 'premium-ds/pagination';
+import { Badge } from 'premium-ds/badge';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import {
-  TextField,
-  NumberField,
-  OtpField,
-  Textarea,
-  Checkbox,
-  Toggle,
-  RadioGroup,
-  Select,
-  MultiSelect,
-  type RadioOption,
-} from 'premium-ds';
+import { TextField } from 'premium-ds/text-field';
+import { NumberField } from 'premium-ds/number-field';
+import { OtpField } from 'premium-ds/otp-field';
+import { Textarea } from 'premium-ds/textarea';
+import { Checkbox } from 'premium-ds/checkbox';
+import { Toggle } from 'premium-ds/toggle';
+import { RadioGroup, type RadioOption } from 'premium-ds/radio-group';
+import { Select } from 'premium-ds/select';
+import { MultiSelect } from 'premium-ds/multi-select';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

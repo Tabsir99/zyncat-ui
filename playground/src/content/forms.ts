@@ -2,7 +2,7 @@ import type { ComponentDoc } from './types';
 
 export const forms: Record<string, ComponentDoc> = {
   'text-field': {
-    example: `import { TextField } from 'premium-ds';
+    example: `import { TextField } from 'premium-ds/text-field';
 
 <TextField
   id="post-title"
@@ -60,7 +60,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   'number-field': {
-    example: `import { NumberField } from 'premium-ds';
+    example: `import { NumberField } from 'premium-ds/number-field';
 
 <NumberField
   id="posts-per-day"
@@ -130,7 +130,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   'otp-field': {
-    example: `import { OtpField } from 'premium-ds';
+    example: `import { OtpField } from 'premium-ds/otp-field';
 
 <OtpField
   length={6}
@@ -168,7 +168,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   textarea: {
-    example: `import { Textarea } from 'premium-ds';
+    example: `import { Textarea } from 'premium-ds/textarea';
 
 <Textarea
   id="post-body"
@@ -258,7 +258,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   checkbox: {
-    example: `import { Checkbox } from 'premium-ds';
+    example: `import { Checkbox } from 'premium-ds/checkbox';
 
 <Checkbox
   label="Pin to top of queue"
@@ -317,7 +317,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   toggle: {
-    example: `import { Toggle } from 'premium-ds';
+    example: `import { Toggle } from 'premium-ds/toggle';
 
 <Toggle
   label="Auto-publish drafts"
@@ -369,7 +369,7 @@ export const forms: Record<string, ComponentDoc> = {
   },
 
   'radio-group': {
-    example: `import { RadioGroup } from 'premium-ds';
+    example: `import { RadioGroup } from 'premium-ds/radio-group';
 
 const CADENCE_OPTIONS = [
   { value: 'daily', label: 'Daily', description: 'One post per day.' },
@@ -454,7 +454,7 @@ const CADENCE_OPTIONS = [
   },
 
   select: {
-    example: `import { Select } from 'premium-ds';
+    example: `import { Select } from 'premium-ds/select';
 
 const TIMEZONE_OPTIONS = [
   { value: 'America/New_York', label: 'New York (ET)' },
@@ -551,7 +551,7 @@ const TIMEZONE_OPTIONS = [
   },
 
   'multi-select': {
-    example: `import { MultiSelect } from 'premium-ds';
+    example: `import { MultiSelect } from 'premium-ds/multi-select';
 
 const CHANNEL_OPTIONS = [
   { value: 'twitter', label: 'Twitter / X' },

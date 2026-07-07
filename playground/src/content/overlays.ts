@@ -2,7 +2,7 @@ import type { ComponentDoc } from './types';
 
 export const overlays: Record<string, ComponentDoc> = {
   alert: {
-    example: `import { Alert } from 'premium-ds';
+    example: `import { Alert } from 'premium-ds/alert';
 
 <Alert
   tone="warning"
@@ -76,7 +76,7 @@ export const overlays: Record<string, ComponentDoc> = {
   },
 
   toast: {
-    example: `import { Toaster, toast } from 'premium-ds';
+    example: `import { Toaster, toast } from 'premium-ds/toast';
 
 // Mount <Toaster /> once near your app root. Without it, toast() renders nothing.
 function App() {
@@ -210,7 +210,7 @@ toast.promise(publishBatch(), {
   },
 
   tooltip: {
-    example: `import { Tooltip } from 'premium-ds';
+    example: `import { Tooltip } from 'premium-ds/tooltip';
 
 <Tooltip content="Schedule to queue" shortcut="S">
   <button type="button">Schedule</button>
@@ -274,7 +274,7 @@ toast.promise(publishBatch(), {
   },
 
   dialog: {
-    example: `import { Dialog } from 'premium-ds';
+    example: `import { Dialog } from 'premium-ds/dialog';
 
 <Dialog
   trigger={<button type="button">Delete post</button>}
@@ -368,7 +368,7 @@ toast.promise(publishBatch(), {
   },
 
   overlay: {
-    example: `import { Overlay } from 'premium-ds';
+    example: `import { Overlay } from 'premium-ds/overlay';
 
 <Overlay
   trigger={<button type="button">Actions</button>}
@@ -458,7 +458,7 @@ toast.promise(publishBatch(), {
   },
 
   sheet: {
-    example: `import { Overlay } from 'premium-ds';
+    example: `import { Overlay } from 'premium-ds/overlay';
 
 <Overlay
   mode="sheet"
