@@ -38,24 +38,6 @@ export interface TagGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const TagGroupContext = React.createContext(false);
 
-/* GOTCHA (buildless pages): split props manually, not object-rest. */
-const TAG_OWN_PROPS: Record<string, number> = {
-  children: 1,
-  icon: 1,
-  onRemove: 1,
-  removeLabel: 1,
-  size: 1,
-  disabled: 1,
-  className: 1,
-};
-function tagRestProps(props: Record<string, unknown>, own: Record<string, number>) {
-  const rest: Record<string, unknown> = {};
-  for (const k in props) {
-    if (!own[k]) rest[k] = props[k];
-  }
-  return rest;
-}
-
 /* The remove glyph - drawn inline (path-level, per section D) so it can wind up on hover. */
 function TagRemoveGlyph() {
   return (
@@ -65,17 +47,16 @@ function TagRemoveGlyph() {
   );
 }
 
-export function Tag(props: TagProps) {
-  const {
-    children,
-    icon = null,
-    onRemove = null,
-    removeLabel,
-    size = 'md',
-    disabled = false,
-    className = '',
-  } = props;
-  const rest = tagRestProps(props as unknown as Record<string, unknown>, TAG_OWN_PROPS);
+export function Tag({
+  children,
+  icon = null,
+  onRemove = null,
+  removeLabel,
+  size = 'md',
+  disabled = false,
+  className = '',
+  ...rest
+}: TagProps) {
   const grouped = React.useContext(TagGroupContext);
   const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
 
@@ -121,20 +102,16 @@ export function Tag(props: TagProps) {
       animate={{ opacity: 1, scale: 1, transition: t.enter }}
       exit={{ opacity: 0, scale: 0.9, transition: t.exit }}
       transition={t.layout}
-      {...rest}
+      /* span props whose names collide with Motion gesture callbacks (onDrag*) can't be
+         typed onto a motion element; the runtime spread is unchanged */
+      {...(rest as Record<string, unknown>)}
     >
       {content}
     </motion.span>
   );
 }
 
-export function TagGroup(props: TagGroupProps) {
-  const { label, className = '', children } = props;
-  const rest = tagRestProps(props as unknown as Record<string, unknown>, {
-    label: 1,
-    className: 1,
-    children: 1,
-  });
+export function TagGroup({ label, className = '', children, ...rest }: TagGroupProps) {
   return (
     <div
       className={['tag-group', className].filter(Boolean).join(' ')}

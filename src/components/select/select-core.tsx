@@ -1,20 +1,19 @@
 'use client';
 
-/* select-core - shared listbox mechanics for Select + MultiSelect; holds no selection state. */
+/* select-core - shared listbox mechanics for Select + MultiSelect; holds no selection state.
+   Selection stays with the public components: they own their value shape and hand
+   this module two opaque callbacks (isSelected / onCommit) plus a close policy. */
 import './select.css';
 import * as React from 'react';
-import { motion as coreMotion, AnimatePresence as CoreAnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
+import { Collapse } from '../motion/Collapse';
+import { GlidePill, useGlide } from '../motion/glide';
+import { OverlayPortal, useOverlayEntry, useOutsidePress } from '../overlay/layer';
 
-const coreSM = UIMotion;
-const {
-  useState: coreUseState,
-  useEffect: coreUseEffect,
-  useLayoutEffect: coreUseLayoutEffect,
-  useRef: coreUseRef,
-} = React;
+const { useState, useEffect, useLayoutEffect, useRef } = React;
 
 export interface SelectOption {
   /** The stored value - what `onChange` returns and `value` matches; must be unique. */
@@ -40,21 +39,6 @@ interface NormalizedGroup {
   options: SelectOption[];
 }
 
-export function useControllable<T, O = SelectOption>(
-  controlled: T | undefined,
-  initial: T,
-  onChange?: (next: T, opt?: O) => void,
-): [T, (next: T, opt?: O) => void] {
-  const [internal, setInternal] = coreUseState<T>(initial);
-  const isControlled = controlled !== undefined;
-  const value = isControlled ? (controlled as T) : internal;
-  const setValue = (next: T, opt?: O) => {
-    if (!isControlled) setInternal(next);
-    onChange && onChange(next, opt);
-  };
-  return [value, setValue];
-}
-
 export function normalize(options: SelectOption[] | SelectGroup[]): {
   groups: NormalizedGroup[];
   flat: SelectOption[];
@@ -77,9 +61,9 @@ const selectMenuVariants = {
     y: -6,
     scale: 0.96,
     transition: {
-      duration: coreSM.dur.base,
-      ease: coreSM.ease.exit,
-      opacity: { duration: coreSM.dur.fast, ease: coreSM.ease.exit },
+      duration: UIMotion.dur.base,
+      ease: UIMotion.ease.exit,
+      opacity: { duration: UIMotion.dur.fast, ease: UIMotion.ease.exit },
     },
   },
   open: {
@@ -87,9 +71,9 @@ const selectMenuVariants = {
     y: 0,
     scale: 1,
     transition: {
-      duration: coreSM.dur.base,
-      ease: coreSM.ease.entrance,
-      opacity: { duration: coreSM.dur.fast, ease: coreSM.ease.entrance },
+      duration: UIMotion.dur.base,
+      ease: UIMotion.ease.entrance,
+      opacity: { duration: UIMotion.dur.fast, ease: UIMotion.ease.entrance },
     },
   },
 };
@@ -122,28 +106,14 @@ export function useSelectMenu({
   commit,
   searchable,
 }: UseSelectMenuArgs) {
-  const [activeIdx, setActiveIdx] = coreUseState(-1);
-  const typeahead = coreUseRef<{ buf: string; t: ReturnType<typeof setTimeout> | number }>({
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const typeahead = useRef<{ buf: string; t: ReturnType<typeof setTimeout> | number }>({
     buf: '',
     t: 0,
   });
 
-  // outside-click dismiss (the menu isn't in the top layer, so we own this)
-  coreUseEffect(() => {
-    if (!open) return undefined;
-    const onDocPointer = (e: PointerEvent) => {
-      const t = triggerRef.current,
-        menu = document.getElementById(menuId);
-      const target = e.target as Node;
-      if ((t && t.contains(target)) || (menu && menu.contains(target))) return;
-      close();
-    };
-    document.addEventListener('pointerdown', onDocPointer, true);
-    return () => document.removeEventListener('pointerdown', onDocPointer, true);
-  }, [open, menuId]); // eslint-disable-line react-hooks/exhaustive-deps
-
   // placement under the trigger, flips above when cramped; layout effect lands coords before paint so the entrance plays in place
-  coreUseLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return undefined;
     const place = () => {
       const t = triggerRef.current,
@@ -169,7 +139,7 @@ export function useSelectMenu({
     };
   }, [open, menuId, navItems.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  coreUseEffect(() => {
+  useEffect(() => {
     if (!open) return;
     const sel = navItems.findIndex((o) => isSelected(o.value) && !o.disabled);
     const first = navItems.findIndex((o) => !o.disabled);
@@ -181,7 +151,7 @@ export function useSelectMenu({
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // keep the active row in view (manual - never scrollIntoView)
-  coreUseEffect(() => {
+  useEffect(() => {
     const list = listRef.current;
     if (!open || activeIdx < 0 || !list) return;
     const el = list.querySelector('[data-idx="' + activeIdx + '"]') as HTMLElement | null;
@@ -323,26 +293,49 @@ export function SelectTrigger({
 export interface SelectMenuProps {
   open: boolean;
   menuId: string;
+  close: () => void;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  multiple?: boolean;
   children?: React.ReactNode;
 }
 
-export function SelectMenu({ open, menuId, children }: SelectMenuProps) {
+/* The mounted surface joins the overlay stack: dialog focus traps defer to it,
+   Escape unwinds menu-then-dialog, and light dismiss comes from the stack too. */
+function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<SelectMenuProps, 'open'>) {
+  const menuRef = useRef<HTMLDivElement>(null);
+  const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
+  useOutsidePress({ entry, refs: [menuRef, triggerRef], enabled: true, onPress: close });
   return (
-    <CoreAnimatePresence>
-      {open && (
-        <coreMotion.div
-          className="select__menu"
-          id={menuId}
-          role="presentation"
-          variants={selectMenuVariants}
-          initial="closed"
-          animate="open"
-          exit="closed"
-        >
-          {children}
-        </coreMotion.div>
-      )}
-    </CoreAnimatePresence>
+    <motion.div
+      ref={menuRef}
+      className="select__menu"
+      id={menuId}
+      role="presentation"
+      data-multiple={multiple ? 'true' : undefined}
+      variants={selectMenuVariants}
+      initial="closed"
+      animate="open"
+      exit="closed"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* Body-portaled (via layer.tsx) so an ancestor transform/filter can never become
+   the containing block of the fixed-position menu - the playground could not
+   catch that; any transformed wrapper in a real app would. */
+export function SelectMenu({ open, menuId, close, triggerRef, multiple, children }: SelectMenuProps) {
+  return (
+    <OverlayPortal>
+      <AnimatePresence>
+        {open && (
+          <MenuSurface menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple}>
+            {children}
+          </MenuSurface>
+        )}
+      </AnimatePresence>
+    </OverlayPortal>
   );
 }
 
@@ -392,13 +385,9 @@ export interface FilterRowProps {
 /* Collapse wrapper for filterable rows - rows ease out instead of popping. */
 export function FilterRow({ visible, children }: FilterRowProps) {
   return (
-    <div
-      className="collapse collapse--fade"
-      data-open={visible ? 'true' : 'false'}
-      data-axis="height"
-    >
-      <div className="collapse__inner">{children}</div>
-    </div>
+    <Collapse open={visible} fade>
+      {children}
+    </Collapse>
   );
 }
 
@@ -420,5 +409,254 @@ export function LoadingRows() {
         </div>
       ))}
     </div>
+  );
+}
+
+export interface UseListboxArgs {
+  options: SelectOption[] | SelectGroup[];
+  disabled: boolean;
+  loading: boolean;
+  searchable: boolean;
+  id?: string;
+  idPrefix: string;
+  isSelected: (value: string) => boolean;
+  onCommit: (opt: SelectOption) => void;
+  closeOnCommit: boolean;
+}
+
+
+export type ListboxState = ReturnType<typeof useListbox>;
+
+/* One listbox brain for both variants: open/query/refs/ids, option filtering,
+   glide-pill tracking and the keyboard machine. Never inspects the value shape. */
+export function useListbox({
+  options,
+  disabled,
+  loading,
+  searchable,
+  id,
+  idPrefix,
+  isSelected,
+  onCommit,
+  closeOnCommit,
+}: UseListboxArgs) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+
+  const triggerRef = useRef<HTMLButtonElement>(null),
+    listRef = useRef<HTMLDivElement>(null),
+    searchRef = useRef<HTMLInputElement>(null);
+  const baseId = id || idPrefix + React.useId();
+  const menuId = baseId + '-menu';
+  const listId = baseId + '-list';
+  const glide = useGlide(listRef);
+
+  const { groups, flat } = normalize(options);
+  const navItems: SelectOption[] = [];
+  groups.forEach((g) =>
+    g.options.forEach((o) => {
+      if (matches(o, query)) navItems.push(o);
+    }),
+  );
+
+  const show = () => {
+    if (!disabled && !loading) setOpen(true);
+  };
+  const hide = () => setOpen(false);
+  const returnFocus = () => triggerRef.current && triggerRef.current.focus();
+
+  function commit(opt: SelectOption) {
+    if (!opt || opt.disabled) return;
+    onCommit(opt);
+    if (closeOnCommit) {
+      hide();
+      returnFocus();
+    }
+  }
+
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
+
+  const { activeIdx, setActiveIdx, onMenuKeyDown } = useSelectMenu({
+    open,
+    close: hide,
+    returnFocus,
+    triggerRef,
+    listRef,
+    searchRef,
+    menuId,
+    navItems,
+    isSelected,
+    commit,
+    searchable,
+  });
+
+  // Drive the glide pill from the active row. It lives in the scroll list (not per-option), so it
+  // is never clipped by the searchable rows' collapse wrapper and animates real size between rows.
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const el =
+      open &&
+      activeIdx >= 0 &&
+      list &&
+      list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
+    if (el) glide.enter(el);
+    else glide.leave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, activeIdx, query]);
+
+  /* option ids are keyed by VALUE, not list position - under filtering an option keeps
+     its id as the visible set narrows, so aria-activedescendant never re-points mid-query */
+  const optId = (value: string) => baseId + '-opt-' + encodeURIComponent(value);
+  const active = activeIdx >= 0 ? navItems[activeIdx] : undefined;
+  const adId = open && active ? optId(active.value) : undefined;
+
+  return {
+    open,
+    query,
+    setQuery,
+    triggerRef,
+    listRef,
+    searchRef,
+    baseId,
+    menuId,
+    listId,
+    optId,
+    adId,
+    groups,
+    flat,
+    navItems,
+    glide,
+    isSelected,
+    show,
+    hide,
+    commit,
+    activeIdx,
+    setActiveIdx,
+    onMenuKeyDown,
+  };
+}
+
+export interface ListboxPanelProps {
+  lb: ListboxState;
+  loading: boolean;
+  searchable: boolean;
+  searchPlaceholder?: string;
+  ariaLabel?: string;
+  multiple?: boolean;
+  /** Row check-slot renderer; the default is the single-select checkmark. */
+  check?: (selected: boolean) => React.ReactNode;
+}
+
+const defaultCheck = (selected: boolean) =>
+  selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null;
+
+/* The shared menu render - search field, listbox, group loop, option rows, glide pill. */
+export function ListboxPanel({
+  lb,
+  loading,
+  searchable,
+  searchPlaceholder,
+  ariaLabel,
+  multiple,
+  check = defaultCheck,
+}: ListboxPanelProps) {
+  let vIdx = -1;
+  return (
+    <SelectMenu
+      open={lb.open}
+      menuId={lb.menuId}
+      close={lb.hide}
+      triggerRef={lb.triggerRef}
+      multiple={multiple}
+    >
+      {searchable && !loading && (
+        <SearchField
+          searchRef={lb.searchRef}
+          query={lb.query}
+          onQuery={lb.setQuery}
+          onKeyDown={lb.onMenuKeyDown}
+          placeholder={searchPlaceholder}
+          listId={lb.listId}
+          adId={lb.adId}
+        />
+      )}
+
+      <div
+        className="select__list"
+        ref={lb.listRef}
+        id={lb.listId}
+        role="listbox"
+        aria-multiselectable={multiple || undefined}
+        tabIndex={-1}
+        aria-label={ariaLabel}
+        onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
+      >
+        <GlidePill className="select__glide" rect={lb.glide.rect} active={lb.glide.active} />
+        {loading ? (
+          <LoadingRows />
+        ) : (
+          <React.Fragment>
+            {lb.groups.map((g, gi) => (
+              <div
+                className="select__group"
+                role="group"
+                aria-label={g.label || undefined}
+                key={gi}
+              >
+                {g.label && g.options.some((o) => matches(o, lb.query)) && (
+                  <div className="select__group-label">{g.label}</div>
+                )}
+                {g.options.map((opt) => {
+                  const visible = matches(opt, lb.query);
+                  const i = visible ? ((vIdx += 1), vIdx) : -1;
+                  const isSel = lb.isSelected(opt.value);
+                  const row = (
+                    <div
+                      key={opt.value}
+                      id={visible ? lb.optId(opt.value) : undefined}
+                      data-idx={visible ? i : undefined}
+                      className="select__option"
+                      role="option"
+                      aria-selected={isSel}
+                      aria-hidden={!visible || undefined}
+                      aria-disabled={opt.disabled || undefined}
+                      data-selected={isSel ? 'true' : undefined}
+                      data-active={visible && i === lb.activeIdx ? 'true' : undefined}
+                      data-disabled={opt.disabled ? 'true' : undefined}
+                      onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
+                      onMouseDown={(e) => e.preventDefault() /* keep focus on list */}
+                      onClick={() => visible && lb.commit(opt)}
+                    >
+                      {opt.icon && (
+                        <span className="select__option-icon">
+                          <IconSlot size="sm">{opt.icon}</IconSlot>
+                        </span>
+                      )}
+                      <span className="select__option-text">
+                        <span className="select__option-label">{opt.label}</span>
+                        {opt.description && (
+                          <span className="select__option-desc">{opt.description}</span>
+                        )}
+                      </span>
+                      <span className="select__option-check">{check(isSel)}</span>
+                    </div>
+                  );
+                  return searchable ? (
+                    <FilterRow key={opt.value} visible={visible}>
+                      {row}
+                    </FilterRow>
+                  ) : (
+                    row
+                  );
+                })}
+              </div>
+            ))}
+            {lb.navItems.length === 0 && <EmptyRow query={lb.query} />}
+          </React.Fragment>
+        )}
+      </div>
+    </SelectMenu>
   );
 }

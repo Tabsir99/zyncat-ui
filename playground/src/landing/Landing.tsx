@@ -37,7 +37,7 @@ const SPEC_ROWS: { key: string; value: string }[] = [
 ];
 
 const STEPS: { code: string; note: string }[] = [
-  { code: 'pnpm add premium-ds motion', note: 'motion is optional — skip it and everything still works' },
+  { code: 'pnpm add premium-ds motion', note: 'motion is an optional peer — the static half of the library runs without it; the animated components need it' },
   { code: "import 'premium-ds/styles.css'", note: 'once, at your app root — fonts + tokens' },
   { code: "import { Button } from 'premium-ds/button'", note: 'and ship — each import pulls only its own CSS' },
 ];

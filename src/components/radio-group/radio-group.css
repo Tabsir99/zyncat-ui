@@ -44,6 +44,7 @@
 }
 
 .rg__options {
+  position: relative; /* anchors the rows' shared glide pill */
   display: grid;
   gap: var(--space-1);
 }
@@ -77,14 +78,16 @@
   transition: var(--transition-colors);
   -webkit-tap-highlight-color: transparent;
 }
-/* Hover pill - one fill that glides between rows via layoutId (see RadioGroup hover state),
-   sitting behind the row content. Rows only; cards keep their own lift/shadow hover. */
+/* Hover pill - one persistent fill (../motion/glide, first child of .rg__options) that
+   springs between rows; the positioned rows paint above it. Rows only; cards keep their
+   own layoutId hover (their opaque bg + press transform need the fill inside the card). */
 .rg__hover {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: 0;
   border-radius: var(--radius-md);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
   pointer-events: none;
 }
 .rg-opt__control,
@@ -248,7 +251,7 @@
   z-index: 0;
   border: var(--border-hairline) solid var(--border-strong);
   border-radius: var(--radius-lg);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
   pointer-events: none;
 }
 .rg--cards .rg-opt > .rg-opt__icon,

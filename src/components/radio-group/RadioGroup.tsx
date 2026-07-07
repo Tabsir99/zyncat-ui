@@ -1,12 +1,16 @@
 'use client';
 
-// RadioGroup - single-select rows or cards; one marker glides between dots via Motion layoutId.
+// RadioGroup - single-select rows or cards. The rows' hover fill is a shared glide pill
+// (../motion/glide); the marker dot and the cards' fill/hover glide between options via
+// Motion layoutId (kept inside each card - its own bg/transform layering needs them there).
 
 import './radio-group.css';
 import * as React from 'react';
 import { motion, LayoutGroup } from 'motion/react';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
+import { Collapse } from '../motion/Collapse';
+import { GlidePill, useGlide, useLayoutSelfHeal } from '../motion/glide';
 import { UIMotion } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -76,7 +80,13 @@ function RadioGroup({
   ...rest
 }: RadioGroupProps) {
   const groupId = React.useId();
+  /* cards keep hovered state for their layoutId spans; rows drive the glide pill directly */
   const [hovered, setHovered] = React.useState<string | null>(null);
+  const optionsRef = React.useRef<HTMLDivElement>(null);
+  const glide = useGlide(optionsRef);
+  const healMarker = useLayoutSelfHeal<HTMLSpanElement>();
+  const healFill = useLayoutSelfHeal<HTMLSpanElement>();
+  const healHover = useLayoutSelfHeal<HTMLSpanElement>();
 
   const cls = [
     'rg',
@@ -107,7 +117,17 @@ function RadioGroup({
       )}
 
       <LayoutGroup id={groupId}>
-        <div className="rg__options" onPointerLeave={() => setHovered(null)}>
+        <div
+          className="rg__options"
+          ref={optionsRef}
+          onPointerLeave={() => {
+            glide.leave();
+            setHovered(null);
+          }}
+        >
+          {variant === 'rows' && (
+            <GlidePill className="rg__hover" rect={glide.rect} active={glide.active} />
+          )}
           {options.map((opt) => {
             const selected = opt.value === value;
             const isDisabled = disabled || opt.disabled;
@@ -121,7 +141,13 @@ function RadioGroup({
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                onPointerEnter={isDisabled ? undefined : () => setHovered(opt.value)}
+                onPointerEnter={
+                  isDisabled
+                    ? undefined
+                    : variant === 'rows'
+                      ? (e) => glide.enter(e.currentTarget)
+                      : () => setHovered(opt.value)
+                }
               >
                 <input
                   className="rg-opt__input"
@@ -132,15 +158,6 @@ function RadioGroup({
                   disabled={isDisabled}
                   onChange={() => onChange && onChange(opt.value)}
                 />
-                {variant === 'rows' && hovered === opt.value && (
-                  <motion.span
-                    className="rg__hover"
-                    layoutId="hover"
-                    layout="position"
-                    transition={SM.t.layout}
-                    aria-hidden="true"
-                  ></motion.span>
-                )}
                 {variant === 'cards' && hovered === opt.value && !selected && (
                   <motion.span
                     className="rg__card-hover"
@@ -148,6 +165,8 @@ function RadioGroup({
                     layout="position"
                     transition={SM.t.layout}
                     aria-hidden="true"
+                    ref={healHover.ref}
+                    onLayoutAnimationComplete={healHover.onLayoutAnimationComplete}
                   ></motion.span>
                 )}
                 {variant === 'cards' && selected && (
@@ -156,6 +175,8 @@ function RadioGroup({
                     layoutId="card-fill"
                     transition={SM.t.layout}
                     aria-hidden="true"
+                    ref={healFill.ref}
+                    onLayoutAnimationComplete={healFill.onLayoutAnimationComplete}
                   ></motion.span>
                 )}
                 {variant === 'cards' && opt.icon && (
@@ -171,6 +192,8 @@ function RadioGroup({
                         layoutId="marker"
                         transition={SM.t.layout}
                         aria-hidden="true"
+                        ref={healMarker.ref}
+                        onLayoutAnimationComplete={healMarker.onLayoutAnimationComplete}
                       ></motion.span>
                     )}
                   </span>
@@ -185,18 +208,12 @@ function RadioGroup({
         </div>
       </LayoutGroup>
 
-      <div
-        className={'collapse collapse--fade rg__msg-wrap'}
-        data-open={error ? 'true' : 'false'}
-        data-axis="height"
-      >
-        <div className="collapse__inner">
-          <div className="rg__msg">
-            <Icon name="warning-circle" size="sm" weight="fill" />
-            {error}
-          </div>
+      <Collapse open={!!error} fade className="rg__msg-wrap">
+        <div className="rg__msg">
+          <Icon name="warning-circle" size="sm" weight="fill" />
+          {error}
         </div>
-      </div>
+      </Collapse>
     </fieldset>
   );
 }

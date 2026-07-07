@@ -256,7 +256,7 @@
   font-size: var(--size-caption);
 }
 .numf__step:hover {
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
   color: var(--text-strong);
 }
 .numf__step:active {

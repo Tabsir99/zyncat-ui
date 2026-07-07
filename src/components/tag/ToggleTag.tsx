@@ -3,8 +3,11 @@
 /* ToggleTag - on/off filter chip (<button aria-pressed>); owns its selection state. */
 
 import './tag.css';
+/* The tick clip renders .collapse classes - collapse.css must ride along. */
+import '../motion/collapse.css';
 import * as React from 'react';
 import { IconSlot } from '../icon/IconSlot';
+import { useControllable } from '../use-controllable';
 
 /** ToggleTag - the on/off filter chip (<button aria-pressed>). */
 export interface ToggleTagProps extends Omit<
@@ -31,26 +34,6 @@ export interface ToggleTagProps extends Omit<
   className?: string;
 }
 
-/* GOTCHA: split props manually instead of object-rest. */
-const TOGGLE_TAG_OWN_PROPS: Record<string, number> = {
-  children: 1,
-  selected: 1,
-  defaultSelected: 1,
-  onChange: 1,
-  icon: 1,
-  count: 1,
-  size: 1,
-  disabled: 1,
-  className: 1,
-};
-function toggleTagRestProps(props: Record<string, unknown>, own: Record<string, number>) {
-  const rest: Record<string, unknown> = {};
-  for (const k in props) {
-    if (!own[k]) rest[k] = props[k];
-  }
-  return rest;
-}
-
 function ToggleTagTick({ selected }: { selected: boolean }) {
   /* collapse.css mechanism on spans - width 0fr and 1fr, content clipped */
   return (
@@ -75,31 +58,20 @@ function ToggleTagTick({ selected }: { selected: boolean }) {
   );
 }
 
-export function ToggleTag(props: ToggleTagProps) {
-  const {
-    children,
-    selected: controlledSelected,
-    defaultSelected = false,
-    onChange,
-    icon = null,
-    count = null,
-    size = 'md',
-    disabled = false,
-    className = '',
-  } = props;
-  const rest = toggleTagRestProps(
-    props as unknown as Record<string, unknown>,
-    TOGGLE_TAG_OWN_PROPS,
-  );
-  const [uncontrolled, setUncontrolled] = React.useState(defaultSelected);
-  const isControlled = controlledSelected !== undefined;
-  const selected = isControlled ? controlledSelected : uncontrolled;
-
-  function toggle() {
-    const next = !selected;
-    if (!isControlled) setUncontrolled(next);
-    if (onChange) onChange(next);
-  }
+export function ToggleTag({
+  children,
+  selected: selectedProp,
+  defaultSelected = false,
+  onChange,
+  icon = null,
+  count = null,
+  size = 'md',
+  disabled = false,
+  className = '',
+  ...rest
+}: ToggleTagProps) {
+  const [selected, setSelected] = useControllable(selectedProp, defaultSelected, onChange);
+  const toggle = () => setSelected(!selected);
 
   const classes = ['tag', 'tag--toggle', size === 'sm' ? 'tag--sm' : '', className]
     .filter(Boolean)

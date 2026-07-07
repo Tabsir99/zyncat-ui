@@ -2,13 +2,15 @@ import type { ReactNode } from 'react';
 import { Table, type TableColumn } from 'premium-ds/table';
 import { Toaster, toast } from 'premium-ds/toast';
 
-/* Standalone repro for the cross-component CSS coupling: this module graph
+/* Regression harness for cross-component CSS coupling: this module graph
    contains ONLY premium-ds/table and premium-ds/toast (plus whatever the
-   entry file adds). Table renders .cbx/.odo/.btn markup whose styles live in
-   checkbox.css / badge.css / button.css — none of which are in this graph,
-   so on /broken.html those pieces render as raw, unstyled DOM. The SPA
-   playground can never show this: it imports every component, so every
-   stylesheet is always present. */
+   entry file adds). Table renders .cbx/.odo/.btn vocabularies - since the
+   ownership fix (CheckGlyph/Odometer carry their CSS; renderers import
+   button.css), their styles ride in with the table import itself. The two
+   twins must therefore render IDENTICALLY; if this page ever shows naked
+   checkboxes, a digit strip, or a gray Clear button again, the coupling
+   has crept back. The SPA playground can never catch that - it imports
+   every component, so every stylesheet is always present. */
 
 interface Deploy {
   id: number;
@@ -33,15 +35,15 @@ const COLUMNS: TableColumn<Deploy>[] = [
 const CHECKS: [string, string][] = [
   [
     'Row checkboxes',
-    'Table renders the Checkbox primitive’s DOM (.cbx), but the state machine that hides the native input and paints the box lives in checkbox.css.',
+    'Painted by checkbox.css, which now travels with Table via the shared CheckGlyph - the native input must be invisible, the box styled.',
   ],
   [
     'Select a row → the bulk bar',
-    'The "N selected" count is an odometer (.odo from badge.css — without it every digit strip 0–9 is visible at once) and the built-in Clear button is .btn from button.css.',
+    'The "N selected" odometer clips to one digit (odometer.css rides with the shared Odometer) and the built-in Clear button is styled (Table imports button.css for the .btn it renders).',
   ],
   [
     'Fire the toast → its Undo action',
-    'The action renders .btn btn--secondary btn--sm — button.css again.',
+    'The .btn btn--secondary btn--sm action is styled - Toast imports button.css too.',
   ],
 ];
 
@@ -66,8 +68,8 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
       </h1>
       <p style={{ color: 'var(--text-muted, #666)', maxWidth: 620 }}>
         {healed
-          ? 'Identical demo code. The only difference: this page also uses Checkbox, Button and Badge (below) — so checkbox.css, button.css and badge.css happen to be in the graph, and Table silently heals. Whether Table looks right depends on unrelated imports elsewhere in the app.'
-          : 'Nothing here is mocked — this is the shipped Table and toast, with only their own CSS loaded, exactly like a consumer app that imports just these two subpaths.'}
+          ? 'Identical demo code, plus Checkbox, Button and Badge rendered below. Before the ownership fix this page looked right while the other twin broke; now both must match, because Table no longer depends on unrelated imports being present.'
+          : 'Nothing here is mocked — this is the shipped Table and toast, importing only their own subpaths. Every vocabulary they render must arrive styled through their own module graph.'}
       </p>
       {extras}
       <ol style={{ margin: '12px 0 28px', paddingLeft: 20, maxWidth: 640 }}>
@@ -105,9 +107,9 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
 
       <p style={{ marginTop: 32, borderTop: '1px solid var(--border-subtle, #ddd)', paddingTop: 16 }}>
         {healed ? (
-          <a href="/broken.html">← back to the broken twin</a>
+          <a href="/broken.html">← back to the minimal-graph twin</a>
         ) : (
-          <a href="/fixed.html">see the healed twin — same code + three CSS-owner imports →</a>
+          <a href="/fixed.html">compare the twin — same code + three extra component imports →</a>
         )}
       </p>
     </main>

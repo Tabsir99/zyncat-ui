@@ -3,8 +3,11 @@
 // NumberField.tsx - numeric input: tabular figures, caret steppers, unit suffix, min/max clamp, arrow stepping.
 
 import './input.css';
-import type { ChangeEvent, InputHTMLAttributes, KeyboardEvent, ReactNode } from 'react';
+import { useState } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
+import { FieldLabel, FieldMessage } from './field-chrome';
+import { useControllable } from '../use-controllable';
 
 export interface NumberFieldProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -20,14 +23,16 @@ export interface NumberFieldProps extends Omit<
   error?: ReactNode;
   /** Unit suffix shown inside the field (e.g. "days", "%"). */
   unit?: string;
-  /** Minimum value - typed and stepped values clamp up to this; the decrease stepper disables here. @default 0 */
+  /** Minimum value - steps and committed typing clamp up to this; the decrease stepper disables here. @default 0 */
   min?: number;
-  /** Maximum value - typed and stepped values clamp down to this; the increase stepper disables here. @default Infinity */
+  /** Maximum value - steps and committed typing clamp down to this; the increase stepper disables here. @default Infinity */
   max?: number;
-  /** Amount added/removed per ArrowUp/ArrowDown press and per caret stepper click. @default 1 */
+  /** Amount added/removed per ArrowUp/ArrowDown press and per caret stepper click. Decimals work. @default 1 */
   step?: number;
-  /** Controlled numeric value. */
+  /** Controlled numeric value. Omit for uncontrolled (use `defaultValue`). */
   value?: number | string;
+  /** Uncontrolled initial value. Use instead of `value`. @default 0 */
+  defaultValue?: number;
   /** Called with the next clamped number. */
   onChange?: (value: number) => void;
   /** Control height: sm - md (default) - lg. */
@@ -44,13 +49,25 @@ export function NumberField({
   max = Infinity,
   step = 1,
   value,
+  defaultValue = 0,
   onChange,
   size,
   className = '',
   ...rest
 }: NumberFieldProps) {
-  const v = parseInt((value ?? 0) as any, 10) || 0;
-  const set = (n: number) => onChange && onChange(Math.min(max, Math.max(min, n)));
+  const controlled =
+    value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
+  const [num, setNum] = useControllable<number>(controlled, defaultValue, onChange);
+  /* free-typing draft: clamping every keystroke makes "50" untypable under min=10, so the
+     raw text lives here while focused; commits (blur / Enter / any step) clamp and clear it. */
+  const [draft, setDraft] = useState<string | null>(null);
+  const v = draft !== null ? parseFloat(draft) || 0 : num;
+  const snap = (n: number) => parseFloat(n.toFixed(10)); /* kill float drift on decimal steps */
+  const clamp = (n: number) => Math.min(max, Math.max(min, snap(n)));
+  const commit = (n: number) => {
+    setDraft(null);
+    setNum(clamp(n));
+  };
   const cls = [
     'fld',
     'numf',
@@ -64,30 +81,31 @@ export function NumberField({
 
   return (
     <div className={cls}>
-      {label && (
-        <label className="fld__label" htmlFor={id}>
-          {label}
-        </label>
-      )}
+      <FieldLabel id={id} label={label} />
       <div className="fld__control">
         <input
           id={id}
           className="fld__input"
           type="text"
-          inputMode="numeric"
-          value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            set(parseInt(e.target.value.replace(/[^\d]/g, '') || '0', 10))
-          }
-          onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+          inputMode="decimal"
+          value={draft !== null ? draft : String(num)}
+          onChange={(e) => {
+            const text = e.target.value.replace(/[^\d.-]/g, '');
+            setDraft(text);
+            /* live (clamped) for controlled parents; the visible text stays on the draft */
+            setNum(clamp(parseFloat(text) || 0));
+          }}
+          onBlur={() => commit(v)}
+          onKeyDown={(e) => {
             if (e.key === 'ArrowUp') {
               e.preventDefault();
-              set(v + step);
+              commit(v + step);
             }
             if (e.key === 'ArrowDown') {
               e.preventDefault();
-              set(v - step);
+              commit(v - step);
             }
+            if (e.key === 'Enter') commit(v);
           }}
           {...rest}
         />
@@ -98,7 +116,7 @@ export function NumberField({
             className="numf__step"
             aria-label="Increase"
             disabled={v >= max}
-            onClick={() => set(v + step)}
+            onClick={() => commit(v + step)}
           >
             <Icon name="caret-up" size="sm" />
           </button>
@@ -107,18 +125,13 @@ export function NumberField({
             className="numf__step"
             aria-label="Decrease"
             disabled={v <= min}
-            onClick={() => set(v - step)}
+            onClick={() => commit(v - step)}
           >
             <Icon name="caret-down" size="sm" />
           </button>
         </div>
       </div>
-      {(error || helper) && (
-        <div className="fld__msg">
-          {error && <Icon name="warning-circle" size="sm" weight="fill" />}
-          {error || helper}
-        </div>
-      )}
+      <FieldMessage message={error || helper} icon={error ? 'warning-circle' : null} />
     </div>
   );
 }

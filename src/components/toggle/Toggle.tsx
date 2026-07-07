@@ -4,6 +4,7 @@
 
 import './toggle.css';
 import * as React from 'react';
+import { useControllable } from '../use-controllable';
 
 const { useState } = React;
 
@@ -38,9 +39,8 @@ export function Toggle({
   onChange,
   ...rest
 }: ToggleProps) {
-  const controlled = checked !== undefined;
-  const [internal, setInternal] = useState(!!defaultChecked);
-  const isOn = controlled ? !!checked : internal;
+  /* public onChange keeps the DOM-event contract, so it forwards here instead of riding the hook */
+  const [isOn, setOn] = useControllable(checked, !!defaultChecked);
 
   const classes = ['sw', size === 'sm' ? 'sw--sm' : '', disabled ? 'sw--disabled' : '', className]
     .filter(Boolean)
@@ -54,7 +54,7 @@ export function Toggle({
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!controlled) setInternal(e.target.checked);
+    setOn(e.target.checked);
     if (onChange) onChange(e);
   }
 

@@ -7,6 +7,10 @@ Setup:
   import { Button } from 'premium-ds/button';   // one subpath per component - there is no barrel entry
   import 'premium-ds/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
+motion is an optional peer: these subpaths run without it - avatar, avatar-group, badge, button,
+  checkbox, collapse, count-badge, motion-tokens, number-field, otp-field, status-badge,
+  text-field, textarea, time-field, toast-store, toggle, toggle-tag. Every other subpath
+  imports motion/react and needs motion installed.
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 
 Conventions:

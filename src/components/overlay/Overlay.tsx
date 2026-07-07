@@ -3,10 +3,9 @@
 /* Overlay - one headless component, three modes: popover - dialog - sheet. */
 import './overlay.css';
 import * as React from 'react';
+import { AnimatePresence } from 'motion/react';
+import { UIMotion } from '../../tokens/motion-tokens';
 import {
-  OvAnimatePresence as AnimatePresence,
-  ovSM as SM,
-  useControllable,
   ovResolveChildren,
   ovCloneTrigger,
   useOverlayEntry,
@@ -17,8 +16,10 @@ import {
   ModalShell,
   ovPanelElement,
 } from './overlay-core';
+import { useControllable } from '../use-controllable';
 import { useSheetDrag } from './sheet-drag';
 
+const SM = UIMotion;
 const { useRef, useId } = React;
 
 export interface OverlayProps {

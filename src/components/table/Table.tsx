@@ -3,12 +3,17 @@
 /* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
 import './table.css';
+/* The bulk bar's Clear button renders .btn classes - button.css must ride along. */
+import '../button/button.css';
 import * as React from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
+import { CheckGlyph } from '../checkbox/check-glyph';
+import { Odometer } from '../badge/odometer';
+import { useScrollEdges } from '../use-scroll-edges';
 
-const { useState, useRef, useEffect, useMemo } = React;
+const { useState, useRef, useMemo } = React;
 
 export type TableAlign = 'start' | 'end' | 'center';
 export type TableHideBelow = 'sm' | 'md';
@@ -102,55 +107,18 @@ interface TblCheckboxProps {
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 }
 
-/* the Checkbox primitive's exact DOM minus label - its CSS state machine paints it */
+/* the Checkbox primitive minus its label wrapper - CheckGlyph carries checkbox.css */
 function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: TblCheckboxProps) {
-  const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (ref.current) ref.current.indeterminate = !!indeterminate;
-  }, [indeterminate, checked]);
   return (
     <label className="cbx tbl__cbx">
-      <input
-        ref={ref}
-        type="checkbox"
-        className="cbx__input"
+      <CheckGlyph
         checked={checked}
+        indeterminate={!!indeterminate}
         aria-label={ariaLabel}
         onChange={onChange}
         onClick={onClick}
       />
-      <span className="cbx__box" aria-hidden="true">
-        <svg className="cbx__mark" viewBox="0 0 16 16" fill="none">
-          <path className="cbx__tick" d="M3.5 8.5 L6.75 11.5 L12.5 4.75"></path>
-        </svg>
-        <span className="cbx__dash"></span>
-      </span>
     </label>
-  );
-}
-
-/* count odometer - reuses badge.css's .odo vocabulary: each digit clips a 0-9 strip */
-const TBL_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-function TblOdo({ value }: { value: number }) {
-  const str = String(value);
-  return (
-    <span className="odo" role="text" aria-label={str}>
-      {str.split('').map((ch, i) =>
-        /\d/.test(ch) ? (
-          <span key={i} className="odo__col" aria-hidden="true">
-            <span className={'odo__strip odo__strip--' + ch}>
-              {TBL_DIGITS.map((d) => (
-                <span key={d}>{d}</span>
-              ))}
-            </span>
-          </span>
-        ) : (
-          <span key={i} className="odo__fixed" aria-hidden="true">
-            {ch}
-          </span>
-        ),
-      )}
-    </span>
   );
 }
 
@@ -243,30 +211,22 @@ export function Table<Row = any>({
     commitSelection(next);
   }
 
-  /* live scroll - data attrs that CSS reads for header elevation, pin cast, edge fades */
-  useEffect(() => {
-    const el = scrollRef.current;
-    const w = wrapRef.current;
-    if (!el || !w) return;
-    const set = (attr: string, on: boolean) => {
-      if (on) w.setAttribute(attr, '');
-      else w.removeAttribute(attr);
-    };
-    const sync = () => {
+  /* live scroll - data attrs (on the wrap) that CSS reads for header elevation, pin cast, edge fades */
+  useScrollEdges(
+    scrollRef,
+    (edges, el) => {
+      const w = wrapRef.current;
+      if (!w) return;
+      const set = (attr: string, on: boolean) => {
+        if (on) w.setAttribute(attr, '');
+        else w.removeAttribute(attr);
+      };
       set('data-scrolled', el.scrollTop > 0);
-      set('data-x-back', el.scrollLeft > 1);
-      set('data-x-more', el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
-    };
-    sync();
-    el.addEventListener('scroll', sync, { passive: true });
-    const ro = new ResizeObserver(sync);
-    ro.observe(el);
-    if (el.firstElementChild) ro.observe(el.firstElementChild);
-    return () => {
-      el.removeEventListener('scroll', sync);
-      ro.disconnect();
-    };
-  }, []);
+      set('data-x-back', edges.left);
+      set('data-x-more', edges.right);
+    },
+    { content: true },
+  );
 
   function cellMods(col: TableColumn<Row>, i: number) {
     const a: string[] = [];
@@ -318,7 +278,7 @@ export function Table<Row = any>({
             onChange={toggleAll}
           />
           <span className="tbl__bulkCount" aria-live="polite" aria-atomic="true">
-            <TblOdo value={bulkOpen ? selected.size : lastCountRef.current} />
+            <Odometer value={bulkOpen ? selected.size : lastCountRef.current} />
             <span> selected</span>
           </span>
           <span className="tbl__bulkSpacer"></span>

@@ -4,31 +4,19 @@
 
 import './textarea.css';
 import * as React from 'react';
-import { Icon } from '../icon/Icon';
-import { Collapse } from '../motion/Collapse';
+import {
+  FieldLabel,
+  FieldMessage,
+  resolveFieldMessage,
+  type FieldMessagingProps,
+} from '../input/field-chrome';
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
 export interface TextareaProps extends Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   'size' | 'rows' | 'onSubmit'
-> {
-  /** Id wired to the textarea and the label's `htmlFor`. */
-  id?: string;
-  /** Label text (sentence case). */
-  label?: React.ReactNode;
-  /** Show a danger `*` after the label. */
-  required?: boolean;
-  /** Show a muted "(optional)" after the label. */
-  optional?: boolean;
-  /** Neutral helper - shown when there's no validation message. */
-  helper?: React.ReactNode;
-  /** Sets the matching state (border + icon + colour). error wins over warning/success/helper. */
-  error?: React.ReactNode;
-  /** Warning message - warning state. Loses to `error`; wins over `success`/`helper`. */
-  warning?: React.ReactNode;
-  /** Success message - success state. Loses to `error`/`warning`; wins over `helper`. */
-  success?: React.ReactNode;
+>, FieldMessagingProps {
   /** Controlled text value. @default '' */
   value?: string;
   /** Change handler - fired on each edit with the textarea change event. */
@@ -82,9 +70,7 @@ export function Textarea({
   const remaining = max ? max - count : 0;
   const meterState = over ? 'is-over' : max && remaining <= warnAt ? 'is-near' : '';
 
-  const state = error ? 'is-error' : warning ? 'is-warning' : success ? 'is-success' : '';
-  const msg = error || warning || success || helper;
-  const msgIcon = error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null;
+  const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
 
   // Auto-grow without a caret jump: the .txa__stack wrapper animates its height and is overflow:clip while growing (a clip box can't scroll to the caret); scroll is enabled only past max-height.
   const resize = () => {
@@ -107,10 +93,21 @@ export function Textarea({
     stack.style.height = target + 'px';
   };
   React.useLayoutEffect(resize, [text, size]);
+  /* re-measure on WIDTH changes only (window, splitter, panel collapse); the observer must
+     ignore the height mutations resize() itself makes, or it would feed back on itself. */
   React.useEffect(() => {
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
-  }, []);
+    const stack = stackRef.current;
+    if (!stack) return undefined;
+    let w = stack.offsetWidth;
+    const ro = new ResizeObserver(() => {
+      if (stack.offsetWidth !== w) {
+        w = stack.offsetWidth;
+        resize();
+      }
+    });
+    ro.observe(stack);
+    return () => ro.disconnect();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (onSubmit && (e.metaKey || e.ctrlKey) && e.key === 'Enter') {
@@ -129,17 +126,7 @@ export function Textarea({
 
   return (
     <div className={cls}>
-      {label && (
-        <label className="fld__label" htmlFor={id}>
-          {label}
-          {required && (
-            <span className="fld__req" aria-hidden="true">
-              *
-            </span>
-          )}
-          {optional && <span className="fld__optional">(optional)</span>}
-        </label>
-      )}
+      <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div
         className={boxCls}
         style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as React.CSSProperties}
@@ -195,12 +182,7 @@ export function Textarea({
           </div>
         )}
       </div>
-      <Collapse open={!!msg} className="fld__msg-wrap">
-        <div className="fld__msg">
-          {msgIcon && <Icon name={msgIcon} size="sm" weight="fill" />}
-          {msg}
-        </div>
-      </Collapse>
+      <FieldMessage message={msg} icon={msgIcon} />
     </div>
   );
 }

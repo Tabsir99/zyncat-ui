@@ -3,11 +3,14 @@
 /* Alert - the persistent, in-flow status message (banner is a paint modifier). */
 
 import './alert.css';
+/* The action renders .btn classes - button.css must ride along. */
+import '../button/button.css';
 import * as React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
+import { useControllable } from '../use-controllable';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -66,13 +69,8 @@ export function Alert({
   className = '',
   ...rest
 }: AlertProps) {
-  const [selfOpen, setSelfOpen] = React.useState(true);
-  const isOpen = open === undefined ? selfOpen : open;
-
-  const dismiss = () => {
-    if (open === undefined) setSelfOpen(false);
-    if (onDismiss) onDismiss();
-  };
+  const [isOpen, setOpen] = useControllable(open, true, onDismiss);
+  const dismiss = () => setOpen(false);
 
   const classes = ['alert', banner ? 'alert--banner' : '', className].filter(Boolean).join(' ');
 

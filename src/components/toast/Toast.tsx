@@ -2,10 +2,13 @@
 
 /* Toast - the React render layer (queue + clocks live in toast-store.ts). */
 import './toast.css';
+/* The action renders .btn classes - button.css must ride along. */
+import '../button/button.css';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { tokenPx } from '../token-px';
 import { Icon, type IconName } from '../icon/Icon';
 import {
   UIToast,
@@ -26,11 +29,7 @@ const SWIPE_V = 480;
 // expanded gap AND collapsed peek - read lazily (post-stylesheet), once
 let GAP = 0;
 function stackGap() {
-  if (GAP) return GAP;
-  const cs = getComputedStyle(document.documentElement);
-  const raw = cs.getPropertyValue('--space-3').trim();
-  const n = parseFloat(raw) || 0;
-  GAP = (raw.endsWith('rem') ? n * (parseFloat(cs.fontSize) || 16) : n) || 12;
+  if (!GAP) GAP = tokenPx('--space-3') || 12;
   return GAP;
 }
 

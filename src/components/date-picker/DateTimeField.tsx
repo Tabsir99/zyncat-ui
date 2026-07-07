@@ -5,10 +5,11 @@
 import './date-picker.css';
 import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
-import { FieldShell } from './field-shell';
+import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
+import { useControllable } from '../use-controllable';
 import { TimeSegments } from './time-core';
 import { DtpPanel } from './DateField';
-import { MONTHS as DTTF_MONTHS, pad as dttfPad } from './date-utils';
+import { pad, displayDay } from './date-utils';
 
 const { useState, useEffect } = React;
 
@@ -17,16 +18,11 @@ interface DateTimeParts {
   time: string | null;
 }
 
-function dttfDisplayDate(key: string): string {
-  const p = key.split('-').map(Number);
-  const year = p[0] === new Date().getFullYear() ? '' : ', ' + p[0];
-  return DTTF_MONTHS[p[1] - 1].slice(0, 3) + ' ' + dttfPad(p[2]) + year;
-}
-function dttfDisplayTime(t: string, format?: '24h' | '12h'): string {
+function displayTime(t: string, format?: '24h' | '12h'): string {
   if (format !== '12h') return t;
   const p = t.split(':').map(Number);
   const mer = p[0] >= 12 ? 'PM' : 'AM';
-  return ((p[0] + 11) % 12) + 1 + ':' + dttfPad(p[1]) + ' ' + mer;
+  return ((p[0] + 11) % 12) + 1 + ':' + pad(p[1]) + ' ' + mer;
 }
 /* value: 'YYYY-MM-DDTHH:mm' - parts. Limits may be date-only. */
 function dttfSplit(v: string | null | undefined): DateTimeParts {
@@ -35,15 +31,13 @@ function dttfSplit(v: string | null | undefined): DateTimeParts {
   return i < 0 ? { date: v, time: null } : { date: v.slice(0, i), time: v.slice(i + 1) };
 }
 
-export interface DateTimeFieldProps {
+export interface DateTimeFieldProps extends DateFieldBaseProps {
   /** Controlled value, 'YYYY-MM-DDTHH:mm'. */
   value?: string | null;
   /** Uncontrolled initial value, 'YYYY-MM-DDTHH:mm'. Use instead of `value`. @default null */
   defaultValue?: string | null;
   /** Fires once both date and time are set, with 'YYYY-MM-DDTHH:mm' (an incomplete half never commits). */
   onChange?: (value: string) => void;
-  /** Field label rendered above the trigger. */
-  label?: string;
   /** Trigger text shown when no value is picked. @default 'Pick date & time' */
   placeholder?: string;
   /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
@@ -56,16 +50,6 @@ export interface DateTimeFieldProps {
   format?: '24h' | '12h';
   /** ↑/↓ step granularity in minutes (typing is exact). Default 5. */
   minuteStep?: number;
-  /** Asterisk on the label. @default false */
-  required?: boolean;
-  /** Danger border + message color (.fld is-error). @default false */
-  invalid?: boolean;
-  /** Helper / error text under the field. */
-  message?: string;
-  /** Disable the field. @default false */
-  disabled?: boolean;
-  /** Extra class on the field shell root. */
-  className?: string;
 }
 
 export function DateTimeField({
@@ -85,9 +69,11 @@ export function DateTimeField({
   disabled = false,
   className = '',
 }: DateTimeFieldProps) {
-  const controlled = value !== undefined;
-  const [inner, setInner] = useState<string | null>(defaultValue);
-  const val = controlled ? value : inner;
+  const [val, setVal] = useControllable<string | null>(
+    value,
+    defaultValue,
+    onChange as ((next: string | null) => void) | undefined,
+  );
   const parts = dttfSplit(val);
 
   /* incomplete halves wait here; a committed value supersedes them */
@@ -114,9 +100,7 @@ export function DateTimeField({
     if (maxL.time && d === maxL.date && tt > maxL.time) tt = maxL.time;
     if (tt !== t) setPendTime(tt);
     const next = d + 'T' + tt;
-    if (next === val) return;
-    if (!controlled) setInner(next);
-    if (onChange) onChange(next);
+    if (next !== val) setVal(next);
   }
   function handleDate(d: string) {
     setPendDate(d);
@@ -128,18 +112,9 @@ export function DateTimeField({
   }
 
   const display = date
-    ? dttfDisplayDate(date) + ', ' + (time ? dttfDisplayTime(time, format) : '--:--')
+    ? displayDay(date) + ', ' + (time ? displayTime(time, format) : '--:--')
     : null;
-
-  const trigger = (
-    <button type="button" className="fld__input dtf__trigger" disabled={disabled}>
-      {display ? (
-        <span className="dtf__value">{display}</span>
-      ) : (
-        <span className="dtf__placeholder">{placeholder}</span>
-      )}
-    </button>
-  );
+  const trigger = <FieldTrigger display={display} placeholder={placeholder} disabled={disabled} />;
 
   return (
     <FieldShell

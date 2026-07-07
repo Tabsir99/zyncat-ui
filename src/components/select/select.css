@@ -313,23 +313,23 @@
 }
 
 /* Multi-select: the reused Checkbox box IS the indicator - no row fill (avoid double-encoding); strip the .cbx standalone chrome. */
-.select[data-multiple='true'] .select__option-check {
+.select__menu[data-multiple='true'] .select__option-check {
   opacity: 1;
 }
-.select[data-multiple='true'] .select__option .cbx {
+.select__menu[data-multiple='true'] .select__option .cbx {
   padding: 0;
   gap: 0;
   pointer-events: none;
 }
-.select[data-multiple='true'] .select__option .cbx__box {
+.select__menu[data-multiple='true'] .select__option .cbx__box {
   margin-top: 0;
 }
 
 /* Row owns the press (.cbx is pointer-events:none); --press inherits down to dip .cbx__box. */
-.select[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx {
+.select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx {
   --press: 0.88;
 }
-.select[data-multiple='true'] .select__option[data-selected='true'] {
+.select__menu[data-multiple='true'] .select__option[data-selected='true'] {
   background-color: transparent;
 }
 

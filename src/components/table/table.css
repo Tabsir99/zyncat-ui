@@ -165,7 +165,7 @@
 }
 .tbl__sort:hover {
   color: var(--text-strong);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
 }
 .tbl__sort:focus-visible {
   outline: none;

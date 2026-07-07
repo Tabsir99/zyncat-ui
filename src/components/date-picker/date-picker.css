@@ -88,7 +88,7 @@
   transition: var(--transition-colors);
 }
 .dtp__nav:hover:not(:disabled) {
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
   color: var(--text-strong);
 }
 .dtp__nav:active:not(:disabled) {
@@ -167,7 +167,7 @@
   left: 0;
   z-index: -1;
   border-radius: var(--radius-md);
-  background: var(--bg-muted);
+  background: var(--neutral-wash);
   will-change: transform, opacity;
 }
 
@@ -336,7 +336,7 @@
   left: 0;
   z-index: -1;
   border-radius: var(--radius-md);
-  background: var(--bg-muted);
+  background: var(--neutral-wash);
   will-change: transform, opacity;
 }
 

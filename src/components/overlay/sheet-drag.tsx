@@ -6,8 +6,8 @@ import * as React from 'react';
 import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 
-const sdSM = UIMotion;
-const { useEffect: sdUseEffect, useRef: sdUseRef } = React;
+const SM = UIMotion;
+const { useEffect, useRef } = React;
 
 const DISMISS_RATIO = 0.4;
 const DISMISS_VELOCITY = 500;
@@ -45,7 +45,7 @@ function useSheetDrag({
   const travel = useMotionValue<string | number>('100%');
   const stretch = useMotionValue(1);
   const controls = useDragControls();
-  const savedUserSelect = sdUseRef<string | null>(null);
+  const savedUserSelect = useRef<string | null>(null);
 
   /* suspend selection only while dragging; restore also covers unmount mid-drag */
   function suspendSelection() {
@@ -59,7 +59,7 @@ function useSheetDrag({
     document.body.style.userSelect = savedUserSelect.current;
     savedUserSelect.current = null;
   }
-  sdUseEffect(() => restoreSelection, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => restoreSelection, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const progress = useTransform(travel, (v) => {
     if (typeof v === 'string') return Math.min(Math.max(parseFloat(v) / 100 || 0, 0), 1);
@@ -114,7 +114,7 @@ function useSheetDrag({
 
   function onDragEnd(_ev: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) {
     restoreSelection();
-    animate(stretch, 1, sdSM.t.settle);
+    animate(stretch, 1, SM.t.settle);
     const el = slotRef.current;
     if (!el) return;
     const size = axis === 'y' ? el.offsetHeight : el.offsetWidth;

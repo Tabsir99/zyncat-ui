@@ -102,6 +102,13 @@ export default defineConfig({
       const code = await readFile(out, 'utf8');
       if (!/^['"]use client['"]/.test(code)) await writeFile(out, `'use client';${code}`);
     }
+    // CSS imports keep their source-relative specifiers, but dist ships CSS flat -
+    // re-point any cross-directory '../x/y.css' (or './x/y.css') at the sibling copy.
+    for (const [out] of outputs) {
+      const code = await readFile(out, 'utf8');
+      const flat = code.replace(/(['"])\.{1,2}\/(?:[\w.-]+\/)+([\w-]+\.css)\1/g, '$1./$2$1');
+      if (flat !== code) await writeFile(out, flat);
+    }
     // Ship each component stylesheet flat into dist so the (external) `./x.css`
     // side-effect imports in the emitted chunks resolve to a sibling file - which is
     // what lets a consumer's bundler code-split/lazy-load CSS per component. glass.css

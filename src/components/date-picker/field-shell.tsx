@@ -1,30 +1,29 @@
 'use client';
 
-/* FieldShell + useControllable - the variant-blind .fld chrome and a controlled/uncontrolled state hook. */
+/* FieldShell - the variant-blind chrome around every date/time field's control.
+   The .fld vocabulary is owned by input.css (imported via field-chrome);
+   date-picker.css only extends it. */
 
 import './date-picker.css';
-import * as React from 'react';
-import type { ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import { Icon, type IconName } from '../icon/Icon';
+import { FieldLabel, FieldMessage } from '../input/field-chrome';
 
-const { useState, useCallback } = React;
-
-export function useControllable<T>(
-  value: T | undefined,
-  defaultValue: T,
-  onChange?: (next: T) => void,
-): [T, (next: T) => void] {
-  const controlled = value !== undefined;
-  const [inner, setInner] = useState<T>(defaultValue);
-  const val = controlled ? (value as T) : inner;
-  const commit = useCallback(
-    (next: T) => {
-      if (!controlled) setInner(next);
-      if (onChange) onChange(next);
-    },
-    [controlled, onChange],
-  );
-  return [val, commit];
+/* Props every date/time field shares - documented once, inherited by each
+   field's public interface. */
+export interface DateFieldBaseProps {
+  /** Field label rendered above the trigger. */
+  label?: string;
+  /** Asterisk on the label. @default false */
+  required?: boolean;
+  /** Danger border + message color (.fld is-error). @default false */
+  invalid?: boolean;
+  /** Helper / error text under the field. */
+  message?: string;
+  /** Disable the field. @default false */
+  disabled?: boolean;
+  /** Extra class on the field shell root. */
+  className?: string;
 }
 
 export interface FieldShellProps {
@@ -53,27 +52,39 @@ export function FieldShell({
     .join(' ');
   return (
     <div className={cls}>
-      {label ? (
-        <span className="fld__label">
-          {label}
-          {required ? (
-            <span className="fld__req" aria-hidden="true">
-              *
-            </span>
-          ) : null}
-        </span>
-      ) : null}
+      <FieldLabel label={label} required={required} />
       <div className="fld__control">
         {children}
         <span className="fld__icon fld__icon--lead" aria-hidden="true">
           <Icon name={icon} size="md" />
         </span>
       </div>
-      {message ? (
-        <div className="fld__msg">
-          <span>{message}</span>
-        </div>
-      ) : null}
+      <FieldMessage message={message ? <span>{message}</span> : null} />
     </div>
+  );
+}
+
+/* The shared trigger button every popover field renders inside the shell.
+   Overlay clones this element with onClick/aria/ref - everything not consumed
+   here must reach the real <button>, so the rest (incl. React 19 ref-as-prop)
+   spreads through. */
+export function FieldTrigger({
+  display,
+  placeholder,
+  disabled,
+  ...rest
+}: {
+  display: string | null;
+  placeholder: string;
+  disabled?: boolean;
+} & ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> }) {
+  return (
+    <button type="button" className="fld__input dtf__trigger" disabled={disabled} {...rest}>
+      {display ? (
+        <span className="dtf__value">{display}</span>
+      ) : (
+        <span className="dtf__placeholder">{placeholder}</span>
+      )}
+    </button>
   );
 }

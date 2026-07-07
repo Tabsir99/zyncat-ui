@@ -34,7 +34,7 @@
   }
 
   &:not(.cbx--disabled):hover {
-    background: var(--bg-subtle);
+    background: var(--neutral-wash);
   }
   /* accent the empty box on hover */
   &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {

@@ -56,6 +56,18 @@ export function useGlide<T extends HTMLElement = HTMLElement>(
   return { rect, active, enter, leave };
 }
 
+/* Keep a layoutId marker honest at rest: FLIP measures viewport rects, so a mid-flight
+   ancestor transform (scroll reveal, panel entrance) poisons the measurement and the node
+   settles off-target with a stale inline transform. Clearing it once the layout animation
+   completes snaps the node back to its CSS-anchored spot - the next FLIP measures truth. */
+export function useLayoutSelfHeal<T extends HTMLElement = HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const onLayoutAnimationComplete = useCallback(() => {
+    if (ref.current) ref.current.style.removeProperty('transform');
+  }, []);
+  return { ref, onLayoutAnimationComplete };
+}
+
 export interface GlidePillProps {
   className?: string;
   rect: GlideRect | null;

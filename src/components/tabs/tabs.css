@@ -1,31 +1,17 @@
-/* tabs.css - Tabs.
-   -------------------------------------------------------------------------
-   Line tabs for VIEW SWITCHING (overview / activity / settings) - peers
-   of the content below them, sitting on a hairline baseline. NOT a form
-   control: pick Segmented control for 2-3 short filter options.
+/* tabs.css - line tabs for VIEW SWITCHING (overview / activity / settings), sitting on a
+   hairline baseline. NOT a form control: pick Segmented control for 2-3 filter options.
 
-   Anatomy:  .tabs > .tabs__list[role=tablist] > .tab* + .tabs__ink
-             .tab > .tab__pad ( .tab__hover? + Icon? + .tab__label + .tab__count? )
+   Anatomy:  .tabs > .tabs__list[role=tablist] > .tab__hover? + .tab* + .tabs__ink
+             .tab > .tab__pad ( Icon? + .tab__label + .tab__count? )
    States:   :hover - :active - :focus-visible - :disabled - .is-selected
 
-   THE SIGNATURE MOTION - "the ink reaches, then releases."
-   The active underline is ONE persistent node (.tabs__ink). On selection the
-   edge facing the destination travels first - the ink stretches across the
-   gap - then the trailing edge releases and settles. Direction-aware, always
-   decelerating. Motion (animate(), Tabs.jsx) owns the travel; there is NO css
-   transition on the ink. Width is animated measured-px - measured-px - the
-   surfaced section C morph exception (Tooltip precedent), since the destination tab
-   width is unknowable to transforms and scaleX would distort the radius.
-
-   THE SECOND MOTION - the gliding hover. Hover feedback is ONE shared pill
-   (.tab__hover), not a per-tab background: it fades in under the first tab
-   you touch, then GLIDES - morphing position and width - as the pointer
-   moves along the row, and fades out when it leaves. Implicit: consumers get
-   it for free, there is no API. It is a `layoutId` node rendered inside the
-   hovered tab - Motion's FLIP owns the travel; tab-to-tab is an atomic
-   remount (one node per frame - no AnimatePresence, which caused a flicker),
-   and the leave-fade plays on the still-mounted pill before it unmounts -
-   so this file only gives it paint. No CSS transition on it.
+   Two motions, both driven from Tabs.tsx - nothing here transitions them:
+   - the ink ("reaches, then releases"): one persistent node; the edge facing the
+     destination travels first, then the trailing edge settles. animate() keyframes on
+     x + measured width (destination width is unknowable to transforms; scaleX would
+     distort the radius).
+   - the gliding hover: one persistent pill (../motion/glide) that fades in under the
+     first tab touched, springs between pads, and fades out where it rests on leave.
    Label color, icon weight and press dip remain trivial-tier CSS. */
 
 /* -- Shell - owns the full-width baseline ----------------------------------
@@ -101,13 +87,8 @@
 }
 
 .tab__pad {
-  position: relative; /* containing block for the pill - NO isolation: the
-                             pill's z-index:-1 must resolve in the LIST's
-                             stacking context (z-index:1), so the in-flight
-                             pill paints beneath EVERY tab's content. Isolating
-                             here traps it per-tab - a later (right) sibling's
-                             pill then paints OVER an earlier tab's label while
-                             traveling left-right. */
+  position: relative; /* positioned so every pad paints above the shared glide
+                             pill (z-index 0, first child of the list) */
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -137,7 +118,7 @@
   color: var(--text-body);
 }
 .tab:active:not(:disabled) .tab__pad {
-  background: var(--bg-muted);
+  background: var(--neutral-wash-press);
   transform: translateY(var(--space-px));
 }
 .tab.is-selected .tab__pad,
@@ -176,17 +157,18 @@
 }
 
 /* -- The gliding hover ------------------------------------------------------
-   One shared pill, rendered inside whichever tab is hovered (layoutId - FLIP
-   moves it between tabs). Paint only: geometry is inset 0 of the pad; the
-   negative z-index resolves in the LIST's stacking context (see .tab__pad),
-   keeping the pill under every tab's label in BOTH travel directions. Motion
-   writes transform/opacity at runtime; nothing transitions here. */
+   One persistent pill, first child of the scroller (../motion/glide writes
+   x/y/width/height/opacity inline; coordinates include scrollLeft, so it
+   scrolls with its tab). z-index 0 + DOM order keep it under every tab's
+   positioned pad in both travel directions. Nothing transitions here. */
 .tab__hover {
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  z-index: 0;
   border-radius: var(--radius-md);
-  background: var(--bg-muted); /* not -subtle: ~ invisible on --bg-app */
+  background: var(--neutral-wash);
+  pointer-events: none;
   will-change: transform, opacity;
 }
 

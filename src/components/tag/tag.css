@@ -143,7 +143,7 @@
 .tag--toggle:hover:not(:disabled) {
   color: var(--text-strong);
   border-color: var(--border-strong);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
 }
 .tag--toggle:active:not(:disabled) {
   transform: translateY(var(--space-px));

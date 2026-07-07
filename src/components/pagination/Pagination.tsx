@@ -3,9 +3,12 @@
 /* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
 
 import './pagination.css';
+/* The nav arrows render .btn classes - button.css must ride along. */
+import '../button/button.css';
 import * as React from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { tokenPx } from '../token-px';
 import { Icon } from '../icon/Icon';
 
 export interface PaginationProps {
@@ -31,15 +34,10 @@ export interface PaginationProps {
 
 const { useEffect, useRef } = React;
 
-/* --space-2 in real px - tokens resolve to "0.5rem"; bare parseFloat gives 0.5, so convert rem-px */
+/* range-swap travel distance - resolved once, on first use */
 let pgnTravelPx: number | null = null;
 function pgnTravel() {
-  if (pgnTravelPx == null) {
-    const cs = getComputedStyle(document.documentElement);
-    const v = cs.getPropertyValue('--space-2').trim();
-    const n = parseFloat(v);
-    pgnTravelPx = v.endsWith('rem') ? n * parseFloat(cs.fontSize) : n;
-  }
+  if (pgnTravelPx == null) pgnTravelPx = tokenPx('--space-2');
   return pgnTravelPx;
 }
 

@@ -3,29 +3,32 @@
 /* DateRangeField - DateField's sibling for { start, end }: a Linear/Notion two-click range; the Overlay switches popoverandsheet by viewport. */
 
 import './date-picker.css';
+/* The footer Done renders .btn classes - button.css must ride along. */
+import '../button/button.css';
 import * as React from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
 import { Overlay } from '../overlay/Overlay';
-import { FieldShell, useControllable } from './field-shell';
-import { GlidePill, useGlide } from './glide-pill';
+import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
+import { useControllable } from '../use-controllable';
+import { GlidePill, useGlide, useLayoutSelfHeal } from './glide-pill';
+import { useDayFocus } from './use-day-focus';
 import {
-  MONTHS as DRP_MONTHS,
-  DOW as DRP_DOW,
-  pad as drpPad,
-  key as drpKey,
-  parse as drpParse,
-  today as drpToday,
-  add as drpAdd,
-  col as drpCol,
-  grid as drpGrid,
-  tzLabel as drpTzLabel,
+  MONTHS,
+  DOW,
+  pad,
+  key as toKey,
+  parse,
+  today,
+  add,
+  col,
+  grid,
+  tzLabel,
+  within,
 } from './date-utils';
 
 const { useState, useRef, useEffect } = React;
-const drpMotion = motion;
-const drpSM = UIMotion;
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {
@@ -43,35 +46,35 @@ interface DrpPreset {
 }
 
 function drpDisplay(key: string, withYear: boolean): string {
-  const d = drpParse(key);
-  const mon = DRP_MONTHS[d.getMonth()].slice(0, 3);
-  return mon + ' ' + drpPad(d.getDate()) + (withYear ? ', ' + d.getFullYear() : '');
+  const d = parse(key);
+  const mon = MONTHS[d.getMonth()].slice(0, 3);
+  return mon + ' ' + pad(d.getDate()) + (withYear ? ', ' + d.getFullYear() : '');
 }
 function drpRangeText(start: string, end: string): string {
-  const sameYear = drpParse(start).getFullYear() === drpParse(end).getFullYear();
+  const sameYear = parse(start).getFullYear() === parse(end).getFullYear();
   const curYear = new Date().getFullYear();
-  const startYr = !sameYear || drpParse(start).getFullYear() !== curYear;
-  const endYr = drpParse(end).getFullYear() !== curYear;
+  const startYr = !sameYear || parse(start).getFullYear() !== curYear;
+  const endYr = parse(end).getFullYear() !== curYear;
   return drpDisplay(start, startYr) + ' - ' + drpDisplay(end, endYr);
 }
 const drpDays = (start: string, end: string): number =>
-  Math.round((+drpParse(end) - +drpParse(start)) / 86400000) + 1;
+  Math.round((+parse(end) - +parse(start)) / 86400000) + 1;
 
 function drpPresets(): DrpPreset[] {
-  const t = drpToday();
+  const t = today();
   const now = new Date();
-  const firstThis = drpKey(new Date(now.getFullYear(), now.getMonth(), 1));
-  const firstPrev = drpKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
-  const lastPrev = drpKey(new Date(now.getFullYear(), now.getMonth(), 0));
-  const jan1 = drpKey(new Date(now.getFullYear(), 0, 1));
+  const firstThis = toKey(new Date(now.getFullYear(), now.getMonth(), 1));
+  const firstPrev = toKey(new Date(now.getFullYear(), now.getMonth() - 1, 1));
+  const lastPrev = toKey(new Date(now.getFullYear(), now.getMonth(), 0));
+  const jan1 = toKey(new Date(now.getFullYear(), 0, 1));
   return [
     { id: 'today', label: 'Today', start: t, end: t },
-    { id: 'yest', label: 'Yesterday', start: drpAdd(t, -1), end: drpAdd(t, -1) },
-    { id: '7d', label: 'Last 7 days', start: drpAdd(t, -6), end: t },
-    { id: '30d', label: 'Last 30 days', start: drpAdd(t, -29), end: t },
+    { id: 'yest', label: 'Yesterday', start: add(t, -1), end: add(t, -1) },
+    { id: '7d', label: 'Last 7 days', start: add(t, -6), end: t },
+    { id: '30d', label: 'Last 30 days', start: add(t, -29), end: t },
     { id: 'mtd', label: 'This month', start: firstThis, end: t },
     { id: 'lastm', label: 'Last month', start: firstPrev, end: lastPrev },
-    { id: '90d', label: 'Last 90 days', start: drpAdd(t, -89), end: t },
+    { id: '90d', label: 'Last 90 days', start: add(t, -89), end: t },
     { id: 'ytd', label: 'Year to date', start: jan1, end: t },
   ];
 }
@@ -115,8 +118,8 @@ function DrpPanel({
   months,
   layout,
 }: DrpPanelProps) {
-  const seedKey = (value && value.start) || drpToday();
-  const seed = drpParse(seedKey);
+  const seedKey = (value && value.start) || today();
+  const seed = parse(seedKey);
   const [view, setView] = useState<{ y: number; m: number }>({
     y: seed.getFullYear(),
     m: seed.getMonth(),
@@ -129,13 +132,16 @@ function DrpPanel({
 
   const daysRef = useRef<HTMLDivElement>(null);
   const presetsRef = useRef<HTMLDivElement>(null);
-  const pendingFocusRef = useRef(false);
+  const armFocus = useDayFocus(daysRef, focusKey);
 
   /* gliding hover pill per zone (see glide-pill); hoverKey drives the preview band, not the pill - the pill idles once an anchor is set. */
-  const grid = useGlide(daysRef);
+  const gridGlide = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
+  /* the caps FLIP between cells while the popover may still be scale-entering - self-heal at rest */
+  const healLo = useLayoutSelfHeal<HTMLSpanElement>();
+  const healHi = useLayoutSelfHeal<HTMLSpanElement>();
 
-  const inBounds = (key: string): boolean => (!min || key >= min) && (!max || key <= max);
+  const inBounds = (key: string): boolean => within(key, min, max);
 
   /* effective lo/hi for PAINT: mid-selection - anchorandhover; else committed */
   let lo: string | null = null,
@@ -168,7 +174,7 @@ function DrpPanel({
   function applyPreset(p: DrpPreset) {
     setAnchor(null);
     setHoverKey(null);
-    const d = drpParse(p.start);
+    const d = parse(p.start);
     setView({ y: d.getFullYear(), m: d.getMonth() });
     setFocusKey(p.start);
     commit({ start: p.start, end: p.end });
@@ -189,30 +195,13 @@ function DrpPanel({
     prevViewIdxRef.current = viewIdx;
   }, [viewIdx]);
 
-  /* seed focus into the grid on open (panel portals to <body>) */
-  useEffect(() => {
-    const el = daysRef.current;
-    if (!el) return;
-    const btn =
-      el.querySelector('[data-key="' + focusKey + '"]:not(:disabled)') ||
-      el.querySelector('.dtp__day:not(:disabled)');
-    if (btn) (btn as HTMLElement).focus({ preventScroll: true });
-  }, []);
-
-  useEffect(() => {
-    if (!pendingFocusRef.current || !daysRef.current) return;
-    pendingFocusRef.current = false;
-    const btn = daysRef.current.querySelector('[data-key="' + focusKey + '"]');
-    if (btn) (btn as HTMLElement).focus({ preventScroll: true });
-  }, [focusKey]);
-
   function moveFocus(deltaDays: number) {
-    const key = drpAdd(focusKey, deltaDays);
-    const d = drpParse(key);
-    pendingFocusRef.current = true;
+    const key = add(focusKey, deltaDays);
+    const d = parse(key);
+    armFocus();
     setFocusKey(key);
     if (anchor) setHoverKey(key);
-    const first = months === 2 ? view.y * 12 + view.m : view.y * 12 + view.m;
+    const first = view.y * 12 + view.m;
     const idx = d.getFullYear() * 12 + d.getMonth();
     const last = first + (months - 1);
     if (idx < first) setView({ y: d.getFullYear(), m: d.getMonth() });
@@ -241,12 +230,12 @@ function DrpPanel({
     e.preventDefault();
   }
 
-  const todayKey = drpToday();
+  const todayKey = today();
   function renderDay(d: Date, viewMonth: number) {
-    const key = drpKey(d);
+    const key = toKey(d);
     const out = d.getMonth() !== viewMonth;
     const disabled = !inBounds(key);
-    const col = drpCol(d);
+    const dayCol = col(d);
 
     const isLo = lo && key === lo;
     const isHi = hi && key === hi;
@@ -257,8 +246,8 @@ function DrpPanel({
     const hiGhost = provisional && isHi && !single && hi !== anchor;
 
     const band = inRange && !single;
-    const extL = band && !isLo && col !== 0;
-    const extR = band && !isHi && col !== 6;
+    const extL = band && !isLo && dayCol !== 0;
+    const extR = band && !isHi && dayCol !== 6;
 
     /* a boundary date shows in two cells (two-month view); the cap is a shared-layoutId node, so render it in exactly one - the in-month cell. */
     const capHere = months === 1 || !out;
@@ -286,31 +275,35 @@ function DrpPanel({
         className={cls.join(' ')}
         disabled={disabled}
         tabIndex={key === focusKey ? 0 : -1}
-        aria-label={DRP_MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
+        aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
         aria-selected={isLo || isHi || undefined}
         onClick={() => pickDay(key)}
         onPointerEnter={(e) => {
           setHoverKey(key);
-          if (!anchor && !disabled) grid.enter(e.currentTarget);
-          else grid.leave();
+          if (!anchor && !disabled) gridGlide.enter(e.currentTarget);
+          else gridGlide.leave();
         }}
       >
         {band ? <span className={bandCls.join(' ')} aria-hidden="true"></span> : null}
         {loCap ? (
-          <drpMotion.span
+          <motion.span
             className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')}
             layoutId="drp-cap-lo"
-            transition={drpSM.t.settle}
+            transition={UIMotion.t.settle}
             aria-hidden="true"
-          ></drpMotion.span>
+            ref={healLo.ref}
+            onLayoutAnimationComplete={healLo.onLayoutAnimationComplete}
+          ></motion.span>
         ) : null}
         {hiCap ? (
-          <drpMotion.span
+          <motion.span
             className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')}
             layoutId="drp-cap-hi"
-            transition={drpSM.t.settle}
+            transition={UIMotion.t.settle}
             aria-hidden="true"
-          ></drpMotion.span>
+            ref={healHi.ref}
+            onLayoutAnimationComplete={healHi.onLayoutAnimationComplete}
+          ></motion.span>
         ) : null}
         <span className="dtp__num">{d.getDate()}</span>
         {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
@@ -322,9 +315,9 @@ function DrpPanel({
     const base = new Date(view.y, view.m + offset, 1);
     const y = base.getFullYear(),
       m = base.getMonth();
-    const cells = drpGrid(y, m);
-    const prevEnd = drpKey(new Date(y, m, 0));
-    const nextStart = drpKey(new Date(y, m + 1, 1));
+    const cells = grid(y, m);
+    const prevEnd = toKey(new Date(y, m, 0));
+    const nextStart = toKey(new Date(y, m + 1, 1));
     return (
       <div className="dtp__cal" key={offset}>
         <div className={'drp__mhead' + (withNext && !withPrev ? ' drp__mhead--right' : '')}>
@@ -340,7 +333,7 @@ function DrpPanel({
             </button>
           ) : null}
           <span className="dtp__month">
-            {DRP_MONTHS[m]} <span className="dtp__year">{y}</span>
+            {MONTHS[m]} <span className="dtp__year">{y}</span>
           </span>
           {withNext ? (
             <button
@@ -355,14 +348,14 @@ function DrpPanel({
           ) : null}
         </div>
         <div className="dtp__dow" aria-hidden="true">
-          {DRP_DOW.map((d) => (
+          {DOW.map((d) => (
             <span key={d}>{d}</span>
           ))}
         </div>
         <div
           className="dtp__days"
           role="grid"
-          aria-label={DRP_MONTHS[m] + ' ' + y}
+          aria-label={MONTHS[m] + ' ' + y}
           key={'days-' + viewIdx + '-' + offset}
           data-enter={navDir || undefined}
         >
@@ -414,13 +407,13 @@ function DrpPanel({
           onKeyDown={onGridKeyDown}
           onPointerLeave={() => {
             if (anchor) setHoverKey(anchor);
-            grid.leave();
+            gridGlide.leave();
           }}
         >
           {months === 2
             ? [renderMonth(0, true, false), renderMonth(1, false, true)]
             : renderMonth(0, true, true)}
-          <GlidePill className="dtp__hover" rect={grid.rect} active={grid.active} />
+          <GlidePill className="dtp__hover" rect={gridGlide.rect} active={gridGlide.active} />
         </div>
       </div>
       <div className="drp__foot">
@@ -438,7 +431,7 @@ function DrpPanel({
             'Pick a start date'
           )}
         </span>
-        {timezone ? <span className="drp__tz">{drpTzLabel(timezone)}</span> : null}
+        {timezone ? <span className="drp__tz">{tzLabel(timezone)}</span> : null}
         <span className="drp__footSpacer"></span>
         <button type="button" className="btn btn--primary btn--sm" onClick={close}>
           Done
@@ -448,15 +441,13 @@ function DrpPanel({
   );
 }
 
-export interface DateRangeFieldProps {
+export interface DateRangeFieldProps extends DateFieldBaseProps {
   /** Controlled value - both endpoints, or null when empty. */
   value?: DateRange | null;
   /** Uncontrolled initial range. Use instead of `value`. @default null */
   defaultValue?: DateRange | null;
   /** Fires only on a COMPLETE range (a lone anchor never commits). */
   onChange?: (value: DateRange) => void;
-  /** Field label rendered above the trigger. */
-  label?: string;
   /** Trigger text shown when no range is picked. @default 'Pick a date range' */
   placeholder?: string;
   /** IANA timezone (e.g. 'Europe/Riga') - display context, shown in the footer. */
@@ -465,16 +456,6 @@ export interface DateRangeFieldProps {
   min?: string;
   /** Latest pickable date, 'YYYY-MM-DD', inclusive. */
   max?: string;
-  /** Asterisk on the label. @default false */
-  required?: boolean;
-  /** Danger border + message color (.fld is-error). @default false */
-  invalid?: boolean;
-  /** Helper / error text under the field. */
-  message?: string;
-  /** Disable the field. @default false */
-  disabled?: boolean;
-  /** Extra class on the field shell root. */
-  className?: string;
 }
 
 export function DateRangeField({
@@ -498,16 +479,7 @@ export function DateRangeField({
   const mode = narrow ? 'sheet' : 'popover';
 
   const display = val && val.start && val.end ? drpRangeText(val.start, val.end) : null;
-
-  const trigger = (
-    <button type="button" className="fld__input dtf__trigger" disabled={disabled}>
-      {display ? (
-        <span className="dtf__value">{display}</span>
-      ) : (
-        <span className="dtf__placeholder">{placeholder}</span>
-      )}
-    </button>
-  );
+  const trigger = <FieldTrigger display={display} placeholder={placeholder} disabled={disabled} />;
 
   return (
     <FieldShell
@@ -519,12 +491,7 @@ export function DateRangeField({
       icon="calendar"
       className={className}
     >
-      <Overlay
-        trigger={trigger}
-        mode={mode}
-        side={mode === 'sheet' ? 'bottom' : 'bottom'}
-        align="start"
-      >
+      <Overlay trigger={trigger} mode={mode} side="bottom" align="start">
         {(api) => (
           <DrpPanel
             value={val}

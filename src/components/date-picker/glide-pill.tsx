@@ -5,5 +5,5 @@
 
 import './date-picker.css';
 
-export { useGlide, GlidePill } from '../motion/glide';
+export { useGlide, GlidePill, useLayoutSelfHeal } from '../motion/glide';
 export type { GlideRect, GlideApi, GlidePillProps } from '../motion/glide';

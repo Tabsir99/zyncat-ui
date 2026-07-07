@@ -3,28 +3,13 @@
 // TextField.tsx - text input: label - control - message, leading icon, clear action, sizes, validation states.
 
 import './input.css';
-import type { ChangeEvent, InputHTMLAttributes, ReactNode } from 'react';
+import { useRef } from 'react';
+import type { InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
-import { Collapse } from '../motion/Collapse';
+import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from './field-chrome';
 
-export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  /** Field id, ties the label to the input. */
-  id?: string;
-  /** Label text (sentence case). */
-  label?: ReactNode;
-  /** Show a danger `*` after the label. */
-  required?: boolean;
-  /** Show a muted "(optional)" after the label. */
-  optional?: boolean;
-  /** Neutral helper text - shown when there's no validation message. */
-  helper?: ReactNode;
-  /** Error message - sets the error state (red border/ring + icon). Wins over warning/success/helper. */
-  error?: ReactNode;
-  /** Warning message - amber state. */
-  warning?: ReactNode;
-  /** Success message - green state. */
-  success?: ReactNode;
+export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, FieldMessagingProps {
   /** Leading icon - your own icon node (sized to the control). Decorative. */
   leadingIcon?: ReactNode;
   /** Show a clear button when there's a value. */
@@ -54,10 +39,22 @@ export function TextField({
   className = '',
   ...rest
 }: TextFieldProps) {
-  const state = error ? 'is-error' : warning ? 'is-warning' : success ? 'is-success' : '';
-  const msg = error || warning || success || helper;
-  const msgIcon = error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null;
+  const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
+  const inputRef = useRef<HTMLInputElement>(null);
   const showClear = clearable && value;
+
+  /* Clear by writing the input through the native value setter and dispatching a real
+     `input` event - React synthesizes a genuine ChangeEvent (currentTarget, preventDefault
+     and friends all real, unlike a hand-built {target:{value}} object). Focus returns to
+     the input since this button unmounts the moment the value empties. */
+  function clear() {
+    const el = inputRef.current;
+    if (!el) return;
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    setValue.call(el, '');
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.focus();
+  }
   const cls = [
     'fld',
     size === 'sm' ? 'fld--sm' : size === 'lg' ? 'fld--lg' : '',
@@ -71,17 +68,7 @@ export function TextField({
 
   return (
     <div className={cls}>
-      {label && (
-        <label className="fld__label" htmlFor={id}>
-          {label}
-          {required && (
-            <span className="fld__req" aria-hidden="true">
-              *
-            </span>
-          )}
-          {optional && <span className="fld__optional">(optional)</span>}
-        </label>
-      )}
+      <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div className="fld__control">
         {leadingIcon && (
           <span className="fld__icon fld__icon--lead">
@@ -90,6 +77,7 @@ export function TextField({
         )}
         <input
           id={id}
+          ref={inputRef}
           className="fld__input"
           type={type}
           value={value}
@@ -101,24 +89,12 @@ export function TextField({
           {...rest}
         />
         {showClear && (
-          <button
-            type="button"
-            className="fld__action"
-            aria-label="Clear"
-            onClick={() =>
-              onChange && onChange({ target: { value: '' } } as ChangeEvent<HTMLInputElement>)
-            }
-          >
+          <button type="button" className="fld__action" aria-label="Clear" onClick={clear}>
             <Icon name="close" />
           </button>
         )}
       </div>
-      <Collapse open={!!msg} className="fld__msg-wrap">
-        <div className="fld__msg">
-          {msgIcon && <Icon name={msgIcon} size="sm" weight="fill" />}
-          {msg}
-        </div>
-      </Collapse>
+      <FieldMessage message={msg} icon={msgIcon} />
     </div>
   );
 }

@@ -164,63 +164,6 @@
   transition: none;
 }
 
-/* Odometer - each digit is a column clipping a 0-9 strip; .odo__strip--N sets the translateY (no inline styles). */
-.odo {
-  display: inline-flex;
-  align-items: center;
-}
-.odo__col {
-  display: inline-block;
-  height: 1em;
-  line-height: 1;
-  overflow: hidden;
-}
-.odo__strip {
-  display: flex;
-  flex-direction: column;
-  transition: transform var(--duration-slow) var(--ease-entrance);
-  will-change: transform;
-}
-.odo__strip > span {
-  height: 1em;
-  line-height: 1;
-  display: block;
-  text-align: center;
-}
-.odo__fixed {
-  display: inline-block;
-}
-.odo__strip--0 {
-  transform: translateY(0);
-}
-.odo__strip--1 {
-  transform: translateY(-1em);
-}
-.odo__strip--2 {
-  transform: translateY(-2em);
-}
-.odo__strip--3 {
-  transform: translateY(-3em);
-}
-.odo__strip--4 {
-  transform: translateY(-4em);
-}
-.odo__strip--5 {
-  transform: translateY(-5em);
-}
-.odo__strip--6 {
-  transform: translateY(-6em);
-}
-.odo__strip--7 {
-  transform: translateY(-7em);
-}
-.odo__strip--8 {
-  transform: translateY(-8em);
-}
-.odo__strip--9 {
-  transform: translateY(-9em);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .badge--outline {
     transition: none;
@@ -235,9 +178,6 @@
     transition: none;
   }
   .badge__word {
-    transition: none;
-  }
-  .odo__strip {
     transition: none;
   }
 }

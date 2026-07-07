@@ -44,8 +44,10 @@
   --red-600: oklch(0.545 0.196 27);
   --red-700: oklch(0.478 0.172 27);
 
-  /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue. */
+  /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue.
+     -strong is the press step of the gray wash (hover 6% < press 10%). */
   --gray-wash: oklch(0.42 0.012 264 / 0.06);
+  --gray-wash-strong: oklch(0.42 0.012 264 / 0.1);
   --teal-wash: oklch(0.63 0.118 198 / 0.05);
   --green-wash: oklch(0.62 0.13 152 / 0.1);
   --amber-wash: oklch(0.76 0.14 75 / 0.12);

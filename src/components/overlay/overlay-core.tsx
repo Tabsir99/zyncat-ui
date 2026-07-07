@@ -1,43 +1,25 @@
 'use client';
 
-/* overlay-core - the headless mechanics under popover, dialog and sheet. */
+/* overlay-core - the headless mechanics under popover, dialog and sheet.
+   The portal + stack + light-dismiss primitives live in layer.tsx (shared with
+   select-core); this file adds the modal machinery on top. */
 import './overlay.css';
 import * as React from 'react';
-import { createPortal } from 'react-dom';
-import { motion as ovMotion, AnimatePresence as OvAnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { tokenPx } from '../token-px';
+import {
+  type OverlayEntry,
+  ovIsTop,
+  ovInOverlayAbove,
+  useOverlayEntry,
+  useOutsidePress,
+  cloneTrigger,
+  OverlayPortal,
+} from './layer';
 
-const ovSM = UIMotion;
-const {
-  useState: ovUseState,
-  useEffect: ovUseEffect,
-  useLayoutEffect: ovUseLayoutEffect,
-  useRef: ovUseRef,
-} = React;
-
-function useControllable<T>(
-  controlled: T | undefined,
-  initial: T,
-  onChange?: (next: T) => void,
-): [T, (next: T) => void] {
-  const [internal, setInternal] = ovUseState(initial);
-  const isControlled = controlled !== undefined;
-  const value = isControlled ? controlled : internal;
-  const setValue = (next: T) => {
-    if (!isControlled) setInternal(next);
-    if (onChange) onChange(next);
-  };
-  return [value, setValue];
-}
-
-/* Token length - px; parseFloat alone reads "0.5rem" as 0.5px, so convert rem. */
-function ovReadPx(token: string): number {
-  const root = document.documentElement;
-  const v = getComputedStyle(root).getPropertyValue(token).trim();
-  const n = parseFloat(v);
-  if (Number.isNaN(n)) return 0;
-  return v.endsWith('rem') ? n * parseFloat(getComputedStyle(root).fontSize) : n;
-}
+const SM = UIMotion;
+const { useEffect, useLayoutEffect, useRef } = React;
 
 function ovResolveChildren(
   children: React.ReactNode | ((api: { close: () => void }) => React.ReactNode),
@@ -63,121 +45,23 @@ function ovCloneTrigger(
   },
 ): React.ReactElement | null {
   if (!trigger) return null;
-  const setRef = (node: HTMLElement | null) => {
-    if (triggerRef) triggerRef.current = node;
-    const r = (trigger as any).ref;
-    if (typeof r === 'function') r(node);
-    else if (r) r.current = node;
-  };
-  return React.cloneElement(trigger as React.ReactElement<any>, {
-    ref: setRef,
-    onClick: (e: React.MouseEvent) => {
-      const oc = (trigger.props as { onClick?: (e: React.MouseEvent) => void }).onClick;
-      if (oc) oc(e);
-      onPress();
+  return cloneTrigger(
+    trigger,
+    {
+      onClick: onPress,
+      'aria-haspopup': haspopup,
+      'aria-expanded': open,
+      'aria-controls': open ? panelId : undefined,
     },
-    'aria-haspopup': haspopup,
-    'aria-expanded': open,
-    'aria-controls': open ? panelId : undefined,
-  });
-}
-
-/* The overlay stack: one Esc listener closes only the topmost dismissible, and defers to inner handlers that already consumed the key (defaultPrevented). */
-interface OverlayEntry {
-  contains: (t: EventTarget | null) => boolean;
-  isDismissible: () => boolean;
-  requestClose: () => void;
-  _dismissible?: boolean;
-  _close?: () => void;
-}
-
-const ovStack: OverlayEntry[] = [];
-
-function ovOnDocKeyDown(e: KeyboardEvent) {
-  if (e.key !== 'Escape' || e.defaultPrevented || ovStack.length === 0) return;
-  const top = ovStack[ovStack.length - 1];
-  if (!top.isDismissible()) return;
-  e.preventDefault();
-  top.requestClose();
-}
-
-function ovIsTop(entry: OverlayEntry) {
-  return ovStack[ovStack.length - 1] === entry;
-}
-
-/* true if `target` sits in an overlay opened after `entry` (a nested child owns it). */
-function ovInOverlayAbove(entry: OverlayEntry, target: EventTarget | null) {
-  const i = ovStack.indexOf(entry);
-  return i >= 0 && ovStack.slice(i + 1).some((e) => e.contains(target));
-}
-
-/* Join the stack for the panel's lifetime; set z = --layer-overlay + depth. */
-function useOverlayEntry({
-  nodeRef,
-  dismissible,
-  requestClose,
-}: {
-  nodeRef: React.RefObject<HTMLElement>;
-  dismissible: boolean;
-  requestClose: () => void;
-}): OverlayEntry {
-  const ref = ovUseRef<OverlayEntry>(null);
-  if (!ref.current) {
-    ref.current = {
-      contains: (t) => Boolean(nodeRef.current && nodeRef.current.contains(t as Node)),
-      isDismissible: () => ref.current._dismissible,
-      requestClose: () => ref.current._close(),
-    };
-  }
-  ref.current._dismissible = dismissible;
-  ref.current._close = requestClose;
-
-  ovUseLayoutEffect(() => {
-    const entry = ref.current;
-    if (ovStack.length === 0) document.addEventListener('keydown', ovOnDocKeyDown);
-    ovStack.push(entry);
-    if (nodeRef.current)
-      nodeRef.current.style.zIndex = 'calc(var(--layer-overlay) + ' + (ovStack.length - 1) + ')';
-    return () => {
-      const i = ovStack.indexOf(entry);
-      if (i >= 0) ovStack.splice(i, 1);
-      if (ovStack.length === 0) document.removeEventListener('keydown', ovOnDocKeyDown);
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return ref.current;
-}
-
-/* Light dismiss - close on a press outside the panel, trigger, and any overlay above. */
-function useOutsidePress({
-  entry,
-  refs,
-  enabled,
-  onPress,
-}: {
-  entry: OverlayEntry;
-  refs: React.RefObject<HTMLElement>[];
-  enabled: boolean;
-  onPress: () => void;
-}) {
-  const latest = ovUseRef<{ enabled: boolean; onPress: () => void }>(null);
-  latest.current = { enabled, onPress };
-  ovUseEffect(() => {
-    const onDown = (e: PointerEvent) => {
-      if (!latest.current.enabled) return;
-      const t = e.target;
-      if (refs.some((r) => r.current && r.current.contains(t as Node))) return;
-      if (ovInOverlayAbove(entry, t)) return;
-      latest.current.onPress();
-    };
-    document.addEventListener('pointerdown', onDown, true);
-    return () => document.removeEventListener('pointerdown', onDown, true);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    (node) => {
+      triggerRef.current = node;
+    },
+  );
 }
 
 /* Restore focus to the opener on unmount, but only if it would otherwise be lost; a microtask dodges the inert-release ordering race. */
 function useReturnFocus(nodeRef: React.RefObject<HTMLElement>) {
-  ovUseEffect(() => {
+  useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
     return () => {
       const a = document.activeElement;
@@ -204,7 +88,7 @@ function useFocusTrap({
   panelRef: React.RefObject<HTMLElement>;
   entry: OverlayEntry;
 }) {
-  ovUseEffect(() => {
+  useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return undefined;
     const focusables = () =>
@@ -253,7 +137,7 @@ let ovLocks = 0;
 let ovSavedOverflow = '';
 let ovSavedPad = '';
 function useScrollLock() {
-  ovUseEffect(() => {
+  useEffect(() => {
     if (++ovLocks === 1) {
       const body = document.body;
       const gutter = window.innerWidth - document.documentElement.clientWidth;
@@ -277,7 +161,7 @@ function useScrollLock() {
 let ovInertCount = 0;
 const ovInerted = new Set<HTMLElement>();
 function useInertOutside() {
-  ovUseEffect(() => {
+  useEffect(() => {
     if (++ovInertCount === 1) {
       for (const el of Array.from(document.body.children) as HTMLElement[]) {
         if (
@@ -316,7 +200,7 @@ function useAnchorPosition({
   triggerRef: React.RefObject<HTMLElement>;
   panelRef: React.RefObject<HTMLElement>;
 }) {
-  ovUseLayoutEffect(() => {
+  useLayoutEffect(() => {
     const place = () => {
       const t = triggerRef.current;
       const p = panelRef.current;
@@ -324,7 +208,7 @@ function useAnchorPosition({
       const r = t.getBoundingClientRect();
       const pw = p.offsetWidth,
         ph = p.offsetHeight;
-      const edge = ovReadPx('--space-2');
+      const edge = tokenPx('--space-2');
       const gap = edge + (arrow ? 3 : 0);
       const vw = window.innerWidth,
         vh = window.innerHeight;
@@ -392,28 +276,10 @@ function useAnchorPosition({
   }, [side, align, arrow]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-/* Per-instance <body> host (escapes ancestor transforms; skipped by inert); persists across open/close so AnimatePresence can play exits. */
-function OverlayPortal({ children }: { children: React.ReactNode }) {
-  const hostRef = ovUseRef<HTMLDivElement | null>(null);
-  // SSR guard: reached during server render; hooks below stay unconditional.
-  if (typeof document !== 'undefined' && !hostRef.current) {
-    hostRef.current = document.createElement('div');
-    hostRef.current.setAttribute('data-overlay-root', '');
-  }
-  ovUseLayoutEffect(() => {
-    const el = hostRef.current;
-    if (!el) return;
-    document.body.appendChild(el);
-    return () => el.remove();
-  }, []);
-  if (!hostRef.current) return null;
-  return createPortal(children, hostRef.current);
-}
-
 /* Scrim (real motion.div): dialogs fade via variants, sheets via a travel-derived MotionValue; a press must start AND end on it to dismiss. */
 const ovScrimVariants = {
-  closed: { opacity: 0, transition: { duration: ovSM.dur.base, ease: ovSM.ease.standard } },
-  open: { opacity: 1, transition: { duration: ovSM.dur.slow, ease: ovSM.ease.entrance } },
+  closed: { opacity: 0, transition: { duration: SM.dur.base, ease: SM.ease.standard } },
+  open: { opacity: 1, transition: { duration: SM.dur.slow, ease: SM.ease.entrance } },
 };
 function OverlayScrim({
   dismissible,
@@ -424,9 +290,9 @@ function OverlayScrim({
   onPress: () => void;
   opacity?: any;
 }) {
-  const down = ovUseRef(false);
+  const down = useRef(false);
   return (
-    <ovMotion.div
+    <motion.div
       className="overlay-scrim"
       aria-hidden="true"
       {...(opacity ? { style: { opacity } } : { variants: ovScrimVariants })}
@@ -436,7 +302,7 @@ function OverlayScrim({
       onClick={(e) => {
         if (dismissible && down.current && e.target === e.currentTarget) onPress();
       }}
-    ></ovMotion.div>
+    ></motion.div>
   );
 }
 
@@ -459,7 +325,7 @@ function ovPanelElement({
   if (asChild) {
     const child = React.Children.only(children) as React.ReactElement<any>;
     if (typeof child.type === 'string') {
-      const Tag = (ovMotion as any)[child.type];
+      const Tag = (motion as any)[child.type];
       const composedRef = (node: HTMLElement | null) => {
         nodeRef.current = node;
         const r = (child as any).ref;
@@ -482,14 +348,14 @@ function ovPanelElement({
     console.warn('[Overlay] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
-    <ovMotion.div
+    <motion.div
       {...motionProps}
       ref={nodeRef as React.RefObject<HTMLDivElement>}
       className={className}
     >
       {prepend}
       {children}
-    </ovMotion.div>
+    </motion.div>
   );
 }
 
@@ -519,8 +385,8 @@ function ModalShell({
   scrimOpacity?: any;
   children: React.ReactNode;
 }) {
-  const layerRef = ovUseRef<HTMLDivElement>(null);
-  const internalSlotRef = ovUseRef<HTMLElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  const internalSlotRef = useRef<HTMLElement>(null);
   const slotRef = externalSlotRef || internalSlotRef;
   const entry = useOverlayEntry({ nodeRef: layerRef, dismissible, requestClose });
   useScrollLock();
@@ -528,7 +394,7 @@ function ModalShell({
   useReturnFocus(layerRef);
   useFocusTrap({ panelRef: slotRef, entry });
   return (
-    <ovMotion.div
+    <motion.div
       ref={layerRef}
       className={'overlay-layer ' + layerClass}
       initial="closed"
@@ -543,15 +409,11 @@ function ModalShell({
         className: 'overlay-slot ' + slotClass,
         motionProps: { id: panelId, tabIndex: -1, variants: slotVariants, ...slotProps },
       })}
-    </ovMotion.div>
+    </motion.div>
   );
 }
 
 export {
-  ovMotion,
-  OvAnimatePresence,
-  ovSM,
-  useControllable,
   ovResolveChildren,
   ovCloneTrigger,
   useOverlayEntry,

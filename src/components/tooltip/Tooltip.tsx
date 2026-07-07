@@ -4,10 +4,11 @@
 import './tooltip.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
 import { motion, AnimatePresence } from 'motion/react';
 import type { ReactElement, ReactNode } from 'react';
 import { UIMotion } from '../../tokens/motion-tokens';
+import { cloneTrigger } from '../overlay/layer';
+import { tokenPx } from '../token-px';
 
 const SM = UIMotion;
 const { useRef, useEffect, useLayoutEffect, useState, useId, useSyncExternalStore } = React;
@@ -39,10 +40,6 @@ const OPEN_DELAY = 350;
 const CLOSE_GRACE = 140;
 const WARM_WINDOW = 300;
 
-const TIP_GAP =
-  typeof document !== 'undefined'
-    ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--space-2')) || 8
-    : 8;
 
 /* Store - what's showing, where; triggers write, the host renders. */
 const store = {
@@ -84,6 +81,8 @@ const store = {
 function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
   const vw = window.innerWidth,
     vh = window.innerHeight,
+    /* read at call time - at import time the stylesheet may not be parsed yet */
+    TIP_GAP = tokenPx('--space-2', 8) || 8,
     M = TIP_GAP;
   let p = want;
   if (p === 'top' && t.top - size.h - TIP_GAP < M) p = 'bottom';
@@ -158,7 +157,8 @@ function TooltipHost() {
     });
   }, [active]);
 
-  // Esc or any scroll dismisses (a stale hint is worse than none)
+  // Esc or any scroll dismisses - intended divergence from Select/Overlay, which re-place
+  // on scroll: a hint is transient, and a stale or trailing hint is worse than none.
   useEffect(() => {
     if (!active) return undefined;
     const onKey = (e: KeyboardEvent) => {
@@ -187,7 +187,7 @@ function TooltipHost() {
           <motion.div
             key="tip"
             className="tooltip"
-            id="scheduly-tooltip"
+            id="pds-tooltip"
             role="tooltip"
             data-placement={box.placement}
             initial={{
@@ -231,21 +231,38 @@ function TooltipHost() {
   );
 }
 
-// Mount the host exactly once, lazily, in its own root.
-let hostMounted = false;
-function ensureHost() {
-  if (hostMounted) return;
-  hostMounted = true;
-  const el = document.createElement('div');
-  el.setAttribute('data-tooltip-host', '');
-  document.body.appendChild(el);
-  createRoot(el).render(<TooltipHost />);
-}
-
-const chain = (theirs: ((e: any) => void) | undefined, mine: (e: any) => void) => (e: any) => {
-  if (theirs) theirs(e);
-  mine(e);
+/* Host election - the shared bubble host renders inside exactly ONE living Tooltip's tree
+   (first registered wins; when it unmounts the next takes over, and the store re-feeds the
+   same active payload). In-tree instead of a module-level createRoot: context crosses, the
+   host dies with the app instead of zombieing, and two library copies can't fight a global. */
+const hostReg = {
+  keys: [] as symbol[],
+  listeners: new Set<() => void>(),
+  subscribe(l: () => void) {
+    hostReg.listeners.add(l);
+    return () => hostReg.listeners.delete(l);
+  },
+  register(k: symbol) {
+    hostReg.keys.push(k);
+    hostReg.listeners.forEach((l) => l());
+    return () => {
+      const i = hostReg.keys.indexOf(k);
+      if (i >= 0) hostReg.keys.splice(i, 1);
+      hostReg.listeners.forEach((l) => l());
+    };
+  },
 };
+
+function useHostElection(): boolean {
+  const keyRef = useRef<symbol | null>(null);
+  if (!keyRef.current) keyRef.current = Symbol('tip-host');
+  useEffect(() => hostReg.register(keyRef.current!), []);
+  return useSyncExternalStore(
+    hostReg.subscribe,
+    () => hostReg.keys[0] === keyRef.current,
+    () => false,
+  );
+}
 
 /* Trigger - reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
 export interface TooltipProps {
@@ -284,6 +301,7 @@ function Tooltip({
   const wrapRef = useRef<HTMLSpanElement | null>(null);
   const openTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
   const myId = id || 'tip-' + useId();
+  const isHost = useHostElection();
 
   // The element we anchor to + set aria-describedby on (clone, or the wrapper's child).
   const anchorEl = (): HTMLElement | null =>
@@ -299,11 +317,10 @@ function Tooltip({
 
   function show(immediate: boolean) {
     if (disabled) return;
-    ensureHost();
     clearTimeout(openTimer.current);
     const el = anchorEl();
     if (!el) return;
-    el.setAttribute('aria-describedby', 'scheduly-tooltip');
+    el.setAttribute('aria-describedby', 'pds-tooltip');
     const open = () =>
       store.open({
         id: myId,
@@ -330,38 +347,46 @@ function Tooltip({
   };
 
   // Default: a display:contents wrapper carries the listeners + rect; the child needs no ref.
+  // The elected host mounts as a SIBLING - portal events bubble through the React tree, so
+  // nesting it inside the anchor would feed the bubble's own pointer events back into show/hide.
   if (!asChild) {
     return (
-      <span
-        ref={wrapRef}
-        className="tooltip-anchor"
-        onPointerEnter={onEnter}
-        onPointerLeave={hide}
-        onPointerDown={hide}
-        onFocus={onFocusIn}
-        onBlur={hide}
-      >
-        {children}
-      </span>
+      <React.Fragment>
+        <span
+          ref={wrapRef}
+          className="tooltip-anchor"
+          onPointerEnter={onEnter}
+          onPointerLeave={hide}
+          onPointerDown={hide}
+          onFocus={onFocusIn}
+          onBlur={hide}
+        >
+          {children}
+        </span>
+        {isHost && <TooltipHost />}
+      </React.Fragment>
     );
   }
 
   // asChild: clone the child, merging our handlers + ref (a press dismisses: activating != hinting).
-  const child = React.Children.only(children) as ReactElement & { ref?: any };
-  const childRef = child.ref;
-  const childProps = child.props as any;
-  return React.cloneElement(child, {
-    ref: (node: HTMLElement | null) => {
-      triggerRef.current = node;
-      if (typeof childRef === 'function') childRef(node);
-      else if (childRef && typeof childRef === 'object') childRef.current = node;
-    },
-    onPointerEnter: chain(childProps.onPointerEnter, onEnter),
-    onPointerLeave: chain(childProps.onPointerLeave, hide),
-    onPointerDown: chain(childProps.onPointerDown, hide),
-    onFocus: chain(childProps.onFocus, onFocusIn),
-    onBlur: chain(childProps.onBlur, hide),
-  } as any);
+  return (
+    <React.Fragment>
+      {cloneTrigger(
+        React.Children.only(children),
+        {
+          onPointerEnter: onEnter,
+          onPointerLeave: hide,
+          onPointerDown: hide,
+          onFocus: onFocusIn,
+          onBlur: hide,
+        },
+        (node) => {
+          triggerRef.current = node;
+        },
+      )}
+      {isHost && <TooltipHost />}
+    </React.Fragment>
+  );
 }
 
 export { Tooltip, TooltipHost };

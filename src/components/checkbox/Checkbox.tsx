@@ -4,6 +4,7 @@
 
 import './checkbox.css';
 import * as React from 'react';
+import { CheckGlyph } from './check-glyph';
 
 export interface CheckboxProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -42,13 +43,6 @@ export function Checkbox({
   onChange,
   ...rest
 }: CheckboxProps) {
-  const ref = React.useRef<HTMLInputElement>(null);
-
-  // `indeterminate` is not an HTML attribute - push it onto the node directly.
-  React.useEffect(() => {
-    if (ref.current) ref.current.indeterminate = indeterminate;
-  }, [indeterminate, checked]);
-
   const classes = [
     'cbx',
     size === 'sm' ? 'cbx--sm' : '',
@@ -64,22 +58,14 @@ export function Checkbox({
 
   return (
     <label className={classes}>
-      <input
-        ref={ref}
-        type="checkbox"
-        className="cbx__input"
+      <CheckGlyph
+        indeterminate={indeterminate}
         disabled={disabled}
         aria-invalid={invalid || undefined}
         onChange={onChange}
         {...checkedProps}
         {...rest}
       />
-      <span className="cbx__box" aria-hidden="true">
-        <svg className="cbx__mark" viewBox="0 0 16 16" fill="none">
-          <path className="cbx__tick" d="M3.5 8.5 L6.75 11.5 L12.5 4.75" />
-        </svg>
-        <span className="cbx__dash" />
-      </span>
       {label || description ? (
         <span className="cbx__text">
           {label ? <span className="cbx__label">{label}</span> : null}

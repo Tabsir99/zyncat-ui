@@ -44,7 +44,10 @@
   --info-text: var(--teal-700);
   --danger-disabled: var(--red-300);
 
+  /* State layer: interactive hover/press fills are translucent washes, never opaque
+     near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. */
   --neutral-wash: var(--gray-wash);
+  --neutral-wash-press: var(--gray-wash-strong);
   --accent-wash: var(--teal-wash);
   --success-wash: var(--green-wash);
   --warning-wash: var(--amber-wash);

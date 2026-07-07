@@ -6,8 +6,7 @@ import * as React from 'react';
 import { Overlay } from '../overlay/Overlay';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
-
-const { useRef: dlgUseRef, useEffect: dlgUseEffect, useId: dlgUseId } = React;
+import { useScrollEdges } from '../use-scroll-edges';
 
 export interface DialogProps {
   /** Controlled open state. Omit for uncontrolled (use defaultOpen + trigger). */
@@ -38,29 +37,6 @@ export interface DialogProps {
   id?: string;
 }
 
-/* Flag the body's scroll edges (data-scroll-top/-bottom) so dialog.css :has() can earn the header lift + footer divider. */
-function useScrollEdges(ref: React.RefObject<HTMLElement>) {
-  dlgUseEffect(() => {
-    const el = ref.current;
-    if (!el) return undefined;
-    const update = () => {
-      el.toggleAttribute('data-scroll-top', el.scrollTop > 1);
-      el.toggleAttribute(
-        'data-scroll-bottom',
-        el.scrollTop + el.clientHeight < el.scrollHeight - 1,
-      );
-    };
-    update();
-    el.addEventListener('scroll', update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener('scroll', update);
-      ro.disconnect();
-    };
-  }, [ref]);
-}
-
 interface DialogSurfaceProps {
   baseId: string;
   size: 'sm' | 'md' | 'lg';
@@ -86,11 +62,15 @@ function DialogSurface({
   onRequestClose,
   children,
 }: DialogSurfaceProps) {
-  const bodyRef = dlgUseRef<HTMLDivElement>(null);
+  const bodyRef = React.useRef<HTMLDivElement>(null);
   const titleId = baseId + '-title';
   const descId = baseId + '-desc';
 
-  useScrollEdges(bodyRef);
+  /* data-scroll-top/-bottom on the body - dialog.css :has() earns the header lift + footer divider */
+  useScrollEdges(bodyRef, (edges, el) => {
+    el.toggleAttribute('data-scroll-top', edges.top);
+    el.toggleAttribute('data-scroll-bottom', edges.bottom);
+  });
 
   return (
     <section
@@ -156,7 +136,7 @@ export function Dialog({
   children,
   id,
 }: DialogProps) {
-  const autoId = dlgUseId();
+  const autoId = React.useId();
   const baseId = id || 'dialog-' + autoId;
 
   return (

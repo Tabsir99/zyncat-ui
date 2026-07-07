@@ -103,11 +103,11 @@
 }
 .btn--secondary:hover:not(:disabled):not(.is-loading) {
   color: var(--text-strong);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
   border-color: var(--border-strong);
 }
 .btn--secondary:active:not(:disabled):not(.is-loading) {
-  background: var(--bg-muted);
+  background: var(--neutral-wash-press);
   transform: translateY(var(--space-px));
   --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
 }
@@ -118,10 +118,10 @@
 }
 .btn--ghost:hover:not(:disabled):not(.is-loading) {
   color: var(--text-strong);
-  background: var(--bg-subtle);
+  background: var(--neutral-wash);
 }
 .btn--ghost:active:not(:disabled):not(.is-loading) {
-  background: var(--bg-muted);
+  background: var(--neutral-wash-press);
   transform: translateY(var(--space-px));
 }
 

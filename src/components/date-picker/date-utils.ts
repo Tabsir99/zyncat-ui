@@ -31,6 +31,17 @@ export const add = (k: string, days: number): string => {
 };
 export const col = (d: Date): number => (d.getDay() + 6) % 7; // Monday-first column 0-6
 
+export const within = (k: string, min?: string, max?: string): boolean =>
+  (!min || k >= min) && (!max || k <= max);
+
+/* 'Jun 12' (year only when it isn't the current one) */
+export function displayDay(k: string | null): string | null {
+  if (!k) return null;
+  const d = parse(k);
+  const year = d.getFullYear() === new Date().getFullYear() ? '' : ', ' + d.getFullYear();
+  return MONTHS[d.getMonth()].slice(0, 3) + ' ' + pad(d.getDate()) + year;
+}
+
 /* 42 cells, Monday-first, covering the month of (y, m) */
 export function grid(y: number, m: number): Date[] {
   const lead = (new Date(y, m, 1).getDay() + 6) % 7;

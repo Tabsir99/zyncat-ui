@@ -1,30 +1,17 @@
 'use client';
 
-/* TimeField.tsx - standalone time field.
-   -------------------------------------------------------------------------
-   The segmented HH:MM machine (time-core.tsx) wearing the Input vocabulary -
-   usable anywhere a bare time is needed, without the calendar.
-
-     <TimeField
-       label="Send at"
-       value="09:30"             // canonical 'HH:mm' (24h) | null
-       onChange={(t) => ...}       // live - the instant both segments exist
-       format="12h"              // display only; storage stays 24h
-       minuteStep={15}           // ↑/↓ granularity (typing is exact)
-       min="09:00" max="17:30"   // saturation bounds - clamp, never error
-     />
-
-   Primitives consumed (A8): the .fld Input vocabulary (label/message/error
-   chrome), TimeSegments (the machine), Icon. The box is a div wearing
-   .fld__input - clicking its empty area seats focus in the hours segment.
-   Buildless global was window.TimeField; a bundled app imports it. */
+/* TimeField - standalone time field: the segmented HH:MM machine (time-core)
+   wearing the .fld chrome. `format` is display-only (storage stays 24h),
+   min/max saturate rather than error, and clicking the box's empty area seats
+   focus in the hours segment. */
 
 import './date-picker.css';
 import type { PointerEvent } from 'react';
-import { FieldShell, useControllable } from './field-shell';
+import { FieldShell, type DateFieldBaseProps } from './field-shell';
+import { useControllable } from '../use-controllable';
 import { TimeSegments } from './time-core';
 
-export interface TimeFieldProps {
+export interface TimeFieldProps extends DateFieldBaseProps {
   /** Controlled value, canonical 'HH:mm' (24h). */
   value?: string | null;
   /** Uncontrolled initial value, 'HH:mm' (24h). Use instead of `value`. @default null */
@@ -41,16 +28,6 @@ export interface TimeFieldProps {
   min?: string;
   /** Upper bound 'HH:mm' - saturates, never errors. */
   max?: string;
-  /** Asterisk on the label. @default false */
-  required?: boolean;
-  /** Danger border + message color (.fld is-error). @default false */
-  invalid?: boolean;
-  /** Helper / error text under the field. */
-  message?: string;
-  /** Disable the field (box + segments). @default false */
-  disabled?: boolean;
-  /** Extra class on the field shell root. */
-  className?: string;
 }
 
 export function TimeField({
