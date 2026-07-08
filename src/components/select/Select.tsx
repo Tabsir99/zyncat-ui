@@ -10,10 +10,10 @@ import {
   SelectTrigger,
   type SelectOption,
   type SelectGroup,
-} from './select-core';
+} from './core';
 
-/* Option shapes belong to this subpath's public API; select-core is not an entry point. */
-export type { SelectOption, SelectGroup } from './select-core';
+/* Option shapes belong to this subpath's public API; core is not an entry point. */
+export type { SelectOption, SelectGroup } from './core';
 
 export interface SelectProps {
   /** The choices - a flat `SelectOption[]`, or `SelectGroup[]` to render labeled sections. @default [] */
@@ -93,15 +93,10 @@ export function Select({
       data-loading={loading ? 'true' : undefined}
     >
       <SelectTrigger
-        triggerRef={lb.triggerRef}
-        baseId={lb.baseId}
-        open={lb.open}
+        lb={lb}
         disabled={disabled}
         invalid={invalid}
         ariaLabel={ariaLabel}
-        adId={lb.adId}
-        show={lb.show}
-        hide={lb.hide}
         leading={leadingIcon || (selected && selected.icon) || null}
         text={loading ? 'Loading...' : isPlaceholder ? placeholder : selected.label}
         isPlaceholder={isPlaceholder}

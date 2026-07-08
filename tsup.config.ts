@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 // One entry per public module - one dist file + .d.ts each. Subpaths
 // (`premium-ds/button`) are the ONLY public API - there is no barrel entry, so
 // one import can never pull modules (or CSS) the app didn't ask for.
-// splitting:true hoists shared internals (overlay-core, select-core,
+// splitting:true hoists shared internals (overlay-core, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.
 export default defineConfig({
   entry: {
