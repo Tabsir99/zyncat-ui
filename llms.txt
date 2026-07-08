@@ -159,10 +159,13 @@ Dialog - premium-ds/dialog
   Styled modal: scrim, focus trap, scroll lock. open/onOpenChange, tone, icon, title, description, footer: (close) => node.
   <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
 
-Overlay - premium-ds/overlay
-  Headless floating surface. mode popover|sheet, side, align, trigger (node), asChild; children: ({ close }) => node.
-  <Overlay side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>...</menu>}</Overlay>
-  Sheet = <Overlay mode="sheet" side="right|bottom"> - edge-docked, drag-to-dismiss.
+Popover - premium-ds/popover
+  Headless anchored panel, non-modal. side, align, arrow, trigger (node), asChild; children: ({ close }) => node.
+  <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>...</menu>}</Popover>
+
+Sheet - premium-ds/sheet
+  Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), asChild; children: ({ close }) => node.
+  <Sheet side="right" trigger={<Button>Filters</Button>}>{({ close }) => <div role="dialog">...</div>}</Sheet>
 
 ============================================================ THEMING
   Re-skin by overriding the CSS custom properties (tokens) in your own stylesheet, loaded after

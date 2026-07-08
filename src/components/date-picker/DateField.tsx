@@ -9,7 +9,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode 
 import { motion, animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
-import { Overlay } from '../overlay/Overlay';
+import { Popover } from '../popover/Popover';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../use-controllable';
 import { GlidePill, useGlide, useLayoutSelfHeal } from './glide-pill';
@@ -307,7 +307,7 @@ export function DateField({
       icon="calendar"
       className={className}
     >
-      <Overlay trigger={trigger} side="bottom" align="start">
+      <Popover trigger={trigger} side="bottom" align="start">
         {(api) => (
           <DtpPanel
             val={val}
@@ -319,7 +319,7 @@ export function DateField({
             label={label}
           />
         )}
-      </Overlay>
+      </Popover>
     </FieldShell>
   );
 }

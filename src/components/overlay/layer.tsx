@@ -1,9 +1,10 @@
 'use client';
 
 /* layer - the css-free layering primitives every floating surface shares:
-   a body-portal host, the overlay stack (Escape + focus-trap deference), and
-   light dismiss. overlay-core builds dialogs/sheets on top; select-core mounts
-   its menu through here so ancestor transforms can't hijack its coords. */
+   a body-portal host, the overlay stack (Escape + focus-trap deference), light
+   dismiss, and the trigger/children contracts. Popover, Sheet and Dialog build
+   on top; select/core mounts its menu through here so ancestor transforms
+   can't hijack its coords. */
 import {
   cloneElement,
   useEffect,
@@ -140,6 +141,46 @@ function cloneTrigger(
   return cloneElement(child, merged);
 }
 
+/* Children can be a node or a { close } render-prop - the contract every triggered surface shares. */
+function ovResolveChildren(
+  children: ReactNode | ((api: { close: () => void }) => ReactNode),
+  close: () => void,
+): ReactNode {
+  return typeof children === 'function' ? children({ close }) : children;
+}
+
+/* The popup-trigger contract on top of cloneTrigger: press-to-open plus aria-haspopup/-expanded/-controls, with the node captured for anchoring. */
+function ovCloneTrigger(
+  trigger: ReactElement | null,
+  {
+    open,
+    onPress,
+    panelId,
+    haspopup,
+    triggerRef,
+  }: {
+    open: boolean;
+    onPress: () => void;
+    panelId: string;
+    haspopup: string;
+    triggerRef: RefObject<HTMLElement>;
+  },
+): ReactElement | null {
+  if (!trigger) return null;
+  return cloneTrigger(
+    trigger,
+    {
+      onClick: onPress,
+      'aria-haspopup': haspopup,
+      'aria-expanded': open,
+      'aria-controls': open ? panelId : undefined,
+    },
+    (node) => {
+      triggerRef.current = node;
+    },
+  );
+}
+
 /* Per-instance <body> host (escapes ancestor transforms; skipped by inert); persists across open/close so AnimatePresence can play exits. */
 function OverlayPortal({ children }: { children: ReactNode }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -158,5 +199,14 @@ function OverlayPortal({ children }: { children: ReactNode }) {
   return createPortal(children, hostRef.current);
 }
 
-export { ovIsTop, ovInOverlayAbove, useOverlayEntry, useOutsidePress, cloneTrigger, OverlayPortal };
+export {
+  ovIsTop,
+  ovInOverlayAbove,
+  useOverlayEntry,
+  useOutsidePress,
+  cloneTrigger,
+  ovCloneTrigger,
+  ovResolveChildren,
+  OverlayPortal,
+};
 export type { OverlayEntry };

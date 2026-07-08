@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Alert } from 'premium-ds/alert';
 import { Tooltip } from 'premium-ds/tooltip';
 import { Dialog } from 'premium-ds/dialog';
-import { Overlay } from 'premium-ds/overlay';
+import { Popover } from 'premium-ds/popover';
+import { Sheet } from 'premium-ds/sheet';
 import { Button } from 'premium-ds/button';
 import { toast } from 'premium-ds/toast';
 import { Demo } from '../kit';
@@ -191,10 +192,10 @@ export function DialogPage() {
   );
 }
 
-export function OverlayPage() {
+export function PopoverPage() {
   return (
     <Demo label="popover menu">
-      <Overlay
+      <Popover
         side="bottom"
         align="start"
         trigger={
@@ -242,7 +243,7 @@ export function OverlayPage() {
             ))}
           </div>
         )}
-      </Overlay>
+      </Popover>
     </Demo>
   );
 }
@@ -251,12 +252,7 @@ export function SheetPage() {
   return (
     <>
       <Demo label="right - drag-to-dismiss">
-        <Overlay
-          mode="sheet"
-          side="right"
-          asChild
-          trigger={<Button variant="secondary">Open panel</Button>}
-        >
+        <Sheet side="right" asChild trigger={<Button variant="secondary">Open panel</Button>}>
           {({ close }) => (
             <div
               role="dialog"
@@ -304,11 +300,10 @@ export function SheetPage() {
               </div>
             </div>
           )}
-        </Overlay>
+        </Sheet>
       </Demo>
       <Demo label="bottom">
-        <Overlay
-          mode="sheet"
+        <Sheet
           side="bottom"
           asChild
           trigger={<Button variant="secondary">Open bottom sheet</Button>}
@@ -351,7 +346,7 @@ export function SheetPage() {
               </Button>
             </div>
           )}
-        </Overlay>
+        </Sheet>
       </Demo>
     </>
   );

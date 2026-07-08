@@ -1,6 +1,6 @@
 'use client';
 
-/* DateRangeField - DateField's sibling for { start, end }: a Linear/Notion two-click range; the Overlay switches popoverandsheet by viewport. */
+/* DateRangeField - DateField's sibling for { start, end }: a Linear/Notion two-click range; the surface switches Popover and Sheet by viewport. */
 
 import './date-picker.css';
 /* The footer Done renders .btn classes - button.css must ride along. */
@@ -9,7 +9,8 @@ import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
-import { Overlay } from '../overlay/Overlay';
+import { Popover } from '../popover/Popover';
+import { Sheet } from '../sheet/Sheet';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../use-controllable';
 import { GlidePill, useGlide, useLayoutSelfHeal } from './glide-pill';
@@ -77,7 +78,7 @@ function drpPresets(): DrpPreset[] {
   ];
 }
 
-function useResponsiveOverlayMode(query?: string): boolean {
+function useNarrowViewport(query?: string): boolean {
   const q = query || '(max-width: 640px)';
   const [narrow, setNarrow] = useState(() =>
     typeof matchMedia === 'function' ? matchMedia(q).matches : false,
@@ -473,11 +474,25 @@ export function DateRangeField({
 }: DateRangeFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
-  const narrow = useResponsiveOverlayMode();
-  const mode = narrow ? 'sheet' : 'popover';
+  const narrow = useNarrowViewport();
+  /* open is owned here so the picker survives a Popover<->Sheet swap while up */
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const display = val && val.start && val.end ? drpRangeText(val.start, val.end) : null;
   const trigger = <FieldTrigger display={display} placeholder={placeholder} disabled={disabled} />;
+  const panel = (api: { close: () => void }) => (
+    <DrpPanel
+      value={val}
+      commit={commit}
+      close={api.close}
+      min={min}
+      max={max}
+      timezone={timezone}
+      label={label}
+      months={narrow ? 1 : 2}
+      layout={narrow ? 'sheet' : 'popover'}
+    />
+  );
 
   return (
     <FieldShell
@@ -489,21 +504,21 @@ export function DateRangeField({
       icon="calendar"
       className={className}
     >
-      <Overlay trigger={trigger} mode={mode} side="bottom" align="start">
-        {(api) => (
-          <DrpPanel
-            value={val}
-            commit={commit}
-            close={api.close}
-            min={min}
-            max={max}
-            timezone={timezone}
-            label={label}
-            months={narrow ? 1 : 2}
-            layout={mode}
-          />
-        )}
-      </Overlay>
+      {narrow ? (
+        <Sheet trigger={trigger} side="bottom" open={pickerOpen} onOpenChange={setPickerOpen}>
+          {panel}
+        </Sheet>
+      ) : (
+        <Popover
+          trigger={trigger}
+          side="bottom"
+          align="start"
+          open={pickerOpen}
+          onOpenChange={setPickerOpen}
+        >
+          {panel}
+        </Popover>
+      )}
     </FieldShell>
   );
 }

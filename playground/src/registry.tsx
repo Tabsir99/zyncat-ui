@@ -226,16 +226,16 @@ export const GROUPS: DocGroup[] = [
         Component: O.DialogPage,
       },
       {
-        slug: 'overlay',
-        label: 'Overlay',
+        slug: 'popover',
+        label: 'Popover',
         blurb:
-          'The headless floating-surface primitive (popover mode). The render-prop gets { close }.',
-        Component: O.OverlayPage,
+          'Headless anchored panel, non-modal - flips and clamps to the viewport. The render-prop gets { close }.',
+        Component: O.PopoverPage,
       },
       {
         slug: 'sheet',
         label: 'Sheet',
-        blurb: 'Overlay docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',
+        blurb: 'Modal panel docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',
         Component: O.SheetPage,
       },
     ],

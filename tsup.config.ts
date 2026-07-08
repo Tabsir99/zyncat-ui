@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 // One entry per public module - one dist file + .d.ts each. Subpaths
 // (`premium-ds/button`) are the ONLY public API - there is no barrel entry, so
 // one import can never pull modules (or CSS) the app didn't ask for.
-// splitting:true hoists shared internals (overlay-core, select/core,
+// splitting:true hoists shared internals (overlay/*, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.
 export default defineConfig({
   entry: {
@@ -32,7 +32,8 @@ export default defineConfig({
     'date-range-field': 'src/components/date-picker/DateRangeField.tsx',
     'time-field': 'src/components/date-picker/TimeField.tsx',
     tabs: 'src/components/tabs/Tabs.tsx',
-    overlay: 'src/components/overlay/Overlay.tsx',
+    popover: 'src/components/popover/Popover.tsx',
+    sheet: 'src/components/sheet/Sheet.tsx',
     dialog: 'src/components/dialog/Dialog.tsx',
     tooltip: 'src/components/tooltip/Tooltip.tsx',
     alert: 'src/components/alert/Alert.tsx',

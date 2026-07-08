@@ -367,10 +367,10 @@ toast.promise(publishBatch(), {
     ],
   },
 
-  overlay: {
-    example: `import { Overlay } from 'premium-ds/overlay';
+  popover: {
+    example: `import { Popover } from 'premium-ds/popover';
 
-<Overlay
+<Popover
   trigger={<button type="button">Actions</button>}
   side="bottom"
   align="start"
@@ -381,15 +381,8 @@ toast.promise(publishBatch(), {
       <li><button type="button" onClick={close}>Move to drafts</button></li>
     </menu>
   )}
-</Overlay>`,
+</Popover>`,
     props: [
-      {
-        name: 'mode',
-        type: "'popover' | 'dialog' | 'sheet'",
-        default: "'popover'",
-        description:
-          'Rendering mode and modality; popover is non-modal, dialog and sheet are modal.',
-      },
       {
         name: 'open',
         type: 'boolean',
@@ -410,31 +403,31 @@ toast.promise(publishBatch(), {
         name: 'trigger',
         type: 'React.ReactElement | null',
         default: 'null',
-        description: 'Element cloned to toggle the panel; also serves as the popover anchor.',
+        description: 'Element cloned to toggle the panel; also serves as the anchor.',
       },
       {
         name: 'side',
         type: "'top' | 'bottom' | 'left' | 'right'",
-        description:
-          'Preferred side for a popover (default bottom, flips) or edge for a sheet (default right).',
+        default: "'bottom'",
+        description: 'Preferred side; flips to the opposite side when cramped.',
       },
       {
         name: 'align',
         type: "'start' | 'center' | 'end'",
         default: "'start'",
-        description: 'Popover only: cross-axis alignment of the panel relative to the trigger.',
+        description: 'Cross-axis alignment of the panel relative to the trigger.',
       },
       {
         name: 'arrow',
         type: 'boolean',
         default: 'false',
-        description: 'Popover only: renders a pointing caret tracking the trigger center.',
+        description: 'Renders a pointing caret tracking the trigger center.',
       },
       {
         name: 'dismissible',
         type: 'boolean',
         default: 'true',
-        description: 'Enables scrim, Esc dismissal, and (for sheets) drag-to-edge.',
+        description: 'Enables Esc and outside-press dismissal.',
       },
       {
         name: 'asChild',
@@ -458,10 +451,9 @@ toast.promise(publishBatch(), {
   },
 
   sheet: {
-    example: `import { Overlay } from 'premium-ds/overlay';
+    example: `import { Sheet } from 'premium-ds/sheet';
 
-<Overlay
-  mode="sheet"
+<Sheet
   side="right"
   trigger={<button type="button">Channel settings</button>}
 >
@@ -472,13 +464,8 @@ toast.promise(publishBatch(), {
       <button type="button" onClick={close}>Done</button>
     </div>
   )}
-</Overlay>`,
+</Sheet>`,
     props: [
-      {
-        name: 'mode',
-        type: "'sheet'",
-        description: 'Set to "sheet" to enable the edge-panel mode.',
-      },
       {
         name: 'side',
         type: "'right' | 'bottom'",

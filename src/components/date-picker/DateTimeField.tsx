@@ -4,7 +4,7 @@
 
 import './date-picker.css';
 import { useState, useEffect } from 'react';
-import { Overlay } from '../overlay/Overlay';
+import { Popover } from '../popover/Popover';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../use-controllable';
 import { TimeSegments, disp12 } from './time-core';
@@ -124,7 +124,7 @@ export function DateTimeField({
       icon="calendar"
       className={className}
     >
-      <Overlay trigger={trigger} side="bottom" align="start">
+      <Popover trigger={trigger} side="bottom" align="start">
         {(api) => (
           <DtpPanel
             val={date}
@@ -154,7 +154,7 @@ export function DateTimeField({
             }
           />
         )}
-      </Overlay>
+      </Popover>
     </FieldShell>
   );
 }

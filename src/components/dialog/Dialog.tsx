@@ -1,12 +1,34 @@
 'use client';
 
-/* Dialog - styled modal surface; a thin consumer of <Overlay mode="dialog">. */
+/* Dialog - styled modal surface on the shared ModalShell: header (icon, title,
+   description, close), a scroll-edged body, and a footer action row. */
 import './dialog.css';
-import { useId, useRef, type ReactElement, type ReactNode } from 'react';
-import { Overlay } from '../overlay/Overlay';
+import { Fragment, useId, useRef, type ReactElement, type ReactNode } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { UIMotion } from '../../tokens/motion-tokens';
+import { useControllable } from '../use-controllable';
+import { ovCloneTrigger, OverlayPortal } from '../overlay/layer';
+import { ModalShell } from '../overlay/modal';
 import { Icon } from '../icon/Icon';
 import { IconSlot } from '../icon/IconSlot';
 import { useScrollEdges } from '../use-scroll-edges';
+
+const SM = UIMotion;
+
+const dialogVariants = {
+  closed: {
+    opacity: 0,
+    y: 6,
+    scale: 0.98,
+    transition: { duration: SM.dur.base, ease: SM.ease.standard },
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: SM.dur.slow, ease: SM.ease.entrance },
+  },
+};
 
 export interface DialogProps {
   /** Controlled open state. Omit for uncontrolled (use defaultOpen + trigger). */
@@ -138,32 +160,47 @@ export function Dialog({
 }: DialogProps) {
   const autoId = useId();
   const baseId = id || 'dialog-' + autoId;
+  const [isOpen, setOpen] = useControllable(open, defaultOpen, onOpenChange);
+  const triggerRef = useRef<HTMLElement>(null);
+  const close = () => setOpen(false);
 
   return (
-    <Overlay
-      mode="dialog"
-      id={baseId}
-      open={open}
-      defaultOpen={defaultOpen}
-      onOpenChange={onOpenChange}
-      trigger={trigger}
-      dismissible={dismissible}
-    >
-      {({ close }) => (
-        <DialogSurface
-          baseId={baseId}
-          size={size}
-          tone={tone}
-          icon={icon}
-          title={title}
-          description={description}
-          dismissible={dismissible}
-          footerContent={typeof footer === 'function' ? footer(close) : footer}
-          onRequestClose={close}
-        >
-          {children}
-        </DialogSurface>
-      )}
-    </Overlay>
+    <Fragment>
+      {ovCloneTrigger(trigger, {
+        open: isOpen,
+        onPress: () => setOpen(true),
+        panelId: baseId,
+        haspopup: 'dialog',
+        triggerRef,
+      })}
+      <OverlayPortal>
+        <AnimatePresence>
+          {isOpen && (
+            <ModalShell
+              layerClass="overlay-layer--dialog"
+              slotClass="overlay-slot--dialog"
+              slotVariants={dialogVariants}
+              panelId={baseId}
+              dismissible={dismissible}
+              requestClose={close}
+            >
+              <DialogSurface
+                baseId={baseId}
+                size={size}
+                tone={tone}
+                icon={icon}
+                title={title}
+                description={description}
+                dismissible={dismissible}
+                footerContent={typeof footer === 'function' ? footer(close) : footer}
+                onRequestClose={close}
+              >
+                {children}
+              </DialogSurface>
+            </ModalShell>
+          )}
+        </AnimatePresence>
+      </OverlayPortal>
+    </Fragment>
   );
 }

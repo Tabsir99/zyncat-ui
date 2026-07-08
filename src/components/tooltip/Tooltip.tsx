@@ -167,7 +167,7 @@ function TooltipHost() {
     });
   }, [active]);
 
-  // Esc or any scroll dismisses - intended divergence from Select/Overlay, which re-place
+  // Esc or any scroll dismisses - intended divergence from Select/Popover, which re-place
   // on scroll: a hint is transient, and a stale or trailing hint is worse than none.
   useEffect(() => {
     if (!active) return undefined;

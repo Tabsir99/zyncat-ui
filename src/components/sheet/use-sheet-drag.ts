@@ -1,7 +1,6 @@
 'use client';
 
-/* sheet-drag - drag-to-dismiss for Overlay's sheet mode (dismiss - scrim - rubber-band - scroll handoff). */
-import './overlay.css';
+/* use-sheet-drag - drag-to-dismiss for Sheet (dismiss - scrim - rubber-band - scroll handoff). */
 /* PointerEvent is aliased: React's synthetic type for the React handler below,
    the DOM global (bare `PointerEvent`) for the native window listeners. */
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
