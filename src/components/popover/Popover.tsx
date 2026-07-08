@@ -9,13 +9,7 @@ import { Fragment, useId, useRef, type ReactElement, type ReactNode, type RefObj
 import { AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { useControllable } from '../use-controllable';
-import {
-  ovResolveChildren,
-  ovCloneTrigger,
-  useOverlayEntry,
-  useOutsidePress,
-  OverlayPortal,
-} from '../overlay/layer';
+import { ovResolveChildren, ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from '../overlay/layer';
 import { useReturnFocus } from '../overlay/focus';
 import { useAnchorPosition } from '../overlay/position';
 import { ovPanelElement } from '../overlay/panel';
@@ -84,27 +78,14 @@ function PopoverPanel({
   const entry = useOverlayEntry({ nodeRef: panelRef, dismissible, requestClose });
   useReturnFocus(panelRef);
   useAnchorPosition({ side, align, arrow, triggerRef, panelRef });
-  useOutsidePress({
-    entry,
-    refs: [triggerRef, panelRef],
-    enabled: dismissible,
-    onPress: requestClose,
-  });
+  useOutsidePress({ entry, refs: [triggerRef, panelRef], enabled: dismissible, onPress: requestClose });
   return ovPanelElement({
     asChild,
     children,
-    prepend: arrow ? (
-      <span key="arrow" className="overlay-popover__arrow" aria-hidden="true"></span>
-    ) : null,
+    prepend: arrow ? <span key="arrow" className="overlay-popover__arrow" aria-hidden="true"></span> : null,
     nodeRef: panelRef,
     className: 'overlay-popover',
-    motionProps: {
-      id: panelId,
-      variants: popoverVariants,
-      initial: 'closed',
-      animate: 'open',
-      exit: 'closed',
-    },
+    motionProps: { id: panelId, variants: popoverVariants, initial: 'closed', animate: 'open', exit: 'closed' },
   });
 }
 
@@ -129,13 +110,7 @@ export function Popover({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, {
-        open,
-        onPress: () => setOpen(!open),
-        panelId,
-        haspopup: 'true',
-        triggerRef,
-      })}
+      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(!open), panelId, haspopup: 'true', triggerRef })}
       <OverlayPortal>
         <AnimatePresence>
           {open && (

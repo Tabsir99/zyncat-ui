@@ -25,10 +25,7 @@ export function GlideTile() {
       </div>
       <div className="ld-tile__meta">
         <h3>Hover glides. Selection follows.</h3>
-        <p>
-          One persistent pill tracks the pointer; one ink bar tracks state. Nothing blinks in and
-          out of existence.
-        </p>
+        <p>One persistent pill tracks the pointer; one ink bar tracks state. Nothing blinks in and out of existence.</p>
         <span className="ld-tile__token">--ease-glide</span>
       </div>
     </div>
@@ -39,11 +36,7 @@ export function ToastTile() {
   return (
     <div className="ld-tile" data-reveal>
       <div className="ld-tile__demo ld-tile__demo--row">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => toast.success('Deploy promoted to production')}
-        >
+        <Button size="sm" variant="secondary" onClick={() => toast.success('Deploy promoted to production')}>
           Success
         </Button>
         <Button
@@ -73,10 +66,7 @@ export function ToastTile() {
       </div>
       <div className="ld-tile__meta">
         <h3>Toasts with choreography.</h3>
-        <p>
-          A real queue: stack, coalesce, swipe to dismiss. Promise toasts morph in place instead of
-          swapping.
-        </p>
+        <p>A real queue: stack, coalesce, swipe to dismiss. Promise toasts morph in place instead of swapping.</p>
         <span className="ld-tile__token">toast.promise()</span>
       </div>
     </div>
@@ -108,15 +98,10 @@ export function FlipTile() {
       <div className="ld-tile__meta">
         <h3>Rows FLIP, never teleport.</h3>
         <p>
-          Re-sort, archive, filter — rows travel to their new position, so your eye never loses the
-          one it was following.
+          Re-sort, archive, filter — rows travel to their new position, so your eye never loses the one it was
+          following.
         </p>
-        <Button
-          size="sm"
-          variant="secondary"
-          iconLeft={<Icon name="shuffle" size="sm" />}
-          onClick={rerun}
-        >
+        <Button size="sm" variant="secondary" iconLeft={<Icon name="shuffle" size="sm" />} onClick={rerun}>
           Re-run benchmark
         </Button>
         <span className="ld-tile__token">--transition-layout</span>
@@ -133,8 +118,8 @@ export function DurationTile() {
       </p>
       <div className="ld-tile__meta">
         <p>
-          <code>--duration-base</code> — the whole system swings on three durations and five
-          curves. Retime two tokens, retime the app.
+          <code>--duration-base</code> — the whole system swings on three durations and five curves. Retime two tokens,
+          retime the app.
         </p>
       </div>
     </div>

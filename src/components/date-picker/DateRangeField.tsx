@@ -15,19 +15,7 @@ import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell
 import { useControllable } from '../use-controllable';
 import { GlidePill, useGlide, useLayoutSelfHeal } from './glide-pill';
 import { useDayFocus } from './use-day-focus';
-import {
-  MONTHS,
-  DOW,
-  pad,
-  key as toKey,
-  parse,
-  today,
-  add,
-  col,
-  grid,
-  tzLabel,
-  within,
-} from './date-utils';
+import { MONTHS, DOW, pad, key as toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {
@@ -56,8 +44,7 @@ function drpRangeText(start: string, end: string): string {
   const endYr = parse(end).getFullYear() !== curYear;
   return drpDisplay(start, startYr) + ' - ' + drpDisplay(end, endYr);
 }
-const drpDays = (start: string, end: string): number =>
-  Math.round((+parse(end) - +parse(start)) / 86400000) + 1;
+const drpDays = (start: string, end: string): number => Math.round((+parse(end) - +parse(start)) / 86400000) + 1;
 
 function drpPresets(): DrpPreset[] {
   const t = today();
@@ -80,9 +67,7 @@ function drpPresets(): DrpPreset[] {
 
 function useNarrowViewport(query?: string): boolean {
   const q = query || '(max-width: 640px)';
-  const [narrow, setNarrow] = useState(() =>
-    typeof matchMedia === 'function' ? matchMedia(q).matches : false,
-  );
+  const [narrow, setNarrow] = useState(() => (typeof matchMedia === 'function' ? matchMedia(q).matches : false));
   useEffect(() => {
     const mq = matchMedia(q);
     const fn = (e: MediaQueryListEvent) => setNarrow(e.matches);
@@ -106,23 +91,10 @@ interface DrpPanelProps {
 }
 
 /* the popover/sheet panel, mounted only while open */
-function DrpPanel({
-  value,
-  commit,
-  close,
-  min,
-  max,
-  timezone,
-  label,
-  months,
-  layout,
-}: DrpPanelProps) {
+function DrpPanel({ value, commit, close, min, max, timezone, label, months, layout }: DrpPanelProps) {
   const seedKey = (value && value.start) || today();
   const seed = parse(seedKey);
-  const [view, setView] = useState<{ y: number; m: number }>({
-    y: seed.getFullYear(),
-    m: seed.getMonth(),
-  });
+  const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
 
   /* anchor !== null - a range is being dragged open (awaiting the 2nd pick) */
   const [anchor, setAnchor] = useState<string | null>(null);
@@ -394,11 +366,7 @@ function DrpPanel({
               {p.label}
             </button>
           ))}
-          <GlidePill
-            className="drp__presetGlide"
-            rect={presetGlide.rect}
-            active={presetGlide.active}
-          />
+          <GlidePill className="drp__presetGlide" rect={presetGlide.rect} active={presetGlide.active} />
         </div>
         <div
           className="drp__months"
@@ -409,9 +377,7 @@ function DrpPanel({
             gridGlide.leave();
           }}
         >
-          {months === 2
-            ? [renderMonth(0, true, false), renderMonth(1, false, true)]
-            : renderMonth(0, true, true)}
+          {months === 2 ? [renderMonth(0, true, false), renderMonth(1, false, true)] : renderMonth(0, true, true)}
           <GlidePill className="dtp__hover" rect={gridGlide.rect} active={gridGlide.active} />
         </div>
       </div>
@@ -509,13 +475,7 @@ export function DateRangeField({
           {panel}
         </Sheet>
       ) : (
-        <Popover
-          trigger={trigger}
-          side="bottom"
-          align="start"
-          open={pickerOpen}
-          onOpenChange={setPickerOpen}
-        >
+        <Popover trigger={trigger} side="bottom" align="start" open={pickerOpen} onOpenChange={setPickerOpen}>
           {panel}
         </Popover>
       )}

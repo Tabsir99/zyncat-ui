@@ -36,8 +36,7 @@ import { AvatarGroup } from 'premium-ds/avatar-group';
         name: 'icon',
         type: 'React.ReactNode | null',
         default: 'null',
-        description:
-          'Content override rendered in the face slot when no image or initials are available.',
+        description: 'Content override rendered in the face slot when no image or initials are available.',
       },
       {
         name: 'shape',
@@ -61,14 +60,9 @@ import { AvatarGroup } from 'premium-ds/avatar-group';
         name: 'paletteIndex',
         type: '1 | 2 | 3 | 4 | 5 | 6 | null',
         default: 'null',
-        description:
-          'Override the identity palette slot (blue to moss); auto-selected from name hash when null.',
+        description: 'Override the identity palette slot (blue to moss); auto-selected from name hash when null.',
       },
-      {
-        name: '...rest',
-        type: 'HTMLAttributes<HTMLSpanElement>',
-        description: 'All native span attributes.',
-      },
+      { name: '...rest', type: 'HTMLAttributes<HTMLSpanElement>', description: 'All native span attributes.' },
     ],
   },
 
@@ -104,21 +98,18 @@ const [channels, setChannels] = useState(['instagram', 'twitter', 'linkedin']);
         name: 'icon',
         type: 'React.ReactNode | null',
         default: 'null',
-        description:
-          'Icon node rendered before the label, sized and tinted to the tag text automatically.',
+        description: 'Icon node rendered before the label, sized and tinted to the tag text automatically.',
       },
       {
         name: 'onRemove',
         type: '(() => void) | null',
         default: 'null',
-        description:
-          'Callback fired when the remove button is clicked; its presence adds the remove button.',
+        description: 'Callback fired when the remove button is clicked; its presence adds the remove button.',
       },
       {
         name: 'removeLabel',
         type: 'string',
-        description:
-          'Accessible label for the remove button; defaults to "Remove {label}" for string children.',
+        description: 'Accessible label for the remove button; defaults to "Remove {label}" for string children.',
       },
       {
         name: 'size',
@@ -186,11 +177,7 @@ const rows: Post[] = [
         default: "'id'",
         description: 'Property name used as the stable unique row identity key.',
       },
-      {
-        name: 'label',
-        type: 'string',
-        description: 'aria-label applied to the table element.',
-      },
+      { name: 'label', type: 'string', description: 'aria-label applied to the table element.' },
       {
         name: 'selectable',
         type: 'boolean',
@@ -205,8 +192,7 @@ const rows: Post[] = [
       {
         name: 'bulkActions',
         type: '(keys: Array<string | number>, clear: () => void) => React.ReactNode',
-        description:
-          'Renders additional controls in the bulk bar between the count and the built-in Clear button.',
+        description: 'Renders additional controls in the bulk bar between the count and the built-in Clear button.',
       },
       {
         name: 'selectionLabel',
@@ -245,8 +231,7 @@ const rows: Post[] = [
       {
         name: 'empty',
         type: 'React.ReactNode',
-        description:
-          'Content shown when rows is empty and not loading; defaults to "Nothing to show".',
+        description: 'Content shown when rows is empty and not loading; defaults to "Nothing to show".',
       },
       {
         name: 'footer',
@@ -292,8 +277,7 @@ const [cursor, setCursor] = useState({ from: 1, to: 25, hasPrev: false, hasNext:
         name: 'label',
         type: 'string',
         default: "'Pagination'",
-        description:
-          'Accessible name for the nav landmark; name the list ("Posts"), not "pagination".',
+        description: 'Accessible name for the nav landmark; name the list ("Posts"), not "pagination".',
       },
       {
         name: 'total',
@@ -313,16 +297,8 @@ const [cursor, setCursor] = useState({ from: 1, to: 25, hasPrev: false, hasNext:
         default: 'false',
         description: 'Enables the next arrow when a next cursor exists.',
       },
-      {
-        name: 'onPrev',
-        type: '() => void',
-        description: 'Fired when the previous arrow is pressed.',
-      },
-      {
-        name: 'onNext',
-        type: '() => void',
-        description: 'Fired when the next arrow is pressed.',
-      },
+      { name: 'onPrev', type: '() => void', description: 'Fired when the previous arrow is pressed.' },
+      { name: 'onNext', type: '() => void', description: 'Fired when the next arrow is pressed.' },
       {
         name: 'loading',
         type: 'boolean',
@@ -330,11 +306,7 @@ const [cursor, setCursor] = useState({ from: 1, to: 25, hasPrev: false, hasNext:
         description:
           'Disables both arrows and shows a spinner on the last-pressed button while a page fetch is in flight.',
       },
-      {
-        name: 'className',
-        type: 'string',
-        description: 'Class applied to the nav element.',
-      },
+      { name: 'className', type: 'string', description: 'Class applied to the nav element.' },
     ],
   },
 };

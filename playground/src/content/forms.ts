@@ -18,11 +18,7 @@ export const forms: Record<string, ComponentDoc> = {
       { name: 'id', type: 'string', description: 'Field id that ties the label to the input.' },
       { name: 'label', type: 'ReactNode', description: 'Label text (sentence case).' },
       { name: 'required', type: 'boolean', description: 'Show a danger * after the label.' },
-      {
-        name: 'optional',
-        type: 'boolean',
-        description: 'Show a muted (optional) after the label.',
-      },
+      { name: 'optional', type: 'boolean', description: 'Show a muted (optional) after the label.' },
       {
         name: 'helper',
         type: 'ReactNode',
@@ -36,21 +32,9 @@ export const forms: Record<string, ComponentDoc> = {
       },
       { name: 'warning', type: 'ReactNode', description: 'Warning message - amber state.' },
       { name: 'success', type: 'ReactNode', description: 'Success message - green state.' },
-      {
-        name: 'leadingIcon',
-        type: 'ReactNode',
-        description: 'Leading icon node sized to the control. Decorative.',
-      },
-      {
-        name: 'clearable',
-        type: 'boolean',
-        description: 'Show a clear button when the field has a value.',
-      },
-      {
-        name: 'size',
-        type: "'sm' | 'md' | 'lg'",
-        description: 'Control height: sm 28px, md 36px (default), lg 40px.',
-      },
+      { name: 'leadingIcon', type: 'ReactNode', description: 'Leading icon node sized to the control. Decorative.' },
+      { name: 'clearable', type: 'boolean', description: 'Show a clear button when the field has a value.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", description: 'Control height: sm 28px, md 36px (default), lg 40px.' },
       {
         name: '...rest',
         type: 'InputHTMLAttributes<HTMLInputElement>',
@@ -76,21 +60,9 @@ export const forms: Record<string, ComponentDoc> = {
     props: [
       { name: 'id', type: 'string', description: 'Field id that ties the label to the input.' },
       { name: 'label', type: 'ReactNode', description: 'Label text (sentence case).' },
-      {
-        name: 'helper',
-        type: 'ReactNode',
-        description: 'Neutral helper text shown below the field.',
-      },
-      {
-        name: 'error',
-        type: 'ReactNode',
-        description: 'Error message; also sets the error state (red border, icon).',
-      },
-      {
-        name: 'unit',
-        type: 'string',
-        description: 'Unit suffix shown inside the field (e.g. "days" or "%").',
-      },
+      { name: 'helper', type: 'ReactNode', description: 'Neutral helper text shown below the field.' },
+      { name: 'error', type: 'ReactNode', description: 'Error message; also sets the error state (red border, icon).' },
+      { name: 'unit', type: 'string', description: 'Unit suffix shown inside the field (e.g. "days" or "%").' },
       {
         name: 'min',
         type: 'number',
@@ -103,28 +75,14 @@ export const forms: Record<string, ComponentDoc> = {
         default: 'Infinity',
         description: 'Upper bound; stepper disables at this value and input clamps on blur.',
       },
-      {
-        name: 'step',
-        type: 'number',
-        default: '1',
-        description: 'Increment used by the steppers and arrow keys.',
-      },
+      { name: 'step', type: 'number', default: '1', description: 'Increment used by the steppers and arrow keys.' },
       { name: 'value', type: 'number | string', description: 'Controlled numeric value.' },
-      {
-        name: 'onChange',
-        type: '(value: number) => void',
-        description: 'Called with the next clamped number.',
-      },
-      {
-        name: 'size',
-        type: "'sm' | 'md' | 'lg'",
-        description: 'Control height: sm, md (default), lg.',
-      },
+      { name: 'onChange', type: '(value: number) => void', description: 'Called with the next clamped number.' },
+      { name: 'size', type: "'sm' | 'md' | 'lg'", description: 'Control height: sm, md (default), lg.' },
       {
         name: '...rest',
         type: 'InputHTMLAttributes<HTMLInputElement>',
-        description:
-          'All native input attributes except size, value, onChange, min, max, and step.',
+        description: 'All native input attributes except size, value, onChange, min, max, and step.',
       },
     ],
   },
@@ -146,18 +104,10 @@ export const forms: Record<string, ComponentDoc> = {
         type: '(value: string) => void',
         description: 'Called with the updated digit string after each keystroke or paste.',
       },
-      {
-        name: 'group',
-        type: 'number',
-        description: 'Insert a visual separator between every N slots.',
-      },
+      { name: 'group', type: 'number', description: 'Insert a visual separator between every N slots.' },
       { name: 'error', type: 'boolean', description: 'Error state - red slots and focus ring.' },
       { name: 'disabled', type: 'boolean', description: 'Disables all slots.' },
-      {
-        name: 'size',
-        type: "'sm'",
-        description: 'Compact size variant; sm is the only non-default option.',
-      },
+      { name: 'size', type: "'sm'", description: 'Compact size variant; sm is the only non-default option.' },
       {
         name: 'className',
         type: 'string',
@@ -186,11 +136,7 @@ export const forms: Record<string, ComponentDoc> = {
       { name: 'id', type: 'string', description: 'Field id that ties the label to the textarea.' },
       { name: 'label', type: 'ReactNode', description: 'Label text (sentence case).' },
       { name: 'required', type: 'boolean', description: 'Show a danger * after the label.' },
-      {
-        name: 'optional',
-        type: 'boolean',
-        description: 'Show a muted (optional) after the label.',
-      },
+      { name: 'optional', type: 'boolean', description: 'Show a muted (optional) after the label.' },
       {
         name: 'helper',
         type: 'ReactNode',
@@ -205,11 +151,7 @@ export const forms: Record<string, ComponentDoc> = {
       { name: 'warning', type: 'ReactNode', description: 'Warning message - amber state.' },
       { name: 'success', type: 'ReactNode', description: 'Success message - green state.' },
       { name: 'value', type: 'string', default: "''", description: 'Controlled text value.' },
-      {
-        name: 'onChange',
-        type: 'ChangeEventHandler<HTMLTextAreaElement>',
-        description: 'Standard change handler.',
-      },
+      { name: 'onChange', type: 'ChangeEventHandler<HTMLTextAreaElement>', description: 'Standard change handler.' },
       {
         name: 'onSubmit',
         type: '(value: string) => void',
@@ -218,8 +160,7 @@ export const forms: Record<string, ComponentDoc> = {
       {
         name: 'max',
         type: 'number',
-        description:
-          'Soft char limit; shows the ring meter and highlights over-limit text. Does not truncate.',
+        description: 'Soft char limit; shows the ring meter and highlights over-limit text. Does not truncate.',
       },
       {
         name: 'minRows',
@@ -244,11 +185,7 @@ export const forms: Record<string, ComponentDoc> = {
         type: 'ReactNode',
         description: 'Footer hint shown left of the char meter (e.g. a Cmd+Enter affordance).',
       },
-      {
-        name: 'size',
-        type: "'md' | 'lg'",
-        description: 'md for default fields; lg for a prominent composer.',
-      },
+      { name: 'size', type: "'md' | 'lg'", description: 'md for default fields; lg for a prominent composer.' },
       {
         name: '...rest',
         type: 'TextareaHTMLAttributes<HTMLTextAreaElement>',
@@ -267,11 +204,7 @@ export const forms: Record<string, ComponentDoc> = {
   onChange={(e) => setPinned(e.target.checked)}
 />`,
     props: [
-      {
-        name: 'checked',
-        type: 'boolean',
-        description: 'Controlled checked state; omit for uncontrolled.',
-      },
+      { name: 'checked', type: 'boolean', description: 'Controlled checked state; omit for uncontrolled.' },
       { name: 'defaultChecked', type: 'boolean', description: 'Uncontrolled initial state.' },
       {
         name: 'indeterminate',
@@ -326,17 +259,8 @@ export const forms: Record<string, ComponentDoc> = {
   onChange={(e) => setAutoPublish(e.target.checked)}
 />`,
     props: [
-      {
-        name: 'checked',
-        type: 'boolean',
-        description: 'Controlled checked state; omit for uncontrolled.',
-      },
-      {
-        name: 'defaultChecked',
-        type: 'boolean',
-        default: 'false',
-        description: 'Uncontrolled initial state.',
-      },
+      { name: 'checked', type: 'boolean', description: 'Controlled checked state; omit for uncontrolled.' },
+      { name: 'defaultChecked', type: 'boolean', default: 'false', description: 'Uncontrolled initial state.' },
       {
         name: 'disabled',
         type: 'boolean',
@@ -392,11 +316,7 @@ const CADENCE_OPTIONS = [
         description: 'Shared radio name that ties the options into one keyboard group.',
       },
       { name: 'value', type: 'string', description: 'The selected value (controlled).' },
-      {
-        name: 'onChange',
-        type: '(value: string) => void',
-        description: 'Called with the chosen option value.',
-      },
+      { name: 'onChange', type: '(value: string) => void', description: 'Called with the chosen option value.' },
       { name: 'label', type: 'ReactNode', description: 'Group label and legend (sentence case).' },
       {
         name: 'helper',
@@ -409,11 +329,7 @@ const CADENCE_OPTIONS = [
         description: 'Group-level error; sets the error state and reveals the message.',
       },
       { name: 'required', type: 'boolean', description: 'Show a danger * after the label.' },
-      {
-        name: 'optional',
-        type: 'boolean',
-        description: 'Show a muted (optional) after the label.',
-      },
+      { name: 'optional', type: 'boolean', description: 'Show a muted (optional) after the label.' },
       {
         name: 'variant',
         type: "'rows' | 'cards'",
@@ -433,12 +349,7 @@ const CADENCE_OPTIONS = [
         description: 'Control size: sm (dot 16px) or md (default, dot 18px).',
       },
       { name: 'disabled', type: 'boolean', description: 'Disable the whole group.' },
-      {
-        name: 'options',
-        type: 'RadioOption[]',
-        required: true,
-        description: 'The options to choose between.',
-      },
+      { name: 'options', type: 'RadioOption[]', required: true, description: 'The options to choose between.' },
       {
         name: 'className',
         type: 'string',
@@ -477,11 +388,7 @@ const TIMEZONE_OPTIONS = [
         required: true,
         description: 'Flat option list or array of grouped options.',
       },
-      {
-        name: 'value',
-        type: 'string | null',
-        description: 'Controlled value; null clears the selection.',
-      },
+      { name: 'value', type: 'string | null', description: 'Controlled value; null clears the selection.' },
       {
         name: 'defaultValue',
         type: 'string | null',
@@ -499,24 +406,9 @@ const TIMEZONE_OPTIONS = [
         default: "'Select an option'",
         description: 'Trigger label shown when nothing is selected.',
       },
-      {
-        name: 'size',
-        type: "'sm' | 'default' | 'lg'",
-        default: "'default'",
-        description: 'Trigger and menu size.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Inert and de-emphasized.',
-      },
-      {
-        name: 'invalid',
-        type: 'boolean',
-        default: 'false',
-        description: 'Danger ring and border.',
-      },
+      { name: 'size', type: "'sm' | 'default' | 'lg'", default: "'default'", description: 'Trigger and menu size.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Inert and de-emphasized.' },
+      { name: 'invalid', type: 'boolean', default: 'false', description: 'Danger ring and border.' },
       {
         name: 'loading',
         type: 'boolean',
@@ -538,14 +430,9 @@ const TIMEZONE_OPTIONS = [
       {
         name: 'leadingIcon',
         type: 'ReactNode',
-        description:
-          'Your own icon node pinned before the trigger label; falls back to the selected option icon.',
+        description: 'Your own icon node pinned before the trigger label; falls back to the selected option icon.',
       },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'Base id for the trigger and menu (auto-generated if omitted).',
-      },
+      { name: 'id', type: 'string', description: 'Base id for the trigger and menu (auto-generated if omitted).' },
       { name: 'ariaLabel', type: 'string', description: 'Accessible label for the listbox.' },
     ],
   },
@@ -575,12 +462,7 @@ const CHANNEL_OPTIONS = [
         description: 'Flat option list or array of grouped options.',
       },
       { name: 'value', type: 'string[]', description: 'Controlled array of selected values.' },
-      {
-        name: 'defaultValue',
-        type: 'string[]',
-        default: '[]',
-        description: 'Initial selection for uncontrolled use.',
-      },
+      { name: 'defaultValue', type: 'string[]', default: '[]', description: 'Initial selection for uncontrolled use.' },
       {
         name: 'onChange',
         type: '(value: string[], toggled: SelectOption) => void',
@@ -592,24 +474,9 @@ const CHANNEL_OPTIONS = [
         default: "'Select options'",
         description: 'Trigger label shown when nothing is selected.',
       },
-      {
-        name: 'size',
-        type: "'sm' | 'default' | 'lg'",
-        default: "'default'",
-        description: 'Trigger and menu size.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Inert and de-emphasized.',
-      },
-      {
-        name: 'invalid',
-        type: 'boolean',
-        default: 'false',
-        description: 'Danger ring and border.',
-      },
+      { name: 'size', type: "'sm' | 'default' | 'lg'", default: "'default'", description: 'Trigger and menu size.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Inert and de-emphasized.' },
+      { name: 'invalid', type: 'boolean', default: 'false', description: 'Danger ring and border.' },
       {
         name: 'loading',
         type: 'boolean',
@@ -628,16 +495,8 @@ const CHANNEL_OPTIONS = [
         default: "'Filter options'",
         description: 'Placeholder text for the search field.',
       },
-      {
-        name: 'leadingIcon',
-        type: 'ReactNode',
-        description: 'Your own icon node pinned before the trigger label.',
-      },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'Base id for the trigger and menu (auto-generated if omitted).',
-      },
+      { name: 'leadingIcon', type: 'ReactNode', description: 'Your own icon node pinned before the trigger label.' },
+      { name: 'id', type: 'string', description: 'Base id for the trigger and menu (auto-generated if omitted).' },
       { name: 'ariaLabel', type: 'string', description: 'Accessible label for the listbox.' },
     ],
   },

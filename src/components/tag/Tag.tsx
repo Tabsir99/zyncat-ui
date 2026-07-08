@@ -71,13 +71,7 @@ export function Tag({
       )}
       <span className="tag__label">{children}</span>
       {onRemove && (
-        <button
-          type="button"
-          className="tag__remove"
-          aria-label={xLabel}
-          disabled={disabled}
-          onClick={onRemove}
-        >
+        <button type="button" className="tag__remove" aria-label={xLabel} disabled={disabled} onClick={onRemove}>
           <TagRemoveGlyph />
         </button>
       )}
@@ -113,12 +107,7 @@ export function Tag({
 
 export function TagGroup({ label, className = '', children, ...rest }: TagGroupProps) {
   return (
-    <div
-      className={['tag-group', className].filter(Boolean).join(' ')}
-      role="group"
-      aria-label={label}
-      {...rest}
-    >
+    <div className={['tag-group', className].filter(Boolean).join(' ')} role="group" aria-label={label} {...rest}>
       <TagGroupContext.Provider value={true}>
         <AnimatePresence initial={false}>{children}</AnimatePresence>
       </TagGroupContext.Provider>

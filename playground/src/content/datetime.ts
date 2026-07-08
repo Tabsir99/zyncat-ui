@@ -34,48 +34,20 @@ export const datetime: Record<string, ComponentDoc> = {
       {
         name: 'timezone',
         type: 'string',
-        description:
-          'IANA timezone name (e.g. Europe/Riga), shown as GMT offset in the popover footer.',
+        description: 'IANA timezone name (e.g. Europe/Riga), shown as GMT offset in the popover footer.',
       },
-      {
-        name: 'min',
-        type: 'string',
-        description: 'Earliest pickable date, format YYYY-MM-DD, inclusive.',
-      },
-      {
-        name: 'max',
-        type: 'string',
-        description: 'Latest pickable date, format YYYY-MM-DD, inclusive.',
-      },
-      {
-        name: 'required',
-        type: 'boolean',
-        default: 'false',
-        description: 'Appends an asterisk to the label.',
-      },
+      { name: 'min', type: 'string', description: 'Earliest pickable date, format YYYY-MM-DD, inclusive.' },
+      { name: 'max', type: 'string', description: 'Latest pickable date, format YYYY-MM-DD, inclusive.' },
+      { name: 'required', type: 'boolean', default: 'false', description: 'Appends an asterisk to the label.' },
       {
         name: 'invalid',
         type: 'boolean',
         default: 'false',
         description: 'Applies danger border and error message color.',
       },
-      {
-        name: 'message',
-        type: 'string',
-        description: 'Helper or error text rendered below the field.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Disables the trigger button.',
-      },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the field shell.',
-      },
+      { name: 'message', type: 'string', description: 'Helper or error text rendered below the field.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the trigger button.' },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the field shell.' },
     ],
   },
 
@@ -91,11 +63,7 @@ export const datetime: Record<string, ComponentDoc> = {
   timezone="America/New_York"
 />`,
     props: [
-      {
-        name: 'value',
-        type: 'string | null',
-        description: 'Controlled value, format YYYY-MM-DDTHH:mm.',
-      },
+      { name: 'value', type: 'string | null', description: 'Controlled value, format YYYY-MM-DDTHH:mm.' },
       {
         name: 'defaultValue',
         type: 'string | null',
@@ -119,16 +87,8 @@ export const datetime: Record<string, ComponentDoc> = {
         type: 'string',
         description: 'IANA timezone name (e.g. Europe/Riga), shown in the popover footer.',
       },
-      {
-        name: 'min',
-        type: 'string',
-        description: 'Lower bound, format YYYY-MM-DD or YYYY-MM-DDTHH:mm, inclusive.',
-      },
-      {
-        name: 'max',
-        type: 'string',
-        description: 'Upper bound, format YYYY-MM-DD or YYYY-MM-DDTHH:mm, inclusive.',
-      },
+      { name: 'min', type: 'string', description: 'Lower bound, format YYYY-MM-DD or YYYY-MM-DDTHH:mm, inclusive.' },
+      { name: 'max', type: 'string', description: 'Upper bound, format YYYY-MM-DD or YYYY-MM-DDTHH:mm, inclusive.' },
       {
         name: 'format',
         type: "'24h' | '12h'",
@@ -141,35 +101,16 @@ export const datetime: Record<string, ComponentDoc> = {
         default: '5',
         description: 'Arrow key step granularity in minutes; typing accepts any exact value.',
       },
-      {
-        name: 'required',
-        type: 'boolean',
-        default: 'false',
-        description: 'Appends an asterisk to the label.',
-      },
+      { name: 'required', type: 'boolean', default: 'false', description: 'Appends an asterisk to the label.' },
       {
         name: 'invalid',
         type: 'boolean',
         default: 'false',
         description: 'Applies danger border and error message color.',
       },
-      {
-        name: 'message',
-        type: 'string',
-        description: 'Helper or error text rendered below the field.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Disables the trigger button.',
-      },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the field shell.',
-      },
+      { name: 'message', type: 'string', description: 'Helper or error text rendered below the field.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the trigger button.' },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the field shell.' },
     ],
   },
 
@@ -186,8 +127,7 @@ export const datetime: Record<string, ComponentDoc> = {
       {
         name: 'value',
         type: 'DateRange | null',
-        description:
-          'Controlled range with start and end as YYYY-MM-DD strings, or null when empty.',
+        description: 'Controlled range with start and end as YYYY-MM-DD strings, or null when empty.',
       },
       {
         name: 'defaultValue',
@@ -210,48 +150,20 @@ export const datetime: Record<string, ComponentDoc> = {
       {
         name: 'timezone',
         type: 'string',
-        description:
-          'IANA timezone name (e.g. Europe/Riga), shown in the panel footer for display context.',
+        description: 'IANA timezone name (e.g. Europe/Riga), shown in the panel footer for display context.',
       },
-      {
-        name: 'min',
-        type: 'string',
-        description: 'Earliest pickable date, format YYYY-MM-DD, inclusive.',
-      },
-      {
-        name: 'max',
-        type: 'string',
-        description: 'Latest pickable date, format YYYY-MM-DD, inclusive.',
-      },
-      {
-        name: 'required',
-        type: 'boolean',
-        default: 'false',
-        description: 'Appends an asterisk to the label.',
-      },
+      { name: 'min', type: 'string', description: 'Earliest pickable date, format YYYY-MM-DD, inclusive.' },
+      { name: 'max', type: 'string', description: 'Latest pickable date, format YYYY-MM-DD, inclusive.' },
+      { name: 'required', type: 'boolean', default: 'false', description: 'Appends an asterisk to the label.' },
       {
         name: 'invalid',
         type: 'boolean',
         default: 'false',
         description: 'Applies danger border and error message color.',
       },
-      {
-        name: 'message',
-        type: 'string',
-        description: 'Helper or error text rendered below the field.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Disables the trigger button.',
-      },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the field shell.',
-      },
+      { name: 'message', type: 'string', description: 'Helper or error text rendered below the field.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables the trigger button.' },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the field shell.' },
     ],
   },
 
@@ -268,11 +180,7 @@ export const datetime: Record<string, ComponentDoc> = {
   max="17:30"
 />`,
     props: [
-      {
-        name: 'value',
-        type: 'string | null',
-        description: 'Controlled value, canonical format HH:mm in 24h.',
-      },
+      { name: 'value', type: 'string | null', description: 'Controlled value, canonical format HH:mm in 24h.' },
       {
         name: 'defaultValue',
         type: 'string | null',
@@ -307,35 +215,16 @@ export const datetime: Record<string, ComponentDoc> = {
         type: 'string',
         description: 'Upper bound in HH:mm; values outside the bound are clamped, not rejected.',
       },
-      {
-        name: 'required',
-        type: 'boolean',
-        default: 'false',
-        description: 'Appends an asterisk to the label.',
-      },
+      { name: 'required', type: 'boolean', default: 'false', description: 'Appends an asterisk to the label.' },
       {
         name: 'invalid',
         type: 'boolean',
         default: 'false',
         description: 'Applies danger border and error message color.',
       },
-      {
-        name: 'message',
-        type: 'string',
-        description: 'Helper or error text rendered below the field.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Disables all time segment inputs.',
-      },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the field shell.',
-      },
+      { name: 'message', type: 'string', description: 'Helper or error text rendered below the field.' },
+      { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables all time segment inputs.' },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the field shell.' },
     ],
   },
 
@@ -371,33 +260,24 @@ const items = [
         name: 'value',
         type: 'string | null | undefined',
         required: true,
-        description:
-          'Controlled value of the active tab; null or undefined hides the ink underline.',
+        description: 'Controlled value of the active tab; null or undefined hides the ink underline.',
       },
       {
         name: 'onChange',
         type: '(value: string, dir: 1 | -1) => void',
-        description:
-          'Fires on click and arrow-key travel; dir is +1 for rightward movement and -1 for leftward.',
+        description: 'Fires on click and arrow-key travel; dir is +1 for rightward movement and -1 for leftward.',
       },
       {
         name: 'name',
         type: 'string',
-        description:
-          'Shared id prefix wiring tab and panel aria; omit when no managed panel is paired.',
+        description: 'Shared id prefix wiring tab and panel aria; omit when no managed panel is paired.',
       },
       { name: 'label', type: 'string', description: 'aria-label for the tablist element.' },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the Tabs wrapper.',
-      },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the Tabs wrapper.' },
       {
         name: '...rest',
         type: 'HTMLAttributes<HTMLDivElement>',
-        description:
-          'Additional div props (excluding onChange) forwarded to the Tabs wrapper element.',
+        description: 'Additional div props (excluding onChange) forwarded to the Tabs wrapper element.',
       },
       // TabPanel props
       {
@@ -418,12 +298,7 @@ const items = [
         description: 'Direction of travel from Tabs onChange; 0 produces a plain fade.',
       },
       { name: 'children', type: 'ReactNode', description: 'Content rendered inside the panel.' },
-      {
-        name: 'className',
-        type: 'string',
-        default: "''",
-        description: 'Extra class names on the panel wrapper.',
-      },
+      { name: 'className', type: 'string', default: "''", description: 'Extra class names on the panel wrapper.' },
       {
         name: '...rest',
         type: 'HTMLAttributes<HTMLDivElement>',

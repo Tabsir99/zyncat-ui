@@ -190,8 +190,7 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'tabs',
         label: 'Tabs',
-        blurb:
-          'Line tabs - the ink reaches then releases; panels enter from the side you moved toward.',
+        blurb: 'Line tabs - the ink reaches then releases; panels enter from the side you moved toward.',
         Component: T.TabsPage,
       },
     ],
@@ -209,8 +208,7 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'toast',
         label: 'Toast',
-        blurb:
-          'Imperative toast() API. Mount <Toaster /> once at the root, then fire one from anywhere.',
+        blurb: 'Imperative toast() API. Mount <Toaster /> once at the root, then fire one from anywhere.',
         Component: O.ToastPage,
       },
       {
@@ -228,8 +226,7 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'popover',
         label: 'Popover',
-        blurb:
-          'Headless anchored panel, non-modal - flips and clamps to the viewport. The render-prop gets { close }.',
+        blurb: 'Headless anchored panel, non-modal - flips and clamps to the viewport. The render-prop gets { close }.',
         Component: O.PopoverPage,
       },
       {
@@ -242,7 +239,4 @@ export const GROUPS: DocGroup[] = [
   },
 ];
 
-export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs).map((d) => ({
-  ...d,
-  ...CONTENT[d.slug],
-}));
+export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs).map((d) => ({ ...d, ...CONTENT[d.slug] }));

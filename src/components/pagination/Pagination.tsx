@@ -86,11 +86,7 @@ export function Pagination({
   const nextBusy = loading && lastDirRef.current === 1;
 
   return (
-    <nav
-      className={('pgn ' + className).trim()}
-      aria-label={label}
-      aria-busy={loading || undefined}
-    >
+    <nav className={('pgn ' + className).trim()} aria-label={label} aria-busy={loading || undefined}>
       <span className="pgn__readout" aria-live="polite">
         <span className="pgn__range" ref={rangeRef}>
           <b>
@@ -103,9 +99,7 @@ export function Pagination({
         <button
           type="button"
           ref={prevBtnRef}
-          className={
-            'btn btn--ghost btn--sm pgn__btn pgn__btn--prev' + (prevBusy ? ' is-loading' : '')
-          }
+          className={'btn btn--ghost btn--sm pgn__btn pgn__btn--prev' + (prevBusy ? ' is-loading' : '')}
           disabled={!hasPrev || loading}
           aria-label="Previous page"
           onClick={() => {
@@ -119,9 +113,7 @@ export function Pagination({
         <button
           type="button"
           ref={nextBtnRef}
-          className={
-            'btn btn--ghost btn--sm pgn__btn pgn__btn--next' + (nextBusy ? ' is-loading' : '')
-          }
+          className={'btn btn--ghost btn--sm pgn__btn pgn__btn--next' + (nextBusy ? ' is-loading' : '')}
           disabled={!hasNext || loading}
           aria-label="Next page"
           onClick={() => {

@@ -6,10 +6,7 @@ import './checkbox.css';
 import type { ChangeEventHandler, InputHTMLAttributes, ReactNode } from 'react';
 import { CheckGlyph } from './check-glyph';
 
-export interface CheckboxProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'size' | 'type'
-> {
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
   checked?: boolean;
   /** Uncontrolled initial state. */

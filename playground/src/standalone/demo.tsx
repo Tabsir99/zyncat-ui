@@ -60,8 +60,16 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
       }}
     >
       <Toaster />
-      <p style={{ font: 'var(--type-micro)', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-subtle)' }}>
-        standalone import test — module graph: premium-ds/table + premium-ds/toast{healed ? ' + checkbox + button + badge' : ' only'}
+      <p
+        style={{
+          font: 'var(--type-micro)',
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: 'var(--text-subtle)',
+        }}
+      >
+        standalone import test — module graph: premium-ds/table + premium-ds/toast
+        {healed ? ' + checkbox + button + badge' : ' only'}
       </p>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 650, letterSpacing: '-0.01em', margin: '4px 0 8px' }}>
         {healed ? 'Same page, healed' : 'What a real app gets from `import … from ‘premium-ds/table’`'}
@@ -80,13 +88,7 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
         ))}
       </ol>
 
-      <Table<Deploy>
-        label="Deploys"
-        columns={COLUMNS}
-        rows={ROWS}
-        selectable
-        density="compact"
-      />
+      <Table<Deploy> label="Deploys" columns={COLUMNS} rows={ROWS} selectable density="compact" />
 
       <p style={{ marginTop: 24 }}>
         <button

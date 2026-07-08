@@ -12,10 +12,7 @@ const SM = UIMotion;
 
 export type PostStatus = 'draft' | 'scheduled' | 'processing' | 'published' | 'failed';
 
-export const POST_STATUS: Record<
-  PostStatus,
-  { tone: BadgeProps['tone']; label: string; live?: boolean }
-> = {
+export const POST_STATUS: Record<PostStatus, { tone: BadgeProps['tone']; label: string; live?: boolean }> = {
   draft: { tone: 'neutral', label: 'Draft' },
   scheduled: { tone: 'info', label: 'Scheduled' },
   processing: { tone: 'warning', label: 'Processing', live: true },
@@ -82,9 +79,7 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
     // next frame: roll the new word in, the old out, ease the box - one tween; clip hides the wider word
     const raf = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
-        setWords((ws) =>
-          ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'badge__word--out' })),
-        );
+        setWords((ws) => ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'badge__word--out' })));
         if (nextW) setBoxW(nextW);
       }),
     );

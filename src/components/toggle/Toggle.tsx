@@ -3,13 +3,7 @@
 // Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
 import './toggle.css';
-import {
-  useState,
-  type ChangeEvent,
-  type ChangeEventHandler,
-  type InputHTMLAttributes,
-  type ReactNode,
-} from 'react';
+import { useState, type ChangeEvent, type ChangeEventHandler, type InputHTMLAttributes, type ReactNode } from 'react';
 import { useControllable } from '../use-controllable';
 
 export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {

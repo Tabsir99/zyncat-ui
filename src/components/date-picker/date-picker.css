@@ -278,9 +278,7 @@
 }
 
 .drp {
-  --dtp-cell: var(
-    --control-height
-  ); /* the day grid reuses .dtp__days/.dtp__dow, which size columns off this var */
+  --dtp-cell: var(--control-height); /* the day grid reuses .dtp__days/.dtp__dow, which size columns off this var */
   background: var(--bg-surface-raised);
   border: var(--border-hairline) solid var(--border-default);
   border-radius: var(--radius-lg);
@@ -432,9 +430,7 @@
   inset: 0;
   z-index: 1;
   border-radius: var(--radius-md);
-  background: var(
-    --accent-border
-  ); /* more opaque than the band - a clear selection marker, not a heavy solid fill */
+  background: var(--accent-border); /* more opaque than the band - a clear selection marker, not a heavy solid fill */
 }
 .drp__cap--ghost {
   background: transparent;

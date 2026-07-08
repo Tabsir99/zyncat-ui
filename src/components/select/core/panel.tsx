@@ -22,8 +22,7 @@ export interface ListboxPanelProps {
   check?: (selected: boolean) => ReactNode;
 }
 
-const defaultCheck = (selected: boolean) =>
-  selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null;
+const defaultCheck = (selected: boolean) => (selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null);
 
 function LoadingRows() {
   return (
@@ -39,11 +38,7 @@ function LoadingRows() {
 }
 
 function EmptyRow({ query }: { query: string }) {
-  return (
-    <div className="select__empty">
-      {query ? 'No matches for "' + query + '"' : 'No options available'}
-    </div>
-  );
+  return <div className="select__empty">{query ? 'No matches for "' + query + '"' : 'No options available'}</div>;
 }
 
 export function ListboxPanel({
@@ -58,18 +53,9 @@ export function ListboxPanel({
   /* value -> position in the filtered nav space; the row reads its index (and its visibility)
      from this one map, so `visible` and `data-idx` can never disagree the way a counter threaded
      through the group loop could. Rebuilt only when the visible set changes. */
-  const navIndex = useMemo(
-    () => new Map(lb.navItems.map((o, i) => [o.value, i] as const)),
-    [lb.navItems],
-  );
+  const navIndex = useMemo(() => new Map(lb.navItems.map((o, i) => [o.value, i] as const)), [lb.navItems]);
   return (
-    <SelectMenu
-      open={lb.open}
-      menuId={lb.menuId}
-      close={lb.hide}
-      triggerRef={lb.triggerRef}
-      multiple={multiple}
-    >
+    <SelectMenu open={lb.open} menuId={lb.menuId} close={lb.hide} triggerRef={lb.triggerRef} multiple={multiple}>
       {searchable && !loading && (
         <div className="select__search">
           <Icon name="magnifying-glass" size="sm" />
@@ -104,12 +90,7 @@ export function ListboxPanel({
         ) : (
           <Fragment>
             {lb.groups.map((g, gi) => (
-              <div
-                className="select__group"
-                role="group"
-                aria-label={g.label || undefined}
-                key={gi}
-              >
+              <div className="select__group" role="group" aria-label={g.label || undefined} key={gi}>
                 {g.label && g.options.some((o) => navIndex.has(o.value)) && (
                   <div className="select__group-label">{g.label}</div>
                 )}
@@ -141,9 +122,7 @@ export function ListboxPanel({
                       )}
                       <span className="select__option-text">
                         <span className="select__option-label">{opt.label}</span>
-                        {opt.description && (
-                          <span className="select__option-desc">{opt.description}</span>
-                        )}
+                        {opt.description && <span className="select__option-desc">{opt.description}</span>}
                       </span>
                       <span className="select__option-check">{check(isSel)}</span>
                     </div>

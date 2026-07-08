@@ -21,14 +21,7 @@
 // geometry), and the selected tab is kept in view.
 
 import './tabs.css';
-import {
-  useId,
-  useLayoutEffect,
-  useRef,
-  type HTMLAttributes,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { useId, useLayoutEffect, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { IconSlot } from '../icon/IconSlot';
@@ -78,15 +71,7 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 10;
 
-export function Tabs({
-  items = [],
-  value,
-  onChange,
-  name,
-  label,
-  className = '',
-  ...rest
-}: TabsProps) {
+export function Tabs({ items = [], value, onChange, name, label, className = '', ...rest }: TabsProps) {
   const autoId = useId();
   const base = name || autoId;
 
@@ -132,14 +117,8 @@ export function Tabs({
         const span = dir === 1 ? next.x + next.w - cur.x : cur.x + cur.w - next.x;
         const kf =
           dir === 1
-            ? {
-                x: [cur.x, cur.x, next.x],
-                width: [cur.w, span, next.w],
-              } /* right edge reaches, left releases */
-            : {
-                x: [cur.x, next.x, next.x],
-                width: [cur.w, span, next.w],
-              }; /* left edge reaches, right releases */
+            ? { x: [cur.x, cur.x, next.x], width: [cur.w, span, next.w] } /* right edge reaches, left releases */
+            : { x: [cur.x, next.x, next.x], width: [cur.w, span, next.w] }; /* left edge reaches, right releases */
         animRef.current = animate(ink, kf, {
           duration: SM.dur.slow,
           times: [0, 0.55, 1],
@@ -165,10 +144,7 @@ export function Tabs({
       if (el.offsetLeft < l.scrollLeft + TABS_EDGE_PAD) {
         l.scrollTo({ left: el.offsetLeft - TABS_EDGE_PAD, behavior });
       } else if (el.offsetLeft + el.offsetWidth > l.scrollLeft + l.clientWidth - TABS_EDGE_PAD) {
-        l.scrollTo({
-          left: el.offsetLeft + el.offsetWidth - l.clientWidth + TABS_EDGE_PAD,
-          behavior,
-        });
+        l.scrollTo({ left: el.offsetLeft + el.offsetWidth - l.clientWidth + TABS_EDGE_PAD, behavior });
       }
     }
   }, [value]);
@@ -291,11 +267,7 @@ export function TabPanel({ tab, name, dir = 0, className = '', children, ...rest
       return;
     }
     if (SM.reduced) return;
-    const anim = animate(
-      innerRef.current,
-      { opacity: [0, 1], x: [dir * TABS_ENTER_X, 0] },
-      SM.t.enter,
-    );
+    const anim = animate(innerRef.current, { opacity: [0, 1], x: [dir * TABS_ENTER_X, 0] }, SM.t.enter);
     return () => anim.stop();
   }, [tab]);
   return (

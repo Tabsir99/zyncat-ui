@@ -10,10 +10,7 @@ import { IconSlot } from '../icon/IconSlot';
 import { useControllable } from '../use-controllable';
 
 /** ToggleTag - the on/off filter chip (<button aria-pressed>). */
-export interface ToggleTagProps extends Omit<
-  ButtonHTMLAttributes<HTMLButtonElement>,
-  'onChange' | 'children'
-> {
+export interface ToggleTagProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'children'> {
   /** Chip content; the label shown beside the tick or `icon`. */
   children: ReactNode;
   /** Controlled selected value. Omit for uncontrolled. */
@@ -37,12 +34,7 @@ export interface ToggleTagProps extends Omit<
 function ToggleTagTick({ selected }: { selected: boolean }) {
   /* collapse.css mechanism on spans - width 0fr and 1fr, content clipped */
   return (
-    <span
-      className="tag__check collapse"
-      data-axis="width"
-      data-open={selected ? 'true' : 'false'}
-      aria-hidden="true"
-    >
+    <span className="tag__check collapse" data-axis="width" data-open={selected ? 'true' : 'false'} aria-hidden="true">
       <span className="collapse__inner">
         <svg viewBox="0 0 12 12" fill="none">
           <path
@@ -73,19 +65,10 @@ export function ToggleTag({
   const [selected, setSelected] = useControllable(selectedProp, defaultSelected, onChange);
   const toggle = () => setSelected(!selected);
 
-  const classes = ['tag', 'tag--toggle', size === 'sm' ? 'tag--sm' : '', className]
-    .filter(Boolean)
-    .join(' ');
+  const classes = ['tag', 'tag--toggle', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
 
   return (
-    <button
-      type="button"
-      className={classes}
-      aria-pressed={selected}
-      disabled={disabled}
-      onClick={toggle}
-      {...rest}
-    >
+    <button type="button" className={classes} aria-pressed={selected} disabled={disabled} onClick={toggle} {...rest}>
       {icon ? (
         <span className="tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>

@@ -28,10 +28,7 @@ export interface RadioOption {
   disabled?: boolean;
 }
 
-export interface RadioGroupProps extends Omit<
-  FieldsetHTMLAttributes<HTMLFieldSetElement>,
-  'onChange'
-> {
+export interface RadioGroupProps extends Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
   /** Shared radio name - ties the options into one keyboard group. Required. */
   name: string;
   /** The selected value (controlled). */
@@ -125,20 +122,14 @@ function RadioGroup({
             setHovered(null);
           }}
         >
-          {variant === 'rows' && (
-            <GlidePill className="rg__hover" rect={glide.rect} active={glide.active} />
-          )}
+          {variant === 'rows' && <GlidePill className="rg__hover" rect={glide.rect} active={glide.active} />}
           {options.map((opt) => {
             const selected = opt.value === value;
             const isDisabled = disabled || opt.disabled;
             return (
               <label
                 key={opt.value}
-                className={[
-                  'rg-opt',
-                  selected ? 'is-selected' : '',
-                  isDisabled ? 'is-disabled' : '',
-                ]
+                className={['rg-opt', selected ? 'is-selected' : '', isDisabled ? 'is-disabled' : '']
                   .filter(Boolean)
                   .join(' ')}
                 onPointerEnter={

@@ -8,10 +8,7 @@
 import './checkbox.css';
 import { Fragment, useEffect, useRef, type InputHTMLAttributes } from 'react';
 
-export interface CheckGlyphProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'type' | 'size'
-> {
+export interface CheckGlyphProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
   /** The "some, not all" select-all state - a DOM property, not an attribute. */
   indeterminate?: boolean;
 }

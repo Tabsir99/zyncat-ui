@@ -4,14 +4,7 @@
 
 import './input.css';
 import { useRef } from 'react';
-import type {
-  ChangeEvent,
-  ClipboardEvent,
-  FocusEvent,
-  KeyboardEvent,
-  MouseEvent,
-  ReactNode,
-} from 'react';
+import type { ChangeEvent, ClipboardEvent, FocusEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 
 export interface OtpFieldProps {
   /** Number of slots. @default 6 */
@@ -66,14 +59,11 @@ export function OtpField({
     }
   };
 
-  const cls = ['otp', size === 'sm' ? 'otp--sm' : '', error ? 'is-error' : '', className]
-    .filter(Boolean)
-    .join(' ');
+  const cls = ['otp', size === 'sm' ? 'otp--sm' : '', error ? 'is-error' : '', className].filter(Boolean).join(' ');
 
   const cells: ReactNode[] = [];
   for (let i = 0; i < length; i++) {
-    if (group && i > 0 && i % group === 0)
-      cells.push(<span key={`sep${i}`} className="otp__sep" />);
+    if (group && i > 0 && i % group === 0) cells.push(<span key={`sep${i}`} className="otp__sep" />);
     cells.push(
       <input
         key={i}

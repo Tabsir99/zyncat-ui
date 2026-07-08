@@ -21,13 +21,7 @@ import { UIMotion } from '../../tokens/motion-tokens';
 import { fireGlint } from '../glass/glint';
 import { tokenPx } from '../token-px';
 import { Icon, type IconName } from '../icon/Icon';
-import {
-  UIToast,
-  DEFAULT_TOASTER_CONFIG,
-  type ToastRecord,
-  type ToastTone,
-  type ToasterConfig,
-} from './toast-store';
+import { UIToast, DEFAULT_TOASTER_CONFIG, type ToastRecord, type ToastTone, type ToasterConfig } from './toast-store';
 
 const SM = UIMotion;
 const store = UIToast;
@@ -51,11 +45,7 @@ const TONE_ICON: Record<string, IconName> = {
 };
 
 /* useToneGesture - success glint, error headshake; the glint class is toggled with a reflow (remove - offsetWidth - add) to restart the one-shot. */
-function useToneGesture(
-  tone: ToastTone,
-  ref: RefObject<HTMLElement>,
-  x: ReturnType<typeof useMotionValue<number>>,
-) {
+function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>, x: ReturnType<typeof useMotionValue<number>>) {
   const prevTone = useRef<ToastTone | null>(null);
   useEffect(() => {
     const prev = prevTone.current;
@@ -63,11 +53,7 @@ function useToneGesture(
     if (tone === prev) return;
     if (tone === 'success') return fireGlint(ref.current);
     if (tone === 'error') {
-      const fall = animate(x, [0, -7, 5, -2, 0], {
-        duration: SM.dur.slow,
-        ease: SM.ease.standard,
-        delay: SM.dur.base,
-      });
+      const fall = animate(x, [0, -7, 5, -2, 0], { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base });
       return () => fall.stop();
     }
   }, [tone]);
@@ -105,9 +91,7 @@ function ToastItem({
   const swipe = (_e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
       // fling out the right edge, THEN remove - the exit fade plays where it landed, no snap-back
-      animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() =>
-        store.dismiss(t.id),
-      );
+      animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() => store.dismiss(t.id));
     }
   };
 
@@ -168,12 +152,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
           )}
           {isFinite(t.duration) && (
             /* the ring - keyed to the timer so a restart re-fills it; pathLength=1 makes dashoffset a fraction */
-            <svg
-              key={'ring-' + t.timerKey}
-              className="toast__ring"
-              viewBox="0 0 36 36"
-              aria-hidden="true"
-            >
+            <svg key={'ring-' + t.timerKey} className="toast__ring" viewBox="0 0 36 36" aria-hidden="true">
               <circle className="toast__ring-track" cx="18" cy="18" r="16.5"></circle>
               <circle
                 className="toast__ring-arc"
@@ -221,12 +200,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
         </button>
       )}
       {t.dismissible && (
-        <button
-          type="button"
-          className="toast__close"
-          aria-label="Dismiss"
-          onClick={() => store.dismiss(t.id)}
-        >
+        <button type="button" className="toast__close" aria-label="Dismiss" onClick={() => store.dismiss(t.id)}>
           <Icon name="close" size="sm" />
         </button>
       )}
@@ -252,8 +226,7 @@ function ToastHost({ config }: { config: ToasterConfig }) {
   // Portals into document.body, so render nothing until mounted (SSR-safe, no hydration mismatch).
   useEffect(() => setReady(true), []);
 
-  const onHeight = (id: string, h: number) =>
-    setHeights((prev) => (prev[id] === h ? prev : { ...prev, [id]: h }));
+  const onHeight = (id: string, h: number) => setHeights((prev) => (prev[id] === h ? prev : { ...prev, [id]: h }));
 
   // hold = fan open + freeze clocks; release = graced fold + resume
   const onHold = () => {
@@ -310,9 +283,7 @@ function ToastHost({ config }: { config: ToasterConfig }) {
     <ol
       className={'toast-viewport' + (paused ? ' is-paused' : '')}
       data-position={config.position}
-      style={
-        config.offset ? ({ '--toast-offset': `${config.offset}px` } as CSSProperties) : undefined
-      }
+      style={config.offset ? ({ '--toast-offset': `${config.offset}px` } as CSSProperties) : undefined}
       aria-label="Notifications"
       onPointerOver={(e) => {
         if (e.pointerType !== 'touch') onHold();
@@ -322,8 +293,7 @@ function ToastHost({ config }: { config: ToasterConfig }) {
       }}
       onFocus={onHold}
       onBlur={(e) => {
-        if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget as Node))
-          onRelease(false);
+        if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget as Node)) onRelease(false);
       }}
     >
       <AnimatePresence>
@@ -377,14 +347,7 @@ export function Toaster(props: ToasterProps): ReactElement {
     return () => {
       store.mounted = false;
     };
-  }, [
-    config.position,
-    config.duration,
-    config.visibleToasts,
-    config.gap,
-    config.offset,
-    config.expand,
-  ]);
+  }, [config.position, config.duration, config.visibleToasts, config.gap, config.offset, config.expand]);
 
   return <ToastHost config={config} />;
 }

@@ -68,10 +68,7 @@ export function ToastPage() {
         >
           Success
         </Button>
-        <Button
-          variant="secondary"
-          onClick={() => toast.error('Upload failed', { description: 'File too large' })}
-        >
+        <Button variant="secondary" onClick={() => toast.error('Upload failed', { description: 'File too large' })}>
           Error
         </Button>
         <Button variant="secondary" onClick={() => toast.warning("You're running low on storage")}>
@@ -271,21 +268,12 @@ export function SheetPage() {
               }}
             >
               <div className="stack" style={{ gap: 'var(--space-1)' }}>
-                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>
-                  Filters
-                </h2>
+                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Filters</h2>
                 <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
                   Drag toward the edge, press Esc, or tap the scrim to dismiss.
                 </p>
               </div>
-              <div
-                style={{
-                  marginTop: 'auto',
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  gap: 'var(--space-2)',
-                }}
-              >
+              <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
                 <Button variant="secondary" onClick={close}>
                   Cancel
                 </Button>
@@ -303,11 +291,7 @@ export function SheetPage() {
         </Sheet>
       </Demo>
       <Demo label="bottom">
-        <Sheet
-          side="bottom"
-          asChild
-          trigger={<Button variant="secondary">Open bottom sheet</Button>}
-        >
+        <Sheet side="bottom" asChild trigger={<Button variant="secondary">Open bottom sheet</Button>}>
           {({ close }) => (
             <div
               role="dialog"
@@ -335,9 +319,7 @@ export function SheetPage() {
                   alignSelf: 'center',
                 }}
               />
-              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>
-                Quick actions
-              </h2>
+              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Quick actions</h2>
               <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
                 The bottom sheet spans the full width and drags down to dismiss.
               </p>

@@ -10,10 +10,4 @@ import { overlays } from './content/overlays';
 
 export type { ComponentDoc } from './content/types';
 
-export const CONTENT: Record<string, ComponentDoc> = {
-  ...primitives,
-  ...forms,
-  ...data,
-  ...datetime,
-  ...overlays,
-};
+export const CONTENT: Record<string, ComponentDoc> = { ...primitives, ...forms, ...data, ...datetime, ...overlays };

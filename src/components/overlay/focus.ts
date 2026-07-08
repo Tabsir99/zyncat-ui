@@ -11,8 +11,7 @@ export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
     const prev = document.activeElement as HTMLElement | null;
     return () => {
       const a = document.activeElement;
-      const orphaned =
-        !a || a === document.body || (nodeRef.current && nodeRef.current.contains(a));
+      const orphaned = !a || a === document.body || (nodeRef.current && nodeRef.current.contains(a));
       if (orphaned && prev && prev.isConnected && typeof prev.focus === 'function') {
         queueMicrotask(() => {
           if (prev.isConnected) prev.focus({ preventScroll: true });
@@ -27,13 +26,7 @@ const OV_FOCUSABLE =
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /* Hard focus trap: seed in, cycle Tab inside, recapture stray focus unless not topmost or it's in an overlay above. */
-export function useFocusTrap({
-  panelRef,
-  entry,
-}: {
-  panelRef: RefObject<HTMLElement>;
-  entry: OverlayEntry;
-}) {
+export function useFocusTrap({ panelRef, entry }: { panelRef: RefObject<HTMLElement>; entry: OverlayEntry }) {
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return undefined;
@@ -42,8 +35,7 @@ export function useFocusTrap({
         (el) => el.offsetParent !== null || el === document.activeElement,
       );
 
-    const seed =
-      panel.querySelector<HTMLElement>('[autofocus], [data-autofocus]') || focusables()[0] || panel;
+    const seed = panel.querySelector<HTMLElement>('[autofocus], [data-autofocus]') || focusables()[0] || panel;
     seed.focus({ preventScroll: true });
 
     const onKeyDown = (e: KeyboardEvent) => {

@@ -13,19 +13,12 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from 'react';
-import {
-  FieldLabel,
-  FieldMessage,
-  resolveFieldMessage,
-  type FieldMessagingProps,
-} from '../input/field-chrome';
+import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from '../input/field-chrome';
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
 export interface TextareaProps
-  extends
-    Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'rows' | 'onSubmit'>,
-    FieldMessagingProps {
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'rows' | 'onSubmit'>, FieldMessagingProps {
   /** Controlled text value. @default '' */
   value?: string;
   /** Change handler - fired on each edit with the textarea change event. */
@@ -126,20 +119,13 @@ export function Textarea({
     rest.onKeyDown && rest.onKeyDown(e);
   };
 
-  const cls = ['fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className]
-    .filter(Boolean)
-    .join(' ');
-  const boxCls = ['txa', disabled && 'is-disabled', readOnly && 'is-readonly']
-    .filter(Boolean)
-    .join(' ');
+  const cls = ['fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className].filter(Boolean).join(' ');
+  const boxCls = ['txa', disabled && 'is-disabled', readOnly && 'is-readonly'].filter(Boolean).join(' ');
 
   return (
     <div className={cls}>
       <FieldLabel id={id} label={label} required={required} optional={optional} />
-      <div
-        className={boxCls}
-        style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as CSSProperties}
-      >
+      <div className={boxCls} style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as CSSProperties}>
         <div className="txa__stack" ref={stackRef}>
           <div className="txa__mirror" ref={mirrorRef} aria-hidden="true">
             {over ? text.slice(0, max) : text}
@@ -169,19 +155,12 @@ export function Textarea({
             {hint && <span className="txa__hint">{hint}</span>}
             {max && (
               <span className={['txa__meter', meterState].filter(Boolean).join(' ')}>
-                <span className="txa__count">
-                  {over || remaining <= warnAt ? remaining : `${count} / ${max}`}
-                </span>
+                <span className="txa__count">{over || remaining <= warnAt ? remaining : `${count} / ${max}`}</span>
                 <svg
                   className="txa__ring"
                   viewBox="0 0 16 16"
                   aria-hidden="true"
-                  style={
-                    {
-                      '--txa-ring-c': RING_C,
-                      '--txa-ring-p': Math.min(count / max, 1),
-                    } as CSSProperties
-                  }
+                  style={{ '--txa-ring-c': RING_C, '--txa-ring-p': Math.min(count / max, 1) } as CSSProperties}
                 >
                   <circle className="txa__ring-trk" cx="8" cy="8" r="7" />
                   <circle className="txa__ring-prg" cx="8" cy="8" r="7" />

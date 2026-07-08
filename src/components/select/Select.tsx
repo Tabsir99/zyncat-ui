@@ -4,13 +4,7 @@
 import './select.css';
 import type { ReactNode } from 'react';
 import { useControllable } from '../use-controllable';
-import {
-  useListbox,
-  ListboxPanel,
-  SelectTrigger,
-  type SelectOption,
-  type SelectGroup,
-} from './core';
+import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
 
 /* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';

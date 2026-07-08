@@ -11,13 +11,7 @@ import { MultiSelect } from 'premium-ds/multi-select';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
-type Option = {
-  value: string;
-  label: string;
-  description?: string;
-  icon?: string;
-  disabled?: boolean;
-};
+type Option = { value: string; label: string; description?: string; icon?: string; disabled?: boolean };
 
 const ROLES: RadioOption[] = [
   { value: 'owner', label: 'Owner', description: 'Full access, including billing.' },
@@ -26,12 +20,7 @@ const ROLES: RadioOption[] = [
 ];
 
 const PLAN: RadioOption[] = [
-  {
-    value: 'starter',
-    label: 'Starter',
-    description: 'For individuals',
-    icon: <Icon name="cloud" />,
-  },
+  { value: 'starter', label: 'Starter', description: 'For individuals', icon: <Icon name="cloud" /> },
   { value: 'pro', label: 'Pro', description: 'For small teams', icon: <Icon name="lightning" /> },
   { value: 'scale', label: 'Scale', description: 'For organizations', icon: <Icon name="crown" /> },
 ];
@@ -102,14 +91,7 @@ export function TextFieldPage() {
           readOnly
           style={{ width: W }}
         />
-        <TextField
-          id="ok"
-          label="Slug"
-          success="Available."
-          value="acme-team"
-          readOnly
-          style={{ width: W }}
-        />
+        <TextField id="ok" label="Slug" success="Available." value="acme-team" readOnly style={{ width: W }} />
       </Demo>
       <Demo label="sizes - disabled">
         <TextField id="sm" size="sm" placeholder="Small" style={{ width: W }} />
@@ -150,32 +132,11 @@ export function NumberFieldPage() {
           error={perPage > 8 ? 'Keep it under 8.' : undefined}
           style={{ width: W }}
         />
-        <NumberField
-          id="nsm"
-          size="sm"
-          unit="%"
-          value={25}
-          onChange={() => {}}
-          style={{ width: W }}
-        />
-        <NumberField
-          id="nlg"
-          size="lg"
-          unit="hrs"
-          value={2}
-          onChange={() => {}}
-          style={{ width: W }}
-        />
+        <NumberField id="nsm" size="sm" unit="%" value={25} onChange={() => {}} style={{ width: W }} />
+        <NumberField id="nlg" size="lg" unit="hrs" value={2} onChange={() => {}} style={{ width: W }} />
       </Demo>
       <Demo label="disabled">
-        <NumberField
-          id="ndis"
-          label="Concurrency"
-          value={4}
-          onChange={() => {}}
-          disabled
-          style={{ width: W }}
-        />
+        <NumberField id="ndis" label="Concurrency" value={4} onChange={() => {}} disabled style={{ width: W }} />
       </Demo>
     </>
   );
@@ -234,29 +195,9 @@ export function TextareaPage() {
         />
       </Demo>
       <Demo label="error - large - disabled" fill>
-        <Textarea
-          id="berr"
-          label="Summary"
-          max={280}
-          error="Can't be empty."
-          value=""
-          onChange={() => {}}
-        />
-        <Textarea
-          id="blg"
-          label="Composer"
-          size="lg"
-          placeholder="Prominent composer"
-          value=""
-          onChange={() => {}}
-        />
-        <Textarea
-          id="bdis"
-          label="Template"
-          disabled
-          value="Read-only content"
-          onChange={() => {}}
-        />
+        <Textarea id="berr" label="Summary" max={280} error="Can't be empty." value="" onChange={() => {}} />
+        <Textarea id="blg" label="Composer" size="lg" placeholder="Prominent composer" value="" onChange={() => {}} />
+        <Textarea id="bdis" label="Template" disabled value="Read-only content" onChange={() => {}} />
       </Demo>
     </>
   );
@@ -309,11 +250,7 @@ export function TogglePage() {
     <>
       <Demo label="label - description">
         <div className="stack">
-          <Toggle
-            label="Auto-save drafts"
-            checked={autosave}
-            onChange={(e) => setAutosave(e.target.checked)}
-          />
+          <Toggle label="Auto-save drafts" checked={autosave} onChange={(e) => setAutosave(e.target.checked)} />
           <Toggle
             size="sm"
             label="Public profile"
@@ -325,11 +262,7 @@ export function TogglePage() {
       </Demo>
       <Demo label="controlled - disabled">
         <div className="stack">
-          <Toggle
-            label="Two-factor auth"
-            checked={twofa}
-            onChange={(e) => setTwofa(e.target.checked)}
-          />
+          <Toggle label="Two-factor auth" checked={twofa} onChange={(e) => setTwofa(e.target.checked)} />
           <Toggle label="Locked setting" disabled defaultChecked />
         </div>
       </Demo>
@@ -464,18 +397,8 @@ export function MultiSelectPage() {
       </Demo>
       <Demo label="invalid - disabled">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', width: W }}>
-          <MultiSelect
-            options={PEOPLE}
-            invalid
-            placeholder="Pick at least one"
-            ariaLabel="Invalid multi-select"
-          />
-          <MultiSelect
-            options={PEOPLE}
-            disabled
-            defaultValue={['an']}
-            ariaLabel="Disabled multi-select"
-          />
+          <MultiSelect options={PEOPLE} invalid placeholder="Pick at least one" ariaLabel="Invalid multi-select" />
+          <MultiSelect options={PEOPLE} disabled defaultValue={['an']} ariaLabel="Disabled multi-select" />
         </div>
       </Demo>
     </>

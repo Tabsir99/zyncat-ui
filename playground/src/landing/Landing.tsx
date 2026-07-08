@@ -37,7 +37,10 @@ const SPEC_ROWS: { key: string; value: string }[] = [
 ];
 
 const STEPS: { code: string; note: string }[] = [
-  { code: 'pnpm add premium-ds motion', note: 'motion is an optional peer — the static half of the library runs without it; the animated components need it' },
+  {
+    code: 'pnpm add premium-ds motion',
+    note: 'motion is an optional peer — the static half of the library runs without it; the animated components need it',
+  },
   { code: "import 'premium-ds/styles.css'", note: 'once, at your app root — fonts + tokens' },
   { code: "import { Button } from 'premium-ds/button'", note: 'and ship — each import pulls only its own CSS' },
 ];
@@ -99,8 +102,8 @@ export function Landing() {
           <div className="ld-container ld-hero__grid">
             <div className="ld-hero__copy">
               <p className="ld-lede">
-                Motion-first React components for dashboards, admin panels and data-heavy products
-                — tuned until they feel expensive. Token-driven, no Tailwind, MIT all the way down.
+                Motion-first React components for dashboards, admin panels and data-heavy products — tuned until they
+                feel expensive. Token-driven, no Tailwind, MIT all the way down.
               </p>
               <div className="ld-cta">
                 <Link to="/components" className="btn btn--lg">
@@ -110,11 +113,7 @@ export function Landing() {
                   </span>
                 </Link>
                 <Tooltip content="Copy install command">
-                  <button
-                    type="button"
-                    className="ld-install"
-                    onClick={() => copy('pnpm add premium-ds')}
-                  >
+                  <button type="button" className="ld-install" onClick={() => copy('pnpm add premium-ds')}>
                     <span className="ld-install__prompt" aria-hidden>
                       $
                     </span>
@@ -139,9 +138,7 @@ export function Landing() {
                 </span>
               </div>
               <HeroConsole />
-              <p className="ld-hero__caption">
-                real components, rendered from source — not a video, not a mock
-              </p>
+              <p className="ld-hero__caption">real components, rendered from source — not a video, not a mock</p>
             </div>
           </div>
 
@@ -164,9 +161,9 @@ export function Landing() {
                 <h2 className="ld-h2">Every component has a signature move.</h2>
               </div>
               <p className="ld-section-lede">
-                Not micro-interaction confetti — one deliberate, physical motion per component,
-                timed on shared tokens. Pills glide, springs settle, rows FLIP. And the moment a
-                user prefers reduced motion, all of it stands down.
+                Not micro-interaction confetti — one deliberate, physical motion per component, timed on shared tokens.
+                Pills glide, springs settle, rows FLIP. And the moment a user prefers reduced motion, all of it stands
+                down.
               </p>
             </div>
 
@@ -192,8 +189,8 @@ export function Landing() {
               <p className="ld-eyebrow">--03 · foundation</p>
               <h2 className="ld-h2">Boring where it should be.</h2>
               <p className="ld-section-lede">
-                Ambitious motion needs an unambitious foundation: plain modern CSS, intent-named
-                custom properties, and components that behave in any React 19 stack.
+                Ambitious motion needs an unambitious foundation: plain modern CSS, intent-named custom properties, and
+                components that behave in any React 19 stack.
               </p>
             </div>
             <dl className="ld-spec ld-spec--grid" data-reveal>
@@ -240,7 +237,8 @@ export function Landing() {
         <section className="ld-finale">
           <div className="ld-container" data-reveal>
             <p className="ld-finale__big" aria-label="price: zero dollars">
-              <span className="ld-finale__prop">--price:</span> $0;<i className="ld-caret" aria-hidden />
+              <span className="ld-finale__prop">--price:</span> $0;
+              <i className="ld-caret" aria-hidden />
             </p>
             <p className="ld-finale__line">The premium tier is the only tier.</p>
             <div className="ld-finale__cta">

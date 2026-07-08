@@ -30,8 +30,7 @@ export function normalize(options: SelectOption[] | SelectGroup[]): {
   groups: NormalizedGroup[];
   flat: SelectOption[];
 } {
-  const grouped =
-    options.length > 0 && options[0] && Array.isArray((options[0] as SelectGroup).options);
+  const grouped = options.length > 0 && options[0] && Array.isArray((options[0] as SelectGroup).options);
   const groups: NormalizedGroup[] = grouped
     ? (options as SelectGroup[]).map((g) => ({ label: g.label, options: g.options || [] }))
     : [{ label: null, options: options as SelectOption[] }];

@@ -219,9 +219,7 @@
   padding-right: calc(var(--numf-stepper-w) + var(--space-2));
 }
 .numf--unit .fld__input {
-  padding-right: calc(
-    var(--numf-stepper-w) + var(--numf-unit-w, var(--control-height-lg)) + var(--space-2)
-  );
+  padding-right: calc(var(--numf-stepper-w) + var(--numf-unit-w, var(--control-height-lg)) + var(--space-2));
 }
 .numf__unit {
   position: absolute;

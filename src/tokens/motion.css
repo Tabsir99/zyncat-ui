@@ -19,13 +19,10 @@
   ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
 
   --transition-control:
-    color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
   --transition-colors:
-    color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard);
   --transition-opacity: opacity var(--duration-base) var(--ease-standard);
   --transition-transform: transform var(--duration-base) var(--ease-standard);
@@ -34,8 +31,7 @@
   --transition-layout:
     grid-template-rows var(--duration-slow) var(--ease-entrance),
     grid-template-columns var(--duration-slow) var(--ease-entrance),
-    max-height var(--duration-slow) var(--ease-entrance),
-    max-width var(--duration-slow) var(--ease-entrance);
+    max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance);
 }
 
 /* Accessibility: honor reduced-motion globally - every consumer gets it free. */

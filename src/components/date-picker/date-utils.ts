@@ -17,8 +17,7 @@ export const MONTHS: string[] = [
 export const DOW: string[] = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 export const pad = (n: number): string => String(n).padStart(2, '0');
-export const key = (d: Date): string =>
-  d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+export const key = (d: Date): string => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
 export function parse(k: string): Date {
   const p = k.split('-').map(Number);
   return new Date(p[0], p[1] - 1, p[2]);
@@ -31,8 +30,7 @@ export const add = (k: string, days: number): string => {
 };
 export const col = (d: Date): number => (d.getDay() + 6) % 7; // Monday-first column 0-6
 
-export const within = (k: string, min?: string, max?: string): boolean =>
-  (!min || k >= min) && (!max || k <= max);
+export const within = (k: string, min?: string, max?: string): boolean => (!min || k >= min) && (!max || k <= max);
 
 /* 'Jun 12' (year only when it isn't the current one) */
 export function displayDay(k: string | null): string | null {
@@ -54,10 +52,7 @@ export function grid(y: number, m: number): Date[] {
 export function tzLabel(tz: string, dateKey?: string): string {
   try {
     const at = dateKey ? parse(dateKey) : new Date();
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: tz,
-      timeZoneName: 'shortOffset',
-    }).formatToParts(at);
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(at);
     const name = parts.find((p) => p.type === 'timeZoneName');
     return tz.replace(/_/g, ' ') + (name ? ' - ' + name.value : '');
   } catch (_e) {

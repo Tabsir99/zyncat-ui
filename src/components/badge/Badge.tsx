@@ -53,9 +53,7 @@ export function Badge({
 
   return (
     <span className={classes} {...rest}>
-      {showDot ? (
-        <span className={`badge__dot${live ? ' badge__dot--live' : ''}`} aria-hidden="true" />
-      ) : null}
+      {showDot ? <span className={`badge__dot${live ? ' badge__dot--live' : ''}`} aria-hidden="true" /> : null}
       {icon ? (
         <span className="badge__icon" aria-hidden="true">
           {icon}

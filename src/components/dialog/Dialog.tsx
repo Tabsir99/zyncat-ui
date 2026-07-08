@@ -16,18 +16,8 @@ import { useScrollEdges } from '../use-scroll-edges';
 const SM = UIMotion;
 
 const dialogVariants = {
-  closed: {
-    opacity: 0,
-    y: 6,
-    scale: 0.98,
-    transition: { duration: SM.dur.base, ease: SM.ease.standard },
-  },
-  open: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: SM.dur.slow, ease: SM.ease.entrance },
-  },
+  closed: { opacity: 0, y: 6, scale: 0.98, transition: { duration: SM.dur.base, ease: SM.ease.standard } },
+  open: { opacity: 1, y: 0, scale: 1, transition: { duration: SM.dur.slow, ease: SM.ease.entrance } },
 };
 
 export interface DialogProps {
@@ -123,12 +113,7 @@ function DialogSurface({
           )}
         </div>
         {dismissible && (
-          <button
-            type="button"
-            className="dialog__close"
-            aria-label="Close dialog"
-            onClick={onRequestClose}
-          >
+          <button type="button" className="dialog__close" aria-label="Close dialog" onClick={onRequestClose}>
             <Icon name="x" size="sm" weight="bold" />
           </button>
         )}

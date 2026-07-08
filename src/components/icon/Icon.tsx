@@ -67,12 +67,5 @@ const SIZE_PX: Record<IconSize, number> = { sm: 16, md: 20, lg: 24 };
 export function Icon({ name, size = 'md', weight = 'regular', label, className = '' }: IconProps) {
   const Glyph = REGISTRY[name];
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
-  return (
-    <Glyph
-      size={SIZE_PX[size]}
-      weight={weight}
-      className={('icon ' + className).trim()}
-      {...a11y}
-    />
-  );
+  return <Glyph size={SIZE_PX[size]} weight={weight} className={('icon ' + className).trim()} {...a11y} />;
 }

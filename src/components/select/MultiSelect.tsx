@@ -5,13 +5,7 @@ import './select.css';
 import type { ReactNode } from 'react';
 import { useControllable } from '../use-controllable';
 import { CheckGlyph } from '../checkbox/check-glyph';
-import {
-  useListbox,
-  ListboxPanel,
-  SelectTrigger,
-  type SelectOption,
-  type SelectGroup,
-} from './core';
+import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
 
 /* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
@@ -89,10 +83,7 @@ export function MultiSelect({
     idPrefix: 'mselect-',
     isSelected,
     onCommit: (opt) =>
-      setValue(
-        isSelected(opt.value) ? values.filter((v) => v !== opt.value) : [...values, opt.value],
-        opt,
-      ),
+      setValue(isSelected(opt.value) ? values.filter((v) => v !== opt.value) : [...values, opt.value], opt),
     closeOnCommit: false,
   });
 

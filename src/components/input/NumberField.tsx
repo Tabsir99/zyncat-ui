@@ -55,8 +55,7 @@ export function NumberField({
   className = '',
   ...rest
 }: NumberFieldProps) {
-  const controlled =
-    value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
+  const controlled = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
   const [num, setNum] = useControllable<number>(controlled, defaultValue, onChange);
   /* free-typing draft: clamping every keystroke makes "50" untypable under min=10, so the
      raw text lives here while focused; commits (blur / Enter / any step) clamp and clear it. */

@@ -11,14 +11,6 @@ const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 // static pages: `pnpm standalone` then serve dist-standalone.
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: dsAliases,
-    dedupe: ['react', 'react-dom', 'motion'],
-  },
-  build: {
-    outDir: 'dist-standalone',
-    rollupOptions: {
-      input: { broken: r('broken.html'), fixed: r('fixed.html') },
-    },
-  },
+  resolve: { alias: dsAliases, dedupe: ['react', 'react-dom', 'motion'] },
+  build: { outDir: 'dist-standalone', rollupOptions: { input: { broken: r('broken.html'), fixed: r('fixed.html') } } },
 });

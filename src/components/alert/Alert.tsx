@@ -49,12 +49,7 @@ const TONE_GLYPH: Record<AlertTone, IconName> = {
   warning: 'warning',
   danger: 'warning-circle',
 };
-const TONE_ROLE: Record<AlertTone, string> = {
-  info: 'status',
-  success: 'status',
-  warning: 'alert',
-  danger: 'alert',
-};
+const TONE_ROLE: Record<AlertTone, string> = { info: 'status', success: 'status', warning: 'alert', danger: 'alert' };
 
 export function Alert({
   tone = 'info',

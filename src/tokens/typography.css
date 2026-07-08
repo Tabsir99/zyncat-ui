@@ -38,11 +38,9 @@
   --tracking-display: -0.021em;
 
   /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. */
-  --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg)
-    var(--font-sans);
+  --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans);
   --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans);
-  --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg)
-    var(--font-sans);
+  --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans);
   --type-title: var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans);
   --type-heading: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans);
   --type-body-lg: var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans);

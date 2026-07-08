@@ -24,9 +24,7 @@ function useScrollLock() {
       ovSavedOverflow = body.style.overflow;
       ovSavedPad = body.style.paddingRight;
       body.style.overflow = 'hidden';
-      if (gutter > 0)
-        body.style.paddingRight =
-          (parseFloat(getComputedStyle(body).paddingRight) || 0) + gutter + 'px';
+      if (gutter > 0) body.style.paddingRight = (parseFloat(getComputedStyle(body).paddingRight) || 0) + gutter + 'px';
     }
     return () => {
       if (--ovLocks === 0) {
@@ -44,12 +42,7 @@ function useInertOutside() {
   useEffect(() => {
     if (++ovInertCount === 1) {
       for (const el of Array.from(document.body.children) as HTMLElement[]) {
-        if (
-          el.hasAttribute('data-overlay-root') ||
-          el.tagName === 'SCRIPT' ||
-          el.tagName === 'STYLE' ||
-          el.inert
-        )
+        if (el.hasAttribute('data-overlay-root') || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.inert)
           continue;
         el.inert = true;
         ovInerted.add(el);
@@ -131,13 +124,7 @@ export function ModalShell({
   useReturnFocus(layerRef);
   useFocusTrap({ panelRef: slotRef, entry });
   return (
-    <motion.div
-      ref={layerRef}
-      className={'overlay-layer ' + layerClass}
-      initial="closed"
-      animate="open"
-      exit="closed"
-    >
+    <motion.div ref={layerRef} className={'overlay-layer ' + layerClass} initial="closed" animate="open" exit="closed">
       <OverlayScrim dismissible={dismissible} onPress={requestClose} opacity={scrimOpacity} />
       {ovPanelElement({
         asChild,

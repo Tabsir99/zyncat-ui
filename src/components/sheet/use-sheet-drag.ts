@@ -118,12 +118,10 @@ function useSheetDrag({
     const el = slotRef.current;
     if (!el) return;
     const size = axis === 'y' ? el.offsetHeight : el.offsetWidth;
-    if (info.offset[axis] > size * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY)
-      requestClose();
+    if (info.offset[axis] > size * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) requestClose();
   }
 
-  const stretchStyle =
-    axis === 'y' ? { scaleY: stretch, originY: 1 } : { scaleX: stretch, originX: 1 };
+  const stretchStyle = axis === 'y' ? { scaleY: stretch, originY: 1 } : { scaleX: stretch, originX: 1 };
 
   const slotProps = enabled
     ? {

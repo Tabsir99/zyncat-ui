@@ -5,14 +5,7 @@
 import './table.css';
 /* The bulk bar's Clear button renders .btn classes - button.css must ride along. */
 import '../button/button.css';
-import {
-  useMemo,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type MouseEvent,
-  type ReactNode,
-} from 'react';
+import { useMemo, useRef, useState, type ChangeEvent, type MouseEvent, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
@@ -317,9 +310,7 @@ export function Table<Row = any>({
                       key={c.key}
                       scope="col"
                       className={cls.join(' ')}
-                      aria-sort={
-                        active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined
-                      }
+                      aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined}
                     >
                       {c.sortable ? (
                         <button type="button" className="tbl__sort" onClick={() => cycleSort(c)}>

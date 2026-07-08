@@ -75,9 +75,7 @@ export default defineConfig({
         return false;
       }
     };
-    const metaName = (await readdir('dist')).find(
-      (f) => f.startsWith('metafile-') && f.endsWith('.json'),
-    );
+    const metaName = (await readdir('dist')).find((f) => f.startsWith('metafile-') && f.endsWith('.json'));
     if (!metaName) return;
     const meta = JSON.parse(await readFile(`dist/${metaName}`, 'utf8')) as {
       outputs: Record<string, { inputs: Record<string, unknown>; imports?: { path: string }[] }>;
@@ -117,13 +115,9 @@ export default defineConfig({
     const cssFiles = (await readdir('src/components', { recursive: true })).filter(
       (f) => f.endsWith('.css') && !f.endsWith('glass.css'),
     );
-    await Promise.all(
-      cssFiles.map((f) => copyFile(`src/components/${f}`, `dist/${f.split('/').pop()}`)),
-    );
+    await Promise.all(cssFiles.map((f) => copyFile(`src/components/${f}`, `dist/${f.split('/').pop()}`)));
 
     await rm(`dist/${metaName}`);
-    console.log(
-      `tsup: ${outputs.length} JS (${client.size} client) + ${cssFiles.length} component CSS`,
-    );
+    console.log(`tsup: ${outputs.length} JS (${client.size} client) + ${cssFiles.length} component CSS`);
   },
 });

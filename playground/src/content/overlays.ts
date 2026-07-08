@@ -41,20 +41,17 @@ export const overlays: Record<string, ComponentDoc> = {
         name: 'dismissible',
         type: 'boolean',
         default: 'false',
-        description:
-          'Renders a close button; triggers uncontrolled dismissal unless `open` is also set.',
+        description: 'Renders a close button; triggers uncontrolled dismissal unless `open` is also set.',
       },
       {
         name: 'onDismiss',
         type: '() => void',
-        description:
-          'Fires when the alert is dismissed; with `open` set, the parent owns visibility.',
+        description: 'Fires when the alert is dismissed; with `open` set, the parent owns visibility.',
       },
       {
         name: 'open',
         type: 'boolean',
-        description:
-          'Controlled visibility; omit for uncontrolled (animates height collapse on exit).',
+        description: 'Controlled visibility; omit for uncontrolled (animates height collapse on exit).',
       },
       {
         name: 'banner',
@@ -101,8 +98,7 @@ toast.promise(publishBatch(), {
         name: '<Toaster />',
         type: 'ToasterProps',
         required: true,
-        description:
-          'Mount once at the app root. Owns the viewport; toast() no-ops until it is mounted.',
+        description: 'Mount once at the app root. Owns the viewport; toast() no-ops until it is mounted.',
       },
       {
         name: 'Toaster position',
@@ -177,8 +173,7 @@ toast.promise(publishBatch(), {
       {
         name: 'toast.promise(promise, msgs?)',
         type: '<T>(promise: Promise<T>, msgs?: { loading?: string; success?: string | ((v: T) => string); error?: string | ((e: unknown) => string) }) => Promise<T>',
-        description:
-          'Show a loading toast that transitions to success or error when the promise settles.',
+        description: 'Show a loading toast that transitions to success or error when the promise settles.',
       },
       {
         name: 'toast.custom(node, opts?)',
@@ -190,21 +185,12 @@ toast.promise(publishBatch(), {
         type: 'string | number',
         description: 'Stable key for deduplication and targeted updates via toast.update.',
       },
-      {
-        name: 'opts.duration',
-        type: 'number',
-        description: 'Auto-dismiss delay in ms; omit to use the tone preset.',
-      },
-      {
-        name: 'opts.description',
-        type: 'string | null',
-        description: 'Secondary line shown below the message.',
-      },
+      { name: 'opts.duration', type: 'number', description: 'Auto-dismiss delay in ms; omit to use the tone preset.' },
+      { name: 'opts.description', type: 'string | null', description: 'Secondary line shown below the message.' },
       {
         name: 'opts.action',
         type: '{ label: string; onClick: () => void }',
-        description:
-          'Action button shown inside the toast; dismisses the toast after the click handler runs.',
+        description: 'Action button shown inside the toast; dismisses the toast after the click handler runs.',
       },
     ],
   },
@@ -232,8 +218,7 @@ toast.promise(publishBatch(), {
         name: 'placement',
         type: "'top' | 'bottom' | 'left' | 'right'",
         default: "'top'",
-        description:
-          'Preferred side; auto-flips when the chosen side has insufficient viewport room.',
+        description: 'Preferred side; auto-flips when the chosen side has insufficient viewport room.',
       },
       {
         name: 'disabled',
@@ -259,11 +244,7 @@ toast.promise(publishBatch(), {
         default: 'false',
         description: 'Clone the child and merge event handlers directly; child must accept a ref.',
       },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'ID applied to the tooltip trigger wrapper.',
-      },
+      { name: 'id', type: 'string', description: 'ID applied to the tooltip trigger wrapper.' },
       {
         name: 'children',
         type: 'ReactElement',
@@ -290,33 +271,16 @@ toast.promise(publishBatch(), {
   This will remove the post from the queue permanently.
 </Dialog>`,
     props: [
-      {
-        name: 'open',
-        type: 'boolean',
-        description: 'Controlled open state; omit for uncontrolled mode.',
-      },
-      {
-        name: 'defaultOpen',
-        type: 'boolean',
-        default: 'false',
-        description: 'Initial open state when uncontrolled.',
-      },
-      {
-        name: 'onOpenChange',
-        type: '(open: boolean) => void',
-        description: 'Called when the dialog opens or closes.',
-      },
+      { name: 'open', type: 'boolean', description: 'Controlled open state; omit for uncontrolled mode.' },
+      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
+      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the dialog opens or closes.' },
       {
         name: 'trigger',
         type: 'React.ReactElement | null',
         default: 'null',
         description: 'Element cloned to open the dialog; useful for uncontrolled ergonomics.',
       },
-      {
-        name: 'title',
-        type: 'React.ReactNode',
-        description: 'Heading shown in the dialog header.',
-      },
+      { name: 'title', type: 'React.ReactNode', description: 'Heading shown in the dialog header.' },
       {
         name: 'description',
         type: 'React.ReactNode',
@@ -351,19 +315,14 @@ toast.promise(publishBatch(), {
         name: 'footer',
         type: 'React.ReactNode | ((close: () => void) => React.ReactNode)',
         default: 'null',
-        description:
-          'Action row content; use the render function form to call close from uncontrolled dialogs.',
+        description: 'Action row content; use the render function form to call close from uncontrolled dialogs.',
       },
       {
         name: 'children',
         type: 'React.ReactNode',
         description: 'Body content rendered inside the scrollable dialog body.',
       },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'ID applied to the dialog element.',
-      },
+      { name: 'id', type: 'string', description: 'ID applied to the dialog element.' },
     ],
   },
 
@@ -383,22 +342,9 @@ toast.promise(publishBatch(), {
   )}
 </Popover>`,
     props: [
-      {
-        name: 'open',
-        type: 'boolean',
-        description: 'Controlled open state; omit to stay uncontrolled.',
-      },
-      {
-        name: 'defaultOpen',
-        type: 'boolean',
-        default: 'false',
-        description: 'Initial open state when uncontrolled.',
-      },
-      {
-        name: 'onOpenChange',
-        type: '(open: boolean) => void',
-        description: 'Called when the panel opens or closes.',
-      },
+      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
+      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
+      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the panel opens or closes.' },
       {
         name: 'trigger',
         type: 'React.ReactElement | null',
@@ -433,14 +379,9 @@ toast.promise(publishBatch(), {
         name: 'asChild',
         type: 'boolean',
         default: 'false',
-        description:
-          'Render no wrapper element; your DOM-element child becomes the panel directly.',
+        description: 'Render no wrapper element; your DOM-element child becomes the panel directly.',
       },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'ID applied to the panel element.',
-      },
+      { name: 'id', type: 'string', description: 'ID applied to the panel element.' },
       {
         name: 'children',
         type: 'React.ReactNode | ((api: { close: () => void }) => React.ReactNode)',
@@ -466,28 +407,10 @@ toast.promise(publishBatch(), {
   )}
 </Sheet>`,
     props: [
-      {
-        name: 'side',
-        type: "'right' | 'bottom'",
-        default: "'right'",
-        description: 'Edge the sheet slides in from.',
-      },
-      {
-        name: 'open',
-        type: 'boolean',
-        description: 'Controlled open state; omit to stay uncontrolled.',
-      },
-      {
-        name: 'defaultOpen',
-        type: 'boolean',
-        default: 'false',
-        description: 'Initial open state when uncontrolled.',
-      },
-      {
-        name: 'onOpenChange',
-        type: '(open: boolean) => void',
-        description: 'Called when the sheet opens or closes.',
-      },
+      { name: 'side', type: "'right' | 'bottom'", default: "'right'", description: 'Edge the sheet slides in from.' },
+      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
+      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
+      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the sheet opens or closes.' },
       {
         name: 'trigger',
         type: 'React.ReactElement | null',
@@ -506,11 +429,7 @@ toast.promise(publishBatch(), {
         default: 'false',
         description: 'Render no wrapper element; your DOM-element child becomes the panel.',
       },
-      {
-        name: 'id',
-        type: 'string',
-        description: 'ID applied to the sheet panel element.',
-      },
+      { name: 'id', type: 'string', description: 'ID applied to the sheet panel element.' },
       {
         name: 'children',
         type: 'React.ReactNode | ((api: { close: () => void }) => React.ReactNode)',

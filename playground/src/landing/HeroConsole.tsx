@@ -8,7 +8,10 @@ import { Tabs } from 'premium-ds/tabs';
 import { toast } from 'premium-ds/toast';
 import { DEPLOYS, type Deploy, type DeployStatus } from './data';
 
-const STATUS: Record<DeployStatus, { tone: 'success' | 'warning' | 'danger' | 'neutral'; label: string; live?: boolean }> = {
+const STATUS: Record<
+  DeployStatus,
+  { tone: 'success' | 'warning' | 'danger' | 'neutral'; label: string; live?: boolean }
+> = {
   live: { tone: 'success', label: 'Live' },
   building: { tone: 'warning', label: 'Building', live: true },
   failed: { tone: 'danger', label: 'Failed' },
@@ -40,14 +43,7 @@ const COLUMNS: TableColumn<Deploy>[] = [
       </span>
     ),
   },
-  {
-    key: 'duration',
-    label: 'Build',
-    mono: true,
-    align: 'end',
-    sortable: true,
-    sortBy: (r) => r.durationS,
-  },
+  { key: 'duration', label: 'Build', mono: true, align: 'end', sortable: true, sortBy: (r) => r.durationS },
   {
     key: 'when',
     label: 'Deployed',
@@ -63,10 +59,7 @@ export function HeroConsole() {
   const [env, setEnv] = useState('all');
   const [rows, setRows] = useState(DEPLOYS);
 
-  const visible = useMemo(
-    () => (env === 'all' ? rows : rows.filter((r) => r.env === env)),
-    [env, rows],
-  );
+  const visible = useMemo(() => (env === 'all' ? rows : rows.filter((r) => r.env === env)), [env, rows]);
   const count = (e: string) => rows.filter((r) => r.env === e).length;
 
   return (
@@ -122,9 +115,7 @@ export function HeroConsole() {
                 onClick={() => {
                   setRows((all) => all.filter((r) => !keys.includes(r.id)));
                   clear();
-                  toast(`${keys.length} archived`, {
-                    description: 'Rows FLIP out — nothing teleports.',
-                  });
+                  toast(`${keys.length} archived`, { description: 'Rows FLIP out — nothing teleports.' });
                 }}
               >
                 Archive
@@ -142,11 +133,7 @@ export function HeroConsole() {
         />
       </div>
       <div className="ld-console__foot">
-        <Pagination
-          label="Deploys"
-          range={[visible.length ? 1 : 0, visible.length]}
-          total={visible.length}
-        />
+        <Pagination label="Deploys" range={[visible.length ? 1 : 0, visible.length]} total={visible.length} />
       </div>
     </div>
   );

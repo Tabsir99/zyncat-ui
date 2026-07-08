@@ -47,12 +47,7 @@ export function DateTimeFieldPage() {
     <>
       <Demo label="empty">
         <div style={COL}>
-          <DateTimeField
-            label="Due at"
-            value={dateTime}
-            onChange={setDateTime}
-            timezone="Europe/Riga"
-          />
+          <DateTimeField label="Due at" value={dateTime} onChange={setDateTime} timezone="Europe/Riga" />
         </div>
       </Demo>
       <Demo label="preset - 12h - 15-min steps">
@@ -79,20 +74,12 @@ export function DateTimeFieldPage() {
 
 export function DateRangePage() {
   const [range, setRange] = useState<DateRange | null>(null);
-  const [rangePreset, setRangePreset] = useState<DateRange | null>({
-    start: '2026-06-01',
-    end: '2026-06-30',
-  });
+  const [rangePreset, setRangePreset] = useState<DateRange | null>({ start: '2026-06-01', end: '2026-06-30' });
   return (
     <>
       <Demo label="empty">
         <div style={COL}>
-          <DateRangeField
-            label="Reporting period"
-            value={range}
-            onChange={setRange}
-            timezone="Europe/Riga"
-          />
+          <DateRangeField label="Reporting period" value={range} onChange={setRange} timezone="Europe/Riga" />
         </div>
       </Demo>
       <Demo label="preset - bounded">
@@ -108,11 +95,7 @@ export function DateRangePage() {
       </Demo>
       <Demo label="disabled">
         <div style={COL}>
-          <DateRangeField
-            label="Reporting period"
-            defaultValue={{ start: '2026-06-01', end: '2026-06-30' }}
-            disabled
-          />
+          <DateRangeField label="Reporting period" defaultValue={{ start: '2026-06-01', end: '2026-06-30' }} disabled />
         </div>
       </Demo>
     </>
@@ -180,12 +163,7 @@ export function TabsPage() {
           }}
           items={items}
         />
-        <TabPanel
-          name="views"
-          tab={view}
-          dir={dir}
-          style={{ padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}
-        >
+        <TabPanel name="views" tab={view} dir={dir} style={{ padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}>
           {view === 'overview' && <span>A calm summary of everything at a glance.</span>}
           {view === 'activity' && <span>4 events in the last hour.</span>}
           {view === 'members' && <span>128 people across your workspace.</span>}

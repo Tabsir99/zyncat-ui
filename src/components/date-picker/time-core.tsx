@@ -3,14 +3,7 @@
 /* TimeSegments - the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
 
 import './date-picker.css';
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ClipboardEvent,
-  type KeyboardEvent,
-  type RefObject,
-} from 'react';
+import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent, type RefObject } from 'react';
 
 type Meridiem = 'AM' | 'PM';
 type Segment = 'h' | 'm';
@@ -169,9 +162,7 @@ export function TimeSegments({
       } else {
         /* step to the NEXT grid point, so 07 + ↑(step 5) lands on 10 */
         const next =
-          dir > 0
-            ? (Math.floor(m / minuteStep) + 1) * minuteStep
-            : (Math.ceil(m / minuteStep) - 1) * minuteStep;
+          dir > 0 ? (Math.floor(m / minuteStep) + 1) * minuteStep : (Math.ceil(m / minuteStep) - 1) * minuteStep;
         nm = ((next % 60) + 60) % 60;
       }
       setM(nm);
@@ -221,9 +212,7 @@ export function TimeSegments({
   function onPaste(e: ClipboardEvent<HTMLDivElement>) {
     if (disabled) return;
     const txt = (e.clipboardData.getData('text') || '').trim();
-    const mt =
-      txt.match(/^(\d{1,2})[:h.\s]?(\d{2})?\s*([ap])\.?m?\.?$/i) ||
-      txt.match(/^(\d{1,2})[:h.\s]?(\d{2})?$/);
+    const mt = txt.match(/^(\d{1,2})[:h.\s]?(\d{2})?\s*([ap])\.?m?\.?$/i) || txt.match(/^(\d{1,2})[:h.\s]?(\d{2})?$/);
     if (!mt) return;
     e.preventDefault();
     let hh = +mt[1];
@@ -245,8 +234,7 @@ export function TimeSegments({
   };
 
   /* pending digit overrides canonical display, so typing '0' in 12h shows '00', not a premature '12'. */
-  const hText =
-    pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? disp12(h) : h);
+  const hText = pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? disp12(h) : h);
   const mText = pend && pend.seg === 'm' ? tsgPad(pend.d) : m == null ? '--' : tsgPad(m);
 
   const segCls = (empty: boolean): string => 'tsg__seg' + (empty ? ' is-empty' : '');

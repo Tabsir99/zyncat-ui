@@ -109,9 +109,7 @@ export function DateTimeField({
     commitIf(date, t);
   }
 
-  const display = date
-    ? displayDay(date) + ', ' + (time ? displayTime(time, format) : '--:--')
-    : null;
+  const display = date ? displayDay(date) + ', ' + (time ? displayTime(time, format) : '--:--') : null;
   const trigger = <FieldTrigger display={display} placeholder={placeholder} disabled={disabled} />;
 
   return (

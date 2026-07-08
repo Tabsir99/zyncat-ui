@@ -66,12 +66,7 @@ function SheetShell({
   children: ReactNode;
 }) {
   const slotRef = useRef<HTMLElement>(null);
-  const { slotProps, scrimOpacity } = useSheetDrag({
-    side,
-    slotRef,
-    enabled: dismissible,
-    requestClose,
-  });
+  const { slotProps, scrimOpacity } = useSheetDrag({ side, slotRef, enabled: dismissible, requestClose });
   return (
     <ModalShell
       layerClass={'overlay-layer--sheet-' + side}
@@ -109,23 +104,11 @@ export function Sheet({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, {
-        open,
-        onPress: () => setOpen(true),
-        panelId,
-        haspopup: 'dialog',
-        triggerRef,
-      })}
+      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
       <OverlayPortal>
         <AnimatePresence>
           {open && (
-            <SheetShell
-              side={side}
-              panelId={panelId}
-              dismissible={dismissible}
-              asChild={asChild}
-              requestClose={close}
-            >
+            <SheetShell side={side} panelId={panelId} dismissible={dismissible} asChild={asChild} requestClose={close}>
               {ovResolveChildren(children, close)}
             </SheetShell>
           )}

@@ -74,24 +74,9 @@ const ACCENTS: Record<AccentName, { swatch: string; vars: Record<string, string>
 };
 
 const RADII: Record<RadiusName, Record<string, string>> = {
-  sharp: {
-    '--radius-sm': '2px',
-    '--radius-md': '4px',
-    '--radius-lg': '6px',
-    '--radius-xl': '10px',
-  },
-  soft: {
-    '--radius-sm': '0.25rem',
-    '--radius-md': '0.375rem',
-    '--radius-lg': '0.5rem',
-    '--radius-xl': '0.75rem',
-  },
-  round: {
-    '--radius-sm': '8px',
-    '--radius-md': '12px',
-    '--radius-lg': '16px',
-    '--radius-xl': '22px',
-  },
+  sharp: { '--radius-sm': '2px', '--radius-md': '4px', '--radius-lg': '6px', '--radius-xl': '10px' },
+  soft: { '--radius-sm': '0.25rem', '--radius-md': '0.375rem', '--radius-lg': '0.5rem', '--radius-xl': '0.75rem' },
+  round: { '--radius-sm': '8px', '--radius-md': '12px', '--radius-lg': '16px', '--radius-xl': '22px' },
 };
 
 const REGIONS = [
@@ -128,9 +113,8 @@ export function ThemeBand() {
           <p className="ld-eyebrow ld-eyebrow--dark">--02 · tokens</p>
           <h2 className="ld-h2 ld-h2--dark">Re-skin it in one paste.</h2>
           <p className="ld-theme__lede">
-            Every component reads from one small, intent-named token vocabulary — no config file,
-            no build step. Repoint the custom properties and buttons, tabs, focus rings and hover
-            washes all follow. Try it:
+            Every component reads from one small, intent-named token vocabulary — no config file, no build step. Repoint
+            the custom properties and buttons, tabs, focus rings and hover washes all follow. Try it:
           </p>
 
           <div className="ld-theme__knobs">
@@ -176,8 +160,7 @@ export function ThemeBand() {
             <code>{overrideCss(accent, radius)}</code>
           </pre>
           <p className="ld-theme__note">
-            ↑ this block is the actual CSS the preview is running — copy it into your app and
-            you're themed.
+            ↑ this block is the actual CSS the preview is running — copy it into your app and you're themed.
           </p>
         </div>
 
@@ -227,11 +210,7 @@ export function ThemeBand() {
                 value={digest}
                 onChange={setDigest}
               />
-              <Toggle
-                label="Usage alerts"
-                description="Email the team when nearing plan limits."
-                defaultChecked
-              />
+              <Toggle label="Usage alerts" description="Email the team when nearing plan limits." defaultChecked />
             </div>
             <div className="ld-panel__foot">
               <Button variant="ghost" size="sm">
@@ -243,8 +222,8 @@ export function ThemeBand() {
             </div>
           </div>
           <p className="ld-theme__caption">
-            same components · zero refactor — <span>focus rings, hover washes and pressed states
-            re-derive themselves</span>
+            same components · zero refactor —{' '}
+            <span>focus rings, hover washes and pressed states re-derive themselves</span>
           </p>
         </div>
       </div>

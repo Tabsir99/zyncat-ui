@@ -86,9 +86,7 @@ export function TagPage() {
           <ToggleTag
             key={label}
             selected={filters.includes(label)}
-            onChange={(next) =>
-              setFilters((sel) => (next ? [...sel, label] : sel.filter((x) => x !== label)))
-            }
+            onChange={(next) => setFilters((sel) => (next ? [...sel, label] : sel.filter((x) => x !== label)))}
           >
             {label}
           </ToggleTag>
@@ -125,42 +123,10 @@ const STATUS_TONE: Record<InvoiceStatus, 'success' | 'warning' | 'danger' | unde
 };
 
 const INVOICES: Invoice[] = [
-  {
-    id: 'i1',
-    number: 'INV-2041',
-    customer: 'Northwind',
-    status: 'paid',
-    date: 'Jun 12',
-    ts: 1718,
-    amount: 4820,
-  },
-  {
-    id: 'i2',
-    number: 'INV-2042',
-    customer: 'Acme Inc',
-    status: 'pending',
-    date: 'Jun 14',
-    ts: 1718.2,
-    amount: 1290,
-  },
-  {
-    id: 'i3',
-    number: 'INV-2043',
-    customer: 'Globex',
-    status: 'draft',
-    date: '-',
-    ts: 0,
-    amount: 0,
-  },
-  {
-    id: 'i4',
-    number: 'INV-2044',
-    customer: 'Initech',
-    status: 'overdue',
-    date: 'May 30',
-    ts: 1717,
-    amount: 760,
-  },
+  { id: 'i1', number: 'INV-2041', customer: 'Northwind', status: 'paid', date: 'Jun 12', ts: 1718, amount: 4820 },
+  { id: 'i2', number: 'INV-2042', customer: 'Acme Inc', status: 'pending', date: 'Jun 14', ts: 1718.2, amount: 1290 },
+  { id: 'i3', number: 'INV-2043', customer: 'Globex', status: 'draft', date: '-', ts: 0, amount: 0 },
+  { id: 'i4', number: 'INV-2044', customer: 'Initech', status: 'overdue', date: 'May 30', ts: 1717, amount: 760 },
 ];
 
 const COLUMNS: TableColumn<Invoice>[] = [
@@ -195,9 +161,7 @@ export function TablePage() {
         rows={INVOICES}
         selectable
         defaultSort={{ key: 'amount', dir: 'desc' }}
-        footer={
-          <Pagination label="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />
-        }
+        footer={<Pagination label="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />}
       />
     </Demo>
   );

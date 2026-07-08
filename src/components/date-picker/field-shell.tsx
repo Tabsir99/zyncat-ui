@@ -37,19 +37,8 @@ export interface FieldShellProps {
   children?: ReactNode;
 }
 
-export function FieldShell({
-  variant,
-  label,
-  required,
-  invalid,
-  message,
-  icon,
-  className,
-  children,
-}: FieldShellProps) {
-  const cls = ['fld', variant, 'fld--has-lead', invalid ? 'is-error' : '', className || '']
-    .filter(Boolean)
-    .join(' ');
+export function FieldShell({ variant, label, required, invalid, message, icon, className, children }: FieldShellProps) {
+  const cls = ['fld', variant, 'fld--has-lead', invalid ? 'is-error' : '', className || ''].filter(Boolean).join(' ');
   return (
     <div className={cls}>
       <FieldLabel label={label} required={required} />
@@ -73,11 +62,9 @@ export function FieldTrigger({
   placeholder,
   disabled,
   ...rest
-}: {
-  display: string | null;
-  placeholder: string;
-  disabled?: boolean;
-} & ButtonHTMLAttributes<HTMLButtonElement> & { ref?: Ref<HTMLButtonElement> }) {
+}: { display: string | null; placeholder: string; disabled?: boolean } & ButtonHTMLAttributes<HTMLButtonElement> & {
+    ref?: Ref<HTMLButtonElement>;
+  }) {
   return (
     <button type="button" className="fld__input dtf__trigger" disabled={disabled} {...rest}>
       {display ? (

@@ -17,11 +17,7 @@
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   /* the lit pane: top-light gradient over the tint + 1px inner highlight (Button's lighting model) */
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--bg-surface) 45%, var(--alert-bg)),
-    var(--alert-bg)
-  );
+  background: linear-gradient(180deg, color-mix(in oklab, var(--bg-surface) 45%, var(--alert-bg)), var(--alert-bg));
   border: var(--border-hairline) solid color-mix(in oklab, var(--alert-hue) 30%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.55);

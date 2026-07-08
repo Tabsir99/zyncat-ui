@@ -35,8 +35,7 @@ export interface ToastSnapshot {
   expanded: boolean;
 }
 
-export type ToastPosition =
-  'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 /* Root-level options - set once on <Toaster /> and read by the queue + host. */
 export interface ToasterConfig {
@@ -111,12 +110,7 @@ const store: ToastStore = {
   add(t) {
     // coalesce: an identical visible toast becomes a xN counter instead of a duplicate
     const twin = store.toasts.find(
-      (x) =>
-        !x.node &&
-        !t.node &&
-        x.tone === t.tone &&
-        x.message === t.message &&
-        x.description === t.description,
+      (x) => !x.node && !t.node && x.tone === t.tone && x.message === t.message && x.description === t.description,
     );
     if (twin) return store.update(twin.id, { count: twin.count + 1 });
     store.toasts.push(t);
@@ -259,14 +253,10 @@ export interface ToastApi {
   dismiss(id?: string | null): void;
   update(id: string, patch?: Partial<ToastRecord>): string;
   promise<T>(promise: Promise<T>, msgs?: ToastPromiseMsgs<T>): Promise<T>;
-  custom(
-    node: unknown,
-    opts?: { id?: string | number; duration?: number; dismissible?: boolean },
-  ): string;
+  custom(node: unknown, opts?: { id?: string | number; duration?: number; dismissible?: boolean }): string;
 }
 
-const toast = ((message: string, opts?: ToastOptions) =>
-  make('default', message, opts)) as ToastApi;
+const toast = ((message: string, opts?: ToastOptions) => make('default', message, opts)) as ToastApi;
 toast.success = (m, o) => make('success', m, o);
 toast.error = (m, o) => make('error', m, o);
 toast.warning = (m, o) => make('warning', m, o);
@@ -286,8 +276,7 @@ toast.promise = function <T>(promise: Promise<T>, msgs: ToastPromiseMsgs<T> = {}
     typeof m === 'function' ? (m as (x: V) => string)(v) : m != null ? m : fallback;
   promise.then(
     (v) => toast.update(id, { tone: 'success', message: text(msgs.success, 'Done', v) }),
-    (e) =>
-      toast.update(id, { tone: 'error', message: text(msgs.error, 'Something went wrong', e) }),
+    (e) => toast.update(id, { tone: 'error', message: text(msgs.error, 'Something went wrong', e) }),
   );
   return promise;
 };

@@ -14,18 +14,7 @@ import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell
 import { useControllable } from '../use-controllable';
 import { GlidePill, useGlide, useLayoutSelfHeal } from './glide-pill';
 import { useDayFocus } from './use-day-focus';
-import {
-  MONTHS,
-  DOW,
-  key as toKey,
-  parse,
-  col,
-  today,
-  grid,
-  tzLabel,
-  within,
-  displayDay,
-} from './date-utils';
+import { MONTHS, DOW, key as toKey, parse, col, today, grid, tzLabel, within, displayDay } from './date-utils';
 
 export interface DtpPanelProps {
   val: string | null;
@@ -41,10 +30,7 @@ export interface DtpPanelProps {
 /* the popover panel, mounted only while open - owns view + roving focus, so each open starts at the picked month. */
 export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }: DtpPanelProps) {
   const seed = val ? parse(val) : new Date();
-  const [view, setView] = useState<{ y: number; m: number }>({
-    y: seed.getFullYear(),
-    m: seed.getMonth(),
-  });
+  const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
   const [focusKey, setFocusKey] = useState<string>(val || today());
 
   const daysRef = useRef<HTMLDivElement>(null);
@@ -235,9 +221,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                       ></motion.span>
                     ) : null}
                     <span className="dtp__num">{d.getDate()}</span>
-                    {key === todayKey ? (
-                      <span className="dtp__dot" aria-hidden="true"></span>
-                    ) : null}
+                    {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
                   </button>
                 );
               })}
@@ -293,9 +277,7 @@ export function DateField({
   className = '',
 }: DateFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
-  const trigger = (
-    <FieldTrigger display={displayDay(val)} placeholder={placeholder} disabled={disabled} />
-  );
+  const trigger = <FieldTrigger display={displayDay(val)} placeholder={placeholder} disabled={disabled} />;
 
   return (
     <FieldShell
@@ -309,15 +291,7 @@ export function DateField({
     >
       <Popover trigger={trigger} side="bottom" align="start">
         {(api) => (
-          <DtpPanel
-            val={val}
-            commit={commit}
-            close={api.close}
-            min={min}
-            max={max}
-            timezone={timezone}
-            label={label}
-          />
+          <DtpPanel val={val} commit={commit} close={api.close} min={min} max={max} timezone={timezone} label={label} />
         )}
       </Popover>
     </FieldShell>

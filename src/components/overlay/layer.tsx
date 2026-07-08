@@ -70,8 +70,7 @@ function useOverlayEntry({
     const entry = ref.current;
     if (ovStack.length === 0) document.addEventListener('keydown', ovOnDocKeyDown);
     ovStack.push(entry);
-    if (nodeRef.current)
-      nodeRef.current.style.zIndex = 'calc(var(--layer-overlay) + ' + (ovStack.length - 1) + ')';
+    if (nodeRef.current) nodeRef.current.style.zIndex = 'calc(var(--layer-overlay) + ' + (ovStack.length - 1) + ')';
     return () => {
       const i = ovStack.indexOf(entry);
       if (i >= 0) ovStack.splice(i, 1);
@@ -134,8 +133,7 @@ function cloneTrigger(
     merged.ref = (node: HTMLElement | null) => {
       setNode(node);
       if (typeof childRef === 'function') childRef(node);
-      else if (childRef && typeof childRef === 'object')
-        (childRef as { current: unknown }).current = node;
+      else if (childRef && typeof childRef === 'object') (childRef as { current: unknown }).current = node;
     };
   }
   return cloneElement(child, merged);
@@ -158,23 +156,12 @@ function ovCloneTrigger(
     panelId,
     haspopup,
     triggerRef,
-  }: {
-    open: boolean;
-    onPress: () => void;
-    panelId: string;
-    haspopup: string;
-    triggerRef: RefObject<HTMLElement>;
-  },
+  }: { open: boolean; onPress: () => void; panelId: string; haspopup: string; triggerRef: RefObject<HTMLElement> },
 ): ReactElement | null {
   if (!trigger) return null;
   return cloneTrigger(
     trigger,
-    {
-      onClick: onPress,
-      'aria-haspopup': haspopup,
-      'aria-expanded': open,
-      'aria-controls': open ? panelId : undefined,
-    },
+    { onClick: onPress, 'aria-haspopup': haspopup, 'aria-expanded': open, 'aria-controls': open ? panelId : undefined },
     (node) => {
       triggerRef.current = node;
     },

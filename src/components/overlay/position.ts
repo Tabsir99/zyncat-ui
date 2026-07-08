@@ -31,12 +31,7 @@ export function useAnchorPosition({
       const vw = window.innerWidth,
         vh = window.innerHeight;
 
-      const room: Record<string, number> = {
-        top: r.top,
-        bottom: vh - r.bottom,
-        left: r.left,
-        right: vw - r.right,
-      };
+      const room: Record<string, number> = { top: r.top, bottom: vh - r.bottom, left: r.left, right: vw - r.right };
       const opposite: Record<string, 'top' | 'bottom' | 'left' | 'right'> = {
         top: 'bottom',
         bottom: 'top',
@@ -50,8 +45,7 @@ export function useAnchorPosition({
       let x, y;
       if (vertical) {
         y = s === 'top' ? r.top - ph - gap : r.bottom + gap;
-        x =
-          align === 'start' ? r.left : align === 'end' ? r.right - pw : r.left + (r.width - pw) / 2;
+        x = align === 'start' ? r.left : align === 'end' ? r.right - pw : r.left + (r.width - pw) / 2;
         x = Math.min(Math.max(x, edge), vw - pw - edge);
         y = Math.max(
           Math.min(y, vh - ph - edge),
@@ -59,8 +53,7 @@ export function useAnchorPosition({
         ); /* main-axis clamp: keep the leading edge on-screen (max last - may cover the trigger) */
       } else {
         x = s === 'left' ? r.left - pw - gap : r.right + gap;
-        y =
-          align === 'start' ? r.top : align === 'end' ? r.bottom - ph : r.top + (r.height - ph) / 2;
+        y = align === 'start' ? r.top : align === 'end' ? r.bottom - ph : r.top + (r.height - ph) / 2;
         y = Math.min(Math.max(y, edge), vh - ph - edge);
         x = Math.max(Math.min(x, vw - pw - edge), edge);
       }

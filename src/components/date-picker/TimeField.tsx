@@ -65,10 +65,7 @@ export function TimeField({
       icon="clock"
       className={className}
     >
-      <div
-        className={'fld__input tfd__box' + (disabled ? ' is-disabled' : '')}
-        onPointerDown={onBoxPointerDown}
-      >
+      <div className={'fld__input tfd__box' + (disabled ? ' is-disabled' : '')} onPointerDown={onBoxPointerDown}>
         <TimeSegments
           value={val}
           onCommit={commit}

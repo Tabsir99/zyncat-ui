@@ -47,17 +47,11 @@ const ENTRIES: Record<string, string> = {
 
 export const dsAliases = [
   { find: 'premium-ds/styles.css', replacement: r('../src/styles.css') },
-  ...Object.entries(ENTRIES).map(([name, path]) => ({
-    find: `premium-ds/${name}`,
-    replacement: r(`../src/${path}`),
-  })),
+  ...Object.entries(ENTRIES).map(([name, path]) => ({ find: `premium-ds/${name}`, replacement: r(`../src/${path}`) })),
 ];
 
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: dsAliases,
-    dedupe: ['react', 'react-dom', 'motion', '@phosphor-icons/react'],
-  },
+  resolve: { alias: dsAliases, dedupe: ['react', 'react-dom', 'motion', '@phosphor-icons/react'] },
   server: { fs: { allow: [r('..')] }, port: 5179 },
 });

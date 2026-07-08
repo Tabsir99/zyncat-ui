@@ -38,9 +38,7 @@ for (const file of walk(COMPONENTS, ['.css'])) {
 }
 /* classes served app-wide by the base manifest (tokens + glass) - always satisfied */
 const globalClasses = new Set();
-for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(
-  /@import url\('([^']+)'\)/g,
-)) {
+for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(/@import url\('([^']+)'\)/g)) {
   const f = resolve(join(ROOT, 'src'), m[1]);
   if (!existsSync(f)) continue;
   const css = stripComments(readFileSync(f, 'utf8'));
@@ -86,16 +84,14 @@ function renderedClasses(src) {
     const toks = lit.split(/\s+/).filter(Boolean);
     /* a class-list literal is short and ALL class-shaped - prose, aria copy and warning
        sentences always carry a token that fails this and disqualify the whole literal */
-    if (!toks.length || toks.length > 6 || !toks.every((t) => /^[a-z][a-z0-9_-]*$/.test(t)))
-      continue;
+    if (!toks.length || toks.length > 6 || !toks.every((t) => /^[a-z][a-z0-9_-]*$/.test(t))) continue;
     for (const tok of toks) {
       if (AMBIGUOUS.has(tok)) continue;
       if (classOwners.has(tok) && !globalClasses.has(tok)) found.add(tok);
       else if (tok.endsWith('-') && /__|--/.test(tok)) {
         /* concat stub ('tbl__cell--hide-' + bp): class concats are always BEM stubs;
            bare 'word-' prefixes build ids, not classes */
-        for (const cls of classOwners.keys())
-          if (cls.startsWith(tok) && !globalClasses.has(cls)) found.add(cls);
+        for (const cls of classOwners.keys()) if (cls.startsWith(tok) && !globalClasses.has(cls)) found.add(cls);
       }
     }
   }
@@ -133,9 +129,7 @@ for (const entry of entries) {
       if (![...owners].some((o) => cssSet.has(o))) {
         violations++;
         const owner = [...owners].map((o) => o.replace(ROOT + '/', '')).join(' | ');
-        console.error(
-          `✗ ${entry.name}: ${mod.replace(ROOT + '/', '')} renders .${cls} but never imports ${owner}`,
-        );
+        console.error(`✗ ${entry.name}: ${mod.replace(ROOT + '/', '')} renders .${cls} but never imports ${owner}`);
       }
     }
   }

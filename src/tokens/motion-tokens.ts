@@ -32,9 +32,7 @@ function build(dur: MotionTokens['dur'], ease: MotionTokens['ease']): MotionToke
       enter: { duration: dur.base, ease: ease.entrance },
       exit: { duration: dur.fast, ease: ease.exit },
       layout: { duration: dur.slow, ease: ease.entrance },
-      settle: reduced
-        ? { duration: 0 }
-        : { type: 'spring', visualDuration: dur.base, bounce: 0.22 },
+      settle: reduced ? { duration: 0 } : { type: 'spring', visualDuration: dur.base, bounce: 0.22 },
     },
   };
 }

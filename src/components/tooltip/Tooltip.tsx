@@ -158,11 +158,7 @@ function TooltipHost() {
     const r = measureRef.current.getBoundingClientRect();
     const b = (measureRef.current.firstChild as HTMLElement).getBoundingClientRect();
     setBox({
-      ...targetBox(
-        { w: Math.ceil(r.width), h: Math.ceil(r.height) },
-        active.rect(),
-        active.placement,
-      ),
+      ...targetBox({ w: Math.ceil(r.width), h: Math.ceil(r.height) }, active.rect(), active.placement),
       bodyW: Math.ceil(b.width),
     });
   }, [active]);
@@ -200,14 +196,7 @@ function TooltipHost() {
             id="pds-tooltip"
             role="tooltip"
             data-placement={box.placement}
-            initial={{
-              x: box.x + off.x,
-              y: box.y + off.y,
-              width: box.w,
-              height: box.h,
-              opacity: 0,
-              scale: 0.96,
-            }}
+            initial={{ x: box.x + off.x, y: box.y + off.y, width: box.w, height: box.h, opacity: 0, scale: 0.96 }}
             animate={{ x: box.x, y: box.y, width: box.w, height: box.h, opacity: 1, scale: 1 }}
             exit={{
               x: box.x + off.x,
@@ -226,11 +215,7 @@ function TooltipHost() {
             }}
           >
             {/* one node keyed by trigger: old cuts, new fades in while the box travels (fixed width keeps wrapping stable) */}
-            <motion.span
-              key={active.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: SM.t.enter }}
-            >
+            <motion.span key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: SM.t.enter }}>
               <Body a={active} width={box.bodyW} />
             </motion.span>
           </motion.div>
@@ -332,13 +317,7 @@ function Tooltip({
     if (!el) return;
     el.setAttribute('aria-describedby', 'pds-tooltip');
     const open = () =>
-      store.open({
-        id: myId,
-        content,
-        shortcut,
-        placement,
-        rect: () => anchorEl()!.getBoundingClientRect(),
-      });
+      store.open({ id: myId, content, shortcut, placement, rect: () => anchorEl()!.getBoundingClientRect() });
     if (immediate || store.isWarm()) open();
     else openTimer.current = setTimeout(open, openDelay);
   }
@@ -383,13 +362,7 @@ function Tooltip({
     <Fragment>
       {cloneTrigger(
         Children.only(children),
-        {
-          onPointerEnter: onEnter,
-          onPointerLeave: hide,
-          onPointerDown: hide,
-          onFocus: onFocusIn,
-          onBlur: hide,
-        },
+        { onPointerEnter: onEnter, onPointerLeave: hide, onPointerDown: hide, onFocus: onFocusIn, onBlur: hide },
         (node) => {
           triggerRef.current = node;
         },

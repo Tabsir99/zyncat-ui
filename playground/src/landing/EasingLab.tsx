@@ -94,11 +94,7 @@ export function EasingLab() {
             <span className="ld-lab__lane-name">{name}</span>
             <span className="ld-lab__track">
               {run > 0 && (
-                <i
-                  key={run}
-                  className="ld-lab__dot"
-                  style={{ animationTimingFunction: cb(UIMotion.ease[name]) }}
-                />
+                <i key={run} className="ld-lab__dot" style={{ animationTimingFunction: cb(UIMotion.ease[name]) }} />
               )}
             </span>
             <span className="ld-lab__lane-role">{role}</span>

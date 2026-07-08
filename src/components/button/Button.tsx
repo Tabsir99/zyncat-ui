@@ -45,13 +45,7 @@ export function Button({
     .join(' ');
 
   return (
-    <button
-      type={type}
-      className={classes}
-      disabled={disabled || loading}
-      aria-busy={loading || undefined}
-      {...rest}
-    >
+    <button type={type} className={classes} disabled={disabled || loading} aria-busy={loading || undefined} {...rest}>
       {iconLeft ? (
         <span className="btn__icon" aria-hidden="true">
           {iconLeft}

@@ -69,8 +69,7 @@
   width: var(--cbx-size);
   height: var(--cbx-size);
   margin-top: calc((var(--leading-body) - var(--cbx-size)) / 2);
-  border: var(--border-hairline) solid
-    color-mix(in oklab, var(--cbx-on) calc(var(--fill) * 100%), var(--cbx-off));
+  border: var(--border-hairline) solid color-mix(in oklab, var(--cbx-on) calc(var(--fill) * 100%), var(--cbx-off));
   border-radius: var(--cbx-radius);
   background: var(--bg-inset);
   transform: scale(var(--press));
@@ -113,8 +112,7 @@
   stroke-linejoin: round;
   stroke-dasharray: var(--tick-len);
   stroke-dashoffset: calc(var(--tick-len) * (1 - var(--tick)));
-  transition: stroke-dashoffset var(--duration-base) var(--ease-entrance)
-    calc(var(--tick) * var(--duration-fast));
+  transition: stroke-dashoffset var(--duration-base) var(--ease-entrance) calc(var(--tick) * var(--duration-fast));
 }
 
 .cbx__dash {

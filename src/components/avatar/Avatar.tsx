@@ -91,13 +91,7 @@ export function Avatar({
     >
       <span className="avatar__face">
         {showImg && (
-          <img
-            className="avatar__img"
-            src={src}
-            alt={name || ''}
-            onError={() => setImgError(true)}
-            draggable={false}
-          />
+          <img className="avatar__img" src={src} alt={name || ''} onError={() => setImgError(true)} draggable={false} />
         )}
         {!showImg && icon && (
           <span className="avatar__icon" aria-hidden="true">
@@ -117,12 +111,7 @@ export function Avatar({
       </span>
 
       {status && (
-        <span
-          className={`avatar__status avatar__status--${status}`}
-          role="img"
-          aria-label={status}
-          title={status}
-        />
+        <span className={`avatar__status avatar__status--${status}`} role="img" aria-label={status} title={status} />
       )}
     </span>
   );

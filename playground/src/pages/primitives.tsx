@@ -68,8 +68,8 @@ export function CollapsePage() {
         </Button>
         <Collapse open={open}>
           <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
-            This region eases open and closed without an abrupt layout shift - the
-            decelerate-and-settle curve, never a teleport.
+            This region eases open and closed without an abrupt layout shift - the decelerate-and-settle curve, never a
+            teleport.
           </div>
         </Collapse>
       </div>
@@ -115,11 +115,7 @@ export function StatusBadgePage() {
         ))}
       </Demo>
       <Demo label="morph in place">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setSi((i) => (i + 1) % STATUSES.length)}
-        >
+        <Button size="sm" variant="secondary" onClick={() => setSi((i) => (i + 1) % STATUSES.length)}>
           Advance
         </Button>
         <StatusBadge status={STATUSES[si]} morph />
