@@ -1,19 +1,12 @@
 'use client';
 
 /* useListbox - one listbox brain for both Select and MultiSelect: open/query state, refs/ids,
-   option filtering, placement, the keyboard machine, glide-pill tracking and commit.
+   option filtering, the keyboard machine, glide-pill tracking and commit. Placement belongs to
+   the menu surface (menu.tsx), not the brain.
    Variant-blind - it holds no selection state and never inspects the value shape. The public
    components own their value and hand it two opaque callbacks (isSelected / onCommit) plus a
    close policy. */
-import {
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useGlide } from '../../motion/glide';
 import { normalize, matches, type SelectOption, type SelectGroup } from './types';
 
@@ -45,10 +38,7 @@ export function useListbox({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIdx, setActiveIdx] = useState(-1);
-  const typeahead = useRef<{ buf: string; t: ReturnType<typeof setTimeout> | number }>({
-    buf: '',
-    t: 0,
-  });
+  const typeahead = useRef<{ buf: string; t: ReturnType<typeof setTimeout> | number }>({ buf: '', t: 0 });
 
   const triggerRef = useRef<HTMLButtonElement>(null),
     listRef = useRef<HTMLDivElement>(null),
@@ -83,33 +73,6 @@ export function useListbox({
     if (!open) setQuery('');
   }, [open]);
 
-  // placement under the trigger, flips above when cramped; layout effect lands coords before paint so the entrance plays in place
-  useLayoutEffect(() => {
-    if (!open) return undefined;
-    const place = () => {
-      const t = triggerRef.current,
-        menu = document.getElementById(menuId);
-      if (!t || !menu) return;
-      const r = t.getBoundingClientRect(),
-        gap = 4;
-      menu.style.minWidth = r.width + 'px';
-      menu.style.left = Math.round(r.left) + 'px';
-      const mh = menu.offsetHeight,
-        room = window.innerHeight - r.bottom;
-      const above = room < mh + gap && r.top > room;
-      menu.style.top = Math.round(above ? r.top - mh - gap : r.bottom + gap) + 'px';
-      menu.setAttribute('data-placement', above ? 'top' : 'bottom');
-    };
-    place();
-    const onScroll = () => place();
-    window.addEventListener('scroll', onScroll, true);
-    window.addEventListener('resize', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll, true);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, [open, menuId, navItems.length]); // eslint-disable-line react-hooks/exhaustive-deps
-
   useEffect(() => {
     if (!open) return;
     const sel = navItems.findIndex((o) => isSelected(o.value) && !o.disabled);
@@ -136,11 +99,7 @@ export function useListbox({
   // is never clipped by the searchable rows' collapse wrapper and animates real size between rows.
   useLayoutEffect(() => {
     const list = listRef.current;
-    const el =
-      open &&
-      activeIdx >= 0 &&
-      list &&
-      list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
+    const el = open && activeIdx >= 0 && list && list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
     if (el) glide.enter(el);
     else glide.leave();
     // eslint-disable-next-line react-hooks/exhaustive-deps

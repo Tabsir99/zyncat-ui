@@ -27,9 +27,7 @@ export interface GlideApi {
   leave: () => void;
 }
 
-export function useGlide<T extends HTMLElement = HTMLElement>(
-  containerRef: RefObject<T | null>,
-): GlideApi {
+export function useGlide<T extends HTMLElement = HTMLElement>(containerRef: RefObject<T | null>): GlideApi {
   const [rect, setRect] = useState<GlideRect | null>(null);
   const [active, setActive] = useState(false);
   const enter = useCallback(
@@ -38,13 +36,18 @@ export function useGlide<T extends HTMLElement = HTMLElement>(
       if (!c || !el) return;
       const cb = c.getBoundingClientRect();
       const tb = el.getBoundingClientRect();
+      /* client rects include ancestor transforms - measuring during a panel's entrance scale
+         would bake the shrunken size into the pill. Normalize by the container's rendered/layout
+         ratio so the rect is always layout truth (ratio is 1 outside an animation). */
+      const sx = c.offsetWidth ? cb.width / c.offsetWidth : 1;
+      const sy = c.offsetHeight ? cb.height / c.offsetHeight : 1;
       /* container-content coords (+ scroll) so the pill stays pinned to its item when the list
          scrolls; scroll is 0 for static grids, so this is a no-op there. */
       setRect({
-        x: tb.left - cb.left + c.scrollLeft,
-        y: tb.top - cb.top + c.scrollTop,
-        width: tb.width,
-        height: tb.height,
+        x: (tb.left - cb.left) / sx + c.scrollLeft,
+        y: (tb.top - cb.top) / sy + c.scrollTop,
+        width: tb.width / sx,
+        height: tb.height / sy,
       });
       setActive(true);
     },

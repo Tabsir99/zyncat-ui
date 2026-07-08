@@ -150,6 +150,10 @@
   padding: var(--space-1);
   transform-origin: top left;
 }
+/* flipped above the trigger (data-side from useAnchorPosition) - scale from the anchored edge */
+.select__menu[data-side='top'] {
+  transform-origin: bottom left;
+}
 
 .select__search {
   display: flex;
