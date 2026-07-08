@@ -8,7 +8,7 @@ import { Popover } from '../popover/Popover';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../use-controllable';
 import { TimeSegments, disp12 } from './time-core';
-import { DtpPanel } from './DateField';
+import { DtpPanel } from './calendar-panel';
 import { pad, displayDay } from './date-utils';
 
 interface DateTimeParts {
