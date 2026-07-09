@@ -4,10 +4,16 @@ import type { Transition } from 'motion/react';
 
 export type Bezier = [number, number, number, number];
 
+/* The canonical token names live in motion-scale.ts; the MotionTokens shape and any
+   component prop unions (e.g. Collapse duration/ease) derive from them, so a token
+   added or renamed there propagates everywhere by type. */
+import type { DurationToken, EaseToken } from './motion-scale';
+export type { DurationToken, EaseToken } from './motion-scale';
+
 export interface MotionTokens {
   /** seconds - fast 0.12 - base 0.18 - slow 0.26 */
-  dur: { fast: number; base: number; slow: number };
-  ease: { standard: Bezier; entrance: Bezier; exit: Bezier; spring: Bezier; glide: Bezier };
+  dur: Record<DurationToken, number>;
+  ease: Record<EaseToken, Bezier>;
   /** ready-made Motion transitions */
   t: { enter: Transition; exit: Transition; layout: Transition; settle: Transition };
   reduced: boolean;
