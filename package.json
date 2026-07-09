@@ -167,6 +167,10 @@
       "types": "./dist/motion-tokens.d.ts",
       "import": "./dist/motion-tokens.js"
     },
+    "./motion-devtools": {
+      "types": "./dist/motion-devtools.d.ts",
+      "import": "./dist/motion-devtools.js"
+    },
     "./styles.css": "./src/styles.css",
     "./package.json": "./package.json"
   },

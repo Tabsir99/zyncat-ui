@@ -40,6 +40,7 @@ export default defineConfig({
     toast: 'src/components/toast/Toast.tsx',
     'toast-store': 'src/components/toast/toast-store.ts',
     'motion-tokens': 'src/tokens/motion-tokens.ts',
+    'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
   },
   format: ['esm'],
 

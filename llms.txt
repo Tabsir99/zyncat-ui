@@ -167,6 +167,16 @@ Sheet - premium-ds/sheet
   Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), asChild; children: ({ close }) => node.
   <Sheet side="right" trigger={<Button>Filters</Button>}>{({ close }) => <div role="dialog">...</div>}</Sheet>
 
+============================================================ DEV TOOLS
+
+MotionDevtools - premium-ds/motion-devtools
+  Dev-only floating panel that slows or freezes EVERY animation at once (CSS, Motion, raw WAAPI)
+  for motion debugging. Mount once at the app root - no provider, touches no other component.
+  Requires the motion peer. Gate behind a dev check; keep it out of production.
+  placement top-left|top-right|bottom-left|bottom-right, offset, presets, maxFactor, defaultFactor,
+  scaleTimers, persist, defaultOpen. Also exports motionSlowmo for console/hotkey control.
+  {import.meta.env.DEV && <MotionDevtools placement="bottom-right" />}
+
 ============================================================ THEMING
   Re-skin by overriding the CSS custom properties (tokens) in your own stylesheet, loaded after
   premium-ds/styles.css - never fork the source. Token groups: spacing --space-*, type --type-*,
