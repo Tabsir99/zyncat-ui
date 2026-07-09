@@ -63,6 +63,7 @@ const CANONICAL: Record<string, number> = {
   '--duration-base': 200,
   '--duration-slow': 300,
   '--duration-slower': 450,
+  '--duration-slowest': 900,
   '--duration-spin': 600,
   '--duration-pulse': 1600,
 };

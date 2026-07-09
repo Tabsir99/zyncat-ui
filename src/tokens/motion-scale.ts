@@ -7,8 +7,10 @@
  *  - `fast` 140ms - micro feedback: hover washes, presses, control tint/border/shadow.
  *  - `base` 200ms - standard element transitions: fades, toggles, badge morphs.
  *  - `slow` 300ms - layout-scale movement: Collapse, panel resizes, reordering.
- *  - `slower` 450ms - large-surface movement: dialogs, sheets, page-scale reveals. */
-export type DurationToken = 'fast' | 'base' | 'slow' | 'slower';
+ *  - `slower` 450ms - large-surface movement: dialogs, sheets, page-scale reveals.
+ *  - `slowest` 900ms - hero-scale movement: card expansion, container transforms. The scale's
+ *    ceiling: anything longer is choreography and belongs to Motion, not a transition token. */
+export type DurationToken = 'fast' | 'base' | 'slow' | 'slower' | 'slowest';
 
 /** Names of the brand easing curves (`--ease-*`):
  *  - `standard` cubic-bezier(0.2, 0, 0, 1) - brisk start, soft landing; the default for state changes.
