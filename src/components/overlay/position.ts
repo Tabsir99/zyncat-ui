@@ -4,20 +4,16 @@
 import { useLayoutEffect, type RefObject } from 'react';
 import { tokenPx } from '../token-px';
 
-/* Anchored placement: measure, place on the side, flip when cramped, clamp the cross axis; writes data-side/-align + arrow vars in a layout effect. */
-export function useAnchorPosition({
-  side,
-  align,
-  arrow,
-  triggerRef,
-  panelRef,
-}: {
+interface UseAnchorPositionProps {
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   arrow: boolean;
   triggerRef: RefObject<HTMLElement>;
   panelRef: RefObject<HTMLElement>;
-}) {
+}
+
+/* Anchored placement: measure, place on the side, flip when cramped, clamp the cross axis; writes data-side/-align + arrow vars in a layout effect. */
+export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: UseAnchorPositionProps) {
   useLayoutEffect(() => {
     const place = () => {
       const t = triggerRef.current;
@@ -47,10 +43,8 @@ export function useAnchorPosition({
         y = s === 'top' ? r.top - ph - gap : r.bottom + gap;
         x = align === 'start' ? r.left : align === 'end' ? r.right - pw : r.left + (r.width - pw) / 2;
         x = Math.min(Math.max(x, edge), vw - pw - edge);
-        y = Math.max(
-          Math.min(y, vh - ph - edge),
-          edge,
-        ); /* main-axis clamp: keep the leading edge on-screen (max last - may cover the trigger) */
+        /* main-axis clamp: keep the leading edge on-screen (max last - may cover the trigger) */
+        y = Math.max(Math.min(y, vh - ph - edge), edge);
       } else {
         x = s === 'left' ? r.left - pw - gap : r.right + gap;
         y = align === 'start' ? r.top : align === 'end' ? r.bottom - ph : r.top + (r.height - ph) / 2;
