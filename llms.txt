@@ -30,8 +30,11 @@ Button - premium-ds/button
   <Button variant="primary" iconLeft={<Icon name="plus" size="sm" />}>Schedule post</Button>
 
 Collapse - premium-ds/collapse
-  Layout-transition primitive; eases height open/closed, never teleports.
-  <Collapse open={open}><div>...revealed content...</div></Collapse>
+  Layout-transition primitive; eases height open/closed, never teleports. Closed content also
+  leaves the tab order, accessibility tree and hit-testing once the exit completes; reopening is
+  focusable immediately. duration/ease take motion tokens ONLY (fast|base|slow /
+  standard|entrance|exit|spring|glide), one for both directions or per-direction { open, close }.
+  <Collapse open={open} duration={{ close: 'fast' }} ease={{ close: 'exit' }}><div>...revealed content...</div></Collapse>
 
 Badge - premium-ds/badge
   Glass or outline chip. tone neutral|info|success|warning|danger, dot, live, variant="outline", pill, size="sm".
