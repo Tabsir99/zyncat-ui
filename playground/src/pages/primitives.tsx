@@ -96,7 +96,7 @@ export function CollapsePage() {
           <Button variant="secondary" size="sm" onClick={() => setAsym((o) => !o)}>
             {asym ? 'Close' : 'Open'}
           </Button>
-          <Collapse open={asym} fade duration={{ open: 'slow', close: 'fast' }} ease={{ close: 'exit' }}>
+          <Collapse open={asym} fade animation={{ duration: { open: 'slow', close: 'fast' }, ease: { close: 'exit' } }}>
             <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
               Opens deliberately on the entrance curve, leaves in a hurry on the exit curve - duration and ease accept
               motion tokens only, single or per-direction.
