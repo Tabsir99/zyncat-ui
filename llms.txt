@@ -23,6 +23,10 @@ Conventions:
 
 Every named export is also a subpath: premium-ds/<kebab-name> (e.g. premium-ds/status-badge).
 
+Agents: prefer the bundled MCP server over scanning this file or node_modules - register
+  { "mcpServers": { "premium-ds": { "command": "node", "args": ["./node_modules/premium-ds/dist/mcp.js"] } } }
+  then use list_components / get_component / search_api / get_tokens.
+
 ============================================================ PRIMITIVES
 
 Button - premium-ds/button

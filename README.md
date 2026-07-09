@@ -67,8 +67,21 @@ documented inline in the types; see [`llms.txt`](./llms.txt) for per-component e
 
 ## For AI coding agents
 
-Once installed, an agent doesn't need to read the component source - the contract is the shipped
-types:
+**MCP server (preferred).** The package bundles a zero-dependency MCP server (stdio) so agents
+query the API surface instead of grepping `node_modules`: `list_components` (index + conventions),
+`get_component` (usage docs + complete prop types, shared type chunks inlined), `search_api`
+(which component owns a prop/type/token), `get_tokens` (the token vocabulary with real values).
+Register it in the consuming project - for Claude Code, `.mcp.json` at the project root:
+
+```json
+{ "mcpServers": { "premium-ds": { "command": "node", "args": ["./node_modules/premium-ds/dist/mcp.js"] } } }
+```
+
+Any MCP client works (also exposed as the `premium-ds-mcp` bin). The server reads the installed
+package's `llms.txt`, `dist/*.d.ts` and `src/tokens/*.css` at call time, so answers always match
+the installed version.
+
+Without MCP, the same contract is readable directly:
 
 - **`node_modules/premium-ds/dist/*.d.ts`** - every component's props carry inline TSDoc. This is
   the machine-readable source of truth (e.g. `dist/button.d.ts` fully describes `ButtonProps`).
