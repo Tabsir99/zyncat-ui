@@ -41,8 +41,3 @@
 .pgn__btn--next:hover:not(:disabled) .icon {
   transform: translateX(var(--space-px));
 }
-
-/* loading: clicked arrow shows Button's spinner - hide its caret like button.css hides .btn__icon */
-.pgn__btn.is-loading .icon {
-  opacity: 0;
-}

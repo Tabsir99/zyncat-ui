@@ -115,13 +115,34 @@
   color: var(--text-body);
   background: transparent;
 }
+/* hover wash grows from the center rather than flat-filling: a ::before scales up under the
+   label (.btn is isolated, so z-index:-1 stays inside the button, behind .btn__label). */
+.btn--ghost::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--neutral-wash);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    transform var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
 .btn--ghost:hover:not(:disabled):not(.is-loading) {
   color: var(--text-strong);
-  background: var(--neutral-wash);
+}
+.btn--ghost:hover:not(:disabled):not(.is-loading)::before {
+  opacity: 1;
+  transform: scale(1);
 }
 .btn--ghost:active:not(:disabled):not(.is-loading) {
-  background: var(--neutral-wash-press);
   transform: translateY(var(--space-px));
+}
+.btn--ghost:active:not(:disabled):not(.is-loading)::before {
+  background: var(--neutral-wash-press);
 }
 
 .btn--danger {

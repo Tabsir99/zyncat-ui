@@ -6,12 +6,11 @@
    not a sibling field's internals. */
 
 import './date-picker.css';
-/* The footer Done renders .btn classes - button.css must ride along. */
-import '../button/button.css';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
+import { Button } from '../button/Button';
 import { GlidePill, useGlide, useLayoutSelfHeal } from '../motion/glide';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, key as toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
@@ -236,9 +235,9 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
       <div className="dtp__foot">
         {timezone ? <span className="dtp__tz">{tzLabel(timezone, selKey)}</span> : null}
         <span className="dtp__footSpacer"></span>
-        <button type="button" className="btn btn--primary btn--sm" onClick={close}>
+        <Button variant="primary" size="sm" onClick={close}>
           Done
-        </button>
+        </Button>
       </div>
     </div>
   );

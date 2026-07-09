@@ -3,13 +3,12 @@
 /* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
 import './table.css';
-/* The bulk bar's Clear button renders .btn classes - button.css must ride along. */
-import '../button/button.css';
-import { useMemo, useRef, useState, type ChangeEvent, type MouseEvent, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
-import { CheckGlyph } from '../checkbox/check-glyph';
+import { Button } from '../button/Button';
+import { Checkbox } from '../checkbox/Checkbox';
 import { Odometer } from '../badge/odometer';
 import { useScrollEdges } from '../use-scroll-edges';
 
@@ -95,29 +94,6 @@ function tblCompare(a: unknown, b: unknown) {
   if (b == null) return -1;
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
-}
-
-interface TblCheckboxProps {
-  checked?: boolean;
-  indeterminate?: boolean;
-  ariaLabel?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
-}
-
-/* the Checkbox primitive minus its label wrapper - CheckGlyph carries checkbox.css */
-function TblCheckbox({ checked, indeterminate, ariaLabel, onChange, onClick }: TblCheckboxProps) {
-  return (
-    <label className="cbx tbl__cbx">
-      <CheckGlyph
-        checked={checked}
-        indeterminate={!!indeterminate}
-        aria-label={ariaLabel}
-        onChange={onChange}
-        onClick={onClick}
-      />
-    </label>
-  );
 }
 
 export function Table<Row = any>({
@@ -269,10 +245,11 @@ export function Table<Row = any>({
           role="toolbar"
           aria-label="Selection actions"
         >
-          <TblCheckbox
+          <Checkbox
+            className="tbl__cbx"
             checked={allSelected}
             indeterminate={someSelected}
-            ariaLabel="Select all rows"
+            aria-label="Select all rows"
             onChange={toggleAll}
           />
           <span className="tbl__bulkCount" aria-live="polite" aria-atomic="true">
@@ -281,9 +258,9 @@ export function Table<Row = any>({
           </span>
           <span className="tbl__bulkSpacer"></span>
           {bulkActions ? bulkActions(Array.from(selected), clearSelection) : null}
-          <button type="button" className="btn btn--ghost btn--sm" onClick={clearSelection}>
+          <Button variant="ghost" size="sm" onClick={clearSelection}>
             Clear
-          </button>
+          </Button>
         </div>
       ) : null}
 
@@ -294,10 +271,11 @@ export function Table<Row = any>({
               <tr>
                 {selectable ? (
                   <th scope="col" className={checkCellCls}>
-                    <TblCheckbox
+                    <Checkbox
+                      className="tbl__cbx"
                       checked={allSelected}
                       indeterminate={someSelected}
-                      ariaLabel="Select all rows"
+                      aria-label="Select all rows"
                       onChange={toggleAll}
                     />
                   </th>
@@ -356,9 +334,10 @@ export function Table<Row = any>({
                     >
                       {selectable ? (
                         <td className={checkCellCls} onClick={(e) => e.stopPropagation()}>
-                          <TblCheckbox
+                          <Checkbox
+                            className="tbl__cbx"
                             checked={isSel}
-                            ariaLabel={selectionLabel ? selectionLabel(row) : 'Select row'}
+                            aria-label={selectionLabel ? selectionLabel(row) : 'Select row'}
                             onClick={(e) => {
                               shiftRef.current = e.shiftKey;
                             }}

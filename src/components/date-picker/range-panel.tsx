@@ -6,12 +6,11 @@
    also owns the range-text formatter the trigger display reuses. */
 
 import './date-picker.css';
-/* The footer Done renders .btn classes - button.css must ride along. */
-import '../button/button.css';
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon } from '../icon/Icon';
+import { Button } from '../button/Button';
 import { GlidePill, useGlide, useLayoutSelfHeal } from '../motion/glide';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, pad, key as toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
@@ -384,9 +383,9 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
         </span>
         {timezone ? <span className="drp__tz">{tzLabel(timezone)}</span> : null}
         <span className="drp__footSpacer"></span>
-        <button type="button" className="btn btn--primary btn--sm" onClick={close}>
+        <Button variant="primary" size="sm" onClick={close}>
           Done
-        </button>
+        </Button>
       </div>
     </div>
   );

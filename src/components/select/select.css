@@ -329,9 +329,10 @@
   margin-top: 0;
 }
 
-/* Row owns the press (.cbx is pointer-events:none); --press inherits down to dip .cbx__box. */
-.select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx {
-  --press: 0.88;
+/* Row owns the press (.cbx is pointer-events:none): dip the box on press - explicit transform,
+   so a checked box (whose resting scale would otherwise dilute --press) still scales from center. */
+.select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx__box {
+  transform: scale(0.86);
 }
 .select__menu[data-multiple='true'] .select__option[data-selected='true'] {
   background-color: transparent;

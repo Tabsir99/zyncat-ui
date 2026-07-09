@@ -3,13 +3,12 @@
 /* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
 
 import './pagination.css';
-/* The nav arrows render .btn classes - button.css must ride along. */
-import '../button/button.css';
 import { useEffect, useRef } from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { tokenPx } from '../token-px';
 import { Icon } from '../icon/Icon';
+import { Button } from '../button/Button';
 
 export interface PaginationProps {
   /** Accessible name for the nav landmark - name the list ("Posts"), not "pagination". @default 'Pagination' */
@@ -96,10 +95,12 @@ export function Pagination({
         </span>
       </span>
       <div className="pgn__nav">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           ref={prevBtnRef}
-          className={'btn btn--ghost btn--sm pgn__btn pgn__btn--prev' + (prevBusy ? ' is-loading' : '')}
+          className="pgn__btn pgn__btn--prev"
+          loading={prevBusy}
           disabled={!hasPrev || loading}
           aria-label="Previous page"
           onClick={() => {
@@ -108,12 +109,13 @@ export function Pagination({
           }}
         >
           <Icon name="caret-left" size="sm" />
-          {prevBusy ? <span className="btn__spinner" aria-hidden="true"></span> : null}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
           ref={nextBtnRef}
-          className={'btn btn--ghost btn--sm pgn__btn pgn__btn--next' + (nextBusy ? ' is-loading' : '')}
+          className="pgn__btn pgn__btn--next"
+          loading={nextBusy}
           disabled={!hasNext || loading}
           aria-label="Next page"
           onClick={() => {
@@ -122,8 +124,7 @@ export function Pagination({
           }}
         >
           <Icon name="caret-right" size="sm" />
-          {nextBusy ? <span className="btn__spinner" aria-hidden="true"></span> : null}
-        </button>
+        </Button>
       </div>
     </nav>
   );

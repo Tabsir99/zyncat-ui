@@ -3,11 +3,14 @@
 // Button - primitive; composes button.css classes, renders icons, manages loading.
 
 import './button.css';
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Visual weight / intent. @default 'primary' */
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link';
+  /** Visual weight / intent. `unstyled` emits base chrome only (sizing, focus ring,
+   *  layout) with no skin - for local re-skins via `className`, e.g. Alert's tone action. @default 'primary' */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link' | 'unstyled';
+  /** Forwarded to the underlying <button> (React 19 ref-as-prop). */
+  ref?: Ref<HTMLButtonElement>;
   /** Control height. sm 28px - md 36px (default) - lg 40px. @default 'md' */
   size?: 'sm' | 'md' | 'lg';
   /** Loading - swaps content for a spinner and makes the button inert. */
@@ -35,7 +38,7 @@ export function Button({
 }: ButtonProps) {
   const classes = [
     'btn',
-    `btn--${variant}`,
+    variant !== 'unstyled' ? `btn--${variant}` : '',
     size !== 'md' ? `btn--${size}` : '',
     fullWidth ? 'btn--block' : '',
     loading ? 'is-loading' : '',

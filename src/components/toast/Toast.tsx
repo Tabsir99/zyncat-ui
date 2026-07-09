@@ -2,8 +2,6 @@
 
 /* Toast - the React render layer (queue + clocks live in toast-store.ts). */
 import './toast.css';
-/* The action renders .btn classes - button.css must ride along. */
-import '../button/button.css';
 import {
   useEffect,
   useLayoutEffect,
@@ -21,6 +19,7 @@ import { UIMotion } from '../../tokens/motion-tokens';
 import { fireGlint } from '../glass/glint';
 import { tokenPx } from '../token-px';
 import { Icon, type IconName } from '../icon/Icon';
+import { Button } from '../button/Button';
 import { UIToast, DEFAULT_TOASTER_CONFIG, type ToastRecord, type ToastTone, type ToasterConfig } from './toast-store';
 
 const SM = UIMotion;
@@ -188,16 +187,17 @@ function ToastBody({ t }: { t: ToastRecord }) {
         </motion.span>
       )}
       {t.action && (
-        <button
-          type="button"
-          className="btn btn--secondary btn--sm toast__action"
+        <Button
+          variant="secondary"
+          size="sm"
+          className="toast__action"
           onClick={() => {
             if (t.action.onClick) t.action.onClick();
             store.dismiss(t.id);
           }}
         >
           {t.action.label}
-        </button>
+        </Button>
       )}
       {t.dismissible && (
         <button type="button" className="toast__close" aria-label="Dismiss" onClick={() => store.dismiss(t.id)}>

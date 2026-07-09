@@ -3,12 +3,11 @@
 /* Alert - the persistent, in-flow status message (banner is a paint modifier). */
 
 import './alert.css';
-/* The action renders .btn classes - button.css must ride along. */
-import '../button/button.css';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UIMotion } from '../../tokens/motion-tokens';
 import { Icon, type IconName } from '../icon/Icon';
+import { Button } from '../button/Button';
 import { IconSlot } from '../icon/IconSlot';
 import { useControllable } from '../use-controllable';
 
@@ -95,9 +94,9 @@ export function Alert({
               {children != null && <p className="alert__desc">{children}</p>}
             </div>
             {action && (
-              <button type="button" className="btn btn--sm alert__action" onClick={action.onClick}>
+              <Button variant="unstyled" size="sm" className="alert__action" onClick={action.onClick}>
                 {action.label}
-              </button>
+              </Button>
             )}
             {dismissible && (
               <button type="button" className="alert__close" aria-label="Dismiss" onClick={dismiss}>
