@@ -19,6 +19,13 @@
   color: var(--text-disabled);
 }
 
+/* Hover - subtle gray wash + stronger border, matching Select's trigger. The border
+   darkens via the shared .fld__input:hover; this adds the neutral wash it omits. Held
+   off while focused or open, where the accent focus look owns the trigger. */
+.dtf__trigger:hover:not(:disabled):not(:focus):not([aria-expanded='true']) {
+  background-color: var(--neutral-wash);
+}
+
 /* open - focus moves into the panel, so the trigger holds the focus look itself while expanded. */
 .dtf__trigger[aria-expanded='true']:not(:disabled) {
   border-color: var(--accent);
