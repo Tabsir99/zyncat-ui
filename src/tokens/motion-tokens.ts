@@ -11,7 +11,7 @@ import type { DurationToken, EaseToken } from './motion-scale';
 export type { DurationToken, EaseToken } from './motion-scale';
 
 export interface MotionTokens {
-  /** seconds - fast 0.12 - base 0.18 - slow 0.26 */
+  /** seconds - fast 0.14 - base 0.2 - slow 0.3 - slower 0.45 */
   dur: Record<DurationToken, number>;
   ease: Record<EaseToken, Bezier>;
   /** ready-made Motion transitions */
@@ -19,7 +19,7 @@ export interface MotionTokens {
   reduced: boolean;
 }
 
-const DEFAULT_DUR: MotionTokens['dur'] = { fast: 0.12, base: 0.18, slow: 0.26 };
+const DEFAULT_DUR: MotionTokens['dur'] = { fast: 0.14, base: 0.2, slow: 0.3, slower: 0.45 };
 const DEFAULT_EASE: MotionTokens['ease'] = {
   standard: [0.2, 0, 0, 1],
   entrance: [0.16, 1, 0.3, 1],
@@ -59,6 +59,7 @@ function readFromDom(): MotionTokens {
       fast: seconds('--duration-fast', DEFAULT_DUR.fast),
       base: seconds('--duration-base', DEFAULT_DUR.base),
       slow: seconds('--duration-slow', DEFAULT_DUR.slow),
+      slower: seconds('--duration-slower', DEFAULT_DUR.slower),
     },
     {
       standard: bezier('--ease-standard', DEFAULT_EASE.standard),

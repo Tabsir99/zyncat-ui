@@ -14,9 +14,10 @@
 
 .mdt {
   /* immune to the global slow-mo the engine applies to --duration-* */
-  --duration-fast: 120ms;
-  --duration-base: 180ms;
-  --duration-slow: 260ms;
+  --duration-fast: 140ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 450ms;
   --duration-spin: 600ms;
   --duration-pulse: 1600ms;
 

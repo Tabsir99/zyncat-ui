@@ -59,9 +59,10 @@ export interface SlowmoOptions {
 /** Canonical --duration-* scale (ms), mirrored from tokens/motion.css. Used as the scaling
  *  base so slow-mo works even when reduced-motion has collapsed the live tokens to 1ms. */
 const CANONICAL: Record<string, number> = {
-  '--duration-fast': 120,
-  '--duration-base': 180,
-  '--duration-slow': 260,
+  '--duration-fast': 140,
+  '--duration-base': 200,
+  '--duration-slow': 300,
+  '--duration-slower': 450,
   '--duration-spin': 600,
   '--duration-pulse': 1600,
 };
