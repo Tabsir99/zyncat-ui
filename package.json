@@ -34,6 +34,9 @@
   "sideEffects": [
     "*.css"
   ],
+  "bin": {
+    "premium-ds-mcp": "./dist/mcp.js"
+  },
   "exports": {
     "./button": {
       "types": "./dist/button.d.ts",

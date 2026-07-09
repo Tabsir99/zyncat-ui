@@ -1,11 +1,11 @@
-import { defineConfig } from 'tsup';
+import { defineConfig, type Options } from 'tsup';
 
 // One entry per public module - one dist file + .d.ts each. Subpaths
 // (`premium-ds/button`) are the ONLY public API - there is no barrel entry, so
 // one import can never pull modules (or CSS) the app didn't ask for.
 // splitting:true hoists shared internals (overlay/*, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.
-export default defineConfig({
+const library: Options = {
   entry: {
     button: 'src/components/button/Button.tsx',
     collapse: 'src/components/motion/Collapse.tsx',
@@ -121,4 +121,21 @@ export default defineConfig({
     await rm(`dist/${metaName}`);
     console.log(`tsup: ${outputs.length} JS (${client.size} client) + ${cssFiles.length} component CSS`);
   },
-});
+};
+
+// The MCP server is a node CLI, not a library module: node platform, shebang for the
+// package bin, no d.ts (it has no importable API), and clean:false so it never races
+// the library build's dist wipe.
+const mcpServer: Options = {
+  entry: { mcp: 'src/mcp/server.ts' },
+  format: ['esm'],
+  platform: 'node',
+  target: 'node18',
+  dts: false,
+  sourcemap: false,
+  clean: false,
+  silent: true,
+  banner: { js: '#!/usr/bin/env node' },
+};
+
+export default defineConfig([library, mcpServer]);

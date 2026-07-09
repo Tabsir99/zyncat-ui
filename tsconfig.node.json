@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "lib": ["esnext"], "types": ["node"], "noEmit": true },
-  "include": ["tsup.config.ts"]
+  "include": ["tsup.config.ts", "src/mcp"],
+  "exclude": ["node_modules"]
 }
