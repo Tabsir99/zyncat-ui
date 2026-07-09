@@ -37,7 +37,7 @@ properties) and the shared `glass` utility. Link it exactly once at the app root
 You never import per-component CSS: every component imports its own stylesheet, so your
 bundler code-splits and lazy-loads it with the component. Import `premium-ds/dialog` and
 only `dialog.css` ships (plus the `overlay`/`icon` styles it reuses, deduped) - not the
-other 20 components' CSS.
+other 30 components' CSS.
 
 ### Import a single component
 
@@ -60,7 +60,7 @@ same module graph: components you don't use drop their stylesheets too.
 | Forms               | TextField, NumberField, OtpField, Textarea, Checkbox, Toggle, RadioGroup, Select, MultiSelect |
 | Data                | Avatar, AvatarGroup, Tag, ToggleTag, Table, Pagination                                        |
 | Date, time & tabs   | DateField, DateTimeField, DateRangeField, TimeField, Tabs                                     |
-| Overlays & feedback | Alert, Toast, Tooltip, Dialog, Overlay, Sheet                                                 |
+| Overlays & feedback | Alert, Toast, Tooltip, Dialog, Popover, Sheet                                                 |
 
 Each is a named export from the barrel and a subpath (`premium-ds/<kebab-name>`). Props are
 documented inline in the types; see [`llms.txt`](./llms.txt) for per-component examples.
