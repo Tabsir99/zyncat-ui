@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'premium-ds/button';
 import { Collapse } from 'premium-ds/collapse';
+import { TextField } from 'premium-ds/text-field';
 import { Badge } from 'premium-ds/badge';
 import { StatusBadge, type PostStatus } from 'premium-ds/status-badge';
 import { CountBadge } from 'premium-ds/count-badge';
@@ -73,20 +74,54 @@ export function IconPage() {
 
 export function CollapsePage() {
   const [open, setOpen] = useState(true);
+  const [asym, setAsym] = useState(true);
+  const [form, setForm] = useState(false);
   return (
-    <Demo label="toggle">
-      <div className="stack">
-        <Button variant="secondary" size="sm" onClick={() => setOpen((o) => !o)}>
-          {open ? 'Close' : 'Open'}
-        </Button>
-        <Collapse open={open}>
-          <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
-            This region eases open and closed without an abrupt layout shift - the decelerate-and-settle curve, never a
-            teleport.
-          </div>
-        </Collapse>
-      </div>
-    </Demo>
+    <>
+      <Demo label="toggle">
+        <div className="stack">
+          <Button variant="secondary" size="sm" onClick={() => setOpen((o) => !o)}>
+            {open ? 'Close' : 'Open'}
+          </Button>
+          <Collapse open={open}>
+            <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
+              This region eases open and closed without an abrupt layout shift - the decelerate-and-settle curve, never
+              a teleport.
+            </div>
+          </Collapse>
+        </div>
+      </Demo>
+      <Demo label="asymmetric timing - tokens only">
+        <div className="stack">
+          <Button variant="secondary" size="sm" onClick={() => setAsym((o) => !o)}>
+            {asym ? 'Close' : 'Open'}
+          </Button>
+          <Collapse open={asym} fade duration={{ open: 'slow', close: 'fast' }} ease={{ close: 'exit' }}>
+            <div style={{ padding: '12px 0', maxWidth: 360, color: 'var(--text-muted)' }}>
+              Opens deliberately on the entrance curve, leaves in a hurry on the exit curve - duration and ease accept
+              motion tokens only, single or per-direction.
+            </div>
+          </Collapse>
+        </div>
+      </Demo>
+      <Demo label="closed content leaves the tab order">
+        <div className="stack">
+          <Button variant="secondary" size="sm" onClick={() => setForm((o) => !o)}>
+            {form ? 'Hide form' : 'Show form'}
+          </Button>
+          <Collapse open={form}>
+            {/* 4px side padding keeps the 3px focus rings clear of the collapse clip edge */}
+            <div className="stack" style={{ padding: '12px 4px', maxWidth: 360 }}>
+              <TextField id="collapse-demo-name" label="Name" placeholder="Tab reaches me only while open" />
+              <Button size="sm">And me</Button>
+            </div>
+          </Collapse>
+          <Button variant="secondary" size="sm">
+            Tab lands here while closed
+          </Button>
+        </div>
+      </Demo>
+    </>
   );
 }
 
