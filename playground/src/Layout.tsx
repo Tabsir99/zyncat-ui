@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from 'premium-ds/toast';
 import { GROUPS } from './registry';
+/* __MDT_VERIFY__ temporary preview mount - remove when done */
+import { MotionDevtools } from '../../src/components/dev/MotionDevtools';
 
 export function Layout() {
   const { pathname } = useLocation();
@@ -12,6 +14,8 @@ export function Layout() {
 
   return (
     <div className="app">
+      {/* __MDT_VERIFY__ temporary preview mount */}
+      <MotionDevtools persist={false} />
       <Toaster />
       <aside className="sidebar">
         <NavLink to="/" className="brand">

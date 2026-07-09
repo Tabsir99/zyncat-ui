@@ -8,6 +8,7 @@ import { Demo } from '../kit';
 import { Icon } from '../icon';
 
 export function ButtonPage() {
+  const [l, setL] = useState(false);
   return (
     <>
       <Demo label="variants">
@@ -29,6 +30,18 @@ export function ButtonPage() {
         </Button>
         <Button loading>Saving</Button>
         <Button disabled>Disabled</Button>
+        <Button
+          loading={l}
+          onClick={() => {
+            setL(true);
+            setTimeout(() => {
+              setL(false);
+            }, 2000);
+          }}
+        >
+          {' '}
+          {l ? 'Loading' : 'Load'}{' '}
+        </Button>
       </Demo>
     </>
   );
