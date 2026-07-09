@@ -1,9 +1,9 @@
 /* Motion system - durations, brand curves, and pre-composed transitions; smooths every layout shift by default. */
 
 :root {
-  --duration-fast: 120ms;
-  --duration-base: 180ms;
-  --duration-slow: 260ms;
+  --duration-fast: 140ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
   --duration-spin: 600ms; /* continuous loaders only; deliberately outside the UI-transition scale */
   --duration-pulse: 1600ms; /* ambient live/processing breathing; not collapsed under reduced motion */
 
