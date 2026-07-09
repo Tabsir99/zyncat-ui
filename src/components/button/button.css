@@ -1,5 +1,18 @@
 /* Button - variants, sizes, states; lit gradient, tactile press, composed focus ring. */
 
+/* Gradient stops as typed properties: background-image can't transition, but registered
+   <color> values can - gradient variants set the stops once and states swap them. */
+@property --btn-grad-a {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+@property --btn-grad-b {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
 .btn {
   --btn-shadow: none;
   --btn-ring: var(--ring-accent);
@@ -32,6 +45,8 @@
 
   transition:
     background-color var(--duration-fast) var(--ease-standard),
+    --btn-grad-a var(--duration-base) var(--ease-standard),
+    --btn-grad-b var(--duration-base) var(--ease-standard),
     border-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard),
@@ -81,15 +96,19 @@
 
 .btn--primary {
   color: var(--text-on-accent);
-  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+  --btn-grad-a: var(--accent);
+  --btn-grad-b: var(--accent-hover);
+  background: linear-gradient(180deg, var(--btn-grad-a), var(--btn-grad-b));
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
 }
 .btn--primary:hover:not(:disabled):not(.is-loading) {
-  background: linear-gradient(180deg, var(--accent-lift), var(--accent));
+  --btn-grad-a: var(--accent-lift);
+  --btn-grad-b: var(--accent);
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.22), var(--shadow-md);
 }
 .btn--primary:active:not(:disabled):not(.is-loading) {
-  background: linear-gradient(180deg, var(--accent-hover), var(--accent-active));
+  --btn-grad-a: var(--accent-hover);
+  --btn-grad-b: var(--accent-active);
   transform: translateY(var(--space-px));
   --btn-shadow: inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
 }
@@ -147,16 +166,20 @@
 
 .btn--danger {
   color: var(--text-on-accent);
-  background: linear-gradient(180deg, var(--red-500), var(--red-600));
+  --btn-grad-a: var(--red-500);
+  --btn-grad-b: var(--red-600);
+  background: linear-gradient(180deg, var(--btn-grad-a), var(--btn-grad-b));
   --btn-ring: var(--ring-danger);
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
 }
 .btn--danger:hover:not(:disabled):not(.is-loading) {
-  background: linear-gradient(180deg, var(--red-400), var(--red-500));
+  --btn-grad-a: var(--red-400);
+  --btn-grad-b: var(--red-500);
   --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.22), var(--shadow-md);
 }
 .btn--danger:active:not(:disabled):not(.is-loading) {
-  background: linear-gradient(180deg, var(--red-600), var(--red-700));
+  --btn-grad-a: var(--red-600);
+  --btn-grad-b: var(--red-700);
   transform: translateY(var(--space-px));
   --btn-shadow: inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
 }
