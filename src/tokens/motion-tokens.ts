@@ -15,7 +15,7 @@ export interface MotionTokens {
   dur: Record<DurationToken, number>;
   ease: Record<EaseToken, Bezier>;
   /** ready-made Motion transitions */
-  t: { enter: Transition; exit: Transition; layout: Transition; settle: Transition };
+  t: { enter: Transition; exit: Transition; layout: Transition<any>; settle: Transition<any> };
   reduced: boolean;
 }
 

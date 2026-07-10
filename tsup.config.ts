@@ -41,6 +41,7 @@ const library: Options = {
     'toast-store': 'src/components/toast/toast-store.ts',
     'motion-tokens': 'src/tokens/motion-tokens.ts',
     'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
+    glide: 'src/components/motion/glide.tsx',
   },
   format: ['esm'],
 

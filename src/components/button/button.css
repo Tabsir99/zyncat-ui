@@ -31,7 +31,7 @@
 
   font-family: var(--font-sans);
   font-size: var(--size-body);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-medium);
   line-height: 1;
   letter-spacing: var(--tracking-normal);
   white-space: nowrap;

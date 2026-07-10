@@ -1,7 +1,7 @@
 /* Icon sizing - sm 16 (inline) - md 20 (default) - lg 24 (emphasis). */
 
 :root {
-  --icon-sm: 16px;
+  --icon-sm: 17px;
   --icon-md: 20px;
   --icon-lg: 24px;
 }
