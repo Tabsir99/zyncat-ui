@@ -3,7 +3,7 @@
 // Collapse - open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
 
 import './collapse.css';
-import type { CSSProperties, HTMLAttributes } from 'react';
+import type { CSSProperties, HTMLAttributes, JSX } from 'react';
 import type { DurationToken, EaseToken } from '../../tokens/motion-scale';
 import { timingVars, type AnimationTiming, type Timing, type TimingProps } from './timing';
 
@@ -32,6 +32,10 @@ export interface CollapseProps extends HTMLAttributes<HTMLDivElement>, TimingPro
    *  `{ open, close }`, e.g. `{ duration: { close: 'fast' }, ease: { close: 'exit' } }`.
    *  @default duration 'slow' + ease 'entrance' (fade-out: 'base' + 'standard') */
   animation?: AnimationTiming;
+  /**
+   * What html tag to render as
+   */
+  As: keyof JSX.IntrinsicElements;
 }
 
 export function Collapse({
@@ -43,6 +47,7 @@ export function Collapse({
   innerClassName = '',
   style,
   children,
+  As = 'div',
   ...rest
 }: CollapseProps) {
   const classes = ['collapse', fade ? 'collapse--fade' : '', className].filter(Boolean).join(' ');
@@ -60,9 +65,9 @@ export function Collapse({
       style={vars || style ? ({ ...style, ...vars } as CSSProperties) : undefined}
       {...rest}
     >
-      <div className={'collapse__inner ' + innerClassName} style={vars}>
+      <As className={'collapse__inner ' + innerClassName} style={vars}>
         {children}
-      </div>
+      </As>
     </div>
   );
 }
