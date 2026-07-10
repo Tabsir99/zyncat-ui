@@ -74,6 +74,11 @@
 .btn--block {
   width: 100%;
 }
+.btn--icon {
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  border-radius: var(--radius-sm);
+}
 
 .btn__icon {
   display: inline-flex;

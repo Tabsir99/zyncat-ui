@@ -12,7 +12,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Forwarded to the underlying <button> (React 19 ref-as-prop). */
   ref?: Ref<HTMLButtonElement>;
   /** Control height. sm 28px - md 36px (default) - lg 40px. @default 'md' */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
   /** Loading - swaps content for a spinner and makes the button inert. */
   loading?: boolean;
   /** Leading icon node (e.g. a 16px <Icon>). Sized & aligned by the component. */

@@ -1,6 +1,13 @@
 /* motion-tokens.ts - the JSandCSS motion bridge; Motion code reads these token values, never hardcodes them. */
 
-import type { Transition } from 'motion/react';
+export interface MotionTransition {
+  type?: 'spring' | 'tween' | 'inertia' | 'keyframes';
+  duration?: number;
+  ease?: Bezier | 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'circIn' | 'circOut' | 'circInOut' | 'backIn' | 'backOut' | 'backInOut' | 'anticipate';
+  bounce?: number;
+  visualDuration?: number;
+  delay?: number;
+}
 
 export type Bezier = [number, number, number, number];
 
@@ -15,7 +22,7 @@ export interface MotionTokens {
   dur: Record<DurationToken, number>;
   ease: Record<EaseToken, Bezier>;
   /** ready-made Motion transitions */
-  t: { enter: Transition; exit: Transition; layout: Transition<any>; settle: Transition<any> };
+  t: { enter: MotionTransition; exit: MotionTransition; layout: MotionTransition; settle: MotionTransition };
   reduced: boolean;
 }
 
@@ -38,7 +45,7 @@ function build(dur: MotionTokens['dur'], ease: MotionTokens['ease']): MotionToke
       enter: { duration: dur.base, ease: ease.entrance },
       exit: { duration: dur.fast, ease: ease.exit },
       layout: { duration: dur.slow, ease: ease.entrance },
-      settle: reduced ? { duration: 0 } : { type: 'spring', visualDuration: dur.base, bounce: 0.22 },
+      settle: reduced ? { duration: 0 } : { type: 'spring', visualDuration: dur.fast, bounce: 0.25 },
     },
   };
 }

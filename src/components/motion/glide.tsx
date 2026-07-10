@@ -9,7 +9,7 @@
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { motion } from 'motion/react';
-import { UIMotion } from '../../tokens/motion-tokens';
+import { UIMotion, type MotionTokens } from '../../tokens/motion-tokens';
 
 const SM = UIMotion;
 
@@ -73,15 +73,16 @@ export interface GlidePillProps {
   className?: string;
   rect: GlideRect | null;
   active: boolean;
+  motionToken?: keyof MotionTokens['t'];
 }
 
-export function GlidePill({ className, rect, active }: GlidePillProps) {
+export function GlidePill({ className, rect, active, motionToken = 'settle' }: GlidePillProps) {
   /* `wasActive` trails one render: the first appearance lands in place, later moves travel on the spring. */
   const wasActive = useRef(false);
   useEffect(() => {
     wasActive.current = active;
   });
-  const travel = wasActive.current && active ? SM.t.settle : { duration: 0 };
+  const travel = wasActive.current && active ? SM.t[motionToken] : { duration: 0 };
   return (
     <motion.span
       className={className}
