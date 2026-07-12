@@ -35,7 +35,7 @@ export interface CollapseProps extends HTMLAttributes<HTMLDivElement>, TimingPro
   /**
    * What html tag to render as
    */
-  As: keyof JSX.IntrinsicElements;
+  As?: keyof JSX.IntrinsicElements;
 }
 
 export function Collapse({

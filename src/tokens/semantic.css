@@ -11,6 +11,7 @@
 
   --text-strong: var(--gray-950);
   --text-body: var(--gray-800);
+  --text-secondary: var(--gray-700);
   --text-muted: var(--gray-600);
   --text-subtle: var(--gray-500);
   --text-disabled: var(--gray-400);

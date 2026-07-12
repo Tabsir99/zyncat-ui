@@ -149,7 +149,7 @@
   border-radius: inherit;
   background: var(--neutral-wash);
   opacity: 0;
-  transform: scale(0.6);
+  transform: scale(0.75);
   transition:
     transform var(--duration-fast) var(--ease-standard),
     opacity var(--duration-fast) var(--ease-standard),
