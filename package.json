@@ -214,12 +214,18 @@
       "import": "./dist/glide.js"
     },
     "./styles.css": "./src/styles.css",
+    "./next": {
+      "types": "./next.d.mts",
+      "default": "./next.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "src",
-    "llms.txt"
+    "llms.txt",
+    "next.mjs",
+    "next.d.mts"
   ],
   "scripts": {
     "build": "tsup",

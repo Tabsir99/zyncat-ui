@@ -6,21 +6,21 @@
    component. This file is only the always-needed global layer.
    Order matters: fonts - primitives - semantics - shared utilities. */
 
-@import url('./tokens/fonts.css');
+@import './tokens/fonts.css';
 
-@import url('./tokens/color.css');
-@import url('./tokens/typography.css');
-@import url('./tokens/spacing.css');
-@import url('./tokens/radius.css');
-@import url('./tokens/elevation.css');
-@import url('./tokens/motion.css');
-@import url('./tokens/glass.css');
-@import url('./tokens/icons.css');
-@import url('./tokens/layers.css');
-@import url('./tokens/avatar.css');
+@import './tokens/color.css';
+@import './tokens/typography.css';
+@import './tokens/spacing.css';
+@import './tokens/radius.css';
+@import './tokens/elevation.css';
+@import './tokens/motion.css';
+@import './tokens/glass.css';
+@import './tokens/icons.css';
+@import './tokens/layers.css';
+@import './tokens/avatar.css';
 
-@import url('./tokens/semantic.css');
+@import './tokens/semantic.css';
 
 /* Cross-cutting frosted-surface utility shared by several unrelated components
    (badge, toast, select, icon); kept global instead of duplicated per component. */
-@import url('./components/glass/glass.css');
+@import './components/glass/glass.css';
