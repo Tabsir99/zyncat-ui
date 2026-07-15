@@ -161,7 +161,12 @@ function ovCloneTrigger(
   if (!trigger) return null;
   return cloneTrigger(
     trigger,
-    { onClick: onPress, 'aria-haspopup': haspopup, 'aria-expanded': open, 'aria-controls': open ? panelId : undefined },
+    {
+      onpointerdown: onPress,
+      'aria-haspopup': haspopup,
+      'aria-expanded': open,
+      'aria-controls': open ? panelId : undefined,
+    },
     (node) => {
       triggerRef.current = node;
     },

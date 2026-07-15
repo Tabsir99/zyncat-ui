@@ -35,7 +35,8 @@ export function withPremiumDS(nextConfig = {}) {
     ) {
       const bare = subpath.slice(2);
       const abs = resolve(pkgDir, conditions.source);
-      aliases[`premium-ds/${bare}`] = `./${relative(root, abs)}`;
+      const rel = relative(projectDir, abs);
+      aliases[`premium-ds/${bare}`] = rel.startsWith("..") ? rel : `./${rel}`;
     }
   }
 
