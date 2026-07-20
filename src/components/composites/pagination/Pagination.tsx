@@ -3,12 +3,13 @@
 /* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
 
 import './pagination.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type HTMLAttributes } from 'react';
 import { animate } from 'motion/react';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
+import type { DataAttributes } from '../../../dom-props';
 
 export interface PaginationProps {
   /** Accessible name for the nav landmark - name the list ("Posts"), not "pagination". @default 'Pagination' */
@@ -29,6 +30,8 @@ export interface PaginationProps {
   loading?: boolean;
   /** Extra class(es) merged onto the root element. */
   className?: string;
+  /** Standard <nav> attributes (style, data-*, aria-*, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLElement>, 'className'> & DataAttributes;
 }
 
 /* range-swap travel distance - resolved once, on first use */
@@ -53,6 +56,7 @@ export function Pagination({
   onNext,
   loading = false,
   className = '',
+  htmlProps,
 }: PaginationProps) {
   const rangeRef = useRef<HTMLSpanElement>(null);
   const prevBtnRef = useRef<HTMLButtonElement>(null);
@@ -85,7 +89,7 @@ export function Pagination({
   const nextBusy = loading && lastDirRef.current === 1;
 
   return (
-    <nav className={('pgn ' + className).trim()} aria-label={label} aria-busy={loading || undefined}>
+    <nav className={('pgn ' + className).trim()} aria-label={label} aria-busy={loading || undefined} {...htmlProps}>
       <span className="pgn__readout" aria-live="polite">
         <span className="pgn__range" ref={rangeRef}>
           <b>
@@ -102,10 +106,12 @@ export function Pagination({
           className="pgn__btn pgn__btn--prev"
           loading={prevBusy}
           disabled={!hasPrev || loading}
-          aria-label="Previous page"
-          onClick={() => {
-            lastDirRef.current = -1;
-            if (onPrev) onPrev();
+          htmlProps={{
+            'aria-label': 'Previous page',
+            onClick: () => {
+              lastDirRef.current = -1;
+              if (onPrev) onPrev();
+            },
           }}
         >
           <Icon name="caret-left" size="sm" />
@@ -117,10 +123,12 @@ export function Pagination({
           className="pgn__btn pgn__btn--next"
           loading={nextBusy}
           disabled={!hasNext || loading}
-          aria-label="Next page"
-          onClick={() => {
-            lastDirRef.current = 1;
-            if (onNext) onNext();
+          htmlProps={{
+            'aria-label': 'Next page',
+            onClick: () => {
+              lastDirRef.current = 1;
+              if (onNext) onNext();
+            },
           }}
         >
           <Icon name="caret-right" size="sm" />

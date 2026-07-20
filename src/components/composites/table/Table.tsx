@@ -3,10 +3,11 @@
 /* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
 
 import './table.css';
-import { useMemo, useRef, useState, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
+import type { DataAttributes } from '../../../dom-props';
 import { Button } from '../../primitives/button/Button';
 import { Checkbox } from '../../primitives/checkbox/Checkbox';
 import { Odometer } from '../../primitives/badge/odometer';
@@ -85,6 +86,8 @@ export interface TableProps<Row = any> {
   onRowClick?: (row: Row) => void;
   /** Size the table here - the internal scroller absorbs the constraint. */
   className?: string;
+  /** Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the table wrapper. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, 'className'> & DataAttributes;
 }
 
 /* numbers compare numerically, else natural-order text; null/undefined sink to the end */
@@ -114,6 +117,7 @@ export function Table<Row = any>({
   footer,
   onRowClick,
   className = '',
+  htmlProps,
 }: TableProps<Row>) {
   const [sort, setSort] = useState<TableSort | null>(defaultSort);
   const [selected, setSelected] = useState<Set<string | number>>(() => new Set());
@@ -236,7 +240,7 @@ export function Table<Row = any>({
     .join(' ');
 
   return (
-    <div ref={wrapRef} className={rootCls}>
+    <div ref={wrapRef} className={rootCls} {...htmlProps}>
       {selectable ? (
         <div
           className="tbl__bulk"
@@ -249,7 +253,7 @@ export function Table<Row = any>({
             className="tbl__cbx"
             checked={allSelected}
             indeterminate={someSelected}
-            aria-label="Select all rows"
+            htmlProps={{ 'aria-label': 'Select all rows' }}
             onChange={toggleAll}
           />
           <span className="tbl__bulkCount" aria-live="polite" aria-atomic="true">
@@ -258,7 +262,7 @@ export function Table<Row = any>({
           </span>
           <span className="tbl__bulkSpacer"></span>
           {bulkActions ? bulkActions(Array.from(selected), clearSelection) : null}
-          <Button variant="ghost" size="sm" onClick={clearSelection}>
+          <Button variant="ghost" size="sm" htmlProps={{ onClick: clearSelection }}>
             Clear
           </Button>
         </div>
@@ -275,7 +279,7 @@ export function Table<Row = any>({
                       className="tbl__cbx"
                       checked={allSelected}
                       indeterminate={someSelected}
-                      aria-label="Select all rows"
+                      htmlProps={{ 'aria-label': 'Select all rows' }}
                       onChange={toggleAll}
                     />
                   </th>
@@ -337,9 +341,11 @@ export function Table<Row = any>({
                           <Checkbox
                             className="tbl__cbx"
                             checked={isSel}
-                            aria-label={selectionLabel ? selectionLabel(row) : 'Select row'}
-                            onClick={(e) => {
-                              shiftRef.current = e.shiftKey;
+                            htmlProps={{
+                              'aria-label': selectionLabel ? selectionLabel(row) : 'Select row',
+                              onClick: (e) => {
+                                shiftRef.current = e.shiftKey;
+                              },
                             }}
                             onChange={() => toggleRow(idx)}
                           />

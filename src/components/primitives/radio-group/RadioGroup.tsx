@@ -5,13 +5,14 @@
 // Motion layoutId (kept inside each card - its own bg/transform layering needs them there).
 
 import './radio-group.css';
-import { useId, useRef, useState, type FieldsetHTMLAttributes, type ReactNode } from 'react';
+import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { Collapse } from '../../../motion/Collapse';
 import { GlidePill, useGlide, useLayoutSelfHeal } from '../../../motion/glide';
 import { UIMotion } from '../../../tokens/motion-tokens';
+import type { DataAttributes } from '../../../dom-props';
 
 const SM = UIMotion;
 
@@ -28,7 +29,7 @@ export interface RadioOption {
   disabled?: boolean;
 }
 
-export interface RadioGroupProps extends Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'onChange'> {
+interface RadioGroupOwnProps {
   /** Shared radio name - ties the options into one keyboard group. Required. */
   name: string;
   /** The selected value (controlled). */
@@ -57,6 +58,13 @@ export interface RadioGroupProps extends Omit<FieldsetHTMLAttributes<HTMLFieldSe
   options: RadioOption[];
   /** Extra class(es) merged onto the root element. */
   className?: string;
+  /** Inline styles merged onto the root element. */
+  style?: CSSProperties;
+}
+
+export interface RadioGroupProps extends RadioGroupOwnProps {
+  /** Standard <fieldset> attributes (aria-*, data-*, ...) forwarded to the root. */
+  htmlProps?: Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, keyof RadioGroupOwnProps> & DataAttributes;
 }
 
 function RadioGroup({
@@ -74,7 +82,8 @@ function RadioGroup({
   disabled,
   options = [],
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: RadioGroupProps) {
   const groupId = useId();
   /* cards keep hovered state for their layoutId spans; rows drive the glide pill directly */
@@ -97,7 +106,7 @@ function RadioGroup({
     .join(' ');
 
   return (
-    <fieldset className={cls} aria-invalid={error ? true : undefined} {...rest}>
+    <fieldset className={cls} style={style} aria-invalid={error ? true : undefined} {...htmlProps}>
       {label && (
         <div className="rg__head">
           <legend className="rg__label">

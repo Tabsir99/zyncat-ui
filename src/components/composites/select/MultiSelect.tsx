@@ -2,10 +2,12 @@
 
 /* MultiSelect - many-of custom listbox; committing toggles a row, the menu stays open. */
 import './select.css';
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { CheckGlyph } from '../../primitives/checkbox/check-glyph';
 import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
+import type { DisableableAnimation } from '../../../motion/timing';
+import type { DataAttributes } from '../../../dom-props';
 
 /* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
@@ -39,6 +41,10 @@ export interface MultiSelectProps {
   id?: string;
   /** Accessible name for the trigger and listbox - supply when there is no visible label. */
   ariaLabel?: string;
+  /** Standard <div> attributes (className, style, data-*, ...) forwarded to the select root. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
+  animation?: DisableableAnimation;
 }
 
 /* Decorative row tick - CheckGlyph carries checkbox.css into this graph. */
@@ -65,6 +71,8 @@ export function MultiSelect({
   leadingIcon = null,
   id,
   ariaLabel,
+  htmlProps,
+  animation,
 }: MultiSelectProps) {
   const [value, setValue] = useControllable<string[], SelectOption>(
     controlledValue,
@@ -92,7 +100,8 @@ export function MultiSelect({
 
   return (
     <div
-      className="select"
+      {...htmlProps}
+      className={htmlProps?.className ? 'select ' + htmlProps.className : 'select'}
       data-multiple="true"
       data-size={size === 'default' ? undefined : size}
       data-open={lb.open ? 'true' : undefined}
@@ -117,6 +126,7 @@ export function MultiSelect({
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
         multiple
+        animation={animation}
         check={(sel) => <CheckboxTick checked={sel} />}
       />
     </div>

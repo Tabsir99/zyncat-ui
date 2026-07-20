@@ -3,13 +3,15 @@
 /* Alert - the persistent, in-flow status message (banner is a paint modifier). */
 
 import './alert.css';
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { DataAttributes } from '../../../dom-props';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -19,7 +21,7 @@ export interface AlertAction {
   onClick?: () => void;
 }
 
-export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
+interface AlertOwnProps {
   /** Status of the message; info/success are polite, warning/danger assertive. Default 'info'. */
   tone?: AlertTone;
   /** The message - sentence case, ideally one line. */
@@ -38,9 +40,30 @@ export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
   banner?: boolean;
   /** Override the tone glyph; pass null to render no glyph. */
   icon?: ReactNode | null;
+  /** Extra class(es) merged onto the alert. */
+  className?: string;
+  /** Inline styles merged onto the alert. */
+  style?: CSSProperties;
+  /** Enter/exit timing - motion tokens only, or `null` to disable (the height collapse snaps).
+   *  @default height 'slow'/'entrance'; opacity in 'base'/'entrance', out 'fast'/'exit' */
+  animation?: DisableableAnimation;
 }
 
-const { t } = UIMotion;
+export interface AlertProps extends AlertOwnProps {
+  /** Standard <div> attributes (aria-*, data-*, ...) forwarded to the alert. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof AlertOwnProps> & DataAttributes;
+}
+
+/* height rides the layout curve both ways; opacity is quicker (and eases out on exit) - each a
+   resolveMotionTiming default so one `animation` prop retimes both and `null` snaps them. */
+const ALERT_HEIGHT_TIMING = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'slow', ease: 'entrance' },
+} as const;
+const ALERT_OPACITY_TIMING = {
+  open: { duration: 'base', ease: 'entrance' },
+  close: { duration: 'fast', ease: 'exit' },
+} as const;
 
 const TONE_GLYPH: Record<AlertTone, IconName> = {
   info: 'info',
@@ -61,10 +84,15 @@ export function Alert({
   banner = false,
   icon,
   className = '',
-  ...rest
+  style,
+  htmlProps,
+  animation,
 }: AlertProps) {
   const [isOpen, setOpen] = useControllable(open, true, onDismiss);
   const dismiss = () => setOpen(false);
+
+  const h = resolveMotionTiming(animation, ALERT_HEIGHT_TIMING);
+  const o = resolveMotionTiming(animation, ALERT_OPACITY_TIMING);
 
   const classes = ['alert', banner ? 'alert--banner' : '', className].filter(Boolean).join(' ');
 
@@ -76,10 +104,10 @@ export function Alert({
           className="alert-shell"
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0, transition: { height: t.layout, opacity: t.exit } }}
-          transition={{ height: t.layout, opacity: t.enter }}
+          exit={{ height: 0, opacity: 0, transition: { height: h.close, opacity: o.close } }}
+          transition={{ height: h.open, opacity: o.open }}
         >
-          <div className={classes} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...rest}>
+          <div className={classes} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (
               <span className="alert__icon" aria-hidden="true">
                 {icon !== undefined ? (
@@ -94,7 +122,7 @@ export function Alert({
               {children != null && <p className="alert__desc">{children}</p>}
             </div>
             {action && (
-              <Button variant="unstyled" size="sm" className="alert__action" onClick={action.onClick}>
+              <Button variant="unstyled" size="sm" className="alert__action" htmlProps={{ onClick: action.onClick }}>
                 {action.label}
               </Button>
             )}

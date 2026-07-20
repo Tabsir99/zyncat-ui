@@ -14,11 +14,14 @@ import {
   type TextareaHTMLAttributes,
 } from 'react';
 import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from '../input/field-chrome';
+import type { DataAttributes } from '../../../dom-props';
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
-export interface TextareaProps
-  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'rows' | 'onSubmit'>, FieldMessagingProps {
+/** The native <textarea> props Textarea surfaces at the top level (the rest live in `htmlProps`). */
+type TextareaNative = Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'placeholder' | 'disabled' | 'readOnly'>;
+
+interface TextareaOwnProps extends FieldMessagingProps, TextareaNative {
   /** Controlled text value. @default '' */
   value?: string;
   /** Change handler - fired on each edit with the textarea change event. */
@@ -37,6 +40,15 @@ export interface TextareaProps
   hint?: ReactNode;
   /** md (default) - lg (prominent composer). */
   size?: 'md' | 'lg';
+  /** Extra class(es) merged onto the field root. */
+  className?: string;
+  /** Inline styles merged onto the field root. */
+  style?: CSSProperties;
+}
+
+export interface TextareaProps extends TextareaOwnProps {
+  /** Standard <textarea> attributes (name, maxLength, aria-*, onKeyDown, ...) forwarded to the textarea. */
+  htmlProps?: Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, keyof TextareaOwnProps | 'rows'> & DataAttributes;
 }
 
 export function Textarea({
@@ -61,7 +73,8 @@ export function Textarea({
   disabled,
   readOnly,
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: TextareaProps) {
   const taRef = useRef<HTMLTextAreaElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
@@ -116,14 +129,14 @@ export function Textarea({
       e.preventDefault();
       onSubmit(text);
     }
-    rest.onKeyDown && rest.onKeyDown(e);
+    htmlProps?.onKeyDown && htmlProps.onKeyDown(e);
   };
 
   const cls = ['fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className].filter(Boolean).join(' ');
   const boxCls = ['txa', disabled && 'is-disabled', readOnly && 'is-readonly'].filter(Boolean).join(' ');
 
   return (
-    <div className={cls}>
+    <div className={cls} style={style}>
       <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div className={boxCls} style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as CSSProperties}>
         <div className="txa__stack" ref={stackRef}>
@@ -147,7 +160,7 @@ export function Textarea({
               if (mirrorRef.current) mirrorRef.current.scrollTop = taRef.current.scrollTop;
             }}
             aria-invalid={error ? true : undefined}
-            {...rest}
+            {...htmlProps}
           />
         </div>
         {(max || hint) && (

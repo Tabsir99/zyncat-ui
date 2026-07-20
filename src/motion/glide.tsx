@@ -7,8 +7,9 @@
    as collapse/expand between differently sized items. Its look comes from the passed className;
    this module ships no CSS. */
 
-import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type HTMLAttributes, type RefObject } from 'react';
 import { motion } from 'motion/react';
+import type { DataAttributes } from '../dom-props';
 import { UIMotion, type MotionTokens } from '../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -74,9 +75,11 @@ export interface GlidePillProps {
   rect: GlideRect | null;
   active: boolean;
   motionToken?: keyof MotionTokens['t'];
+  /** Standard <span> attributes forwarded to the pill (decorative; aria-hidden). */
+  htmlProps?: HTMLAttributes<HTMLSpanElement> & DataAttributes;
 }
 
-export function GlidePill({ className, rect, active, motionToken = 'settle' }: GlidePillProps) {
+export function GlidePill({ className, rect, active, motionToken = 'settle', htmlProps }: GlidePillProps) {
   /* `wasActive` trails one render: the first appearance lands in place, later moves travel on the spring. */
   const wasActive = useRef(false);
   useEffect(() => {
@@ -85,7 +88,8 @@ export function GlidePill({ className, rect, active, motionToken = 'settle' }: G
   const travel = wasActive.current && active ? SM.t[motionToken] : { duration: 0 };
   return (
     <motion.span
-      className={className}
+      {...(htmlProps as Record<string, unknown>)}
+      className={htmlProps?.className ? className + ' ' + htmlProps.className : className}
       aria-hidden="true"
       initial={false}
       animate={{

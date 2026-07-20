@@ -5,9 +5,11 @@
    date-picker.css only extends it. */
 
 import './date-picker.css';
-import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode, Ref } from 'react';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { FieldLabel, FieldMessage } from '../../primitives/input/field-chrome';
+import type { DisableableAnimation } from '../../../motion/timing';
+import type { DataAttributes } from '../../../dom-props';
 
 /* Props every date/time field shares - documented once, inherited by each
    field's public interface. */
@@ -24,6 +26,10 @@ export interface DateFieldBaseProps {
   disabled?: boolean;
   /** Extra class on the field shell root. */
   className?: string;
+  /** Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Popover open/close timing - motion tokens only, or `null` to disable. (Not used by TimeField, which is inline.) */
+  animation?: DisableableAnimation;
 }
 
 export interface FieldShellProps {
@@ -34,13 +40,24 @@ export interface FieldShellProps {
   message?: ReactNode;
   icon: IconName;
   className?: string;
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   children?: ReactNode;
 }
 
-export function FieldShell({ variant, label, required, invalid, message, icon, className, children }: FieldShellProps) {
+export function FieldShell({
+  variant,
+  label,
+  required,
+  invalid,
+  message,
+  icon,
+  className,
+  htmlProps,
+  children,
+}: FieldShellProps) {
   const cls = ['fld', variant, 'fld--has-lead', invalid ? 'is-error' : '', className || ''].filter(Boolean).join(' ');
   return (
-    <div className={cls}>
+    <div {...htmlProps} className={cls}>
       <FieldLabel label={label} required={required} />
       <div className="fld__control">
         {children}

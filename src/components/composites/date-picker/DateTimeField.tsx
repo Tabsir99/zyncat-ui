@@ -66,6 +66,8 @@ export function DateTimeField({
   message,
   disabled = false,
   className = '',
+  htmlProps,
+  animation,
 }: DateTimeFieldProps) {
   const [val, setVal] = useControllable<string | null>(
     value,
@@ -121,8 +123,9 @@ export function DateTimeField({
       message={message}
       icon="calendar"
       className={className}
+      htmlProps={htmlProps}
     >
-      <Popover trigger={trigger} side="bottom" align="start">
+      <Popover trigger={trigger} side="bottom" align="start" animation={animation}>
         {(api) => (
           <DtpPanel
             val={date}

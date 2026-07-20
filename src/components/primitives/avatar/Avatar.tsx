@@ -3,14 +3,15 @@
 // Avatar - identity mark; content priority: image - icon - initials - silhouette.
 
 import './avatar.css';
-import { useState, type HTMLAttributes, type ReactNode } from 'react';
+import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import type { DataAttributes } from '../../../dom-props';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarShape = 'circle' | 'square';
 export type AvatarStatus = 'online' | 'away' | 'busy' | 'offline';
 export type AvatarPaletteIndex = 1 | 2 | 3 | 4 | 5 | 6;
 
-export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
+interface AvatarOwnProps {
   /** Image URL. Falls back to initials / icon / silhouette if absent or fails. */
   src?: string | null;
   /** Display name - drives initials generation, palette hash, and aria-label. */
@@ -25,6 +26,15 @@ export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   status?: AvatarStatus | null;
   /** Override identity slot 1-6 (blue - violet - plum - rose - clay - moss); auto from name hash when null, neutral when anonymous. */
   paletteIndex?: AvatarPaletteIndex | null;
+  /** Extra class(es) merged onto the root. */
+  className?: string;
+  /** Inline styles merged onto the root. */
+  style?: CSSProperties;
+}
+
+export interface AvatarProps extends AvatarOwnProps {
+  /** Standard <span> attributes (onClick, title, data-*, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLSpanElement>, keyof AvatarOwnProps> & DataAttributes;
 }
 
 const _PALETTE_SLOTS = 6;
@@ -62,7 +72,7 @@ export function Avatar({
   paletteIndex = null,
   className = '',
   style = {},
-  ...rest
+  htmlProps,
 }: AvatarProps) {
   const [imgError, setImgError] = useState(false);
   const showImg = Boolean(src) && !imgError;
@@ -87,7 +97,7 @@ export function Avatar({
       aria-label={name || undefined}
       data-palette={!showImg && slot != null ? slot : undefined}
       style={style}
-      {...rest}
+      {...htmlProps}
     >
       <span className="avatar__face">
         {showImg && (

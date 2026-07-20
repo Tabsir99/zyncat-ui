@@ -3,11 +3,12 @@
 // Base badge chip - glass surface by default; the outline variant is flat (no glass classes).
 
 import './badge.css';
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
+import type { DataAttributes } from '../../../dom-props';
 
 export type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
-export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+interface BadgeOwnProps {
   /** Status hue. @default 'neutral' */
   tone?: BadgeTone;
   /** Surface. @default 'glass' */
@@ -22,6 +23,17 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   pill?: boolean;
   /** Optional leading <Icon> (overrides dot if both set). */
   icon?: ReactNode;
+  /** Extra class(es) merged onto the chip. */
+  className?: string;
+  /** Inline styles merged onto the chip. */
+  style?: CSSProperties;
+  /** Chip label. */
+  children?: ReactNode;
+}
+
+export interface BadgeProps extends BadgeOwnProps {
+  /** Standard <span> attributes (aria-*, data-*, title, ...) forwarded to the chip. */
+  htmlProps?: Omit<HTMLAttributes<HTMLSpanElement>, keyof BadgeOwnProps> & DataAttributes;
 }
 
 export function Badge({
@@ -33,8 +45,9 @@ export function Badge({
   pill = false,
   icon = null,
   className = '',
+  style,
   children,
-  ...rest
+  htmlProps,
 }: BadgeProps) {
   const isGlass = variant !== 'outline';
   const classes = [
@@ -52,7 +65,7 @@ export function Badge({
   const showDot = (dot || live) && !icon;
 
   return (
-    <span className={classes} {...rest}>
+    <span className={classes} style={style} {...htmlProps}>
       {showDot ? <span className={`badge__dot${live ? ' badge__dot--live' : ''}`} aria-hidden="true" /> : null}
       {icon ? (
         <span className="badge__icon" aria-hidden="true">

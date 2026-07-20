@@ -4,15 +4,20 @@
    trap, scroll lock, inert page) comes from the shared ModalShell; the
    drag-to-dismiss physics live in use-sheet-drag. */
 import './sheet.css';
-import { Fragment, useId, useRef, type ReactElement, type ReactNode } from 'react';
+import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import { resolveMotionTiming, type MotionTimings } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovResolveChildren, ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell } from '../../internal/overlay/modal';
 import { useSheetDrag } from './use-sheet-drag';
+import type { DataAttributes } from '../../../dom-props';
 
-const SM = UIMotion;
+const SHEET_TIMING = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'base', ease: 'exit' },
+} as const;
 
 export interface SheetProps {
   /** Controlled open state. Omit to stay uncontrolled. */
@@ -36,17 +41,18 @@ export interface SheetProps {
 
   /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
+  /** Standard attributes (className, style, data-*, ...) forwarded to the sheet panel. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Open/close timing - motion tokens only, or `null` to disable. @default open 'slow'/'entrance', close 'base'/'exit' */
+  animation?: DisableableAnimation;
   /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
 /* entrance curve, not a spring - overshoot would show a gap behind the panel */
-function sheetVariants(side: 'right' | 'bottom') {
+function sheetVariants(side: 'right' | 'bottom', timings: MotionTimings) {
   const axis = side === 'bottom' ? 'y' : 'x';
-  return {
-    closed: { [axis]: '100%', transition: { duration: SM.dur.base, ease: SM.ease.exit } },
-    open: { [axis]: 0, transition: { duration: SM.dur.slow, ease: SM.ease.entrance } },
-  };
+  return { closed: { [axis]: '100%', transition: timings.close }, open: { [axis]: 0, transition: timings.open } };
 }
 
 /* The shell owns the drag hook; slotRef must exist before the shell renders. */
@@ -56,6 +62,8 @@ function SheetShell({
   dismissible,
   asChild,
   requestClose,
+  htmlProps,
+  animation,
   children,
 }: {
   side: 'right' | 'bottom';
@@ -63,6 +71,8 @@ function SheetShell({
   dismissible: boolean;
   asChild: boolean;
   requestClose: () => void;
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  animation?: DisableableAnimation;
   children: ReactNode;
 }) {
   const slotRef = useRef<HTMLElement>(null);
@@ -71,13 +81,13 @@ function SheetShell({
     <ModalShell
       layerClass={'overlay-layer--sheet-' + side}
       slotClass={'overlay-slot--sheet-' + side}
-      slotVariants={sheetVariants(side)}
+      slotVariants={sheetVariants(side, resolveMotionTiming(animation, SHEET_TIMING))}
       panelId={panelId}
       dismissible={dismissible}
       requestClose={requestClose}
       asChild={asChild}
       slotRef={slotRef}
-      slotProps={slotProps}
+      slotProps={{ ...htmlProps, ...slotProps }}
       scrimOpacity={scrimOpacity}
     >
       {children}
@@ -94,6 +104,8 @@ export function Sheet({
   dismissible = true,
   asChild = false,
   id,
+  htmlProps,
+  animation,
   children,
 }: SheetProps) {
   const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
@@ -108,7 +120,15 @@ export function Sheet({
       <OverlayPortal>
         <AnimatePresence>
           {open && (
-            <SheetShell side={side} panelId={panelId} dismissible={dismissible} asChild={asChild} requestClose={close}>
+            <SheetShell
+              side={side}
+              panelId={panelId}
+              dismissible={dismissible}
+              asChild={asChild}
+              requestClose={close}
+              htmlProps={htmlProps}
+              animation={animation}
+            >
               {ovResolveChildren(children, close)}
             </SheetShell>
           )}

@@ -3,9 +3,10 @@
 // Collapse - open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
 
 import './collapse.css';
-import type { CSSProperties, HTMLAttributes, JSX } from 'react';
+import type { CSSProperties, HTMLAttributes, JSX, ReactNode } from 'react';
+import type { DataAttributes } from '../dom-props';
 import type { DurationToken, EaseToken } from '../tokens/motion-scale';
-import { timingVars, type AnimationTiming, type Timing, type TimingProps } from './timing';
+import { timingVars, type AnimationTiming, type DisableableAnimation, type Timing, type TimingProps } from './timing';
 
 /** Motion-scale duration tokens - the only values Collapse timing accepts. */
 export type CollapseDuration = DurationToken;
@@ -16,7 +17,7 @@ export type CollapseTiming<Token extends string> = Timing<Token>;
 /** Grouped `{ duration, ease }` timing for the size/fade transition. */
 export type CollapseAnimation = AnimationTiming;
 
-export interface CollapseProps extends HTMLAttributes<HTMLDivElement>, TimingProps {
+interface CollapseOwnProps extends TimingProps {
   /** Open/closed state. Closed content is also removed from the tab order, the accessibility
    *  tree and hit-testing once the exit transition completes; reopening restores it before
    *  the entrance runs. */
@@ -30,12 +31,24 @@ export interface CollapseProps extends HTMLAttributes<HTMLDivElement>, TimingPro
   innerClassName?: string;
   /** Size (and fade) transition timing - motion tokens only, each field one token or
    *  `{ open, close }`, e.g. `{ duration: { close: 'fast' }, ease: { close: 'exit' } }`.
+   *  `null` disables the transition (open/close snap instantly).
    *  @default duration 'slow' + ease 'entrance' (fade-out: 'base' + 'standard') */
-  animation?: AnimationTiming;
+  animation?: DisableableAnimation;
   /**
    * What html tag to render as
    */
   As?: keyof JSX.IntrinsicElements;
+  /** Extra class(es) merged onto the root. */
+  className?: string;
+  /** Inline styles merged onto the root (composed with the timing custom properties). */
+  style?: CSSProperties;
+  /** The collapsing content. */
+  children?: ReactNode;
+}
+
+export interface CollapseProps extends CollapseOwnProps {
+  /** Standard <div> attributes (aria-*, data-*, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof CollapseOwnProps> & DataAttributes;
 }
 
 export function Collapse({
@@ -48,7 +61,7 @@ export function Collapse({
   style,
   children,
   As = 'div',
-  ...rest
+  htmlProps,
 }: CollapseProps) {
   const classes = ['collapse', fade ? 'collapse--fade' : '', className].filter(Boolean).join(' ');
 
@@ -63,7 +76,7 @@ export function Collapse({
       data-open={open ? 'true' : 'false'}
       data-axis={axis}
       style={vars || style ? ({ ...style, ...vars } as CSSProperties) : undefined}
-      {...rest}
+      {...htmlProps}
     >
       <As className={'collapse__inner ' + innerClassName} style={vars}>
         {children}

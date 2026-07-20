@@ -3,22 +3,22 @@
 /* Dialog - styled modal surface on the shared ModalShell: header (icon, title,
    description, close), a scroll-edged body, and a footer action row. */
 import './dialog.css';
-import { Fragment, useId, useRef, type ReactElement, type ReactNode } from 'react';
+import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell } from '../../internal/overlay/modal';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
+import type { DataAttributes } from '../../../dom-props';
 
-const SM = UIMotion;
-
-const dialogVariants = {
-  closed: { opacity: 0, y: 6, scale: 0.98, transition: { duration: SM.dur.base, ease: SM.ease.standard } },
-  open: { opacity: 1, y: 0, scale: 1, transition: { duration: SM.dur.slow, ease: SM.ease.entrance } },
-};
+const DIALOG_TIMING = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'base', ease: 'standard' },
+} as const;
 
 export interface DialogProps {
   /** Controlled open state. Omit for uncontrolled (use defaultOpen + trigger). */
@@ -47,6 +47,10 @@ export interface DialogProps {
   children?: ReactNode;
   /** Base id for the surface + its title/desc aria ids. Auto-generated when omitted. */
   id?: string;
+  /** Standard attributes (className, style, data-*, ...) forwarded to the dialog `<section>`. */
+  htmlProps?: HTMLAttributes<HTMLElement> & DataAttributes;
+  /** Open/close timing - motion tokens only, or `null` to disable. @default open 'slow'/'entrance', close 'base'/'standard' */
+  animation?: DisableableAnimation;
 }
 
 interface DialogSurfaceProps {
@@ -59,6 +63,7 @@ interface DialogSurfaceProps {
   dismissible: boolean;
   footerContent: ReactNode;
   onRequestClose: () => void;
+  htmlProps?: HTMLAttributes<HTMLElement> & DataAttributes;
   children?: ReactNode;
 }
 
@@ -72,6 +77,7 @@ function DialogSurface({
   dismissible,
   footerContent,
   onRequestClose,
+  htmlProps,
   children,
 }: DialogSurfaceProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -86,7 +92,8 @@ function DialogSurface({
 
   return (
     <section
-      className="dialog"
+      {...htmlProps}
+      className={htmlProps?.className ? 'dialog ' + htmlProps.className : 'dialog'}
       role="dialog"
       aria-modal="true"
       data-size={size === 'md' ? undefined : size}
@@ -142,12 +149,20 @@ export function Dialog({
   footer = null,
   children,
   id,
+  htmlProps,
+  animation,
 }: DialogProps) {
   const autoId = useId();
   const baseId = id || 'dialog-' + autoId;
   const [isOpen, setOpen] = useControllable(open, defaultOpen, onOpenChange);
   const triggerRef = useRef<HTMLElement>(null);
   const close = () => setOpen(false);
+
+  const timings = resolveMotionTiming(animation, DIALOG_TIMING);
+  const dialogVariants = {
+    closed: { opacity: 0, y: 6, scale: 0.98, transition: timings.close },
+    open: { opacity: 1, y: 0, scale: 1, transition: timings.open },
+  };
 
   return (
     <Fragment>
@@ -179,6 +194,7 @@ export function Dialog({
                 dismissible={dismissible}
                 footerContent={typeof footer === 'function' ? footer(close) : footer}
                 onRequestClose={close}
+                htmlProps={htmlProps}
               >
                 {children}
               </DialogSurface>

@@ -4,15 +4,13 @@
 
 import './input.css';
 import { useState } from 'react';
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../../internal/icon/Icon';
 import { FieldLabel, FieldMessage } from './field-chrome';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface NumberFieldProps extends Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  'size' | 'value' | 'onChange' | 'min' | 'max' | 'step'
-> {
+interface NumberFieldOwnProps {
   /** Id wired to the input and the label's `htmlFor`. */
   id?: string;
   /** Label text (sentence case). */
@@ -37,6 +35,19 @@ export interface NumberFieldProps extends Omit<
   onChange?: (value: number) => void;
   /** Control height: sm - md (default) - lg. */
   size?: 'sm' | 'md' | 'lg';
+  /** Extra class(es) merged onto the field root. */
+  className?: string;
+  /** Inline styles merged onto the field root. */
+  style?: CSSProperties;
+}
+
+export interface NumberFieldProps extends NumberFieldOwnProps {
+  /** Standard <input> attributes (name, aria-*, ...) forwarded to the input. */
+  htmlProps?: Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    keyof NumberFieldOwnProps | 'size' | 'value' | 'onChange' | 'min' | 'max' | 'step'
+  > &
+    DataAttributes;
 }
 
 export function NumberField({
@@ -53,7 +64,8 @@ export function NumberField({
   onChange,
   size,
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: NumberFieldProps) {
   const controlled = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
   const [num, setNum] = useControllable<number>(controlled, defaultValue, onChange);
@@ -79,7 +91,7 @@ export function NumberField({
     .join(' ');
 
   return (
-    <div className={cls}>
+    <div className={cls} style={style}>
       <FieldLabel id={id} label={label} />
       <div className="fld__control">
         <input
@@ -106,7 +118,7 @@ export function NumberField({
             }
             if (e.key === 'Enter') commit(v);
           }}
-          {...rest}
+          {...htmlProps}
         />
         {unit && <span className="numf__unit">{unit}</span>}
         <div className="numf__steppers">

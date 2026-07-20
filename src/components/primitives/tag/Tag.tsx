@@ -3,13 +3,22 @@
 /* Tag (+ TagGroup) - removable/editable label; stateless, the parent owns the list. */
 
 import './tag.css';
-import { createContext, useContext, Fragment, type HTMLAttributes, type ReactNode } from 'react';
+import { createContext, useContext, Fragment, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { IconSlot } from '../../internal/icon/IconSlot';
+import type { DataAttributes } from '../../../dom-props';
 
-/** Tag - the removable, editable label (stateless; the parent owns the list). */
-export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
+/* enter/exit for a chip appearing or leaving the group; layout for neighbours sliding to fill.
+   Both are resolveMotionTiming defaults so TagGroup's `animation` retimes them and `null` snaps. */
+const TAG_TIMING = { open: { duration: 'base', ease: 'entrance' }, close: { duration: 'fast', ease: 'exit' } } as const;
+const TAG_LAYOUT_TIMING = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'slow', ease: 'entrance' },
+} as const;
+
+interface TagOwnProps {
   /** Tag content; a string label also seeds the default remove-button `aria-label`. */
   children: ReactNode;
   /** Your own icon node, sized small and tinted to the tag's text. */
@@ -24,19 +33,40 @@ export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'childre
   disabled?: boolean;
   /** Extra class(es) merged onto the root element. */
   className?: string;
+  /** Inline styles merged onto the root element. */
+  style?: CSSProperties;
 }
 
-/** TagGroup - wrapping flex row + removal/insertion choreography. */
-export interface TagGroupProps extends HTMLAttributes<HTMLDivElement> {
+/** Tag - the removable, editable label (stateless; the parent owns the list). */
+export interface TagProps extends TagOwnProps {
+  /** Standard <span> attributes forwarded to the tag root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLSpanElement>, keyof TagOwnProps> & DataAttributes;
+}
+
+interface TagGroupOwnProps {
   /** Accessible name for the group (role="group"). */
   label?: string;
   /** The `Tag`s; wrapped in `AnimatePresence` so adds/removes animate. */
   children?: ReactNode;
   /** Extra class(es) merged onto the group wrapper. */
   className?: string;
+  /** Inline styles merged onto the group wrapper. */
+  style?: CSSProperties;
+  /** Add/remove/reflow timing for the member tags - motion tokens only, or `null` to disable. */
+  animation?: DisableableAnimation;
 }
 
-const TagGroupContext = createContext(false);
+/** TagGroup - wrapping flex row + removal/insertion choreography. */
+export interface TagGroupProps extends TagGroupOwnProps {
+  /** Standard <div> attributes forwarded to the group wrapper. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TagGroupOwnProps> & DataAttributes;
+}
+
+interface TagGroupCtx {
+  grouped: boolean;
+  animation?: DisableableAnimation;
+}
+const TagGroupContext = createContext<TagGroupCtx>({ grouped: false });
 
 /* The remove glyph - drawn inline (path-level, per section D) so it can wind up on hover. */
 function TagRemoveGlyph() {
@@ -55,9 +85,10 @@ export function Tag({
   size = 'md',
   disabled = false,
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: TagProps) {
-  const grouped = useContext(TagGroupContext);
+  const { grouped, animation } = useContext(TagGroupContext);
   const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
 
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
@@ -80,35 +111,43 @@ export function Tag({
 
   if (!grouped) {
     return (
-      <span className={classes} data-disabled={disabled ? 'true' : undefined} {...rest}>
+      <span className={classes} style={style} data-disabled={disabled ? 'true' : undefined} {...htmlProps}>
         {content}
       </span>
     );
   }
 
-  const { t } = UIMotion;
+  const enterExit = resolveMotionTiming(animation, TAG_TIMING);
+  const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
   return (
     <motion.span
       layout
       className={classes}
+      style={style}
       data-disabled={disabled ? 'true' : undefined}
       initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1, transition: t.enter }}
-      exit={{ opacity: 0, scale: 0.9, transition: t.exit }}
-      transition={t.layout}
+      animate={{ opacity: 1, scale: 1, transition: enterExit.open }}
+      exit={{ opacity: 0, scale: 0.9, transition: enterExit.close }}
+      transition={layout}
       /* span props whose names collide with Motion gesture callbacks (onDrag*) can't be
          typed onto a motion element; the runtime spread is unchanged */
-      {...(rest as Record<string, unknown>)}
+      {...(htmlProps as Record<string, unknown>)}
     >
       {content}
     </motion.span>
   );
 }
 
-export function TagGroup({ label, className = '', children, ...rest }: TagGroupProps) {
+export function TagGroup({ label, className = '', style, children, htmlProps, animation }: TagGroupProps) {
   return (
-    <div className={['tag-group', className].filter(Boolean).join(' ')} role="group" aria-label={label} {...rest}>
-      <TagGroupContext.Provider value={true}>
+    <div
+      className={['tag-group', className].filter(Boolean).join(' ')}
+      style={style}
+      role="group"
+      aria-label={label}
+      {...htmlProps}
+    >
+      <TagGroupContext.Provider value={{ grouped: true, animation }}>
         <AnimatePresence initial={false}>{children}</AnimatePresence>
       </TagGroupContext.Provider>
     </div>

@@ -10,6 +10,7 @@ import { Collapse } from '../../../../motion/Collapse';
 import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
+import type { DisableableAnimation } from '../../../../motion/timing';
 
 export interface ListboxPanelProps {
   lb: ListboxState;
@@ -18,6 +19,8 @@ export interface ListboxPanelProps {
   searchPlaceholder?: string;
   ariaLabel?: string;
   multiple?: boolean;
+  /** Menu open/close timing - motion tokens only, or `null` to disable. */
+  animation?: DisableableAnimation;
   /** Row check-slot renderer; the default is the single-select checkmark. */
   check?: (selected: boolean) => ReactNode;
 }
@@ -48,6 +51,7 @@ export function ListboxPanel({
   searchPlaceholder,
   ariaLabel,
   multiple,
+  animation,
   check = defaultCheck,
 }: ListboxPanelProps) {
   /* value -> position in the filtered nav space; the row reads its index (and its visibility)
@@ -55,7 +59,14 @@ export function ListboxPanel({
      through the group loop could. Rebuilt only when the visible set changes. */
   const navIndex = useMemo(() => new Map(lb.navItems.map((o, i) => [o.value, i] as const)), [lb.navItems]);
   return (
-    <SelectMenu open={lb.open} menuId={lb.menuId} close={lb.hide} triggerRef={lb.triggerRef} multiple={multiple}>
+    <SelectMenu
+      open={lb.open}
+      menuId={lb.menuId}
+      close={lb.hide}
+      triggerRef={lb.triggerRef}
+      multiple={multiple}
+      animation={animation}
+    >
       {searchable && !loading && (
         <div className="select__search">
           <Icon name="magnifying-glass" size="sm" />

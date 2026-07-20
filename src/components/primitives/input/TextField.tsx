@@ -4,18 +4,34 @@
 
 import './input.css';
 import { useRef } from 'react';
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from './field-chrome';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, FieldMessagingProps {
+/** The native <input> props TextField surfaces at the top level (the rest live in `htmlProps`). */
+type TextFieldNative = Pick<
+  InputHTMLAttributes<HTMLInputElement>,
+  'placeholder' | 'value' | 'onChange' | 'disabled' | 'readOnly' | 'type'
+>;
+
+interface TextFieldOwnProps extends FieldMessagingProps, TextFieldNative {
   /** Leading icon - your own icon node (sized to the control). Decorative. */
   leadingIcon?: ReactNode;
   /** Show a clear button when there's a value. */
   clearable?: boolean;
   /** Control height: sm 28 - md 36 (default) - lg 40. */
   size?: 'sm' | 'md' | 'lg';
+  /** Extra class(es) merged onto the field root. */
+  className?: string;
+  /** Inline styles merged onto the field root. */
+  style?: CSSProperties;
+}
+
+export interface TextFieldProps extends TextFieldOwnProps {
+  /** Standard <input> attributes (name, autoComplete, maxLength, aria-*, ...) forwarded to the input. */
+  htmlProps?: Omit<InputHTMLAttributes<HTMLInputElement>, keyof TextFieldOwnProps | 'size'> & DataAttributes;
 }
 
 export function TextField({
@@ -37,7 +53,8 @@ export function TextField({
   readOnly,
   type = 'text',
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: TextFieldProps) {
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +84,7 @@ export function TextField({
     .join(' ');
 
   return (
-    <div className={cls}>
+    <div className={cls} style={style}>
       <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div className="fld__control">
         {leadingIcon && (
@@ -86,7 +103,7 @@ export function TextField({
           disabled={disabled}
           readOnly={readOnly}
           aria-invalid={error ? true : undefined}
-          {...rest}
+          {...htmlProps}
         />
         {showClear && (
           <button type="button" className="fld__action" aria-label="Clear" onClick={clear}>

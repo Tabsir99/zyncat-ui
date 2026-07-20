@@ -44,6 +44,7 @@ export function TimeField({
   message,
   disabled = false,
   className = '',
+  htmlProps,
 }: TimeFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
@@ -64,6 +65,7 @@ export function TimeField({
       message={message}
       icon="clock"
       className={className}
+      htmlProps={htmlProps}
     >
       <div className={'fld__input tfd__box' + (disabled ? ' is-disabled' : '')} onPointerDown={onBoxPointerDown}>
         <TimeSegments

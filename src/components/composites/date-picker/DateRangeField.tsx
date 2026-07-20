@@ -56,6 +56,8 @@ export function DateRangeField({
   message,
   disabled = false,
   className = '',
+  htmlProps,
+  animation,
 }: DateRangeFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
@@ -88,13 +90,21 @@ export function DateRangeField({
       message={message}
       icon="calendar"
       className={className}
+      htmlProps={htmlProps}
     >
       {narrow ? (
         <Sheet trigger={trigger} side="bottom" open={pickerOpen} onOpenChange={setPickerOpen}>
           {panel}
         </Sheet>
       ) : (
-        <Popover trigger={trigger} side="bottom" align="start" open={pickerOpen} onOpenChange={setPickerOpen}>
+        <Popover
+          trigger={trigger}
+          side="bottom"
+          align="start"
+          open={pickerOpen}
+          onOpenChange={setPickerOpen}
+          animation={animation}
+        >
           {panel}
         </Popover>
       )}

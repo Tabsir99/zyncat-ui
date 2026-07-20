@@ -40,6 +40,8 @@ export function DateField({
   message,
   disabled = false,
   className = '',
+  htmlProps,
+  animation,
 }: DateFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
   const trigger = <FieldTrigger display={displayDay(val)} placeholder={placeholder} disabled={disabled} />;
@@ -53,8 +55,9 @@ export function DateField({
       message={message}
       icon="calendar"
       className={className}
+      htmlProps={htmlProps}
     >
-      <Popover trigger={trigger} side="bottom" align="start">
+      <Popover trigger={trigger} side="bottom" align="start" animation={animation}>
         {(api) => (
           <DtpPanel val={val} commit={commit} close={api.close} min={min} max={max} timezone={timezone} label={label} />
         )}

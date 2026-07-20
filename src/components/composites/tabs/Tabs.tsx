@@ -21,13 +21,23 @@
 // geometry), and the selected tab is kept in view.
 
 import './tabs.css';
-import { useId, useLayoutEffect, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  useId,
+  useLayoutEffect,
+  useRef,
+  type CSSProperties,
+  type HTMLAttributes,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { motion, animate } from 'motion/react';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
-import { AnimationTiming } from '../../../motion/timing';
+import { type DisableableAnimation } from '../../../motion/timing';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DataAttributes } from '../../../dom-props';
 
 const SM = UIMotion;
 
@@ -45,7 +55,7 @@ export interface TabItem {
   disabled?: boolean;
 }
 
-export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
+interface TabsOwnProps {
   /** The tab row, in order. @default [] */
   items: TabItem[];
   /** Controlled - the value of the active tab (null/undefined hides the ink). */
@@ -63,6 +73,15 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
   name?: string;
   /** aria-label for the tablist (e.g. "Section views"). */
   label?: string;
+  /** Extra class(es) merged onto the root. */
+  className?: string;
+  /** Inline styles merged onto the root. */
+  style?: CSSProperties;
+}
+
+export interface TabsProps extends TabsOwnProps {
+  /** Standard <div> attributes (data-*, aria-*, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TabsOwnProps> & DataAttributes;
 }
 
 /* Scroll-geometry constants (px) - measurement math, not styling.
@@ -72,7 +91,7 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 20;
 
-export function Tabs({ items = [], value, onChange, name, label, className = '', ...rest }: TabsProps) {
+export function Tabs({ items = [], value, onChange, name, label, className = '', style, htmlProps }: TabsProps) {
   const autoId = useId();
   const base = name || autoId;
 
@@ -196,7 +215,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     : (items.find((i) => !i.disabled) || ({} as Partial<TabItem>)).value;
 
   return (
-    <div className={('tabs ' + className).trim()} {...rest}>
+    <div className={('tabs ' + className).trim()} style={style} {...htmlProps}>
       <div
         className="tabs__list"
         role="tablist"
@@ -244,7 +263,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
   );
 }
 
-export interface TabPanelProps extends Omit<HTMLAttributes<HTMLDivElement>, 'dir'> {
+interface TabPanelOwnProps {
   /** The active tab's value - changing it cuts to the new content. */
   tab: string;
   /** Same `name` as the paired Tabs - wires role/id/aria-labelledby. */
@@ -253,11 +272,27 @@ export interface TabPanelProps extends Omit<HTMLAttributes<HTMLDivElement>, 'dir
   dir?: -1 | 0 | 1;
   /** Panel content - only this inner node animates in on `tab` change; the root chrome stays static. */
   children?: ReactNode;
-  /** Control the animation of the tab */
-  animation?: AnimationTiming;
+  /** Entrance timing for the inner content - motion tokens only, or `null` to disable.
+   *  @default duration 'base' + ease 'entrance' */
+  animation?: DisableableAnimation;
+  /** Extra class(es) merged onto the root. */
+  className?: string;
+  /** Inline styles merged onto the root. */
+  style?: CSSProperties;
 }
 
-export function TabPanel({ tab, name, dir = 0, className = '', children, ...rest }: TabPanelProps) {
+export interface TabPanelProps extends TabPanelOwnProps {
+  /** Standard <div> attributes (data-*, aria-*, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TabPanelOwnProps> & DataAttributes;
+}
+
+const TABPANEL_TIMING = {
+  open: { duration: 'base', ease: 'entrance' },
+  close: { duration: 'base', ease: 'entrance' },
+} as const;
+
+export function TabPanel({ tab, name, dir = 0, className = '', style, children, animation, htmlProps }: TabPanelProps) {
+  const enter = resolveMotionTiming(animation, TABPANEL_TIMING).open;
   return (
     <div
       role="tabpanel"
@@ -265,14 +300,15 @@ export function TabPanel({ tab, name, dir = 0, className = '', children, ...rest
       id={name ? `${name}-panel-${tab}` : undefined}
       aria-labelledby={name ? `${name}-tab-${tab}` : undefined}
       className={('tab-panel ' + className).trim()}
-      {...rest}
+      style={style}
+      {...htmlProps}
     >
       <motion.div
         key={tab}
         className="tab-panel__inner"
         initial={{ x: dir * TABS_ENTER_X, y: 4 }}
         animate={{ x: 0, y: 0 }}
-        transition={SM.t.enter}
+        transition={enter}
       >
         {children}
       </motion.div>

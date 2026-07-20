@@ -2,9 +2,11 @@
 
 /* Select - single-select custom listbox; committing closes the menu and returns focus. */
 import './select.css';
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
+import type { DisableableAnimation } from '../../../motion/timing';
+import type { DataAttributes } from '../../../dom-props';
 
 /* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
@@ -38,6 +40,10 @@ export interface SelectProps {
   id?: string;
   /** Accessible name for the trigger and listbox - supply when there is no visible label. */
   ariaLabel?: string;
+  /** Standard <div> attributes (className, style, data-*, ...) forwarded to the select root. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
+  animation?: DisableableAnimation;
 }
 
 export function Select({
@@ -55,6 +61,8 @@ export function Select({
   leadingIcon = null,
   id,
   ariaLabel,
+  htmlProps,
+  animation,
 }: SelectProps) {
   const [value, setValue] = useControllable<string | null, SelectOption>(
     controlledValue,
@@ -79,7 +87,8 @@ export function Select({
 
   return (
     <div
-      className="select"
+      {...htmlProps}
+      className={htmlProps?.className ? 'select ' + htmlProps.className : 'select'}
       data-size={size === 'default' ? undefined : size}
       data-open={lb.open ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}
@@ -101,6 +110,7 @@ export function Select({
         searchable={searchable}
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
+        animation={animation}
       />
     </div>
   );

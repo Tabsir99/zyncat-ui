@@ -5,12 +5,12 @@
 import './tag.css';
 /* The tick clip renders .collapse classes - collapse.css must ride along. */
 import '../../../motion/collapse.css';
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { DataAttributes } from '../../../dom-props';
 
-/** ToggleTag - the on/off filter chip (<button aria-pressed>). */
-export interface ToggleTagProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'children'> {
+interface ToggleTagOwnProps {
   /** Chip content; the label shown beside the tick or `icon`. */
   children: ReactNode;
   /** Controlled selected value. Omit for uncontrolled. */
@@ -29,6 +29,14 @@ export interface ToggleTagProps extends Omit<ButtonHTMLAttributes<HTMLButtonElem
   disabled?: boolean;
   /** Extra class(es) merged onto the root element. */
   className?: string;
+  /** Inline styles merged onto the root element. */
+  style?: CSSProperties;
+}
+
+/** ToggleTag - the on/off filter chip (<button aria-pressed>). */
+export interface ToggleTagProps extends ToggleTagOwnProps {
+  /** Standard <button> attributes forwarded to the chip. */
+  htmlProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ToggleTagOwnProps> & DataAttributes;
 }
 
 function ToggleTagTick({ selected }: { selected: boolean }) {
@@ -60,7 +68,8 @@ export function ToggleTag({
   size = 'md',
   disabled = false,
   className = '',
-  ...rest
+  style,
+  htmlProps,
 }: ToggleTagProps) {
   const [selected, setSelected] = useControllable(selectedProp, defaultSelected, onChange);
   const toggle = () => setSelected(!selected);
@@ -68,7 +77,15 @@ export function ToggleTag({
   const classes = ['tag', 'tag--toggle', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
 
   return (
-    <button type="button" className={classes} aria-pressed={selected} disabled={disabled} onClick={toggle} {...rest}>
+    <button
+      type="button"
+      className={classes}
+      style={style}
+      aria-pressed={selected}
+      disabled={disabled}
+      onClick={toggle}
+      {...htmlProps}
+    >
       {icon ? (
         <span className="tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>

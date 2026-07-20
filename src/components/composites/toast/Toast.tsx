@@ -9,6 +9,7 @@ import {
   useState,
   useSyncExternalStore,
   type CSSProperties,
+  type HTMLAttributes,
   type ReactElement,
   type ReactNode,
   type RefObject,
@@ -21,6 +22,7 @@ import { tokenPx } from '../../internal/utils/token-px';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { UIToast, DEFAULT_TOASTER_CONFIG, type ToastRecord, type ToastTone, type ToasterConfig } from './toast-store';
+import type { DataAttributes } from '../../../dom-props';
 
 const SM = UIMotion;
 const store = UIToast;
@@ -191,9 +193,11 @@ function ToastBody({ t }: { t: ToastRecord }) {
           variant="secondary"
           size="sm"
           className="toast__action"
-          onClick={() => {
-            if (t.action.onClick) t.action.onClick();
-            store.dismiss(t.id);
+          htmlProps={{
+            onClick: () => {
+              if (t.action.onClick) t.action.onClick();
+              store.dismiss(t.id);
+            },
           }}
         >
           {t.action.label}
@@ -208,7 +212,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
   );
 }
 
-function ToastHost({ config }: { config: ToasterConfig }) {
+function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: HTMLAttributes<HTMLOListElement> }) {
   const {
     toasts,
     paused,
@@ -281,9 +285,16 @@ function ToastHost({ config }: { config: ToasterConfig }) {
 
   return createPortal(
     <ol
-      className={'toast-viewport' + (paused ? ' is-paused' : '')}
+      {...htmlProps}
+      className={
+        'toast-viewport' + (paused ? ' is-paused' : '') + (htmlProps?.className ? ' ' + htmlProps.className : '')
+      }
       data-position={config.position}
-      style={config.offset ? ({ '--toast-offset': `${config.offset}px` } as CSSProperties) : undefined}
+      style={
+        config.offset
+          ? ({ ...htmlProps?.style, '--toast-offset': `${config.offset}px` } as CSSProperties)
+          : htmlProps?.style
+      }
       aria-label="Notifications"
       onPointerOver={(e) => {
         if (e.pointerType !== 'touch') onHold();
@@ -333,11 +344,14 @@ function stripUndefined<T extends object>(o: T): Partial<T> {
   return out;
 }
 
-export interface ToasterProps extends Partial<ToasterConfig> {}
+export interface ToasterProps extends Partial<ToasterConfig> {
+  /** Standard <ol> attributes (className, style, data-*, ...) forwarded to the toast viewport. */
+  htmlProps?: HTMLAttributes<HTMLOListElement> & DataAttributes;
+}
 
 /* Toaster - mount once near the app root. It owns the toast viewport and registers the queue;
    without it, toast() renders nothing (and warns once in the browser). */
-export function Toaster(props: ToasterProps): ReactElement {
+export function Toaster({ htmlProps, ...props }: ToasterProps): ReactElement {
   const config: ToasterConfig = { ...DEFAULT_TOASTER_CONFIG, ...stripUndefined(props) };
 
   useEffect(() => {
@@ -349,7 +363,7 @@ export function Toaster(props: ToasterProps): ReactElement {
     };
   }, [config.position, config.duration, config.visibleToasts, config.gap, config.offset, config.expand]);
 
-  return <ToastHost config={config} />;
+  return <ToastHost config={config} htmlProps={htmlProps} />;
 }
 
 /* The imperative API ships from the same subpath as <Toaster /> - one import for both. */

@@ -4,9 +4,19 @@
 
 import './input.css';
 import { useRef } from 'react';
-import type { ChangeEvent, ClipboardEvent, FocusEvent, KeyboardEvent, MouseEvent, ReactNode } from 'react';
+import type {
+  ChangeEvent,
+  ClipboardEvent,
+  CSSProperties,
+  FocusEvent,
+  HTMLAttributes,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+} from 'react';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface OtpFieldProps {
+interface OtpFieldOwnProps {
   /** Number of slots. @default 6 */
   length?: number;
   /** Controlled value (digit string). */
@@ -23,6 +33,13 @@ export interface OtpFieldProps {
   size?: 'sm';
   /** Extra class(es) appended to the root wrapper. */
   className?: string;
+  /** Inline styles merged onto the root wrapper. */
+  style?: CSSProperties;
+}
+
+export interface OtpFieldProps extends OtpFieldOwnProps {
+  /** Standard <div> attributes (aria-*, data-*, ...) forwarded to the root wrapper. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof OtpFieldOwnProps> & DataAttributes;
 }
 
 export function OtpField({
@@ -34,6 +51,8 @@ export function OtpField({
   disabled,
   size,
   className = '',
+  style,
+  htmlProps,
 }: OtpFieldProps) {
   const refs = useRef<(HTMLInputElement | null)[]>([]);
   const chars = String(value).slice(0, length).padEnd(length).split('');
@@ -108,5 +127,9 @@ export function OtpField({
       />,
     );
   }
-  return <div className={cls}>{cells}</div>;
+  return (
+    <div className={cls} style={style} {...htmlProps}>
+      {cells}
+    </div>
+  );
 }

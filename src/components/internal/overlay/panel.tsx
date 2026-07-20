@@ -20,6 +20,9 @@ export function ovPanelElement({
   className: string;
   motionProps: Record<string, any>;
 }): ReactElement {
+  /* A className riding motionProps (an overlay's forwarded htmlProps) merges onto the panel
+     base class rather than being clobbered by it. */
+  const merged = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ');
   if (asChild) {
     const child = Children.only(children) as ReactElement<any>;
     if (typeof child.type === 'string') {
@@ -35,7 +38,7 @@ export function ovPanelElement({
           {...child.props}
           {...motionProps}
           ref={composedRef}
-          className={child.props.className ? className + ' ' + child.props.className : className}
+          className={merged(className, motionProps.className, child.props.className)}
           style={{ ...motionProps.style, ...child.props.style }}
         >
           {prepend}
@@ -46,7 +49,11 @@ export function ovPanelElement({
     console.warn('[premium-ds] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
-    <motion.div {...motionProps} ref={nodeRef as RefObject<HTMLDivElement>} className={className}>
+    <motion.div
+      {...motionProps}
+      ref={nodeRef as RefObject<HTMLDivElement>}
+      className={merged(className, motionProps.className)}
+    >
       {prepend}
       {children}
     </motion.div>

@@ -3,9 +3,10 @@
 // Button - primitive; composes button.css classes, renders icons, manages loading.
 
 import './button.css';
-import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
+import type { ButtonHTMLAttributes, CSSProperties, ReactNode, Ref } from 'react';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonOwnProps {
   /** Visual weight / intent. `unstyled` emits base chrome only (sizing, focus ring,
    *  layout) with no skin - for local re-skins via `className`, e.g. Alert's tone action. @default 'primary' */
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link' | 'unstyled';
@@ -13,6 +14,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ref?: Ref<HTMLButtonElement>;
   /** Control height. sm 28px - md 36px (default) - lg 40px. @default 'md' */
   size?: 'sm' | 'md' | 'lg' | 'icon';
+  /** `submit` / `reset` / `button`. @default 'button' */
+  type?: 'button' | 'submit' | 'reset';
+  /** Disable the control (also implied by `loading`). */
+  disabled?: boolean;
   /** Loading - swaps content for a spinner and makes the button inert. */
   loading?: boolean;
   /** Leading icon node (e.g. a 16px <Icon>). Sized & aligned by the component. */
@@ -21,6 +26,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconRight?: ReactNode;
   /** Stretch to fill the container width. */
   fullWidth?: boolean;
+  /** Extra class(es) merged onto the button. */
+  className?: string;
+  /** Inline styles merged onto the button. */
+  style?: CSSProperties;
+  /** Button label. */
+  children?: ReactNode;
+}
+
+export interface ButtonProps extends ButtonOwnProps {
+  /** Standard <button> attributes (onClick, name, form, aria-*, data-*, ...) forwarded verbatim. */
+  htmlProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonOwnProps> & DataAttributes;
 }
 
 export function Button({
@@ -33,8 +49,9 @@ export function Button({
   iconRight = null,
   fullWidth = false,
   className = '',
+  style,
   children,
-  ...rest
+  htmlProps,
 }: ButtonProps) {
   const classes = [
     'btn',
@@ -48,7 +65,14 @@ export function Button({
     .join(' ');
 
   return (
-    <button type={type} className={classes} disabled={disabled || loading} aria-busy={loading || undefined} {...rest}>
+    <button
+      type={type}
+      className={classes}
+      style={style}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...htmlProps}
+    >
       {iconLeft ? (
         <span className="btn__icon" aria-hidden="true">
           {iconLeft}

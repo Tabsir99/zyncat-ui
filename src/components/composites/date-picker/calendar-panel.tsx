@@ -235,7 +235,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
       <div className="dtp__foot">
         {timezone ? <span className="dtp__tz">{tzLabel(timezone, selKey)}</span> : null}
         <span className="dtp__footSpacer"></span>
-        <Button variant="primary" size="sm" onClick={close}>
+        <Button variant="primary" size="sm" htmlProps={{ onClick: close }}>
           Done
         </Button>
       </div>

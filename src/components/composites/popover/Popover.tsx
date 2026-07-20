@@ -5,16 +5,27 @@
    on scroll/resize; focus returns to the opener on close but is never trapped,
    so the page behind stays live. Modal surfaces are Dialog and Sheet. */
 import './popover.css';
-import { Fragment, useId, useRef, type ReactElement, type ReactNode, type RefObject } from 'react';
+import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
 import { AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { ovResolveChildren, ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from '../../internal/overlay/layer';
+import {
+  ovResolveChildren,
+  ovCloneTrigger,
+  useOverlayEntry,
+  useOutsidePress,
+  OverlayPortal,
+} from '../../internal/overlay/layer';
 import { useReturnFocus } from '../../internal/overlay/focus';
 import { useAnchorPosition } from '../../internal/overlay/position';
 import { ovPanelElement } from '../../internal/overlay/panel';
+import type { DataAttributes } from '../../../dom-props';
 
-const SM = UIMotion;
+const POPOVER_TIMING = {
+  open: { duration: 'base', ease: 'entrance' },
+  close: { duration: 'fast', ease: 'exit' },
+} as const;
 
 export interface PopoverProps {
   /** Controlled open state. Omit to stay uncontrolled. */
@@ -42,15 +53,22 @@ export interface PopoverProps {
 
   /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
+  /** Standard attributes (className, style, data-*, ...) forwarded to the popover panel. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Open/close timing - motion tokens only, or `null` to disable. @default open 'base'/'entrance', close 'fast'/'exit' */
+  animation?: DisableableAnimation;
   /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
 /* scales open from the anchored edge (transform-origin set in popover.css) */
-const popoverVariants = {
-  closed: { opacity: 0, scale: 0.96, transition: SM.t.exit },
-  open: { opacity: 1, scale: 1, transition: SM.t.enter },
-};
+function popoverVariants(animation: DisableableAnimation | undefined) {
+  const t = resolveMotionTiming(animation, POPOVER_TIMING);
+  return {
+    closed: { opacity: 0, scale: 0.96, transition: t.close },
+    open: { opacity: 1, scale: 1, transition: t.open },
+  };
+}
 
 /* Panel - lifecycle hooks live here so dismiss/placement hold until exit ends. */
 function PopoverPanel({
@@ -62,6 +80,8 @@ function PopoverPanel({
   asChild,
   requestClose,
   triggerRef,
+  htmlProps,
+  animation,
   children,
 }: {
   panelId: string;
@@ -72,6 +92,8 @@ function PopoverPanel({
   asChild: boolean;
   requestClose: () => void;
   triggerRef: RefObject<HTMLElement>;
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  animation?: DisableableAnimation;
   children: ReactNode;
 }) {
   const panelRef = useRef<HTMLElement>(null);
@@ -85,7 +107,14 @@ function PopoverPanel({
     prepend: arrow ? <span key="arrow" className="overlay-popover__arrow" aria-hidden="true"></span> : null,
     nodeRef: panelRef,
     className: 'overlay-popover',
-    motionProps: { id: panelId, variants: popoverVariants, initial: 'closed', animate: 'open', exit: 'closed' },
+    motionProps: {
+      ...htmlProps,
+      id: panelId,
+      variants: popoverVariants(animation),
+      initial: 'closed',
+      animate: 'open',
+      exit: 'closed',
+    },
   });
 }
 
@@ -100,6 +129,8 @@ export function Popover({
   dismissible = true,
   asChild = false,
   id,
+  htmlProps,
+  animation,
   children,
 }: PopoverProps) {
   const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
@@ -123,6 +154,8 @@ export function Popover({
               asChild={asChild}
               requestClose={close}
               triggerRef={triggerRef}
+              htmlProps={htmlProps}
+              animation={animation}
             >
               {ovResolveChildren(children, close)}
             </PopoverPanel>

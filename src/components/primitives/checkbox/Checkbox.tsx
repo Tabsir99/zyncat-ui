@@ -3,10 +3,11 @@
 // Checkbox - checkbox primitive; on/off + indeterminate select-all.
 
 import './checkbox.css';
-import type { ChangeEventHandler, InputHTMLAttributes, ReactNode } from 'react';
+import type { ChangeEventHandler, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { CheckGlyph } from './check-glyph';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
+interface CheckboxOwnProps {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
   checked?: boolean;
   /** Uncontrolled initial state. */
@@ -25,6 +26,15 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   description?: ReactNode;
   /** Fires on toggle - read `e.target.checked`. */
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  /** Extra class(es) merged onto the root label. */
+  className?: string;
+  /** Inline styles merged onto the root label. */
+  style?: CSSProperties;
+}
+
+export interface CheckboxProps extends CheckboxOwnProps {
+  /** Standard <input> attributes (name, value, required, aria-*, ...) forwarded to the checkbox input. */
+  htmlProps?: Omit<InputHTMLAttributes<HTMLInputElement>, keyof CheckboxOwnProps | 'type'> & DataAttributes;
 }
 
 export function Checkbox({
@@ -37,8 +47,9 @@ export function Checkbox({
   label,
   description,
   className = '',
+  style,
   onChange,
-  ...rest
+  htmlProps,
 }: CheckboxProps) {
   const classes = [
     'cbx',
@@ -54,14 +65,14 @@ export function Checkbox({
   const checkedProps = controlled ? { checked } : { defaultChecked };
 
   return (
-    <label className={classes}>
+    <label className={classes} style={style}>
       <CheckGlyph
         indeterminate={indeterminate}
         disabled={disabled}
         aria-invalid={invalid || undefined}
         onChange={onChange}
         {...checkedProps}
-        {...rest}
+        {...htmlProps}
       />
       {label || description ? (
         <span className="cbx__text">

@@ -12,6 +12,10 @@ export const ok = (
       animation={{ duration: { open: 'slower', close: 'fast' }, ease: { open: 'entrance', close: 'exit' } }}
     />
     <Collapse open animation={{ duration: { close: 'fast' } }} />
+    {/* null disables the transition */}
+    <Collapse open animation={null} />
+    {/* className / style stay first-class; other DOM attributes ride htmlProps */}
+    <Collapse open className="x" htmlProps={{ 'aria-label': 'panel', 'data-open-state': 'yes', onClick: () => {} }} />
   </>
 );
 
@@ -25,5 +29,7 @@ export const bad = (
     <Collapse open animation={{ ease: 'ease-in-out' }} />
     {/* @ts-expect-error - unknown directions must not type-check */}
     <Collapse open animation={{ duration: { enter: 'fast' } }} />
+    {/* @ts-expect-error - raw DOM attributes no longer live at the top level */}
+    <Collapse open onClick={() => {}} />
   </>
 );

@@ -23,25 +23,38 @@ export interface AnimationTiming {
   ease?: Timing<EaseToken>;
 }
 
+/** The `animation` prop shape: tokens to retime, omit for the component's defaults, or
+ *  `null` to disable the transition entirely (it plays instantly). */
+export type DisableableAnimation = AnimationTiming | null;
+
 /** Extend this to expose the timing API on a component; redeclare `animation`
  *  to document the component's own default tokens. */
 export interface TimingProps {
-  /** Transition timing - motion tokens only, each field a single token or { open, close }. */
-  animation?: AnimationTiming;
+  /** Transition timing - motion tokens only, each field a single token or { open, close };
+   *  `null` disables the transition (it plays instantly). */
+  animation?: DisableableAnimation;
 }
 
-function resolve<Token extends string>(timing: Timing<Token> | undefined, dir: TimingDirection): Token | undefined {
+/** Pick a single direction out of a `Timing` value (one token, or `{ open, close }`). */
+export function resolveDirection<Token extends string>(
+  timing: Timing<Token> | undefined,
+  dir: TimingDirection,
+): Token | undefined {
   return typeof timing === 'object' ? timing[dir] : timing;
 }
 
-/** Inline style carrying `--<prefix>-dur-open/close` and `--<prefix>-ease-open/close` for the
- *  directions actually given; undefined when none are, so callers can skip the style attribute. */
-export function timingVars(prefix: string, animation: AnimationTiming | undefined): CSSProperties | undefined {
-  if (!animation) return undefined;
+/** Inline style carrying `--<prefix>-dur-open/close` and `--<prefix>-ease-open/close`. Tokens
+ *  become `var(--duration-*)` / `var(--ease-*)`; `null` pins both durations to `0ms` so the
+ *  transition plays instantly; `undefined` yields `undefined`, so callers skip the style. */
+export function timingVars(prefix: string, animation: DisableableAnimation | undefined): CSSProperties | undefined {
+  if (animation === undefined) return undefined;
+  if (animation === null) {
+    return { [`--${prefix}-dur-open`]: '0ms', [`--${prefix}-dur-close`]: '0ms' } as CSSProperties;
+  }
   const vars: Record<string, string> = {};
   for (const dir of ['open', 'close'] as const) {
-    const d = resolve(animation.duration, dir);
-    const e = resolve(animation.ease, dir);
+    const d = resolveDirection(animation.duration, dir);
+    const e = resolveDirection(animation.ease, dir);
     if (d) vars[`--${prefix}-dur-${dir}`] = `var(--duration-${d})`;
     if (e) vars[`--${prefix}-ease-${dir}`] = `var(--ease-${e})`;
   }

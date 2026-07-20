@@ -3,10 +3,18 @@
 // Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
 
 import './toggle.css';
-import { useState, type ChangeEvent, type ChangeEventHandler, type InputHTMLAttributes, type ReactNode } from 'react';
+import {
+  useState,
+  type ChangeEvent,
+  type ChangeEventHandler,
+  type CSSProperties,
+  type InputHTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { DataAttributes } from '../../../dom-props';
 
-export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
+interface ToggleOwnProps {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
   checked?: boolean;
   /** Uncontrolled initial state. */
@@ -21,6 +29,15 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   description?: ReactNode;
   /** Fires on flip - read `e.target.checked`. */
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  /** Extra class(es) merged onto the root label. */
+  className?: string;
+  /** Inline styles merged onto the root label. */
+  style?: CSSProperties;
+}
+
+export interface ToggleProps extends ToggleOwnProps {
+  /** Standard <input> attributes (name, value, required, aria-*, ...) forwarded to the switch input. */
+  htmlProps?: Omit<InputHTMLAttributes<HTMLInputElement>, keyof ToggleOwnProps | 'type'> & DataAttributes;
 }
 
 export function Toggle({
@@ -31,8 +48,9 @@ export function Toggle({
   label,
   description,
   className = '',
+  style,
   onChange,
-  ...rest
+  htmlProps,
 }: ToggleProps) {
   /* public onChange keeps the DOM-event contract, so it forwards here instead of riding the hook */
   const [isOn, setOn] = useControllable(checked, !!defaultChecked);
@@ -56,6 +74,7 @@ export function Toggle({
   return (
     <label
       className={classes}
+      style={style}
       onPointerDown={press(true)}
       onPointerUp={press(false)}
       onPointerLeave={press(false)}
@@ -68,7 +87,7 @@ export function Toggle({
         disabled={disabled}
         checked={isOn}
         onChange={handleChange}
-        {...rest}
+        {...htmlProps}
         defaultChecked={undefined}
       />
       <span

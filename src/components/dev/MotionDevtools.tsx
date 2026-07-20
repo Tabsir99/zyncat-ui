@@ -180,7 +180,7 @@ export function MotionDevtools({
                   key={p}
                   size="sm"
                   variant={!snap.paused && snap.factor === p ? 'primary' : 'secondary'}
-                  onClick={() => setFactor(p)}
+                  htmlProps={{ onClick: () => setFactor(p) }}
                 >
                   {p}×
                 </Button>
@@ -191,11 +191,11 @@ export function MotionDevtools({
               <Button
                 size="sm"
                 variant={snap.paused ? 'primary' : 'secondary'}
-                onClick={() => motionSlowmo.set({ paused: !snap.paused })}
+                htmlProps={{ onClick: () => motionSlowmo.set({ paused: !snap.paused }) }}
               >
                 {snap.paused ? 'Resume' : 'Freeze'}
               </Button>
-              <Button size="sm" variant="ghost" disabled={!active} onClick={() => motionSlowmo.reset()}>
+              <Button size="sm" variant="ghost" disabled={!active} htmlProps={{ onClick: () => motionSlowmo.reset() }}>
                 Reset
               </Button>
             </div>

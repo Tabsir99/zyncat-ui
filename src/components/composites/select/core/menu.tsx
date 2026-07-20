@@ -5,33 +5,27 @@
    mounts the surface. */
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UIMotion } from '../../../../tokens/motion-tokens';
+import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
+import { resolveMotionTiming } from '../../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../../motion/timing';
 import { OverlayPortal, useOverlayEntry, useOutsidePress } from '../../../internal/overlay/layer';
 import { useAnchorPosition } from '../../../internal/overlay/position';
 
-/* Enter decelerates from the trigger, exit accelerates away; opacity rides a faster clock than the slide. */
-const selectMenuVariants = {
-  closed: {
-    opacity: 0,
-    y: -6,
-    scale: 0.96,
-    transition: {
-      duration: UIMotion.dur.base,
-      ease: UIMotion.ease.exit,
-      opacity: { duration: UIMotion.dur.fast, ease: UIMotion.ease.exit },
-    },
-  },
-  open: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: UIMotion.dur.base,
-      ease: UIMotion.ease.entrance,
-      opacity: { duration: UIMotion.dur.fast, ease: UIMotion.ease.entrance },
-    },
-  },
-};
+/* Enter decelerates from the trigger, exit accelerates away; opacity rides a faster clock than
+   the slide (but collapses to instant when the transition is disabled). */
+const SELECT_MENU_TIMING = {
+  open: { duration: 'base', ease: 'entrance' },
+  close: { duration: 'base', ease: 'exit' },
+} as const;
+
+function selectMenuVariants(animation: DisableableAnimation | undefined) {
+  const t = resolveMotionTiming(animation, SELECT_MENU_TIMING);
+  const opacity = (d: MotionTransition) => ({ duration: d.duration === 0 ? 0 : UIMotion.dur.fast, ease: d.ease });
+  return {
+    closed: { opacity: 0, y: -6, scale: 0.96, transition: { ...t.close, opacity: opacity(t.close) } },
+    open: { opacity: 1, y: 0, scale: 1, transition: { ...t.open, opacity: opacity(t.open) } },
+  };
+}
 
 export interface SelectMenuProps {
   open: boolean;
@@ -39,12 +33,14 @@ export interface SelectMenuProps {
   close: () => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
   multiple?: boolean;
+  /** Open/close timing - motion tokens only, or `null` to disable. */
+  animation?: DisableableAnimation;
   children?: ReactNode;
 }
 
 /* The mounted surface joins the overlay stack: dialog focus traps defer to it,
    Escape unwinds menu-then-dialog, and light dismiss comes from the stack too. */
-function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<SelectMenuProps, 'open'>) {
+function MenuSurface({ menuId, close, triggerRef, multiple, animation, children }: Omit<SelectMenuProps, 'open'>) {
   const menuRef = useRef<HTMLDivElement>(null);
   const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
   /* Width policy is the menu's, not the positioner's: never paint narrower than the control.
@@ -68,7 +64,7 @@ function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<Sel
       id={menuId}
       role="presentation"
       data-multiple={multiple ? 'true' : undefined}
-      variants={selectMenuVariants}
+      variants={selectMenuVariants(animation)}
       initial="closed"
       animate="open"
       exit="closed"
@@ -81,12 +77,12 @@ function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<Sel
 /* Body-portaled (via layer.tsx) so an ancestor transform/filter can never become
    the containing block of the fixed-position menu - the playground could not
    catch that; any transformed wrapper in a real app would. */
-export function SelectMenu({ open, menuId, close, triggerRef, multiple, children }: SelectMenuProps) {
+export function SelectMenu({ open, menuId, close, triggerRef, multiple, animation, children }: SelectMenuProps) {
   return (
     <OverlayPortal>
       <AnimatePresence>
         {open && (
-          <MenuSurface menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple}>
+          <MenuSurface menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple} animation={animation}>
             {children}
           </MenuSurface>
         )}

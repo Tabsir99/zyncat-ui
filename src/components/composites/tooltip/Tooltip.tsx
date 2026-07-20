@@ -11,6 +11,7 @@ import {
   useId,
   useRef,
   type FocusEvent,
+  type HTMLAttributes,
   type PointerEvent,
   type ReactElement,
   type ReactNode,
@@ -18,6 +19,7 @@ import {
 import { cloneTrigger } from '../../internal/overlay/layer';
 import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, type Placement } from './tooltip-store';
 import { TooltipHost } from './tooltip-host';
+import type { DataAttributes } from '../../../dom-props';
 
 /* Trigger - reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
 export interface TooltipProps {
@@ -39,6 +41,8 @@ export interface TooltipProps {
   id?: string;
   /** Exactly one element; any element works by default, asChild requires one that accepts a ref. */
   children: ReactElement;
+  /** Standard <span> attributes forwarded to the anchor wrapper (default mode only; ignored with `asChild`, which has no wrapper). */
+  htmlProps?: HTMLAttributes<HTMLSpanElement> & DataAttributes;
 }
 
 function Tooltip({
@@ -51,6 +55,7 @@ function Tooltip({
   asChild = false,
   id,
   children,
+  htmlProps,
 }: TooltipProps) {
   const triggerRef = useRef<HTMLElement | null>(null);
   const wrapRef = useRef<HTMLSpanElement | null>(null);
@@ -102,8 +107,9 @@ function Tooltip({
     return (
       <Fragment>
         <span
+          {...htmlProps}
           ref={wrapRef}
-          className="tooltip-anchor"
+          className={htmlProps?.className ? 'tooltip-anchor ' + htmlProps.className : 'tooltip-anchor'}
           onPointerEnter={onEnter}
           onPointerLeave={hide}
           onPointerDown={hide}
