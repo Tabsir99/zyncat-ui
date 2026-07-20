@@ -39,162 +39,162 @@
   },
   "exports": {
     "./button": {
-      "source": "./src/components/button/Button.tsx",
+      "source": "./src/components/primitives/button/Button.tsx",
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
     "./collapse": {
-      "source": "./src/components/motion/Collapse.tsx",
+      "source": "./src/motion/Collapse.tsx",
       "types": "./dist/collapse.d.ts",
       "import": "./dist/collapse.js"
     },
     "./badge": {
-      "source": "./src/components/badge/Badge.tsx",
+      "source": "./src/components/primitives/badge/Badge.tsx",
       "types": "./dist/badge.d.ts",
       "import": "./dist/badge.js"
     },
     "./status-badge": {
-      "source": "./src/components/badge/StatusBadge.tsx",
+      "source": "./src/components/primitives/badge/StatusBadge.tsx",
       "types": "./dist/status-badge.d.ts",
       "import": "./dist/status-badge.js"
     },
     "./count-badge": {
-      "source": "./src/components/badge/CountBadge.tsx",
+      "source": "./src/components/primitives/badge/CountBadge.tsx",
       "types": "./dist/count-badge.d.ts",
       "import": "./dist/count-badge.js"
     },
     "./avatar": {
-      "source": "./src/components/avatar/Avatar.tsx",
+      "source": "./src/components/primitives/avatar/Avatar.tsx",
       "types": "./dist/avatar.d.ts",
       "import": "./dist/avatar.js"
     },
     "./avatar-group": {
-      "source": "./src/components/avatar/AvatarGroup.tsx",
+      "source": "./src/components/primitives/avatar/AvatarGroup.tsx",
       "types": "./dist/avatar-group.d.ts",
       "import": "./dist/avatar-group.js"
     },
     "./tag": {
-      "source": "./src/components/tag/Tag.tsx",
+      "source": "./src/components/primitives/tag/Tag.tsx",
       "types": "./dist/tag.d.ts",
       "import": "./dist/tag.js"
     },
     "./toggle-tag": {
-      "source": "./src/components/tag/ToggleTag.tsx",
+      "source": "./src/components/primitives/tag/ToggleTag.tsx",
       "types": "./dist/toggle-tag.d.ts",
       "import": "./dist/toggle-tag.js"
     },
     "./table": {
-      "source": "./src/components/table/Table.tsx",
+      "source": "./src/components/composites/table/Table.tsx",
       "types": "./dist/table.d.ts",
       "import": "./dist/table.js"
     },
     "./pagination": {
-      "source": "./src/components/pagination/Pagination.tsx",
+      "source": "./src/components/composites/pagination/Pagination.tsx",
       "types": "./dist/pagination.d.ts",
       "import": "./dist/pagination.js"
     },
     "./text-field": {
-      "source": "./src/components/input/TextField.tsx",
+      "source": "./src/components/primitives/input/TextField.tsx",
       "types": "./dist/text-field.d.ts",
       "import": "./dist/text-field.js"
     },
     "./number-field": {
-      "source": "./src/components/input/NumberField.tsx",
+      "source": "./src/components/primitives/input/NumberField.tsx",
       "types": "./dist/number-field.d.ts",
       "import": "./dist/number-field.js"
     },
     "./otp-field": {
-      "source": "./src/components/input/OtpField.tsx",
+      "source": "./src/components/primitives/input/OtpField.tsx",
       "types": "./dist/otp-field.d.ts",
       "import": "./dist/otp-field.js"
     },
     "./textarea": {
-      "source": "./src/components/textarea/Textarea.tsx",
+      "source": "./src/components/primitives/textarea/Textarea.tsx",
       "types": "./dist/textarea.d.ts",
       "import": "./dist/textarea.js"
     },
     "./checkbox": {
-      "source": "./src/components/checkbox/Checkbox.tsx",
+      "source": "./src/components/primitives/checkbox/Checkbox.tsx",
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
     },
     "./toggle": {
-      "source": "./src/components/toggle/Toggle.tsx",
+      "source": "./src/components/primitives/toggle/Toggle.tsx",
       "types": "./dist/toggle.d.ts",
       "import": "./dist/toggle.js"
     },
     "./radio-group": {
-      "source": "./src/components/radio-group/RadioGroup.tsx",
+      "source": "./src/components/primitives/radio-group/RadioGroup.tsx",
       "types": "./dist/radio-group.d.ts",
       "import": "./dist/radio-group.js"
     },
     "./select": {
-      "source": "./src/components/select/Select.tsx",
+      "source": "./src/components/composites/select/Select.tsx",
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
     },
     "./multi-select": {
-      "source": "./src/components/select/MultiSelect.tsx",
+      "source": "./src/components/composites/select/MultiSelect.tsx",
       "types": "./dist/multi-select.d.ts",
       "import": "./dist/multi-select.js"
     },
     "./date-field": {
-      "source": "./src/components/date-picker/DateField.tsx",
+      "source": "./src/components/composites/date-picker/DateField.tsx",
       "types": "./dist/date-field.d.ts",
       "import": "./dist/date-field.js"
     },
     "./datetime-field": {
-      "source": "./src/components/date-picker/DateTimeField.tsx",
+      "source": "./src/components/composites/date-picker/DateTimeField.tsx",
       "types": "./dist/datetime-field.d.ts",
       "import": "./dist/datetime-field.js"
     },
     "./date-range-field": {
-      "source": "./src/components/date-picker/DateRangeField.tsx",
+      "source": "./src/components/composites/date-picker/DateRangeField.tsx",
       "types": "./dist/date-range-field.d.ts",
       "import": "./dist/date-range-field.js"
     },
     "./time-field": {
-      "source": "./src/components/date-picker/TimeField.tsx",
+      "source": "./src/components/composites/date-picker/TimeField.tsx",
       "types": "./dist/time-field.d.ts",
       "import": "./dist/time-field.js"
     },
     "./tabs": {
-      "source": "./src/components/tabs/Tabs.tsx",
+      "source": "./src/components/composites/tabs/Tabs.tsx",
       "types": "./dist/tabs.d.ts",
       "import": "./dist/tabs.js"
     },
     "./popover": {
-      "source": "./src/components/popover/Popover.tsx",
+      "source": "./src/components/composites/popover/Popover.tsx",
       "types": "./dist/popover.d.ts",
       "import": "./dist/popover.js"
     },
     "./sheet": {
-      "source": "./src/components/sheet/Sheet.tsx",
+      "source": "./src/components/composites/sheet/Sheet.tsx",
       "types": "./dist/sheet.d.ts",
       "import": "./dist/sheet.js"
     },
     "./dialog": {
-      "source": "./src/components/dialog/Dialog.tsx",
+      "source": "./src/components/composites/dialog/Dialog.tsx",
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
     },
     "./tooltip": {
-      "source": "./src/components/tooltip/Tooltip.tsx",
+      "source": "./src/components/composites/tooltip/Tooltip.tsx",
       "types": "./dist/tooltip.d.ts",
       "import": "./dist/tooltip.js"
     },
     "./alert": {
-      "source": "./src/components/alert/Alert.tsx",
+      "source": "./src/components/composites/alert/Alert.tsx",
       "types": "./dist/alert.d.ts",
       "import": "./dist/alert.js"
     },
     "./toast": {
-      "source": "./src/components/toast/Toast.tsx",
+      "source": "./src/components/composites/toast/Toast.tsx",
       "types": "./dist/toast.d.ts",
       "import": "./dist/toast.js"
     },
     "./toast-store": {
-      "source": "./src/components/toast/toast-store.ts",
+      "source": "./src/components/composites/toast/toast-store.ts",
       "types": "./dist/toast-store.d.ts",
       "import": "./dist/toast-store.js"
     },
@@ -209,7 +209,7 @@
       "import": "./dist/motion-devtools.js"
     },
     "./glide": {
-      "source": "./src/components/motion/glide.tsx",
+      "source": "./src/motion/glide.tsx",
       "types": "./dist/glide.d.ts",
       "import": "./dist/glide.js"
     },

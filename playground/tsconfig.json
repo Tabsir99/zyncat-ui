@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -12,41 +16,118 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "paths": {
-      "premium-ds/button": ["../src/components/button/Button.tsx"],
-      "premium-ds/collapse": ["../src/components/motion/Collapse.tsx"],
-      "premium-ds/badge": ["../src/components/badge/Badge.tsx"],
-      "premium-ds/status-badge": ["../src/components/badge/StatusBadge.tsx"],
-      "premium-ds/count-badge": ["../src/components/badge/CountBadge.tsx"],
-      "premium-ds/avatar": ["../src/components/avatar/Avatar.tsx"],
-      "premium-ds/avatar-group": ["../src/components/avatar/AvatarGroup.tsx"],
-      "premium-ds/tag": ["../src/components/tag/Tag.tsx"],
-      "premium-ds/toggle-tag": ["../src/components/tag/ToggleTag.tsx"],
-      "premium-ds/table": ["../src/components/table/Table.tsx"],
-      "premium-ds/pagination": ["../src/components/pagination/Pagination.tsx"],
-      "premium-ds/text-field": ["../src/components/input/TextField.tsx"],
-      "premium-ds/number-field": ["../src/components/input/NumberField.tsx"],
-      "premium-ds/otp-field": ["../src/components/input/OtpField.tsx"],
-      "premium-ds/textarea": ["../src/components/textarea/Textarea.tsx"],
-      "premium-ds/checkbox": ["../src/components/checkbox/Checkbox.tsx"],
-      "premium-ds/toggle": ["../src/components/toggle/Toggle.tsx"],
-      "premium-ds/radio-group": ["../src/components/radio-group/RadioGroup.tsx"],
-      "premium-ds/select": ["../src/components/select/Select.tsx"],
-      "premium-ds/multi-select": ["../src/components/select/MultiSelect.tsx"],
-      "premium-ds/date-field": ["../src/components/date-picker/DateField.tsx"],
-      "premium-ds/datetime-field": ["../src/components/date-picker/DateTimeField.tsx"],
-      "premium-ds/date-range-field": ["../src/components/date-picker/DateRangeField.tsx"],
-      "premium-ds/time-field": ["../src/components/date-picker/TimeField.tsx"],
-      "premium-ds/tabs": ["../src/components/tabs/Tabs.tsx"],
-      "premium-ds/popover": ["../src/components/popover/Popover.tsx"],
-      "premium-ds/sheet": ["../src/components/sheet/Sheet.tsx"],
-      "premium-ds/dialog": ["../src/components/dialog/Dialog.tsx"],
-      "premium-ds/tooltip": ["../src/components/tooltip/Tooltip.tsx"],
-      "premium-ds/alert": ["../src/components/alert/Alert.tsx"],
-      "premium-ds/toast": ["../src/components/toast/Toast.tsx"],
-      "premium-ds/toast-store": ["../src/components/toast/toast-store.ts"],
-      "premium-ds/motion-tokens": ["../src/tokens/motion-tokens.ts"],
-      "premium-ds/styles.css": ["../src/styles.css"]
+      "premium-ds/styles.css": [
+        "../src/styles.css"
+      ],
+      "premium-ds/toast-store": [
+        "../src/components/composites/toast/toast-store.ts"
+      ],
+      "premium-ds/motion-tokens": [
+        "../src/tokens/motion-tokens.ts"
+      ],
+      "premium-ds/motion-devtools": [
+        "../src/components/dev/MotionDevtools.tsx"
+      ],
+      "premium-ds/collapse": [
+        "../src/motion/Collapse.tsx"
+      ],
+      "premium-ds/glide": [
+        "../src/motion/glide.tsx"
+      ],
+      "premium-ds/avatar": [
+        "../src/components/primitives/avatar/Avatar.tsx"
+      ],
+      "premium-ds/avatar-group": [
+        "../src/components/primitives/avatar/AvatarGroup.tsx"
+      ],
+      "premium-ds/badge": [
+        "../src/components/primitives/badge/Badge.tsx"
+      ],
+      "premium-ds/count-badge": [
+        "../src/components/primitives/badge/CountBadge.tsx"
+      ],
+      "premium-ds/status-badge": [
+        "../src/components/primitives/badge/StatusBadge.tsx"
+      ],
+      "premium-ds/button": [
+        "../src/components/primitives/button/Button.tsx"
+      ],
+      "premium-ds/checkbox": [
+        "../src/components/primitives/checkbox/Checkbox.tsx"
+      ],
+      "premium-ds/number-field": [
+        "../src/components/primitives/input/NumberField.tsx"
+      ],
+      "premium-ds/otp-field": [
+        "../src/components/primitives/input/OtpField.tsx"
+      ],
+      "premium-ds/text-field": [
+        "../src/components/primitives/input/TextField.tsx"
+      ],
+      "premium-ds/radio-group": [
+        "../src/components/primitives/radio-group/RadioGroup.tsx"
+      ],
+      "premium-ds/tag": [
+        "../src/components/primitives/tag/Tag.tsx"
+      ],
+      "premium-ds/toggle-tag": [
+        "../src/components/primitives/tag/ToggleTag.tsx"
+      ],
+      "premium-ds/textarea": [
+        "../src/components/primitives/textarea/Textarea.tsx"
+      ],
+      "premium-ds/toggle": [
+        "../src/components/primitives/toggle/Toggle.tsx"
+      ],
+      "premium-ds/alert": [
+        "../src/components/composites/alert/Alert.tsx"
+      ],
+      "premium-ds/date-field": [
+        "../src/components/composites/date-picker/DateField.tsx"
+      ],
+      "premium-ds/date-range-field": [
+        "../src/components/composites/date-picker/DateRangeField.tsx"
+      ],
+      "premium-ds/datetime-field": [
+        "../src/components/composites/date-picker/DateTimeField.tsx"
+      ],
+      "premium-ds/time-field": [
+        "../src/components/composites/date-picker/TimeField.tsx"
+      ],
+      "premium-ds/dialog": [
+        "../src/components/composites/dialog/Dialog.tsx"
+      ],
+      "premium-ds/pagination": [
+        "../src/components/composites/pagination/Pagination.tsx"
+      ],
+      "premium-ds/popover": [
+        "../src/components/composites/popover/Popover.tsx"
+      ],
+      "premium-ds/multi-select": [
+        "../src/components/composites/select/MultiSelect.tsx"
+      ],
+      "premium-ds/select": [
+        "../src/components/composites/select/Select.tsx"
+      ],
+      "premium-ds/sheet": [
+        "../src/components/composites/sheet/Sheet.tsx"
+      ],
+      "premium-ds/table": [
+        "../src/components/composites/table/Table.tsx"
+      ],
+      "premium-ds/tabs": [
+        "../src/components/composites/tabs/Tabs.tsx"
+      ],
+      "premium-ds/toast": [
+        "../src/components/composites/toast/Toast.tsx"
+      ],
+      "premium-ds/tooltip": [
+        "../src/components/composites/tooltip/Tooltip.tsx"
+      ]
     }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": [
+    "src",
+    "vite.config.ts"
+  ]
 }

@@ -1,0 +1,107 @@
+'use client';
+
+/* GlidePill + useGlide - one persistent pill that springs between hovered items, never a per-item
+   remount (so it can't be clipped by a per-item wrapper the way a re-parented layoutId node can).
+   Container-relative and scroll-aware, so it works in scrolling lists (Select) and static grids
+   (DatePicker) alike. The pill animates real width/height - no transform scale - so it never reads
+   as collapse/expand between differently sized items. Its look comes from the passed className;
+   this module ships no CSS. */
+
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { motion } from 'motion/react';
+import { UIMotion, type MotionTokens } from '../tokens/motion-tokens';
+
+const SM = UIMotion;
+
+export interface GlideRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface GlideApi {
+  rect: GlideRect | null;
+  active: boolean;
+  enter: (el: HTMLElement | null) => void;
+  leave: () => void;
+}
+
+export function useGlide<T extends HTMLElement = HTMLElement>(containerRef: RefObject<T | null>): GlideApi {
+  const [rect, setRect] = useState<GlideRect | null>(null);
+  const [active, setActive] = useState(false);
+  const enter = useCallback(
+    (el: HTMLElement | null) => {
+      const c = containerRef.current;
+      if (!c || !el) return;
+      const cb = c.getBoundingClientRect();
+      const tb = el.getBoundingClientRect();
+      /* client rects include ancestor transforms - measuring during a panel's entrance scale
+         would bake the shrunken size into the pill. Normalize by the container's rendered/layout
+         ratio so the rect is always layout truth (ratio is 1 outside an animation). */
+      const sx = c.offsetWidth ? cb.width / c.offsetWidth : 1;
+      const sy = c.offsetHeight ? cb.height / c.offsetHeight : 1;
+      /* container-content coords (+ scroll) so the pill stays pinned to its item when the list
+         scrolls; scroll is 0 for static grids, so this is a no-op there. */
+      setRect({
+        x: (tb.left - cb.left) / sx + c.scrollLeft,
+        y: (tb.top - cb.top) / sy + c.scrollTop,
+        width: tb.width / sx,
+        height: tb.height / sy,
+      });
+      setActive(true);
+    },
+    [containerRef],
+  );
+  const leave = useCallback(() => setActive(false), []);
+  return { rect, active, enter, leave };
+}
+
+/* Keep a layoutId marker honest at rest: FLIP measures viewport rects, so a mid-flight
+   ancestor transform (scroll reveal, panel entrance) poisons the measurement and the node
+   settles off-target with a stale inline transform. Clearing it once the layout animation
+   completes snaps the node back to its CSS-anchored spot - the next FLIP measures truth. */
+export function useLayoutSelfHeal<T extends HTMLElement = HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const onLayoutAnimationComplete = useCallback(() => {
+    if (ref.current) ref.current.style.removeProperty('transform');
+  }, []);
+  return { ref, onLayoutAnimationComplete };
+}
+
+export interface GlidePillProps {
+  className?: string;
+  rect: GlideRect | null;
+  active: boolean;
+  motionToken?: keyof MotionTokens['t'];
+}
+
+export function GlidePill({ className, rect, active, motionToken = 'settle' }: GlidePillProps) {
+  /* `wasActive` trails one render: the first appearance lands in place, later moves travel on the spring. */
+  const wasActive = useRef(false);
+  useEffect(() => {
+    wasActive.current = active;
+  });
+  const travel = wasActive.current && active ? SM.t[motionToken] : { duration: 0 };
+  return (
+    <motion.span
+      className={className}
+      aria-hidden="true"
+      initial={false}
+      animate={{
+        x: rect ? rect.x : 0,
+        y: rect ? rect.y : 0,
+        width: rect ? rect.width : 0,
+        height: rect ? rect.height : 0,
+        opacity: active && rect ? 1 : 0,
+      }}
+      transition={{
+        x: travel,
+        y: travel,
+        width: travel,
+        height: travel,
+        opacity: { duration: SM.dur.fast, ease: active ? SM.ease.standard : SM.ease.exit },
+      }}
+    ></motion.span>
+  );
+}

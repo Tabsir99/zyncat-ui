@@ -23,4 +23,4 @@
 
 /* Cross-cutting frosted-surface utility shared by several unrelated components
    (badge, toast, select, icon); kept global instead of duplicated per component. */
-@import './components/glass/glass.css';
+@import './components/internal/glass/glass.css';

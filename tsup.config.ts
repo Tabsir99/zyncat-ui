@@ -1,4 +1,48 @@
 import { defineConfig, type Options } from 'tsup';
+import { readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+
+// PascalCase filename → kebab-case entry name (Button → button, TextField → text-field).
+function toKebab(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase();
+}
+
+// Exceptions where the auto-derived kebab name doesn't match the desired public entry name.
+const NAME_OVERRIDES: Record<string, string> = {
+  DateTimeField: 'datetime-field',
+};
+
+// Scan primitives/, composites/, compound/ for PascalCase .tsx files → entry map.
+function discoverComponentEntries(): Record<string, string> {
+  const entries: Record<string, string> = {};
+  for (const tier of ['primitives', 'composites', 'compound']) {
+    const tierDir = join('src/components', tier);
+    let dirs: string[];
+    try { dirs = readdirSync(tierDir); } catch { continue; }
+    for (const comp of dirs) {
+      const compDir = join(tierDir, comp);
+      if (!statSync(compDir).isDirectory()) continue;
+      for (const file of readdirSync(compDir)) {
+        if (!file.endsWith('.tsx') || !/^[A-Z]/.test(file)) continue;
+        const stem = file.replace('.tsx', '');
+        entries[NAME_OVERRIDES[stem] ?? toKebab(stem)] = join(compDir, file);
+      }
+    }
+  }
+  return entries;
+}
+
+// Non-component public entries that don't follow the PascalCase .tsx convention.
+const EXPLICIT_ENTRIES: Record<string, string> = {
+  'toast-store': 'src/components/composites/toast/toast-store.ts',
+  'motion-tokens': 'src/tokens/motion-tokens.ts',
+  'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
+  collapse: 'src/motion/Collapse.tsx',
+  glide: 'src/motion/glide.tsx',
+};
 
 // One entry per public module - one dist file + .d.ts each. Subpaths
 // (`premium-ds/button`) are the ONLY public API - there is no barrel entry, so
@@ -6,43 +50,7 @@ import { defineConfig, type Options } from 'tsup';
 // splitting:true hoists shared internals (overlay/*, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.
 const library: Options = {
-  entry: {
-    button: 'src/components/button/Button.tsx',
-    collapse: 'src/components/motion/Collapse.tsx',
-    badge: 'src/components/badge/Badge.tsx',
-    'status-badge': 'src/components/badge/StatusBadge.tsx',
-    'count-badge': 'src/components/badge/CountBadge.tsx',
-    avatar: 'src/components/avatar/Avatar.tsx',
-    'avatar-group': 'src/components/avatar/AvatarGroup.tsx',
-    tag: 'src/components/tag/Tag.tsx',
-    'toggle-tag': 'src/components/tag/ToggleTag.tsx',
-    table: 'src/components/table/Table.tsx',
-    pagination: 'src/components/pagination/Pagination.tsx',
-    'text-field': 'src/components/input/TextField.tsx',
-    'number-field': 'src/components/input/NumberField.tsx',
-    'otp-field': 'src/components/input/OtpField.tsx',
-    textarea: 'src/components/textarea/Textarea.tsx',
-    checkbox: 'src/components/checkbox/Checkbox.tsx',
-    toggle: 'src/components/toggle/Toggle.tsx',
-    'radio-group': 'src/components/radio-group/RadioGroup.tsx',
-    select: 'src/components/select/Select.tsx',
-    'multi-select': 'src/components/select/MultiSelect.tsx',
-    'date-field': 'src/components/date-picker/DateField.tsx',
-    'datetime-field': 'src/components/date-picker/DateTimeField.tsx',
-    'date-range-field': 'src/components/date-picker/DateRangeField.tsx',
-    'time-field': 'src/components/date-picker/TimeField.tsx',
-    tabs: 'src/components/tabs/Tabs.tsx',
-    popover: 'src/components/popover/Popover.tsx',
-    sheet: 'src/components/sheet/Sheet.tsx',
-    dialog: 'src/components/dialog/Dialog.tsx',
-    tooltip: 'src/components/tooltip/Tooltip.tsx',
-    alert: 'src/components/alert/Alert.tsx',
-    toast: 'src/components/toast/Toast.tsx',
-    'toast-store': 'src/components/toast/toast-store.ts',
-    'motion-tokens': 'src/tokens/motion-tokens.ts',
-    'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
-    glide: 'src/components/motion/glide.tsx',
-  },
+  entry: { ...discoverComponentEntries(), ...EXPLICIT_ENTRIES },
   format: ['esm'],
 
   // tsup injects a (now-deprecated) baseUrl into the dts compiler; silence it here
@@ -114,10 +122,15 @@ const library: Options = {
     // side-effect imports in the emitted chunks resolve to a sibling file - which is
     // what lets a consumer's bundler code-split/lazy-load CSS per component. glass.css
     // is a cross-cutting utility served by the base manifest (styles.css), so skip it.
-    const cssFiles = (await readdir('src/components', { recursive: true })).filter(
-      (f) => f.endsWith('.css') && !f.endsWith('glass.css'),
-    );
-    await Promise.all(cssFiles.map((f) => copyFile(`src/components/${f}`, `dist/${f.split('/').pop()}`)));
+    const cssDirs = ['src/components', 'src/motion'];
+    const cssFiles: { src: string; name: string }[] = [];
+    for (const dir of cssDirs) {
+      const found = (await readdir(dir, { recursive: true })).filter(
+        (f) => f.endsWith('.css') && !f.endsWith('glass.css'),
+      );
+      cssFiles.push(...found.map((f) => ({ src: `${dir}/${f}`, name: f.split('/').pop()! })));
+    }
+    await Promise.all(cssFiles.map((f) => copyFile(f.src, `dist/${f.name}`)));
 
     await rm(`dist/${metaName}`);
     console.log(`tsup: ${outputs.length} JS (${client.size} client) + ${cssFiles.length} component CSS`);

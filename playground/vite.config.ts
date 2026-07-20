@@ -1,54 +1,56 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
+import { readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
-// The playground consumes the library exactly as a real app would - through the
-// public subpath specifiers (there is no barrel). Each subpath is aliased to
-// its ../src module so edits to the DS are live (HMR), and react/motion are
-// deduped so there is ONE copy across the playground and ../src.
-// Keep this map in sync with tsup.config.ts entries + tsconfig.json paths.
-const ENTRIES: Record<string, string> = {
-  button: 'components/button/Button.tsx',
-  collapse: 'components/motion/Collapse.tsx',
-  badge: 'components/badge/Badge.tsx',
-  'status-badge': 'components/badge/StatusBadge.tsx',
-  'count-badge': 'components/badge/CountBadge.tsx',
-  avatar: 'components/avatar/Avatar.tsx',
-  'avatar-group': 'components/avatar/AvatarGroup.tsx',
-  tag: 'components/tag/Tag.tsx',
-  'toggle-tag': 'components/tag/ToggleTag.tsx',
-  table: 'components/table/Table.tsx',
-  pagination: 'components/pagination/Pagination.tsx',
-  'text-field': 'components/input/TextField.tsx',
-  'number-field': 'components/input/NumberField.tsx',
-  'otp-field': 'components/input/OtpField.tsx',
-  textarea: 'components/textarea/Textarea.tsx',
-  checkbox: 'components/checkbox/Checkbox.tsx',
-  toggle: 'components/toggle/Toggle.tsx',
-  'radio-group': 'components/radio-group/RadioGroup.tsx',
-  select: 'components/select/Select.tsx',
-  'multi-select': 'components/select/MultiSelect.tsx',
-  'date-field': 'components/date-picker/DateField.tsx',
-  'datetime-field': 'components/date-picker/DateTimeField.tsx',
-  'date-range-field': 'components/date-picker/DateRangeField.tsx',
-  'time-field': 'components/date-picker/TimeField.tsx',
-  tabs: 'components/tabs/Tabs.tsx',
-  popover: 'components/popover/Popover.tsx',
-  sheet: 'components/sheet/Sheet.tsx',
-  dialog: 'components/dialog/Dialog.tsx',
-  tooltip: 'components/tooltip/Tooltip.tsx',
-  alert: 'components/alert/Alert.tsx',
-  toast: 'components/toast/Toast.tsx',
-  'toast-store': 'components/toast/toast-store.ts',
+function toKebab(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
+    .toLowerCase();
+}
+
+const NAME_OVERRIDES: Record<string, string> = {
+  DateTimeField: 'datetime-field',
+};
+
+function discoverComponentEntries(): Record<string, string> {
+  const entries: Record<string, string> = {};
+  const baseDir = fileURLToPath(new URL('../src/components', import.meta.url));
+  for (const tier of ['primitives', 'composites', 'compound']) {
+    const tierDir = join(baseDir, tier);
+    let dirs: string[];
+    try { dirs = readdirSync(tierDir); } catch { continue; }
+    for (const comp of dirs) {
+      const compDir = join(tierDir, comp);
+      if (!statSync(compDir).isDirectory()) continue;
+      for (const file of readdirSync(compDir)) {
+        if (!file.endsWith('.tsx') || !/^[A-Z]/.test(file)) continue;
+        const stem = file.replace('.tsx', '');
+        entries[NAME_OVERRIDES[stem] ?? toKebab(stem)] = `components/${tier}/${comp}/${file}`;
+      }
+    }
+  }
+  return entries;
+}
+
+const EXPLICIT_ENTRIES: Record<string, string> = {
+  'toast-store': 'components/composites/toast/toast-store.ts',
   'motion-tokens': 'tokens/motion-tokens.ts',
   'motion-devtools': 'components/dev/MotionDevtools.tsx',
+  collapse: 'motion/Collapse.tsx',
+  glide: 'motion/glide.tsx',
 };
 
 export const dsAliases = [
   { find: 'premium-ds/styles.css', replacement: r('../src/styles.css') },
-  ...Object.entries(ENTRIES).map(([name, path]) => ({ find: `premium-ds/${name}`, replacement: r(`../src/${path}`) })),
+  ...Object.entries({ ...discoverComponentEntries(), ...EXPLICIT_ENTRIES }).map(([name, path]) => ({
+    find: `premium-ds/${name}`,
+    replacement: r(`../src/${path}`)
+  }))
 ];
 
 export default defineConfig({
