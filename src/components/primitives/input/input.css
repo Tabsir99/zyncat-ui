@@ -124,16 +124,16 @@
   font-size: var(--icon-md);
 }
 .fld__icon--lead {
-  left: var(--space-3);
+  left: var(--space-2);
 }
 .fld__icon--trail {
-  right: var(--space-3);
+  right: var(--space-2);
 }
 .fld__control:focus-within .fld__icon {
   color: var(--text-muted);
 }
 .fld--has-lead .fld__input {
-  padding-left: calc(var(--space-3) + var(--icon-md) + var(--space-2));
+  padding-left: calc(var(--space-2) + var(--icon-md) + var(--space-2));
 }
 .fld--has-trail .fld__input {
   padding-right: calc(var(--space-3) + var(--icon-md) + var(--space-2));

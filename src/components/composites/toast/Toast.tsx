@@ -193,11 +193,9 @@ function ToastBody({ t }: { t: ToastRecord }) {
           variant="secondary"
           size="sm"
           className="toast__action"
-          htmlProps={{
-            onClick: () => {
-              if (t.action.onClick) t.action.onClick();
-              store.dismiss(t.id);
-            },
+          onClick={() => {
+            if (t.action.onClick) t.action.onClick();
+            store.dismiss(t.id);
           }}
         >
           {t.action.label}

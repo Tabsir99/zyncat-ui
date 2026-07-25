@@ -123,7 +123,7 @@ export function useListbox({
     clearTimeout(ta.t);
     ta.buf += ch.toLowerCase();
     ta.t = setTimeout(() => (ta.buf = ''), 600);
-    const i = navItems.findIndex((o) => !o.disabled && o.label.toLowerCase().startsWith(ta.buf));
+    const i = navItems.findIndex((o) => !o.disabled && o.value.toLowerCase().startsWith(ta.buf));
     if (i >= 0) setActiveIdx(i);
   }
 

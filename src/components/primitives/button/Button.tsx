@@ -32,6 +32,10 @@ interface ButtonOwnProps {
   style?: CSSProperties;
   /** Button label. */
   children?: ReactNode;
+  /** Click handler */
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  /** Pointer handler */
+  onPointerDown?: React.PointerEventHandler<HTMLButtonElement>;
 }
 
 export interface ButtonProps extends ButtonOwnProps {
@@ -51,6 +55,9 @@ export function Button({
   className = '',
   style,
   children,
+  onClick,
+  ref,
+  onPointerDown,
   htmlProps,
 }: ButtonProps) {
   const classes = [
@@ -67,10 +74,13 @@ export function Button({
   return (
     <button
       type={type}
+      ref={ref}
       className={classes}
       style={style}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      onClick={onClick}
+      onPointerDown={onPointerDown}
       {...htmlProps}
     >
       {iconLeft ? (

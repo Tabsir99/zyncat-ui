@@ -6,7 +6,7 @@ export interface SelectOption {
   /** The stored value - what `onChange` returns and `value` matches; must be unique. */
   value: string;
   /** Primary row text, and the trigger label once selected; also matched by `searchable`. */
-  label: string;
+  label: ReactNode;
   /** Optional secondary line under the label; also matched by `searchable`. */
   description?: string;
   /** Your own icon node shown before the label. */

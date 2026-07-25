@@ -7,6 +7,7 @@ import { useControllable } from '../../internal/hooks/use-controllable';
 import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
+import { ButtonProps } from '../../primitives/button/Button';
 
 /* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
@@ -44,6 +45,10 @@ export interface SelectProps {
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
   animation?: DisableableAnimation;
+  /** Trigger props */
+  triggerProps?: ButtonProps;
+  /** Show check icon on selected value */
+  showCheck?: boolean;
 }
 
 export function Select({
@@ -63,12 +68,10 @@ export function Select({
   ariaLabel,
   htmlProps,
   animation,
+  triggerProps,
+  showCheck = true,
 }: SelectProps) {
-  const [value, setValue] = useControllable<string | null, SelectOption>(
-    controlledValue,
-    defaultValue,
-    onChange as ((next: string | null, opt?: SelectOption) => void) | undefined,
-  );
+  const [value, setValue] = useControllable<string | null, SelectOption>(controlledValue, defaultValue, onChange);
 
   const lb = useListbox({
     options,
@@ -103,6 +106,7 @@ export function Select({
         leading={leadingIcon || (selected && selected.icon) || null}
         text={loading ? 'Loading...' : isPlaceholder ? placeholder : selected.label}
         isPlaceholder={isPlaceholder}
+        {...triggerProps}
       />
       <ListboxPanel
         lb={lb}
@@ -111,6 +115,8 @@ export function Select({
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
         animation={animation}
+        size={triggerProps?.size}
+        {...(!showCheck && { check: () => null })}
       />
     </div>
   );

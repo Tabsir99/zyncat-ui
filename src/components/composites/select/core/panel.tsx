@@ -11,6 +11,7 @@ import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
 import type { DisableableAnimation } from '../../../../motion/timing';
+import type { ButtonProps } from '../../../primitives/button/Button';
 
 export interface ListboxPanelProps {
   lb: ListboxState;
@@ -23,6 +24,7 @@ export interface ListboxPanelProps {
   animation?: DisableableAnimation;
   /** Row check-slot renderer; the default is the single-select checkmark. */
   check?: (selected: boolean) => ReactNode;
+  size: ButtonProps['size'];
 }
 
 const defaultCheck = (selected: boolean) => (selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null);
@@ -52,6 +54,7 @@ export function ListboxPanel({
   ariaLabel,
   multiple,
   animation,
+  size = 'md',
   check = defaultCheck,
 }: ListboxPanelProps) {
   /* value -> position in the filtered nav space; the row reads its index (and its visibility)
@@ -125,6 +128,7 @@ export function ListboxPanel({
                       onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
                       onMouseDown={(e) => e.preventDefault() /* keep focus on list */}
                       onClick={() => visible && lb.commit(opt)}
+                      data-size={size}
                     >
                       {opt.icon && (
                         <span className="select__option-icon">
@@ -135,7 +139,7 @@ export function ListboxPanel({
                         <span className="select__option-label">{opt.label}</span>
                         {opt.description && <span className="select__option-desc">{opt.description}</span>}
                       </span>
-                      <span className="select__option-check">{check(isSel)}</span>
+                      {check(isSel) ? <span className="select__option-check">{check(isSel)}</span> : null}
                     </div>
                   );
                   /* under search, rows ease out through Collapse instead of popping */

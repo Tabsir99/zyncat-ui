@@ -19,7 +19,10 @@ import type { DataAttributes } from '../../../dom-props';
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
 /** The native <textarea> props Textarea surfaces at the top level (the rest live in `htmlProps`). */
-type TextareaNative = Pick<TextareaHTMLAttributes<HTMLTextAreaElement>, 'placeholder' | 'disabled' | 'readOnly'>;
+type TextareaNative = Pick<
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'placeholder' | 'disabled' | 'readOnly' | 'onKeyDown'
+>;
 
 interface TextareaOwnProps extends FieldMessagingProps, TextareaNative {
   /** Controlled text value. @default '' */
@@ -63,6 +66,7 @@ export function Textarea({
   success,
   value = '',
   onChange,
+  onKeyDown,
   onSubmit,
   max,
   minRows = 3,
@@ -124,12 +128,12 @@ export function Textarea({
     return () => ro.disconnect();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (onSubmit && (e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
       onSubmit(text);
     }
-    htmlProps?.onKeyDown && htmlProps.onKeyDown(e);
+    onKeyDown?.(e);
   };
 
   const cls = ['fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className].filter(Boolean).join(' ');
@@ -155,7 +159,7 @@ export function Textarea({
             disabled={disabled}
             readOnly={readOnly}
             onChange={onChange}
-            onKeyDown={onKeyDown}
+            onKeyDown={handleKeyDown}
             onScroll={() => {
               if (mirrorRef.current) mirrorRef.current.scrollTop = taRef.current.scrollTop;
             }}

@@ -13,7 +13,16 @@ import type { DataAttributes } from '../../../dom-props';
 /** The native <input> props TextField surfaces at the top level (the rest live in `htmlProps`). */
 type TextFieldNative = Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'placeholder' | 'value' | 'onChange' | 'disabled' | 'readOnly' | 'type'
+  | 'placeholder'
+  | 'value'
+  | 'onChange'
+  | 'disabled'
+  | 'readOnly'
+  | 'maxLength'
+  | 'minLength'
+  | 'hidden'
+  | 'pattern'
+  | 'onKeyDown'
 >;
 
 interface TextFieldOwnProps extends FieldMessagingProps, TextFieldNative {
@@ -27,6 +36,8 @@ interface TextFieldOwnProps extends FieldMessagingProps, TextFieldNative {
   className?: string;
   /** Inline styles merged onto the field root. */
   style?: CSSProperties;
+  /** Available text like types */
+  type?: 'text' | 'search' | 'email' | 'url' | 'password';
 }
 
 export interface TextFieldProps extends TextFieldOwnProps {
@@ -35,11 +46,7 @@ export interface TextFieldProps extends TextFieldOwnProps {
 }
 
 export function TextField({
-  id,
   label,
-  required,
-  optional,
-  placeholder,
   helper,
   error,
   warning,
@@ -48,13 +55,11 @@ export function TextField({
   clearable,
   size,
   value,
-  onChange,
-  disabled,
-  readOnly,
-  type = 'text',
-  className = '',
-  style,
   htmlProps,
+  className,
+  style,
+  optional,
+  ...rest
 }: TextFieldProps) {
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,29 +90,24 @@ export function TextField({
 
   return (
     <div className={cls} style={style}>
-      <FieldLabel id={id} label={label} required={required} optional={optional} />
+      <FieldLabel id={rest.id} label={label} required={rest.required} optional={optional} />
       <div className="fld__control">
         {leadingIcon && (
           <span className="fld__icon fld__icon--lead">
-            <IconSlot>{leadingIcon}</IconSlot>
+            <IconSlot size={size}>{leadingIcon}</IconSlot>
           </span>
         )}
         <input
-          id={id}
           ref={inputRef}
           className="fld__input"
-          type={type}
           value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          disabled={disabled}
-          readOnly={readOnly}
           aria-invalid={error ? true : undefined}
+          {...rest}
           {...htmlProps}
         />
         {showClear && (
           <button type="button" className="fld__action" aria-label="Clear" onClick={clear}>
-            <Icon name="close" />
+            <Icon name="close" size={size} />
           </button>
         )}
       </div>
