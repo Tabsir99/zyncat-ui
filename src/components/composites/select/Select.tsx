@@ -23,8 +23,8 @@ export interface SelectProps {
   onChange?: (value: string, option: SelectOption) => void;
   /** Trigger text when nothing is selected. @default 'Select an option' */
   placeholder?: string;
-  /** Control height. @default 'default' */
-  size?: 'sm' | 'default' | 'lg';
+  /** Control height. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
   /** Disabled - trigger is inert and the menu cannot open. @default false */
   disabled?: boolean;
   /** Danger ring + border. @default false */
@@ -57,7 +57,7 @@ export function Select({
   defaultValue = null,
   onChange,
   placeholder = 'Select an option',
-  size = 'default',
+  size = 'md',
   disabled = false,
   invalid = false,
   loading = false,
@@ -92,7 +92,7 @@ export function Select({
     <div
       {...htmlProps}
       className={htmlProps?.className ? 'select ' + htmlProps.className : 'select'}
-      data-size={size === 'default' ? undefined : size}
+      data-size={size}
       data-open={lb.open ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}
       data-invalid={invalid ? 'true' : undefined}
@@ -115,7 +115,7 @@ export function Select({
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
         animation={animation}
-        size={triggerProps?.size}
+        size={size}
         {...(!showCheck && { check: () => null })}
       />
     </div>

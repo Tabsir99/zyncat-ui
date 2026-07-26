@@ -24,7 +24,7 @@ export interface ListboxPanelProps {
   animation?: DisableableAnimation;
   /** Row check-slot renderer; the default is the single-select checkmark. */
   check?: (selected: boolean) => ReactNode;
-  size: ButtonProps['size'];
+  size?: ButtonProps['size'];
 }
 
 const defaultCheck = (selected: boolean) => (selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null);

@@ -26,7 +26,7 @@
 }
 
 .badge--sm {
-  padding-block: 0;
+  padding-block: var(--space-px);
   gap: var(--space-px);
 }
 
@@ -110,7 +110,7 @@
 .badge--outline {
   position: relative;
   isolation: isolate;
-  background: transparent;
+  background: color-mix(in oklab, var(--badge-fg) 6%, transparent);
   box-shadow:
     inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 30%, transparent),
     inset 0 1px 0 0 rgb(255 255 255 / 0.5),
@@ -125,7 +125,6 @@
 }
 .badge--outline:hover {
   transform: translateY(calc(var(--space-px) * -1));
-  background: color-mix(in oklab, var(--badge-fg) 7%, transparent);
   box-shadow:
     inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 42%, transparent),
     inset 0 1px 0 0 rgb(255 255 255 / 0.6),

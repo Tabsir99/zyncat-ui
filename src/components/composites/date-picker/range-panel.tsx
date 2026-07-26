@@ -383,7 +383,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
         </span>
         {timezone ? <span className="drp__tz">{tzLabel(timezone)}</span> : null}
         <span className="drp__footSpacer"></span>
-        <Button variant="primary" size="sm" htmlProps={{ onClick: close }}>
+        <Button variant="primary" size="sm" onClick={close}>
           Done
         </Button>
       </div>

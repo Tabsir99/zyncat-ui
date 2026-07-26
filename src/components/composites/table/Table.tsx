@@ -262,7 +262,7 @@ export function Table<Row = any>({
           </span>
           <span className="tbl__bulkSpacer"></span>
           {bulkActions ? bulkActions(Array.from(selected), clearSelection) : null}
-          <Button variant="ghost" size="sm" htmlProps={{ onClick: clearSelection }}>
+          <Button variant="ghost" size="sm" onClick={clearSelection}>
             Clear
           </Button>
         </div>

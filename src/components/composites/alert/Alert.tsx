@@ -122,7 +122,7 @@ export function Alert({
               {children != null && <p className="alert__desc">{children}</p>}
             </div>
             {action && (
-              <Button variant="unstyled" size="sm" className="alert__action" htmlProps={{ onClick: action.onClick }}>
+              <Button variant="unstyled" size="sm" className="alert__action" onClick={action.onClick}>
                 {action.label}
               </Button>
             )}

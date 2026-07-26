@@ -30,7 +30,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { motion, animate } from 'motion/react';
+import { animate } from 'motion';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { GlidePill, useGlide } from '../../../motion/glide';
@@ -293,6 +293,24 @@ const TABPANEL_TIMING = {
 
 export function TabPanel({ tab, name, dir = 0, className = '', style, children, animation, htmlProps }: TabPanelProps) {
   const enter = resolveMotionTiming(animation, TABPANEL_TIMING).open;
+  const innerRef = useRef<HTMLDivElement | null>(null);
+  const enterRef = useRef<ReturnType<typeof animate> | null>(null);
+
+  /* The entrance runs imperatively off keyframes rather than off a keyed node's
+     `initial`: a keyed node remounts the panel's children on every tab change,
+     which costs consumers their content state (and any cross-tab animation). */
+  useLayoutEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    enterRef.current?.stop();
+    enterRef.current = animate(
+      el,
+      { translate: [`${dir * TABS_ENTER_X}px 4px`, '0px 0px'] },
+      enter,
+    );
+    return () => enterRef.current?.stop();
+  }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div
       role="tabpanel"
@@ -303,15 +321,9 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
       style={style}
       {...htmlProps}
     >
-      <motion.div
-        key={tab}
-        className="tab-panel__inner"
-        initial={{ x: dir * TABS_ENTER_X, y: 4 }}
-        animate={{ x: 0, y: 0 }}
-        transition={enter}
-      >
+      <div ref={innerRef} className="tab-panel__inner">
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }

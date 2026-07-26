@@ -106,12 +106,10 @@ export function Pagination({
           className="pgn__btn pgn__btn--prev"
           loading={prevBusy}
           disabled={!hasPrev || loading}
-          htmlProps={{
-            'aria-label': 'Previous page',
-            onClick: () => {
-              lastDirRef.current = -1;
-              if (onPrev) onPrev();
-            },
+          htmlProps={{ 'aria-label': 'Previous page' }}
+          onClick={() => {
+            lastDirRef.current = -1;
+            if (onPrev) onPrev();
           }}
         >
           <Icon name="caret-left" size="sm" />
@@ -123,12 +121,10 @@ export function Pagination({
           className="pgn__btn pgn__btn--next"
           loading={nextBusy}
           disabled={!hasNext || loading}
-          htmlProps={{
-            'aria-label': 'Next page',
-            onClick: () => {
-              lastDirRef.current = 1;
-              if (onNext) onNext();
-            },
+          htmlProps={{ 'aria-label': 'Next page' }}
+          onClick={() => {
+            lastDirRef.current = 1;
+            if (onNext) onNext();
           }}
         >
           <Icon name="caret-right" size="sm" />
