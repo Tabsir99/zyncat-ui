@@ -49,5 +49,5 @@ for (const [name, path] of Object.entries(entries)) {
 
 tsconfig.compilerOptions.paths = newPaths;
 
-writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + '\\n');
+writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + '\n');
 console.log('Playground tsconfig.json updated dynamically.');
