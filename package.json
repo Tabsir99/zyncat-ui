@@ -44,7 +44,7 @@
       "import": "./dist/button.js"
     },
     "./collapse": {
-      "source": "./src/motion/Collapse.tsx",
+      "source": "./src/components/primitives/collapse/Collapse.tsx",
       "types": "./dist/collapse.d.ts",
       "import": "./dist/collapse.js"
     },

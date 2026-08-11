@@ -3,7 +3,7 @@
 import './input.css';
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '../../internal/icon/Icon';
-import { Collapse } from '../../../motion/Collapse';
+import { Collapse } from '../collapse/Collapse';
 
 export interface FieldMessagingProps {
   /** Field id, ties the label to the control. */

@@ -14,7 +14,6 @@ const entries = {
   'toast-store': 'components/composites/toast/toast-store.ts',
   'motion-tokens': 'tokens/motion-tokens.ts',
   'motion-devtools': 'components/dev/MotionDevtools.tsx',
-  collapse: 'motion/Collapse.tsx',
   glide: 'motion/glide.tsx',
 };
 

@@ -4,7 +4,7 @@ import './radio-group.css';
 import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { Collapse } from '../collapse';
+import { Collapse } from '../collapse/Collapse';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { UIMotion } from '../../../tokens/motion-tokens';

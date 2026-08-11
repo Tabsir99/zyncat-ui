@@ -1,7 +1,7 @@
 'use client';
 
 import './tag.css';
-import '../../../motion/collapse.css';
+import '../collapse/collapse.css';
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';

@@ -2,9 +2,15 @@
 
 import './collapse.css';
 import type { CSSProperties, HTMLAttributes, JSX, ReactNode } from 'react';
-import type { DataAttributes } from '../dom-props';
-import type { DurationToken, EaseToken } from '../tokens/motion-scale';
-import { timingVars, type AnimationTiming, type DisableableAnimation, type Timing, type TimingProps } from './timing';
+import type { DataAttributes } from '../../../dom-props';
+import type { DurationToken, EaseToken } from '../../../tokens/motion-scale';
+import {
+  timingVars,
+  type AnimationTiming,
+  type DisableableAnimation,
+  type Timing,
+  type TimingProps,
+} from '../../../motion/timing';
 
 /** Motion-scale duration tokens - the only values Collapse timing accepts. */
 export type CollapseDuration = DurationToken;

@@ -3,7 +3,7 @@
 import { Fragment, useMemo, type ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
-import { Collapse } from '../../../../motion/Collapse';
+import { Collapse } from '../../../primitives/collapse/Collapse';
 import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';

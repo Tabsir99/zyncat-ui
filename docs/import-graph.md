@@ -87,7 +87,7 @@ Layer 1 — Shared primitives  (assemble Foundation pieces)
   components/overlay/panel.tsx             floating-panel renderer (Popover + modal shell)
   components/overlay/modal.tsx             modal machinery (scrim + trap + scroll-lock) on top of the above
   components/motion/glide.tsx              spring pill indicator
-  components/motion/Collapse.tsx           collapse animation
+  components/primitives/collapse/Collapse.tsx  collapse animation
   components/input/field-chrome.tsx        label + message chrome for fields
   components/date-picker/field-shell.tsx   date/time field shell
 
@@ -123,7 +123,7 @@ component the others import — hence its appearance among the hubs.
 | `date-picker/range-panel.tsx` (DrpPanel)    | DateRangeField                                                            |
 | `date-picker/time-core.tsx`                 | DateTimeField, TimeField                                                  |
 | `motion/glide.tsx`                          | calendar-panel, range-panel, RadioGroup, select/core, Tabs                |
-| `motion/Collapse.tsx`                       | field-chrome, RadioGroup, select/core/panel                               |
+| `primitives/collapse/Collapse.tsx`          | field-chrome, RadioGroup, select/core/panel, ToggleTag, MotionDevtools    |
 | `glass/glint.ts`                            | Toast, StatusBadge                                                        |
 
 ---
