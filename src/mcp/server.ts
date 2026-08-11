@@ -192,6 +192,19 @@ const tokenFiles = (root: string): string[] =>
 
 /* ---------------------------------------------------------------- tools */
 
+const CODE_LINE_RE = /^(?:[<{]|import\s|const\s|let\s|function\s)/;
+
+function entryTeaser(e: LlmsEntry): string {
+  const parts: string[] = [];
+  for (let i = 1; i < e.lines.length; i++) {
+    const line = e.lines[i].trim();
+    if (!line) break;
+    if (i > 1 && CODE_LINE_RE.test(line)) break;
+    parts.push(line);
+  }
+  return parts.join(' ');
+}
+
 function listComponents(): string {
   const d = db();
   const out: string[] = [...d.preamble, ''];
@@ -201,7 +214,7 @@ function listComponents(): string {
     out.push(`== ${s.title} ==`);
     out.push(...s.body);
     for (const e of inSection) {
-      const first = (e.lines[1] ?? '').trim();
+      const first = entryTeaser(e);
       out.push(`${e.title} - @zyncat/ui/${e.subpath}${first ? ` - ${first}` : ''}`);
     }
     out.push('');
