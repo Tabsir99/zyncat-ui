@@ -1,9 +1,19 @@
-/* motion-tokens.ts - the JSandCSS motion bridge; Motion code reads these token values, never hardcodes them. */
-
 export interface MotionTransition {
   type?: 'spring' | 'tween' | 'inertia' | 'keyframes';
   duration?: number;
-  ease?: Bezier | 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'circIn' | 'circOut' | 'circInOut' | 'backIn' | 'backOut' | 'backInOut' | 'anticipate';
+  ease?:
+    | Bezier
+    | 'linear'
+    | 'easeIn'
+    | 'easeOut'
+    | 'easeInOut'
+    | 'circIn'
+    | 'circOut'
+    | 'circInOut'
+    | 'backIn'
+    | 'backOut'
+    | 'backInOut'
+    | 'anticipate';
   bounce?: number;
   visualDuration?: number;
   delay?: number;
@@ -11,9 +21,6 @@ export interface MotionTransition {
 
 export type Bezier = [number, number, number, number];
 
-/* The canonical token names live in motion-scale.ts; the MotionTokens shape and any
-   component prop unions (e.g. Collapse duration/ease) derive from them, so a token
-   added or renamed there propagates everywhere by type. */
 import type { DurationToken, EaseToken } from './motion-scale';
 export type { DurationToken, EaseToken } from './motion-scale';
 
@@ -36,7 +43,7 @@ const DEFAULT_EASE: MotionTokens['ease'] = {
 };
 
 function build(dur: MotionTokens['dur'], ease: MotionTokens['ease']): MotionTokens {
-  const reduced = dur.base <= 0.005; // reduced motion collapses durations to ~1ms
+  const reduced = dur.base <= 0.005;
   return {
     dur,
     ease,

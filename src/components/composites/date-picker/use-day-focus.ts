@@ -1,9 +1,5 @@
 'use client';
 
-/* Roving-focus plumbing shared by the calendar panels: seed focus into the
-   grid on mount (the panel portals to <body>, unreachable from the trigger),
-   then chase focusKey across re-renders - but only for moves the caller armed
-   (keyboard travel, today-jump), never on plain re-paints. Returns the arm(). */
 import { useEffect, useRef, type RefObject } from 'react';
 
 export function useDayFocus(

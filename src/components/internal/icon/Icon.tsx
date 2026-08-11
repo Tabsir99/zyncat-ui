@@ -1,7 +1,5 @@
 'use client';
 
-// Icon - internal, curated glyph set; statically imported so the bundle ships only these (tree-shaking).
-
 import './icon.css';
 import {
   ArrowUp,
@@ -50,13 +48,9 @@ export type IconSize = 'sm' | 'md' | 'lg';
 export type { IconWeight };
 
 export interface IconProps {
-  /** A curated glyph name (see the registry in this file). */
   name: IconName;
-  /** Token size: sm 16 - md 20 (default) - lg 24. */
   size?: IconSize;
-  /** `fill` marks active/selected; Regular otherwise. */
   weight?: IconWeight;
-  /** If set, the icon is meaningful and exposed to AT; omit for decorative. */
   label?: string;
   /** Extra class(es) merged onto the root element. */
   className?: string;

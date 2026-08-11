@@ -1,10 +1,5 @@
 'use client';
 
-/* DrpPanel - the portaled range-calendar surface for DateRangeField: a two-click
-   anchor+hover range, quick-range presets, one or two months, band + cap painting.
-   Lives in its own module so the field file stays a thin wrapper (mirrors calendar-panel);
-   also owns the range-text formatter the trigger display reuses. */
-
 import './date-picker.css';
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
@@ -75,13 +70,11 @@ interface DrpPanelProps {
   layout: 'popover' | 'sheet';
 }
 
-/* the popover/sheet panel, mounted only while open */
 export function DrpPanel({ value, commit, close, min, max, timezone, label, months, layout }: DrpPanelProps) {
   const seedKey = (value && value.start) || today();
   const seed = parse(seedKey);
   const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
 
-  /* anchor !== null - a range is being dragged open (awaiting the 2nd pick) */
   const [anchor, setAnchor] = useState<string | null>(null);
   const [hoverKey, setHoverKey] = useState<string | null>(null);
   const [focusKey, setFocusKey] = useState<string>(seedKey);
@@ -90,16 +83,13 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
   const presetsRef = useRef<HTMLDivElement>(null);
   const armFocus = useDayFocus(daysRef, focusKey);
 
-  /* gliding hover pill per zone (see ../motion/glide); hoverKey drives the preview band, not the pill - the pill idles once an anchor is set. */
   const gridGlide = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
-  /* the caps FLIP between cells while the popover may still be scale-entering - self-heal at rest */
   const healLo = useLayoutSelfHeal<HTMLSpanElement>();
   const healHi = useLayoutSelfHeal<HTMLSpanElement>();
 
   const inBounds = (key: string): boolean => within(key, min, max);
 
-  /* effective lo/hi for PAINT: mid-selection - anchorandhover; else committed */
   let lo: string | null = null,
     hi: string | null = null,
     provisional = false;
@@ -143,7 +133,6 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
     });
   }
 
-  /* directional month slide via CSS keyframe on a keyed grid remount - Motion animate() fights the layoutId caps; direction from the viewIdx delta, the first mount gets none. */
   const viewIdx = view.y * 12 + view.m;
   const prevViewIdxRef = useRef(viewIdx);
   const navDir = prevViewIdxRef.current === viewIdx ? 0 : viewIdx > prevViewIdxRef.current ? 1 : -1;
@@ -197,7 +186,6 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
     const isHi = hi && key === hi;
     const single = lo && hi && lo === hi;
     const inRange = lo && hi && key >= lo && key <= hi;
-    /* the provisional (un-committed) end gets the outlined ghost cap; the anchor stays solid. */
     const loGhost = provisional && isLo && lo !== anchor;
     const hiGhost = provisional && isHi && !single && hi !== anchor;
 
@@ -205,7 +193,6 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
     const extL = band && !isLo && dayCol !== 0;
     const extR = band && !isHi && dayCol !== 6;
 
-    /* a boundary date shows in two cells (two-month view); the cap is a shared-layoutId node, so render it in exactly one - the in-month cell. */
     const capHere = months === 1 || !out;
     const loCap = isLo && capHere;
     const hiCap = isHi && !single && capHere;

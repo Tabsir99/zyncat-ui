@@ -1,5 +1,3 @@
-// toast-store - the Toast machinery: queue, clocks, coalescing, imperative API (zero React).
-
 export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'custom';
 
 export interface ToastAction {
@@ -24,7 +22,7 @@ export interface ToastRecord {
   remaining: number;
   count: number;
   timerKey: number;
-  node: unknown; // a React node, kept opaque so this module stays React-free
+  node: unknown;
   dismissible: boolean;
   expiresAt?: number;
 }
@@ -37,14 +35,13 @@ export interface ToastSnapshot {
 
 export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
-/* Root-level options - set once on <Toaster /> and read by the queue + host. */
 export interface ToasterConfig {
   position: ToastPosition;
-  duration: number; // default auto-dismiss ms for timed tones; 0 keeps the per-tone defaults
-  visibleToasts: number; // cards shown before the rest recede behind
-  gap: number; // px between cards; 0 reads --space-3 from the stylesheet
-  offset: number; // px inset from the viewport edge; 0 reads --space-6
-  expand: boolean; // start the stack fanned open instead of collapsed
+  duration: number;
+  visibleToasts: number;
+  gap: number;
+  offset: number;
+  expand: boolean;
 }
 
 export const DEFAULT_TOASTER_CONFIG: ToasterConfig = {
@@ -62,7 +59,7 @@ const DURATION: Record<string, number> = {
   info: 5000,
   warning: 8000,
   error: 8000,
-  loading: Infinity, // sticky until updated/dismissed
+  loading: Infinity,
 };
 
 let uid = 0;
@@ -72,7 +69,7 @@ interface ToastStore {
   toasts: ToastRecord[];
   paused: boolean;
   expanded: boolean;
-  mounted: boolean; // a <Toaster /> is live; toasts no-op until it is
+  mounted: boolean;
   config: ToasterConfig;
   snap: ToastSnapshot;
   listeners: Set<() => void>;
@@ -88,7 +85,6 @@ interface ToastStore {
   setExpanded(v: boolean): void;
 }
 
-/* Store - the queue; the API writes, the host renders. */
 const store: ToastStore = {
   toasts: [],
   paused: false,
@@ -108,7 +104,6 @@ const store: ToastStore = {
   },
 
   add(t) {
-    // coalesce: an identical visible toast becomes a xN counter instead of a duplicate
     const twin = store.toasts.find(
       (x) => !x.node && !t.node && x.tone === t.tone && x.message === t.message && x.description === t.description,
     );
@@ -125,7 +120,7 @@ const store: ToastStore = {
     Object.assign(t, patch);
     if ('tone' in patch || 'duration' in patch || 'count' in patch) {
       t.remaining = t.duration;
-      t.timerKey++; // re-key the ring so it re-fills
+      t.timerKey++;
       store.schedule(t);
     }
     store.emit();
@@ -146,7 +141,7 @@ const store: ToastStore = {
     clearTimeout(timers.get(t.id));
     timers.delete(t.id);
     if (!isFinite(t.duration)) return;
-    if (store.paused) return; // resume() picks it up with t.remaining
+    if (store.paused) return;
     t.expiresAt = performance.now() + t.remaining;
     timers.set(
       t.id,
@@ -155,7 +150,6 @@ const store: ToastStore = {
   },
 
   pause() {
-    // freeze every clock, remember what's left
     if (store.paused) return;
     store.paused = true;
     store.toasts.forEach((t) => {
@@ -185,8 +179,6 @@ const store: ToastStore = {
 let warned = false;
 let warnScheduled = false;
 
-/* A toast with no <Toaster /> mounted renders nothing. Warn once, deferred a tick so a
-   toast fired during the same render that mounts <Toaster /> is not a false positive. */
 function warnIfDetached(): void {
   if (store.mounted || warned || warnScheduled || typeof window === 'undefined') return;
   warnScheduled = true;
@@ -200,7 +192,6 @@ function warnIfDetached(): void {
   });
 }
 
-/* Per-tone default unless the root sets a global duration; loading stays sticky (Infinity). */
 function resolveDuration(tone: ToastTone, opt?: number): number {
   if (opt != null) return opt;
   const toneDefault = DURATION[tone];
@@ -265,7 +256,6 @@ toast.loading = (m, o) => make('loading', m, o);
 toast.dismiss = (id) => store.dismiss(id);
 
 toast.update = (id, patch = {}) => {
-  // a tone change without an explicit duration adopts that tone's clock
   if (patch.tone && patch.duration == null) patch = { ...patch, duration: DURATION[patch.tone] };
   return store.update(id, patch);
 };

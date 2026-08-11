@@ -1,8 +1,5 @@
 'use client';
 
-/* The shared menu render - search field, listbox, group loop, option rows, glide pill.
-   Walks the unfiltered group tree (so the searchable collapse can animate rows out) while
-   addressing each row by its index in the filtered nav space. */
 import { Fragment, useMemo, type ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
@@ -22,7 +19,6 @@ export interface ListboxPanelProps {
   multiple?: boolean;
   /** Menu open/close timing - motion tokens only, or `null` to disable. */
   animation?: DisableableAnimation;
-  /** Row check-slot renderer; the default is the single-select checkmark. */
   check?: (selected: boolean) => ReactNode;
   size?: ButtonProps['size'];
 }
@@ -57,9 +53,6 @@ export function ListboxPanel({
   size = 'md',
   check = defaultCheck,
 }: ListboxPanelProps) {
-  /* value -> position in the filtered nav space; the row reads its index (and its visibility)
-     from this one map, so `visible` and `data-idx` can never disagree the way a counter threaded
-     through the group loop could. Rebuilt only when the visible set changes. */
   const navIndex = useMemo(() => new Map(lb.navItems.map((o, i) => [o.value, i] as const)), [lb.navItems]);
   return (
     <SelectMenu
@@ -126,7 +119,7 @@ export function ListboxPanel({
                       data-active={visible && i === lb.activeIdx ? 'true' : undefined}
                       data-disabled={opt.disabled ? 'true' : undefined}
                       onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
-                      onMouseDown={(e) => e.preventDefault() /* keep focus on list */}
+                      onMouseDown={(e) => e.preventDefault()}
                       onClick={() => visible && lb.commit(opt)}
                       data-size={size}
                     >
@@ -142,7 +135,6 @@ export function ListboxPanel({
                       {check(isSel) ? <span className="select__option-check">{check(isSel)}</span> : null}
                     </div>
                   );
-                  /* under search, rows ease out through Collapse instead of popping */
                   return searchable ? (
                     <Collapse key={opt.value} open={visible} fade>
                       {row}

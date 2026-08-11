@@ -1,16 +1,10 @@
 'use client';
 
-/* FieldChrome - the shared .fld chrome pieces: label row and animated message
-   region. One implementation for every field (text/number/textarea/date/time);
-   the control between them stays bespoke per component. Owns input.css. */
 import './input.css';
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Collapse } from '../../../motion/Collapse';
 
-/* The label + validation props every .fld text control shares - documented once,
-   inherited by TextFieldProps and TextareaProps. (NumberField keeps its narrower
-   helper/error pair; the date/time fields share DateFieldBaseProps instead.) */
 export interface FieldMessagingProps {
   /** Field id, ties the label to the control. */
   id?: string;
@@ -31,7 +25,6 @@ export interface FieldMessagingProps {
 }
 
 export interface FieldLabelProps {
-  /** Ties the label to its control; omitted for button/segment controls. */
   id?: string;
   label?: ReactNode;
   required?: boolean;
@@ -54,9 +47,7 @@ export function FieldLabel({ id, label, required, optional }: FieldLabelProps) {
 }
 
 export interface FieldMessageProps {
-  /** The resolved message node; the region collapses closed when empty. */
   message?: ReactNode;
-  /** State icon before the text; callers that render text-only pass nothing. */
   icon?: IconName | null;
 }
 
@@ -71,7 +62,6 @@ export function FieldMessage({ message, icon }: FieldMessageProps) {
   );
 }
 
-/* error wins over warning over success over helper - one precedence for every field. */
 export function resolveFieldMessage(
   error: ReactNode,
   warning: ReactNode,

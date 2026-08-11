@@ -1,7 +1,5 @@
 'use client';
 
-/* Alert - the persistent, in-flow status message (banner is a paint modifier). */
-
 import './alert.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -54,8 +52,6 @@ export interface AlertProps extends AlertOwnProps {
   htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof AlertOwnProps> & DataAttributes;
 }
 
-/* height rides the layout curve both ways; opacity is quicker (and eases out on exit) - each a
-   resolveMotionTiming default so one `animation` prop retimes both and `null` snaps them. */
 const ALERT_HEIGHT_TIMING = {
   open: { duration: 'slow', ease: 'entrance' },
   close: { duration: 'slow', ease: 'entrance' },
@@ -100,7 +96,7 @@ export function Alert({
     <AnimatePresence initial={false}>
       {isOpen && (
         <motion.div
-          key="alert-shell" /* explicit key - AnimatePresence strands un-keyed conditional children */
+          key="alert-shell"
           className="alert-shell"
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}

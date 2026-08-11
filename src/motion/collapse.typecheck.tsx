@@ -1,7 +1,3 @@
-// Type-contract check for the Collapse timing API, enforced by `pnpm typecheck`:
-// motion tokens (single or per-direction) compile; raw CSS values must not.
-// Never imported at runtime - it exists only to fail the build on contract drift.
-
 import { Collapse } from './Collapse';
 
 export const ok = (
@@ -12,9 +8,7 @@ export const ok = (
       animation={{ duration: { open: 'slower', close: 'fast' }, ease: { open: 'entrance', close: 'exit' } }}
     />
     <Collapse open animation={{ duration: { close: 'fast' } }} />
-    {/* null disables the transition */}
     <Collapse open animation={null} />
-    {/* className / style stay first-class; other DOM attributes ride htmlProps */}
     <Collapse open className="x" htmlProps={{ 'aria-label': 'panel', 'data-open-state': 'yes', onClick: () => {} }} />
   </>
 );

@@ -1,7 +1,5 @@
 'use client';
 
-/* DateField - opinionated single-date picker: a .fld trigger opens a month-calendar popover, commit is live on day pick. */
-
 import './date-picker.css';
 import { Popover } from '../popover/Popover';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';

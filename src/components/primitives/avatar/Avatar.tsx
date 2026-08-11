@@ -1,7 +1,5 @@
 'use client';
 
-// Avatar - identity mark; content priority: image - icon - initials - silhouette.
-
 import './avatar.css';
 import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';

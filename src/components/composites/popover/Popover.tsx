@@ -1,9 +1,5 @@
 'use client';
 
-/* Popover - an anchored, non-modal floating panel cloned onto its trigger.
-   It joins the overlay stack for Escape + light dismiss and re-places itself
-   on scroll/resize; focus returns to the opener on close but is never trapped,
-   so the page behind stays live. Modal surfaces are Dialog and Sheet. */
 import './popover.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
 import { AnimatePresence } from 'motion/react';
@@ -61,7 +57,6 @@ export interface PopoverProps {
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
-/* scales open from the anchored edge (transform-origin set in popover.css) */
 function popoverVariants(animation: DisableableAnimation | undefined) {
   const t = resolveMotionTiming(animation, POPOVER_TIMING);
   return {
@@ -70,7 +65,6 @@ function popoverVariants(animation: DisableableAnimation | undefined) {
   };
 }
 
-/* Panel - lifecycle hooks live here so dismiss/placement hold until exit ends. */
 function PopoverPanel({
   panelId,
   side,

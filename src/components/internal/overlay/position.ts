@@ -1,6 +1,5 @@
 'use client';
 
-/* position - anchored placement for floating panels. */
 import { useLayoutEffect, type RefObject } from 'react';
 import { tokenPx } from '../utils/token-px';
 
@@ -12,7 +11,6 @@ interface UseAnchorPositionProps {
   panelRef: RefObject<HTMLElement>;
 }
 
-/* Anchored placement: measure, place on the side, flip when cramped, clamp the cross axis; writes data-side/-align + arrow vars in a layout effect. */
 export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: UseAnchorPositionProps) {
   useLayoutEffect(() => {
     const place = () => {
@@ -26,7 +24,6 @@ export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: 
 
       const edge = tokenPx('--space-2');
 
-      // No gap by default. Only reserve space when rendering an arrow.
       const gap = arrow ? tokenPx('--space-2') + 3 : 0;
 
       const vw = window.innerWidth;
@@ -58,7 +55,6 @@ export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: 
 
         x = Math.min(Math.max(x, edge), vw - pw - edge);
 
-        /* main-axis clamp: keep the leading edge on-screen (max last - may cover the trigger) */
         y = Math.max(Math.min(y, vh - ph - edge), edge);
       } else {
         x = s === 'left' ? r.left - pw - gap : r.right + gap;

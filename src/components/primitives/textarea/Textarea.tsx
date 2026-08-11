@@ -1,7 +1,5 @@
 'use client';
 
-// Textarea.tsx - multiline input: TextField anatomy plus auto-grow, char meter, over-limit highlight, ⌘/Ctrl+↵ submit.
-
 import './textarea.css';
 import {
   useEffect,
@@ -91,12 +89,11 @@ export function Textarea({
 
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
 
-  // Auto-grow without a caret jump: the .txa__stack wrapper animates its height and is overflow:clip while growing (a clip box can't scroll to the caret); scroll is enabled only past max-height.
   const resize = () => {
     const el = taRef.current,
       stack = stackRef.current;
     if (!el || !stack) return;
-    const start = stack.offsetHeight; // capture the start height before mutating layout below
+    const start = stack.offsetHeight;
     el.style.height = 'auto';
     el.style.height = el.scrollHeight + 'px';
     const content = el.offsetHeight;
@@ -108,12 +105,10 @@ export function Textarea({
     }
     stack.style.overflowY = 'clip';
     stack.style.height = start + 'px';
-    void stack.offsetHeight; // force a reflow so the height transition runs from start
+    void stack.offsetHeight;
     stack.style.height = target + 'px';
   };
   useLayoutEffect(resize, [text, size]);
-  /* re-measure on WIDTH changes only (window, splitter, panel collapse); the observer must
-     ignore the height mutations resize() itself makes, or it would feed back on itself. */
   useEffect(() => {
     const stack = stackRef.current;
     if (!stack) return undefined;

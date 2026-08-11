@@ -1,7 +1,5 @@
 'use client';
 
-// Base badge chip - glass surface by default; the outline variant is flat (no glass classes).
-
 import './badge.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';

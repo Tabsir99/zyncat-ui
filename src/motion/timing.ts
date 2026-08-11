@@ -1,12 +1,3 @@
-/* Motion timing props - the shared vocabulary for components that expose a token-typed
-   `animation` prop (Collapse today; any transition component tomorrow). Values are motion
-   tokens ONLY - no ms numbers, no raw CSS - each field one token for both directions or
-   per-direction { open, close }. timingVars() turns the object into the --<prefix>-dur- and
-   --<prefix>-ease- open/close custom properties the component's stylesheet transitions read
-   (register those non-inheriting there, so timing never leaks into a nested instance).
-   Tokens map to the --duration-<token> and --ease-<token> custom properties, never literal
-   ms, so the global reduced-motion collapse keeps applying. */
-
 import type { CSSProperties } from 'react';
 import type { DurationToken, EaseToken } from '../tokens/motion-scale';
 
@@ -35,7 +26,6 @@ export interface TimingProps {
   animation?: DisableableAnimation;
 }
 
-/** Pick a single direction out of a `Timing` value (one token, or `{ open, close }`). */
 export function resolveDirection<Token extends string>(
   timing: Timing<Token> | undefined,
   dir: TimingDirection,
@@ -43,9 +33,6 @@ export function resolveDirection<Token extends string>(
   return typeof timing === 'object' ? timing[dir] : timing;
 }
 
-/** Inline style carrying `--<prefix>-dur-open/close` and `--<prefix>-ease-open/close`. Tokens
- *  become `var(--duration-*)` / `var(--ease-*)`; `null` pins both durations to `0ms` so the
- *  transition plays instantly; `undefined` yields `undefined`, so callers skip the style. */
 export function timingVars(prefix: string, animation: DisableableAnimation | undefined): CSSProperties | undefined {
   if (animation === undefined) return undefined;
   if (animation === null) {

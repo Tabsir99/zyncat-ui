@@ -1,7 +1,5 @@
 'use client';
 
-// TextField.tsx - text input: label - control - message, leading icon, clear action, sizes, validation states.
-
 import './input.css';
 import { useRef } from 'react';
 import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
@@ -65,10 +63,6 @@ export function TextField({
   const inputRef = useRef<HTMLInputElement>(null);
   const showClear = clearable && value;
 
-  /* Clear by writing the input through the native value setter and dispatching a real
-     `input` event - React synthesizes a genuine ChangeEvent (currentTarget, preventDefault
-     and friends all real, unlike a hand-built {target:{value}} object). Focus returns to
-     the input since this button unmounts the moment the value empties. */
   function clear() {
     const el = inputRef.current;
     if (!el) return;

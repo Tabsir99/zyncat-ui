@@ -1,7 +1,5 @@
 'use client';
 
-/* Dialog - styled modal surface on the shared ModalShell: header (icon, title,
-   description, close), a scroll-edged body, and a footer action row. */
 import './dialog.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { AnimatePresence } from 'motion/react';
@@ -84,7 +82,6 @@ function DialogSurface({
   const titleId = baseId + '-title';
   const descId = baseId + '-desc';
 
-  /* data-scroll-top/-bottom on the body - dialog.css :has() earns the header lift + footer divider */
   useScrollEdges(bodyRef, (edges, el) => {
     el.toggleAttribute('data-scroll-top', edges.top);
     el.toggleAttribute('data-scroll-bottom', edges.bottom);

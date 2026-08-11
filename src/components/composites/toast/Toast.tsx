@@ -1,6 +1,5 @@
 'use client';
 
-/* Toast - the React render layer (queue + clocks live in toast-store.ts). */
 import './toast.css';
 import {
   useEffect,
@@ -31,7 +30,6 @@ const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
 const SWIPE_V = 480;
 
-// expanded gap AND collapsed peek - read lazily (post-stylesheet), once
 let GAP = 0;
 function stackGap() {
   if (!GAP) GAP = tokenPx('--space-3') || 12;
@@ -45,7 +43,6 @@ const TONE_ICON: Record<string, IconName> = {
   info: 'info',
 };
 
-/* useToneGesture - success glint, error headshake; the glint class is toggled with a reflow (remove - offsetWidth - add) to restart the one-shot. */
 function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>, x: ReturnType<typeof useMotionValue<number>>) {
   const prevTone = useRef<ToastTone | null>(null);
   useEffect(() => {
@@ -80,10 +77,9 @@ function ToastItem({
   onHeight: (id: string, h: number) => void;
 }) {
   const ref = useRef<HTMLLIElement>(null);
-  const x = useMotionValue(0); // swipe travel - ours, so dismissal can finish it
+  const x = useMotionValue(0);
   useToneGesture(t.tone, ref, x);
 
-  // report the CONTENT height (firstChild - the li's own height is animated, so it'd read mid-tween)
   useLayoutEffect(() => {
     if (ref.current && ref.current.firstElementChild)
       onHeight(t.id, (ref.current.firstElementChild as HTMLElement).offsetHeight);
@@ -91,7 +87,6 @@ function ToastItem({
 
   const swipe = (_e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-      // fling out the right edge, THEN remove - the exit fade plays where it landed, no snap-back
       animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() => store.dismiss(t.id));
     }
   };
@@ -110,7 +105,6 @@ function ToastItem({
         opacity: hidden ? 0 : 1,
         y: isTop ? offset : -offset,
         scale: 1 - depth * 0.05,
-        /* behind-cards adopt the front card's frame height (content faded) so a short card never drowns behind a tall one */
         height: frameHeight || 'auto',
         pointerEvents: hidden ? 'none' : 'auto',
       }}
@@ -136,7 +130,6 @@ function ToastBody({ t }: { t: ToastRecord }) {
       {(t.tone !== 'default' || isFinite(t.duration)) && (
         <span className="toast__icon">
           {t.tone !== 'default' && (
-            /* keyed remount (not nested AnimatePresence): old glyph cuts, new springs in */
             <motion.span
               key={t.tone}
               className="toast__icon-glyph"
@@ -152,7 +145,6 @@ function ToastBody({ t }: { t: ToastRecord }) {
             </motion.span>
           )}
           {isFinite(t.duration) && (
-            /* the ring - keyed to the timer so a restart re-fills it; pathLength=1 makes dashoffset a fraction */
             <svg key={'ring-' + t.timerKey} className="toast__ring" viewBox="0 0 36 36" aria-hidden="true">
               <circle className="toast__ring-track" cx="18" cy="18" r="16.5"></circle>
               <circle
@@ -211,26 +203,16 @@ function ToastBody({ t }: { t: ToastRecord }) {
 }
 
 function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: HTMLAttributes<HTMLOListElement> }) {
-  const {
-    toasts,
-    paused,
-    expanded: hoverExpanded,
-  } = useSyncExternalStore(
-    store.subscribe,
-    store.get,
-    store.get, // server snapshot - the host renders nothing until mounted anyway
-  );
+  const { toasts, paused, expanded: hoverExpanded } = useSyncExternalStore(store.subscribe, store.get, store.get);
   const [heights, setHeights] = useState<Record<string, number>>({});
   const [ready, setReady] = useState(false);
   const collapseTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
   const hovering = useRef(false);
 
-  // Portals into document.body, so render nothing until mounted (SSR-safe, no hydration mismatch).
   useEffect(() => setReady(true), []);
 
   const onHeight = (id: string, h: number) => setHeights((prev) => (prev[id] === h ? prev : { ...prev, [id]: h }));
 
-  // hold = fan open + freeze clocks; release = graced fold + resume
   const onHold = () => {
     hovering.current = true;
     clearTimeout(collapseTimer.current);
@@ -249,7 +231,6 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
     );
   };
 
-  // tab hidden - freeze clocks, visible - resume (visibility, not window focus: an embedded preview blurs on outside clicks).
   useEffect(() => {
     const onVis = () => {
       if (document.hidden) store.pause();
@@ -259,7 +240,6 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
     return () => document.removeEventListener('visibilitychange', onVis);
   }, []);
 
-  // safety net: last card removed under the cursor fires no pointerout, so release here
   useEffect(() => {
     if (toasts.length === 0) {
       hovering.current = false;
@@ -307,10 +287,9 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
     >
       <AnimatePresence>
         {slice.map((t, i) => {
-          const depth = n - 1 - i; // newest = 0, at the front
-          let offset = depth * gap; // collapsed: peek per depth
+          const depth = n - 1 - i;
+          let offset = depth * gap;
           if (expanded) {
-            // expanded: real heights
             offset = 0;
             for (let j = i + 1; j < n; j++) offset += (heights[slice[j].id] || 0) + gap;
           }
@@ -347,8 +326,6 @@ export interface ToasterProps extends Partial<ToasterConfig> {
   htmlProps?: HTMLAttributes<HTMLOListElement> & DataAttributes;
 }
 
-/* Toaster - mount once near the app root. It owns the toast viewport and registers the queue;
-   without it, toast() renders nothing (and warns once in the browser). */
 export function Toaster({ htmlProps, ...props }: ToasterProps): ReactElement {
   const config: ToasterConfig = { ...DEFAULT_TOASTER_CONFIG, ...stripUndefined(props) };
 
@@ -364,5 +341,4 @@ export function Toaster({ htmlProps, ...props }: ToasterProps): ReactElement {
   return <ToastHost config={config} htmlProps={htmlProps} />;
 }
 
-/* The imperative API ships from the same subpath as <Toaster /> - one import for both. */
 export { toast } from './toast-store';

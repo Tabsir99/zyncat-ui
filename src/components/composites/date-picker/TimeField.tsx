@@ -1,10 +1,5 @@
 'use client';
 
-/* TimeField - standalone time field: the segmented HH:MM machine (time-core)
-   wearing the .fld chrome. `format` is display-only (storage stays 24h),
-   min/max saturate rather than error, and clicking the box's empty area seats
-   focus in the hours segment. */
-
 import './date-picker.css';
 import type { PointerEvent } from 'react';
 import { FieldShell, type DateFieldBaseProps } from './field-shell';
@@ -48,7 +43,6 @@ export function TimeField({
 }: TimeFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
-  /* clicking the box (not a segment) seats focus where typing starts */
   function onBoxPointerDown(e: PointerEvent<HTMLDivElement>) {
     if (disabled || (e.target as HTMLElement).closest('.tsg__seg')) return;
     e.preventDefault();

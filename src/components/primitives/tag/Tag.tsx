@@ -1,7 +1,5 @@
 'use client';
 
-/* Tag (+ TagGroup) - removable/editable label; stateless, the parent owns the list. */
-
 import './tag.css';
 import { createContext, useContext, Fragment, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -10,8 +8,6 @@ import type { DisableableAnimation } from '../../../motion/timing';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import type { DataAttributes } from '../../../dom-props';
 
-/* enter/exit for a chip appearing or leaving the group; layout for neighbours sliding to fill.
-   Both are resolveMotionTiming defaults so TagGroup's `animation` retimes them and `null` snaps. */
 const TAG_TIMING = { open: { duration: 'base', ease: 'entrance' }, close: { duration: 'fast', ease: 'exit' } } as const;
 const TAG_LAYOUT_TIMING = {
   open: { duration: 'slow', ease: 'entrance' },
@@ -68,7 +64,6 @@ interface TagGroupCtx {
 }
 const TagGroupContext = createContext<TagGroupCtx>({ grouped: false });
 
-/* The remove glyph - drawn inline (path-level, per section D) so it can wind up on hover. */
 function TagRemoveGlyph() {
   return (
     <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -129,8 +124,6 @@ export function Tag({
       animate={{ opacity: 1, scale: 1, transition: enterExit.open }}
       exit={{ opacity: 0, scale: 0.9, transition: enterExit.close }}
       transition={layout}
-      /* span props whose names collide with Motion gesture callbacks (onDrag*) can't be
-         typed onto a motion element; the runtime spread is unchanged */
       {...(htmlProps as Record<string, unknown>)}
     >
       {content}

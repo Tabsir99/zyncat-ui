@@ -1,7 +1,5 @@
 'use client';
 
-// NumberField.tsx - numeric input: tabular figures, caret steppers, unit suffix, min/max clamp, arrow stepping.
-
 import './input.css';
 import { useState } from 'react';
 import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
@@ -69,11 +67,9 @@ export function NumberField({
 }: NumberFieldProps) {
   const controlled = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
   const [num, setNum] = useControllable<number>(controlled, defaultValue, onChange);
-  /* free-typing draft: clamping every keystroke makes "50" untypable under min=10, so the
-     raw text lives here while focused; commits (blur / Enter / any step) clamp and clear it. */
   const [draft, setDraft] = useState<string | null>(null);
   const v = draft !== null ? parseFloat(draft) || 0 : num;
-  const snap = (n: number) => parseFloat(n.toFixed(10)); /* kill float drift on decimal steps */
+  const snap = (n: number) => parseFloat(n.toFixed(10));
   const clamp = (n: number) => Math.min(max, Math.max(min, snap(n)));
   const commit = (n: number) => {
     setDraft(null);
@@ -103,7 +99,6 @@ export function NumberField({
           onChange={(e) => {
             const text = e.target.value.replace(/[^\d.-]/g, '');
             setDraft(text);
-            /* live (clamped) for controlled parents; the visible text stays on the draft */
             setNum(clamp(parseFloat(text) || 0));
           }}
           onBlur={() => commit(v)}

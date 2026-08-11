@@ -3,17 +3,12 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 
 export interface ScrollEdges {
-  /** More content above / below / left / right of the viewport (1px tolerance). */
   top: boolean;
   bottom: boolean;
   left: boolean;
   right: boolean;
 }
 
-/* One scroll-edge watcher for the data-attr patterns (dialog header lift, table pin cast,
-   tabs edge fades): syncs on scroll + element resize (+ first child with `content`, for
-   scrollWidth/Height changes the box itself doesn't see), and hands the consumer the raw
-   element so it can derive its own attributes. Returns the sync fn for imperative re-runs. */
 export function useScrollEdges(
   ref: RefObject<HTMLElement | null>,
   onChange: (edges: ScrollEdges, el: HTMLElement) => void,

@@ -1,25 +1,5 @@
 'use client';
 
-// Tabs.tsx - line tabs for view switching on a hairline baseline; a single accent ink
-// marks the active view. `TabPanel` is the matching content wrapper (aria wiring +
-// directional entrance). Styling lives in tabs.css; this file composes classes and
-// drives two implicit motions - consumers configure neither:
-//
-// 1 - "the ink reaches, then releases" (selection). One persistent ink node: the edge
-//     facing the destination travels first (ease-standard), then the trailing edge
-//     releases and settles (ease-entrance). Motion keyframes on x + measured width -
-//     the destination width is unknowable to transforms, and scaleX would distort the
-//     radius. Interrupts restart from the ink's LIVE rect, never the last target.
-//     Reduced motion collapses to an instant set.
-// 2 - the gliding hover: one persistent pill (../motion/glide) that fades in under the
-//     first tab the pointer touches, springs between tab pads as it moves (disabled
-//     tabs and gaps hold it), and fades out where it rests when the pointer leaves.
-//
-// Keyboard (WAI-ARIA tabs, automatic activation): roving tabindex; left/right arrows
-// cycle (wrapping, skipping disabled), Home/End jump; selection follows focus.
-// Overflow is honest: the row scrolls, clipped edges fade (data-fade from scroll
-// geometry), and the selected tab is kept in view.
-
 import './tabs.css';
 import {
   useId,
@@ -84,10 +64,6 @@ export interface TabsProps extends TabsOwnProps {
   htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TabsOwnProps> & DataAttributes;
 }
 
-/* Scroll-geometry constants (px) - measurement math, not styling.
-   EDGE_PAD ~ --space-6: breathing room kept between the selected tab and a
-   faded edge. ENTER_X: TabPanel's entrance travel (bespoke motion geometry,
-   like Tooltip's offsets - there is no spatial motion token). */
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 20;
 
@@ -103,13 +79,8 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
   const valueRef = useRef(value);
   valueRef.current = value;
 
-  /* The gliding hover - one persistent pill; fresh entry fades in place,
-     leaving the list fades it out where it rests (glide.tsx owns both). */
   const glide = useGlide(listRef);
 
-  /* Place the ink under the active tab - instantly (mount, resize, reduced
-     motion) or as the reach-then-release travel. Coordinates are offsetLeft
-     space (layout, scroll-independent) since the ink lives in the scroller. */
   const place = (animated: boolean) => {
     const list = listRef.current,
       ink = inkRef.current;
@@ -128,7 +99,6 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
       ink.style.transform = 'translateX(' + next.x + 'px)';
       ink.style.width = next.w + 'px';
     } else {
-      /* start from the LIVE rect so an interrupted travel never jumps back */
       const lr = list.getBoundingClientRect();
       const ir = ink.getBoundingClientRect();
       const cur = { x: ir.left - lr.left + list.scrollLeft, w: ir.width };
@@ -137,8 +107,8 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
         const span = dir === 1 ? next.x + next.w - cur.x : cur.x + cur.w - next.x;
         const kf =
           dir === 1
-            ? { x: [cur.x, cur.x, next.x], width: [cur.w, span, next.w] } /* right edge reaches, left releases */
-            : { x: [cur.x, next.x, next.x], width: [cur.w, span, next.w] }; /* left edge reaches, right releases */
+            ? { x: [cur.x, cur.x, next.x], width: [cur.w, span, next.w] }
+            : { x: [cur.x, next.x, next.x], width: [cur.w, span, next.w] };
         animRef.current = animate(ink, kf, {
           duration: SM.dur.slow,
           times: [0, 0.55, 1],
@@ -149,12 +119,10 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     placedRef.current = true;
   };
 
-  /* Edge fades: data-fade="start end" on the list, from scroll geometry. */
   const syncEdges = useScrollEdges(listRef, (edges, el) => {
     el.dataset.fade = ((edges.left ? 'start ' : '') + (edges.right ? 'end' : '')).trim();
   });
 
-  /* Selection drives the travel + keeps the active tab clear of a faded edge. */
   useLayoutEffect(() => {
     place(true);
     const l = listRef.current,
@@ -169,8 +137,6 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     }
   }, [value]);
 
-  /* Any size change (fonts arriving, container resize, label edits) re-seats
-     the ink instantly and re-derives the edge fades. */
   useLayoutEffect(() => {
     const ro = new ResizeObserver(() => {
       place(false);
@@ -208,8 +174,6 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     if (el) el.focus();
   };
 
-  /* Roving tabindex - the selected tab is the stop; if nothing is selected
-     yet, the first enabled tab takes it so the list stays reachable. */
   const focusValue = items.some((i) => i.value === value && !i.disabled)
     ? value
     : (items.find((i) => !i.disabled) || ({} as Partial<TabItem>)).value;
@@ -243,10 +207,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
               }}
               onClick={() => select(it.value)}
               onPointerEnter={
-                it.disabled
-                  ? undefined
-                  : /* the pill covers the pad (the visual pill), not the taller hit target */
-                    (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
+                it.disabled ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
               }
             >
               <span className="tab__pad">
@@ -296,18 +257,11 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
   const innerRef = useRef<HTMLDivElement | null>(null);
   const enterRef = useRef<ReturnType<typeof animate> | null>(null);
 
-  /* The entrance runs imperatively off keyframes rather than off a keyed node's
-     `initial`: a keyed node remounts the panel's children on every tab change,
-     which costs consumers their content state (and any cross-tab animation). */
   useLayoutEffect(() => {
     const el = innerRef.current;
     if (!el) return;
     enterRef.current?.stop();
-    enterRef.current = animate(
-      el,
-      { translate: [`${dir * TABS_ENTER_X}px 4px`, '0px 0px'] },
-      enter,
-    );
+    enterRef.current = animate(el, { translate: [`${dir * TABS_ENTER_X}px 4px`, '0px 0px'] }, enter);
     return () => enterRef.current?.stop();
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 

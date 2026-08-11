@@ -1,7 +1,5 @@
 'use client';
 
-// Toggle - binary on/off switch for an immediate setting (vs. Checkbox, which stages a choice).
-
 import './toggle.css';
 import {
   useState,
@@ -52,7 +50,6 @@ export function Toggle({
   onChange,
   htmlProps,
 }: ToggleProps) {
-  /* public onChange keeps the DOM-event contract, so it forwards here instead of riding the hook */
   const [isOn, setOn] = useControllable(checked, !!defaultChecked);
 
   const classes = ['sw', size === 'sm' ? 'sw--sm' : '', disabled ? 'sw--disabled' : '', className]

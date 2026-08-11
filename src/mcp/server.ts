@@ -1,29 +1,7 @@
-/* Zyncat UI MCP server - Model Context Protocol over stdio (newline-delimited JSON-RPC 2.0).
-
-   Coding agents pointed at a consumer app keep re-deriving this library's API by grepping
-   node_modules - slow, token-hungry and error-prone. This server hands them the same ground
-   truth as four precise tools:
-
-     list_components  what exists + setup and usage conventions   (llms.txt)
-     get_component    one component: usage docs + complete types  (llms.txt + dist/*.d.ts)
-     search_api       which component/prop/token matches a word   (docs + types + token CSS)
-     get_tokens       the CSS custom-property vocabulary           (src/tokens/*.css)
-
-   Zero dependencies (node builtins only) and no hardcoded registry: everything is read at
-   call time from the package's own package.json exports, llms.txt, dist/ and src/tokens/,
-   so answers always match the installed version. Register in the consuming project:
-
-     { "mcpServers": { "zyncat-ui": {
-         "command": "node", "args": ["./node_modules/@zyncat/ui/dist/mcp.js"] } } }
-*/
-
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-/* ---------------------------------------------------------------- package root */
-
-/** Walk up from this file until the @zyncat/ui package.json - works from dist/ and src/mcp/. */
 function findRoot(): string {
   let dir = dirname(fileURLToPath(import.meta.url));
   for (;;) {
@@ -31,9 +9,7 @@ function findRoot(): string {
     if (existsSync(pj)) {
       try {
         if (JSON.parse(readFileSync(pj, 'utf8')).name === '@zyncat/ui') return dir;
-      } catch {
-        /* unreadable package.json on the way up - keep walking */
-      }
+      } catch {}
     }
     const parent = dirname(dir);
     if (parent === dir) throw new Error('@zyncat/ui package root not found');
@@ -41,23 +17,21 @@ function findRoot(): string {
   }
 }
 
-/* ---------------------------------------------------------------- registry */
-
 interface LlmsEntry {
-  title: string; // "Button", "Tag / TagGroup"
-  subpath: string; // "button"
-  section: string; // "PRIMITIVES"
-  lines: string[]; // raw block, heading included
+  title: string;
+  subpath: string;
+  section: string;
+  lines: string[];
 }
 interface LlmsSection {
   title: string;
-  body: string[]; // column-0 note lines + entry-less section bodies (THEMING)
+  body: string[];
 }
 interface Db {
   root: string;
   version: string;
-  subpaths: string[]; // from package.json exports - the API surface of record
-  preamble: string[]; // llms.txt before the first section: setup + conventions
+  subpaths: string[];
+  preamble: string[];
   sections: LlmsSection[];
   entries: LlmsEntry[];
 }
@@ -114,20 +88,17 @@ function db(): Db {
   return cached;
 }
 
-/* ---------------------------------------------------------------- lookups */
-
 const norm = (s: string) =>
   s
     .toLowerCase()
     .replace(/^@zyncat\/ui\//, '')
     .replace(/[^a-z0-9]/g, '');
 
-/** "Button" | "text-field" | "@zyncat/ui/select" | "TagGroup" -> subpath. */
 function resolveSubpath(input: string): string {
   const d = db();
   const q = norm(input);
   if (!q) throw new Error('Pass a component name or subpath, e.g. "Button" or "text-field".');
-  const candidates = new Map<string, string>(); // norm(name) -> subpath
+  const candidates = new Map<string, string>();
   for (const sub of d.subpaths) candidates.set(norm(sub), sub);
   for (const e of d.entries) for (const part of e.title.split('/')) candidates.set(norm(part), e.subpath);
   const exact = candidates.get(q);
@@ -143,7 +114,6 @@ function resolveSubpath(input: string): string {
   );
 }
 
-/** Entry .d.ts plus every shared type chunk it (transitively) imports - the closed type surface. */
 function readTypes(root: string, subpath: string): string {
   const out: string[] = [];
   const seen = new Set<string>();
@@ -165,7 +135,6 @@ function readTypes(root: string, subpath: string): string {
   return out.join('\n\n');
 }
 
-/** Whether the built module (transitively) imports motion/react - i.e. needs the optional peer. */
 function needsMotion(root: string, subpath: string): boolean | null {
   const seen = new Set<string>();
   const walk = (rel: string): boolean => {
@@ -189,8 +158,6 @@ const tokenFiles = (root: string): string[] =>
         .filter((f) => f.endsWith('.css'))
         .sort()
     : [];
-
-/* ---------------------------------------------------------------- tools */
 
 const CODE_LINE_RE = /^(?:[<{]|import\s|const\s|let\s|function\s)/;
 
@@ -255,7 +222,7 @@ function searchApi(query: string): string {
   const d = db();
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) throw new Error('Pass one or more keywords, e.g. "searchable" or "drag dismiss".');
-  const hits = new Map<string, string[]>(); // label -> "  L12: line"
+  const hits = new Map<string, string[]>();
   const scan = (label: string, text: string, lineLabel?: (line: string, i: number) => string) => {
     text.split('\n').forEach((line, i) => {
       const l = line.toLowerCase();
@@ -266,7 +233,6 @@ function searchApi(query: string): string {
     });
   };
 
-  // llms.txt, attributed to the entry/section each matching line sits in
   {
     const raw = readFileSync(join(d.root, 'llms.txt'), 'utf8');
     const labels: string[] = [];
@@ -333,8 +299,6 @@ function getTokens(group?: string): string {
   if (theming?.body.length) out.push(['/* ==== theming ==== */', ...theming.body].join('\n'));
   return out.join('\n\n');
 }
-
-/* ---------------------------------------------------------------- MCP plumbing */
 
 const TOOLS = [
   {
@@ -418,7 +382,7 @@ function send(msg: object): void {
   try {
     process.stdout.write(`${JSON.stringify(msg)}\n`);
   } catch {
-    process.exit(0); // client hung up mid-write
+    process.exit(0);
   }
 }
 const reply = (id: RpcId, result: object) => send({ jsonrpc: '2.0', id, result });
@@ -432,9 +396,7 @@ function handle(req: { id?: RpcId; method?: string; params?: Record<string, unkn
       let version = '0.0.0';
       try {
         version = db().version;
-      } catch {
-        /* a broken install still gets a handshake; tool calls will explain */
-      }
+      } catch {}
       return reply(id!, {
         protocolVersion: typeof params?.protocolVersion === 'string' ? params.protocolVersion : '2025-06-18',
         capabilities: { tools: {} },

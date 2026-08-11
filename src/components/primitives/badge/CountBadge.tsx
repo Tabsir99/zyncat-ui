@@ -1,7 +1,5 @@
 'use client';
 
-// CountBadge - count chip (counts, totals, deltas); roll mode is an odometer, digits roll on change.
-
 import { Badge, type BadgeProps } from './Badge';
 import { Odometer } from './odometer';
 

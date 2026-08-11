@@ -1,7 +1,5 @@
 'use client';
 
-/* Table - opinionated data table: columns + rows in; owns sort, selection, sticky header, pinned column, motion. */
-
 import './table.css';
 import { useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { motion } from 'motion/react';
@@ -90,7 +88,6 @@ export interface TableProps<Row = any> {
   htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, 'className'> & DataAttributes;
 }
 
-/* numbers compare numerically, else natural-order text; null/undefined sink to the end */
 function tblCompare(a: unknown, b: unknown) {
   if (a == null && b == null) return 0;
   if (a == null) return 1;
@@ -123,9 +120,9 @@ export function Table<Row = any>({
   const [selected, setSelected] = useState<Set<string | number>>(() => new Set());
   const wrapRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const lastIdxRef = useRef(-1); // anchor for shift-click ranges
-  const shiftRef = useRef(false); // shift held on the click that fired change
-  const lastCountRef = useRef(0); // freezes the bulk count during its exit fade
+  const lastIdxRef = useRef(-1);
+  const shiftRef = useRef(false);
+  const lastCountRef = useRef(0);
 
   const keyOf = (row: Row): string | number => (row as Record<string, string | number>)[rowKey];
 
@@ -189,7 +186,6 @@ export function Table<Row = any>({
     commitSelection(next);
   }
 
-  /* live scroll - data attrs (on the wrap) that CSS reads for header elevation, pin cast, edge fades */
   useScrollEdges(
     scrollRef,
     (edges, el) => {
@@ -224,7 +220,6 @@ export function Table<Row = any>({
   const showEmpty = !loading && sortedRows.length === 0;
   const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
 
-  /* one persistent node, CSS open/close - AnimatePresence ghosted here; count frozen so exit doesn't roll to 0 */
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 

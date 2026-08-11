@@ -1,10 +1,8 @@
 'use client';
 
-/* panel - the floating-panel element renderer shared by Popover and the modal shell. */
 import { Children, type ReactElement, type ReactNode, type RefObject } from 'react';
 import { motion } from 'motion/react';
 
-/* Render the panel: a motion.div wrapper, or with asChild the child's own tag (host element required - component children can't take a ref here). */
 export function ovPanelElement({
   asChild,
   children,
@@ -20,8 +18,6 @@ export function ovPanelElement({
   className: string;
   motionProps: Record<string, any>;
 }): ReactElement {
-  /* A className riding motionProps (an overlay's forwarded htmlProps) merges onto the panel
-     base class rather than being clobbered by it. */
   const merged = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ');
   if (asChild) {
     const child = Children.only(children) as ReactElement<any>;

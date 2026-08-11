@@ -1,7 +1,5 @@
 'use client';
 
-/* TimeSegments - the segmented HH:MM machine: every keystroke interpreted (never inserted); commit is live and clamped (saturate, never error). */
-
 import './date-picker.css';
 import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent, type RefObject } from 'react';
 
@@ -28,7 +26,6 @@ const tsgPad = (n: number): string => String(n).padStart(2, '0');
 export const disp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
 const tsgToH24 = (d12: number, mer: Meridiem): number => (d12 % 12) + (mer === 'PM' ? 12 : 0);
 
-/* feed one digit into a bounded two-digit segment; done = saturated (can't take another). */
 function tsgFeed(pend: number | null, d: number, hi: number): { val: number; done: boolean } {
   if (pend != null) {
     const n = pend * 10 + d;
@@ -56,7 +53,6 @@ export function TimeSegments({
   const [mer, setMer] = useState<Meridiem>(seed[0] != null && seed[0] >= 12 ? 'PM' : 'AM');
   const [pend, setPendState] = useState<Pending | null>(null);
 
-  /* live mirrors - blur fires synchronously before re-render, so blur-commit reads refs, not stale closure state. */
   const hLive = useRef<number | null>(seed[0]);
   const mLive = useRef<number | null>(seed[1]);
   const pendLive = useRef<Pending | null>(null);
@@ -78,7 +74,6 @@ export function TimeSegments({
   const merRef = useRef<HTMLSpanElement>(null);
   const lastRef = useRef<string | null>(value || null);
 
-  /* external value changes re-seed; our own commits (matched via lastRef) are left alone, never clobbering in-flight typing. */
   useEffect(() => {
     if ((value || null) === lastRef.current) return;
     lastRef.current = value || null;
@@ -138,7 +133,6 @@ export function TimeSegments({
     } else if (k === 'Tab') {
       return;
     } else if (k.length === 1 && !e.metaKey && !e.ctrlKey) {
-      /* swallow */
     } else return;
     e.preventDefault();
   }
@@ -160,7 +154,6 @@ export function TimeSegments({
       if (m == null) {
         nm = (Math.round(new Date().getMinutes() / minuteStep) * minuteStep) % 60;
       } else {
-        /* step to the NEXT grid point, so 07 + ↑(step 5) lands on 10 */
         const next =
           dir > 0 ? (Math.floor(m / minuteStep) + 1) * minuteStep : (Math.ceil(m / minuteStep) - 1) * minuteStep;
         nm = ((next % 60) + 60) % 60;
@@ -182,7 +175,6 @@ export function TimeSegments({
     } else if (k === 'Tab') {
       return;
     } else if (k.length === 1 && !e.metaKey && !e.ctrlKey) {
-      /* swallow */
     } else return;
     e.preventDefault();
   }
@@ -204,7 +196,6 @@ export function TimeSegments({
     else if (k === 'Tab') {
       return;
     } else if (k.length === 1 && !e.metaKey && !e.ctrlKey) {
-      /* swallow */
     } else return;
     e.preventDefault();
   }
@@ -233,7 +224,6 @@ export function TimeSegments({
     }
   };
 
-  /* pending digit overrides canonical display, so typing '0' in 12h shows '00', not a premature '12'. */
   const hText = pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? disp12(h) : h);
   const mText = pend && pend.seg === 'm' ? tsgPad(pend.d) : m == null ? '--' : tsgPad(m);
 

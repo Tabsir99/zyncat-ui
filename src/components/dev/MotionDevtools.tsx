@@ -1,15 +1,5 @@
 'use client';
 
-/* MotionDevtools - a drop-in floating panel for slowing / freezing every animation in the app
-   at once, for motion debugging (slow-mo, inspecting a transition mid-flight). Mount it once at
-   the app root; it needs no provider and touches no other component - it drives the global
-   slow-mo engine (see slowmo-engine.ts), which reaches CSS, Motion and raw WAAPI together.
-
-   The panel styles itself immune to its own slow-mo, and uses no Motion internally, so its
-   controls stay responsive while the app crawls. Its own expand/collapse rides the design
-   system's <Collapse> (a CSS grid-fr layout transition), so the panel never teleports either.
-   Purely a dev tool - render it behind an `import.meta.env.DEV` check; it has no place in production. */
-
 import './motion-devtools.css';
 import { useEffect, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
@@ -82,11 +72,8 @@ export function MotionDevtools({
   const [snap, setSnap] = useState<SlowmoState>(() => motionSlowmo.get());
   const [timers, setTimers] = useState(scaleTimers);
 
-  // Subscribe to engine state so the panel reflects console/hotkey-driven changes too.
   useEffect(() => motionSlowmo.subscribe(setSnap), []);
 
-  // One-time init: restore persisted factor (or apply the default) after mount, so SSR
-  // renders nothing and there's no hydration mismatch.
   useEffect(() => {
     setMounted(true);
     let initial: Partial<SlowmoState> = { factor: defaultFactor, paused: false };
@@ -94,9 +81,7 @@ export function MotionDevtools({
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) initial = { ...initial, ...JSON.parse(raw) };
-      } catch {
-        /* private mode / bad JSON - ignore */
-      }
+      } catch {}
     }
     motionSlowmo.set(initial);
     if ((initial.factor ?? 1) > 1 || initial.paused) setOpen(true);
@@ -107,14 +92,11 @@ export function MotionDevtools({
     motionSlowmo.configure({ scaleTimers: timers });
   }, [timers]);
 
-  // Persist on change.
   useEffect(() => {
     if (!persist) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ factor: snap.factor, paused: snap.paused }));
-    } catch {
-      /* ignore */
-    }
+    } catch {}
   }, [snap.factor, snap.paused, persist]);
 
   if (!mounted) return null;

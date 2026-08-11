@@ -1,8 +1,5 @@
 'use client';
 
-/* tooltip-host - the one shared bubble (+ its hidden measuring twin) that every Tooltip feeds
-   through the store: measure-before-paint, flip/clamp placement, and the travel animation
-   between triggers. Mounted by exactly one elected Tooltip (see tooltip-store). */
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -25,11 +22,9 @@ interface RenderedBox extends TargetBox {
   bodyW: number;
 }
 
-/* Target box from the trigger rect + the measured content size; flips + clamps. */
 function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
   const vw = window.innerWidth,
     vh = window.innerHeight,
-    /* read at call time - at import time the stylesheet may not be parsed yet */
     TIP_GAP = tokenPx('--space-2', 8) || 8,
     M = TIP_GAP;
   let p = want;
@@ -61,7 +56,6 @@ function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
 }
 
 const fromEdge = (p: Placement) => ({
-  // enter/exit offset toward the trigger
   x: p === 'left' ? 4 : p === 'right' ? -4 : 0,
   y: p === 'top' ? 4 : p === 'bottom' ? -4 : 0,
 });
@@ -81,13 +75,11 @@ function Body({ a, width }: { a: ActivePayload; width?: number }) {
   );
 }
 
-/* Host - the one bubble + its hidden measuring twin. */
 export function TooltipHost() {
   const active = useSyncExternalStore(store.subscribe, store.get);
   const measureRef = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState<RenderedBox | null>(null);
 
-  // Measure the clone before paint: box = its border box; bodyW locks the live body's wrapping to the clone's.
   useLayoutEffect(() => {
     if (!active) {
       setBox(null);
@@ -101,8 +93,6 @@ export function TooltipHost() {
     });
   }, [active]);
 
-  // Esc or any scroll dismisses - intended divergence from Select/Popover, which re-place
-  // on scroll: a hint is transient, and a stale or trailing hint is worse than none.
   useEffect(() => {
     if (!active) return undefined;
     const onKey = (e: KeyboardEvent) => {
@@ -152,7 +142,6 @@ export function TooltipHost() {
               scale: SM.t.enter,
             }}
           >
-            {/* one node keyed by trigger: old cuts, new fades in while the box travels (fixed width keeps wrapping stable) */}
             <motion.span key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: SM.t.enter }}>
               <Body a={active} width={box.bodyW} />
             </motion.span>

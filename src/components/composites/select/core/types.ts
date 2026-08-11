@@ -1,5 +1,3 @@
-/* select data layer - option shapes plus the pure normalize/matches helpers.
-   No React, no DOM: safe to import from the hook and the render without pulling either. */
 import type { ReactNode } from 'react';
 
 export interface SelectOption {

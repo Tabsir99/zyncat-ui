@@ -1,7 +1,5 @@
 'use client';
 
-// OtpField.tsx - segmented one-time-code input: mono slots, auto-advance, arrow nav, paste-to-fill, grouping.
-
 import './input.css';
 import { useRef } from 'react';
 import type {
@@ -62,7 +60,6 @@ export function OtpField({
     a[i] = ch || ' ';
     emit(a.join(''));
   };
-  // place caret at the end (no selection highlight); replacement handled by slice(-1)
   const caretEnd = (el: HTMLInputElement | null) => {
     if (!el) return;
     const n = el.value.length;

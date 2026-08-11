@@ -1,7 +1,5 @@
 'use client';
 
-// Collapse - open/closed layout transition via grid-fr; toggles data-attrs, styling in collapse.css.
-
 import './collapse.css';
 import type { CSSProperties, HTMLAttributes, JSX, ReactNode } from 'react';
 import type { DataAttributes } from '../dom-props';
@@ -65,9 +63,6 @@ export function Collapse({
 }: CollapseProps) {
   const classes = ['collapse', fade ? 'collapse--fade' : '', className].filter(Boolean).join(' ');
 
-  /* Timing props become the -open/-close custom properties the collapse.css transitions read.
-     They are registered non-inheriting, so they are set on both elements that read them: the
-     root (size transition) and the inner wrapper (fade). */
   const vars = timingVars('collapse', animation);
 
   return (

@@ -1,7 +1,5 @@
 'use client';
 
-/* tooltip-store - the singleton behind every Tooltip: what's showing + where (the store),
-   and the host election (exactly one living Tooltip renders the shared bubble host). */
 import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right';
@@ -18,7 +16,6 @@ export const OPEN_DELAY = 350;
 export const CLOSE_GRACE = 140;
 const WARM_WINDOW = 300;
 
-/* Store - what's showing, where; triggers write, the host renders. */
 export const store = {
   active: null as ActivePayload | null,
   closeTimer: 0 as ReturnType<typeof setTimeout> | 0,
@@ -39,7 +36,6 @@ export const store = {
     store.emit();
   },
   close(id: string, grace = CLOSE_GRACE) {
-    // graced; only the owning trigger can close
     clearTimeout(store.closeTimer);
     store.closeTimer = setTimeout(() => {
       if (store.active && store.active.id === id) store.closeNow();
@@ -54,10 +50,6 @@ export const store = {
   },
 };
 
-/* Host election - the shared bubble host renders inside exactly ONE living Tooltip's tree
-   (first registered wins; when it unmounts the next takes over, and the store re-feeds the
-   same active payload). In-tree instead of a module-level createRoot: context crosses, the
-   host dies with the app instead of zombieing, and two library copies can't fight a global. */
 const hostReg = {
   keys: [] as symbol[],
   listeners: new Set<() => void>(),

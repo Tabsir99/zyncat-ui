@@ -1,8 +1,5 @@
 'use client';
 
-/* Tooltip - a transient, non-interactive hint on hover/focus (one shared bubble).
-   This file is just the trigger: the shared bubble lives in tooltip-host, its state +
-   host election in tooltip-store. */
 import './tooltip.css';
 import {
   Children,
@@ -21,7 +18,6 @@ import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, type Placement } from 
 import { TooltipHost } from './tooltip-host';
 import type { DataAttributes } from '../../../dom-props';
 
-/* Trigger - reports to the store; default wraps the child in a display:contents anchor (any element, no ref), asChild clones instead. */
 export interface TooltipProps {
   /** The hint - a string or small node; never interactive content. */
   content: ReactNode;
@@ -63,7 +59,6 @@ function Tooltip({
   const myId = id || 'tip-' + useId();
   const isHost = useHostElection();
 
-  // The element we anchor to + set aria-describedby on (clone, or the wrapper's child).
   const anchorEl = (): HTMLElement | null =>
     asChild ? triggerRef.current : ((wrapRef.current?.firstElementChild as HTMLElement) ?? null);
 
@@ -100,9 +95,6 @@ function Tooltip({
     if ((e.target as HTMLElement).matches(':focus-visible')) show(true);
   };
 
-  // Default: a display:contents wrapper carries the listeners + rect; the child needs no ref.
-  // The elected host mounts as a SIBLING - portal events bubble through the React tree, so
-  // nesting it inside the anchor would feed the bubble's own pointer events back into show/hide.
   if (!asChild) {
     return (
       <Fragment>
@@ -123,7 +115,6 @@ function Tooltip({
     );
   }
 
-  // asChild: clone the child, merging our handlers + ref (a press dismisses: activating != hinting).
   return (
     <Fragment>
       {cloneTrigger(

@@ -1,8 +1,5 @@
 'use client';
 
-/* modal - the machinery that makes a surface modal, and the shell composing it:
-   scroll lock, inert page, scrim, focus trap. Dialog and Sheet render through
-   ModalShell; non-modal surfaces (Popover, select) never touch this file. */
 import './overlay.css';
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { motion } from 'motion/react';
@@ -35,7 +32,6 @@ function useScrollLock() {
   }, []);
 }
 
-/* `inert` on every non-overlay <body> child (refcounted); content mounted while a modal is already up is not swept. */
 let ovInertCount = 0;
 const ovInerted = new Set<HTMLElement>();
 function useInertOutside() {
@@ -59,7 +55,6 @@ function useInertOutside() {
   }, []);
 }
 
-/* Scrim (real motion.div): dialogs fade via variants, sheets via a travel-derived MotionValue; a press must start AND end on it to dismiss. */
 const ovScrimVariants = {
   closed: { opacity: 0, transition: { duration: SM.dur.base, ease: SM.ease.standard } },
   open: { opacity: 1, transition: { duration: SM.dur.slow, ease: SM.ease.entrance } },
@@ -89,7 +84,6 @@ function OverlayScrim({
   );
 }
 
-/* Shared modal shell (dialog + sheet): layer > scrim + slot; sets no role/label (the consumer's panel owns semantics); modality hooks live here so they hold until exit. */
 export function ModalShell({
   layerClass,
   slotClass,

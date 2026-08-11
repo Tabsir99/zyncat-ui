@@ -1,7 +1,5 @@
 'use client';
 
-/* Pagination - pure cursor strip: mono range readout + prev/next, no page numbers. */
-
 import './pagination.css';
 import { useEffect, useRef, type HTMLAttributes } from 'react';
 import { animate } from 'motion/react';
@@ -34,14 +32,12 @@ export interface PaginationProps {
   htmlProps?: Omit<HTMLAttributes<HTMLElement>, 'className'> & DataAttributes;
 }
 
-/* range-swap travel distance - resolved once, on first use */
 let pgnTravelPx: number | null = null;
 function pgnTravel() {
   if (pgnTravelPx == null) pgnTravelPx = tokenPx('--space-2');
   return pgnTravelPx;
 }
 
-/* thin-space thousands grouping ("48 210") - section E mono-numeral convention */
 function pgnFormat(n: number) {
   return n.toLocaleString('en-US').replace(/,/g, '\u2009');
 }
@@ -61,13 +57,12 @@ export function Pagination({
   const rangeRef = useRef<HTMLSpanElement>(null);
   const prevBtnRef = useRef<HTMLButtonElement>(null);
   const nextBtnRef = useRef<HTMLButtonElement>(null);
-  const shownRef = useRef<[number, number]>(range); // last range rendered (skip first mount)
-  const lastDirRef = useRef(0); // -1 prev - +1 next - last arrow fired
+  const shownRef = useRef<[number, number]>(range);
+  const lastDirRef = useRef(0);
 
   const from = range[0];
   const to = range[1];
 
-  /* direction-aware entrance: new numbers arrive from the side you traveled toward (one persistent node, imperative keyframes) */
   useEffect(() => {
     const pf = shownRef.current[0],
       pt = shownRef.current[1];
@@ -77,7 +72,6 @@ export function Pagination({
     animate(rangeRef.current, { x: [dir * pgnTravel(), 0], opacity: [0, 1] }, UIMotion.t.enter);
   }, [from, to]);
 
-  /* edge disables the focused arrow and focus falls to <body> - hand it to the surviving direction; activeElement guard avoids stealing focus */
   useEffect(() => {
     if (loading || document.activeElement !== document.body) return;
     const d = lastDirRef.current;

@@ -1,8 +1,5 @@
 'use client';
 
-/* Sheet - an edge-docked modal panel (right or bottom). Modality (scrim, focus
-   trap, scroll lock, inert page) comes from the shared ModalShell; the
-   drag-to-dismiss physics live in use-sheet-drag. */
 import './sheet.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { AnimatePresence } from 'motion/react';
@@ -49,13 +46,11 @@ export interface SheetProps {
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
-/* entrance curve, not a spring - overshoot would show a gap behind the panel */
 function sheetVariants(side: 'right' | 'bottom', timings: MotionTimings) {
   const axis = side === 'bottom' ? 'y' : 'x';
   return { closed: { [axis]: '100%', transition: timings.close }, open: { [axis]: 0, transition: timings.open } };
 }
 
-/* The shell owns the drag hook; slotRef must exist before the shell renders. */
 function SheetShell({
   side,
   panelId,

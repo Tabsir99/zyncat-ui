@@ -1,10 +1,5 @@
 'use client';
 
-/* DtpPanel - the portaled month-calendar surface shared by DateField and DateTimeField:
-   owns the viewed month + roving focus, glides a hover pill, commits live on day pick.
-   Lives here (not in DateField) because DateTimeField mounts it too - a neutral module,
-   not a sibling field's internals. */
-
 import './date-picker.css';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { motion, animate } from 'motion/react';
@@ -26,7 +21,6 @@ export interface DtpPanelProps {
   slot?: ReactNode;
 }
 
-/* the popover panel, mounted only while open - owns view + roving focus, so each open starts at the picked month. */
 export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }: DtpPanelProps) {
   const seed = val ? parse(val) : new Date();
   const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
@@ -37,10 +31,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
   const uid = useId();
   const pillId = 'dtp-pill-' + uid;
 
-  /* gliding hover: one persistent pill that travels to the hovered cell (see ../motion/glide). */
   const glide = useGlide(daysRef);
-  /* the popover panel scale-animates on entrance - a pick mid-entrance FLIPs against a
-     scaling ancestor, so the pill self-heals to its CSS spot once the travel settles */
   const healPill = useLayoutSelfHeal<HTMLSpanElement>();
 
   const inRange = (key: string): boolean => within(key, min, max);
@@ -61,7 +52,6 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     const d = new Date(view.y, view.m + dir, 1);
     goToMonth(d.getFullYear(), d.getMonth());
   }
-  /* today-jump is navigation, not commit: slides home + focuses today; disabled while viewing the current month. */
   const now = new Date();
   const viewIsCurrent = view.y === now.getFullYear() && view.m === now.getMonth();
   function goToToday() {

@@ -1,7 +1,5 @@
 'use client';
 
-/* DateRangeField - DateField's sibling for { start, end }: a Linear/Notion two-click range; the surface switches Popover and Sheet by viewport. */
-
 import './date-picker.css';
 import { useEffect, useState } from 'react';
 import { Popover } from '../popover/Popover';
@@ -62,7 +60,6 @@ export function DateRangeField({
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
   const narrow = useNarrowViewport();
-  /* open is owned here so the picker survives a Popover<->Sheet swap while up */
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const display = val && val.start && val.end ? drpRangeText(val.start, val.end) : null;

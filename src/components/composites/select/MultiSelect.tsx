@@ -1,6 +1,5 @@
 'use client';
 
-/* MultiSelect - many-of custom listbox; committing toggles a row, the menu stays open. */
 import './select.css';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
@@ -9,7 +8,6 @@ import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type Select
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
 
-/* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
 
 export interface MultiSelectProps {
@@ -47,7 +45,6 @@ export interface MultiSelectProps {
   animation?: DisableableAnimation;
 }
 
-/* Decorative row tick - CheckGlyph carries checkbox.css into this graph. */
 function CheckboxTick({ checked }: { checked: boolean }) {
   return (
     <span className="cbx" aria-hidden="true">

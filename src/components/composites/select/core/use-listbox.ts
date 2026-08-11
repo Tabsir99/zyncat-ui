@@ -1,11 +1,5 @@
 'use client';
 
-/* useListbox - one listbox brain for both Select and MultiSelect: open/query state, refs/ids,
-   option filtering, the keyboard machine, glide-pill tracking and commit. Placement belongs to
-   the menu surface (menu.tsx), not the brain.
-   Variant-blind - it holds no selection state and never inspects the value shape. The public
-   components own their value and hand it two opaque callbacks (isSelected / onCommit) plus a
-   close policy. */
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useGlide } from '../../../../motion/glide';
 import { normalize, matches, type SelectOption, type SelectGroup } from './types';
@@ -50,8 +44,6 @@ export function useListbox({
   const glide = useGlide(listRef);
 
   const { groups, flat } = useMemo(() => normalize(options), [options]);
-  // navItems is the flat, group-ordered visible set - the index space the keyboard machine,
-  // aria-activedescendant and the glide pill all address. Re-derived only when a filter changes.
   const navItems = useMemo(() => flat.filter((o) => matches(o, query)), [flat, query]);
 
   const show = () => {
@@ -81,10 +73,9 @@ export function useListbox({
     const ref = searchable ? searchRef : listRef;
     setTimeout(() => {
       if (ref.current) ref.current.focus();
-    }, 0); // after the menu paints
+    }, 0);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // keep the active row in view (manual - never scrollIntoView)
   useEffect(() => {
     const list = listRef.current;
     if (!open || activeIdx < 0 || !list) return;
@@ -95,8 +86,6 @@ export function useListbox({
       list.scrollTop = el.offsetTop + el.offsetHeight - list.clientHeight;
   }, [activeIdx, open]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Drive the glide pill from the active row. It lives in the scroll list (not per-option), so it
-  // is never clipped by the searchable rows' collapse wrapper and animates real size between rows.
   useLayoutEffect(() => {
     const list = listRef.current;
     const el = open && activeIdx >= 0 && list && list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
@@ -162,8 +151,6 @@ export function useListbox({
     }
   }
 
-  /* option ids are keyed by VALUE, not list position - under filtering an option keeps
-     its id as the visible set narrows, so aria-activedescendant never re-points mid-query */
   const optId = (value: string) => baseId + '-opt-' + encodeURIComponent(value);
   const active = activeIdx >= 0 ? navItems[activeIdx] : undefined;
   const adId = open && active ? optId(active.value) : undefined;

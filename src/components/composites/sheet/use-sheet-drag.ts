@@ -1,8 +1,5 @@
 'use client';
 
-/* use-sheet-drag - drag-to-dismiss for Sheet (dismiss - scrim - rubber-band - scroll handoff). */
-/* PointerEvent is aliased: React's synthetic type for the React handler below,
-   the DOM global (bare `PointerEvent`) for the native window listeners. */
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
 import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
 import { UIMotion } from '../../../tokens/motion-tokens';
@@ -14,7 +11,6 @@ const DISMISS_VELOCITY = 500;
 const INTENT_PX = 4;
 const STRETCH_MAX = 0.06;
 
-/* nearest scrollable ancestor of `node`, stopping at the slot */
 function findScrollable(node: EventTarget | null, stop: HTMLElement | null): HTMLElement | null {
   let el = node instanceof Element ? node : null;
   while (el && el !== stop) {
@@ -41,13 +37,11 @@ function useSheetDrag({
   requestClose: () => void;
 }) {
   const axis = side === 'bottom' ? 'y' : 'x';
-  /* matches the `closed` variant so the scrim starts transparent */
   const travel = useMotionValue<string | number>('100%');
   const stretch = useMotionValue(1);
   const controls = useDragControls();
   const savedUserSelect = useRef<string | null>(null);
 
-  /* suspend selection only while dragging; restore also covers unmount mid-drag */
   function suspendSelection() {
     const sel = window.getSelection();
     if (sel) sel.removeAllRanges();
@@ -69,7 +63,6 @@ function useSheetDrag({
   });
   const scrimOpacity = useTransform(progress, (p) => 1 - p);
 
-  /* pointer intent: watch the first few px, then hand off to drag or to scroll/selection */
   function onPointerDown(e: ReactPointerEvent) {
     if (e.button !== 0) return;
     const startX = e.clientX,
@@ -88,7 +81,6 @@ function useSheetDrag({
         if (axis === 'y' ? scrollable.scrollTop > 0 : scrollable.scrollLeft > 0) return;
       }
       suspendSelection();
-      /* framer may not fire onDragEnd (release exactly at threshold), so restore here too - idempotent with the onDragEnd restore */
       window.addEventListener('pointerup', restoreSelection, { once: true });
       window.addEventListener('pointercancel', restoreSelection, { once: true });
       controls.start(ev);
@@ -103,7 +95,6 @@ function useSheetDrag({
     window.addEventListener('pointercancel', cleanup);
   }
 
-  /* overdrag away from the edge - damped, capped stretch (info.offset is raw; travel is clamped) */
   function onDrag(_ev: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) {
     const el = slotRef.current;
     if (!el) return;
@@ -130,14 +121,13 @@ function useSheetDrag({
         dragListener: false,
         dragMomentum: false,
         dragConstraints: { top: 0, bottom: 0, left: 0, right: 0 },
-        /* away from the edge: hard clamp (stretch covers it); toward: free */
         dragElastic: axis === 'y' ? { top: 0, bottom: 1 } : { left: 0, right: 1 },
         onPointerDown,
         onDrag,
         onDragEnd,
         style: { [axis]: travel, ...stretchStyle },
       }
-    : { style: { [axis]: travel } }; // scrim coupling still applies
+    : { style: { [axis]: travel } };
 
   return { slotProps, scrimOpacity };
 }

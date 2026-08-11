@@ -1,9 +1,6 @@
 'use client';
 
-/* ToggleTag - on/off filter chip (<button aria-pressed>); owns its selection state. */
-
 import './tag.css';
-/* The tick clip renders .collapse classes - collapse.css must ride along. */
 import '../../../motion/collapse.css';
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import { IconSlot } from '../../internal/icon/IconSlot';
@@ -40,7 +37,6 @@ export interface ToggleTagProps extends ToggleTagOwnProps {
 }
 
 function ToggleTagTick({ selected }: { selected: boolean }) {
-  /* collapse.css mechanism on spans - width 0fr and 1fr, content clipped */
   return (
     <span className="tag__check collapse" data-axis="width" data-open={selected ? 'true' : 'false'} aria-hidden="true">
       <span className="collapse__inner">

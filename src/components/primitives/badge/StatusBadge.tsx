@@ -1,7 +1,5 @@
 'use client';
 
-// StatusBadge - a status as a badge; canonical tone+label mapping; morph tweens width in place.
-
 import './badge.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Badge, type BadgeProps } from './Badge';
@@ -61,7 +59,6 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   const [words, setWords] = useState<Word[]>([{ key: 0, label: s.label, cls: '' }]);
   const [boxW, setBoxW] = useState<number>();
 
-  // initial width only; on change the width eases in the rAF below, synced to the word roll
   useLayoutEffect(() => {
     if (ghostRef.current) setBoxW(ghostRef.current.offsetWidth);
   }, []);
@@ -71,24 +68,19 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
     prev.current = status;
     const next = POST_STATUS[status] || POST_STATUS.draft;
     const nk = keyRef.current++;
-    // ghost already holds the new label
     const nextW = ghostRef.current?.offsetWidth;
 
-    // add the new word primed below (invisible); the current word stays settled
     setWords((ws) => ws.concat({ key: nk, label: next.label, cls: 'badge__word--in' }));
-    // next frame: roll the new word in, the old out, ease the box - one tween; clip hides the wider word
     const raf = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         setWords((ws) => ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'badge__word--out' })));
         if (nextW) setBoxW(nextW);
       }),
     );
-    // old word done rolling out - drop it; width already settled in the rAF, so this only prunes the DOM
     const drop = setTimeout(
       () => setWords((ws) => ws.filter((w) => !w.cls.includes('--out'))),
       SM.dur.base * 1000 + 80,
     );
-    // glint when a post lands on a terminal state
     let stopGlint: (() => void) | undefined;
     if (TERMINAL[status] && labelRef.current) {
       const chip = labelRef.current.closest('.badge') as HTMLElement | null;

@@ -1,7 +1,5 @@
 'use client';
 
-/* DateTimeField - DateField's sibling for 'YYYY-MM-DDTHH:mm': the calendar panel plus the segmented time machine; commits only complete datetimes. */
-
 import './date-picker.css';
 import { useState, useEffect } from 'react';
 import { Popover } from '../popover/Popover';
@@ -22,7 +20,6 @@ function displayTime(t: string, format?: '24h' | '12h'): string {
   const mer = p[0] >= 12 ? 'PM' : 'AM';
   return disp12(p[0]) + ':' + pad(p[1]) + ' ' + mer;
 }
-/* value: 'YYYY-MM-DDTHH:mm' - parts. Limits may be date-only. */
 function dttfSplit(v: string | null | undefined): DateTimeParts {
   if (!v) return { date: null, time: null };
   const i = v.indexOf('T');
@@ -76,7 +73,6 @@ export function DateTimeField({
   );
   const parts = dttfSplit(val);
 
-  /* incomplete halves wait here; a committed value supersedes them */
   const [pendDate, setPendDate] = useState<string | null>(null);
   const [pendTime, setPendTime] = useState<string | null>(null);
   useEffect(() => {
@@ -89,7 +85,6 @@ export function DateTimeField({
 
   const minL = dttfSplit(min);
   const maxL = dttfSplit(max);
-  /* time bounds exist only on the boundary date */
   const minTime = date && date === minL.date ? minL.time : null;
   const maxTime = date && date === maxL.date ? maxL.time : null;
 

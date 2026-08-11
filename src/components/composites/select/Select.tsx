@@ -1,6 +1,5 @@
 'use client';
 
-/* Select - single-select custom listbox; committing closes the menu and returns focus. */
 import './select.css';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
@@ -9,7 +8,6 @@ import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
 import { ButtonProps } from '../../primitives/button/Button';
 
-/* Option shapes belong to this subpath's public API; core is not an entry point. */
 export type { SelectOption, SelectGroup } from './core';
 
 export interface SelectProps {

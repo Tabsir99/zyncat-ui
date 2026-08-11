@@ -1,8 +1,5 @@
 'use client';
 
-/* The trigger button shared by both variants. The a11y wiring (ref, ids, expanded state,
-   open/close) comes straight off the listbox brain; only the display bits - label text,
-   leading icon, overflow count, disabled/invalid - are decided per variant. */
 import type { ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
@@ -10,7 +7,6 @@ import type { ListboxState } from './use-listbox';
 import { Button, ButtonProps } from '../../../primitives/button/Button';
 
 export interface SelectTriggerProps extends ButtonProps {
-  /** The listbox brain - supplies the trigger ref, ids, open state and the show/hide handlers. */
   lb: ListboxState;
   invalid?: boolean;
   ariaLabel?: string;

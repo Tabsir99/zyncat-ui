@@ -1,11 +1,8 @@
 'use client';
 
-/* focus - how floating surfaces treat keyboard focus: return it to the opener
-   when a surface closes (every surface), trap it inside while open (modals). */
 import { useEffect, type RefObject } from 'react';
 import { type OverlayEntry, ovIsTop, ovInOverlayAbove } from './layer';
 
-/* Restore focus to the opener on unmount, but only if it would otherwise be lost; a microtask dodges the inert-release ordering race. */
 export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
@@ -25,7 +22,6 @@ const OV_FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/* Hard focus trap: seed in, cycle Tab inside, recapture stray focus unless not topmost or it's in an overlay above. */
 export function useFocusTrap({ panelRef, entry }: { panelRef: RefObject<HTMLElement>; entry: OverlayEntry }) {
   useEffect(() => {
     const panel = panelRef.current;

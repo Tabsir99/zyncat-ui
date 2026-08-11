@@ -1,5 +1,3 @@
-/* date-picker shared pure helpers - 'YYYY-MM-DD' civil-date math, month/weekday constants, tz-offset label. */
-
 export const MONTHS: string[] = [
   'January',
   'February',
@@ -28,11 +26,10 @@ export const add = (k: string, days: number): string => {
   d.setDate(d.getDate() + days);
   return key(d);
 };
-export const col = (d: Date): number => (d.getDay() + 6) % 7; // Monday-first column 0-6
+export const col = (d: Date): number => (d.getDay() + 6) % 7;
 
 export const within = (k: string, min?: string, max?: string): boolean => (!min || k >= min) && (!max || k <= max);
 
-/* 'Jun 12' (year only when it isn't the current one) */
 export function displayDay(k: string | null): string | null {
   if (!k) return null;
   const d = parse(k);
@@ -40,7 +37,6 @@ export function displayDay(k: string | null): string | null {
   return MONTHS[d.getMonth()].slice(0, 3) + ' ' + pad(d.getDate()) + year;
 }
 
-/* 42 cells, Monday-first, covering the month of (y, m) */
 export function grid(y: number, m: number): Date[] {
   const lead = (new Date(y, m, 1).getDay() + 6) % 7;
   const days: Date[] = [];
@@ -48,7 +44,6 @@ export function grid(y: number, m: number): Date[] {
   return days;
 }
 
-/* 'Europe/Riga' - 'Europe/Riga - GMT+3'; dateKey gives the DST-correct offset for that date, else now. */
 export function tzLabel(tz: string, dateKey?: string): string {
   try {
     const at = dateKey ? parse(dateKey) : new Date();

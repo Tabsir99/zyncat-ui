@@ -1,9 +1,5 @@
 'use client';
 
-// RadioGroup - single-select rows or cards. The rows' hover fill is a shared glide pill
-// (../motion/glide); the marker dot and the cards' fill/hover glide between options via
-// Motion layoutId (kept inside each card - its own bg/transform layering needs them there).
-
 import './radio-group.css';
 import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
 import { motion, LayoutGroup } from 'motion/react';
@@ -86,7 +82,6 @@ function RadioGroup({
   htmlProps,
 }: RadioGroupProps) {
   const groupId = useId();
-  /* cards keep hovered state for their layoutId spans; rows drive the glide pill directly */
   const [hovered, setHovered] = useState<string | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
   const glide = useGlide(optionsRef);

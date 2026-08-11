@@ -1,7 +1,5 @@
 'use client';
 
-// AvatarGroup - stacks Avatars with overlap + a "+N" overflow chip; CSS drives the hover-spread.
-
 import './avatar.css';
 import {
   Children,

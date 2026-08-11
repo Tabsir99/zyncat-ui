@@ -1,7 +1,5 @@
 'use client';
 
-// Checkbox - checkbox primitive; on/off + indeterminate select-all.
-
 import './checkbox.css';
 import type { ChangeEventHandler, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { CheckGlyph } from './check-glyph';

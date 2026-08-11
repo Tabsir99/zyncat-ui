@@ -1,8 +1,5 @@
 'use client';
 
-/* useControllable - the library's one controlled/uncontrolled state hook.
-   `meta` rides along to onChange for callers that report what caused the
-   change (e.g. Select passes the committed option). */
 import { useCallback, useState } from 'react';
 
 export function useControllable<T, Meta = unknown>(

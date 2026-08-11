@@ -1,8 +1,5 @@
 'use client';
 
-/* Odometer - rolling digit display; each digit column clips a 0-9 strip and
-   .odo__strip--N sets the translateY (no inline styles). Owns odometer.css, so
-   any renderer (CountBadge, Table's bulk count) ships the styles with it. */
 import './odometer.css';
 
 function Digit({ d }: { d: number }) {
@@ -18,7 +15,6 @@ function Digit({ d }: { d: number }) {
 }
 
 export interface OdometerProps {
-  /** Stringified; digits become rolling columns, other characters render fixed. */
   value: string | number;
 }
 

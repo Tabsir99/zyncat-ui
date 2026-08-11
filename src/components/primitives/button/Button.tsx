@@ -1,7 +1,5 @@
 'use client';
 
-// Button - primitive; composes button.css classes, renders icons, manages loading.
-
 import './button.css';
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode, Ref } from 'react';
 import type { DataAttributes } from '../../../dom-props';
