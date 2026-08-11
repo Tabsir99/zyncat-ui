@@ -1,11 +1,11 @@
-# premium-ds - LLM usage guide
+# Zyncat UI - LLM usage guide
 
 Premium React 19 design system, shipped as built ESM + types. This is a compact per-component
-index; full prop types (with docs) live in node_modules/premium-ds/dist/*.d.ts.
+index; full prop types (with docs) live in node_modules/@zyncat/ui/dist/*.d.ts.
 
 Setup:
-  import { Button } from 'premium-ds/button';   // one subpath per component - there is no barrel entry
-  import 'premium-ds/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
+  import { Button } from '@zyncat/ui/button';   // one subpath per component - there is no barrel entry
+  import '@zyncat/ui/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
 motion is an optional peer: these subpaths run without it - avatar, avatar-group, badge, button,
   checkbox, collapse, count-badge, motion-tokens, number-field, otp-field, status-badge,
@@ -17,30 +17,30 @@ Conventions:
 - Sentence case everywhere; no emoji or exclamation marks in UI. One primary <Button> per view.
 - Numbers, times, IDs, status read mono + tabular. Status words: Scheduled, Draft, Published, Failed.
 - Status hues (info/success/warning/danger) only for genuine status; hierarchy from the neutral ramp.
-- Icons: premium-ds renders its own glyphs from a bundled curated Phosphor set, but does NOT
+- Icons: Zyncat UI renders its own glyphs from a bundled curated Phosphor set, but does NOT
   export an Icon component. Where an example below shows <Icon name="..." />, that is YOUR OWN icon
   node - any ReactNode you pass into the prop (e.g. an @phosphor-icons/react element).
 
-Every named export is also a subpath: premium-ds/<kebab-name> (e.g. premium-ds/status-badge).
+Every named export is also a subpath: @zyncat/ui/<kebab-name> (e.g. @zyncat/ui/status-badge).
 
 Agents: prefer the bundled MCP server over scanning this file or node_modules - register
-  { "mcpServers": { "premium-ds": { "command": "node", "args": ["./node_modules/premium-ds/dist/mcp.js"] } } }
+  { "mcpServers": { "zyncat-ui": { "command": "node", "args": ["./node_modules/@zyncat/ui/dist/mcp.js"] } } }
   then use list_components / get_component / search_api / get_tokens.
 
 ============================================================ PRIMITIVES
 
-Button - premium-ds/button
+Button - @zyncat/ui/button
   One control for every click; exactly one primary per view. variant primary|secondary|ghost|danger|link, size sm|md|lg, iconLeft/iconRight (ReactNode), loading, disabled.
   <Button variant="primary" iconLeft={<Icon name="plus" size="sm" />}>Schedule post</Button>
 
-Collapse - premium-ds/collapse
+Collapse - @zyncat/ui/collapse
   Layout-transition primitive; eases height open/closed, never teleports. Closed content also
   leaves the tab order, accessibility tree and hit-testing once the exit completes; reopening is
   focusable immediately. animation takes motion tokens ONLY - { duration, ease }, each one token
   (fast|base|slow|slower|slowest / standard|entrance|exit|spring|glide) or per-direction { open, close }.
   <Collapse open={open} animation={{ duration: { close: 'fast' }, ease: { close: 'exit' } }}><div>...revealed content...</div></Collapse>
 
-Glide / GlidePill - premium-ds/glide
+Glide / GlidePill - @zyncat/ui/glide
   A persistent background pill that glides smoothly between hovered/active elements. Container must be `position: relative`.
   const glide = useGlide(containerRef);
   <nav ref={containerRef} onPointerLeave={glide.leave}>
@@ -48,16 +48,16 @@ Glide / GlidePill - premium-ds/glide
     <button onPointerEnter={(e) => glide.enter(e.currentTarget)}>Item 1</button>
   </nav>
 
-Badge - premium-ds/badge
+Badge - @zyncat/ui/badge
   Glass or outline chip. tone neutral|info|success|warning|danger, dot, live, variant="outline", pill, size="sm".
   <Badge tone="success" pill>Published</Badge>
 
-StatusBadge - premium-ds/status-badge
+StatusBadge - @zyncat/ui/status-badge
   Canonical post status - tone + one-word label. status draft|scheduled|processing|published|failed; add `morph` to animate in place as status changes.
   <StatusBadge status="published" />
   <StatusBadge status={s} morph />
 
-CountBadge - premium-ds/count-badge
+CountBadge - @zyncat/ui/count-badge
   Mono tabular count; `roll` animates digits like an odometer. value: number | string.
   <CountBadge value="7 / 10" />
   <CountBadge value={count} roll tone="info" />
@@ -65,126 +65,126 @@ CountBadge - premium-ds/count-badge
 ============================================================ FORMS
 (all take label, helper/error/warning/success, size sm|md|lg, disabled)
 
-TextField - premium-ds/text-field
+TextField - @zyncat/ui/text-field
   Base text input; states disclose via Collapse. leadingIcon, clearable, optional/required.
   <TextField id="ws" label="Workspace name" required value={v} onChange={(e) => set(e.target.value)} />
   <TextField id="h" label="Username" error="Must be at least 4 characters." value={v} onChange={...} />
 
-NumberField - premium-ds/number-field
+NumberField - @zyncat/ui/number-field
   Tabular figures, caret steppers, unit suffix, clamp to [min,max]. onChange(value: number).
   <NumberField id="seats" label="Seats" unit="users" min={1} max={50} value={n} onChange={setN} />
 
-OtpField - premium-ds/otp-field
+OtpField - @zyncat/ui/otp-field
   Segmented one-time code; auto-advance, paste-to-fill. length, group, error, size.
   <OtpField length={6} group={3} value={code} onChange={setCode} />
 
-Textarea - premium-ds/textarea
+Textarea - @zyncat/ui/textarea
   Auto-grow, char meter (max), ⌘/Ctrl+↵ submit (onSubmit). minRows/maxRows.
   <Textarea id="bio" label="Bio" max={280} minRows={4} value={v} onChange={(e) => set(e.target.value)} onSubmit={save} />
 
-Checkbox - premium-ds/checkbox
+Checkbox - @zyncat/ui/checkbox
   Stages a choice. label, description, indeterminate, invalid, required, disabled. Standard checked/onChange.
   <Checkbox label="Email me about product updates" checked={on} onChange={(e) => set(e.target.checked)} />
 
-Toggle - premium-ds/toggle
+Toggle - @zyncat/ui/toggle
   Actuates a setting on the spot. label, description; checked/onChange like a checkbox.
   <Toggle label="Auto-save drafts" checked={on} onChange={(e) => set(e.target.checked)} />
 
-RadioGroup - premium-ds/radio-group
+RadioGroup - @zyncat/ui/radio-group
   Pick exactly one. options: RadioOption[] ({ value, label, description?, icon?, disabled? }); variant rows|cards, orientation; value/onChange(value).
   <RadioGroup name="role" label="Member role" value={role} onChange={setRole} options={ROLES} />
 
-Select - premium-ds/select
+Select - @zyncat/ui/select
   Single-select listbox. options: SelectOption[]; value: string|null, onChange(value); searchable, leadingIcon, placeholder, invalid, loading, ariaLabel.
   <Select options={TIMEZONES} value={tz} onChange={setTz} searchable placeholder="Choose a time zone" ariaLabel="Time zone" />
 
-MultiSelect - premium-ds/multi-select
+MultiSelect - @zyncat/ui/multi-select
   Many-of listbox; stays open while toggling, trigger summarises as first +N. value: string[], onChange(string[]); searchable.
   <MultiSelect options={PEOPLE} value={ids} onChange={setIds} placeholder="Choose members" ariaLabel="Members" />
 
 ============================================================ DATA DISPLAY
 
-Avatar - premium-ds/avatar
+Avatar - @zyncat/ui/avatar
   Identity mark: image, initials, or silhouette. name, src, size xs|sm|md|lg|xl, status online|away|busy|offline, shape, paletteIndex, icon.
   <Avatar name="Ana Ng" src="..." status="online" />
 
-AvatarGroup - premium-ds/avatar-group
+AvatarGroup - @zyncat/ui/avatar-group
   Overlapping avatars with +N overflow. max, size; children are <Avatar>s.
   <AvatarGroup max={4} size="sm"><Avatar name="Ana Ng" />...</AvatarGroup>
 
-Tag / TagGroup - premium-ds/tag
+Tag / TagGroup - @zyncat/ui/tag
   User-owned label (a control, not a status). icon, size, disabled, onRemove + removeLabel (removable). TagGroup wraps a labelled set.
   <Tag icon={<Icon name="hash" />} onRemove={fn} removeLabel="Remove design">design</Tag>
 
-ToggleTag - premium-ds/toggle-tag
+ToggleTag - @zyncat/ui/toggle-tag
   Many-of-many filter chip. selected/onChange(next) or defaultSelected; icon, count.
   <ToggleTag selected={on} onChange={setOn} icon={<Icon name="star" />} count={48}>Starred</ToggleTag>
 
-Table - premium-ds/table
+Table - @zyncat/ui/table
   Declare columns + rows; owns sort, selection, stickiness, overflow. columns: TableColumn<T>[] ({ key, label, render?, sortable?, sortBy?, align?, mono?, strong?, grow? }); selectable, defaultSort, footer.
   <Table<Invoice> label="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
 
-Pagination - premium-ds/pagination
+Pagination - @zyncat/ui/pagination
   Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext.
   <Pagination label="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={...} onNext={...} />
 
 ============================================================ DATE, TIME & TABS
 (value is a string; onChange(value | null); timezone, min/max, disabled)
 
-DateField - premium-ds/date-field
+DateField - @zyncat/ui/date-field
   Month calendar in a popover; value 'YYYY-MM-DD'.
   <DateField label="Start date" value={d} onChange={setD} timezone="Europe/Riga" min="2026-06-01" />
 
-DateTimeField - premium-ds/datetime-field
+DateTimeField - @zyncat/ui/datetime-field
   Calendar + segmented HH:MM; value 'YYYY-MM-DDTHH:mm'. format 12h|24h, minuteStep.
   <DateTimeField label="Due at" value={v} onChange={setV} format="12h" minuteStep={15} />
 
-DateRangeField - premium-ds/date-range-field
+DateRangeField - @zyncat/ui/date-range-field
   Two-tap auto-ordering window; value DateRange { start, end } | null; commits when both ends exist.
   <DateRangeField label="Reporting period" value={r} onChange={setR} />
 
-TimeField - premium-ds/time-field
+TimeField - @zyncat/ui/time-field
   Standalone segmented time; value 'HH:mm'; bounds saturate. format, minuteStep.
   <TimeField label="Send at" value={t} onChange={setT} format="12h" minuteStep={15} />
 
-Tabs / TabPanel - premium-ds/tabs
+Tabs / TabPanel - @zyncat/ui/tabs
   Line tabs; the ink reaches then releases; panels enter from the side you moved toward. items: TabItem[]; value/onChange(value, dir). Pair with <TabPanel name tab dir>.
   <Tabs name="views" label="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
   <TabPanel name="views" tab={view} dir={dir}>...</TabPanel>
 
 ============================================================ OVERLAYS & FEEDBACK
 
-Alert - premium-ds/alert
+Alert - @zyncat/ui/alert
   Persistent, in-flow status. tone, title, children (body), action { label, onClick }, dismissible, banner, open/onDismiss (controlled).
   <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: fn }}>Add a plan...</Alert>
 
-Toast - premium-ds/toast  (imperative; mount <Toaster /> once at the app root, then call toast() from anywhere)
+Toast - @zyncat/ui/toast  (imperative; mount <Toaster /> once at the app root, then call toast() from anywhere)
   <Toaster /> props: position ('bottom-right' default), duration, visibleToasts, gap, offset, expand. Without it, toast() no-ops.
   toast(msg) - toast.success/error/warning/info(msg, { description, action }) - toast.promise(p, { loading, success, error }) - toast.loading - toast.dismiss().
-  import { Toaster, toast } from 'premium-ds/toast';
+  import { Toaster, toast } from '@zyncat/ui/toast';
   // once at the root: <Toaster position="bottom-right" />
   toast.success('Changes saved', { description: 'Synced to the cloud' });
   toast.promise(save(), { loading: 'Saving...', success: (v) => `Saved - ${v.count}`, error: (e) => `Failed - ${e.message}` });
 
-Tooltip - premium-ds/tooltip
+Tooltip - @zyncat/ui/tooltip
   Transient hint on hover/focus; wraps any child (no ref wiring needed). content, shortcut, placement top|bottom|left|right.
   <Tooltip content="Save changes" shortcut="⌘S"><Button>Save</Button></Tooltip>
 
-Dialog - premium-ds/dialog
+Dialog - @zyncat/ui/dialog
   Styled modal: scrim, focus trap, scroll lock. open/onOpenChange, tone, icon, title, description, footer: (close) => node.
   <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
 
-Popover - premium-ds/popover
+Popover - @zyncat/ui/popover
   Headless anchored panel, non-modal. side, align, arrow, trigger (node), asChild; children: ({ close }) => node.
   <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>...</menu>}</Popover>
 
-Sheet - premium-ds/sheet
+Sheet - @zyncat/ui/sheet
   Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), asChild; children: ({ close }) => node.
   <Sheet side="right" trigger={<Button>Filters</Button>}>{({ close }) => <div role="dialog">...</div>}</Sheet>
 
 ============================================================ DEV TOOLS
 
-MotionDevtools - premium-ds/motion-devtools
+MotionDevtools - @zyncat/ui/motion-devtools
   Dev-only floating panel that slows or freezes EVERY animation at once (CSS, Motion, raw WAAPI)
   for motion debugging. Mount once at the app root - no provider, touches no other component.
   Requires the motion peer. Gate behind a dev check; keep it out of production.
@@ -194,6 +194,6 @@ MotionDevtools - premium-ds/motion-devtools
 
 ============================================================ THEMING
   Re-skin by overriding the CSS custom properties (tokens) in your own stylesheet, loaded after
-  premium-ds/styles.css - never fork the source. Token groups: spacing --space-*, type --type-*,
+  @zyncat/ui/styles.css - never fork the source. Token groups: spacing --space-*, type --type-*,
   color (--bg-*, --text-*, --border-*, --accent), --radius-*, elevation --shadow-*, motion
   (--duration-*, --ease-*).

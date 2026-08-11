@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Button } from 'premium-ds/button';
-import { Collapse } from 'premium-ds/collapse';
-import { TextField } from 'premium-ds/text-field';
-import { Badge } from 'premium-ds/badge';
-import { StatusBadge, type PostStatus } from 'premium-ds/status-badge';
-import { CountBadge } from 'premium-ds/count-badge';
+import { Button } from '@zyncat/ui/button';
+import { Collapse } from '@zyncat/ui/collapse';
+import { TextField } from '@zyncat/ui/text-field';
+import { Badge } from '@zyncat/ui/badge';
+import { StatusBadge, type PostStatus } from '@zyncat/ui/status-badge';
+import { CountBadge } from '@zyncat/ui/count-badge';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

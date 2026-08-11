@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 /**
- * Next.js plugin that configures Turbopack to resolve premium-ds
+ * Next.js plugin that configures Turbopack to resolve @zyncat/ui
  * imports to TypeScript source, enabling live HMR without a build step.
  */
-export declare function withPremiumDS(nextConfig?: NextConfig): NextConfig;
+export declare function withZyncatUI(nextConfig?: NextConfig): NextConfig;

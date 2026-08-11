@@ -1,25 +1,23 @@
 // @ts-check
-import { readFileSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { readFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /**
- * Next.js plugin that configures Turbopack to resolve premium-ds
+ * Next.js plugin that configures Turbopack to resolve @zyncat/ui
  * component imports to TypeScript source, enabling live HMR without
  * a build step.
  *
  * Sets `turbopack.root` to the common ancestor of the consuming project
- * and the premium-ds package so Turbopack's filesystem scope includes
+ * and the @zyncat/ui package so Turbopack's filesystem scope includes
  * the source tree (which may live outside the project when linked).
  *
  * @param {import('next').NextConfig} nextConfig
  * @returns {import('next').NextConfig}
  */
-export function withPremiumDS(nextConfig = {}) {
+export function withZyncatUI(nextConfig = {}) {
   const pkgDir = dirname(fileURLToPath(import.meta.url));
-  const pkg = JSON.parse(
-    readFileSync(resolve(pkgDir, "package.json"), "utf-8"),
-  );
+  const pkg = JSON.parse(readFileSync(resolve(pkgDir, 'package.json'), 'utf-8'));
 
   const projectDir = process.cwd();
   const root = commonAncestor(projectDir, pkgDir);
@@ -28,31 +26,18 @@ export function withPremiumDS(nextConfig = {}) {
   const aliases = {};
 
   for (const [subpath, conditions] of Object.entries(pkg.exports)) {
-    if (
-      typeof conditions === "object" &&
-      conditions !== null &&
-      "source" in conditions
-    ) {
+    if (typeof conditions === 'object' && conditions !== null && 'source' in conditions) {
       const bare = subpath.slice(2);
       const abs = resolve(pkgDir, conditions.source);
       const rel = relative(projectDir, abs);
-      aliases[`premium-ds/${bare}`] = rel.startsWith("..") ? rel : `./${rel}`;
+      aliases[`@zyncat/ui/${bare}`] = rel.startsWith('..') ? rel : `./${rel}`;
     }
   }
 
   return {
     ...nextConfig,
-    transpilePackages: Array.from(
-      new Set([...(nextConfig.transpilePackages ?? []), "premium-ds"]),
-    ),
-    turbopack: {
-      ...nextConfig.turbopack,
-      root,
-      resolveAlias: {
-        ...nextConfig.turbopack?.resolveAlias,
-        ...aliases,
-      },
-    },
+    transpilePackages: Array.from(new Set([...(nextConfig.transpilePackages ?? []), '@zyncat/ui'])),
+    turbopack: { ...nextConfig.turbopack, root, resolveAlias: { ...nextConfig.turbopack?.resolveAlias, ...aliases } },
   };
 }
 
@@ -63,12 +48,12 @@ export function withPremiumDS(nextConfig = {}) {
  * @returns {string}
  */
 function commonAncestor(a, b) {
-  const aParts = a.split("/");
-  const bParts = b.split("/");
+  const aParts = a.split('/');
+  const bParts = b.split('/');
   const common = [];
   for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
     if (aParts[i] === bParts[i]) common.push(aParts[i]);
     else break;
   }
-  return common.join("/") || "/";
+  return common.join('/') || '/';
 }

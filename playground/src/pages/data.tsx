@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Avatar } from 'premium-ds/avatar';
-import { AvatarGroup } from 'premium-ds/avatar-group';
-import { Tag, TagGroup } from 'premium-ds/tag';
-import { ToggleTag } from 'premium-ds/toggle-tag';
-import { Table, type TableColumn } from 'premium-ds/table';
-import { Pagination } from 'premium-ds/pagination';
-import { Badge } from 'premium-ds/badge';
+import { Avatar } from '@zyncat/ui/avatar';
+import { AvatarGroup } from '@zyncat/ui/avatar-group';
+import { Tag, TagGroup } from '@zyncat/ui/tag';
+import { ToggleTag } from '@zyncat/ui/toggle-tag';
+import { Table, type TableColumn } from '@zyncat/ui/table';
+import { Pagination } from '@zyncat/ui/pagination';
+import { Badge } from '@zyncat/ui/badge';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

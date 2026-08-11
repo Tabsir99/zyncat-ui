@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { TextField } from 'premium-ds/text-field';
-import { NumberField } from 'premium-ds/number-field';
-import { OtpField } from 'premium-ds/otp-field';
-import { Textarea } from 'premium-ds/textarea';
-import { Checkbox } from 'premium-ds/checkbox';
-import { Toggle } from 'premium-ds/toggle';
-import { RadioGroup, type RadioOption } from 'premium-ds/radio-group';
-import { Select } from 'premium-ds/select';
-import { MultiSelect } from 'premium-ds/multi-select';
+import { TextField } from '@zyncat/ui/text-field';
+import { NumberField } from '@zyncat/ui/number-field';
+import { OtpField } from '@zyncat/ui/otp-field';
+import { Textarea } from '@zyncat/ui/textarea';
+import { Checkbox } from '@zyncat/ui/checkbox';
+import { Toggle } from '@zyncat/ui/toggle';
+import { RadioGroup, type RadioOption } from '@zyncat/ui/radio-group';
+import { Select } from '@zyncat/ui/select';
+import { MultiSelect } from '@zyncat/ui/multi-select';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

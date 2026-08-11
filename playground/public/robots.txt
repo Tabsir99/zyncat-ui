@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://premium-ds.vercel.app/sitemap.xml
+Sitemap: https://ui.zyncat.app/sitemap.xml

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Button } from 'premium-ds/button';
-import { Table, type TableColumn } from 'premium-ds/table';
-import { Tabs } from 'premium-ds/tabs';
-import { toast } from 'premium-ds/toast';
+import { Button } from '@zyncat/ui/button';
+import { Table, type TableColumn } from '@zyncat/ui/table';
+import { Tabs } from '@zyncat/ui/tabs';
+import { toast } from '@zyncat/ui/toast';
 import { Icon } from '../icon';
 import { BENCH_BASE, type BenchRow } from './data';
 

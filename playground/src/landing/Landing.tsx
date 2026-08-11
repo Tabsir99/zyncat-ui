@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
-import { Toaster, toast } from 'premium-ds/toast';
-import { Tooltip } from 'premium-ds/tooltip';
+import { Toaster, toast } from '@zyncat/ui/toast';
+import { Tooltip } from '@zyncat/ui/tooltip';
 import { Icon } from '../icon';
 import { HeroConsole } from './HeroConsole';
 import { EasingLab } from './EasingLab';
@@ -10,8 +10,8 @@ import { ThemeBand } from './ThemeBand';
 import { useReveals } from './reveal';
 import './landing.css';
 
-const SITE = 'https://premium-ds.vercel.app';
-const GITHUB = 'https://github.com/Tabsir99/premium-ds';
+const SITE = 'https://ui.zyncat.app';
+const GITHUB = 'https://github.com/Tabsir99/zyncat-ui';
 
 function copy(cmd: string) {
   navigator.clipboard.writeText(cmd).then(
@@ -38,11 +38,11 @@ const SPEC_ROWS: { key: string; value: string }[] = [
 
 const STEPS: { code: string; note: string }[] = [
   {
-    code: 'pnpm add premium-ds motion',
+    code: 'pnpm add @zyncat/ui motion',
     note: 'motion is an optional peer — the static half of the library runs without it; the animated components need it',
   },
-  { code: "import 'premium-ds/styles.css'", note: 'once, at your app root — fonts + tokens' },
-  { code: "import { Button } from 'premium-ds/button'", note: 'and ship — each import pulls only its own CSS' },
+  { code: "import '@zyncat/ui/styles.css'", note: 'once, at your app root — fonts + tokens' },
+  { code: "import { Button } from '@zyncat/ui/button'", note: 'and ship — each import pulls only its own CSS' },
 ];
 
 export function Landing() {
@@ -51,14 +51,14 @@ export function Landing() {
   return (
     <div className="ld">
       <Head>
-        <title>premium-ds — the $400 design system, minus the $400</title>
+        <title>Zyncat UI — the $400 design system, minus the $400</title>
         <meta
           name="description"
           content="Open-source, motion-first React design system for dashboards and data-heavy apps. 30+ polished components on a small token vocabulary — no Tailwind, no CSS-in-JS. MIT."
         />
         <link rel="canonical" href={SITE} />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="premium-ds — the $400 design system, minus the $400" />
+        <meta property="og:title" content="Zyncat UI — the $400 design system, minus the $400" />
         <meta
           property="og:description"
           content="Motion-first React components for dashboards and data-heavy apps, polished to paid-kit level. Token-driven theming, no Tailwind, MIT."
@@ -66,7 +66,7 @@ export function Landing() {
         <meta property="og:url" content={SITE} />
         <meta property="og:image" content={`${SITE}/og.png`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="premium-ds — the $400 design system, minus the $400" />
+        <meta name="twitter:title" content="Zyncat UI — the $400 design system, minus the $400" />
         <meta name="twitter:image" content={`${SITE}/og.png`} />
       </Head>
       <Toaster />
@@ -75,7 +75,7 @@ export function Landing() {
         <div className="ld-container ld-nav__in">
           <Link to="/" className="ld-brand">
             <span className="ld-brand__dot" aria-hidden />
-            premium-ds
+            Zyncat UI
           </Link>
           <nav className="ld-nav__links" aria-label="Site">
             <Link to="/components" className="ld-nav__link">
@@ -113,11 +113,11 @@ export function Landing() {
                   </span>
                 </Link>
                 <Tooltip content="Copy install command">
-                  <button type="button" className="ld-install" onClick={() => copy('pnpm add premium-ds')}>
+                  <button type="button" className="ld-install" onClick={() => copy('pnpm add @zyncat/ui')}>
                     <span className="ld-install__prompt" aria-hidden>
                       $
                     </span>
-                    pnpm add premium-ds
+                    pnpm add @zyncat/ui
                     <Icon name="copy" size="sm" />
                   </button>
                 </Tooltip>
@@ -261,13 +261,13 @@ export function Landing() {
 
       <footer className="ld-footer">
         <div className="ld-container ld-footer__in">
-          <span>premium-ds · MIT · built by Tabsir Ahammed</span>
+          <span>Zyncat UI · MIT · built by Tabsir Ahammed</span>
           <nav className="ld-footer__links" aria-label="Footer">
             <Link to="/components">components</Link>
             <a href={GITHUB} rel="noreferrer">
               github
             </a>
-            <a href="https://www.npmjs.com/package/premium-ds" rel="noreferrer">
+            <a href="https://www.npmjs.com/package/@zyncat/ui" rel="noreferrer">
               npm
             </a>
           </nav>

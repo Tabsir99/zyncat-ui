@@ -8,9 +8,7 @@ function toKebab(name) {
     .toLowerCase();
 }
 
-const NAME_OVERRIDES = {
-  DateTimeField: 'datetime-field',
-};
+const NAME_OVERRIDES = { DateTimeField: 'datetime-field' };
 
 const entries = {
   'toast-store': 'components/composites/toast/toast-store.ts',
@@ -24,7 +22,11 @@ const baseDir = join(process.cwd(), 'src/components');
 for (const tier of ['primitives', 'composites', 'compound']) {
   const tierDir = join(baseDir, tier);
   let dirs;
-  try { dirs = readdirSync(tierDir); } catch { continue; }
+  try {
+    dirs = readdirSync(tierDir);
+  } catch {
+    continue;
+  }
   for (const comp of dirs) {
     const compDir = join(tierDir, comp);
     if (!statSync(compDir).isDirectory()) continue;
@@ -39,12 +41,10 @@ for (const tier of ['primitives', 'composites', 'compound']) {
 const tsconfigPath = join(process.cwd(), 'playground/tsconfig.json');
 const tsconfig = JSON.parse(readFileSync(tsconfigPath, 'utf8'));
 
-const newPaths = {
-  'premium-ds/styles.css': ['../src/styles.css']
-};
+const newPaths = { '@zyncat/ui/styles.css': ['../src/styles.css'] };
 
 for (const [name, path] of Object.entries(entries)) {
-  newPaths[`premium-ds/${name}`] = [`../src/${path}`];
+  newPaths[`@zyncat/ui/${name}`] = [`../src/${path}`];
 }
 
 tsconfig.compilerOptions.paths = newPaths;

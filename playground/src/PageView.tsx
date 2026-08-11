@@ -7,11 +7,11 @@ import type { Doc } from './registry';
 import { Example } from './kit';
 import { PropsTable } from './PropsTable';
 
-const SITE = 'https://premium-ds.vercel.app';
+const SITE = 'https://ui.zyncat.app';
 
 export function PageView({ doc }: { doc: Doc }) {
   const { slug, label, blurb, Component, example, props } = doc;
-  const title = `${label} - premium-ds`;
+  const title = `${label} - Zyncat UI`;
   const url = `${SITE}/${slug}`;
   return (
     <article className="page">

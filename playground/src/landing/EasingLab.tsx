@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button } from 'premium-ds/button';
-import { UIMotion, type Bezier } from 'premium-ds/motion-tokens';
+import { Button } from '@zyncat/ui/button';
+import { UIMotion, type Bezier } from '@zyncat/ui/motion-tokens';
 import { Icon } from '../icon';
 
 type EaseName = keyof typeof UIMotion.ease;

@@ -2,7 +2,7 @@ import type { ComponentDoc } from './types';
 
 export const overlays: Record<string, ComponentDoc> = {
   alert: {
-    example: `import { Alert } from 'premium-ds/alert';
+    example: `import { Alert } from '@zyncat/ui/alert';
 
 <Alert
   tone="warning"
@@ -73,7 +73,7 @@ export const overlays: Record<string, ComponentDoc> = {
   },
 
   toast: {
-    example: `import { Toaster, toast } from 'premium-ds/toast';
+    example: `import { Toaster, toast } from '@zyncat/ui/toast';
 
 // Mount <Toaster /> once near your app root. Without it, toast() renders nothing.
 function App() {
@@ -196,7 +196,7 @@ toast.promise(publishBatch(), {
   },
 
   tooltip: {
-    example: `import { Tooltip } from 'premium-ds/tooltip';
+    example: `import { Tooltip } from '@zyncat/ui/tooltip';
 
 <Tooltip content="Schedule to queue" shortcut="S">
   <button type="button">Schedule</button>
@@ -255,7 +255,7 @@ toast.promise(publishBatch(), {
   },
 
   dialog: {
-    example: `import { Dialog } from 'premium-ds/dialog';
+    example: `import { Dialog } from '@zyncat/ui/dialog';
 
 <Dialog
   trigger={<button type="button">Delete post</button>}
@@ -327,7 +327,7 @@ toast.promise(publishBatch(), {
   },
 
   popover: {
-    example: `import { Popover } from 'premium-ds/popover';
+    example: `import { Popover } from '@zyncat/ui/popover';
 
 <Popover
   trigger={<button type="button">Actions</button>}
@@ -392,7 +392,7 @@ toast.promise(publishBatch(), {
   },
 
   sheet: {
-    example: `import { Sheet } from 'premium-ds/sheet';
+    example: `import { Sheet } from '@zyncat/ui/sheet';
 
 <Sheet
   side="right"

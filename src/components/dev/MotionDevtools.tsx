@@ -40,7 +40,7 @@ export interface MotionDevtoolsProps {
   defaultOpen?: boolean;
 }
 
-const STORAGE_KEY = 'premium-ds:motion-devtools';
+const STORAGE_KEY = 'zyncat-ui:motion-devtools';
 const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
 function GaugeGlyph() {

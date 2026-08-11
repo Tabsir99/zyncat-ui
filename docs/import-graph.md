@@ -1,4 +1,4 @@
-# Import Graph — premium-ds
+# Import Graph — Zyncat UI
 
 Structural map of the internal module dependencies in `src/`, generated with
 [`madge`](https://github.com/pahen/madge) (a devDependency).
@@ -27,7 +27,7 @@ foundation; a change here ripples widest.
 |         9 | `components/icon/IconSlot.tsx`           | Sizes consumer-supplied icon nodes to `--icon-*` tokens                                                                   |
 |         7 | `components/overlay/layer.tsx`           | CSS-free layering primitives (portal + stack + outside-press) behind every floating surface                               |
 |         6 | `components/motion/glide.tsx`            | Spring "active pill" indicator (`useGlide` + `GlidePill`)                                                                 |
-|         6 | `components/button/Button.tsx`           | The button primitive — also the public `premium-ds/button` export, now dogfooded by every component that renders a button |
+|         6 | `components/button/Button.tsx`           | The button primitive — also the public `@zyncat/ui/button` export, now dogfooded by every component that renders a button |
 |         4 | `components/token-px.ts`                 | CSS-token → px runtime utility                                                                                            |
 |         4 | `components/input/field-chrome.tsx`      | Shared label + animated-message chrome for field controls                                                                 |
 |         4 | `components/date-picker/field-shell.tsx` | Shared segment + trigger shell for all date/time fields                                                                   |

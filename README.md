@@ -1,4 +1,4 @@
-# premium-ds
+# Zyncat UI
 
 A premium React design system - modern CSS + a small, closed token vocabulary, applied
 consistently. Restraint, calm motion, no Tailwind, no CSS-in-JS, no UI libraries.
@@ -9,7 +9,7 @@ component; link one base stylesheet - each component loads its own CSS automatic
 ## Install
 
 ```bash
-pnpm add premium-ds
+pnpm add @zyncat/ui
 # peers (you likely already have them):
 pnpm add react react-dom motion
 ```
@@ -27,15 +27,15 @@ No bundler config and no `transpilePackages` - the package ships built ESM with 
 directives intact, so Next.js App Router boundaries just work.
 
 ```tsx
-import { Button, toast } from 'premium-ds';
-import 'premium-ds/styles.css'; // base layer - link once, at the app root
+import { Button, toast } from '@zyncat/ui';
+import '@zyncat/ui/styles.css'; // base layer - link once, at the app root
 ```
 
 `styles.css` is the **base layer only** - fonts, design tokens (the `:root` custom
 properties) and the shared `glass` utility. Link it exactly once at the app root.
 
 You never import per-component CSS: every component imports its own stylesheet, so your
-bundler code-splits and lazy-loads it with the component. Import `premium-ds/dialog` and
+bundler code-splits and lazy-loads it with the component. Import `@zyncat/ui/dialog` and
 only `dialog.css` ships (plus the `overlay`/`icon` styles it reuses, deduped) - not the
 other 30 components' CSS.
 
@@ -44,11 +44,11 @@ other 30 components' CSS.
 Every component is also a subpath export, so you can pull just one:
 
 ```tsx
-import { Button } from 'premium-ds/button';
-import { DateField } from 'premium-ds/date-field';
+import { Button } from '@zyncat/ui/button';
+import { DateField } from '@zyncat/ui/date-field';
 ```
 
-The barrel is side-effect-free and tree-shakes, so `import { Button } from 'premium-ds'` is
+The barrel is side-effect-free and tree-shakes, so `import { Button } from '@zyncat/ui'` is
 equally lean in a bundler - subpaths help in non-bundled or explicit setups. CSS follows the
 same module graph: components you don't use drop their stylesheets too.
 
@@ -62,7 +62,7 @@ same module graph: components you don't use drop their stylesheets too.
 | Date, time & tabs   | DateField, DateTimeField, DateRangeField, TimeField, Tabs                                     |
 | Overlays & feedback | Alert, Toast, Tooltip, Dialog, Popover, Sheet                                                 |
 
-Each is a named export from the barrel and a subpath (`premium-ds/<kebab-name>`). Props are
+Each is a named export from the barrel and a subpath (`@zyncat/ui/<kebab-name>`). Props are
 documented inline in the types; see [`llms.txt`](./llms.txt) for per-component examples.
 
 ## For AI coding agents
@@ -74,16 +74,16 @@ query the API surface instead of grepping `node_modules`: `list_components` (ind
 Register it in the consuming project - for Claude Code, `.mcp.json` at the project root:
 
 ```json
-{ "mcpServers": { "premium-ds": { "command": "node", "args": ["./node_modules/premium-ds/dist/mcp.js"] } } }
+{ "mcpServers": { "zyncat-ui": { "command": "node", "args": ["./node_modules/@zyncat/ui/dist/mcp.js"] } } }
 ```
 
-Any MCP client works (also exposed as the `premium-ds-mcp` bin). The server reads the installed
+Any MCP client works (also exposed as the `zyncat-ui-mcp` bin). The server reads the installed
 package's `llms.txt`, `dist/*.d.ts` and `src/tokens/*.css` at call time, so answers always match
 the installed version.
 
 Without MCP, the same contract is readable directly:
 
-- **`node_modules/premium-ds/dist/*.d.ts`** - every component's props carry inline TSDoc. This is
+- **`node_modules/@zyncat/ui/dist/*.d.ts`** - every component's props carry inline TSDoc. This is
   the machine-readable source of truth (e.g. `dist/button.d.ts` fully describes `ButtonProps`).
 - **`llms.txt`** (package root) - a compact, per-component index: purpose - import - a minimal
   example. Cheaper to scan than every `.d.ts`.
@@ -92,7 +92,7 @@ Without MCP, the same contract is readable directly:
 ## Copy-paste instead
 
 The tarball also ships `src/`, so you can lift a component straight from
-`node_modules/premium-ds/src/components/<name>/` into your project. Components aren't fully
+`node_modules/@zyncat/ui/src/components/<name>/` into your project. Components aren't fully
 self-contained - they share `src/tokens/`, the `motion-tokens` bridge, the internal `icon/`, and a
 few `*-core` helpers - so copy those alongside. (A shadcn-style registry/CLI could automate this
 later.)
@@ -100,7 +100,7 @@ later.)
 ## Icons
 
 Components render their own glyphs from a small curated Phosphor set, **bundled in** - no icon peer
-to install. premium-ds does **not** export an `Icon` component, so where a prop takes an icon
+to install. Zyncat UI does **not** export an `Icon` component, so where a prop takes an icon
 (`iconLeft`, `leadingIcon`, a `Tag`'s `icon`, ...) pass your own node - any `ReactNode` (e.g. an
 `@phosphor-icons/react` element, if you choose to use it).
 
@@ -120,7 +120,7 @@ dist/               compiled ESM + .d.ts - what you import
 - **Fonts.** `src/tokens/fonts.css` pulls Geist + Geist Mono from Google Fonts via a remote
   `@import`. Self-host the families to drop the render-blocking network hop.
 - **Styling is token-driven.** Re-skin by overriding the CSS custom properties in your own
-  stylesheet loaded after `premium-ds/styles.css` - never fork the source.
+  stylesheet loaded after `@zyncat/ui/styles.css` - never fork the source.
 
 ## Develop
 

@@ -1,12 +1,12 @@
 import { useState, type CSSProperties } from 'react';
-import { Badge } from 'premium-ds/badge';
-import { Button } from 'premium-ds/button';
-import { RadioGroup } from 'premium-ds/radio-group';
-import { Select } from 'premium-ds/select';
-import { Tabs } from 'premium-ds/tabs';
-import { TextField } from 'premium-ds/text-field';
-import { Toggle } from 'premium-ds/toggle';
-import { toast } from 'premium-ds/toast';
+import { Badge } from '@zyncat/ui/badge';
+import { Button } from '@zyncat/ui/button';
+import { RadioGroup } from '@zyncat/ui/radio-group';
+import { Select } from '@zyncat/ui/select';
+import { Tabs } from '@zyncat/ui/tabs';
+import { TextField } from '@zyncat/ui/text-field';
+import { Toggle } from '@zyncat/ui/toggle';
+import { toast } from '@zyncat/ui/toast';
 import { Icon } from '../icon';
 
 type AccentName = 'teal' | 'indigo' | 'violet' | 'ember';

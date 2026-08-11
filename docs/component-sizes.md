@@ -1,4 +1,4 @@
-# Component Size Ranking — premium-ds
+# Component Size Ranking — Zyncat UI
 
 Lines of code across `src/` (`.tsx` + `.ts` + `.css`), measured with `wc -l`.
 

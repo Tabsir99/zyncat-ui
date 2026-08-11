@@ -195,7 +195,7 @@ function warnIfDetached(): void {
     if (store.mounted || warned) return;
     warned = true;
     console.warn(
-      'premium-ds: a toast was triggered but no <Toaster /> is mounted, so nothing will render. Mount <Toaster /> once near your app root.',
+      'zyncat-ui: a toast was triggered but no <Toaster /> is mounted, so nothing will render. Mount <Toaster /> once near your app root.',
     );
   });
 }

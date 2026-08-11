@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -16,118 +12,43 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "paths": {
-      "premium-ds/styles.css": [
-        "../src/styles.css"
-      ],
-      "premium-ds/toast-store": [
-        "../src/components/composites/toast/toast-store.ts"
-      ],
-      "premium-ds/motion-tokens": [
-        "../src/tokens/motion-tokens.ts"
-      ],
-      "premium-ds/motion-devtools": [
-        "../src/components/dev/MotionDevtools.tsx"
-      ],
-      "premium-ds/collapse": [
-        "../src/motion/Collapse.tsx"
-      ],
-      "premium-ds/glide": [
-        "../src/motion/glide.tsx"
-      ],
-      "premium-ds/avatar": [
-        "../src/components/primitives/avatar/Avatar.tsx"
-      ],
-      "premium-ds/avatar-group": [
-        "../src/components/primitives/avatar/AvatarGroup.tsx"
-      ],
-      "premium-ds/badge": [
-        "../src/components/primitives/badge/Badge.tsx"
-      ],
-      "premium-ds/count-badge": [
-        "../src/components/primitives/badge/CountBadge.tsx"
-      ],
-      "premium-ds/status-badge": [
-        "../src/components/primitives/badge/StatusBadge.tsx"
-      ],
-      "premium-ds/button": [
-        "../src/components/primitives/button/Button.tsx"
-      ],
-      "premium-ds/checkbox": [
-        "../src/components/primitives/checkbox/Checkbox.tsx"
-      ],
-      "premium-ds/number-field": [
-        "../src/components/primitives/input/NumberField.tsx"
-      ],
-      "premium-ds/otp-field": [
-        "../src/components/primitives/input/OtpField.tsx"
-      ],
-      "premium-ds/text-field": [
-        "../src/components/primitives/input/TextField.tsx"
-      ],
-      "premium-ds/radio-group": [
-        "../src/components/primitives/radio-group/RadioGroup.tsx"
-      ],
-      "premium-ds/tag": [
-        "../src/components/primitives/tag/Tag.tsx"
-      ],
-      "premium-ds/toggle-tag": [
-        "../src/components/primitives/tag/ToggleTag.tsx"
-      ],
-      "premium-ds/textarea": [
-        "../src/components/primitives/textarea/Textarea.tsx"
-      ],
-      "premium-ds/toggle": [
-        "../src/components/primitives/toggle/Toggle.tsx"
-      ],
-      "premium-ds/alert": [
-        "../src/components/composites/alert/Alert.tsx"
-      ],
-      "premium-ds/date-field": [
-        "../src/components/composites/date-picker/DateField.tsx"
-      ],
-      "premium-ds/date-range-field": [
-        "../src/components/composites/date-picker/DateRangeField.tsx"
-      ],
-      "premium-ds/datetime-field": [
-        "../src/components/composites/date-picker/DateTimeField.tsx"
-      ],
-      "premium-ds/time-field": [
-        "../src/components/composites/date-picker/TimeField.tsx"
-      ],
-      "premium-ds/dialog": [
-        "../src/components/composites/dialog/Dialog.tsx"
-      ],
-      "premium-ds/pagination": [
-        "../src/components/composites/pagination/Pagination.tsx"
-      ],
-      "premium-ds/popover": [
-        "../src/components/composites/popover/Popover.tsx"
-      ],
-      "premium-ds/multi-select": [
-        "../src/components/composites/select/MultiSelect.tsx"
-      ],
-      "premium-ds/select": [
-        "../src/components/composites/select/Select.tsx"
-      ],
-      "premium-ds/sheet": [
-        "../src/components/composites/sheet/Sheet.tsx"
-      ],
-      "premium-ds/table": [
-        "../src/components/composites/table/Table.tsx"
-      ],
-      "premium-ds/tabs": [
-        "../src/components/composites/tabs/Tabs.tsx"
-      ],
-      "premium-ds/toast": [
-        "../src/components/composites/toast/Toast.tsx"
-      ],
-      "premium-ds/tooltip": [
-        "../src/components/composites/tooltip/Tooltip.tsx"
-      ]
+      "@zyncat/ui/styles.css": ["../src/styles.css"],
+      "@zyncat/ui/toast-store": ["../src/components/composites/toast/toast-store.ts"],
+      "@zyncat/ui/motion-tokens": ["../src/tokens/motion-tokens.ts"],
+      "@zyncat/ui/motion-devtools": ["../src/components/dev/MotionDevtools.tsx"],
+      "@zyncat/ui/collapse": ["../src/motion/Collapse.tsx"],
+      "@zyncat/ui/glide": ["../src/motion/glide.tsx"],
+      "@zyncat/ui/avatar": ["../src/components/primitives/avatar/Avatar.tsx"],
+      "@zyncat/ui/avatar-group": ["../src/components/primitives/avatar/AvatarGroup.tsx"],
+      "@zyncat/ui/badge": ["../src/components/primitives/badge/Badge.tsx"],
+      "@zyncat/ui/count-badge": ["../src/components/primitives/badge/CountBadge.tsx"],
+      "@zyncat/ui/status-badge": ["../src/components/primitives/badge/StatusBadge.tsx"],
+      "@zyncat/ui/button": ["../src/components/primitives/button/Button.tsx"],
+      "@zyncat/ui/checkbox": ["../src/components/primitives/checkbox/Checkbox.tsx"],
+      "@zyncat/ui/number-field": ["../src/components/primitives/input/NumberField.tsx"],
+      "@zyncat/ui/otp-field": ["../src/components/primitives/input/OtpField.tsx"],
+      "@zyncat/ui/text-field": ["../src/components/primitives/input/TextField.tsx"],
+      "@zyncat/ui/radio-group": ["../src/components/primitives/radio-group/RadioGroup.tsx"],
+      "@zyncat/ui/tag": ["../src/components/primitives/tag/Tag.tsx"],
+      "@zyncat/ui/toggle-tag": ["../src/components/primitives/tag/ToggleTag.tsx"],
+      "@zyncat/ui/textarea": ["../src/components/primitives/textarea/Textarea.tsx"],
+      "@zyncat/ui/toggle": ["../src/components/primitives/toggle/Toggle.tsx"],
+      "@zyncat/ui/alert": ["../src/components/composites/alert/Alert.tsx"],
+      "@zyncat/ui/date-field": ["../src/components/composites/date-picker/DateField.tsx"],
+      "@zyncat/ui/date-range-field": ["../src/components/composites/date-picker/DateRangeField.tsx"],
+      "@zyncat/ui/datetime-field": ["../src/components/composites/date-picker/DateTimeField.tsx"],
+      "@zyncat/ui/time-field": ["../src/components/composites/date-picker/TimeField.tsx"],
+      "@zyncat/ui/dialog": ["../src/components/composites/dialog/Dialog.tsx"],
+      "@zyncat/ui/pagination": ["../src/components/composites/pagination/Pagination.tsx"],
+      "@zyncat/ui/popover": ["../src/components/composites/popover/Popover.tsx"],
+      "@zyncat/ui/multi-select": ["../src/components/composites/select/MultiSelect.tsx"],
+      "@zyncat/ui/select": ["../src/components/composites/select/Select.tsx"],
+      "@zyncat/ui/sheet": ["../src/components/composites/sheet/Sheet.tsx"],
+      "@zyncat/ui/table": ["../src/components/composites/table/Table.tsx"],
+      "@zyncat/ui/tabs": ["../src/components/composites/tabs/Tabs.tsx"],
+      "@zyncat/ui/toast": ["../src/components/composites/toast/Toast.tsx"],
+      "@zyncat/ui/tooltip": ["../src/components/composites/tooltip/Tooltip.tsx"]
     }
   },
-  "include": [
-    "src",
-    "vite.config.ts"
-  ]
+  "include": ["src", "vite.config.ts"]
 }

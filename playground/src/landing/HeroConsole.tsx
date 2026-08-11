@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Avatar } from 'premium-ds/avatar';
-import { Badge } from 'premium-ds/badge';
-import { Button } from 'premium-ds/button';
-import { Pagination } from 'premium-ds/pagination';
-import { Table, type TableColumn } from 'premium-ds/table';
-import { Tabs } from 'premium-ds/tabs';
-import { toast } from 'premium-ds/toast';
+import { Avatar } from '@zyncat/ui/avatar';
+import { Badge } from '@zyncat/ui/badge';
+import { Button } from '@zyncat/ui/button';
+import { Pagination } from '@zyncat/ui/pagination';
+import { Table, type TableColumn } from '@zyncat/ui/table';
+import { Tabs } from '@zyncat/ui/tabs';
+import { toast } from '@zyncat/ui/toast';
 import { DEPLOYS, type Deploy, type DeployStatus } from './data';
 
 const STATUS: Record<
@@ -63,7 +63,7 @@ export function HeroConsole() {
   const count = (e: string) => rows.filter((r) => r.env === e).length;
 
   return (
-    <div className="ld-console" aria-label="Live demo — deploy console built from premium-ds">
+    <div className="ld-console" aria-label="Live demo — deploy console built from Zyncat UI">
       <div className="ld-console__bar">
         <span className="ld-console__dots" aria-hidden>
           <i />

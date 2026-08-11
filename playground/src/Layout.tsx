@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Toaster } from 'premium-ds/toast';
+import { Toaster } from '@zyncat/ui/toast';
 import { GROUPS } from './registry';
 /* __MDT_VERIFY__ temporary preview mount - remove when done */
 import { MotionDevtools } from '../../src/components/dev/MotionDevtools';
@@ -20,7 +20,7 @@ export function Layout() {
       <aside className="sidebar">
         <NavLink to="/" className="brand">
           <span className="brand__mark" />
-          <span className="brand__name">premium-ds</span>
+          <span className="brand__name">Zyncat UI</span>
         </NavLink>
         <nav>
           {GROUPS.map((g) => (
@@ -47,9 +47,7 @@ export function Layout() {
 
         <div className="wrap">
           <Outlet />
-          <footer className="footer">
-            premium-ds - rendered from source via Vite. Restraint, consistency, motion.
-          </footer>
+          <footer className="footer">Zyncat UI - rendered from source via Vite. Restraint, consistency, motion.</footer>
         </div>
       </div>
     </div>

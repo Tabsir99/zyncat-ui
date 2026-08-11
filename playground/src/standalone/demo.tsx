@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import { Table, type TableColumn } from 'premium-ds/table';
-import { Toaster, toast } from 'premium-ds/toast';
+import { Table, type TableColumn } from '@zyncat/ui/table';
+import { Toaster, toast } from '@zyncat/ui/toast';
 
 /* Regression harness for cross-component CSS coupling: this module graph
-   contains ONLY premium-ds/table and premium-ds/toast (plus whatever the
+   contains ONLY @zyncat/ui/table and @zyncat/ui/toast (plus whatever the
    entry file adds). Table renders .cbx/.odo/.btn vocabularies - since the
    ownership fix (CheckGlyph/Odometer carry their CSS; renderers import
    button.css), their styles ride in with the table import itself. The two
@@ -68,11 +68,11 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
           color: 'var(--text-subtle)',
         }}
       >
-        standalone import test — module graph: premium-ds/table + premium-ds/toast
+        standalone import test — module graph: @zyncat/ui/table + @zyncat/ui/toast
         {healed ? ' + checkbox + button + badge' : ' only'}
       </p>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 650, letterSpacing: '-0.01em', margin: '4px 0 8px' }}>
-        {healed ? 'Same page, healed' : 'What a real app gets from `import … from ‘premium-ds/table’`'}
+        {healed ? 'Same page, healed' : 'What a real app gets from `import … from ‘@zyncat/ui/table’`'}
       </h1>
       <p style={{ color: 'var(--text-muted, #666)', maxWidth: 620 }}>
         {healed

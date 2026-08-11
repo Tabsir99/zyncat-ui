@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Alert } from 'premium-ds/alert';
-import { Tooltip } from 'premium-ds/tooltip';
-import { Dialog } from 'premium-ds/dialog';
-import { Popover } from 'premium-ds/popover';
-import { Sheet } from 'premium-ds/sheet';
-import { Button } from 'premium-ds/button';
-import { toast } from 'premium-ds/toast';
+import { Alert } from '@zyncat/ui/alert';
+import { Tooltip } from '@zyncat/ui/tooltip';
+import { Dialog } from '@zyncat/ui/dialog';
+import { Popover } from '@zyncat/ui/popover';
+import { Sheet } from '@zyncat/ui/sheet';
+import { Button } from '@zyncat/ui/button';
+import { toast } from '@zyncat/ui/toast';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

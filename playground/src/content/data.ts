@@ -2,8 +2,8 @@ import type { ComponentDoc } from './types';
 
 export const data: Record<string, ComponentDoc> = {
   avatar: {
-    example: `import { Avatar } from 'premium-ds/avatar';
-import { AvatarGroup } from 'premium-ds/avatar-group';
+    example: `import { Avatar } from '@zyncat/ui/avatar';
+import { AvatarGroup } from '@zyncat/ui/avatar-group';
 
 // Single avatar with presence dot
 <Avatar name="Sara Osei" src="/avatars/sara.jpg" size="md" status="online" />
@@ -67,7 +67,7 @@ import { AvatarGroup } from 'premium-ds/avatar-group';
   },
 
   tag: {
-    example: `import { Tag, TagGroup } from 'premium-ds/tag';
+    example: `import { Tag, TagGroup } from '@zyncat/ui/tag';
 
 const [channels, setChannels] = useState(['instagram', 'twitter', 'linkedin']);
 
@@ -132,7 +132,7 @@ const [channels, setChannels] = useState(['instagram', 'twitter', 'linkedin']);
   },
 
   table: {
-    example: `import { Table } from 'premium-ds/table';
+    example: `import { Table } from '@zyncat/ui/table';
 
 type Post = { id: number; channel: string; status: string; scheduled: string; reach: number };
 
@@ -253,7 +253,7 @@ const rows: Post[] = [
   },
 
   pagination: {
-    example: `import { Pagination } from 'premium-ds/pagination';
+    example: `import { Pagination } from '@zyncat/ui/pagination';
 
 const [cursor, setCursor] = useState({ from: 1, to: 25, hasPrev: false, hasNext: true });
 

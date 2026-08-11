@@ -1,4 +1,4 @@
-/* premium-ds base layer - import ONCE at your app root:  import 'premium-ds/styles.css';
+/* Zyncat UI base layer - import ONCE at your app root:  import '@zyncat/ui/styles.css';
    Fonts, design tokens (:root variables) and the shared `glass` utility.
 
    Per-component CSS is NOT here on purpose: every component imports its own

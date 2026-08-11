@@ -11,9 +11,7 @@ function toKebab(name: string): string {
 }
 
 // Exceptions where the auto-derived kebab name doesn't match the desired public entry name.
-const NAME_OVERRIDES: Record<string, string> = {
-  DateTimeField: 'datetime-field',
-};
+const NAME_OVERRIDES: Record<string, string> = { DateTimeField: 'datetime-field' };
 
 // Scan primitives/, composites/, compound/ for PascalCase .tsx files → entry map.
 function discoverComponentEntries(): Record<string, string> {
@@ -21,7 +19,11 @@ function discoverComponentEntries(): Record<string, string> {
   for (const tier of ['primitives', 'composites', 'compound']) {
     const tierDir = join('src/components', tier);
     let dirs: string[];
-    try { dirs = readdirSync(tierDir); } catch { continue; }
+    try {
+      dirs = readdirSync(tierDir);
+    } catch {
+      continue;
+    }
     for (const comp of dirs) {
       const compDir = join(tierDir, comp);
       if (!statSync(compDir).isDirectory()) continue;
@@ -45,7 +47,7 @@ const EXPLICIT_ENTRIES: Record<string, string> = {
 };
 
 // One entry per public module - one dist file + .d.ts each. Subpaths
-// (`premium-ds/button`) are the ONLY public API - there is no barrel entry, so
+// (`@zyncat/ui/button`) are the ONLY public API - there is no barrel entry, so
 // one import can never pull modules (or CSS) the app didn't ask for.
 // splitting:true hoists shared internals (overlay/*, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.

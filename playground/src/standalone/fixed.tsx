@@ -1,12 +1,12 @@
-import 'premium-ds/styles.css';
+import '@zyncat/ui/styles.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 /* The heal: this page ALSO uses the components that own the vocabularies
    Table/Toast render (.cbx / .btn / .odo). Their CSS rides along, so the
    table's checkboxes, bulk buttons and odometer style themselves again. */
-import { Checkbox } from 'premium-ds/checkbox';
-import { Button } from 'premium-ds/button';
-import { Badge } from 'premium-ds/badge';
+import { Checkbox } from '@zyncat/ui/checkbox';
+import { Button } from '@zyncat/ui/button';
+import { Badge } from '@zyncat/ui/badge';
 import { StandaloneDemo } from './demo';
 
 const extras = (

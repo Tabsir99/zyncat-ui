@@ -1,9 +1,9 @@
 import { useState, type CSSProperties } from 'react';
-import { DateField } from 'premium-ds/date-field';
-import { DateTimeField } from 'premium-ds/datetime-field';
-import { DateRangeField, type DateRange } from 'premium-ds/date-range-field';
-import { TimeField } from 'premium-ds/time-field';
-import { Tabs, TabPanel, type TabItem } from 'premium-ds/tabs';
+import { DateField } from '@zyncat/ui/date-field';
+import { DateTimeField } from '@zyncat/ui/datetime-field';
+import { DateRangeField, type DateRange } from '@zyncat/ui/date-range-field';
+import { TimeField } from '@zyncat/ui/time-field';
+import { Tabs, TabPanel, type TabItem } from '@zyncat/ui/tabs';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 

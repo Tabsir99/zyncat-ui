@@ -46,7 +46,7 @@ export function ovPanelElement({
         </Tag>
       );
     }
-    console.warn('[premium-ds] asChild requires a DOM-element child - falling back to a wrapper');
+    console.warn('[zyncat-ui] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
     <motion.div

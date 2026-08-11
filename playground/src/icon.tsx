@@ -1,6 +1,6 @@
 // Playground-local icon - the DEMO app's OWN icon source.
 // -------------------------------------------------------------------------
-// premium-ds ships no consumer icon set: its components take icons as nodes
+// Zyncat UI ships no consumer icon set: its components take icons as nodes
 // (bring-your-own), so the docs supply their own here. Like a real app should,
 // we import EXACTLY the glyphs the demos use - never the whole Phosphor library.
 // `name` is typed to the registry, so using a new icon in a demo is a compile

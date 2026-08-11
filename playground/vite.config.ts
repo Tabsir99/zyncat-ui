@@ -13,9 +13,7 @@ function toKebab(name: string): string {
     .toLowerCase();
 }
 
-const NAME_OVERRIDES: Record<string, string> = {
-  DateTimeField: 'datetime-field',
-};
+const NAME_OVERRIDES: Record<string, string> = { DateTimeField: 'datetime-field' };
 
 function discoverComponentEntries(): Record<string, string> {
   const entries: Record<string, string> = {};
@@ -23,7 +21,11 @@ function discoverComponentEntries(): Record<string, string> {
   for (const tier of ['primitives', 'composites', 'compound']) {
     const tierDir = join(baseDir, tier);
     let dirs: string[];
-    try { dirs = readdirSync(tierDir); } catch { continue; }
+    try {
+      dirs = readdirSync(tierDir);
+    } catch {
+      continue;
+    }
     for (const comp of dirs) {
       const compDir = join(tierDir, comp);
       if (!statSync(compDir).isDirectory()) continue;
@@ -46,11 +48,11 @@ const EXPLICIT_ENTRIES: Record<string, string> = {
 };
 
 export const dsAliases = [
-  { find: 'premium-ds/styles.css', replacement: r('../src/styles.css') },
+  { find: '@zyncat/ui/styles.css', replacement: r('../src/styles.css') },
   ...Object.entries({ ...discoverComponentEntries(), ...EXPLICIT_ENTRIES }).map(([name, path]) => ({
-    find: `premium-ds/${name}`,
-    replacement: r(`../src/${path}`)
-  }))
+    find: `@zyncat/ui/${name}`,
+    replacement: r(`../src/${path}`),
+  })),
 ];
 
 export default defineConfig({

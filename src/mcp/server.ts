@@ -1,4 +1,4 @@
-/* premium-ds MCP server - Model Context Protocol over stdio (newline-delimited JSON-RPC 2.0).
+/* Zyncat UI MCP server - Model Context Protocol over stdio (newline-delimited JSON-RPC 2.0).
 
    Coding agents pointed at a consumer app keep re-deriving this library's API by grepping
    node_modules - slow, token-hungry and error-prone. This server hands them the same ground
@@ -13,8 +13,8 @@
    call time from the package's own package.json exports, llms.txt, dist/ and src/tokens/,
    so answers always match the installed version. Register in the consuming project:
 
-     { "mcpServers": { "premium-ds": {
-         "command": "node", "args": ["./node_modules/premium-ds/dist/mcp.js"] } } }
+     { "mcpServers": { "zyncat-ui": {
+         "command": "node", "args": ["./node_modules/@zyncat/ui/dist/mcp.js"] } } }
 */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -23,20 +23,20 @@ import { fileURLToPath } from 'node:url';
 
 /* ---------------------------------------------------------------- package root */
 
-/** Walk up from this file until the premium-ds package.json - works from dist/ and src/mcp/. */
+/** Walk up from this file until the @zyncat/ui package.json - works from dist/ and src/mcp/. */
 function findRoot(): string {
   let dir = dirname(fileURLToPath(import.meta.url));
   for (;;) {
     const pj = join(dir, 'package.json');
     if (existsSync(pj)) {
       try {
-        if (JSON.parse(readFileSync(pj, 'utf8')).name === 'premium-ds') return dir;
+        if (JSON.parse(readFileSync(pj, 'utf8')).name === '@zyncat/ui') return dir;
       } catch {
         /* unreadable package.json on the way up - keep walking */
       }
     }
     const parent = dirname(dir);
-    if (parent === dir) throw new Error('premium-ds package root not found');
+    if (parent === dir) throw new Error('@zyncat/ui package root not found');
     dir = parent;
   }
 }
@@ -63,7 +63,7 @@ interface Db {
 }
 
 const SECTION_RE = /^=+\s+(.+?)\s*$/;
-const HEADING_RE = /^([A-Za-z][\w /]*?) - premium-ds\/([a-z][a-z0-9-]*)\b.*$/;
+const HEADING_RE = /^([A-Za-z][\w /]*?) - @zyncat\/ui\/([a-z][a-z0-9-]*)\b.*$/;
 
 let cached: Db | null = null;
 function db(): Db {
@@ -119,10 +119,10 @@ function db(): Db {
 const norm = (s: string) =>
   s
     .toLowerCase()
-    .replace(/^premium-ds\//, '')
+    .replace(/^@zyncat\/ui\//, '')
     .replace(/[^a-z0-9]/g, '');
 
-/** "Button" | "text-field" | "premium-ds/select" | "TagGroup" -> subpath. */
+/** "Button" | "text-field" | "@zyncat/ui/select" | "TagGroup" -> subpath. */
 function resolveSubpath(input: string): string {
   const d = db();
   const q = norm(input);
@@ -159,7 +159,7 @@ function readTypes(root: string, subpath: string): string {
   walk(subpath);
   if (!out.length) {
     throw new Error(
-      `dist/${subpath}.d.ts not found - the package is not built. In the premium-ds repo run "pnpm build"; in a consumer, reinstall the package.`,
+      `dist/${subpath}.d.ts not found - the package is not built. In the zyncat-ui repo run "pnpm build"; in a consumer, reinstall the package.`,
     );
   }
   return out.join('\n\n');
@@ -202,14 +202,14 @@ function listComponents(): string {
     out.push(...s.body);
     for (const e of inSection) {
       const first = (e.lines[1] ?? '').trim();
-      out.push(`${e.title} - premium-ds/${e.subpath}${first ? ` - ${first}` : ''}`);
+      out.push(`${e.title} - @zyncat/ui/${e.subpath}${first ? ` - ${first}` : ''}`);
     }
     out.push('');
   }
   const extras = d.subpaths.filter((sub) => !d.entries.some((e) => e.subpath === sub));
   if (extras.length) {
     out.push('== SUPPORTING MODULES (no llms.txt entry - full docs live in their types) ==');
-    for (const sub of extras) out.push(`premium-ds/${sub} - call get_component("${sub}")`);
+    for (const sub of extras) out.push(`@zyncat/ui/${sub} - call get_component("${sub}")`);
   }
   return out.join('\n').trim();
 }
@@ -226,7 +226,7 @@ function getComponent(input: string): string {
         ? "requires the optional 'motion' peer to be installed"
         : "runs without the optional 'motion' peer";
 
-  const out: string[] = [`# ${entry ? entry.title : sub} - premium-ds/${sub}${peer ? `  [${peer}]` : ''}`, ''];
+  const out: string[] = [`# ${entry ? entry.title : sub} - @zyncat/ui/${sub}${peer ? `  [${peer}]` : ''}`, ''];
   if (entry) {
     const note = d.sections.find((s) => s.title === entry.section)?.body ?? [];
     if (note.length) out.push(`Applies to every ${entry.section} component:`, ...note, '');
@@ -327,19 +327,19 @@ const TOOLS = [
   {
     name: 'list_components',
     description:
-      'Every premium-ds component: name, import subpath and one-line purpose, grouped by category, plus package setup and usage conventions. Start here instead of exploring node_modules.',
+      'Every Zyncat UI component: name, import subpath and one-line purpose, grouped by category, plus package setup and usage conventions. Start here instead of exploring node_modules.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
   {
     name: 'get_component',
     description:
-      "Full API for one component: the maintainers' usage notes and example plus the complete TypeScript prop types with doc comments (shared type chunks inlined). Cheaper and more accurate than reading node_modules/premium-ds yourself.",
+      "Full API for one component: the maintainers' usage notes and example plus the complete TypeScript prop types with doc comments (shared type chunks inlined). Cheaper and more accurate than reading node_modules/@zyncat/ui yourself.",
     inputSchema: {
       type: 'object',
       properties: {
         component: {
           type: 'string',
-          description: 'Component name or subpath - "Button", "TextField", "text-field", "premium-ds/select".',
+          description: 'Component name or subpath - "Button", "TextField", "text-field", "@zyncat/ui/select".',
         },
       },
       required: ['component'],
@@ -372,11 +372,11 @@ const TOOLS = [
 ];
 
 const INSTRUCTIONS =
-  'premium-ds design-system API. Before writing premium-ds code, use these tools instead of reading ' +
+  'Zyncat UI design-system API. Before writing Zyncat UI code, use these tools instead of reading ' +
   'node_modules or guessing props: list_components (what exists + setup and conventions), get_component ' +
   '(one component: usage docs + complete prop types), search_api (find the component/prop/token for a ' +
   'keyword), get_tokens (CSS custom-property vocabulary with real values, for theming). Imports are ' +
-  'per-subpath (premium-ds/button - no barrel); link premium-ds/styles.css once at the root.';
+  'per-subpath (@zyncat/ui/button - no barrel); link @zyncat/ui/styles.css once at the root.';
 
 function callTool(name: string, args: Record<string, unknown>): string {
   const str = (k: string) => (typeof args[k] === 'string' ? (args[k] as string) : undefined);
@@ -425,7 +425,7 @@ function handle(req: { id?: RpcId; method?: string; params?: Record<string, unkn
       return reply(id!, {
         protocolVersion: typeof params?.protocolVersion === 'string' ? params.protocolVersion : '2025-06-18',
         capabilities: { tools: {} },
-        serverInfo: { name: 'premium-ds', version },
+        serverInfo: { name: 'zyncat-ui', version },
         instructions: INSTRUCTIONS,
       });
     }
