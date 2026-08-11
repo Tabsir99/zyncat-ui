@@ -82,6 +82,7 @@
    springs between rows; the positioned rows paint above it. Rows only; cards keep their
    own layoutId hover (their opaque bg + press transform need the fill inside the card). */
 .rg__hover {
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;

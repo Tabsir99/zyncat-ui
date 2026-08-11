@@ -1,8 +1,9 @@
 'use client';
 
 import './tag.css';
-import { createContext, useContext, Fragment, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import { animate } from '../../../engine';
+import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { IconSlot } from '../../internal/icon/IconSlot';
@@ -37,6 +38,8 @@ interface TagOwnProps {
 export interface TagProps extends TagOwnProps {
   /** Standard <span> attributes forwarded to the tag root. */
   htmlProps?: Omit<HTMLAttributes<HTMLSpanElement>, keyof TagOwnProps> & DataAttributes;
+  /** Ref to the tag root span. */
+  ref?: Ref<HTMLSpanElement>;
 }
 
 interface TagGroupOwnProps {
@@ -58,12 +61,6 @@ export interface TagGroupProps extends TagGroupOwnProps {
   htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TagGroupOwnProps> & DataAttributes;
 }
 
-interface TagGroupCtx {
-  grouped: boolean;
-  animation?: DisableableAnimation;
-}
-const TagGroupContext = createContext<TagGroupCtx>({ grouped: false });
-
 function TagRemoveGlyph() {
   return (
     <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -82,14 +79,13 @@ export function Tag({
   className = '',
   style,
   htmlProps,
+  ref,
 }: TagProps) {
-  const { grouped, animation } = useContext(TagGroupContext);
   const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
-
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
 
-  const content = (
-    <Fragment>
+  return (
+    <span ref={ref} className={classes} style={style} data-disabled={disabled ? 'true' : undefined} {...htmlProps}>
       {icon && (
         <span className="tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>
@@ -101,48 +97,27 @@ export function Tag({
           <TagRemoveGlyph />
         </button>
       )}
-    </Fragment>
-  );
-
-  if (!grouped) {
-    return (
-      <span className={classes} style={style} data-disabled={disabled ? 'true' : undefined} {...htmlProps}>
-        {content}
-      </span>
-    );
-  }
-
-  const enterExit = resolveMotionTiming(animation, TAG_TIMING);
-  const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
-  return (
-    <motion.span
-      layout
-      className={classes}
-      style={style}
-      data-disabled={disabled ? 'true' : undefined}
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1, transition: enterExit.open }}
-      exit={{ opacity: 0, scale: 0.9, transition: enterExit.close }}
-      transition={layout}
-      {...(htmlProps as Record<string, unknown>)}
-    >
-      {content}
-    </motion.span>
+    </span>
   );
 }
 
 export function TagGroup({ label, className = '', style, children, htmlProps, animation }: TagGroupProps) {
+  const step = resolveMotionTiming(animation, TAG_TIMING);
+  const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
+
   return (
-    <div
+    <Presence
+      {...htmlProps}
       className={['tag-group', className].filter(Boolean).join(' ')}
       style={style}
       role="group"
       aria-label={label}
-      {...htmlProps}
+      initial={false}
+      flip={layout}
+      enter={(el) => animate(el, { opacity: [0, 1], scale: [0.9, 1] }, step.open)}
+      exit={(el) => animate(el, { opacity: [1, 0], scale: [1, 0.9] }, step.close)}
     >
-      <TagGroupContext.Provider value={{ grouped: true, animation }}>
-        <AnimatePresence initial={false}>{children}</AnimatePresence>
-      </TagGroupContext.Provider>
-    </div>
+      {children}
+    </Presence>
   );
 }

@@ -91,7 +91,7 @@ export function ListboxPanel({
         aria-label={ariaLabel}
         onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
       >
-        <GlidePill className="select__glide" rect={lb.glide.rect} active={lb.glide.active} />
+        <GlidePill className="select__glide" glide={lb.glide} />
         {loading ? (
           <LoadingRows />
         ) : (

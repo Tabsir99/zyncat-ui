@@ -2,7 +2,8 @@
 
 import './alert.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { animate } from '../../../engine';
+import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { Icon, type IconName } from '../../internal/icon/Icon';
@@ -93,16 +94,13 @@ export function Alert({
   const classes = ['alert', banner ? 'alert--banner' : '', className].filter(Boolean).join(' ');
 
   return (
-    <AnimatePresence initial={false}>
+    <Presence
+      initial={false}
+      enter={(el) => [animate(el, { height: [0, 'auto'] }, h.open), animate(el, { opacity: [0, 1] }, o.open)]}
+      exit={(el) => [animate(el, { height: ['auto', 0] }, h.close), animate(el, { opacity: [1, 0] }, o.close)]}
+    >
       {isOpen && (
-        <motion.div
-          key="alert-shell"
-          className="alert-shell"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0, transition: { height: h.close, opacity: o.close } }}
-          transition={{ height: h.open, opacity: o.open }}
-        >
+        <div key="alert-shell" className="alert-shell">
           <div className={classes} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (
               <span className="alert__icon" aria-hidden="true">
@@ -128,8 +126,8 @@ export function Alert({
               </button>
             )}
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </Presence>
   );
 }

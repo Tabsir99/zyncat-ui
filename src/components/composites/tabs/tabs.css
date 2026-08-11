@@ -158,6 +158,7 @@
    scrolls with its tab). z-index 0 + DOM order keep it under every tab's
    positioned pad in both travel directions. Nothing transitions here. */
 .tab__hover {
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;

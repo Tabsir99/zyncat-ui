@@ -338,7 +338,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
               {p.label}
             </button>
           ))}
-          <GlidePill className="drp__presetGlide" rect={presetGlide.rect} active={presetGlide.active} />
+          <GlidePill className="drp__presetGlide" glide={presetGlide} />
         </div>
         <div
           className="drp__months"
@@ -350,7 +350,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
           }}
         >
           {months === 2 ? [renderMonth(0, true, false), renderMonth(1, false, true)] : renderMonth(0, true, true)}
-          <GlidePill className="dtp__hover" rect={gridGlide.rect} active={gridGlide.active} />
+          <GlidePill className="dtp__hover" glide={gridGlide} />
         </div>
       </div>
       <div className="drp__foot">

@@ -169,6 +169,7 @@
 
 /* gliding hover pill (useGlide) - bg-muted (not -subtle, else ~ invisible on the raised surface); z:-1 under numerals + selection tint. */
 .dtp__hover {
+  opacity: 0;
   position: absolute;
   top: 0;
   left: 0;

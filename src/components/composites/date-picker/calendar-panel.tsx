@@ -216,7 +216,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
               })}
             </div>
           ))}
-          <GlidePill className="dtp__hover" rect={glide.rect} active={glide.active} />
+          <GlidePill className="dtp__hover" glide={glide} />
         </div>
       </div>
 

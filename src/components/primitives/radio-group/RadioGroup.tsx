@@ -2,11 +2,11 @@
 
 import './radio-group.css';
 import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
-import { motion, LayoutGroup } from 'motion/react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { Collapse } from '../../../motion/Collapse';
-import { GlidePill, useGlide, useLayoutSelfHeal } from '../../../motion/glide';
+import { Collapse } from '../collapse';
+import { GlidePill, useGlide } from '../../../motion/glide';
+import { useSharedFlip } from '../../../motion/flip';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import type { DataAttributes } from '../../../dom-props';
 
@@ -85,9 +85,9 @@ function RadioGroup({
   const [hovered, setHovered] = useState<string | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
   const glide = useGlide(optionsRef);
-  const healMarker = useLayoutSelfHeal<HTMLSpanElement>();
-  const healFill = useLayoutSelfHeal<HTMLSpanElement>();
-  const healHover = useLayoutSelfHeal<HTMLSpanElement>();
+  const markerRef = useSharedFlip<HTMLSpanElement>(groupId + ':marker', { timing: SM.t.layout });
+  const fillRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-fill', { timing: SM.t.layout });
+  const cardHoverRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-hover', { scale: false, timing: SM.t.layout });
 
   const cls = [
     'rg',
@@ -117,91 +117,65 @@ function RadioGroup({
         </div>
       )}
 
-      <LayoutGroup id={groupId}>
-        <div
-          className="rg__options"
-          ref={optionsRef}
-          onPointerLeave={() => {
-            glide.leave();
-            setHovered(null);
-          }}
-        >
-          {variant === 'rows' && <GlidePill className="rg__hover" rect={glide.rect} active={glide.active} />}
-          {options.map((opt) => {
-            const selected = opt.value === value;
-            const isDisabled = disabled || opt.disabled;
-            return (
-              <label
-                key={opt.value}
-                className={['rg-opt', selected ? 'is-selected' : '', isDisabled ? 'is-disabled' : '']
-                  .filter(Boolean)
-                  .join(' ')}
-                onPointerEnter={
-                  isDisabled
-                    ? undefined
-                    : variant === 'rows'
-                      ? (e) => glide.enter(e.currentTarget)
-                      : () => setHovered(opt.value)
-                }
-              >
-                <input
-                  className="rg-opt__input"
-                  type="radio"
-                  name={name}
-                  value={opt.value}
-                  checked={selected}
-                  disabled={isDisabled}
-                  onChange={() => onChange && onChange(opt.value)}
-                />
-                {variant === 'cards' && hovered === opt.value && !selected && (
-                  <motion.span
-                    className="rg__card-hover"
-                    layoutId="card-hover"
-                    layout="position"
-                    transition={SM.t.layout}
-                    aria-hidden="true"
-                    ref={healHover.ref}
-                    onLayoutAnimationComplete={healHover.onLayoutAnimationComplete}
-                  ></motion.span>
-                )}
-                {variant === 'cards' && selected && (
-                  <motion.span
-                    className="rg__card-fill"
-                    layoutId="card-fill"
-                    transition={SM.t.layout}
-                    aria-hidden="true"
-                    ref={healFill.ref}
-                    onLayoutAnimationComplete={healFill.onLayoutAnimationComplete}
-                  ></motion.span>
-                )}
-                {variant === 'cards' && opt.icon && (
-                  <span className="rg-opt__icon">
-                    <IconSlot>{opt.icon}</IconSlot>
-                  </span>
-                )}
-                <span className="rg-opt__control">
-                  <span className="rg-opt__dot">
-                    {selected && (
-                      <motion.span
-                        className="rg__marker"
-                        layoutId="marker"
-                        transition={SM.t.layout}
-                        aria-hidden="true"
-                        ref={healMarker.ref}
-                        onLayoutAnimationComplete={healMarker.onLayoutAnimationComplete}
-                      ></motion.span>
-                    )}
-                  </span>
+      <div
+        className="rg__options"
+        ref={optionsRef}
+        onPointerLeave={() => {
+          glide.leave();
+          setHovered(null);
+        }}
+      >
+        {variant === 'rows' && <GlidePill className="rg__hover" glide={glide} />}
+        {options.map((opt) => {
+          const selected = opt.value === value;
+          const isDisabled = disabled || opt.disabled;
+          return (
+            <label
+              key={opt.value}
+              className={['rg-opt', selected ? 'is-selected' : '', isDisabled ? 'is-disabled' : '']
+                .filter(Boolean)
+                .join(' ')}
+              onPointerEnter={
+                isDisabled
+                  ? undefined
+                  : variant === 'rows'
+                    ? (e) => glide.enter(e.currentTarget)
+                    : () => setHovered(opt.value)
+              }
+            >
+              <input
+                className="rg-opt__input"
+                type="radio"
+                name={name}
+                value={opt.value}
+                checked={selected}
+                disabled={isDisabled}
+                onChange={() => onChange && onChange(opt.value)}
+              />
+              {variant === 'cards' && hovered === opt.value && !selected && (
+                <span className="rg__card-hover" aria-hidden="true" ref={cardHoverRef}></span>
+              )}
+              {variant === 'cards' && selected && (
+                <span className="rg__card-fill" aria-hidden="true" ref={fillRef}></span>
+              )}
+              {variant === 'cards' && opt.icon && (
+                <span className="rg-opt__icon">
+                  <IconSlot>{opt.icon}</IconSlot>
                 </span>
-                <span className="rg-opt__body">
-                  <span className="rg-opt__label">{opt.label}</span>
-                  {opt.description && <span className="rg-opt__desc">{opt.description}</span>}
+              )}
+              <span className="rg-opt__control">
+                <span className="rg-opt__dot">
+                  {selected && <span className="rg__marker" aria-hidden="true" ref={markerRef}></span>}
                 </span>
-              </label>
-            );
-          })}
-        </div>
-      </LayoutGroup>
+              </span>
+              <span className="rg-opt__body">
+                <span className="rg-opt__label">{opt.label}</span>
+                {opt.description && <span className="rg-opt__desc">{opt.description}</span>}
+              </span>
+            </label>
+          );
+        })}
+      </div>
 
       <Collapse open={!!error} fade className="rg__msg-wrap">
         <div className="rg__msg">

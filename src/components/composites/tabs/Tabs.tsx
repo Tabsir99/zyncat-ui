@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { animate } from 'motion';
+import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { GlidePill, useGlide } from '../../../motion/glide';
@@ -96,7 +96,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     ink.style.opacity = '1';
 
     if (!animated || !placedRef.current || SM.reduced) {
-      ink.style.transform = 'translateX(' + next.x + 'px)';
+      ink.style.translate = next.x + 'px 0px';
       ink.style.width = next.w + 'px';
     } else {
       const lr = list.getBoundingClientRect();
@@ -105,15 +105,12 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
       if (Math.abs(cur.x - next.x) > 0.5 || Math.abs(cur.w - next.w) > 0.5) {
         const dir = next.x + next.w / 2 >= cur.x + cur.w / 2 ? 1 : -1;
         const span = dir === 1 ? next.x + next.w - cur.x : cur.x + cur.w - next.x;
-        const kf =
-          dir === 1
-            ? { x: [cur.x, cur.x, next.x], width: [cur.w, span, next.w] }
-            : { x: [cur.x, next.x, next.x], width: [cur.w, span, next.w] };
-        animRef.current = animate(ink, kf, {
-          duration: SM.dur.slow,
-          times: [0, 0.55, 1],
-          ease: [SM.ease.standard, SM.ease.entrance],
-        });
+        const lead = dir === 1 ? cur.x : next.x;
+        animRef.current = animate(
+          ink,
+          { translate: [cur.x + 'px 0px', lead + 'px 0px', next.x + 'px 0px'], width: [cur.w, span, next.w] },
+          { duration: SM.dur.slow, times: [0, 0.55, 1], ease: [SM.ease.standard, SM.ease.entrance] },
+        );
       }
     }
     placedRef.current = true;
@@ -188,7 +185,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
         onKeyDown={onKeyDown}
         onPointerLeave={glide.leave}
       >
-        <GlidePill className="tab__hover" rect={glide.rect} active={glide.active} />
+        <GlidePill className="tab__hover" glide={glide} />
         {items.map((it) => {
           const selected = it.value === value;
           return (
