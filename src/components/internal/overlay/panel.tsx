@@ -1,7 +1,6 @@
 'use client';
 
-import { Children, type ReactElement, type ReactNode, type RefObject } from 'react';
-import { motion } from 'motion/react';
+import { Children, cloneElement, type ReactElement, type ReactNode, type RefObject } from 'react';
 
 export function ovPanelElement({
   asChild,
@@ -9,49 +8,43 @@ export function ovPanelElement({
   prepend = null,
   nodeRef,
   className,
-  motionProps,
+  panelProps,
 }: {
   asChild: boolean;
   children: ReactNode;
   prepend?: ReactNode;
   nodeRef: RefObject<HTMLElement>;
   className: string;
-  motionProps: Record<string, any>;
+  panelProps: Record<string, any>;
 }): ReactElement {
   const merged = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ');
   if (asChild) {
     const child = Children.only(children) as ReactElement<any>;
     if (typeof child.type === 'string') {
-      const Tag = (motion as any)[child.type];
+      const childRef = child.props.ref ?? (child as any).ref;
       const composedRef = (node: HTMLElement | null) => {
         nodeRef.current = node;
-        const r = (child as any).ref;
-        if (typeof r === 'function') r(node);
-        else if (r) r.current = node;
+        if (typeof childRef === 'function') childRef(node);
+        else if (childRef) childRef.current = node;
       };
-      return (
-        <Tag
-          {...child.props}
-          {...motionProps}
-          ref={composedRef}
-          className={merged(className, motionProps.className, child.props.className)}
-          style={{ ...motionProps.style, ...child.props.style }}
-        >
-          {prepend}
-          {child.props.children}
-        </Tag>
+      return cloneElement(
+        child,
+        {
+          ...panelProps,
+          ref: composedRef,
+          className: merged(className, panelProps.className, child.props.className),
+          style: { ...panelProps.style, ...child.props.style },
+        },
+        prepend,
+        child.props.children,
       );
     }
     console.warn('[zyncat-ui] asChild requires a DOM-element child - falling back to a wrapper');
   }
   return (
-    <motion.div
-      {...motionProps}
-      ref={nodeRef as RefObject<HTMLDivElement>}
-      className={merged(className, motionProps.className)}
-    >
+    <div {...panelProps} ref={nodeRef as RefObject<HTMLDivElement>} className={merged(className, panelProps.className)}>
       {prepend}
       {children}
-    </motion.div>
+    </div>
   );
 }

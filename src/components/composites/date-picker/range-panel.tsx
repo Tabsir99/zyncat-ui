@@ -2,11 +2,11 @@
 
 import './date-picker.css';
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { motion } from 'motion/react';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
-import { GlidePill, useGlide, useLayoutSelfHeal } from '../../../motion/glide';
+import { GlidePill, useGlide } from '../../../motion/glide';
+import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, pad, key as toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
 
@@ -85,8 +85,8 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
 
   const gridGlide = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
-  const healLo = useLayoutSelfHeal<HTMLSpanElement>();
-  const healHi = useLayoutSelfHeal<HTMLSpanElement>();
+  const capLoRef = useSharedFlip<HTMLSpanElement>('drp-cap-lo', { timing: UIMotion.t.settle });
+  const capHiRef = useSharedFlip<HTMLSpanElement>('drp-cap-hi', { timing: UIMotion.t.settle });
 
   const inBounds = (key: string): boolean => within(key, min, max);
 
@@ -229,24 +229,10 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
       >
         {band ? <span className={bandCls.join(' ')} aria-hidden="true"></span> : null}
         {loCap ? (
-          <motion.span
-            className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')}
-            layoutId="drp-cap-lo"
-            transition={UIMotion.t.settle}
-            aria-hidden="true"
-            ref={healLo.ref}
-            onLayoutAnimationComplete={healLo.onLayoutAnimationComplete}
-          ></motion.span>
+          <span className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')} aria-hidden="true" ref={capLoRef}></span>
         ) : null}
         {hiCap ? (
-          <motion.span
-            className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')}
-            layoutId="drp-cap-hi"
-            transition={UIMotion.t.settle}
-            aria-hidden="true"
-            ref={healHi.ref}
-            onLayoutAnimationComplete={healHi.onLayoutAnimationComplete}
-          ></motion.span>
+          <span className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')} aria-hidden="true" ref={capHiRef}></span>
         ) : null}
         <span className="dtp__num">{d.getDate()}</span>
         {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}

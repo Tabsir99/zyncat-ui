@@ -114,8 +114,8 @@ export function TagGroup({ label, className = '', style, children, htmlProps, an
       aria-label={label}
       initial={false}
       flip={layout}
-      enter={(el) => animate(el, { opacity: [0, 1], scale: [0.9, 1] }, step.open)}
-      exit={(el) => animate(el, { opacity: [1, 0], scale: [1, 0.9] }, step.close)}
+      enter={(el) => animate(el, { opacity: [0, 1], scale: [0.9, 1], timing: step.open })}
+      exit={(el) => animate(el, { opacity: [1, 0], scale: [1, 0.9], timing: step.close })}
     >
       {children}
     </Presence>

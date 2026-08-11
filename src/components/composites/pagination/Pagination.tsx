@@ -2,7 +2,7 @@
 
 import './pagination.css';
 import { useEffect, useRef, type HTMLAttributes } from 'react';
-import { animate } from 'motion/react';
+import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';
 import { Icon } from '../../internal/icon/Icon';
@@ -69,7 +69,15 @@ export function Pagination({
     if (pf === from && pt === to) return;
     const dir = from > pf ? 1 : -1;
     shownRef.current = range;
-    animate(rangeRef.current, { x: [dir * pgnTravel(), 0], opacity: [0, 1] }, UIMotion.t.enter);
+    if (rangeRef.current)
+      animate(rangeRef.current, {
+        translate: [
+          [dir * pgnTravel(), 0],
+          [0, 0],
+        ],
+        opacity: [0, 1],
+        timing: UIMotion.t.enter,
+      });
   }, [from, to]);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { frameData, MotionGlobalConfig, acceleratedValues } from 'motion/react';
+import { clock } from '../../engine';
 
 export interface SlowmoState {
   /** 1 = real time. >1 = that many times slower (4 = quarter speed). */
@@ -29,7 +29,6 @@ const MAX_TIMER_DELAY = 2 ** 30;
 
 const clamp = (min: number, max: number, v: number) => (v < min ? min : v > max ? max : v);
 const hasDOM = typeof document !== 'undefined' && typeof window !== 'undefined';
-const hasMotion = !!frameData && !!MotionGlobalConfig && acceleratedValues instanceof Set;
 
 const state: SlowmoState = { factor: 1, paused: false };
 const options: SlowmoOptions = { scaleTimers: true };
@@ -37,12 +36,6 @@ const listeners = new Set<(s: SlowmoState) => void>();
 
 let active = false;
 let baseMs: Record<string, number> = {};
-
-let rafId = 0;
-let motionClock = 0;
-let lastReal = 0;
-let savedManualTiming: boolean | undefined;
-let savedAccel: string[] | null = null;
 
 type SetTimer = (handler: TimerHandler, timeout?: number, ...args: unknown[]) => number;
 let origSetTimeout: SetTimer | null = null;
@@ -70,39 +63,6 @@ function applyCssTokens() {
 function clearCssTokens() {
   const root = document.documentElement.style;
   for (const token of DURATION_TOKENS) root.removeProperty(token);
-}
-
-function pumpMotionClock(real: number) {
-  const dt = real - lastReal;
-  lastReal = real;
-  if (!state.paused) motionClock += dt / state.factor;
-  frameData.timestamp = motionClock;
-  frameData.delta = state.paused ? 1 : clamp(1, 40, dt / state.factor);
-  rafId = requestAnimationFrame(pumpMotionClock);
-}
-
-function startMotionClock() {
-  if (!hasMotion) return;
-  savedManualTiming = MotionGlobalConfig.useManualTiming;
-  MotionGlobalConfig.useManualTiming = true;
-  savedAccel = [...acceleratedValues];
-  acceleratedValues.clear();
-  motionClock = performance.now();
-  lastReal = motionClock;
-  frameData.timestamp = motionClock;
-  rafId = requestAnimationFrame(pumpMotionClock);
-}
-
-function stopMotionClock() {
-  if (!hasMotion) return;
-  if (rafId) cancelAnimationFrame(rafId);
-  rafId = 0;
-  MotionGlobalConfig.useManualTiming = savedManualTiming;
-  frameData.timestamp = performance.now();
-  if (savedAccel) {
-    for (const v of savedAccel) acceleratedValues.add(v);
-    savedAccel = null;
-  }
 }
 
 function scaleDelay(delay?: number): number | undefined {
@@ -186,12 +146,16 @@ function restoreTrackedRates() {
   trackedRates.clear();
 }
 
+function applyEngineClock() {
+  clock.scale = state.paused ? Infinity : state.factor;
+}
+
 function install() {
   active = true;
   baseMs = {};
   for (const token of DURATION_TOKENS) baseMs[token] = readBaseMs(token);
   applyCssTokens();
-  startMotionClock();
+  applyEngineClock();
   if (options.scaleTimers) patchTimers();
   patchAnimate();
   sweepExisting();
@@ -199,13 +163,14 @@ function install() {
 
 function reconfigure() {
   applyCssTokens();
+  applyEngineClock();
   applyTrackedRates();
 }
 
 function uninstall() {
   active = false;
   clearCssTokens();
-  stopMotionClock();
+  clock.scale = 1;
   restoreTimers();
   restoreAnimate();
   restoreTrackedRates();

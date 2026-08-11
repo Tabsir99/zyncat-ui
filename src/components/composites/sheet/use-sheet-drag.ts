@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
-import { useMotionValue, useTransform, useDragControls, animate, type PanInfo } from 'motion/react';
+import { animate, startDrag, type PanInfo } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -25,6 +25,14 @@ function findScrollable(node: EventTarget | null, stop: HTMLElement | null): HTM
   return null;
 }
 
+function sheetScrim(slot: HTMLElement | null): HTMLElement | null {
+  return slot?.parentElement?.querySelector<HTMLElement>('.overlay-scrim') ?? null;
+}
+
+export function sheetSpan(slot: HTMLElement, side: 'right' | 'bottom'): number {
+  return side === 'bottom' ? slot.offsetHeight : slot.offsetWidth;
+}
+
 function useSheetDrag({
   side,
   slotRef,
@@ -37,9 +45,6 @@ function useSheetDrag({
   requestClose: () => void;
 }) {
   const axis = side === 'bottom' ? 'y' : 'x';
-  const travel = useMotionValue<string | number>('100%');
-  const stretch = useMotionValue(1);
-  const controls = useDragControls();
   const savedUserSelect = useRef<string | null>(null);
 
   function suspendSelection() {
@@ -55,19 +60,20 @@ function useSheetDrag({
   }
   useEffect(() => restoreSelection, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const progress = useTransform(travel, (v) => {
-    if (typeof v === 'string') return Math.min(Math.max(parseFloat(v) / 100 || 0, 0), 1);
-    const el = slotRef.current;
-    const size = el ? (axis === 'y' ? el.offsetHeight : el.offsetWidth) : Infinity;
-    return Math.min(Math.max(v / size, 0), 1);
-  });
-  const scrimOpacity = useTransform(progress, (p) => 1 - p);
+  function paint(el: HTMLElement, travel: number, stretch: number) {
+    const span = sheetSpan(el, side);
+    el.style.translate = axis === 'y' ? `0px ${travel}px` : `${travel}px 0px`;
+    el.style.scale = axis === 'y' ? `1 ${stretch}` : `${stretch} 1`;
+    const scrim = sheetScrim(el);
+    if (scrim) scrim.style.opacity = String(1 - Math.min(Math.max(travel / span, 0), 1));
+  }
 
   function onPointerDown(e: ReactPointerEvent) {
     if (e.button !== 0) return;
     const startX = e.clientX,
       startY = e.clientY;
     const scrollable = findScrollable(e.target, slotRef.current);
+
     const onMove = (ev: PointerEvent) => {
       const dx = ev.clientX - startX,
         dy = ev.clientY - startY;
@@ -81,10 +87,9 @@ function useSheetDrag({
         if (axis === 'y' ? scrollable.scrollTop > 0 : scrollable.scrollLeft > 0) return;
       }
       suspendSelection();
-      window.addEventListener('pointerup', restoreSelection, { once: true });
-      window.addEventListener('pointercancel', restoreSelection, { once: true });
-      controls.start(ev);
+      startDrag(ev, { onMove: onDrag, onEnd: onDragEnd });
     };
+
     const cleanup = () => {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', cleanup);
@@ -95,41 +100,29 @@ function useSheetDrag({
     window.addEventListener('pointercancel', cleanup);
   }
 
-  function onDrag(_ev: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) {
+  function onDrag(info: PanInfo) {
     const el = slotRef.current;
     if (!el) return;
-    const size = axis === 'y' ? el.offsetHeight : el.offsetWidth;
     const o = info.offset[axis];
-    stretch.set(o < 0 ? 1 + Math.min(-o / size, 1) * STRETCH_MAX : 1);
+    const span = sheetSpan(el, side);
+    paint(el, Math.max(o, 0), o < 0 ? 1 + Math.min(-o / span, 1) * STRETCH_MAX : 1);
   }
 
-  function onDragEnd(_ev: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) {
+  function onDragEnd(info: PanInfo) {
     restoreSelection();
-    animate(stretch, 1, SM.t.settle);
     const el = slotRef.current;
     if (!el) return;
-    const size = axis === 'y' ? el.offsetHeight : el.offsetWidth;
-    if (info.offset[axis] > size * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) requestClose();
+    const span = sheetSpan(el, side);
+    if (info.offset[axis] > span * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) {
+      requestClose();
+      return;
+    }
+    animate(el, { translate: [[0, 0]], scale: [[1, 1]], timing: SM.t.settle });
+    const scrim = sheetScrim(el);
+    if (scrim) animate(scrim, { opacity: [1], timing: SM.t.settle });
   }
 
-  const stretchStyle = axis === 'y' ? { scaleY: stretch, originY: 1 } : { scaleX: stretch, originX: 1 };
-
-  const slotProps = enabled
-    ? {
-        drag: axis,
-        dragControls: controls,
-        dragListener: false,
-        dragMomentum: false,
-        dragConstraints: { top: 0, bottom: 0, left: 0, right: 0 },
-        dragElastic: axis === 'y' ? { top: 0, bottom: 1 } : { left: 0, right: 1 },
-        onPointerDown,
-        onDrag,
-        onDragEnd,
-        style: { [axis]: travel, ...stretchStyle },
-      }
-    : { style: { [axis]: travel } };
-
-  return { slotProps, scrimOpacity };
+  return enabled ? { onPointerDown } : {};
 }
 
 export { useSheetDrag };

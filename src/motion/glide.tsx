@@ -35,13 +35,13 @@ export function useGlide<T extends HTMLElement = HTMLElement>(
       animate(
         pill,
         {
-          translate: `${(tb.left - cb.left) / sx + container.scrollLeft}px ${(tb.top - cb.top) / sy + container.scrollTop}px`,
-          width: tb.width / sx,
-          height: tb.height / sy,
+          translate: [[(tb.left - cb.left) / sx + container.scrollLeft, (tb.top - cb.top) / sy + container.scrollTop]],
+          width: [tb.width / sx],
+          height: [tb.height / sy],
+          timing: travel,
         },
-        travel,
+        { opacity: [1], timing: { duration: SM.dur.fast, ease: SM.ease.standard } },
       );
-      animate(pill, { opacity: 1 }, { duration: SM.dur.fast, ease: SM.ease.standard });
       visible.current = true;
     },
     [containerRef, motionToken],
@@ -51,7 +51,7 @@ export function useGlide<T extends HTMLElement = HTMLElement>(
     const pill = ref.current;
     if (!pill) return;
     visible.current = false;
-    animate(pill, { opacity: 0 }, { duration: SM.dur.fast, ease: SM.ease.exit });
+    animate(pill, { opacity: [0], timing: { duration: SM.dur.fast, ease: SM.ease.exit } });
   }, []);
 
   return { ref, enter, leave };

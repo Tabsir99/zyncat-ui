@@ -106,11 +106,15 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
         const dir = next.x + next.w / 2 >= cur.x + cur.w / 2 ? 1 : -1;
         const span = dir === 1 ? next.x + next.w - cur.x : cur.x + cur.w - next.x;
         const lead = dir === 1 ? cur.x : next.x;
-        animRef.current = animate(
-          ink,
-          { translate: [cur.x + 'px 0px', lead + 'px 0px', next.x + 'px 0px'], width: [cur.w, span, next.w] },
-          { duration: SM.dur.slow, times: [0, 0.55, 1], ease: [SM.ease.standard, SM.ease.entrance] },
-        );
+        animRef.current = animate(ink, {
+          translate: [
+            [cur.x, 0],
+            [lead, 0],
+            [next.x, 0],
+          ],
+          width: [cur.w, span, next.w],
+          timing: { duration: SM.dur.slow, times: [0, 0.55, 1], ease: [SM.ease.standard, SM.ease.entrance] },
+        });
       }
     }
     placedRef.current = true;
@@ -258,7 +262,13 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
     const el = innerRef.current;
     if (!el) return;
     enterRef.current?.stop();
-    enterRef.current = animate(el, { translate: [`${dir * TABS_ENTER_X}px 4px`, '0px 0px'] }, enter);
+    enterRef.current = animate(el, {
+      translate: [
+        [dir * TABS_ENTER_X, 4],
+        [0, 0],
+      ],
+      timing: enter,
+    });
     return () => enterRef.current?.stop();
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 

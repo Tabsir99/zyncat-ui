@@ -2,7 +2,7 @@
 
 import './table.css';
 import { useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
-import { motion } from 'motion/react';
+import { Presence } from '../../../motion/presence';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import type { DataAttributes } from '../../../dom-props';
@@ -311,7 +311,7 @@ export function Table<Row = any>({
                 })}
               </tr>
             </thead>
-            <tbody>
+            <Presence as="tbody" flip={t.layout}>
               {showEmpty ? (
                 <tr>
                   <td colSpan={colCount} className="tbl__emptyCell">
@@ -323,10 +323,8 @@ export function Table<Row = any>({
                   const k = keyOf(row);
                   const isSel = selected.has(k);
                   return (
-                    <motion.tr
+                    <tr
                       key={k}
-                      layout="position"
-                      transition={t.layout}
                       className="tbl__row"
                       data-selected={isSel ? '' : undefined}
                       onClick={onRowClick ? () => onRowClick(row) : undefined}
@@ -357,11 +355,11 @@ export function Table<Row = any>({
                           {c.render ? c.render(row) : (row as Record<string, ReactNode>)[c.key]}
                         </td>
                       ))}
-                    </motion.tr>
+                    </tr>
                   );
                 })
               )}
-            </tbody>
+            </Presence>
           </table>
         </div>
         <div className="tbl__edge tbl__edge--l" aria-hidden="true"></div>

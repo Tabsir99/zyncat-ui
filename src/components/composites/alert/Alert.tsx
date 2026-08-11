@@ -96,8 +96,8 @@ export function Alert({
   return (
     <Presence
       initial={false}
-      enter={(el) => [animate(el, { height: [0, 'auto'] }, h.open), animate(el, { opacity: [0, 1] }, o.open)]}
-      exit={(el) => [animate(el, { height: ['auto', 0] }, h.close), animate(el, { opacity: [1, 0] }, o.close)]}
+      enter={(el) => animate(el, { height: [0, 'auto'], timing: h.open }, { opacity: [0, 1], timing: o.open })}
+      exit={(el) => animate(el, { height: ['auto', 0], timing: h.close }, { opacity: [1, 0], timing: o.close })}
     >
       {isOpen && (
         <div key="alert-shell" className="alert-shell">

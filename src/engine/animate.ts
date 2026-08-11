@@ -7,69 +7,53 @@ export interface Playback {
   finished: Promise<void>;
 }
 
-export type StyleValue = number | string;
-export type Keyframes = Record<string, StyleValue | StyleValue[]>;
+export type Vec = [number, number];
+export type Size = number | 'auto';
 
-const UNITLESS = new Set([
-  'opacity',
-  'scale',
-  'zIndex',
-  'flexGrow',
-  'flexShrink',
-  'order',
-  'lineHeight',
-  'fontWeight',
-  'transform',
-]);
-
-const RESET: Record<string, string> = { translate: '0px 0px', scale: '1', rotate: '0deg', filter: 'none' };
-
-const AUTO_METRIC: Record<string, 'offsetHeight' | 'offsetWidth'> = { height: 'offsetHeight', width: 'offsetWidth' };
-
-const kebab = (key: string) => (key.startsWith('--') ? key : key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`));
-
-const toCss = (key: string, value: StyleValue) =>
-  typeof value === 'number' && !UNITLESS.has(key) ? `${value}px` : String(value);
-
-export function setStyle(el: HTMLElement, key: string, value: StyleValue): void {
-  el.style.setProperty(kebab(key), toCss(key, value));
+export interface Layer {
+  translate?: Vec[];
+  scale?: number[] | Vec[];
+  opacity?: number[];
+  width?: Size[];
+  height?: Size[];
+  timing?: Timing;
 }
 
-function currentValue(el: HTMLElement, key: string): string | null {
-  const raw = getComputedStyle(el).getPropertyValue(kebab(key)).trim();
-  if (raw && raw !== 'none') return raw;
-  return RESET[key] ?? null;
-}
+const RESET: Record<string, string> = { translate: '0px 0px', scale: '1' };
+const AUTO_METRIC = { width: 'offsetWidth', height: 'offsetHeight' } as const;
+const SIZES = ['width', 'height'] as const;
 
-const asList = (value: StyleValue | StyleValue[]) => (Array.isArray(value) ? value : [value]);
-
-function measureAuto(el: HTMLElement, key: string): number {
-  const property = kebab(key);
-  const saved = el.style.getPropertyValue(property);
-  el.style.setProperty(property, 'auto');
+function measureAuto(el: HTMLElement, key: 'width' | 'height'): number {
+  const saved = el.style.getPropertyValue(key);
+  el.style.setProperty(key, 'auto');
   const measured = el[AUTO_METRIC[key]];
-  if (saved) el.style.setProperty(property, saved);
-  else el.style.removeProperty(property);
+  if (saved) el.style.setProperty(key, saved);
+  else el.style.removeProperty(key);
   return measured;
 }
 
-function resolveFrames(el: HTMLElement, keyframes: Keyframes) {
+function currentValue(el: HTMLElement, key: string): string {
+  const raw = getComputedStyle(el).getPropertyValue(key).trim();
+  return raw && raw !== 'none' ? raw : RESET[key];
+}
+
+function compile(el: HTMLElement, layer: Layer) {
   const frames: Record<string, string[]> = {};
   const autoKeys: string[] = [];
-  for (const [key, raw] of Object.entries(keyframes)) {
-    let values = asList(raw);
-    if (AUTO_METRIC[key] && values.includes('auto')) {
-      if (values[values.length - 1] === 'auto') autoKeys.push(key);
-      const measured = measureAuto(el, key);
-      values = values.map((value) => (value === 'auto' ? measured : value));
-    }
-    const list = values.map((value) => toCss(key, value));
-    if (list.length === 1) {
-      const from = currentValue(el, key);
-      if (from !== null) list.unshift(from);
-    }
-    frames[key] = list;
+
+  if (layer.translate) frames.translate = layer.translate.map(([x, y]) => `${x}px ${y}px`);
+  if (layer.scale) frames.scale = layer.scale.map((v) => (typeof v === 'number' ? String(v) : `${v[0]} ${v[1]}`));
+  if (layer.opacity) frames.opacity = layer.opacity.map(String);
+
+  for (const key of SIZES) {
+    const list = layer[key];
+    if (!list) continue;
+    if (list[list.length - 1] === 'auto') autoKeys.push(key);
+    const measured = list.includes('auto') ? measureAuto(el, key) : 0;
+    frames[key] = list.map((v) => `${v === 'auto' ? measured : v}px`);
   }
+
+  for (const [key, list] of Object.entries(frames)) if (list.length === 1) list.unshift(currentValue(el, key));
   return { frames, autoKeys };
 }
 
@@ -85,26 +69,17 @@ function claim(el: HTMLElement, keys: string[], animation: Animation): void {
   }
 }
 
-const settled: Playback = { stop() {}, finished: Promise.resolve() };
-
-export interface AnimateOptions {
-  fill?: FillMode;
-}
-
-export function animate(
-  el: HTMLElement,
-  keyframes: Keyframes,
-  timing?: Timing,
-  options: AnimateOptions = {},
-): Playback {
-  const resolved = resolveTiming(timing);
-  const { frames, autoKeys } = resolveFrames(el, keyframes);
+function play(el: HTMLElement, layer: Layer): Playback | null {
+  const { frames, autoKeys } = compile(el, layer);
   const keys = Object.keys(frames);
-  if (!keys.length) return settled;
+  if (!keys.length) return null;
+
+  const timing = layer.timing;
+  const resolved = resolveTiming(timing);
 
   if (resolved.duration <= 0) {
-    if (options.fill !== 'none') for (const key of keys) setStyle(el, key, frames[key][frames[key].length - 1]);
-    return settled;
+    if (timing?.fill !== 'none') for (const key of keys) el.style.setProperty(key, frames[key][frames[key].length - 1]);
+    return null;
   }
 
   const shaped: PropertyIndexedKeyframes = { ...frames };
@@ -115,7 +90,7 @@ export function animate(
     duration: resolved.duration,
     delay: resolved.delay,
     easing: resolved.easing,
-    fill: options.fill ?? 'both',
+    fill: timing?.fill ?? 'both',
   });
   animation.playbackRate = 1 / clock.scale;
   claim(el, keys, animation);
@@ -125,10 +100,28 @@ export function animate(
       if (!autoKeys.length) return;
       animation.commitStyles();
       animation.cancel();
-      for (const key of autoKeys) el.style.setProperty(kebab(key), 'auto');
+      for (const key of autoKeys) el.style.setProperty(key, 'auto');
     },
     (): void => {},
   );
 
   return { stop: () => animation.cancel(), finished };
+}
+
+const settled: Playback = { stop() {}, finished: Promise.resolve() };
+
+export function animate(el: HTMLElement, ...layers: Layer[]): Playback {
+  const plays: Playback[] = [];
+  for (const layer of layers) {
+    const started = play(el, layer);
+    if (started) plays.push(started);
+  }
+  if (!plays.length) return settled;
+  if (plays.length === 1) return plays[0];
+  return {
+    stop: () => {
+      for (const started of plays) started.stop();
+    },
+    finished: Promise.all(plays.map((started) => started.finished)).then((): void => {}),
+  };
 }

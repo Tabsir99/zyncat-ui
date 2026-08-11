@@ -2,7 +2,8 @@
 
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'motion/react';
+import { animate } from '../../../engine';
+import { Presence } from '../../../motion/presence';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';
 import { store, type ActivePayload, type Placement } from './tooltip-store';
@@ -75,6 +76,34 @@ function Body({ a, width }: { a: ActivePayload; width?: number }) {
   );
 }
 
+function TipSurface({ a, box }: { a: ActivePayload; box: RenderedBox }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLSpanElement>(null);
+  const settled = useRef(false);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!settled.current) {
+      settled.current = true;
+      return;
+    }
+    animate(el, { translate: [[box.x, box.y]], width: [box.w], height: [box.h], timing: SM.t.layout });
+  }, [box.x, box.y, box.w, box.h]);
+
+  useLayoutEffect(() => {
+    if (bodyRef.current) animate(bodyRef.current, { opacity: [0, 1], timing: SM.t.enter });
+  }, [a.id]);
+
+  return (
+    <div ref={ref} className="tooltip" id="pds-tooltip" role="tooltip" data-placement={box.placement}>
+      <span ref={bodyRef}>
+        <Body a={a} width={box.bodyW} />
+      </span>
+    </div>
+  );
+}
+
 export function TooltipHost() {
   const active = useSyncExternalStore(store.subscribe, store.get);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -107,7 +136,8 @@ export function TooltipHost() {
     };
   }, [active]);
 
-  const off = box ? fromEdge(box.placement) : { x: 0, y: 0 };
+  const shown = useRef<{ box: RenderedBox; off: { x: number; y: number } } | null>(null);
+  if (box) shown.current = { box, off: fromEdge(box.placement) };
 
   return createPortal(
     <Fragment>
@@ -116,38 +146,37 @@ export function TooltipHost() {
           <Body a={active} />
         </div>
       )}
-      <AnimatePresence>
-        {active && box && (
-          <motion.div
-            key="tip"
-            className="tooltip"
-            id="pds-tooltip"
-            role="tooltip"
-            data-placement={box.placement}
-            initial={{ x: box.x + off.x, y: box.y + off.y, width: box.w, height: box.h, opacity: 0, scale: 0.96 }}
-            animate={{ x: box.x, y: box.y, width: box.w, height: box.h, opacity: 1, scale: 1 }}
-            exit={{
-              x: box.x + off.x,
-              y: box.y + off.y,
-              opacity: 0,
-              scale: 0.96,
-              transition: { duration: SM.dur.fast, ease: SM.ease.exit },
-            }}
-            transition={{
-              x: SM.t.layout,
-              y: SM.t.layout,
-              width: SM.t.layout,
-              height: SM.t.layout,
-              opacity: SM.t.enter,
-              scale: SM.t.enter,
-            }}
-          >
-            <motion.span key={active.id} initial={{ opacity: 0 }} animate={{ opacity: 1, transition: SM.t.enter }}>
-              <Body a={active} width={box.bodyW} />
-            </motion.span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Presence
+        style={{ display: 'contents' }}
+        enter={(el) => {
+          const at = shown.current;
+          if (!at) return null;
+          return animate(
+            el,
+            { width: [at.box.w], height: [at.box.h], timing: { duration: 0 } },
+            {
+              translate: [
+                [at.box.x + at.off.x, at.box.y + at.off.y],
+                [at.box.x, at.box.y],
+              ],
+              timing: SM.t.layout,
+            },
+            { opacity: [0, 1], scale: [0.96, 1], timing: SM.t.enter },
+          );
+        }}
+        exit={(el) => {
+          const at = shown.current;
+          if (!at) return null;
+          return animate(el, {
+            translate: [[at.box.x + at.off.x, at.box.y + at.off.y]],
+            opacity: [0],
+            scale: [0.96],
+            timing: { duration: SM.dur.fast, ease: SM.ease.exit },
+          });
+        }}
+      >
+        {active && box && <TipSurface key="tip" a={active} box={box} />}
+      </Presence>
     </Fragment>,
     document.body,
   );

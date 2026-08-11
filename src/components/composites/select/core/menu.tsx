@@ -1,7 +1,8 @@
 'use client';
 
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { animate, type Layer } from '../../../../engine';
+import { Presence } from '../../../../motion/presence';
 import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
 import { resolveMotionTiming } from '../../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../../motion/timing';
@@ -13,13 +14,25 @@ const SELECT_MENU_TIMING = {
   close: { duration: 'base', ease: 'exit' },
 } as const;
 
-function selectMenuVariants(animation: DisableableAnimation | undefined) {
-  const t = resolveMotionTiming(animation, SELECT_MENU_TIMING);
-  const opacity = (d: MotionTransition) => ({ duration: d.duration === 0 ? 0 : UIMotion.dur.fast, ease: d.ease });
-  return {
-    closed: { opacity: 0, y: -6, scale: 0.96, transition: { ...t.close, opacity: opacity(t.close) } },
-    open: { opacity: 1, y: 0, scale: 1, transition: { ...t.open, opacity: opacity(t.open) } },
-  };
+function selectMenuLayers(animation: DisableableAnimation | undefined, dir: 'open' | 'close'): Layer[] {
+  const t = resolveMotionTiming(animation, SELECT_MENU_TIMING)[dir];
+  const fade = (d: MotionTransition) => ({ duration: d.duration === 0 ? 0 : UIMotion.dur.fast, ease: d.ease });
+  return dir === 'open'
+    ? [
+        {
+          translate: [
+            [0, -6],
+            [0, 0],
+          ],
+          scale: [0.96, 1],
+          timing: t,
+        },
+        { opacity: [0, 1], timing: fade(t) },
+      ]
+    : [
+        { translate: [[0, -6]], scale: [0.96], timing: t },
+        { opacity: [0], timing: fade(t) },
+      ];
 }
 
 export interface SelectMenuProps {
@@ -33,7 +46,7 @@ export interface SelectMenuProps {
   children?: ReactNode;
 }
 
-function MenuSurface({ menuId, close, triggerRef, multiple, animation, children }: Omit<SelectMenuProps, 'open'>) {
+function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<SelectMenuProps, 'open' | 'animation'>) {
   const menuRef = useRef<HTMLDivElement>(null);
   const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
   useLayoutEffect(() => {
@@ -49,32 +62,32 @@ function MenuSurface({ menuId, close, triggerRef, multiple, animation, children 
   useOutsidePress({ entry, refs: [menuRef, triggerRef], enabled: true, onPress: close });
 
   return (
-    <motion.div
+    <div
       ref={menuRef}
       className="select__menu"
       id={menuId}
       role="presentation"
       data-multiple={multiple ? 'true' : undefined}
-      variants={selectMenuVariants(animation)}
-      initial="closed"
-      animate="open"
-      exit="closed"
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
 export function SelectMenu({ open, menuId, close, triggerRef, multiple, animation, children }: SelectMenuProps) {
   return (
     <OverlayPortal>
-      <AnimatePresence>
+      <Presence
+        style={{ display: 'contents' }}
+        enter={(el) => animate(el, ...selectMenuLayers(animation, 'open'))}
+        exit={(el) => animate(el, ...selectMenuLayers(animation, 'close'))}
+      >
         {open && (
-          <MenuSurface menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple} animation={animation}>
+          <MenuSurface key="menu" menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple}>
             {children}
           </MenuSurface>
         )}
-      </AnimatePresence>
+      </Presence>
     </OverlayPortal>
   );
 }

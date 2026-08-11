@@ -6,11 +6,8 @@ index; full prop types (with docs) live in node_modules/@zyncat/ui/dist/*.d.ts.
 Setup:
   import { Button } from '@zyncat/ui/button';   // one subpath per component - there is no barrel entry
   import '@zyncat/ui/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
-Peers: react, react-dom, motion. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
-motion is an optional peer: these subpaths run without it - avatar, avatar-group, badge, button,
-  checkbox, collapse, count-badge, motion-tokens, number-field, otp-field, status-badge,
-  text-field, textarea, time-field, toast-store, toggle, toggle-tag. Every other subpath
-  imports motion/react and needs motion installed.
+Peers: react, react-dom. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
+Animation is built in - a ~2.5 kB WAAPI engine, no animation library to install.
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 
 Conventions:
@@ -185,9 +182,9 @@ Sheet - @zyncat/ui/sheet
 ============================================================ DEV TOOLS
 
 MotionDevtools - @zyncat/ui/motion-devtools
-  Dev-only floating panel that slows or freezes EVERY animation at once (CSS, Motion, raw WAAPI)
+  Dev-only floating panel that slows or freezes EVERY animation at once (CSS and WAAPI)
   for motion debugging. Mount once at the app root - no provider, touches no other component.
-  Requires the motion peer. Gate behind a dev check; keep it out of production.
+  Gate behind a dev check; keep it out of production.
   placement top-left|top-right|bottom-left|bottom-right, offset, presets, maxFactor, defaultFactor,
   scaleTimers, persist, defaultOpen. Also exports motionSlowmo for console/hotkey control.
   {import.meta.env.DEV && <MotionDevtools placement="bottom-right" />}

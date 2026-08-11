@@ -125,6 +125,7 @@ function springCurve(visual: number, bounce: number): SpringCurve {
 export interface Timing extends Omit<MotionTransition, 'ease'> {
   ease?: EaseValue | EaseValue[];
   times?: number[];
+  fill?: FillMode;
 }
 
 export interface ResolvedTiming {

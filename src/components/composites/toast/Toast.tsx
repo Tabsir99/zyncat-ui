@@ -8,13 +8,16 @@ import {
   useState,
   useSyncExternalStore,
   type CSSProperties,
+  type FocusEvent as ReactFocusEvent,
+  type PointerEvent as ReactPointerEvent,
   type HTMLAttributes,
   type ReactElement,
   type ReactNode,
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, animate, useMotionValue, type PanInfo } from 'motion/react';
+import { animate, startDrag, type Layer, type Playback } from '../../../engine';
+import { Presence } from '../../../motion/presence';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
 import { tokenPx } from '../../internal/utils/token-px';
@@ -43,18 +46,40 @@ const TONE_ICON: Record<string, IconName> = {
   info: 'info',
 };
 
-function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>, x: ReturnType<typeof useMotionValue<number>>) {
+function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
   const prevTone = useRef<ToastTone | null>(null);
   useEffect(() => {
     const prev = prevTone.current;
     prevTone.current = tone;
     if (tone === prev) return;
     if (tone === 'success') return fireGlint(ref.current);
-    if (tone === 'error') {
-      const fall = animate(x, [0, -7, 5, -2, 0], { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base });
+    if (tone === 'error' && ref.current) {
+      const shake = ref.current.firstElementChild as HTMLElement | null;
+      if (!shake) return;
+      const fall = animate(shake, {
+        translate: [
+          [0, 0],
+          [-7, 0],
+          [5, 0],
+          [-2, 0],
+          [0, 0],
+        ],
+        timing: { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base },
+      });
+      fall.finished.then(() => fall.stop());
       return () => fall.stop();
     }
   }, [tone]);
+}
+
+function useReplay<T extends HTMLElement>(token: unknown, build: () => Layer[]) {
+  const ref = useRef<T>(null);
+  const latest = useRef(build);
+  latest.current = build;
+  useLayoutEffect(() => {
+    if (ref.current) animate(ref.current, ...latest.current());
+  }, [token]);
+  return ref;
 }
 
 function ToastItem({
@@ -77,72 +102,108 @@ function ToastItem({
   onHeight: (id: string, h: number) => void;
 }) {
   const ref = useRef<HTMLLIElement>(null);
-  const x = useMotionValue(0);
-  useToneGesture(t.tone, ref, x);
+  const settled = useRef(false);
+  const swipeBack = useRef<Playback | null>(null);
+  useToneGesture(t.tone, ref);
 
   useLayoutEffect(() => {
     if (ref.current && ref.current.firstElementChild)
       onHeight(t.id, (ref.current.firstElementChild as HTMLElement).offsetHeight);
   });
 
-  const swipe = (_e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
-    if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-      animate(x, 420, { duration: SM.dur.fast, ease: SM.ease.exit }).then(() => store.dismiss(t.id));
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.pointerEvents = hidden ? 'none' : 'auto';
+    const y = isTop ? offset : -offset;
+    const scale = 1 - depth * 0.05;
+    if (settled.current) {
+      animate(
+        el,
+        { translate: [[0, y]], scale: [scale], height: [frameHeight ?? 'auto'], timing: SM.t.settle },
+        { opacity: [hidden ? 0 : 1], timing: SM.t.enter },
+      );
+      return;
     }
+    settled.current = true;
+    animate(
+      el,
+      {
+        translate: [
+          [0, isTop ? -24 : 24],
+          [0, y],
+        ],
+        scale: [0.97, scale],
+        timing: SM.t.settle,
+      },
+      { opacity: [0, hidden ? 0 : 1], timing: SM.t.enter },
+    );
+  }, [offset, depth, hidden, frameHeight, isTop]);
+
+  const onPointerDown = (e: ReactPointerEvent) => {
+    const inner = ref.current?.firstElementChild as HTMLElement | null;
+    if (!t.dismissible || e.button !== 0 || !inner) return;
+    swipeBack.current?.stop();
+    startDrag(e, {
+      onMove: (info) => {
+        const dx = info.offset.x;
+        inner.style.translate = `${dx > 0 ? dx * 0.9 : dx * 0.04}px 0px`;
+      },
+      onEnd: (info) => {
+        if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
+          animate(inner, {
+            translate: [[420, 0]],
+            timing: { duration: SM.dur.fast, ease: SM.ease.exit },
+          }).finished.then(() => store.dismiss(t.id));
+          return;
+        }
+        const back = animate(inner, { translate: [[0, 0]], timing: SM.t.settle });
+        swipeBack.current = back;
+        back.finished.then(() => back.stop());
+      },
+    });
   };
 
   return (
-    <motion.li
+    <li
       ref={ref}
       className="toast glass"
       data-tone={t.tone}
       data-behind={behind ? '' : undefined}
       role={t.tone === 'error' ? 'alert' : 'status'}
       aria-atomic="true"
-      style={{ x }}
-      initial={{ opacity: 0, y: isTop ? -24 : 24, scale: 0.97 }}
-      animate={{
-        opacity: hidden ? 0 : 1,
-        y: isTop ? offset : -offset,
-        scale: 1 - depth * 0.05,
-        height: frameHeight || 'auto',
-        pointerEvents: hidden ? 'none' : 'auto',
-      }}
-      exit={{ opacity: 0, scale: 0.96, transition: { duration: SM.dur.fast, ease: SM.ease.exit } }}
-      transition={{ y: SM.t.settle, scale: SM.t.settle, height: SM.t.settle, opacity: SM.t.enter }}
-      drag={t.dismissible ? 'x' : false}
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={{ left: 0.04, right: 0.9 }}
-      dragMomentum={false}
-      onDragEnd={swipe}
+      onPointerDown={onPointerDown}
       onKeyDown={(e) => {
         if (e.key === 'Escape' && t.dismissible) store.dismiss(t.id);
       }}
     >
       {t.node ? <div className="toast__custom">{t.node as ReactNode}</div> : <ToastBody t={t} />}
-    </motion.li>
+    </li>
   );
 }
 
 function ToastBody({ t }: { t: ToastRecord }) {
+  const glyphRef = useReplay<HTMLSpanElement>(t.tone, () => [
+    { scale: [0.5, 1], timing: SM.t.settle },
+    { opacity: [0, 1], timing: SM.t.enter },
+  ]);
+  const textRef = useReplay<HTMLDivElement>(String(t.message) + '-' + String(t.description), () => [
+    { opacity: [0, 1], timing: SM.t.enter },
+  ]);
+  const countRef = useReplay<HTMLSpanElement>(t.count, () => [{ scale: [0.6, 1], timing: SM.t.settle }]);
+
   return (
     <div className="toast__inner">
       {(t.tone !== 'default' || isFinite(t.duration)) && (
         <span className="toast__icon">
           {t.tone !== 'default' && (
-            <motion.span
-              key={t.tone}
-              className="toast__icon-glyph"
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ scale: SM.t.settle, opacity: SM.t.enter }}
-            >
+            <span ref={glyphRef} className="toast__icon-glyph">
               {t.tone === 'loading' ? (
                 <span className="toast__spinner" aria-hidden="true"></span>
               ) : (
                 <Icon name={TONE_ICON[t.tone]} weight="fill" />
               )}
-            </motion.span>
+            </span>
           )}
           {isFinite(t.duration) && (
             <svg key={'ring-' + t.timerKey} className="toast__ring" viewBox="0 0 36 36" aria-hidden="true">
@@ -159,26 +220,14 @@ function ToastBody({ t }: { t: ToastRecord }) {
           )}
         </span>
       )}
-      <motion.div
-        key={String(t.message) + '-' + String(t.description)}
-        className="toast__text"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={SM.t.enter}
-      >
+      <div ref={textRef} className="toast__text">
         <p className="toast__message">{t.message}</p>
         {t.description != null && <p className="toast__desc">{t.description}</p>}
-      </motion.div>
+      </div>
       {t.count > 1 && (
-        <motion.span
-          key={t.count}
-          className="toast__count"
-          initial={{ scale: 0.6 }}
-          animate={{ scale: 1 }}
-          transition={SM.t.settle}
-        >
+        <span ref={countRef} className="toast__count">
           ×{t.count}
-        </motion.span>
+        </span>
       )}
       {t.action && (
         <Button
@@ -262,7 +311,9 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
   const frontH = n ? heights[slice[n - 1].id] || 0 : 0;
 
   return createPortal(
-    <ol
+    <Presence
+      as="ol"
+      exit={(el) => animate(el, { opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } })}
       {...htmlProps}
       className={
         'toast-viewport' + (paused ? ' is-paused' : '') + (htmlProps?.className ? ' ' + htmlProps.className : '')
@@ -274,41 +325,39 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
           : htmlProps?.style
       }
       aria-label="Notifications"
-      onPointerOver={(e) => {
+      onPointerOver={(e: ReactPointerEvent<HTMLOListElement>) => {
         if (e.pointerType !== 'touch') onHold();
       }}
-      onPointerOut={(e) => {
+      onPointerOut={(e: ReactPointerEvent<HTMLOListElement>) => {
         if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget as Node)) onRelease(true);
       }}
       onFocus={onHold}
-      onBlur={(e) => {
+      onBlur={(e: ReactFocusEvent<HTMLOListElement>) => {
         if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget as Node)) onRelease(false);
       }}
     >
-      <AnimatePresence>
-        {slice.map((t, i) => {
-          const depth = n - 1 - i;
-          let offset = depth * gap;
-          if (expanded) {
-            offset = 0;
-            for (let j = i + 1; j < n; j++) offset += (heights[slice[j].id] || 0) + gap;
-          }
-          return (
-            <ToastItem
-              key={t.id}
-              t={t}
-              depth={expanded ? 0 : depth}
-              offset={offset}
-              hidden={!expanded && depth >= visible}
-              behind={!expanded && depth > 0}
-              frameHeight={!expanded && depth > 0 && frontH ? frontH : null}
-              isTop={isTop}
-              onHeight={onHeight}
-            />
-          );
-        })}
-      </AnimatePresence>
-    </ol>,
+      {slice.map((t, i) => {
+        const depth = n - 1 - i;
+        let offset = depth * gap;
+        if (expanded) {
+          offset = 0;
+          for (let j = i + 1; j < n; j++) offset += (heights[slice[j].id] || 0) + gap;
+        }
+        return (
+          <ToastItem
+            key={t.id}
+            t={t}
+            depth={expanded ? 0 : depth}
+            offset={offset}
+            hidden={!expanded && depth >= visible}
+            behind={!expanded && depth > 0}
+            frameHeight={!expanded && depth > 0 && frontH ? frontH : null}
+            isTop={isTop}
+            onHeight={onHeight}
+          />
+        );
+      })}
+    </Presence>,
     document.body,
   );
 }

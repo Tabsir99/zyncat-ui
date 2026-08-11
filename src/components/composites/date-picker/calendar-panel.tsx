@@ -2,11 +2,12 @@
 
 import './date-picker.css';
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
-import { motion, animate } from 'motion/react';
+import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
-import { GlidePill, useGlide, useLayoutSelfHeal } from '../../../motion/glide';
+import { GlidePill, useGlide } from '../../../motion/glide';
+import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, key as toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
 
@@ -32,7 +33,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
   const pillId = 'dtp-pill-' + uid;
 
   const glide = useGlide(daysRef);
-  const healPill = useLayoutSelfHeal<HTMLSpanElement>();
+  const pillRef = useSharedFlip<HTMLSpanElement>(pillId, { timing: UIMotion.t.settle });
 
   const inRange = (key: string): boolean => within(key, min, max);
 
@@ -69,11 +70,14 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     const el = daysRef.current;
     if (prev == null || prev === viewIdx || !el) return;
     const dir = viewIdx > prev ? 1 : -1;
-    animate(
-      el,
-      { x: [dir * 16, 0], opacity: [0, 1] },
-      { duration: UIMotion.t.enter.duration, ease: UIMotion.t.enter.ease },
-    );
+    animate(el, {
+      translate: [
+        [dir * 16, 0],
+        [0, 0],
+      ],
+      opacity: [0, 1],
+      timing: { duration: UIMotion.t.enter.duration, ease: UIMotion.t.enter.ease },
+    });
   }, [viewIdx]);
 
   function moveFocus(deltaDays: number, deltaMonths: number) {
@@ -199,16 +203,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                     onClick={() => pickDay(key)}
                     onPointerEnter={(e) => glide.enter(e.currentTarget)}
                   >
-                    {sel ? (
-                      <motion.span
-                        className="dtp__pill"
-                        layoutId={pillId}
-                        transition={UIMotion.t.settle}
-                        aria-hidden="true"
-                        ref={healPill.ref}
-                        onLayoutAnimationComplete={healPill.onLayoutAnimationComplete}
-                      ></motion.span>
-                    ) : null}
+                    {sel ? <span className="dtp__pill" aria-hidden="true" ref={pillRef}></span> : null}
                     <span className="dtp__num">{d.getDate()}</span>
                     {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
                   </button>

@@ -236,14 +236,8 @@
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
-    "motion": "^12",
     "react": "^19",
     "react-dom": "^19"
-  },
-  "peerDependenciesMeta": {
-    "motion": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -251,7 +245,6 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "madge": "^8.0.0",
-    "motion": "^12.40.0",
     "prettier": "^3.8.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

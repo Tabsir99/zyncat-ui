@@ -2,12 +2,12 @@
 
 import './dialog.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell } from '../../internal/overlay/modal';
+import { ModalShell, ovModalPlays } from '../../internal/overlay/modal';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
@@ -156,10 +156,6 @@ export function Dialog({
   const close = () => setOpen(false);
 
   const timings = resolveMotionTiming(animation, DIALOG_TIMING);
-  const dialogVariants = {
-    closed: { opacity: 0, y: 6, scale: 0.98, transition: timings.close },
-    open: { opacity: 1, y: 0, scale: 1, transition: timings.open },
-  };
 
   return (
     <Fragment>
@@ -171,12 +167,30 @@ export function Dialog({
         triggerRef,
       })}
       <OverlayPortal>
-        <AnimatePresence>
+        <Presence
+          style={{ display: 'contents' }}
+          enter={(el) =>
+            ovModalPlays(el, 'open', [
+              {
+                translate: [
+                  [0, 6],
+                  [0, 0],
+                ],
+                scale: [0.98, 1],
+                opacity: [0, 1],
+                timing: timings.open,
+              },
+            ])
+          }
+          exit={(el) =>
+            ovModalPlays(el, 'close', [{ translate: [[0, 6]], scale: [0.98], opacity: [0], timing: timings.close }])
+          }
+        >
           {isOpen && (
             <ModalShell
+              key="dialog"
               layerClass="overlay-layer--dialog"
               slotClass="overlay-slot--dialog"
-              slotVariants={dialogVariants}
               panelId={baseId}
               dismissible={dismissible}
               requestClose={close}
@@ -197,7 +211,7 @@ export function Dialog({
               </DialogSurface>
             </ModalShell>
           )}
-        </AnimatePresence>
+        </Presence>
       </OverlayPortal>
     </Fragment>
   );

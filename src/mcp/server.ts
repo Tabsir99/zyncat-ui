@@ -135,23 +135,6 @@ function readTypes(root: string, subpath: string): string {
   return out.join('\n\n');
 }
 
-function needsMotion(root: string, subpath: string): boolean | null {
-  const seen = new Set<string>();
-  const walk = (rel: string): boolean => {
-    if (seen.has(rel)) return false;
-    seen.add(rel);
-    const p = join(root, 'dist', rel);
-    if (!existsSync(p)) return false;
-    const code = readFileSync(p, 'utf8');
-    if (/["']motion\/react["']/.test(code)) return true;
-    for (const m of code.matchAll(/(?:from|import)\s*["']\.\/([\w.-]+\.js)["']/g)) {
-      if (walk(m[1])) return true;
-    }
-    return false;
-  };
-  return existsSync(join(root, 'dist', `${subpath}.js`)) ? walk(`${subpath}.js`) : null;
-}
-
 const tokenFiles = (root: string): string[] =>
   existsSync(join(root, 'src/tokens'))
     ? readdirSync(join(root, 'src/tokens'))
@@ -198,15 +181,8 @@ function getComponent(input: string): string {
   const d = db();
   const sub = resolveSubpath(input);
   const entry = d.entries.find((e) => e.subpath === sub);
-  const motion = needsMotion(d.root, sub);
-  const peer =
-    motion === null
-      ? null
-      : motion
-        ? "requires the optional 'motion' peer to be installed"
-        : "runs without the optional 'motion' peer";
 
-  const out: string[] = [`# ${entry ? entry.title : sub} - @zyncat/ui/${sub}${peer ? `  [${peer}]` : ''}`, ''];
+  const out: string[] = [`# ${entry ? entry.title : sub} - @zyncat/ui/${sub}`, ''];
   if (entry) {
     const note = d.sections.find((s) => s.title === entry.section)?.body ?? [];
     if (note.length) out.push(`Applies to every ${entry.section} component:`, ...note, '');

@@ -11,13 +11,14 @@ component; link one base stylesheet - each component loads its own CSS automatic
 ```bash
 pnpm add @zyncat/ui
 # peers (you likely already have them):
-pnpm add react react-dom motion
+pnpm add react react-dom
 ```
 
 | Peer                  | Range | Used for                                                             |
 | --------------------- | ----- | -------------------------------------------------------------------- |
 | `react` / `react-dom` | `^19` | components; `createRoot`/`createPortal` for imperative toast/tooltip |
-| `motion`              | `^12` | enter/exit + layout animation (`motion/react`)                       |
+
+Enter/exit, layout and gesture animation are built in (a small WAAPI engine) - no animation library to install.
 
 Icons are **bundled** (a small curated Phosphor set) - there is no icon peer to install.
 

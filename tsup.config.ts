@@ -63,8 +63,8 @@ const library: Options = {
   clean: true,
   target: 'es2022',
   // Bundle the ~16 curated Phosphor glyphs the components import (static, tree-shaken).
-  // react/react-dom/motion stay external - stateful singletons the app must own one of.
-  external: ['react', 'react-dom', 'motion', /\.css$/],
+  // react/react-dom stay external - stateful singletons the app must own one of.
+  external: ['react', 'react-dom', /\.css$/],
   metafile: true,
 
   // Silence tsup/rollup logs: the d.ts pass emits a benign MODULE_LEVEL_DIRECTIVE

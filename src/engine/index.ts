@@ -1,12 +1,4 @@
-export {
-  animate,
-  setStyle,
-  clock,
-  type AnimateOptions,
-  type Keyframes,
-  type Playback,
-  type StyleValue,
-} from './animate';
+export { animate, clock, type Layer, type Playback, type Size, type Vec } from './animate';
 export {
   bezierAt,
   cssBezier,

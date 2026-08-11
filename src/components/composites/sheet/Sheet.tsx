@@ -2,13 +2,14 @@
 
 import './sheet.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { AnimatePresence } from 'motion/react';
-import { resolveMotionTiming, type MotionTimings } from '../../../motion/motion-timing';
+import type { Vec } from '../../../engine';
+import { Presence } from '../../../motion/presence';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovResolveChildren, ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell } from '../../internal/overlay/modal';
-import { useSheetDrag } from './use-sheet-drag';
+import { ModalShell, ovModalPlays } from '../../internal/overlay/modal';
+import { useSheetDrag, sheetSpan } from './use-sheet-drag';
 import type { DataAttributes } from '../../../dom-props';
 
 const SHEET_TIMING = {
@@ -46,9 +47,10 @@ export interface SheetProps {
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
-function sheetVariants(side: 'right' | 'bottom', timings: MotionTimings) {
-  const axis = side === 'bottom' ? 'y' : 'x';
-  return { closed: { [axis]: '100%', transition: timings.close }, open: { [axis]: 0, transition: timings.open } };
+function sheetSlotSpan(layer: HTMLElement, side: 'right' | 'bottom'): Vec {
+  const slot = layer.querySelector<HTMLElement>('.overlay-slot');
+  const span = slot ? sheetSpan(slot, side) : 0;
+  return side === 'bottom' ? [0, span] : [span, 0];
 }
 
 function SheetShell({
@@ -58,7 +60,6 @@ function SheetShell({
   asChild,
   requestClose,
   htmlProps,
-  animation,
   children,
 }: {
   side: 'right' | 'bottom';
@@ -67,23 +68,20 @@ function SheetShell({
   asChild: boolean;
   requestClose: () => void;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
-  animation?: DisableableAnimation;
   children: ReactNode;
 }) {
   const slotRef = useRef<HTMLElement>(null);
-  const { slotProps, scrimOpacity } = useSheetDrag({ side, slotRef, enabled: dismissible, requestClose });
+  const slotProps = useSheetDrag({ side, slotRef, enabled: dismissible, requestClose });
   return (
     <ModalShell
       layerClass={'overlay-layer--sheet-' + side}
       slotClass={'overlay-slot--sheet-' + side}
-      slotVariants={sheetVariants(side, resolveMotionTiming(animation, SHEET_TIMING))}
       panelId={panelId}
       dismissible={dismissible}
       requestClose={requestClose}
       asChild={asChild}
       slotRef={slotRef}
       slotProps={{ ...htmlProps, ...slotProps }}
-      scrimOpacity={scrimOpacity}
     >
       {children}
     </ModalShell>
@@ -108,26 +106,37 @@ export function Sheet({
   const autoId = useId();
   const panelId = id || 'sheet-' + autoId;
   const close = () => setOpen(false);
+  const timings = resolveMotionTiming(animation, SHEET_TIMING);
 
   return (
     <Fragment>
       {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
       <OverlayPortal>
-        <AnimatePresence>
+        <Presence
+          style={{ display: 'contents' }}
+          enter={(el) => {
+            const plays = ovModalPlays(el, 'open', [
+              { translate: [sheetSlotSpan(el, side), [0, 0]], timing: timings.open },
+            ]);
+            for (const play of plays) play.finished.then(() => play.stop());
+            return plays;
+          }}
+          exit={(el) => ovModalPlays(el, 'close', [{ translate: [sheetSlotSpan(el, side)], timing: timings.close }])}
+        >
           {open && (
             <SheetShell
+              key="sheet"
               side={side}
               panelId={panelId}
               dismissible={dismissible}
               asChild={asChild}
               requestClose={close}
               htmlProps={htmlProps}
-              animation={animation}
             >
               {ovResolveChildren(children, close)}
             </SheetShell>
           )}
-        </AnimatePresence>
+        </Presence>
       </OverlayPortal>
     </Fragment>
   );

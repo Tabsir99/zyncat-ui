@@ -1,4 +1,4 @@
-import { animate, type Playback } from './animate';
+import { animate, type Layer, type Playback } from './animate';
 import type { Timing } from './ease';
 
 export interface Box {
@@ -48,9 +48,18 @@ export function flip(el: HTMLElement, from: Box, options: FlipOptions = {}): Pla
   const scaled = Math.abs(sx - 1) > SCALE_EPSILON || Math.abs(sy - 1) > SCALE_EPSILON;
   if (!moved && !scaled) return null;
 
-  const keyframes = scaled
-    ? { translate: [`${dx}px ${dy}px`, '0px 0px'], scale: [`${sx} ${sy}`, '1 1'] }
-    : { translate: [`${dx}px ${dy}px`, '0px 0px'] };
+  const layer: Layer = {
+    translate: [
+      [dx, dy],
+      [0, 0],
+    ],
+    timing: { ...options.timing, fill: 'none' },
+  };
+  if (scaled)
+    layer.scale = [
+      [sx, sy],
+      [1, 1],
+    ];
 
-  return animate(el, keyframes, options.timing, { fill: 'none' });
+  return animate(el, layer);
 }

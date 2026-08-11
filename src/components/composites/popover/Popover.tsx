@@ -2,7 +2,8 @@
 
 import './popover.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { animate } from '../../../engine';
+import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
@@ -57,14 +58,6 @@ export interface PopoverProps {
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
-function popoverVariants(animation: DisableableAnimation | undefined) {
-  const t = resolveMotionTiming(animation, POPOVER_TIMING);
-  return {
-    closed: { opacity: 0, scale: 0.96, transition: t.close },
-    open: { opacity: 1, scale: 1, transition: t.open },
-  };
-}
-
 function PopoverPanel({
   panelId,
   side,
@@ -75,7 +68,6 @@ function PopoverPanel({
   requestClose,
   triggerRef,
   htmlProps,
-  animation,
   children,
 }: {
   panelId: string;
@@ -87,7 +79,6 @@ function PopoverPanel({
   requestClose: () => void;
   triggerRef: RefObject<HTMLElement>;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
-  animation?: DisableableAnimation;
   children: ReactNode;
 }) {
   const panelRef = useRef<HTMLElement>(null);
@@ -101,14 +92,7 @@ function PopoverPanel({
     prepend: arrow ? <span key="arrow" className="overlay-popover__arrow" aria-hidden="true"></span> : null,
     nodeRef: panelRef,
     className: 'overlay-popover',
-    motionProps: {
-      ...htmlProps,
-      id: panelId,
-      variants: popoverVariants(animation),
-      initial: 'closed',
-      animate: 'open',
-      exit: 'closed',
-    },
+    panelProps: { ...htmlProps, id: panelId },
   });
 }
 
@@ -132,14 +116,20 @@ export function Popover({
   const autoId = useId();
   const panelId = id || 'popover-' + autoId;
   const close = () => setOpen(false);
+  const timings = resolveMotionTiming(animation, POPOVER_TIMING);
 
   return (
     <Fragment>
       {ovCloneTrigger(trigger, { open, onPress: () => setOpen(!open), panelId, haspopup: 'true', triggerRef })}
       <OverlayPortal>
-        <AnimatePresence>
+        <Presence
+          style={{ display: 'contents' }}
+          enter={(el) => animate(el, { opacity: [0, 1], scale: [0.96, 1], timing: timings.open })}
+          exit={(el) => animate(el, { opacity: [0], scale: [0.96], timing: timings.close })}
+        >
           {open && (
             <PopoverPanel
+              key="panel"
               panelId={panelId}
               side={side}
               align={align}
@@ -149,12 +139,11 @@ export function Popover({
               requestClose={close}
               triggerRef={triggerRef}
               htmlProps={htmlProps}
-              animation={animation}
             >
               {ovResolveChildren(children, close)}
             </PopoverPanel>
           )}
-        </AnimatePresence>
+        </Presence>
       </OverlayPortal>
     </Fragment>
   );
