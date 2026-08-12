@@ -5,7 +5,6 @@ import {
   useId,
   useLayoutEffect,
   useRef,
-  useState,
   type CSSProperties,
   type HTMLAttributes,
   type KeyboardEvent,
@@ -14,7 +13,7 @@ import {
 import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { Motion } from '../../../motion/element';
+import { GlidePill, useGlide } from '../../../motion/glide';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { type DisableableAnimation } from '../../../motion/timing';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
@@ -80,8 +79,7 @@ export function Tabs({ items = [], value, onChange, name, ariaLabel, className =
   const valueRef = useRef(value);
   valueRef.current = value;
 
-  const [hovered, setHovered] = useState<string | null>(null);
-  const hoverId = base + ':hover';
+  const glide = useGlide(listRef);
 
   const place = (animated: boolean) => {
     const list = listRef.current,
@@ -183,8 +181,9 @@ export function Tabs({ items = [], value, onChange, name, ariaLabel, className =
         aria-label={ariaLabel}
         ref={listRef}
         onKeyDown={onKeyDown}
-        onPointerLeave={() => setHovered(null)}
+        onPointerLeave={glide.leave}
       >
+        <GlidePill className="tab__hover" glide={glide} />
         {items.map((it) => {
           const selected = it.value === value;
           return (
@@ -202,18 +201,11 @@ export function Tabs({ items = [], value, onChange, name, ariaLabel, className =
                 tabRefs.current[it.value] = el;
               }}
               onClick={() => select(it.value)}
-              onPointerEnter={it.disabled ? undefined : () => setHovered(it.value)}
+              onPointerEnter={
+                it.disabled ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
+              }
             >
               <span className="tab__pad">
-                {hovered === it.value && (
-                  <Motion
-                    as="span"
-                    layoutId={hoverId}
-                    layout={{ timing: SM.t.settle }}
-                    className="tab__hover"
-                    aria-hidden="true"
-                  />
-                )}
                 {it.icon && <IconSlot size="sm">{it.icon}</IconSlot>}
                 <span className="tab__label">{it.label}</span>
                 {it.count != null && <span className="tab__count">{it.count}</span>}

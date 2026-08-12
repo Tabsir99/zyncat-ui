@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { useGlide } from '../../../../motion/glide';
 import { normalize, matches, type SelectOption, type SelectGroup } from './types';
 
 export interface UseListboxArgs {
@@ -40,7 +41,7 @@ export function useListbox({
   const baseId = id || idPrefix + autoId;
   const menuId = baseId + '-menu';
   const listId = baseId + '-list';
-  const hoverId = baseId + '-hover';
+  const glide = useGlide(listRef);
 
   const { groups, flat } = useMemo(() => normalize(options), [options]);
   const navItems = useMemo(() => flat.filter((o) => matches(o, query)), [flat, query]);
@@ -84,6 +85,14 @@ export function useListbox({
     else if (el.offsetTop + el.offsetHeight > list.scrollTop + list.clientHeight)
       list.scrollTop = el.offsetTop + el.offsetHeight - list.clientHeight;
   }, [activeIdx, open]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const el = open && activeIdx >= 0 && list && list.querySelector<HTMLElement>('[data-idx="' + activeIdx + '"]');
+    if (el) glide.enter(el);
+    else glide.leave();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, activeIdx, query]);
 
   function moveActive(dir: number) {
     if (!navItems.length) return;
@@ -156,12 +165,12 @@ export function useListbox({
     baseId,
     menuId,
     listId,
-    hoverId,
     optId,
     adId,
     groups,
     flat,
     navItems,
+    glide,
     isSelected,
     show,
     requestClose,

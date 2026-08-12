@@ -1,11 +1,11 @@
 'use client';
 
 import './radio-group.css';
-import { useId, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
+import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { Collapse } from '../collapse/Collapse';
-import { Motion } from '../../../motion/element';
+import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import type { DataAttributes } from '../../../dom-props';
@@ -81,6 +81,8 @@ export function RadioGroup({
 }: RadioGroupProps) {
   const groupId = useId();
   const [hovered, setHovered] = useState<string | null>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
+  const glide = useGlide(optionsRef);
   const markerRef = useSharedFlip<HTMLSpanElement>(groupId + ':marker', { timing: SM.t.layout });
   const fillRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-fill', { timing: SM.t.layout });
   const cardHoverRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-hover', { scale: false, timing: SM.t.layout });
@@ -111,7 +113,15 @@ export function RadioGroup({
         </div>
       )}
 
-      <div className="rg__options" onPointerLeave={() => setHovered(null)}>
+      <div
+        className="rg__options"
+        ref={optionsRef}
+        onPointerLeave={() => {
+          glide.leave();
+          setHovered(null);
+        }}
+      >
+        {variant === 'rows' && <GlidePill className="rg__hover" glide={glide} />}
         {options.map((opt) => {
           const selected = opt.value === value;
           const isDisabled = disabled || opt.disabled;
@@ -119,7 +129,13 @@ export function RadioGroup({
             <label
               key={opt.value}
               className={cx('rg-opt', selected && 'is-selected', isDisabled && 'is-disabled')}
-              onPointerEnter={isDisabled ? undefined : () => setHovered(opt.value)}
+              onPointerEnter={
+                isDisabled
+                  ? undefined
+                  : variant === 'rows'
+                    ? (e) => glide.enter(e.currentTarget)
+                    : () => setHovered(opt.value)
+              }
             >
               <input
                 className="rg-opt__input"
@@ -131,15 +147,6 @@ export function RadioGroup({
                 disabled={isDisabled}
                 onChange={() => onChange && onChange(opt.value)}
               />
-              {variant === 'rows' && hovered === opt.value && (
-                <Motion
-                  as="span"
-                  layoutId={groupId + ':hover'}
-                  layout={{ timing: SM.t.settle }}
-                  className="rg__hover"
-                  aria-hidden="true"
-                />
-              )}
               {variant === 'cards' && hovered === opt.value && !selected && (
                 <span className="rg__card-hover" aria-hidden="true" ref={cardHoverRef}></span>
               )}

@@ -37,6 +37,14 @@ Collapse - @zyncat/ui/collapse
   (fast|base|slow|slower|slowest / standard|entrance|exit|spring|glide) or per-direction { open, close }.
   <Collapse open={open} animation={{ duration: { close: 'fast' }, ease: { close: 'exit' } }}><div>...revealed content...</div></Collapse>
 
+Glide / GlidePill - @zyncat/ui/glide
+  A persistent background pill that glides smoothly between hovered/active elements. Container must be `position: relative`.
+  const glide = useGlide(containerRef);
+  <nav ref={containerRef} onPointerLeave={glide.leave}>
+    <GlidePill rect={glide.rect} active={glide.active} className="my-pill" />
+    <button onPointerEnter={(e) => glide.enter(e.currentTarget)}>Item 1</button>
+  </nav>
+
 Badge - @zyncat/ui/badge
   Glass or outline chip. tone neutral|info|success|warning|danger, dot, live, variant="outline", pill, size="sm".
   <Badge tone="success" pill>Published</Badge>

@@ -42,6 +42,7 @@ const EXPLICIT_ENTRIES: Record<string, string> = {
   'toast-store': 'src/components/composites/toast/toast-store.ts',
   'motion-tokens': 'src/tokens/motion-tokens.ts',
   'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
+  glide: 'src/motion/glide.tsx',
 };
 
 // One entry per public module - one dist file + .d.ts each. Subpaths

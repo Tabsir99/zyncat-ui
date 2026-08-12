@@ -5,7 +5,7 @@ import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
-import { Motion } from '../../../motion/element';
+import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, pad, toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
@@ -77,16 +77,16 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
 
   const [anchor, setAnchor] = useState<string | null>(null);
   const [hoverKey, setHoverKey] = useState<string | null>(null);
-  const [hoveredPreset, setHoveredPreset] = useState<string | null>(null);
   const [focusKey, setFocusKey] = useState<string>(seedKey);
 
   const daysRef = useRef<HTMLDivElement>(null);
+  const presetsRef = useRef<HTMLDivElement>(null);
   const viewIdx = view.y * 12 + view.m;
   const armFocus = useDayFocus(daysRef, focusKey, viewIdx);
 
   const uid = useId();
-  const dayHoverId = 'drp-hover-' + uid;
-  const presetHoverId = 'drp-preset-hover-' + uid;
+  const gridGlide = useGlide(daysRef);
+  const presetGlide = useGlide(presetsRef);
   const capLoRef = useSharedFlip<HTMLSpanElement>('drp-cap-lo-' + uid, { timing: UIMotion.t.settle });
   const capHiRef = useSharedFlip<HTMLSpanElement>('drp-cap-hi-' + uid, { timing: UIMotion.t.settle });
 
@@ -219,17 +219,12 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
         aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
         aria-selected={isLo || isHi || undefined}
         onClick={() => pickDay(key)}
-        onPointerEnter={() => setHoverKey(key)}
+        onPointerEnter={(e) => {
+          setHoverKey(key);
+          if (!anchor && !disabled) gridGlide.enter(e.currentTarget);
+          else gridGlide.leave();
+        }}
       >
-        {hoverKey === key && !anchor && !disabled && (
-          <Motion
-            as="span"
-            layoutId={dayHoverId}
-            layout={{ timing: UIMotion.t.settle }}
-            className="dtp__hover"
-            aria-hidden="true"
-          />
-        )}
         {band ? <span className={bandCls.join(' ')} aria-hidden="true"></span> : null}
         {loCap ? (
           <span className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')} aria-hidden="true" ref={capLoRef}></span>
@@ -313,31 +308,33 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
           className="drp__presets"
           role="group"
           aria-label="Quick ranges"
-          onPointerLeave={() => setHoveredPreset(null)}
+          ref={presetsRef}
+          onPointerLeave={presetGlide.leave}
         >
           {presets.map((p) => (
             <button
               key={p.id}
               type="button"
               className={'drp__preset' + (presetActive(p) ? ' is-active' : '')}
-              onPointerEnter={() => setHoveredPreset(p.id)}
+              onPointerEnter={(e) => presetGlide.enter(e.currentTarget)}
               onClick={() => applyPreset(p)}
             >
-              {hoveredPreset === p.id && (
-                <Motion
-                  as="span"
-                  layoutId={presetHoverId}
-                  layout={{ timing: UIMotion.t.settle }}
-                  className="drp__presetGlide"
-                  aria-hidden="true"
-                />
-              )}
               {p.label}
             </button>
           ))}
+          <GlidePill className="drp__presetGlide" glide={presetGlide} />
         </div>
-        <div className="drp__months" ref={daysRef} onKeyDown={onGridKeyDown} onPointerLeave={() => setHoverKey(anchor)}>
+        <div
+          className="drp__months"
+          ref={daysRef}
+          onKeyDown={onGridKeyDown}
+          onPointerLeave={() => {
+            if (anchor) setHoverKey(anchor);
+            gridGlide.leave();
+          }}
+        >
           {months === 2 ? [renderMonth(0, true, false), renderMonth(1, false, true)] : renderMonth(0, true, true)}
+          <GlidePill className="dtp__hover" glide={gridGlide} />
         </div>
       </div>
       <div className="drp__foot">

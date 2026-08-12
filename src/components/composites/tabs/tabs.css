@@ -1,8 +1,8 @@
 /* tabs.css - line tabs for VIEW SWITCHING (overview / activity / settings), sitting on a
    hairline baseline. NOT a form control: pick Segmented control for 2-3 filter options.
 
-   Anatomy:  .tabs > .tabs__list[role=tablist] > .tab* + .tabs__ink
-             .tab > .tab__pad ( .tab__hover? + Icon? + .tab__label + .tab__count? )
+   Anatomy:  .tabs > .tabs__list[role=tablist] > .tab__hover? + .tab* + .tabs__ink
+             .tab > .tab__pad ( Icon? + .tab__label + .tab__count? )
    States:   :hover - :active - :focus-visible - :disabled - .is-selected
 
    Two motions, both driven from Tabs.tsx - nothing here transitions them:
@@ -10,8 +10,8 @@
      destination travels first, then the trailing edge settles. animate() keyframes on
      x + measured width (destination width is unknowable to transforms; scaleX would
      distort the radius).
-   - the gliding hover: a pill filling the hovered pad, sharing one layoutId (Motion),
-     so it FLIPs from the previously hovered pad and springs between them.
+   - the gliding hover: one persistent pill (../motion/glide) that fades in under the
+     first tab touched, springs between pads, and fades out where it rests on leave.
    Label color, icon weight and press dip remain trivial-tier CSS. */
 
 /* -- Shell - owns the full-width baseline ----------------------------------
@@ -87,8 +87,8 @@
 }
 
 .tab__pad {
-  position: relative; /* containing block for the hover pill, and z-index:auto so
-                             the pill's z:-1 escapes to the scroller */
+  position: relative; /* positioned so every pad paints above the shared glide
+                             pill (z-index 0, first child of the list) */
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -116,12 +116,6 @@
 .tab:active:not(:disabled) .tab__pad {
   background: var(--neutral-wash-press);
   transform: translateY(var(--space-px));
-}
-
-/* the press transform makes the pad a stacking context, which lifts the z:-1
-   pill above the pad's own background - so the pill carries the press fill */
-.tab:active:not(:disabled) .tab__hover {
-  background: var(--neutral-wash-press);
 }
 .tab.is-selected .tab__pad,
 .tab.is-selected:hover:not(:disabled) .tab__pad {
@@ -159,19 +153,20 @@
 }
 
 /* -- The gliding hover ------------------------------------------------------
-   Fills the hovered tab's pad; a shared layoutId (Motion) FLIPs it from the
-   previously hovered pad, so it travels. z-index -1 escapes the pad (which is
-   position:relative, z-index:auto) and resolves in the scroller, keeping the
-   pill under every pad's own background in both travel directions.
-   Nothing transitions here. */
+   One persistent pill, first child of the scroller (../motion/glide writes
+   x/y/width/height/opacity inline; coordinates include scrollLeft, so it
+   scrolls with its tab). z-index 0 + DOM order keep it under every tab's
+   positioned pad in both travel directions. Nothing transitions here. */
 .tab__hover {
+  opacity: 0;
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  z-index: 0;
   border-radius: var(--radius-md);
   background: var(--neutral-wash);
   pointer-events: none;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 /* -- The ink ---------------------------------------------------------------

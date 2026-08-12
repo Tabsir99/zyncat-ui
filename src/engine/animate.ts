@@ -18,6 +18,7 @@ export interface Layer {
   width?: Size[];
   height?: Size[];
   timing?: Timing;
+  composite?: CompositeOperation;
 }
 
 const RESET: Record<string, string> = { translate: '0px 0px', scale: '1' };
@@ -103,9 +104,10 @@ function play(el: HTMLElement, layer: Layer): Playback | null {
     delay: resolved.delay,
     easing: resolved.easing,
     fill: timing?.fill ?? 'both',
+    composite: layer.composite,
   });
   animation.playbackRate = 1 / clock.scale;
-  claim(el, keys, animation);
+  if (layer.composite !== 'add') claim(el, keys, animation);
 
   const finished = animation.finished.then(
     (): void => {
