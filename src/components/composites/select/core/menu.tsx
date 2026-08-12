@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
-import { animate, type Layer } from '../../../../engine';
+import type { Layer } from '../../../../engine';
 import { Presence } from '../../../../motion/presence';
 import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
 import { resolveMotionTiming } from '../../../../motion/motion-timing';
@@ -19,18 +19,11 @@ function selectMenuLayers(animation: DisableableAnimation | undefined, dir: 'ope
   const fade = (d: MotionTransition) => ({ duration: d.duration === 0 ? 0 : UIMotion.dur.fast, ease: d.ease });
   return dir === 'open'
     ? [
-        {
-          translate: [
-            [0, -6],
-            [0, 0],
-          ],
-          scale: [0.96, 1],
-          timing: t,
-        },
+        { y: [-6, 0], scale: [0.96, 1], timing: t },
         { opacity: [0, 1], timing: fade(t) },
       ]
     : [
-        { translate: [[0, -6]], scale: [0.96], timing: t },
+        { y: [-6], scale: [0.96], timing: t },
         { opacity: [0], timing: fade(t) },
       ];
 }
@@ -79,8 +72,8 @@ export function SelectMenu({ open, menuId, close, triggerRef, multiple, animatio
     <OverlayPortal>
       <Presence
         style={{ display: 'contents' }}
-        enter={(el) => animate(el, ...selectMenuLayers(animation, 'open'))}
-        exit={(el) => animate(el, ...selectMenuLayers(animation, 'close'))}
+        enter={selectMenuLayers(animation, 'open')}
+        exit={selectMenuLayers(animation, 'close')}
       >
         {open && (
           <MenuSurface key="menu" menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple}>

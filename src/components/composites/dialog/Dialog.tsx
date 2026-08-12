@@ -170,21 +170,9 @@ export function Dialog({
         <Presence
           style={{ display: 'contents' }}
           enter={(el) =>
-            ovModalPlays(el, 'open', [
-              {
-                translate: [
-                  [0, 6],
-                  [0, 0],
-                ],
-                scale: [0.98, 1],
-                opacity: [0, 1],
-                timing: timings.open,
-              },
-            ])
+            ovModalPlays(el, 'open', [{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }])
           }
-          exit={(el) =>
-            ovModalPlays(el, 'close', [{ translate: [[0, 6]], scale: [0.98], opacity: [0], timing: timings.close }])
-          }
+          exit={(el) => ovModalPlays(el, 'close', [{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }])}
         >
           {isOpen && (
             <ModalShell

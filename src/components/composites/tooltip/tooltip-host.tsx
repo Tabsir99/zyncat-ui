@@ -88,7 +88,7 @@ function TipSurface({ a, box }: { a: ActivePayload; box: RenderedBox }) {
       settled.current = true;
       return;
     }
-    animate(el, { translate: [[box.x, box.y]], width: [box.w], height: [box.h], timing: SM.t.layout });
+    animate(el, { x: [box.x], y: [box.y], width: [box.w], height: [box.h], timing: SM.t.layout });
   }, [box.x, box.y, box.w, box.h]);
 
   useLayoutEffect(() => {
@@ -154,13 +154,7 @@ export function TooltipHost() {
           return animate(
             el,
             { width: [at.box.w], height: [at.box.h], timing: { duration: 0 } },
-            {
-              translate: [
-                [at.box.x + at.off.x, at.box.y + at.off.y],
-                [at.box.x, at.box.y],
-              ],
-              timing: SM.t.layout,
-            },
+            { x: [at.box.x + at.off.x, at.box.x], y: [at.box.y + at.off.y, at.box.y], timing: SM.t.layout },
             { opacity: [0, 1], scale: [0.96, 1], timing: SM.t.enter },
           );
         }}
@@ -168,7 +162,8 @@ export function TooltipHost() {
           const at = shown.current;
           if (!at) return null;
           return animate(el, {
-            translate: [[at.box.x + at.off.x, at.box.y + at.off.y]],
+            x: [at.box.x + at.off.x],
+            y: [at.box.y + at.off.y],
             opacity: [0],
             scale: [0.96],
             timing: { duration: SM.dur.fast, ease: SM.ease.exit },

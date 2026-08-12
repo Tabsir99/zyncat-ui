@@ -10,11 +10,18 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { flip, measure, type Box, type Playback, type Timing } from '../engine';
+import { animate, flip, measure, type Box, type Layer, type Playback, type Timing } from '../engine';
 
 export type Plays = Playback | Playback[] | null | undefined | void;
+export type Motion = Layer | Layer[] | ((el: HTMLElement) => Plays);
 
 const toList = (plays: Plays): Playback[] => (!plays ? [] : Array.isArray(plays) ? plays : [plays]);
+
+const run = (motion: Motion | undefined, el: HTMLElement): Playback[] => {
+  if (!motion) return [];
+  if (typeof motion === 'function') return toList(motion(el));
+  return [Array.isArray(motion) ? animate(el, ...motion) : animate(el, motion)];
+};
 
 const allSettled = (plays: Playback[]): Promise<void> =>
   plays.length ? Promise.all(plays.map((play) => play.finished)).then((): void => {}) : Promise.resolve();
@@ -39,9 +46,9 @@ export interface PresenceProps {
   /** Animate the children already present on first paint. @default true */
   initial?: boolean;
   /** Plays when a child is added. */
-  enter?: (el: HTMLElement) => Plays;
+  enter?: Motion;
   /** Plays when a child is removed; it stays mounted until these finish. */
-  exit?: (el: HTMLElement) => Plays;
+  exit?: Motion;
   /** Reflow surviving children with FLIP at this timing. */
   flip?: Timing | false;
   /** Tag for the container element this renders. @default 'div' */
@@ -72,15 +79,12 @@ export function Presence({
 
   useLayoutEffect(() => {
     setShown((previous) => {
-      const fresh = new Map(incoming.map((entry) => [entry.key, entry.node]));
-      const merged: Entry[] = [];
-      for (const entry of previous) {
-        const replacement = fresh.get(entry.key);
-        if (replacement) merged.push({ key: entry.key, node: replacement, exiting: false });
-        else merged.push(entry.exiting ? entry : { ...entry, exiting: true });
-      }
-      const seen = new Set(previous.map((entry) => entry.key));
-      for (const entry of incoming) if (!seen.has(entry.key)) merged.push(entry);
+      const live = new Set(incoming.map((entry) => entry.key));
+      const merged: Entry[] = incoming.map((entry) => ({ ...entry }));
+      previous.forEach((entry, index) => {
+        if (live.has(entry.key)) return;
+        merged.splice(index, 0, entry.exiting ? entry : { ...entry, exiting: true });
+      });
       return merged;
     });
   }, [signature]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -96,6 +100,15 @@ export function Presence({
       playing.current.delete(key);
     };
 
+    const settledBoxes = boxes.current;
+    if (flipTiming) {
+      const nextBoxes = new Map<string, Box>();
+      shown.forEach((entry, index) => {
+        if (els[index]) nextBoxes.set(entry.key, measure(els[index]));
+      });
+      boxes.current = nextBoxes;
+    }
+
     shown.forEach((entry, index) => {
       const el = els[index];
       if (!el) return;
@@ -104,8 +117,8 @@ export function Presence({
       if (entry.exiting) {
         if (at === 'out') return;
         phase.current.set(entry.key, 'out');
+        const plays = run(playExit, el);
         stop(entry.key);
-        const plays = toList(playExit?.(el));
         playing.current.set(entry.key, plays);
         allSettled(plays).then(() => {
           if (phase.current.get(entry.key) !== 'out') return;
@@ -121,17 +134,12 @@ export function Presence({
         phase.current.set(entry.key, 'in');
         stop(entry.key);
         const skip = !initial && bornAtMount.current.has(entry.key);
-        if (!skip && playEnter) playing.current.set(entry.key, toList(playEnter(el)));
+        if (!skip) playing.current.set(entry.key, run(playEnter, el));
         return;
       }
 
-      const was = boxes.current.get(entry.key);
+      const was = settledBoxes.get(entry.key);
       if (flipTiming && was) flip(el, was, { scale: false, timing: flipTiming });
-    });
-
-    if (!flipTiming) return;
-    shown.forEach((entry, index) => {
-      if (els[index]) boxes.current.set(entry.key, measure(els[index]));
     });
   }, [shown, initial]);
 

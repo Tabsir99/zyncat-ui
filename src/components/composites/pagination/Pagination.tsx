@@ -70,14 +70,7 @@ export function Pagination({
     const dir = from > pf ? 1 : -1;
     shownRef.current = range;
     if (rangeRef.current)
-      animate(rangeRef.current, {
-        translate: [
-          [dir * pgnTravel(), 0],
-          [0, 0],
-        ],
-        opacity: [0, 1],
-        timing: UIMotion.t.enter,
-      });
+      animate(rangeRef.current, { x: [dir * pgnTravel(), 0], opacity: [0, 1], timing: UIMotion.t.enter });
   }, [from, to]);
 
   useEffect(() => {

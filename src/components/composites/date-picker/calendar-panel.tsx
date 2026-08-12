@@ -71,10 +71,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     if (prev == null || prev === viewIdx || !el) return;
     const dir = viewIdx > prev ? 1 : -1;
     animate(el, {
-      translate: [
-        [dir * 16, 0],
-        [0, 0],
-      ],
+      x: [dir * 16, 0],
       opacity: [0, 1],
       timing: { duration: UIMotion.t.enter.duration, ease: UIMotion.t.enter.ease },
     });

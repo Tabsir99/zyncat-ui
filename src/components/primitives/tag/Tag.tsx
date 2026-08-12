@@ -2,7 +2,6 @@
 
 import './tag.css';
 import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
-import { animate } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
@@ -45,7 +44,7 @@ export interface TagProps extends TagOwnProps {
 interface TagGroupOwnProps {
   /** Accessible name for the group (role="group"). */
   label?: string;
-  /** The `Tag`s; wrapped in `AnimatePresence` so adds/removes animate. */
+  /** The `Tag`s; adds, removals and reflow are animated. */
   children?: ReactNode;
   /** Extra class(es) merged onto the group wrapper. */
   className?: string;
@@ -114,8 +113,8 @@ export function TagGroup({ label, className = '', style, children, htmlProps, an
       aria-label={label}
       initial={false}
       flip={layout}
-      enter={(el) => animate(el, { opacity: [0, 1], scale: [0.9, 1], timing: step.open })}
-      exit={(el) => animate(el, { opacity: [1, 0], scale: [1, 0.9], timing: step.close })}
+      enter={{ opacity: [0, 1], scale: [0.9, 1], timing: step.open }}
+      exit={{ opacity: [1, 0], scale: [1, 0.9], timing: step.close }}
     >
       {children}
     </Presence>

@@ -2,7 +2,6 @@
 
 import './alert.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
-import { animate } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
@@ -96,8 +95,14 @@ export function Alert({
   return (
     <Presence
       initial={false}
-      enter={(el) => animate(el, { height: [0, 'auto'], timing: h.open }, { opacity: [0, 1], timing: o.open })}
-      exit={(el) => animate(el, { height: ['auto', 0], timing: h.close }, { opacity: [1, 0], timing: o.close })}
+      enter={[
+        { height: [0, 'auto'], timing: h.open },
+        { opacity: [0, 1], timing: o.open },
+      ]}
+      exit={[
+        { height: ['auto', 0], timing: h.close },
+        { opacity: [1, 0], timing: o.close },
+      ]}
     >
       {isOpen && (
         <div key="alert-shell" className="alert-shell">

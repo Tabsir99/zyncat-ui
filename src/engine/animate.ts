@@ -11,7 +11,8 @@ export type Vec = [number, number];
 export type Size = number | 'auto';
 
 export interface Layer {
-  translate?: Vec[];
+  x?: number[];
+  y?: number[];
   scale?: number[] | Vec[];
   opacity?: number[];
   width?: Size[];
@@ -32,6 +33,10 @@ function measureAuto(el: HTMLElement, key: 'width' | 'height'): number {
   return measured;
 }
 
+function held(list: number[], index: number): number {
+  return list[Math.min(index, list.length - 1)];
+}
+
 function currentValue(el: HTMLElement, key: string): string {
   const raw = getComputedStyle(el).getPropertyValue(key).trim();
   return raw && raw !== 'none' ? raw : RESET[key];
@@ -41,7 +46,12 @@ function compile(el: HTMLElement, layer: Layer) {
   const frames: Record<string, string[]> = {};
   const autoKeys: string[] = [];
 
-  if (layer.translate) frames.translate = layer.translate.map(([x, y]) => `${x}px ${y}px`);
+  if (layer.x?.length || layer.y?.length) {
+    const x = layer.x?.length ? layer.x : [0];
+    const y = layer.y?.length ? layer.y : [0];
+    const count = Math.max(x.length, y.length);
+    frames.translate = Array.from({ length: count }, (_, i) => `${held(x, i)}px ${held(y, i)}px`);
+  }
   if (layer.scale) frames.scale = layer.scale.map((v) => (typeof v === 'number' ? String(v) : `${v[0]} ${v[1]}`));
   if (layer.opacity) frames.opacity = layer.opacity.map(String);
 
@@ -59,13 +69,14 @@ function compile(el: HTMLElement, layer: Layer) {
 
 const owned = new WeakMap<HTMLElement, Map<string, Animation>>();
 
-function claim(el: HTMLElement, keys: string[], animation: Animation): void {
+function claim(el: HTMLElement, keys: string[], animation: Animation | null): void {
   const map = owned.get(el) ?? new Map<string, Animation>();
   owned.set(el, map);
   for (const key of keys) {
     const previous = map.get(key);
     if (previous && previous !== animation) previous.cancel();
-    map.set(key, animation);
+    if (animation) map.set(key, animation);
+    else map.delete(key);
   }
 }
 
@@ -78,6 +89,7 @@ function play(el: HTMLElement, layer: Layer): Playback | null {
   const resolved = resolveTiming(timing);
 
   if (resolved.duration <= 0) {
+    claim(el, keys, null);
     if (timing?.fill !== 'none') for (const key of keys) el.style.setProperty(key, frames[key][frames[key].length - 1]);
     return null;
   }

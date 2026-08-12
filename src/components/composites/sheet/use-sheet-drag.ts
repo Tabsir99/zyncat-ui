@@ -117,7 +117,7 @@ function useSheetDrag({
       requestClose();
       return;
     }
-    animate(el, { translate: [[0, 0]], scale: [[1, 1]], timing: SM.t.settle });
+    animate(el, { x: [0], y: [0], scale: [[1, 1]], timing: SM.t.settle });
     const scrim = sheetScrim(el);
     if (scrim) animate(scrim, { opacity: [1], timing: SM.t.settle });
   }

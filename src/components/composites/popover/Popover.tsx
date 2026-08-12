@@ -2,7 +2,6 @@
 
 import './popover.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
-import { animate } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
@@ -124,8 +123,8 @@ export function Popover({
       <OverlayPortal>
         <Presence
           style={{ display: 'contents' }}
-          enter={(el) => animate(el, { opacity: [0, 1], scale: [0.96, 1], timing: timings.open })}
-          exit={(el) => animate(el, { opacity: [0], scale: [0.96], timing: timings.close })}
+          enter={{ opacity: [0, 1], scale: [0.96, 1], timing: timings.open }}
+          exit={{ opacity: [0], scale: [0.96], timing: timings.close }}
         >
           {open && (
             <PopoverPanel

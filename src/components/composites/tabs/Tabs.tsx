@@ -74,7 +74,6 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
   const listRef = useRef<HTMLDivElement>(null);
   const inkRef = useRef<HTMLSpanElement>(null);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const animRef = useRef<ReturnType<typeof animate> | null>(null);
   const placedRef = useRef(false);
   const valueRef = useRef(value);
   valueRef.current = value;
@@ -86,7 +85,6 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
       ink = inkRef.current;
     const el = valueRef.current != null ? tabRefs.current[valueRef.current] : null;
     if (!list || !ink) return;
-    if (animRef.current) animRef.current.stop();
     if (!el) {
       ink.style.opacity = '0';
       placedRef.current = false;
@@ -96,8 +94,7 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     ink.style.opacity = '1';
 
     if (!animated || !placedRef.current || SM.reduced) {
-      ink.style.translate = next.x + 'px 0px';
-      ink.style.width = next.w + 'px';
+      animate(ink, { x: [next.x], width: [next.w], timing: { duration: 0 } });
     } else {
       const lr = list.getBoundingClientRect();
       const ir = ink.getBoundingClientRect();
@@ -106,12 +103,8 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
         const dir = next.x + next.w / 2 >= cur.x + cur.w / 2 ? 1 : -1;
         const span = dir === 1 ? next.x + next.w - cur.x : cur.x + cur.w - next.x;
         const lead = dir === 1 ? cur.x : next.x;
-        animRef.current = animate(ink, {
-          translate: [
-            [cur.x, 0],
-            [lead, 0],
-            [next.x, 0],
-          ],
+        animate(ink, {
+          x: [cur.x, lead, next.x],
           width: [cur.w, span, next.w],
           timing: { duration: SM.dur.slow, times: [0, 0.55, 1], ease: [SM.ease.standard, SM.ease.entrance] },
         });
@@ -262,13 +255,7 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
     const el = innerRef.current;
     if (!el) return;
     enterRef.current?.stop();
-    enterRef.current = animate(el, {
-      translate: [
-        [dir * TABS_ENTER_X, 4],
-        [0, 0],
-      ],
-      timing: enter,
-    });
+    enterRef.current = animate(el, { x: [dir * TABS_ENTER_X, 0], y: [4, 0], timing: enter });
     return () => enterRef.current?.stop();
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 

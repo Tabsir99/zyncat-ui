@@ -2,7 +2,7 @@
 
 import './sheet.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import type { Vec } from '../../../engine';
+import type { Layer } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
@@ -47,10 +47,11 @@ export interface SheetProps {
   children: ReactNode | ((api: { close: () => void }) => ReactNode);
 }
 
-function sheetSlotSpan(layer: HTMLElement, side: 'right' | 'bottom'): Vec {
+function sheetSlide(layer: HTMLElement, side: 'right' | 'bottom', at: number[]): Layer {
   const slot = layer.querySelector<HTMLElement>('.overlay-slot');
   const span = slot ? sheetSpan(slot, side) : 0;
-  return side === 'bottom' ? [0, span] : [span, 0];
+  const frames = at.map((ratio) => ratio * span);
+  return side === 'bottom' ? { y: frames } : { x: frames };
 }
 
 function SheetShell({
@@ -115,13 +116,11 @@ export function Sheet({
         <Presence
           style={{ display: 'contents' }}
           enter={(el) => {
-            const plays = ovModalPlays(el, 'open', [
-              { translate: [sheetSlotSpan(el, side), [0, 0]], timing: timings.open },
-            ]);
+            const plays = ovModalPlays(el, 'open', [{ ...sheetSlide(el, side, [1, 0]), timing: timings.open }]);
             for (const play of plays) play.finished.then(() => play.stop());
             return plays;
           }}
-          exit={(el) => ovModalPlays(el, 'close', [{ translate: [sheetSlotSpan(el, side)], timing: timings.close }])}
+          exit={(el) => ovModalPlays(el, 'close', [{ ...sheetSlide(el, side, [1]), timing: timings.close }])}
         >
           {open && (
             <SheetShell

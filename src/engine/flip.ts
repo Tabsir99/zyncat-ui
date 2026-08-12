@@ -13,7 +13,7 @@ const SCALE_EPSILON = 0.01;
 
 export function measure(el: HTMLElement): Box {
   const rect = el.getBoundingClientRect();
-  return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+  return { left: rect.left + window.scrollX, top: rect.top + window.scrollY, width: rect.width, height: rect.height };
 }
 
 const shared = new Map<string, Box>();
@@ -48,13 +48,7 @@ export function flip(el: HTMLElement, from: Box, options: FlipOptions = {}): Pla
   const scaled = Math.abs(sx - 1) > SCALE_EPSILON || Math.abs(sy - 1) > SCALE_EPSILON;
   if (!moved && !scaled) return null;
 
-  const layer: Layer = {
-    translate: [
-      [dx, dy],
-      [0, 0],
-    ],
-    timing: { ...options.timing, fill: 'none' },
-  };
+  const layer: Layer = { x: [dx, 0], y: [dy, 0], timing: { ...options.timing, fill: 'none' } };
   if (scaled)
     layer.scale = [
       [sx, sy],

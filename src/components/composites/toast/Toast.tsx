@@ -57,13 +57,7 @@ function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
       const shake = ref.current.firstElementChild as HTMLElement | null;
       if (!shake) return;
       const fall = animate(shake, {
-        translate: [
-          [0, 0],
-          [-7, 0],
-          [5, 0],
-          [-2, 0],
-          [0, 0],
-        ],
+        x: [0, -7, 5, -2, 0],
         timing: { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base },
       });
       fall.finished.then(() => fall.stop());
@@ -120,7 +114,7 @@ function ToastItem({
     if (settled.current) {
       animate(
         el,
-        { translate: [[0, y]], scale: [scale], height: [frameHeight ?? 'auto'], timing: SM.t.settle },
+        { y: [y], scale: [scale], height: [frameHeight ?? 'auto'], timing: SM.t.settle },
         { opacity: [hidden ? 0 : 1], timing: SM.t.enter },
       );
       return;
@@ -128,14 +122,7 @@ function ToastItem({
     settled.current = true;
     animate(
       el,
-      {
-        translate: [
-          [0, isTop ? -24 : 24],
-          [0, y],
-        ],
-        scale: [0.97, scale],
-        timing: SM.t.settle,
-      },
+      { y: [isTop ? -24 : 24, y], scale: [0.97, scale], timing: SM.t.settle },
       { opacity: [0, hidden ? 0 : 1], timing: SM.t.enter },
     );
   }, [offset, depth, hidden, frameHeight, isTop]);
@@ -151,13 +138,12 @@ function ToastItem({
       },
       onEnd: (info) => {
         if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-          animate(inner, {
-            translate: [[420, 0]],
-            timing: { duration: SM.dur.fast, ease: SM.ease.exit },
-          }).finished.then(() => store.dismiss(t.id));
+          animate(inner, { x: [420], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }).finished.then(() =>
+            store.dismiss(t.id),
+          );
           return;
         }
-        const back = animate(inner, { translate: [[0, 0]], timing: SM.t.settle });
+        const back = animate(inner, { x: [0], timing: SM.t.settle });
         swipeBack.current = back;
         back.finished.then(() => back.stop());
       },
@@ -313,7 +299,7 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
   return createPortal(
     <Presence
       as="ol"
-      exit={(el) => animate(el, { opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } })}
+      exit={{ opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }}
       {...htmlProps}
       className={
         'toast-viewport' + (paused ? ' is-paused' : '') + (htmlProps?.className ? ' ' + htmlProps.className : '')
