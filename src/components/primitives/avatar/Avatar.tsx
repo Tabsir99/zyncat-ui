@@ -3,6 +3,7 @@
 import './avatar.css';
 import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarShape = 'circle' | 'square';
@@ -35,15 +36,15 @@ export interface AvatarProps extends AvatarOwnProps {
   htmlProps?: Omit<HTMLAttributes<HTMLSpanElement>, keyof AvatarOwnProps> & DataAttributes;
 }
 
-const _PALETTE_SLOTS = 6;
+const PALETTE_SLOTS = 6;
 
-function _hash(str: string) {
+function hashName(str: string) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  return (Math.abs(h) % _PALETTE_SLOTS) + 1;
+  return (Math.abs(h) % PALETTE_SLOTS) + 1;
 }
 
-function _initials(name: string | null, max: number) {
+function initialsOf(name: string | null, max: number) {
   if (!name) return '';
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return '';
@@ -51,7 +52,7 @@ function _initials(name: string | null, max: number) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-function _Silhouette() {
+function Silhouette() {
   return (
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <circle cx="12" cy="8.5" r="3.8" fill="currentColor" />
@@ -76,21 +77,14 @@ export function Avatar({
   const showImg = Boolean(src) && !imgError;
 
   const maxInits = size === 'xs' ? 1 : 2;
-  const inits = _initials(name, maxInits);
-  const slot = paletteIndex ?? (name ? _hash(name) : null);
+  const inits = initialsOf(name, maxInits);
+  const slot = paletteIndex ?? (name ? hashName(name) : null);
 
-  const classes = [
-    'avatar',
-    size !== 'md' ? `avatar--${size}` : '',
-    shape === 'square' ? 'avatar--square' : '',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const cls = cx('avatar', size !== 'md' && `avatar--${size}`, shape === 'square' && 'avatar--square', className);
 
   return (
     <span
-      className={classes}
+      className={cls}
       role={name ? 'img' : undefined}
       aria-label={name || undefined}
       data-palette={!showImg && slot != null ? slot : undefined}
@@ -107,13 +101,13 @@ export function Avatar({
           </span>
         )}
         {!showImg && !icon && inits && (
-          <span className="avatar__initials" aria-hidden="true">
+          <span className="avatar_initialsOf" aria-hidden="true">
             {inits}
           </span>
         )}
         {!showImg && !icon && !inits && (
           <span className="avatar__icon" aria-hidden="true">
-            <_Silhouette />
+            <Silhouette />
           </span>
         )}
       </span>

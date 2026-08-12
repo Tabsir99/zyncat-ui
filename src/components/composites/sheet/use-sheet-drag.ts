@@ -25,22 +25,22 @@ function findScrollable(node: EventTarget | null, stop: HTMLElement | null): HTM
   return null;
 }
 
-function sheetScrim(slot: HTMLElement | null): HTMLElement | null {
-  return slot?.parentElement?.querySelector<HTMLElement>('.overlay-scrim') ?? null;
+function sheetScrim(panel: HTMLElement | null): HTMLElement | null {
+  return panel?.parentElement?.querySelector<HTMLElement>('.overlay-scrim') ?? null;
 }
 
-export function sheetSpan(slot: HTMLElement, side: 'right' | 'bottom'): number {
-  return side === 'bottom' ? slot.offsetHeight : slot.offsetWidth;
+export function sheetSpan(panel: HTMLElement, side: 'right' | 'bottom'): number {
+  return side === 'bottom' ? panel.offsetHeight : panel.offsetWidth;
 }
 
-function useSheetDrag({
+export function useSheetDrag({
   side,
-  slotRef,
+  panelRef,
   enabled,
   requestClose,
 }: {
   side: 'right' | 'bottom';
-  slotRef: RefObject<HTMLElement>;
+  panelRef: RefObject<HTMLElement>;
   enabled: boolean;
   requestClose: () => void;
 }) {
@@ -72,7 +72,7 @@ function useSheetDrag({
     if (e.button !== 0) return;
     const startX = e.clientX,
       startY = e.clientY;
-    const scrollable = findScrollable(e.target, slotRef.current);
+    const scrollable = findScrollable(e.target, panelRef.current);
 
     const onMove = (ev: PointerEvent) => {
       const dx = ev.clientX - startX,
@@ -101,7 +101,7 @@ function useSheetDrag({
   }
 
   function onDrag(info: PanInfo) {
-    const el = slotRef.current;
+    const el = panelRef.current;
     if (!el) return;
     const o = info.offset[axis];
     const span = sheetSpan(el, side);
@@ -110,7 +110,7 @@ function useSheetDrag({
 
   function onDragEnd(info: PanInfo) {
     restoreSelection();
-    const el = slotRef.current;
+    const el = panelRef.current;
     if (!el) return;
     const span = sheetSpan(el, side);
     if (info.offset[axis] > span * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) {
@@ -124,5 +124,3 @@ function useSheetDrag({
 
   return enabled ? { onPointerDown } : {};
 }
-
-export { useSheetDrag };

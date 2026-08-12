@@ -6,6 +6,7 @@ import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface ToggleTagOwnProps {
   /** Chip content; the label shown beside the tick or `icon`. */
@@ -70,12 +71,12 @@ export function ToggleTag({
   const [selected, setSelected] = useControllable(selectedProp, defaultSelected, onChange);
   const toggle = () => setSelected(!selected);
 
-  const classes = ['tag', 'tag--toggle', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
+  const cls = cx('tag', 'tag--toggle', size === 'sm' && 'tag--sm', className);
 
   return (
     <button
       type="button"
-      className={classes}
+      className={cls}
       style={style}
       aria-pressed={selected}
       disabled={disabled}

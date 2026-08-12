@@ -12,9 +12,10 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, type Placement } from './tooltip-store';
+import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, TOOLTIP_DOM_ID, type Placement } from './tooltip-store';
 import { TooltipHost } from './tooltip-host';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export interface TooltipProps {
   /** The hint - a string or small node; never interactive content. */
@@ -29,7 +30,8 @@ export interface TooltipProps {
   openDelay?: number;
   /** ms the bubble lingers after leaving (bridges moving to a neighbour). Default 140. */
   closeDelay?: number;
-  /** Stable id for this trigger's store entry + `aria-describedby`. Auto-generated when omitted. */
+  /** Stable id for this trigger's store entry - lets overlapping triggers race safely under
+   *  the one shared tooltip host. Not rendered to the DOM. Auto-generated when omitted. */
   id?: string;
   /** Exactly one element. */
   children: ReactElement;
@@ -37,7 +39,7 @@ export interface TooltipProps {
   htmlProps?: HTMLAttributes<HTMLSpanElement> & DataAttributes;
 }
 
-function Tooltip({
+export function Tooltip({
   content,
   shortcut = null,
   placement = 'top',
@@ -68,7 +70,7 @@ function Tooltip({
     clearTimeout(openTimer.current);
     const el = anchorEl();
     if (!el) return;
-    el.setAttribute('aria-describedby', 'pds-tooltip');
+    el.setAttribute('aria-describedby', TOOLTIP_DOM_ID);
     const open = () =>
       store.open({ id: myId, content, shortcut, placement, rect: () => anchorEl()!.getBoundingClientRect() });
     if (immediate || store.isWarm()) open();
@@ -93,7 +95,7 @@ function Tooltip({
       <span
         {...htmlProps}
         ref={wrapRef}
-        className={htmlProps?.className ? 'tooltip-anchor ' + htmlProps.className : 'tooltip-anchor'}
+        className={cx('tooltip-anchor', htmlProps?.className)}
         onPointerEnter={onEnter}
         onPointerLeave={hide}
         onPointerDown={hide}
@@ -106,5 +108,3 @@ function Tooltip({
     </Fragment>
   );
 }
-
-export { Tooltip };

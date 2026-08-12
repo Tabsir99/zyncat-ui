@@ -9,6 +9,8 @@ import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
+import type { FieldRequirementProps } from '../input/field-chrome';
 
 const SM = UIMotion;
 
@@ -25,7 +27,7 @@ export interface RadioOption {
   disabled?: boolean;
 }
 
-interface RadioGroupOwnProps {
+interface RadioGroupOwnProps extends FieldRequirementProps {
   /** Shared radio name - ties the options into one keyboard group. Required. */
   name: string;
   /** The selected value (controlled). */
@@ -38,10 +40,6 @@ interface RadioGroupOwnProps {
   helper?: ReactNode;
   /** Group-level error (e.g. required). Sets the error state + reveals the message. */
   error?: ReactNode;
-  /** Show a danger `*` after the label. */
-  required?: boolean;
-  /** Show a muted "(optional)" after the label. */
-  optional?: boolean;
   /** Skin: quiet rows (default) or selectable cards. */
   variant?: 'rows' | 'cards';
   /** Lay options out in a line instead of a stack. */
@@ -63,7 +61,7 @@ export interface RadioGroupProps extends RadioGroupOwnProps {
   htmlProps?: Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, keyof RadioGroupOwnProps> & DataAttributes;
 }
 
-function RadioGroup({
+export function RadioGroup({
   name,
   value,
   onChange,
@@ -89,16 +87,14 @@ function RadioGroup({
   const fillRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-fill', { timing: SM.t.layout });
   const cardHoverRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-hover', { scale: false, timing: SM.t.layout });
 
-  const cls = [
+  const cls = cx(
     'rg',
-    variant === 'cards' ? 'rg--cards' : '',
-    orientation === 'horizontal' ? 'rg--horizontal' : '',
-    size === 'sm' ? 'rg--sm' : '',
-    error ? 'is-error' : '',
+    variant === 'cards' && 'rg--cards',
+    orientation === 'horizontal' && 'rg--horizontal',
+    size === 'sm' && 'rg--sm',
+    error && 'is-error',
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <fieldset className={cls} style={style} aria-invalid={error ? true : undefined} {...htmlProps}>
@@ -132,9 +128,7 @@ function RadioGroup({
           return (
             <label
               key={opt.value}
-              className={['rg-opt', selected ? 'is-selected' : '', isDisabled ? 'is-disabled' : '']
-                .filter(Boolean)
-                .join(' ')}
+              className={cx('rg-opt', selected && 'is-selected', isDisabled && 'is-disabled')}
               onPointerEnter={
                 isDisabled
                   ? undefined
@@ -186,5 +180,3 @@ function RadioGroup({
     </fieldset>
   );
 }
-
-export { RadioGroup };

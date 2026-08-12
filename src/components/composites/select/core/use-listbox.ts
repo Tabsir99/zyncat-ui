@@ -49,14 +49,14 @@ export function useListbox({
   const show = () => {
     if (!disabled && !loading) setOpen(true);
   };
-  const hide = () => setOpen(false);
+  const requestClose = () => setOpen(false);
   const returnFocus = () => triggerRef.current && triggerRef.current.focus();
 
   function commit(opt: SelectOption) {
     if (!opt || opt.disabled) return;
     onCommit(opt);
     if (closeOnCommit) {
-      hide();
+      requestClose();
       returnFocus();
     }
   }
@@ -120,7 +120,7 @@ export function useListbox({
     switch (e.key) {
       case 'Escape':
         e.preventDefault();
-        hide();
+        requestClose();
         returnFocus();
         break;
       case 'ArrowDown':
@@ -144,7 +144,7 @@ export function useListbox({
         if (activeIdx >= 0) commit(navItems[activeIdx]);
         break;
       case 'Tab':
-        hide();
+        requestClose();
         break;
       default:
         if (!searchable && e.key.length === 1 && !e.metaKey && !e.ctrlKey) typeAhead(e.key);
@@ -173,7 +173,7 @@ export function useListbox({
     glide,
     isSelected,
     show,
-    hide,
+    requestClose,
     commit,
     activeIdx,
     setActiveIdx,

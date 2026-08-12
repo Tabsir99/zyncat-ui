@@ -6,7 +6,8 @@ import { createPortal } from 'react-dom';
 import { Button } from '../primitives/button/Button';
 import { Checkbox } from '../primitives/checkbox/Checkbox';
 import { Collapse } from '../primitives/collapse/Collapse';
-import { motionSlowmo, type SlowmoState } from './slowmo-engine';
+import { motionSlowmo, shouldBeActive, type SlowmoState } from './slowmo-engine';
+import { cx } from '../internal/utils/cx';
 
 export type MotionDevtoolsPlacement = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -101,10 +102,8 @@ export function MotionDevtools({
 
   if (!mounted) return null;
 
-  const active = snap.factor > 1 || snap.paused;
-  const rootClass = ['mdt', `mdt--${placement}`, active ? 'mdt--active' : '', snap.paused ? 'mdt--paused' : '']
-    .filter(Boolean)
-    .join(' ');
+  const active = shouldBeActive(snap.factor, snap.paused);
+  const rootClass = cx('mdt', `mdt--${placement}`, active && 'mdt--active', snap.paused && 'mdt--paused');
 
   const setFactor = (factor: number) => motionSlowmo.set({ factor, paused: false });
   const fill = `${((Math.min(snap.factor, maxFactor) - 1) / Math.max(1, maxFactor - 1)) * 100}%`;

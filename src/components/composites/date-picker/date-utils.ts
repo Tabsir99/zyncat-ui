@@ -15,16 +15,16 @@ export const MONTHS: string[] = [
 export const DOW: string[] = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
 export const pad = (n: number): string => String(n).padStart(2, '0');
-export const key = (d: Date): string => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+export const toKey = (d: Date): string => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
 export function parse(k: string): Date {
   const p = k.split('-').map(Number);
   return new Date(p[0], p[1] - 1, p[2]);
 }
-export const today = (): string => key(new Date());
+export const today = (): string => toKey(new Date());
 export const add = (k: string, days: number): string => {
   const d = parse(k);
   d.setDate(d.getDate() + days);
-  return key(d);
+  return toKey(d);
 };
 export const col = (d: Date): number => (d.getDay() + 6) % 7;
 

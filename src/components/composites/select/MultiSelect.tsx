@@ -7,6 +7,7 @@ import { CheckGlyph } from '../../primitives/checkbox/check-glyph';
 import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export type { SelectOption, SelectGroup } from './core';
 
@@ -21,8 +22,8 @@ export interface MultiSelectProps {
   onChange?: (value: string[], toggled: SelectOption) => void;
   /** Trigger text when nothing is selected. @default 'Select options' */
   placeholder?: string;
-  /** Control height. @default 'default' */
-  size?: 'sm' | 'default' | 'lg';
+  /** Control height. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
   /** Disabled - trigger is inert and the menu cannot open. @default false */
   disabled?: boolean;
   /** Danger ring + border. @default false */
@@ -59,7 +60,7 @@ export function MultiSelect({
   defaultValue = [],
   onChange,
   placeholder = 'Select options',
-  size = 'default',
+  size = 'md',
   disabled = false,
   invalid = false,
   loading = false,
@@ -98,9 +99,9 @@ export function MultiSelect({
   return (
     <div
       {...htmlProps}
-      className={htmlProps?.className ? 'select ' + htmlProps.className : 'select'}
+      className={cx('select', htmlProps?.className)}
       data-multiple="true"
-      data-size={size === 'default' ? undefined : size}
+      data-size={size}
       data-open={lb.open ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}
       data-invalid={invalid ? 'true' : undefined}

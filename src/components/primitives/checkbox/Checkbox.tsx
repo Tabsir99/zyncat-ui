@@ -4,6 +4,7 @@ import './checkbox.css';
 import type { ChangeEventHandler, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { CheckGlyph } from './check-glyph';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface CheckboxOwnProps {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
@@ -13,7 +14,7 @@ interface CheckboxOwnProps {
   /** Indeterminate - the "some, not all" select-all state; visually wins over `checked`. @default false */
   indeterminate?: boolean;
   /** Single error state for consent gates ("you must agree"); also sets `aria-invalid`. @default false */
-  invalid?: boolean;
+  error?: boolean;
   /** Disabled - inert and de-emphasized (distinct fill when checked). */
   disabled?: boolean;
   /** Box size: `md` 18px - `sm` 16px for dense table rows. @default 'md' */
@@ -39,7 +40,7 @@ export function Checkbox({
   checked,
   defaultChecked,
   indeterminate = false,
-  invalid = false,
+  error = false,
   disabled = false,
   size = 'md',
   label,
@@ -49,25 +50,17 @@ export function Checkbox({
   onChange,
   htmlProps,
 }: CheckboxProps) {
-  const classes = [
-    'cbx',
-    size === 'sm' ? 'cbx--sm' : '',
-    invalid ? 'cbx--invalid' : '',
-    disabled ? 'cbx--disabled' : '',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const cls = cx('cbx', size === 'sm' && 'cbx--sm', error && 'cbx--error', disabled && 'cbx--disabled', className);
 
   const controlled = checked !== undefined;
   const checkedProps = controlled ? { checked } : { defaultChecked };
 
   return (
-    <label className={classes} style={style}>
+    <label className={cls} style={style}>
       <CheckGlyph
         indeterminate={indeterminate}
         disabled={disabled}
-        aria-invalid={invalid || undefined}
+        aria-invalid={error || undefined}
         onChange={onChange}
         {...checkedProps}
         {...htmlProps}

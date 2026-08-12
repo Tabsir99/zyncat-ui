@@ -1,4 +1,4 @@
-export type ToastTone = 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'custom';
+export type ToastTone = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'loading' | 'custom';
 
 export interface ToastAction {
   label: string;
@@ -58,7 +58,7 @@ const DURATION: Record<string, number> = {
   success: 5000,
   info: 5000,
   warning: 8000,
-  error: 8000,
+  danger: 8000,
   loading: Infinity,
 };
 
@@ -249,7 +249,7 @@ export interface ToastApi {
 
 const toast = ((message: string, opts?: ToastOptions) => make('default', message, opts)) as ToastApi;
 toast.success = (m, o) => make('success', m, o);
-toast.error = (m, o) => make('error', m, o);
+toast.error = (m, o) => make('danger', m, o);
 toast.warning = (m, o) => make('warning', m, o);
 toast.info = (m, o) => make('info', m, o);
 toast.loading = (m, o) => make('loading', m, o);
@@ -266,7 +266,7 @@ toast.promise = function <T>(promise: Promise<T>, msgs: ToastPromiseMsgs<T> = {}
     typeof m === 'function' ? (m as (x: V) => string)(v) : m != null ? m : fallback;
   promise.then(
     (v) => toast.update(id, { tone: 'success', message: text(msgs.success, 'Done', v) }),
-    (e) => toast.update(id, { tone: 'error', message: text(msgs.error, 'Something went wrong', e) }),
+    (e) => toast.update(id, { tone: 'danger', message: text(msgs.error, 'Something went wrong', e) }),
   );
   return promise;
 };

@@ -13,6 +13,7 @@ import {
 } from 'react';
 import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from '../input/field-chrome';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
@@ -131,8 +132,8 @@ export function Textarea({
     onKeyDown?.(e);
   };
 
-  const cls = ['fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className].filter(Boolean).join(' ');
-  const boxCls = ['txa', disabled && 'is-disabled', readOnly && 'is-readonly'].filter(Boolean).join(' ');
+  const cls = cx('fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className);
+  const boxCls = cx('txa', disabled && 'is-disabled', readOnly && 'is-readonly');
 
   return (
     <div className={cls} style={style}>
@@ -166,7 +167,7 @@ export function Textarea({
           <div className="txa__bar">
             {hint && <span className="txa__hint">{hint}</span>}
             {max && (
-              <span className={['txa__meter', meterState].filter(Boolean).join(' ')}>
+              <span className={cx('txa__meter', meterState)}>
                 <span className="txa__count">{over || remaining <= warnAt ? remaining : `${count} / ${max}`}</span>
                 <svg
                   className="txa__ring"

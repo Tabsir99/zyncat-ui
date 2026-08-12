@@ -10,6 +10,7 @@ import type { FlipTuning } from '../../../motion/flip';
 import type { Layer } from '../../../engine';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const TAG_TIMING = { open: { duration: 'base', ease: 'entrance' }, close: { duration: 'fast', ease: 'exit' } } as const;
 const TAG_LAYOUT_TIMING = {
@@ -54,7 +55,7 @@ export interface TagProps extends TagOwnProps {
 
 interface TagGroupOwnProps {
   /** Accessible name for the group (role="group"). */
-  label?: string;
+  ariaLabel?: string;
   /** The `Tag`s; adds, removals and reflow are animated. */
   children?: ReactNode;
   /** Extra class(es) merged onto the group wrapper. */
@@ -91,7 +92,7 @@ export function Tag({
   htmlProps,
   ref,
 }: TagProps) {
-  const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
+  const cls = cx('tag', size === 'sm' && 'tag--sm', className);
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
   const group = useContext(TagGroupContext);
 
@@ -102,7 +103,7 @@ export function Tag({
       animate={group?.animate}
       exit={group?.exit}
       layout={group?.layout}
-      className={classes}
+      className={cls}
       style={style}
       data-disabled={disabled ? 'true' : undefined}
       {...htmlProps}
@@ -122,7 +123,7 @@ export function Tag({
   );
 }
 
-export function TagGroup({ label, className = '', style, children, htmlProps, animation }: TagGroupProps) {
+export function TagGroup({ ariaLabel, className = '', style, children, htmlProps, animation }: TagGroupProps) {
   const step = resolveMotionTiming(animation, TAG_TIMING);
   const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
 
@@ -133,13 +134,7 @@ export function TagGroup({ label, className = '', style, children, htmlProps, an
   };
 
   return (
-    <div
-      {...htmlProps}
-      className={['tag-group', className].filter(Boolean).join(' ')}
-      style={style}
-      role="group"
-      aria-label={label}
-    >
+    <div {...htmlProps} className={cx('tag-group', className)} style={style} role="group" aria-label={ariaLabel}>
       <TagGroupContext.Provider value={motion}>
         <Presence initial={false}>{children}</Presence>
       </TagGroupContext.Provider>

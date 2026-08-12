@@ -14,6 +14,7 @@ export interface ActivePayload {
 
 export const OPEN_DELAY = 350;
 export const CLOSE_GRACE = 140;
+export const TOOLTIP_DOM_ID = 'pds-tooltip';
 const WARM_WINDOW = 300;
 
 export const store = {

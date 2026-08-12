@@ -18,6 +18,7 @@ import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { type DisableableAnimation } from '../../../motion/timing';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const SM = UIMotion;
 
@@ -51,8 +52,8 @@ interface TabsOwnProps {
    * same `name`; omit it when the tabs have no managed panel.
    */
   name?: string;
-  /** aria-label for the tablist (e.g. "Section views"). */
-  label?: string;
+  /** Accessible name for the tablist (e.g. "Section views"). */
+  ariaLabel?: string;
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
@@ -67,7 +68,7 @@ export interface TabsProps extends TabsOwnProps {
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 20;
 
-export function Tabs({ items = [], value, onChange, name, label, className = '', style, htmlProps }: TabsProps) {
+export function Tabs({ items = [], value, onChange, name, ariaLabel, className = '', style, htmlProps }: TabsProps) {
   const autoId = useId();
   const base = name || autoId;
 
@@ -173,11 +174,11 @@ export function Tabs({ items = [], value, onChange, name, label, className = '',
     : (items.find((i) => !i.disabled) || ({} as Partial<TabItem>)).value;
 
   return (
-    <div className={('tabs ' + className).trim()} style={style} {...htmlProps}>
+    <div className={cx('tabs', className)} style={style} {...htmlProps}>
       <div
         className="tabs__list"
         role="tablist"
-        aria-label={label}
+        aria-label={ariaLabel}
         ref={listRef}
         onKeyDown={onKeyDown}
         onPointerLeave={glide.leave}
@@ -265,7 +266,7 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
       tabIndex={0}
       id={name ? `${name}-panel-${tab}` : undefined}
       aria-labelledby={name ? `${name}-tab-${tab}` : undefined}
-      className={('tab-panel ' + className).trim()}
+      className={cx('tab-panel', className)}
       style={style}
       {...htmlProps}
     >

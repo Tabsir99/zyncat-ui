@@ -58,7 +58,7 @@ export function ListboxPanel({
     <SelectMenu
       open={lb.open}
       menuId={lb.menuId}
-      close={lb.hide}
+      requestClose={lb.requestClose}
       triggerRef={lb.triggerRef}
       multiple={multiple}
       animation={animation}

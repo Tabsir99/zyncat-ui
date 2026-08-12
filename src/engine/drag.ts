@@ -1,4 +1,4 @@
-export interface Axes {
+interface Axes {
   x: number;
   y: number;
 }
@@ -8,7 +8,7 @@ export interface PanInfo {
   velocity: Axes;
 }
 
-export interface DragHandlers {
+interface DragHandlers {
   onMove?: (info: PanInfo) => void;
   onEnd?: (info: PanInfo) => void;
 }
@@ -50,9 +50,4 @@ export function startDrag(origin: { clientX: number; clientY: number }, handlers
   window.addEventListener('pointerup', end);
   window.addEventListener('pointercancel', end);
   return detach;
-}
-
-export function elastic(overshoot: number, size: number, factor = 0.55): number {
-  if (overshoot <= 0 || size <= 0) return overshoot;
-  return size * factor * (1 - size / (overshoot * factor + size));
 }

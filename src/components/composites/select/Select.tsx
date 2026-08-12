@@ -7,6 +7,7 @@ import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type Select
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
 import { ButtonProps } from '../../primitives/button/Button';
+import { cx } from '../../internal/utils/cx';
 
 export type { SelectOption, SelectGroup } from './core';
 
@@ -89,7 +90,7 @@ export function Select({
   return (
     <div
       {...htmlProps}
-      className={htmlProps?.className ? 'select ' + htmlProps.className : 'select'}
+      className={cx('select', htmlProps?.className)}
       data-size={size}
       data-open={lb.open ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}

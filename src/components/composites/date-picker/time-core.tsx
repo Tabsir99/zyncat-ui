@@ -2,6 +2,8 @@
 
 import './date-picker.css';
 import { useEffect, useRef, useState, type ClipboardEvent, type KeyboardEvent, type RefObject } from 'react';
+import { cx } from '../../internal/utils/cx';
+import { pad } from './date-utils';
 
 type Meridiem = 'AM' | 'PM';
 type Segment = 'h' | 'm';
@@ -22,7 +24,6 @@ export interface TimeSegmentsProps {
   className?: string;
 }
 
-const tsgPad = (n: number): string => String(n).padStart(2, '0');
 export const disp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
 const tsgToH24 = (d12: number, mer: Meridiem): number => (d12 % 12) + (mer === 'PM' ? 12 : 0);
 
@@ -86,7 +87,7 @@ export function TimeSegments({
 
   function tryCommit(nh: number | null, nm: number | null) {
     if (nh == null || nm == null) return;
-    let t = tsgPad(nh) + ':' + tsgPad(nm);
+    let t = pad(nh) + ':' + pad(nm);
     if (min && t < min) t = min;
     if (max && t > max) t = max;
     const p = t.split(':').map(Number);
@@ -224,15 +225,15 @@ export function TimeSegments({
     }
   };
 
-  const hText = pend && pend.seg === 'h' ? tsgPad(pend.d) : h == null ? '--' : tsgPad(is12 ? disp12(h) : h);
-  const mText = pend && pend.seg === 'm' ? tsgPad(pend.d) : m == null ? '--' : tsgPad(m);
+  const hText = pend && pend.seg === 'h' ? pad(pend.d) : h == null ? '--' : pad(is12 ? disp12(h) : h);
+  const mText = pend && pend.seg === 'm' ? pad(pend.d) : m == null ? '--' : pad(m);
 
   const segCls = (empty: boolean): string => 'tsg__seg' + (empty ? ' is-empty' : '');
   const tab = disabled ? -1 : 0;
 
   return (
     <div
-      className={('tsg' + (disabled ? ' is-disabled' : '') + ' ' + className).trim()}
+      className={cx('tsg', disabled && 'is-disabled', className)}
       role="group"
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}

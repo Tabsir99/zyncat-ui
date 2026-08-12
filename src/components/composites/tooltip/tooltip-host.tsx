@@ -7,7 +7,7 @@ import { Presence } from '../../../motion/presence';
 import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';
-import { store, type ActivePayload, type Placement } from './tooltip-store';
+import { store, TOOLTIP_DOM_ID, type ActivePayload, type Placement } from './tooltip-store';
 
 const SM = UIMotion;
 
@@ -98,7 +98,7 @@ function TipSurface({ a, box, animate: animateSpec, exit }: { a: ActivePayload; 
   }, [a.id]);
 
   return (
-    <div ref={ref} className="tooltip" id="pds-tooltip" role="tooltip" data-placement={box.placement}>
+    <div ref={ref} className="tooltip" id={TOOLTIP_DOM_ID} role="tooltip" data-placement={box.placement}>
       <span ref={bodyRef}>
         <Body a={a} width={box.bodyW} />
       </span>
@@ -172,7 +172,7 @@ export function TooltipHost() {
                 y: [at.box.y + at.off.y],
                 opacity: [0],
                 scale: [0.96],
-                timing: { duration: SM.dur.fast, ease: SM.ease.exit },
+                timing: SM.t.exit,
               });
             }}
           />

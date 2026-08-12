@@ -3,6 +3,7 @@
 import './button.css';
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode, Ref } from 'react';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface ButtonOwnProps {
   /** Visual weight / intent. `unstyled` emits base chrome only (sizing, focus ring,
@@ -62,22 +63,20 @@ export function Button({
   htmlProps,
   ...rest
 }: ButtonProps) {
-  const classes = [
+  const cls = cx(
     'btn',
-    variant !== 'unstyled' ? `btn--${variant}` : '',
-    size !== 'md' ? `btn--${size}` : '',
-    fullWidth ? 'btn--block' : '',
-    loading ? 'is-loading' : '',
+    variant !== 'unstyled' && `btn--${variant}`,
+    size !== 'md' && `btn--${size}`,
+    fullWidth && 'btn--block',
+    loading && 'is-loading',
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <button
       type={type}
       ref={ref}
-      className={classes}
+      className={cls}
       style={style}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

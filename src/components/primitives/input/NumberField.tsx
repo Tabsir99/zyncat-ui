@@ -2,21 +2,14 @@
 
 import './input.css';
 import { useState } from 'react';
-import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
+import type { CSSProperties, InputHTMLAttributes } from 'react';
 import { Icon } from '../../internal/icon/Icon';
-import { FieldLabel, FieldMessage } from './field-chrome';
+import { FieldLabel, FieldMessage, type FieldCoreMessagingProps, type FieldIdProps } from './field-chrome';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
-interface NumberFieldOwnProps {
-  /** Id wired to the input and the label's `htmlFor`. */
-  id?: string;
-  /** Label text (sentence case). */
-  label?: ReactNode;
-  /** Neutral helper text - shown below when there's no error. */
-  helper?: ReactNode;
-  /** Error message + error state. */
-  error?: ReactNode;
+interface NumberFieldOwnProps extends FieldIdProps, FieldCoreMessagingProps {
   /** Unit suffix shown inside the field (e.g. "days", "%"). */
   unit?: string;
   /** Minimum value - steps and committed typing clamp up to this; the decrease stepper disables here. @default 0 */
@@ -65,8 +58,8 @@ export function NumberField({
   style,
   htmlProps,
 }: NumberFieldProps) {
-  const controlled = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
-  const [num, setNum] = useControllable<number>(controlled, defaultValue, onChange);
+  const resolvedValue = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
+  const [num, setNum] = useControllable<number>(resolvedValue, defaultValue, onChange);
   const [draft, setDraft] = useState<string | null>(null);
   const v = draft !== null ? parseFloat(draft) || 0 : num;
   const snap = (n: number) => parseFloat(n.toFixed(10));
@@ -75,16 +68,14 @@ export function NumberField({
     setDraft(null);
     setNum(clamp(n));
   };
-  const cls = [
+  const cls = cx(
     'fld',
     'numf',
-    unit ? 'numf--unit' : '',
+    unit && 'numf--unit',
     size === 'sm' ? 'fld--sm' : size === 'lg' ? 'fld--lg' : '',
-    error ? 'is-error' : '',
+    error && 'is-error',
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <div className={cls} style={style}>

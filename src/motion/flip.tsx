@@ -1,13 +1,19 @@
 'use client';
 
 import { useLayoutEffect, useRef, type RefObject } from 'react';
-import { dropShared, flip, keepShared, measure, readShared, type Box, type Playback, type Timing } from '../engine';
+import {
+  dropShared,
+  flip,
+  keepShared,
+  measure,
+  readShared,
+  type Box,
+  type FlipOptions,
+  type Playback,
+} from '../engine';
 import { UIMotion } from '../tokens/motion-tokens';
 
-export interface FlipTuning {
-  scale?: boolean;
-  timing?: Timing;
-}
+export type FlipTuning = FlipOptions;
 
 export function useSelfFlip<T extends HTMLElement>(tuning: FlipTuning = {}, enabled = true): RefObject<T | null> {
   const ref = useRef<T | null>(null);

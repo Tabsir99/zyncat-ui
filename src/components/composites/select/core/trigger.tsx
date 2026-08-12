@@ -27,7 +27,7 @@ export function SelectTrigger({
   htmlProps,
   ...rest
 }: SelectTriggerProps) {
-  const { triggerRef, baseId, open, adId, show, hide } = lb;
+  const { triggerRef, baseId, open, adId, show, requestClose } = lb;
   return (
     <Button
       type="button"
@@ -50,7 +50,7 @@ export function SelectTrigger({
         },
         ...htmlProps,
       }}
-      onClick={() => (open ? hide() : show())}
+      onClick={() => (open ? requestClose() : show())}
       iconRight={
         <span className="select__caret">
           <Icon name="caret-down" size="sm" />

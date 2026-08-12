@@ -8,7 +8,7 @@ import { Button } from '../../primitives/button/Button';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
-import { MONTHS, DOW, pad, key as toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
+import { MONTHS, DOW, pad, toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {

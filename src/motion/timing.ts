@@ -3,15 +3,15 @@ import type { DurationToken, EaseToken } from '../tokens/motion-scale';
 
 export type TimingDirection = 'open' | 'close';
 /** One token for both directions, or split per direction; an omitted direction keeps its default. */
-export type Timing<Token extends string> = Token | { [D in TimingDirection]?: Token };
+export type DirectionalToken<Token extends string> = Token | { [D in TimingDirection]?: Token };
 
 /** Timing of an open/close transition, constrained to the motion token vocabulary -
  *  see DurationToken / EaseToken for what each token means. */
 export interface AnimationTiming {
   /** Duration token(s); an omitted field or direction keeps the component's default. */
-  duration?: Timing<DurationToken>;
+  duration?: DirectionalToken<DurationToken>;
   /** Ease token(s); an omitted field or direction keeps the component's default. */
-  ease?: Timing<EaseToken>;
+  ease?: DirectionalToken<EaseToken>;
 }
 
 /** The `animation` prop shape: tokens to retime, omit for the component's defaults, or
@@ -27,7 +27,7 @@ export interface TimingProps {
 }
 
 export function resolveDirection<Token extends string>(
-  timing: Timing<Token> | undefined,
+  timing: DirectionalToken<Token> | undefined,
   dir: TimingDirection,
 ): Token | undefined {
   return typeof timing === 'object' ? timing[dir] : timing;

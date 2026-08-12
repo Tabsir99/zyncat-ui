@@ -3,6 +3,7 @@
 import './badge.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export type BadgeTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
@@ -48,22 +49,20 @@ export function Badge({
   htmlProps,
 }: BadgeProps) {
   const isGlass = variant !== 'outline';
-  const classes = [
-    isGlass ? 'glass glass--interactive' : '',
+  const cls = cx(
+    isGlass && 'glass glass--interactive',
     'badge',
     `badge--${tone}`,
-    variant === 'outline' ? 'badge--outline' : '',
-    size !== 'md' ? `badge--${size}` : '',
-    pill ? 'badge--pill' : '',
+    variant === 'outline' && 'badge--outline',
+    size !== 'md' && `badge--${size}`,
+    pill && 'badge--pill',
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   const showDot = (dot || live) && !icon;
 
   return (
-    <span className={classes} style={style} {...htmlProps}>
+    <span className={cls} style={style} {...htmlProps}>
       {showDot ? <span className={`badge__dot${live ? ' badge__dot--live' : ''}`} aria-hidden="true" /> : null}
       {icon ? (
         <span className="badge__icon" aria-hidden="true">

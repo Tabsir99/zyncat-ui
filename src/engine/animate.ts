@@ -7,7 +7,7 @@ export interface Playback {
   finished: Promise<void>;
 }
 
-export type Vec = [number, number];
+type Vec = [number, number];
 export type Size = number | 'auto';
 
 export interface Layer {

@@ -27,6 +27,7 @@ import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { UIToast, DEFAULT_TOASTER_CONFIG, type ToastRecord, type ToastTone, type ToasterConfig } from './toast-store';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const SM = UIMotion;
 const store = UIToast;
@@ -41,9 +42,9 @@ function stackGap() {
   return GAP;
 }
 
-const TONE_ICON: Record<string, IconName> = {
+const TONE_ICON: Partial<Record<ToastTone, IconName>> = {
   success: 'check-circle',
-  error: 'warning-circle',
+  danger: 'warning-circle',
   warning: 'warning',
   info: 'info',
 };
@@ -55,7 +56,7 @@ function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
     prevTone.current = tone;
     if (tone === prev) return;
     if (tone === 'success') return fireGlint(ref.current);
-    if (tone === 'error' && ref.current) {
+    if (tone === 'danger' && ref.current) {
       const shake = ref.current.firstElementChild as HTMLElement | null;
       if (!shake) return;
       const fall = animate(shake, {
@@ -140,9 +141,7 @@ function ToastItem({
       },
       onEnd: (info) => {
         if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-          animate(inner, { x: [420], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }).finished.then(() =>
-            store.dismiss(t.id),
-          );
+          animate(inner, { x: [420], timing: SM.t.exit }).finished.then(() => store.dismiss(t.id));
           return;
         }
         const back = animate(inner, { x: [0], timing: SM.t.settle });
@@ -156,11 +155,11 @@ function ToastItem({
     <Motion
       as="li"
       ref={ref}
-      exit={{ opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }}
+      exit={{ opacity: [0], scale: [0.96], timing: SM.t.exit }}
       className="toast glass"
       data-tone={t.tone}
       data-behind={behind ? '' : undefined}
-      role={t.tone === 'error' ? 'alert' : 'status'}
+      role={t.tone === 'danger' ? 'alert' : 'status'}
       aria-atomic="true"
       onPointerDown={onPointerDown}
       onKeyDown={(e: ReactKeyboardEvent) => {
@@ -191,7 +190,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
               {t.tone === 'loading' ? (
                 <span className="toast__spinner" aria-hidden="true"></span>
               ) : (
-                <Icon name={TONE_ICON[t.tone]} weight="fill" />
+                <Icon name={TONE_ICON[t.tone] || 'info'} weight="fill" />
               )}
             </span>
           )}
@@ -303,9 +302,7 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
   return createPortal(
     <ol
       {...htmlProps}
-      className={
-        'toast-viewport' + (paused ? ' is-paused' : '') + (htmlProps?.className ? ' ' + htmlProps.className : '')
-      }
+      className={cx('toast-viewport', paused && 'is-paused', htmlProps?.className)}
       data-position={config.position}
       style={
         config.offset

@@ -66,7 +66,7 @@ export function DateTimeField({
   htmlProps,
   animation,
 }: DateTimeFieldProps) {
-  const [val, setVal] = useControllable<string | null>(
+  const [val, commit] = useControllable<string | null>(
     value,
     defaultValue,
     onChange as ((next: string | null) => void) | undefined,
@@ -96,7 +96,7 @@ export function DateTimeField({
     if (maxL.time && d === maxL.date && tt > maxL.time) tt = maxL.time;
     if (tt !== t) setPendTime(tt);
     const next = d + 'T' + tt;
-    if (next !== val) setVal(next);
+    if (next !== val) commit(next);
   }
   function handleDate(d: string) {
     setPendDate(d);

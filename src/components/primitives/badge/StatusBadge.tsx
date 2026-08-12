@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Badge, type BadgeProps } from './Badge';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
+import { cx } from '../../internal/utils/cx';
 
 const SM = UIMotion;
 
@@ -94,19 +95,13 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   }, [status]);
 
   return (
-    <Badge
-      tone={s.tone}
-      dot
-      live={!!s.live}
-      className={['badge--morph', className].filter(Boolean).join(' ')}
-      {...rest}
-    >
+    <Badge tone={s.tone} dot live={!!s.live} className={cx('badge--morph', className)} {...rest}>
       <span className="badge__morph" ref={labelRef} style={boxW ? { width: boxW } : undefined}>
         <span className="badge__ghost" ref={ghostRef} aria-hidden="true">
           {s.label}
         </span>
         {words.map((w) => (
-          <span key={w.key} className={['badge__word', w.cls].filter(Boolean).join(' ')}>
+          <span key={w.key} className={cx('badge__word', w.cls)}>
             {w.label}
           </span>
         ))}

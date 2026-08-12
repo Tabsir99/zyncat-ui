@@ -66,7 +66,7 @@
   --glass-fg: var(--success-text);
   --glass-tint: color-mix(in oklab, var(--glass-tint-success) 70%, transparent);
 }
-.toast[data-tone='error'] {
+.toast[data-tone='danger'] {
   --toast-hue: var(--danger);
   --glass-fg: var(--danger-text);
   --glass-tint: color-mix(in oklab, var(--glass-tint-danger) 70%, transparent);

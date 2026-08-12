@@ -9,9 +9,10 @@ import { Button } from '../../primitives/button/Button';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
-import { MONTHS, DOW, key as toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
+import { MONTHS, DOW, toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
+import { cx } from '../../internal/utils/cx';
 
-export interface DtpPanelProps {
+interface DtpPanelProps {
   val: string | null;
   commit: (key: string) => void;
   close: () => void;
@@ -70,11 +71,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     const el = daysRef.current;
     if (prev == null || prev === viewIdx || !el) return;
     const dir = viewIdx > prev ? 1 : -1;
-    animate(el, {
-      x: [dir * 16, 0],
-      opacity: [0, 1],
-      timing: { duration: UIMotion.t.enter.duration, ease: UIMotion.t.enter.ease },
-    });
+    animate(el, { x: [dir * 16, 0], opacity: [0, 1], timing: UIMotion.t.enter });
   }, [viewIdx]);
 
   function moveFocus(deltaDays: number, deltaMonths: number) {
@@ -178,14 +175,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                 const key = toKey(d);
                 const out = d.getMonth() !== view.m;
                 const sel = key === selKey;
-                const cls = [
-                  'dtp__day',
-                  out ? 'is-out' : '',
-                  sel ? 'is-selected' : '',
-                  key === todayKey ? 'is-today' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ');
+                const cls = cx('dtp__day', out && 'is-out', sel && 'is-selected', key === todayKey && 'is-today');
                 return (
                   <button
                     key={key}

@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface ToggleOwnProps {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */
@@ -52,9 +53,7 @@ export function Toggle({
 }: ToggleProps) {
   const [isOn, setOn] = useControllable(checked, !!defaultChecked);
 
-  const classes = ['sw', size === 'sm' ? 'sw--sm' : '', disabled ? 'sw--disabled' : '', className]
-    .filter(Boolean)
-    .join(' ');
+  const cls = cx('sw', size === 'sm' && 'sw--sm', disabled && 'sw--disabled', className);
 
   const [pressed, setPressed] = useState(false);
   function press(on: boolean) {
@@ -70,7 +69,7 @@ export function Toggle({
 
   return (
     <label
-      className={classes}
+      className={cls}
       style={style}
       onPointerDown={press(true)}
       onPointerUp={press(false)}

@@ -13,6 +13,7 @@ import type {
   ReactNode,
 } from 'react';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface OtpFieldOwnProps {
   /** Number of slots. @default 6 */
@@ -75,7 +76,7 @@ export function OtpField({
     }
   };
 
-  const cls = ['otp', size === 'sm' ? 'otp--sm' : '', error ? 'is-error' : '', className].filter(Boolean).join(' ');
+  const cls = cx('otp', size === 'sm' && 'otp--sm', error && 'is-error', className);
 
   const cells: ReactNode[] = [];
   for (let i = 0; i < length; i++) {

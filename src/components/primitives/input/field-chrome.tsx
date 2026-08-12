@@ -5,30 +5,37 @@ import type { ReactNode } from 'react';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Collapse } from '../collapse/Collapse';
 
-export interface FieldMessagingProps {
+export interface FieldIdProps {
   /** Field id, ties the label to the control. */
   id?: string;
-  /** Label text (sentence case). */
-  label?: ReactNode;
+}
+
+export interface FieldRequirementProps {
   /** Show a danger `*` after the label. */
   required?: boolean;
   /** Show a muted "(optional)" after the label. */
   optional?: boolean;
+}
+
+export interface FieldCoreMessagingProps {
+  /** Label text (sentence case). */
+  label?: ReactNode;
   /** Neutral helper text - shown when there's no validation message. */
   helper?: ReactNode;
   /** Error message - sets the error state (border + icon + colour). Wins over warning/success/helper. */
   error?: ReactNode;
+}
+
+export interface FieldMessagingProps extends FieldIdProps, FieldRequirementProps, FieldCoreMessagingProps {
   /** Warning message - amber state. Loses to `error`; wins over `success`/`helper`. */
   warning?: ReactNode;
   /** Success message - green state. Loses to `error`/`warning`; wins over `helper`. */
   success?: ReactNode;
 }
 
-export interface FieldLabelProps {
-  id?: string;
+export interface FieldLabelProps extends FieldIdProps, FieldRequirementProps {
+  /** Label text (sentence case). */
   label?: ReactNode;
-  required?: boolean;
-  optional?: boolean;
 }
 
 export function FieldLabel({ id, label, required, optional }: FieldLabelProps) {

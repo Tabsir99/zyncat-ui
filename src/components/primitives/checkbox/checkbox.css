@@ -154,7 +154,7 @@
   }
 }
 
-.cbx--invalid {
+.cbx--error {
   --cbx-fill: linear-gradient(180deg, var(--danger), var(--danger));
   --cbx-on: var(--danger);
   --cbx-off: var(--danger);

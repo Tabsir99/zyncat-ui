@@ -12,6 +12,7 @@ import {
 } from 'react';
 import type { AvatarSize } from './Avatar';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 interface AvatarGroupOwnProps {
   /** The `Avatar` elements to stack; each is cloned to force `size`, then sliced to `max`. */
@@ -37,7 +38,7 @@ export function AvatarGroup({ children, max = 5, size = 'md', className = '', st
   const overflow = items.length - visible.length;
 
   return (
-    <span className={['avatar-group', className].filter(Boolean).join(' ')} style={style} {...htmlProps}>
+    <span className={cx('avatar-group', className)} style={style} {...htmlProps}>
       {visible.map((child, i) =>
         isValidElement(child)
           ? cloneElement(child as ReactElement<{ size?: AvatarSize }>, { size, key: child.key ?? i })

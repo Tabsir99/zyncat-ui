@@ -7,17 +7,18 @@ import type { DurationToken, EaseToken } from '../../../tokens/motion-scale';
 import {
   timingVars,
   type AnimationTiming,
+  type DirectionalToken,
   type DisableableAnimation,
-  type Timing,
   type TimingProps,
 } from '../../../motion/timing';
+import { cx } from '../../internal/utils/cx';
 
 /** Motion-scale duration tokens - the only values Collapse timing accepts. */
 export type CollapseDuration = DurationToken;
 /** Motion-scale ease tokens - the only values Collapse timing accepts. */
 export type CollapseEase = EaseToken;
 /** One token for both directions, or split per direction; an omitted direction keeps its default. */
-export type CollapseTiming<Token extends string> = Timing<Token>;
+export type CollapseTiming<Token extends string> = DirectionalToken<Token>;
 /** Grouped `{ duration, ease }` timing for the size/fade transition. */
 export type CollapseAnimation = AnimationTiming;
 
@@ -38,10 +39,8 @@ interface CollapseOwnProps extends TimingProps {
    *  `null` disables the transition (open/close snap instantly).
    *  @default duration 'slow' + ease 'entrance' (fade-out: 'base' + 'standard') */
   animation?: DisableableAnimation;
-  /**
-   * What html tag to render as
-   */
-  As?: keyof JSX.IntrinsicElements;
+  /** Tag to render as. @default 'div' */
+  as?: keyof JSX.IntrinsicElements;
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root (composed with the timing custom properties). */
@@ -64,22 +63,22 @@ export function Collapse({
   innerClassName = '',
   style,
   children,
-  As = 'div',
+  as: As = 'div',
   htmlProps,
 }: CollapseProps) {
-  const classes = ['collapse', fade ? 'collapse--fade' : '', className].filter(Boolean).join(' ');
+  const cls = cx('collapse', fade && 'collapse--fade', className);
 
   const vars = timingVars('collapse', animation);
 
   return (
     <div
-      className={classes}
+      className={cls}
       data-open={open ? 'true' : 'false'}
       data-axis={axis}
       style={vars || style ? ({ ...style, ...vars } as CSSProperties) : undefined}
       {...htmlProps}
     >
-      <As className={'collapse__inner ' + innerClassName} style={vars}>
+      <As className={cx('collapse__inner', innerClassName)} style={vars}>
         {children}
       </As>
     </div>

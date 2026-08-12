@@ -11,6 +11,7 @@ import { Button } from '../../primitives/button/Button';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger';
 
@@ -91,7 +92,7 @@ export function Alert({
   const h = resolveMotionTiming(animation, ALERT_HEIGHT_TIMING);
   const o = resolveMotionTiming(animation, ALERT_OPACITY_TIMING);
 
-  const classes = ['alert', banner ? 'alert--banner' : '', className].filter(Boolean).join(' ');
+  const cls = cx('alert', banner && 'alert--banner', className);
 
   return (
     <Presence initial={false}>
@@ -108,7 +109,7 @@ export function Alert({
             { opacity: [1, 0], timing: o.close },
           ]}
         >
-          <div className={classes} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
+          <div className={cls} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (
               <span className="alert__icon" aria-hidden="true">
                 {icon !== undefined ? (

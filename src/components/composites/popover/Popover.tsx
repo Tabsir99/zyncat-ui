@@ -11,6 +11,7 @@ import { ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from 
 import { useReturnFocus } from '../../internal/overlay/focus';
 import { useAnchorPosition } from '../../internal/overlay/position';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const POPOVER_TIMING = {
   open: { duration: 'base', ease: 'entrance' },
@@ -82,7 +83,7 @@ function PopoverPanel({
       {...htmlProps}
       id={panelId}
       ref={panelRef as RefObject<HTMLDivElement>}
-      className={['overlay-popover', htmlProps?.className].filter(Boolean).join(' ')}
+      className={cx('overlay-popover', htmlProps?.className)}
     >
       {arrow && <span className="overlay-popover__arrow" aria-hidden="true"></span>}
       {children}

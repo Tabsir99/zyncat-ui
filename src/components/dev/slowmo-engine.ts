@@ -181,8 +181,8 @@ function notify() {
   for (const cb of listeners) cb(snapshot);
 }
 
-function shouldBeActive(): boolean {
-  return state.factor > 1 || state.paused;
+export function shouldBeActive(factor: number, paused: boolean): boolean {
+  return factor > 1 || paused;
 }
 
 /** Imperative control surface - drive slow-mo from a console, a hotkey, or the panel.
@@ -199,7 +199,7 @@ export const motionSlowmo = {
     if (typeof patch.paused === 'boolean') state.paused = patch.paused;
 
     if (hasDOM) {
-      const wantActive = shouldBeActive();
+      const wantActive = shouldBeActive(state.factor, state.paused);
       if (!active && wantActive) install();
       else if (active && !wantActive) uninstall();
       else if (active) reconfigure();

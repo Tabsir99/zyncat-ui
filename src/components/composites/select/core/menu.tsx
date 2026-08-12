@@ -32,7 +32,7 @@ function selectMenuLayers(animation: DisableableAnimation | undefined, dir: 'ope
 export interface SelectMenuProps {
   open: boolean;
   menuId: string;
-  close: () => void;
+  requestClose: () => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
   multiple?: boolean;
   /** Open/close timing - motion tokens only, or `null` to disable. */
@@ -42,7 +42,7 @@ export interface SelectMenuProps {
 
 function MenuSurface({
   menuId,
-  close,
+  requestClose,
   triggerRef,
   multiple,
   animate,
@@ -50,7 +50,7 @@ function MenuSurface({
   children,
 }: Omit<SelectMenuProps, 'open' | 'animation'> & MotionSpecs) {
   const menuRef = useRef<HTMLDivElement>(null);
-  const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
+  const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose });
   useMotion(menuRef, { animate, exit });
   useLayoutEffect(() => {
     const apply = () => {
@@ -62,7 +62,7 @@ function MenuSurface({
     return () => window.removeEventListener('resize', apply);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useAnchorPosition({ side: 'bottom', align: 'start', arrow: false, triggerRef, panelRef: menuRef });
-  useOutsidePress({ entry, refs: [menuRef, triggerRef], enabled: true, onPress: close });
+  useOutsidePress({ entry, refs: [menuRef, triggerRef], enabled: true, onPress: requestClose });
 
   return (
     <div
@@ -77,7 +77,7 @@ function MenuSurface({
   );
 }
 
-export function SelectMenu({ open, menuId, close, triggerRef, multiple, animation, children }: SelectMenuProps) {
+export function SelectMenu({ open, menuId, requestClose, triggerRef, multiple, animation, children }: SelectMenuProps) {
   return (
     <OverlayPortal>
       <Presence>
@@ -87,7 +87,7 @@ export function SelectMenu({ open, menuId, close, triggerRef, multiple, animatio
             animate={selectMenuLayers(animation, 'open')}
             exit={selectMenuLayers(animation, 'close')}
             menuId={menuId}
-            close={close}
+            requestClose={requestClose}
             triggerRef={triggerRef}
             multiple={multiple}
           >

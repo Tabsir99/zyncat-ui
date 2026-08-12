@@ -6,6 +6,7 @@ import { Icon, type IconName } from '../../internal/icon/Icon';
 import { FieldLabel, FieldMessage } from '../../primitives/input/field-chrome';
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export interface DateFieldBaseProps {
   /** Field label rendered above the trigger. */
@@ -49,7 +50,7 @@ export function FieldShell({
   htmlProps,
   children,
 }: FieldShellProps) {
-  const cls = ['fld', variant, 'fld--has-lead', invalid ? 'is-error' : '', className || ''].filter(Boolean).join(' ');
+  const cls = cx('fld', variant, 'fld--has-lead', invalid && 'is-error', className);
   return (
     <div {...htmlProps} className={cls}>
       <FieldLabel label={label} required={required} />

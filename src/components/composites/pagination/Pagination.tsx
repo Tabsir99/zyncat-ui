@@ -8,10 +8,11 @@ import { tokenPx } from '../../internal/utils/token-px';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 export interface PaginationProps {
   /** Accessible name for the nav landmark - name the list ("Posts"), not "pagination". @default 'Pagination' */
-  label?: string;
+  ariaLabel?: string;
   /** Items currently shown, 1-based inclusive: `[from, to]` (e.g. `[26, 50]`). */
   range: [number, number];
   /** Total item count - render `of N` only when the API reports one; omit for endless lists. */
@@ -43,7 +44,7 @@ function pgnFormat(n: number) {
 }
 
 export function Pagination({
-  label = 'Pagination',
+  ariaLabel = 'Pagination',
   range,
   total = null,
   hasPrev = false,
@@ -84,7 +85,7 @@ export function Pagination({
   const nextBusy = loading && lastDirRef.current === 1;
 
   return (
-    <nav className={('pgn ' + className).trim()} aria-label={label} aria-busy={loading || undefined} {...htmlProps}>
+    <nav className={cx('pgn', className)} aria-label={ariaLabel} aria-busy={loading || undefined} {...htmlProps}>
       <span className="pgn__readout" aria-live="polite">
         <span className="pgn__range" ref={rangeRef}>
           <b>

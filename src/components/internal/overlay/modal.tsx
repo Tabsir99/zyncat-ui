@@ -7,6 +7,7 @@ import { useMotion, run, type MotionSpec, type MotionSpecs } from '../../../moti
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useOverlayEntry } from './layer';
 import { useReturnFocus, useFocusTrap } from './focus';
+import { cx } from '../utils/cx';
 
 const SM = UIMotion;
 
@@ -87,51 +88,51 @@ function OverlayScrim({
 
 export function ModalShell({
   layerClass,
-  slotClass,
+  panelClass,
   panelId,
   dismissible,
   requestClose,
-  slotRef: externalSlotRef = null,
-  slotProps = {},
+  panelRef: externalPanelRef = null,
+  panelProps = {},
   animate: animateSpec,
   exit,
   children,
 }: {
   layerClass: string;
-  slotClass: string;
+  panelClass: string;
   panelId: string;
   dismissible: boolean;
   requestClose: () => void;
-  slotRef?: RefObject<HTMLElement> | null;
-  slotProps?: Record<string, any>;
+  panelRef?: RefObject<HTMLElement> | null;
+  panelProps?: Record<string, any>;
   children: ReactNode;
 } & MotionSpecs) {
   const layerRef = useRef<HTMLDivElement>(null);
   const scrimRef = useRef<HTMLDivElement>(null);
-  const internalSlotRef = useRef<HTMLElement>(null);
-  const slotRef = externalSlotRef || internalSlotRef;
+  const internalPanelRef = useRef<HTMLElement>(null);
+  const panelRef = externalPanelRef || internalPanelRef;
   const entry = useOverlayEntry({ nodeRef: layerRef, dismissible, requestClose });
 
-  const withScrim = (dir: 'open' | 'close', slotSpec: MotionSpec | undefined) => (): Playback[] => {
+  const withScrim = (dir: 'open' | 'close', panelSpec: MotionSpec | undefined) => (): Playback[] => {
     const fade: Layer = { opacity: dir === 'open' ? [0, 1] : [0], timing: ovScrimTiming[dir] };
     const plays = scrimRef.current ? [animate(scrimRef.current, fade)] : [];
-    return slotRef.current ? plays.concat(run(slotSpec, slotRef.current)) : plays;
+    return panelRef.current ? plays.concat(run(panelSpec, panelRef.current)) : plays;
   };
 
   useMotion(layerRef, { animate: withScrim('open', animateSpec), exit: withScrim('close', exit) });
   useScrollLock();
   useInertOutside();
   useReturnFocus(layerRef);
-  useFocusTrap({ panelRef: slotRef, entry });
+  useFocusTrap({ panelRef, entry });
   return (
     <div ref={layerRef} className={'overlay-layer ' + layerClass}>
       <OverlayScrim dismissible={dismissible} onPress={requestClose} scrimRef={scrimRef} />
       <div
         id={panelId}
         tabIndex={-1}
-        {...slotProps}
-        ref={slotRef as RefObject<HTMLDivElement>}
-        className={['overlay-slot', slotClass, slotProps.className].filter(Boolean).join(' ')}
+        {...panelProps}
+        ref={panelRef as RefObject<HTMLDivElement>}
+        className={cx('overlay-panel', panelClass, panelProps.className)}
       >
         {children}
       </div>

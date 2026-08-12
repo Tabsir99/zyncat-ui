@@ -7,6 +7,7 @@ import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from './field-chrome';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 /** The native <input> props TextField surfaces at the top level (the rest live in `htmlProps`). */
 type TextFieldNative = Pick<
@@ -71,16 +72,14 @@ export function TextField({
     el.dispatchEvent(new Event('input', { bubbles: true }));
     el.focus();
   }
-  const cls = [
+  const cls = cx(
     'fld',
     size === 'sm' ? 'fld--sm' : size === 'lg' ? 'fld--lg' : '',
-    leadingIcon ? 'fld--has-lead' : '',
-    showClear ? 'fld--has-action' : '',
+    leadingIcon && 'fld--has-lead',
+    showClear && 'fld--has-action',
     state,
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <div className={cls} style={style}>

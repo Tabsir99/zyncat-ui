@@ -67,19 +67,19 @@ function SheetShell({
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   children: ReactNode;
 } & MotionSpecs) {
-  const slotRef = useRef<HTMLElement>(null);
-  const slotProps = useSheetDrag({ side, slotRef, enabled: dismissible, requestClose });
+  const panelRef = useRef<HTMLElement>(null);
+  const dragProps = useSheetDrag({ side, panelRef, enabled: dismissible, requestClose });
   return (
     <ModalShell
       animate={animate}
       exit={exit}
       layerClass={'overlay-layer--sheet-' + side}
-      slotClass={'overlay-slot--sheet-' + side}
+      panelClass={'overlay-panel--sheet-' + side}
       panelId={panelId}
       dismissible={dismissible}
       requestClose={requestClose}
-      slotRef={slotRef}
-      slotProps={{ ...htmlProps, ...slotProps }}
+      panelRef={panelRef}
+      panelProps={{ ...htmlProps, ...dragProps }}
     >
       {children}
     </ModalShell>

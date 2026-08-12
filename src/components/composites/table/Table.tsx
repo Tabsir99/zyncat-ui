@@ -10,6 +10,7 @@ import { Button } from '../../primitives/button/Button';
 import { Checkbox } from '../../primitives/checkbox/Checkbox';
 import { Odometer } from '../../primitives/badge/odometer';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
+import { cx } from '../../internal/utils/cx';
 
 export type TableAlign = 'start' | 'end' | 'center';
 export type TableHideBelow = 'sm' | 'md';
@@ -51,8 +52,8 @@ export interface TableProps<Row = any> {
   rows: Row[];
   /** Row identity property. Default 'id'. Must be unique and stable. */
   rowKey?: string;
-  /** aria-label for the <table>. */
-  label?: string;
+  /** Accessible name for the <table>. */
+  ariaLabel?: string;
 
   /** Checkbox column + bulk bar. Selection is a Set of row keys, owned here. */
   selectable?: boolean;
@@ -100,7 +101,7 @@ export function Table<Row = any>({
   columns = [],
   rows = [],
   rowKey = 'id',
-  label,
+  ariaLabel,
   selectable = false,
   onSelectionChange,
   bulkActions,
@@ -223,16 +224,14 @@ export function Table<Row = any>({
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 
-  const rootCls = [
+  const rootCls = cx(
     'tbl',
-    density === 'compact' ? 'tbl--compact' : '',
-    pinFirst ? 'tbl--pin' : '',
-    loading ? 'tbl--loading' : '',
-    onRowClick ? 'tbl--clickable' : '',
+    density === 'compact' && 'tbl--compact',
+    pinFirst && 'tbl--pin',
+    loading && 'tbl--loading',
+    onRowClick && 'tbl--clickable',
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <div ref={wrapRef} className={rootCls} {...htmlProps}>
@@ -265,7 +264,7 @@ export function Table<Row = any>({
 
       <div className="tbl__viewport">
         <div className="tbl__scroll" ref={scrollRef}>
-          <table className="tbl__table" aria-label={label} aria-busy={loading || undefined}>
+          <table className="tbl__table" aria-label={ariaLabel} aria-busy={loading || undefined}>
             <thead>
               <tr>
                 {selectable ? (

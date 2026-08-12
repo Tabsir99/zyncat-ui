@@ -12,6 +12,7 @@ import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 
 const DIALOG_TIMING = {
   open: { duration: 'slow', ease: 'entrance' },
@@ -43,7 +44,8 @@ export interface DialogProps {
   footer?: ReactNode | ((close: () => void) => ReactNode);
   /** Dialog body - scrolls when tall; its scroll edges flag the header lift + footer divider. */
   children?: ReactNode;
-  /** Base id for the surface + its title/desc aria ids. Auto-generated when omitted. */
+  /** Base id for the panel; drives the trigger's `aria-controls` and the title/desc aria ids.
+   *  Auto-generated when omitted. */
   id?: string;
   /** Standard attributes (className, style, data-*, ...) forwarded to the dialog `<section>`. */
   htmlProps?: HTMLAttributes<HTMLElement> & DataAttributes;
@@ -52,7 +54,7 @@ export interface DialogProps {
 }
 
 interface DialogSurfaceProps {
-  baseId: string;
+  panelId: string;
   size: 'sm' | 'md' | 'lg';
   tone: 'default' | 'danger';
   icon: ReactNode;
@@ -60,13 +62,13 @@ interface DialogSurfaceProps {
   description: ReactNode;
   dismissible: boolean;
   footerContent: ReactNode;
-  onRequestClose: () => void;
+  requestClose: () => void;
   htmlProps?: HTMLAttributes<HTMLElement> & DataAttributes;
   children?: ReactNode;
 }
 
 function DialogSurface({
-  baseId,
+  panelId,
   size,
   tone,
   icon,
@@ -74,13 +76,13 @@ function DialogSurface({
   description,
   dismissible,
   footerContent,
-  onRequestClose,
+  requestClose,
   htmlProps,
   children,
 }: DialogSurfaceProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
-  const titleId = baseId + '-title';
-  const descId = baseId + '-desc';
+  const titleId = panelId + '-title';
+  const descId = panelId + '-desc';
 
   useScrollEdges(bodyRef, (edges, el) => {
     el.toggleAttribute('data-scroll-top', edges.top);
@@ -90,7 +92,7 @@ function DialogSurface({
   return (
     <section
       {...htmlProps}
-      className={htmlProps?.className ? 'dialog ' + htmlProps.className : 'dialog'}
+      className={cx('dialog', htmlProps?.className)}
       role="dialog"
       aria-modal="true"
       data-size={size === 'md' ? undefined : size}
@@ -117,7 +119,7 @@ function DialogSurface({
           )}
         </div>
         {dismissible && (
-          <button type="button" className="dialog__close" aria-label="Close dialog" onClick={onRequestClose}>
+          <button type="button" className="dialog__close" aria-label="Close dialog" onClick={requestClose}>
             <Icon name="x" size="sm" weight="bold" />
           </button>
         )}
@@ -133,7 +135,7 @@ function DialogSurface({
 }
 
 export function Dialog({
-  open,
+  open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
   trigger = null,
@@ -150,8 +152,8 @@ export function Dialog({
   animation,
 }: DialogProps) {
   const autoId = useId();
-  const baseId = id || 'dialog-' + autoId;
-  const [isOpen, setOpen] = useControllable(open, defaultOpen, onOpenChange);
+  const panelId = id || 'dialog-' + autoId;
+  const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
   const triggerRef = useRef<HTMLElement>(null);
   const close = () => setOpen(false);
 
@@ -159,28 +161,22 @@ export function Dialog({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, {
-        open: isOpen,
-        onPress: () => setOpen(true),
-        panelId: baseId,
-        haspopup: 'dialog',
-        triggerRef,
-      })}
+      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
       <OverlayPortal>
         <Presence>
-          {isOpen && (
+          {open && (
             <ModalShell
               key="dialog"
               animate={{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }}
               exit={{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }}
               layerClass="overlay-layer--dialog"
-              slotClass="overlay-slot--dialog"
-              panelId={baseId}
+              panelClass="overlay-panel--dialog"
+              panelId={panelId}
               dismissible={dismissible}
               requestClose={close}
             >
               <DialogSurface
-                baseId={baseId}
+                panelId={panelId}
                 size={size}
                 tone={tone}
                 icon={icon}
@@ -188,7 +184,7 @@ export function Dialog({
                 description={description}
                 dismissible={dismissible}
                 footerContent={typeof footer === 'function' ? footer(close) : footer}
-                onRequestClose={close}
+                requestClose={close}
                 htmlProps={htmlProps}
               >
                 {children}
