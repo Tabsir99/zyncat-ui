@@ -9,6 +9,7 @@ import {
   useSyncExternalStore,
   type CSSProperties,
   type FocusEvent as ReactFocusEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type HTMLAttributes,
   type ReactElement,
@@ -18,6 +19,7 @@ import {
 import { createPortal } from 'react-dom';
 import { animate, startDrag, type Layer, type Playback } from '../../../engine';
 import { Presence } from '../../../motion/presence';
+import { Motion } from '../../../motion/element';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
 import { tokenPx } from '../../internal/utils/token-px';
@@ -151,20 +153,22 @@ function ToastItem({
   };
 
   return (
-    <li
+    <Motion
+      as="li"
       ref={ref}
+      exit={{ opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }}
       className="toast glass"
       data-tone={t.tone}
       data-behind={behind ? '' : undefined}
       role={t.tone === 'error' ? 'alert' : 'status'}
       aria-atomic="true"
       onPointerDown={onPointerDown}
-      onKeyDown={(e) => {
+      onKeyDown={(e: ReactKeyboardEvent) => {
         if (e.key === 'Escape' && t.dismissible) store.dismiss(t.id);
       }}
     >
       {t.node ? <div className="toast__custom">{t.node as ReactNode}</div> : <ToastBody t={t} />}
-    </li>
+    </Motion>
   );
 }
 
@@ -297,9 +301,7 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
   const frontH = n ? heights[slice[n - 1].id] || 0 : 0;
 
   return createPortal(
-    <Presence
-      as="ol"
-      exit={{ opacity: [0], scale: [0.96], timing: { duration: SM.dur.fast, ease: SM.ease.exit } }}
+    <ol
       {...htmlProps}
       className={
         'toast-viewport' + (paused ? ' is-paused' : '') + (htmlProps?.className ? ' ' + htmlProps.className : '')
@@ -322,28 +324,30 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
         if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget as Node)) onRelease(false);
       }}
     >
-      {slice.map((t, i) => {
-        const depth = n - 1 - i;
-        let offset = depth * gap;
-        if (expanded) {
-          offset = 0;
-          for (let j = i + 1; j < n; j++) offset += (heights[slice[j].id] || 0) + gap;
-        }
-        return (
-          <ToastItem
-            key={t.id}
-            t={t}
-            depth={expanded ? 0 : depth}
-            offset={offset}
-            hidden={!expanded && depth >= visible}
-            behind={!expanded && depth > 0}
-            frameHeight={!expanded && depth > 0 && frontH ? frontH : null}
-            isTop={isTop}
-            onHeight={onHeight}
-          />
-        );
-      })}
-    </Presence>,
+      <Presence>
+        {slice.map((t, i) => {
+          const depth = n - 1 - i;
+          let offset = depth * gap;
+          if (expanded) {
+            offset = 0;
+            for (let j = i + 1; j < n; j++) offset += (heights[slice[j].id] || 0) + gap;
+          }
+          return (
+            <ToastItem
+              key={t.id}
+              t={t}
+              depth={expanded ? 0 : depth}
+              offset={offset}
+              hidden={!expanded && depth >= visible}
+              behind={!expanded && depth > 0}
+              frameHeight={!expanded && depth > 0 && frontH ? frontH : null}
+              isTop={isTop}
+              onHeight={onHeight}
+            />
+          );
+        })}
+      </Presence>
+    </ol>,
     document.body,
   );
 }

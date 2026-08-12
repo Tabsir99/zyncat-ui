@@ -190,144 +190,153 @@ export function DialogPage() {
 }
 
 export function PopoverPage() {
+  const [open, setOpen] = useState(false);
   return (
     <Demo label="popover menu">
       <Popover
         side="bottom"
         align="start"
+        open={open}
+        onOpenChange={setOpen}
         trigger={
           <Button variant="secondary" iconRight={<Icon name="caret-down" size="sm" />}>
             Actions
           </Button>
         }
       >
-        {({ close }) => (
-          <div
-            role="menu"
-            aria-label="Actions"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-1)',
-              padding: 'var(--space-2)',
-              background: 'var(--bg-surface-raised)',
-              border: 'var(--border-hairline) solid var(--border-default)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-lg)',
-              minWidth: 200,
-            }}
-          >
-            {(
-              [
-                { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming...' },
-                { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
-                { icon: 'trash', label: 'Delete', msg: 'Deleted' },
-              ] as const
-            ).map((it) => (
-              <Button
-                key={it.label}
-                variant="ghost"
-                size="sm"
-                iconLeft={<Icon name={it.icon} size="sm" />}
-                style={{ justifyContent: 'flex-start', width: '100%' }}
-                onClick={() => {
-                  close();
-                  toast(it.msg);
-                }}
-              >
-                {it.label}
-              </Button>
-            ))}
-          </div>
-        )}
+        <div
+          role="menu"
+          aria-label="Actions"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--space-1)',
+            padding: 'var(--space-2)',
+            background: 'var(--bg-surface-raised)',
+            border: 'var(--border-hairline) solid var(--border-default)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-lg)',
+            minWidth: 200,
+          }}
+        >
+          {(
+            [
+              { icon: 'pencil-simple', label: 'Rename', msg: 'Renaming...' },
+              { icon: 'copy', label: 'Duplicate', msg: 'Duplicated' },
+              { icon: 'trash', label: 'Delete', msg: 'Deleted' },
+            ] as const
+          ).map((it) => (
+            <Button
+              key={it.label}
+              variant="ghost"
+              size="sm"
+              iconLeft={<Icon name={it.icon} size="sm" />}
+              style={{ justifyContent: 'flex-start', width: '100%' }}
+              onClick={() => {
+                setOpen(false);
+                toast(it.msg);
+              }}
+            >
+              {it.label}
+            </Button>
+          ))}
+        </div>
       </Popover>
     </Demo>
   );
 }
 
 export function SheetPage() {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [quickOpen, setQuickOpen] = useState(false);
   return (
     <>
       <Demo label="right - drag-to-dismiss">
-        <Sheet side="right" asChild trigger={<Button variant="secondary">Open panel</Button>}>
-          {({ close }) => (
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-label="Filters"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--space-4)',
-                width: 'min(400px, 92vw)',
-                height: '100%',
-                padding: 'var(--space-6)',
-                background: 'var(--bg-surface)',
-                boxShadow: 'var(--shadow-xl)',
-                overflowY: 'auto',
-              }}
-            >
-              <div className="stack" style={{ gap: 'var(--space-1)' }}>
-                <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Filters</h2>
-                <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
-                  Drag toward the edge, press Esc, or tap the scrim to dismiss.
-                </p>
-              </div>
-              <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
-                <Button variant="secondary" onClick={close}>
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    close();
-                    toast.success('Filters applied');
-                  }}
-                >
-                  Apply
-                </Button>
-              </div>
+        <Sheet
+          side="right"
+          open={filtersOpen}
+          onOpenChange={setFiltersOpen}
+          trigger={<Button variant="secondary">Open panel</Button>}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filters"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--space-4)',
+              width: 'min(400px, 92vw)',
+              height: '100%',
+              padding: 'var(--space-6)',
+              background: 'var(--bg-surface)',
+              boxShadow: 'var(--shadow-xl)',
+              overflowY: 'auto',
+            }}
+          >
+            <div className="stack" style={{ gap: 'var(--space-1)' }}>
+              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Filters</h2>
+              <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
+                Drag toward the edge, press Esc, or tap the scrim to dismiss.
+              </p>
             </div>
-          )}
+            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
+              <Button variant="secondary" onClick={() => setFiltersOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  setFiltersOpen(false);
+                  toast.success('Filters applied');
+                }}
+              >
+                Apply
+              </Button>
+            </div>
+          </div>
         </Sheet>
       </Demo>
       <Demo label="bottom">
-        <Sheet side="bottom" asChild trigger={<Button variant="secondary">Open bottom sheet</Button>}>
-          {({ close }) => (
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-label="Quick actions"
+        <Sheet
+          side="bottom"
+          open={quickOpen}
+          onOpenChange={setQuickOpen}
+          trigger={<Button variant="secondary">Open bottom sheet</Button>}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Quick actions"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--space-3)',
+              width: '100%',
+              maxHeight: '80vh',
+              padding: 'var(--space-6)',
+              background: 'var(--bg-surface)',
+              borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+              boxShadow: 'var(--shadow-xl)',
+            }}
+          >
+            <span
+              aria-hidden="true"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--space-3)',
-                width: '100%',
-                maxHeight: '80vh',
-                padding: 'var(--space-6)',
-                background: 'var(--bg-surface)',
-                borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
-                boxShadow: 'var(--shadow-xl)',
+                width: 36,
+                height: 4,
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--border-strong)',
+                alignSelf: 'center',
               }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: 36,
-                  height: 4,
-                  borderRadius: 'var(--radius-full)',
-                  background: 'var(--border-strong)',
-                  alignSelf: 'center',
-                }}
-              />
-              <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Quick actions</h2>
-              <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
-                The bottom sheet spans the full width and drags down to dismiss.
-              </p>
-              <Button onClick={close} style={{ alignSelf: 'flex-start' }}>
-                Done
-              </Button>
-            </div>
-          )}
+            />
+            <h2 style={{ font: 'var(--type-heading)', color: 'var(--text-strong)', margin: 0 }}>Quick actions</h2>
+            <p style={{ font: 'var(--type-body)', color: 'var(--text-muted)', margin: 0 }}>
+              The bottom sheet spans the full width and drags down to dismiss.
+            </p>
+            <Button onClick={() => setQuickOpen(false)} style={{ alignSelf: 'flex-start' }}>
+              Done
+            </Button>
+          </div>
         </Sheet>
       </Demo>
     </>

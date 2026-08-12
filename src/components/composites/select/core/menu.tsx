@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
 import type { Layer } from '../../../../engine';
 import { Presence } from '../../../../motion/presence';
+import { useMotion, type MotionSpecs } from '../../../../motion/use-motion';
 import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
 import { resolveMotionTiming } from '../../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../../motion/timing';
@@ -39,9 +40,18 @@ export interface SelectMenuProps {
   children?: ReactNode;
 }
 
-function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<SelectMenuProps, 'open' | 'animation'>) {
+function MenuSurface({
+  menuId,
+  close,
+  triggerRef,
+  multiple,
+  animate,
+  exit,
+  children,
+}: Omit<SelectMenuProps, 'open' | 'animation'> & MotionSpecs) {
   const menuRef = useRef<HTMLDivElement>(null);
   const entry = useOverlayEntry({ nodeRef: menuRef, dismissible: true, requestClose: close });
+  useMotion(menuRef, { animate, exit });
   useLayoutEffect(() => {
     const apply = () => {
       const t = triggerRef.current;
@@ -70,13 +80,17 @@ function MenuSurface({ menuId, close, triggerRef, multiple, children }: Omit<Sel
 export function SelectMenu({ open, menuId, close, triggerRef, multiple, animation, children }: SelectMenuProps) {
   return (
     <OverlayPortal>
-      <Presence
-        style={{ display: 'contents' }}
-        enter={selectMenuLayers(animation, 'open')}
-        exit={selectMenuLayers(animation, 'close')}
-      >
+      <Presence>
         {open && (
-          <MenuSurface key="menu" menuId={menuId} close={close} triggerRef={triggerRef} multiple={multiple}>
+          <MenuSurface
+            key="menu"
+            animate={selectMenuLayers(animation, 'open')}
+            exit={selectMenuLayers(animation, 'close')}
+            menuId={menuId}
+            close={close}
+            triggerRef={triggerRef}
+            multiple={multiple}
+          >
             {children}
           </MenuSurface>
         )}

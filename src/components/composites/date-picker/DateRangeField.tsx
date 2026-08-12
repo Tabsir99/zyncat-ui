@@ -64,11 +64,11 @@ export function DateRangeField({
 
   const display = val && val.start && val.end ? drpRangeText(val.start, val.end) : null;
   const trigger = <FieldTrigger display={display} placeholder={placeholder} disabled={disabled} />;
-  const panel = (api: { close: () => void }) => (
+  const panel = (
     <DrpPanel
       value={val}
       commit={commit}
-      close={api.close}
+      close={() => setPickerOpen(false)}
       min={min}
       max={max}
       timezone={timezone}

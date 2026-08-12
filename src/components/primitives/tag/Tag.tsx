@@ -1,10 +1,13 @@
 'use client';
 
 import './tag.css';
-import type { CSSProperties, HTMLAttributes, ReactNode, Ref } from 'react';
+import { createContext, useContext, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Presence } from '../../../motion/presence';
+import { Motion } from '../../../motion/element';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
+import type { FlipTuning } from '../../../motion/flip';
+import type { Layer } from '../../../engine';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import type { DataAttributes } from '../../../dom-props';
 
@@ -13,6 +16,14 @@ const TAG_LAYOUT_TIMING = {
   open: { duration: 'slow', ease: 'entrance' },
   close: { duration: 'slow', ease: 'entrance' },
 } as const;
+
+interface TagGroupMotion {
+  animate: Layer;
+  exit: Layer;
+  layout: FlipTuning;
+}
+
+const TagGroupContext = createContext<TagGroupMotion | null>(null);
 
 interface TagOwnProps {
   /** Tag content; a string label also seeds the default remove-button `aria-label`. */
@@ -82,9 +93,20 @@ export function Tag({
 }: TagProps) {
   const classes = ['tag', size === 'sm' ? 'tag--sm' : '', className].filter(Boolean).join(' ');
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
+  const group = useContext(TagGroupContext);
 
   return (
-    <span ref={ref} className={classes} style={style} data-disabled={disabled ? 'true' : undefined} {...htmlProps}>
+    <Motion
+      as="span"
+      ref={ref}
+      animate={group?.animate}
+      exit={group?.exit}
+      layout={group?.layout}
+      className={classes}
+      style={style}
+      data-disabled={disabled ? 'true' : undefined}
+      {...htmlProps}
+    >
       {icon && (
         <span className="tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>
@@ -96,7 +118,7 @@ export function Tag({
           <TagRemoveGlyph />
         </button>
       )}
-    </span>
+    </Motion>
   );
 }
 
@@ -104,19 +126,23 @@ export function TagGroup({ label, className = '', style, children, htmlProps, an
   const step = resolveMotionTiming(animation, TAG_TIMING);
   const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
 
+  const motion = {
+    animate: { opacity: [0, 1], scale: [0.9, 1], timing: step.open },
+    exit: { opacity: [1, 0], scale: [1, 0.9], timing: step.close },
+    layout: { timing: layout },
+  };
+
   return (
-    <Presence
+    <div
       {...htmlProps}
       className={['tag-group', className].filter(Boolean).join(' ')}
       style={style}
       role="group"
       aria-label={label}
-      initial={false}
-      flip={layout}
-      enter={{ opacity: [0, 1], scale: [0.9, 1], timing: step.open }}
-      exit={{ opacity: [1, 0], scale: [1, 0.9], timing: step.close }}
     >
-      {children}
-    </Presence>
+      <TagGroupContext.Provider value={motion}>
+        <Presence initial={false}>{children}</Presence>
+      </TagGroupContext.Provider>
+    </div>
   );
 }

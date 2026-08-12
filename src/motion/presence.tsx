@@ -2,29 +2,17 @@
 
 import {
   Children,
+  Fragment,
   createElement,
   isValidElement,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { animate, flip, measure, type Box, type Layer, type Playback, type Timing } from '../engine';
-
-export type Plays = Playback | Playback[] | null | undefined | void;
-export type Motion = Layer | Layer[] | ((el: HTMLElement) => Plays);
-
-const toList = (plays: Plays): Playback[] => (!plays ? [] : Array.isArray(plays) ? plays : [plays]);
-
-const run = (motion: Motion | undefined, el: HTMLElement): Playback[] => {
-  if (!motion) return [];
-  if (typeof motion === 'function') return toList(motion(el));
-  return [Array.isArray(motion) ? animate(el, ...motion) : animate(el, motion)];
-};
-
-const allSettled = (plays: Playback[]): Promise<void> =>
-  plays.length ? Promise.all(plays.map((play) => play.finished)).then((): void => {}) : Promise.resolve();
+import { PresenceContext } from './presence-context';
 
 interface Entry {
   key: string;
@@ -41,41 +29,24 @@ function toEntries(children: ReactNode): Entry[] {
 }
 
 export interface PresenceProps {
-  /** Keyed children. Each must render exactly one element. */
+  /** Keyed children. A child animates out only if it renders a `<Motion>` carrying `exit`. */
   children?: ReactNode;
-  /** Animate the children already present on first paint. @default true */
+  /** Let children present on the first paint play their `animate`. @default true */
   initial?: boolean;
-  /** Plays when a child is added. */
-  enter?: Motion;
-  /** Plays when a child is removed; it stays mounted until these finish. */
-  exit?: Motion;
-  /** Reflow surviving children with FLIP at this timing. */
-  flip?: Timing | false;
-  /** Tag for the container element this renders. @default 'div' */
-  as?: string;
-  [prop: string]: unknown;
+  /** `wait` holds entering children back until the outgoing ones have left. @default 'sync' */
+  mode?: 'sync' | 'wait';
+  /** Fires once the last exiting child has been removed. */
+  onExitComplete?: () => void;
 }
 
-export function Presence({
-  children,
-  initial = true,
-  enter,
-  exit,
-  flip: reflow = false,
-  as = 'div',
-  ...rest
-}: PresenceProps) {
+export function Presence({ children, initial = true, mode = 'sync', onExitComplete }: PresenceProps) {
   const incoming = toEntries(children);
   const signature = incoming.map((entry) => entry.key).join('|');
   const [shown, setShown] = useState<Entry[]>(incoming);
-
-  const host = useRef<HTMLElement | null>(null);
-  const phase = useRef(new Map<string, 'in' | 'out'>());
-  const playing = useRef(new Map<string, Playback[]>());
-  const boxes = useRef(new Map<string, Box>());
   const bornAtMount = useRef(new Set(incoming.map((entry) => entry.key)));
-  const spec = useRef({ enter, exit, reflow });
-  spec.current = { enter, exit, reflow };
+  const wasExiting = useRef(false);
+  const complete = useRef(onExitComplete);
+  complete.current = onExitComplete;
 
   useLayoutEffect(() => {
     setShown((previous) => {
@@ -89,71 +60,32 @@ export function Presence({
     });
   }, [signature]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useLayoutEffect(() => {
-    const container = host.current;
-    if (!container) return;
-    const els = Array.from(container.children) as HTMLElement[];
-    const { enter: playEnter, exit: playExit, reflow: flipTiming } = spec.current;
+  const leaving = shown.some((entry) => entry.exiting);
 
-    const stop = (key: string) => {
-      for (const play of playing.current.get(key) ?? []) play.stop();
-      playing.current.delete(key);
-    };
-
-    const settledBoxes = boxes.current;
-    if (flipTiming) {
-      const nextBoxes = new Map<string, Box>();
-      shown.forEach((entry, index) => {
-        if (els[index]) nextBoxes.set(entry.key, measure(els[index]));
-      });
-      boxes.current = nextBoxes;
-    }
-
-    shown.forEach((entry, index) => {
-      const el = els[index];
-      if (!el) return;
-      const at = phase.current.get(entry.key);
-
-      if (entry.exiting) {
-        if (at === 'out') return;
-        phase.current.set(entry.key, 'out');
-        const plays = run(playExit, el);
-        stop(entry.key);
-        playing.current.set(entry.key, plays);
-        allSettled(plays).then(() => {
-          if (phase.current.get(entry.key) !== 'out') return;
-          phase.current.delete(entry.key);
-          playing.current.delete(entry.key);
-          boxes.current.delete(entry.key);
-          setShown((previous) => previous.filter((e) => e.key !== entry.key || !e.exiting));
-        });
-        return;
-      }
-
-      if (at === undefined) {
-        phase.current.set(entry.key, 'in');
-        stop(entry.key);
-        const skip = !initial && bornAtMount.current.has(entry.key);
-        if (!skip) playing.current.set(entry.key, run(playEnter, el));
-        return;
-      }
-
-      const was = settledBoxes.get(entry.key);
-      if (flipTiming && was) flip(el, was, { scale: false, timing: flipTiming });
-    });
-  }, [shown, initial]);
-
-  useLayoutEffect(
-    () => () => {
-      for (const plays of playing.current.values()) for (const play of plays) play.stop();
-    },
-    [],
-  );
+  useEffect(() => {
+    if (wasExiting.current && !leaving) complete.current?.();
+    wasExiting.current = leaving;
+  }, [leaving]);
 
   const fresh = new Map(incoming.map((entry) => [entry.key, entry.node]));
+  const visible = mode === 'wait' && leaving ? shown.filter((entry) => entry.exiting) : shown;
+
   return createElement(
-    as,
-    { ...rest, ref: host },
-    shown.map((entry) => fresh.get(entry.key) ?? entry.node),
+    Fragment,
+    null,
+    visible.map((entry) =>
+      createElement(
+        PresenceContext.Provider,
+        {
+          key: entry.key,
+          value: {
+            isPresent: !entry.exiting,
+            initial: initial || !bornAtMount.current.has(entry.key),
+            safeToRemove: () => setShown((previous) => previous.filter((e) => e.key !== entry.key || !e.exiting)),
+          },
+        },
+        fresh.get(entry.key) ?? entry.node,
+      ),
+    ),
   );
 }

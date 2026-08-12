@@ -7,6 +7,7 @@ import {
   useRef,
   type ReactElement,
   type ReactNode,
+  type Ref,
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -99,41 +100,6 @@ function useOutsidePress({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-function cloneTrigger(
-  child: ReactElement,
-  props: Record<string, unknown>,
-  setNode?: (node: HTMLElement | null) => void,
-): ReactElement {
-  const own = child.props as Record<string, unknown>;
-  const merged: Record<string, unknown> = { ...props };
-  for (const key of Object.keys(props)) {
-    const mine = props[key];
-    const theirs = own[key];
-    if (key.startsWith('on') && typeof mine === 'function' && typeof theirs === 'function') {
-      merged[key] = (...args: unknown[]) => {
-        (theirs as (...a: unknown[]) => void)(...args);
-        (mine as (...a: unknown[]) => void)(...args);
-      };
-    }
-  }
-  if (setNode) {
-    const childRef = (child as ReactElement & { ref?: unknown }).ref;
-    merged.ref = (node: HTMLElement | null) => {
-      setNode(node);
-      if (typeof childRef === 'function') childRef(node);
-      else if (childRef && typeof childRef === 'object') (childRef as { current: unknown }).current = node;
-    };
-  }
-  return cloneElement(child, merged);
-}
-
-function ovResolveChildren(
-  children: ReactNode | ((api: { close: () => void }) => ReactNode),
-  close: () => void,
-): ReactNode {
-  return typeof children === 'function' ? children({ close }) : children;
-}
-
 function ovCloneTrigger(
   trigger: ReactElement | null,
   {
@@ -145,13 +111,22 @@ function ovCloneTrigger(
   }: { open: boolean; onPress: () => void; panelId: string; haspopup: string; triggerRef: RefObject<HTMLElement> },
 ): ReactElement | null {
   if (!trigger) return null;
-  return cloneTrigger(
-    trigger,
-    { 'aria-haspopup': haspopup, 'aria-expanded': open, 'aria-controls': open ? panelId : undefined, onClick: onPress },
-    (node) => {
-      triggerRef.current = node;
+  const own = trigger.props as { onClick?: (...args: unknown[]) => void };
+  const ownRef = (trigger as ReactElement & { ref?: Ref<HTMLElement> }).ref;
+  return cloneElement(trigger, {
+    'aria-haspopup': haspopup,
+    'aria-expanded': open,
+    'aria-controls': open ? panelId : undefined,
+    onClick: (...args: unknown[]) => {
+      own.onClick?.(...args);
+      onPress();
     },
-  );
+    ref: (node: HTMLElement | null) => {
+      triggerRef.current = node;
+      if (typeof ownRef === 'function') ownRef(node);
+      else if (ownRef) ownRef.current = node;
+    },
+  } as Partial<typeof trigger.props>);
 }
 
 function OverlayPortal({ children }: { children: ReactNode }) {
@@ -170,14 +145,5 @@ function OverlayPortal({ children }: { children: ReactNode }) {
   return createPortal(children, hostRef.current);
 }
 
-export {
-  ovIsTop,
-  ovInOverlayAbove,
-  useOverlayEntry,
-  useOutsidePress,
-  cloneTrigger,
-  ovCloneTrigger,
-  ovResolveChildren,
-  OverlayPortal,
-};
+export { ovIsTop, ovInOverlayAbove, useOverlayEntry, useOutsidePress, ovCloneTrigger, OverlayPortal };
 export type { OverlayEntry };

@@ -7,7 +7,7 @@ import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell, ovModalPlays } from '../../internal/overlay/modal';
+import { ModalShell } from '../../internal/overlay/modal';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
@@ -167,16 +167,12 @@ export function Dialog({
         triggerRef,
       })}
       <OverlayPortal>
-        <Presence
-          style={{ display: 'contents' }}
-          enter={(el) =>
-            ovModalPlays(el, 'open', [{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }])
-          }
-          exit={(el) => ovModalPlays(el, 'close', [{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }])}
-        >
+        <Presence>
           {isOpen && (
             <ModalShell
               key="dialog"
+              animate={{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }}
+              exit={{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }}
               layerClass="overlay-layer--dialog"
               slotClass="overlay-slot--dialog"
               panelId={baseId}

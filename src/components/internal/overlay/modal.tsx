@@ -3,10 +3,10 @@
 import './overlay.css';
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { animate, type Layer, type Playback } from '../../../engine';
+import { useMotion, run, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useOverlayEntry } from './layer';
 import { useReturnFocus, useFocusTrap } from './focus';
-import { ovPanelElement } from './panel';
 
 const SM = UIMotion;
 
@@ -60,19 +60,19 @@ const ovScrimTiming = {
   close: { duration: SM.dur.base, ease: SM.ease.standard },
 };
 
-export function ovModalPlays(layer: HTMLElement, dir: 'open' | 'close', slot: Layer[]): Playback[] {
-  const scrimEl = layer.querySelector<HTMLElement>('.overlay-scrim');
-  const slotEl = layer.querySelector<HTMLElement>('.overlay-slot');
-  const plays: Playback[] = [];
-  if (scrimEl) plays.push(animate(scrimEl, { opacity: dir === 'open' ? [0, 1] : [0], timing: ovScrimTiming[dir] }));
-  if (slotEl) plays.push(animate(slotEl, ...slot));
-  return plays;
-}
-
-function OverlayScrim({ dismissible, onPress }: { dismissible: boolean; onPress: () => void }) {
+function OverlayScrim({
+  dismissible,
+  onPress,
+  scrimRef,
+}: {
+  dismissible: boolean;
+  onPress: () => void;
+  scrimRef: RefObject<HTMLDivElement | null>;
+}) {
   const down = useRef(false);
   return (
     <div
+      ref={scrimRef}
       className="overlay-scrim"
       aria-hidden="true"
       onPointerDown={(e) => {
@@ -91,9 +91,10 @@ export function ModalShell({
   panelId,
   dismissible,
   requestClose,
-  asChild = false,
   slotRef: externalSlotRef = null,
   slotProps = {},
+  animate: animateSpec,
+  exit,
   children,
 }: {
   layerClass: string;
@@ -101,29 +102,39 @@ export function ModalShell({
   panelId: string;
   dismissible: boolean;
   requestClose: () => void;
-  asChild?: boolean;
   slotRef?: RefObject<HTMLElement> | null;
   slotProps?: Record<string, any>;
   children: ReactNode;
-}) {
+} & MotionSpecs) {
   const layerRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
   const internalSlotRef = useRef<HTMLElement>(null);
   const slotRef = externalSlotRef || internalSlotRef;
   const entry = useOverlayEntry({ nodeRef: layerRef, dismissible, requestClose });
+
+  const withScrim = (dir: 'open' | 'close', slotSpec: MotionSpec | undefined) => (): Playback[] => {
+    const fade: Layer = { opacity: dir === 'open' ? [0, 1] : [0], timing: ovScrimTiming[dir] };
+    const plays = scrimRef.current ? [animate(scrimRef.current, fade)] : [];
+    return slotRef.current ? plays.concat(run(slotSpec, slotRef.current)) : plays;
+  };
+
+  useMotion(layerRef, { animate: withScrim('open', animateSpec), exit: withScrim('close', exit) });
   useScrollLock();
   useInertOutside();
   useReturnFocus(layerRef);
   useFocusTrap({ panelRef: slotRef, entry });
   return (
     <div ref={layerRef} className={'overlay-layer ' + layerClass}>
-      <OverlayScrim dismissible={dismissible} onPress={requestClose} />
-      {ovPanelElement({
-        asChild,
-        children,
-        nodeRef: slotRef,
-        className: 'overlay-slot ' + slotClass,
-        panelProps: { id: panelId, tabIndex: -1, ...slotProps },
-      })}
+      <OverlayScrim dismissible={dismissible} onPress={requestClose} scrimRef={scrimRef} />
+      <div
+        id={panelId}
+        tabIndex={-1}
+        {...slotProps}
+        ref={slotRef as RefObject<HTMLDivElement>}
+        className={['overlay-slot', slotClass, slotProps.className].filter(Boolean).join(' ')}
+      >
+        {children}
+      </div>
     </div>
   );
 }

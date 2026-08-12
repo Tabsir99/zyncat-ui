@@ -2,13 +2,14 @@
 
 import './sheet.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import type { Layer } from '../../../engine';
+import { animate, type Layer } from '../../../engine';
 import { Presence } from '../../../motion/presence';
+import type { MotionSpecs } from '../../../motion/use-motion';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { ovResolveChildren, ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell, ovModalPlays } from '../../internal/overlay/modal';
+import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
+import { ModalShell } from '../../internal/overlay/modal';
 import { useSheetDrag, sheetSpan } from './use-sheet-drag';
 import type { DataAttributes } from '../../../dom-props';
 
@@ -34,23 +35,18 @@ export interface SheetProps {
   /** Scrim/Esc dismissal + drag-to-edge. Default true. */
   dismissible?: boolean;
 
-  /** Render no wrapper - your DOM-element child becomes the panel. Default false. */
-  asChild?: boolean;
-
   /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
   /** Standard attributes (className, style, data-*, ...) forwarded to the sheet panel. */
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   /** Open/close timing - motion tokens only, or `null` to disable. @default open 'slow'/'entrance', close 'base'/'exit' */
   animation?: DisableableAnimation;
-  /** The ENTIRE surface - paint AND semantics. Function form receives { close }. */
-  children: ReactNode | ((api: { close: () => void }) => ReactNode);
+  /** The ENTIRE surface - paint AND semantics. Drive dismissal with `open`/`onOpenChange`. */
+  children: ReactNode;
 }
 
-function sheetSlide(layer: HTMLElement, side: 'right' | 'bottom', at: number[]): Layer {
-  const slot = layer.querySelector<HTMLElement>('.overlay-slot');
-  const span = slot ? sheetSpan(slot, side) : 0;
-  const frames = at.map((ratio) => ratio * span);
+function sheetSlide(slot: HTMLElement, side: 'right' | 'bottom', at: number[]): Layer {
+  const frames = at.map((ratio) => ratio * sheetSpan(slot, side));
   return side === 'bottom' ? { y: frames } : { x: frames };
 }
 
@@ -58,29 +54,30 @@ function SheetShell({
   side,
   panelId,
   dismissible,
-  asChild,
   requestClose,
   htmlProps,
+  animate,
+  exit,
   children,
 }: {
   side: 'right' | 'bottom';
   panelId: string;
   dismissible: boolean;
-  asChild: boolean;
   requestClose: () => void;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   children: ReactNode;
-}) {
+} & MotionSpecs) {
   const slotRef = useRef<HTMLElement>(null);
   const slotProps = useSheetDrag({ side, slotRef, enabled: dismissible, requestClose });
   return (
     <ModalShell
+      animate={animate}
+      exit={exit}
       layerClass={'overlay-layer--sheet-' + side}
       slotClass={'overlay-slot--sheet-' + side}
       panelId={panelId}
       dismissible={dismissible}
       requestClose={requestClose}
-      asChild={asChild}
       slotRef={slotRef}
       slotProps={{ ...htmlProps, ...slotProps }}
     >
@@ -96,7 +93,6 @@ export function Sheet({
   trigger = null,
   side = 'right',
   dismissible = true,
-  asChild = false,
   id,
   htmlProps,
   animation,
@@ -113,26 +109,23 @@ export function Sheet({
     <Fragment>
       {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
       <OverlayPortal>
-        <Presence
-          style={{ display: 'contents' }}
-          enter={(el) => {
-            const plays = ovModalPlays(el, 'open', [{ ...sheetSlide(el, side, [1, 0]), timing: timings.open }]);
-            for (const play of plays) play.finished.then(() => play.stop());
-            return plays;
-          }}
-          exit={(el) => ovModalPlays(el, 'close', [{ ...sheetSlide(el, side, [1]), timing: timings.close }])}
-        >
+        <Presence>
           {open && (
             <SheetShell
               key="sheet"
+              animate={(slot) => {
+                const play = animate(slot, { ...sheetSlide(slot, side, [1, 0]), timing: timings.open });
+                play.finished.then(() => play.stop());
+                return play;
+              }}
+              exit={(slot) => animate(slot, { ...sheetSlide(slot, side, [1]), timing: timings.close })}
               side={side}
               panelId={panelId}
               dismissible={dismissible}
-              asChild={asChild}
               requestClose={close}
               htmlProps={htmlProps}
             >
-              {ovResolveChildren(children, close)}
+              {children}
             </SheetShell>
           )}
         </Presence>

@@ -1,6 +1,7 @@
 'use client';
 
 import './date-picker.css';
+import { useState } from 'react';
 import { Popover } from '../popover/Popover';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../../internal/hooks/use-controllable';
@@ -42,6 +43,7 @@ export function DateField({
   animation,
 }: DateFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const trigger = <FieldTrigger display={displayDay(val)} placeholder={placeholder} disabled={disabled} />;
 
   return (
@@ -55,10 +57,23 @@ export function DateField({
       className={className}
       htmlProps={htmlProps}
     >
-      <Popover trigger={trigger} side="bottom" align="start" animation={animation}>
-        {(api) => (
-          <DtpPanel val={val} commit={commit} close={api.close} min={min} max={max} timezone={timezone} label={label} />
-        )}
+      <Popover
+        trigger={trigger}
+        side="bottom"
+        align="start"
+        animation={animation}
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+      >
+        <DtpPanel
+          val={val}
+          commit={commit}
+          close={() => setPickerOpen(false)}
+          min={min}
+          max={max}
+          timezone={timezone}
+          label={label}
+        />
       </Popover>
     </FieldShell>
   );

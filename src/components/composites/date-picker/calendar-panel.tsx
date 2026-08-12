@@ -14,11 +14,11 @@ import { MONTHS, DOW, key as toKey, parse, col, today, grid, tzLabel, within } f
 export interface DtpPanelProps {
   val: string | null;
   commit: (key: string) => void;
+  close: () => void;
   min?: string;
   max?: string;
   timezone?: string;
   label?: string;
-  close: () => void;
   slot?: ReactNode;
 }
 

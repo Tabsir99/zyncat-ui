@@ -238,19 +238,8 @@ toast.promise(publishBatch(), {
         default: '140',
         description: 'Delay in ms the bubble lingers after the cursor leaves.',
       },
-      {
-        name: 'asChild',
-        type: 'boolean',
-        default: 'false',
-        description: 'Clone the child and merge event handlers directly; child must accept a ref.',
-      },
       { name: 'id', type: 'string', description: 'ID applied to the tooltip trigger wrapper.' },
-      {
-        name: 'children',
-        type: 'ReactElement',
-        required: true,
-        description: 'The trigger element; must accept a ref when asChild is true.',
-      },
+      { name: 'children', type: 'ReactElement', required: true, description: 'The trigger element.' },
     ],
   },
 
@@ -327,19 +316,22 @@ toast.promise(publishBatch(), {
   },
 
   popover: {
-    example: `import { Popover } from '@zyncat/ui/popover';
+    example: `import { useState } from 'react';
+import { Popover } from '@zyncat/ui/popover';
+
+const [open, setOpen] = useState(false);
 
 <Popover
   trigger={<button type="button">Actions</button>}
   side="bottom"
   align="start"
+  open={open}
+  onOpenChange={setOpen}
 >
-  {({ close }) => (
-    <menu>
-      <li><button type="button" onClick={close}>Reschedule</button></li>
-      <li><button type="button" onClick={close}>Move to drafts</button></li>
-    </menu>
-  )}
+  <menu>
+    <li><button type="button" onClick={() => setOpen(false)}>Reschedule</button></li>
+    <li><button type="button" onClick={() => setOpen(false)}>Move to drafts</button></li>
+  </menu>
 </Popover>`,
     props: [
       { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
@@ -375,12 +367,6 @@ toast.promise(publishBatch(), {
         default: 'true',
         description: 'Enables Esc and outside-press dismissal.',
       },
-      {
-        name: 'asChild',
-        type: 'boolean',
-        default: 'false',
-        description: 'Render no wrapper element; your DOM-element child becomes the panel directly.',
-      },
       { name: 'id', type: 'string', description: 'ID applied to the panel element.' },
       {
         name: 'children',
@@ -392,19 +378,22 @@ toast.promise(publishBatch(), {
   },
 
   sheet: {
-    example: `import { Sheet } from '@zyncat/ui/sheet';
+    example: `import { useState } from 'react';
+import { Sheet } from '@zyncat/ui/sheet';
+
+const [open, setOpen] = useState(false);
 
 <Sheet
   side="right"
   trigger={<button type="button">Channel settings</button>}
+  open={open}
+  onOpenChange={setOpen}
 >
-  {({ close }) => (
-    <div>
-      <h2>Channel settings</h2>
-      <p>Configure posting rules and scheduling limits for this channel.</p>
-      <button type="button" onClick={close}>Done</button>
-    </div>
-  )}
+  <div>
+    <h2>Channel settings</h2>
+    <p>Configure posting rules and scheduling limits for this channel.</p>
+    <button type="button" onClick={() => setOpen(false)}>Done</button>
+  </div>
 </Sheet>`,
     props: [
       { name: 'side', type: "'right' | 'bottom'", default: "'right'", description: 'Edge the sheet slides in from.' },
@@ -422,12 +411,6 @@ toast.promise(publishBatch(), {
         type: 'boolean',
         default: 'true',
         description: 'Enables the scrim, Esc key, and drag-to-edge gesture to close.',
-      },
-      {
-        name: 'asChild',
-        type: 'boolean',
-        default: 'false',
-        description: 'Render no wrapper element; your DOM-element child becomes the panel.',
       },
       { name: 'id', type: 'string', description: 'ID applied to the sheet panel element.' },
       {

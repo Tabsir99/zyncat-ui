@@ -36,9 +36,12 @@ interface ButtonOwnProps {
   onPointerDown?: React.PointerEventHandler<HTMLButtonElement>;
 }
 
-export interface ButtonProps extends ButtonOwnProps {
-  /** Standard <button> attributes (onClick, name, form, aria-*, data-*, ...) forwarded verbatim. */
-  htmlProps?: Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonOwnProps> & DataAttributes;
+type ButtonRestProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonOwnProps> & DataAttributes;
+
+export interface ButtonProps extends ButtonOwnProps, ButtonRestProps {
+  /** Standard <button> attributes (onClick, name, form, aria-*, data-*, ...) forwarded verbatim.
+   *  Bare `<button>` attributes also pass through directly; `htmlProps` wins on conflict. */
+  htmlProps?: ButtonRestProps;
 }
 
 export function Button({
@@ -57,6 +60,7 @@ export function Button({
   ref,
   onPointerDown,
   htmlProps,
+  ...rest
 }: ButtonProps) {
   const classes = [
     'btn',
@@ -79,6 +83,7 @@ export function Button({
       aria-busy={loading || undefined}
       onClick={onClick}
       onPointerDown={onPointerDown}
+      {...rest}
       {...htmlProps}
     >
       {iconLeft ? (

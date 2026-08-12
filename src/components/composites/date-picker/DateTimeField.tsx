@@ -73,6 +73,7 @@ export function DateTimeField({
   );
   const parts = dttfSplit(val);
 
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [pendDate, setPendDate] = useState<string | null>(null);
   const [pendTime, setPendTime] = useState<string | null>(null);
   useEffect(() => {
@@ -120,36 +121,41 @@ export function DateTimeField({
       className={className}
       htmlProps={htmlProps}
     >
-      <Popover trigger={trigger} side="bottom" align="start" animation={animation}>
-        {(api) => (
-          <DtpPanel
-            val={date}
-            commit={handleDate}
-            close={api.close}
-            min={minL.date}
-            max={maxL.date}
-            timezone={timezone}
-            label={label}
-            slot={
-              <div className="dtp__time">
-                <span className="dtp__timeLabel">Time</span>
-                <span className="dtp__timeHint" aria-hidden="true">
-                  <kbd>↑</kbd>
-                  <kbd>↓</kbd>
-                </span>
-                <TimeSegments
-                  value={time}
-                  onCommit={handleTime}
-                  format={format}
-                  minuteStep={minuteStep}
-                  min={minTime}
-                  max={maxTime}
-                  ariaLabel="Time"
-                />
-              </div>
-            }
-          />
-        )}
+      <Popover
+        trigger={trigger}
+        side="bottom"
+        align="start"
+        animation={animation}
+        open={pickerOpen}
+        onOpenChange={setPickerOpen}
+      >
+        <DtpPanel
+          val={date}
+          commit={handleDate}
+          close={() => setPickerOpen(false)}
+          min={minL.date}
+          max={maxL.date}
+          timezone={timezone}
+          label={label}
+          slot={
+            <div className="dtp__time">
+              <span className="dtp__timeLabel">Time</span>
+              <span className="dtp__timeHint" aria-hidden="true">
+                <kbd>↑</kbd>
+                <kbd>↓</kbd>
+              </span>
+              <TimeSegments
+                value={time}
+                onCommit={handleTime}
+                format={format}
+                minuteStep={minuteStep}
+                min={minTime}
+                max={maxTime}
+                ariaLabel="Time"
+              />
+            </div>
+          }
+        />
       </Popover>
     </FieldShell>
   );

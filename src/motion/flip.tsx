@@ -9,7 +9,7 @@ export interface FlipTuning {
   timing?: Timing;
 }
 
-export function useSelfFlip<T extends HTMLElement>(tuning: FlipTuning = {}): RefObject<T | null> {
+export function useSelfFlip<T extends HTMLElement>(tuning: FlipTuning = {}, enabled = true): RefObject<T | null> {
   const ref = useRef<T | null>(null);
   const previous = useRef<Box | null>(null);
   const playing = useRef<Playback | null>(null);
@@ -17,7 +17,7 @@ export function useSelfFlip<T extends HTMLElement>(tuning: FlipTuning = {}): Ref
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
     const from = playing.current ? measure(el) : previous.current;
     playing.current?.stop();
     previous.current = measure(el);
@@ -38,14 +38,18 @@ export function useSelfFlip<T extends HTMLElement>(tuning: FlipTuning = {}): Ref
   return ref;
 }
 
-export function useSharedFlip<T extends HTMLElement>(id: string, tuning: FlipTuning = {}): RefObject<T | null> {
+export function useSharedFlip<T extends HTMLElement>(
+  id: string,
+  tuning: FlipTuning = {},
+  enabled = true,
+): RefObject<T | null> {
   const ref = useRef<T | null>(null);
   const playing = useRef<{ play: Playback; el: T } | null>(null);
   const { scale, timing } = tuning;
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
     const live = playing.current;
     const from = live && live.el === el ? measure(el) : readShared(id);
     live?.play.stop();
@@ -58,6 +62,7 @@ export function useSharedFlip<T extends HTMLElement>(id: string, tuning: FlipTun
   });
 
   useLayoutEffect(() => {
+    if (!enabled) return;
     return () => {
       playing.current?.play.stop();
       const mine = readShared(id);
@@ -65,7 +70,7 @@ export function useSharedFlip<T extends HTMLElement>(id: string, tuning: FlipTun
         if (readShared(id) === mine) dropShared(id);
       });
     };
-  }, [id]);
+  }, [id, enabled]);
 
   return ref;
 }
