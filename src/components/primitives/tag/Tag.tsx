@@ -134,7 +134,7 @@ export function TagGroup({ ariaLabel, className = '', style, children, htmlProps
   };
 
   return (
-    <div {...htmlProps} className={cx('tag-group', className)} style={style} role="group" aria-label={ariaLabel}>
+    <div className={cx('tag-group', className)} style={style} role="group" aria-label={ariaLabel} {...htmlProps}>
       <TagGroupContext.Provider value={motion}>
         <Presence initial={false}>{children}</Presence>
       </TagGroupContext.Provider>

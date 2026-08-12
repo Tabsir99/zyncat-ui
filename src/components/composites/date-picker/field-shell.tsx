@@ -50,7 +50,7 @@ export function FieldShell({
   htmlProps,
   children,
 }: FieldShellProps) {
-  const cls = cx('fld', variant, 'fld--has-lead', invalid && 'is-error', className);
+  const cls = cx('fld', variant, 'fld--has-lead', invalid && 'is-error', className, htmlProps?.className);
   return (
     <div {...htmlProps} className={cls}>
       <FieldLabel label={label} required={required} />

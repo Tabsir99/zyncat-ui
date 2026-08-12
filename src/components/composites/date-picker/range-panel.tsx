@@ -1,7 +1,7 @@
 'use client';
 
 import './date-picker.css';
-import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
@@ -81,12 +81,14 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
 
   const daysRef = useRef<HTMLDivElement>(null);
   const presetsRef = useRef<HTMLDivElement>(null);
-  const armFocus = useDayFocus(daysRef, focusKey);
+  const viewIdx = view.y * 12 + view.m;
+  const armFocus = useDayFocus(daysRef, focusKey, viewIdx);
 
+  const uid = useId();
   const gridGlide = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
-  const capLoRef = useSharedFlip<HTMLSpanElement>('drp-cap-lo', { timing: UIMotion.t.settle });
-  const capHiRef = useSharedFlip<HTMLSpanElement>('drp-cap-hi', { timing: UIMotion.t.settle });
+  const capLoRef = useSharedFlip<HTMLSpanElement>('drp-cap-lo-' + uid, { timing: UIMotion.t.settle });
+  const capHiRef = useSharedFlip<HTMLSpanElement>('drp-cap-hi-' + uid, { timing: UIMotion.t.settle });
 
   const inBounds = (key: string): boolean => within(key, min, max);
 
@@ -133,23 +135,23 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
     });
   }
 
-  const viewIdx = view.y * 12 + view.m;
   const prevViewIdxRef = useRef(viewIdx);
   const navDir = prevViewIdxRef.current === viewIdx ? 0 : viewIdx > prevViewIdxRef.current ? 1 : -1;
   useEffect(() => {
     prevViewIdxRef.current = viewIdx;
   }, [viewIdx]);
 
-  function moveFocus(deltaDays: number) {
-    const key = add(focusKey, deltaDays);
-    const d = parse(key);
+  function moveFocus(deltaDays: number, deltaMonths = 0) {
+    const d = parse(focusKey);
+    if (deltaMonths) d.setMonth(d.getMonth() + deltaMonths);
+    if (deltaDays) d.setDate(d.getDate() + deltaDays);
+    const key = toKey(d);
     armFocus();
     setFocusKey(key);
     if (anchor) setHoverKey(key);
-    const first = view.y * 12 + view.m;
     const idx = d.getFullYear() * 12 + d.getMonth();
-    const last = first + (months - 1);
-    if (idx < first) setView({ y: d.getFullYear(), m: d.getMonth() });
+    const last = viewIdx + (months - 1);
+    if (idx < viewIdx) setView({ y: d.getFullYear(), m: d.getMonth() });
     else if (idx > last) {
       const back = new Date(d.getFullYear(), d.getMonth() - (months - 1), 1);
       setView({ y: back.getFullYear(), m: back.getMonth() });
@@ -161,13 +163,9 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
     else if (k === 'ArrowRight') moveFocus(1);
     else if (k === 'ArrowUp') moveFocus(-7);
     else if (k === 'ArrowDown') moveFocus(7);
-    else if (k === 'PageUp') {
-      nav(-1);
-      return;
-    } else if (k === 'PageDown') {
-      nav(1);
-      return;
-    } else if (k === 'Enter' || k === ' ') pickDay(focusKey);
+    else if (k === 'PageUp') moveFocus(0, -1);
+    else if (k === 'PageDown') moveFocus(0, 1);
+    else if (k === 'Enter' || k === ' ') pickDay(focusKey);
     else if (k === 'Escape' && anchor) {
       setAnchor(null);
       setHoverKey(null);

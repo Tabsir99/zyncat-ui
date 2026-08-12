@@ -152,6 +152,7 @@ export function Textarea({
             rows={minRows}
             value={text}
             placeholder={placeholder}
+            required={required}
             disabled={disabled}
             readOnly={readOnly}
             onChange={onChange}

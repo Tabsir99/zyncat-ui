@@ -91,6 +91,7 @@ export function OtpField({
         inputMode="numeric"
         autoComplete="one-time-code"
         disabled={disabled}
+        aria-invalid={error || undefined}
         value={chars[i].trim()}
         data-filled={chars[i].trim() ? 'true' : 'false'}
         onFocus={(e: FocusEvent<HTMLInputElement>) => caretEnd(e.target)}

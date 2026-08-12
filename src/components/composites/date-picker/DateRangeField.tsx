@@ -90,7 +90,7 @@ export function DateRangeField({
       htmlProps={htmlProps}
     >
       {narrow ? (
-        <Sheet trigger={trigger} side="bottom" open={pickerOpen} onOpenChange={setPickerOpen}>
+        <Sheet trigger={trigger} side="bottom" open={pickerOpen} onOpenChange={setPickerOpen} animation={animation}>
           {panel}
         </Sheet>
       ) : (

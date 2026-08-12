@@ -62,7 +62,7 @@ export function TextField({
 }: TextFieldProps) {
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
   const inputRef = useRef<HTMLInputElement>(null);
-  const showClear = clearable && value;
+  const showClear = clearable && value && !rest.disabled && !rest.readOnly;
 
   function clear() {
     const el = inputRef.current;

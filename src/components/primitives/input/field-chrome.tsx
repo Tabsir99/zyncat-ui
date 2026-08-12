@@ -11,7 +11,7 @@ export interface FieldIdProps {
 }
 
 export interface FieldRequirementProps {
-  /** Show a danger `*` after the label. */
+  /** Mark the control required - reaches the native element and shows a danger `*` after the label. */
   required?: boolean;
   /** Show a muted "(optional)" after the label. */
   optional?: boolean;

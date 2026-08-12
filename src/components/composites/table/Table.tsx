@@ -221,6 +221,7 @@ export function Table<Row = any>({
   const showEmpty = !loading && sortedRows.length === 0;
   const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
 
+  const checkSize = density === 'compact' ? 'sm' : 'md';
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 
@@ -245,6 +246,7 @@ export function Table<Row = any>({
         >
           <Checkbox
             className="tbl__cbx"
+            size={checkSize}
             checked={allSelected}
             indeterminate={someSelected}
             htmlProps={{ 'aria-label': 'Select all rows' }}
@@ -271,6 +273,7 @@ export function Table<Row = any>({
                   <th scope="col" className={checkCellCls}>
                     <Checkbox
                       className="tbl__cbx"
+                      size={checkSize}
                       checked={allSelected}
                       indeterminate={someSelected}
                       htmlProps={{ 'aria-label': 'Select all rows' }}
@@ -334,6 +337,7 @@ export function Table<Row = any>({
                         <td className={checkCellCls} onClick={(e) => e.stopPropagation()}>
                           <Checkbox
                             className="tbl__cbx"
+                            size={checkSize}
                             checked={isSel}
                             htmlProps={{
                               'aria-label': selectionLabel ? selectionLabel(row) : 'Select row',

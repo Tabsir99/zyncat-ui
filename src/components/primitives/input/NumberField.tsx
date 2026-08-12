@@ -24,6 +24,8 @@ interface NumberFieldOwnProps extends FieldIdProps, FieldCoreMessagingProps {
   defaultValue?: number;
   /** Called with the next clamped number. */
   onChange?: (value: number) => void;
+  /** Disabled - the input and both steppers go inert. */
+  disabled?: boolean;
   /** Control height: sm - md (default) - lg. */
   size?: 'sm' | 'md' | 'lg';
   /** Extra class(es) merged onto the field root. */
@@ -53,6 +55,7 @@ export function NumberField({
   value,
   defaultValue = 0,
   onChange,
+  disabled,
   size,
   className = '',
   style,
@@ -86,6 +89,8 @@ export function NumberField({
           className="fld__input"
           type="text"
           inputMode="decimal"
+          disabled={disabled}
+          aria-invalid={error ? true : undefined}
           value={draft !== null ? draft : String(num)}
           onChange={(e) => {
             const text = e.target.value.replace(/[^\d.-]/g, '');
@@ -112,7 +117,7 @@ export function NumberField({
             type="button"
             className="numf__step"
             aria-label="Increase"
-            disabled={v >= max}
+            disabled={disabled || v >= max}
             onClick={() => commit(v + step)}
           >
             <Icon name="caret-up" size="sm" />
@@ -121,7 +126,7 @@ export function NumberField({
             type="button"
             className="numf__step"
             aria-label="Decrease"
-            disabled={v <= min}
+            disabled={disabled || v <= min}
             onClick={() => commit(v - step)}
           >
             <Icon name="caret-down" size="sm" />

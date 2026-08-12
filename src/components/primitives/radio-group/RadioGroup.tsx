@@ -143,6 +143,7 @@ export function RadioGroup({
                 name={name}
                 value={opt.value}
                 checked={selected}
+                required={required}
                 disabled={isDisabled}
                 onChange={() => onChange && onChange(opt.value)}
               />
