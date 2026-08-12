@@ -208,11 +208,6 @@
       "types": "./dist/motion-devtools.d.ts",
       "import": "./dist/motion-devtools.js"
     },
-    "./glide": {
-      "source": "./src/motion/glide.tsx",
-      "types": "./dist/glide.d.ts",
-      "import": "./dist/glide.js"
-    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

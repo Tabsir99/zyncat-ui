@@ -273,13 +273,12 @@
   transition: var(--transition-opacity);
 }
 
-/* Hover pill - one persistent fill in the list (../motion/glide) that travels to the active row and
-   animates its real size, so it's never clipped by the searchable rows' collapse and never scales.
-   GlidePill sets x/y/width/height inline; the option (position: relative) paints above it. */
+/* Hover pill - fills the active row, sharing one layoutId (Motion) so it travels there
+   from the previously active row. The option is position: relative, so its content
+   (z-index auto, in flow) paints above this z:0 box. */
 .select__glide {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: 0;
   border-radius: var(--radius-md);
   background: var(--neutral-wash);

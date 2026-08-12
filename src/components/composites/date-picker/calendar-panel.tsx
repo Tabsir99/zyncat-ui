@@ -6,7 +6,7 @@ import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
-import { GlidePill, useGlide } from '../../../motion/glide';
+import { Motion } from '../../../motion/element';
 import { useSharedFlip } from '../../../motion/flip';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
@@ -27,13 +27,14 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
   const seed = val ? parse(val) : new Date();
   const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
   const [focusKey, setFocusKey] = useState<string>(val || today());
+  const [hovered, setHovered] = useState<string | null>(null);
 
   const daysRef = useRef<HTMLDivElement>(null);
   const prevViewRef = useRef<number | null>(null);
   const uid = useId();
   const pillId = 'dtp-pill-' + uid;
+  const hoverId = 'dtp-hover-' + uid;
 
-  const glide = useGlide(daysRef);
   const pillRef = useSharedFlip<HTMLSpanElement>(pillId, { timing: UIMotion.t.settle });
 
   const inRange = (key: string): boolean => within(key, min, max);
@@ -167,7 +168,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
           role="grid"
           aria-label="Calendar"
           onKeyDown={onGridKeyDown}
-          onPointerLeave={glide.leave}
+          onPointerLeave={() => setHovered(null)}
         >
           {weeks.map((week, wi) => (
             <div key={wi} role="row" className="dtp__row">
@@ -188,8 +189,17 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                     aria-selected={sel || undefined}
                     aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
                     onClick={() => pickDay(key)}
-                    onPointerEnter={(e) => glide.enter(e.currentTarget)}
+                    onPointerEnter={() => setHovered(key)}
                   >
+                    {hovered === key && (
+                      <Motion
+                        as="span"
+                        layoutId={hoverId}
+                        layout={{ timing: UIMotion.t.settle }}
+                        className="dtp__hover"
+                        aria-hidden="true"
+                      />
+                    )}
                     {sel ? <span className="dtp__pill" aria-hidden="true" ref={pillRef}></span> : null}
                     <span className="dtp__num">{d.getDate()}</span>
                     {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
@@ -198,7 +208,6 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
               })}
             </div>
           ))}
-          <GlidePill className="dtp__hover" glide={glide} />
         </div>
       </div>
 

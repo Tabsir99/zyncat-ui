@@ -4,7 +4,8 @@ import { Fragment, useMemo, type ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
 import { Collapse } from '../../../primitives/collapse/Collapse';
-import { GlidePill } from '../../../../motion/glide';
+import { Motion } from '../../../../motion/element';
+import { UIMotion } from '../../../../tokens/motion-tokens';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
 import type { DisableableAnimation } from '../../../../motion/timing';
@@ -91,7 +92,6 @@ export function ListboxPanel({
         aria-label={ariaLabel}
         onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
       >
-        <GlidePill className="select__glide" glide={lb.glide} />
         {loading ? (
           <LoadingRows />
         ) : (
@@ -123,6 +123,15 @@ export function ListboxPanel({
                       onClick={() => visible && lb.commit(opt)}
                       data-size={size}
                     >
+                      {visible && i === lb.activeIdx && (
+                        <Motion
+                          as="span"
+                          layoutId={lb.hoverId}
+                          layout={{ timing: UIMotion.t.settle }}
+                          className="select__glide"
+                          aria-hidden="true"
+                        />
+                      )}
                       {opt.icon && (
                         <span className="select__option-icon">
                           <IconSlot size="sm">{opt.icon}</IconSlot>

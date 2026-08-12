@@ -70,7 +70,12 @@ export function useSharedFlip<T extends HTMLElement>(
   useLayoutEffect(() => {
     if (!enabled) return;
     return () => {
-      playing.current?.play.stop();
+      const live = playing.current;
+      if (live) {
+        const box = measure(live.el);
+        if (box.width && box.height) keepShared(id, box);
+        live.play.stop();
+      }
       const mine = readShared(id);
       queueMicrotask(() => {
         if (readShared(id) === mine) dropShared(id);

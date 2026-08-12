@@ -43,7 +43,6 @@ const EXPLICIT_ENTRIES: Record<string, string> = {
   'toast-store': 'components/composites/toast/toast-store.ts',
   'motion-tokens': 'tokens/motion-tokens.ts',
   'motion-devtools': 'components/dev/MotionDevtools.tsx',
-  glide: 'motion/glide.tsx',
 };
 
 export const dsAliases = [

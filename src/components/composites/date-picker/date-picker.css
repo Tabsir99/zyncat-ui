@@ -123,7 +123,7 @@
 }
 
 .dtp__days {
-  position: relative; /* containing block + measuring frame for the glide pill */
+  position: relative;
   display: grid;
   grid-template-columns: repeat(7, var(--dtp-cell));
   gap: var(--space-1);
@@ -167,16 +167,15 @@
   cursor: default;
 }
 
-/* gliding hover pill (useGlide) - bg-muted (not -subtle, else ~ invisible on the raised surface); z:-1 under numerals + selection tint. */
+/* gliding hover pill - fills the hovered day; a shared layoutId (Motion) FLIPs it between days. bg-muted (not -subtle, else ~ invisible on the raised surface); z:-1 under numerals + selection tint. */
 .dtp__hover {
-  opacity: 0;
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: -1;
   border-radius: var(--radius-md);
   background: var(--neutral-wash);
-  will-change: transform, opacity;
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* selection - a quiet tint, not a solid fill (so it never outshouts Done); the layoutId node, so fill + border travel together. */
@@ -335,20 +334,20 @@
   color: var(--text-accent);
   font-weight: var(--weight-medium);
 }
-/* gliding hover indicator - one pill that glides between presets (see glide-pill); the active tint is separate. */
+/* gliding hover indicator - fills the hovered preset; a shared layoutId (Motion) FLIPs it between presets. the active tint is separate. */
 .drp__presetGlide {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: -1;
   border-radius: var(--radius-md);
   background: var(--neutral-wash);
-  will-change: transform, opacity;
+  pointer-events: none;
+  will-change: transform;
 }
 
 .drp__months {
-  position: relative; /* containing block + measuring frame for the glide pill spanning both grids */
-  isolation: isolate; /* contain the pill's z:-1 here, else it paints behind the panel surface */
+  position: relative;
+  isolation: isolate; /* contain the caps' stacking here, else they paint behind the panel surface */
   display: flex;
 }
 .drp__months .dtp__cal {
