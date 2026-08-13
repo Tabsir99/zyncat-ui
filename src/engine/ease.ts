@@ -14,40 +14,13 @@ const NAMED: Record<string, Bezier> = {
   anticipate: [0.38, -0.4, 0.88, 1.08],
 };
 
-const bezierCurve = (a: number, b: number, t: number) => {
-  const u = 1 - t;
-  return 3 * a * u * u * t + 3 * b * u * t * t + t * t * t;
-};
-
-const bezierSlope = (a: number, b: number, t: number) => {
-  const u = 1 - t;
-  return 3 * a * (u * u - 2 * t * u) + 3 * b * (2 * t * u - t * t) + 3 * t * t;
-};
-
-export function bezierAt(b: Bezier, x: number): number {
-  const [x1, y1, x2, y2] = b;
-  if (x1 === y1 && x2 === y2) return x;
-  if (x <= 0) return 0;
-  if (x >= 1) return 1;
-  let t = x;
-  for (let i = 0; i < 8; i++) {
-    const err = bezierCurve(x1, x2, t) - x;
-    if (err < 1e-4 && err > -1e-4) break;
-    const slope = bezierSlope(x1, x2, t);
-    if (slope < 1e-6 && slope > -1e-6) break;
-    t -= err / slope;
-  }
-  return bezierCurve(y1, y2, t);
-}
-
 export type EaseValue = NonNullable<MotionTransition['ease']>;
 
-export const toBezier = (ease: EaseValue): Bezier =>
-  typeof ease === 'string' ? (NAMED[ease] ?? NAMED.easeInOut) : ease;
+const toBezier = (ease: EaseValue): Bezier => (typeof ease === 'string' ? (NAMED[ease] ?? NAMED.easeInOut) : ease);
 
-export const cssBezier = (ease: EaseValue): string => `cubic-bezier(${toBezier(ease).join(',')})`;
+const cssBezier = (ease: EaseValue): string => `cubic-bezier(${toBezier(ease).join(',')})`;
 
-export const isSegmented = (ease: unknown): ease is EaseValue[] =>
+const isSegmented = (ease: unknown): ease is EaseValue[] =>
   Array.isArray(ease) && (Array.isArray(ease[0]) || typeof ease[0] === 'string');
 
 const ARRIVAL = 0.99;
@@ -103,7 +76,6 @@ function toLinearEasing(at: (progress: number) => number, durationMs: number): s
 interface SpringCurve {
   duration: number;
   easing: string;
-  at(progress: number): number;
 }
 
 const springCache = new Map<string, SpringCurve>();
@@ -117,7 +89,7 @@ function springCurve(visual: number, bounce: number): SpringCurve {
   const seconds = settleSeconds(zeta, omega, visual);
   const duration = seconds * 1000;
   const at = (progress: number) => (progress >= 1 ? 1 : springAt(zeta, omega, progress * seconds));
-  const curve: SpringCurve = { duration, easing: toLinearEasing(at, duration), at };
+  const curve: SpringCurve = { duration, easing: toLinearEasing(at, duration) };
   springCache.set(key, curve);
   return curve;
 }
@@ -133,7 +105,6 @@ export interface ResolvedTiming {
   delay: number;
   easing: string;
   segments: string[] | null;
-  at(progress: number): number;
 }
 
 export function resolveTiming(timing: Timing = {}): ResolvedTiming {
@@ -142,14 +113,11 @@ export function resolveTiming(timing: Timing = {}): ResolvedTiming {
   if (spring) {
     const visual = Math.max(timing.visualDuration ?? timing.duration ?? 0.3, 0.01);
     const curve = springCurve(visual, timing.bounce ?? 0);
-    return { duration: curve.duration, delay, easing: curve.easing, segments: null, at: curve.at };
+    return { duration: curve.duration, delay, easing: curve.easing, segments: null };
   }
   const duration = (timing.duration ?? 0.3) * 1000;
   const ease = timing.ease;
-  if (isSegmented(ease)) {
-    const first = toBezier(ease[0]);
-    return { duration, delay, easing: 'linear', segments: ease.map(cssBezier), at: (p) => bezierAt(first, p) };
-  }
+  if (isSegmented(ease)) return { duration, delay, easing: 'linear', segments: ease.map(cssBezier) };
   const bezier = ease === undefined ? NAMED.easeInOut : toBezier(ease);
-  return { duration, delay, easing: cssBezier(bezier), segments: null, at: (p) => bezierAt(bezier, p) };
+  return { duration, delay, easing: cssBezier(bezier), segments: null };
 }
