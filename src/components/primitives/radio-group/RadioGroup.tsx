@@ -6,13 +6,15 @@ import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { Collapse } from '../collapse/Collapse';
 import { GlidePill, useGlide } from '../../../motion/glide';
-import { useSharedFlip } from '../../../motion/flip';
+import { Motion } from '../../../motion/element';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 import type { FieldRequirementProps } from '../input/field-chrome';
 
 const SM = UIMotion;
+const LAYOUT_FLIP = { timing: SM.t.layout };
+const HOVER_FLIP = { scale: false, timing: SM.t.layout };
 
 export interface RadioOption {
   /** The stored value - what `onChange` returns and `value` matches. */
@@ -83,9 +85,6 @@ export function RadioGroup({
   const [hovered, setHovered] = useState<string | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
   const glide = useGlide(optionsRef);
-  const markerRef = useSharedFlip<HTMLSpanElement>(groupId + ':marker', { timing: SM.t.layout });
-  const fillRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-fill', { timing: SM.t.layout });
-  const cardHoverRef = useSharedFlip<HTMLSpanElement>(groupId + ':card-hover', { scale: false, timing: SM.t.layout });
 
   const cls = cx(
     'rg',
@@ -148,10 +147,22 @@ export function RadioGroup({
                 onChange={() => onChange && onChange(opt.value)}
               />
               {variant === 'cards' && hovered === opt.value && !selected && (
-                <span className="rg__card-hover" aria-hidden="true" ref={cardHoverRef}></span>
+                <Motion
+                  as="span"
+                  layoutId={groupId + ':card-hover'}
+                  layoutTransition={HOVER_FLIP}
+                  className="rg__card-hover"
+                  aria-hidden="true"
+                />
               )}
               {variant === 'cards' && selected && (
-                <span className="rg__card-fill" aria-hidden="true" ref={fillRef}></span>
+                <Motion
+                  as="span"
+                  layoutId={groupId + ':card-fill'}
+                  layoutTransition={LAYOUT_FLIP}
+                  className="rg__card-fill"
+                  aria-hidden="true"
+                />
               )}
               {variant === 'cards' && opt.icon && (
                 <span className="rg-opt__icon">
@@ -160,7 +171,15 @@ export function RadioGroup({
               )}
               <span className="rg-opt__control">
                 <span className="rg-opt__dot">
-                  {selected && <span className="rg__marker" aria-hidden="true" ref={markerRef}></span>}
+                  {selected && (
+                    <Motion
+                      as="span"
+                      layoutId={groupId + ':marker'}
+                      layoutTransition={LAYOUT_FLIP}
+                      className="rg__marker"
+                      aria-hidden="true"
+                    />
+                  )}
                 </span>
               </span>
               <span className="rg-opt__body">

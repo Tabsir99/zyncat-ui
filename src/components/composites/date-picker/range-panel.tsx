@@ -6,9 +6,11 @@ import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { GlidePill, useGlide } from '../../../motion/glide';
-import { useSharedFlip } from '../../../motion/flip';
+import { Motion } from '../../../motion/element';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, pad, toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
+
+const CAP_FLIP = { timing: UIMotion.t.settle };
 
 /** A date range as wall-clock 'YYYY-MM-DD' endpoints, inclusive. */
 export interface DateRange {
@@ -87,8 +89,8 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
   const uid = useId();
   const gridGlide = useGlide(daysRef);
   const presetGlide = useGlide(presetsRef);
-  const capLoRef = useSharedFlip<HTMLSpanElement>('drp-cap-lo-' + uid, { timing: UIMotion.t.settle });
-  const capHiRef = useSharedFlip<HTMLSpanElement>('drp-cap-hi-' + uid, { timing: UIMotion.t.settle });
+  const capLoId = 'drp-cap-lo-' + uid;
+  const capHiId = 'drp-cap-hi-' + uid;
 
   const inBounds = (key: string): boolean => within(key, min, max);
 
@@ -227,10 +229,22 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
       >
         {band ? <span className={bandCls.join(' ')} aria-hidden="true"></span> : null}
         {loCap ? (
-          <span className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')} aria-hidden="true" ref={capLoRef}></span>
+          <Motion
+            as="span"
+            layoutId={capLoId}
+            layoutTransition={CAP_FLIP}
+            className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')}
+            aria-hidden="true"
+          />
         ) : null}
         {hiCap ? (
-          <span className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')} aria-hidden="true" ref={capHiRef}></span>
+          <Motion
+            as="span"
+            layoutId={capHiId}
+            layoutTransition={CAP_FLIP}
+            className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')}
+            aria-hidden="true"
+          />
         ) : null}
         <span className="dtp__num">{d.getDate()}</span>
         {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}

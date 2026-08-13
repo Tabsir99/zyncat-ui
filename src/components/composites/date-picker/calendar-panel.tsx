@@ -7,10 +7,12 @@ import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { GlidePill, useGlide } from '../../../motion/glide';
-import { useSharedFlip } from '../../../motion/flip';
+import { Motion } from '../../../motion/element';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
 import { cx } from '../../internal/utils/cx';
+
+const PILL_FLIP = { timing: UIMotion.t.settle };
 
 interface DtpPanelProps {
   val: string | null;
@@ -34,7 +36,6 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
   const pillId = 'dtp-pill-' + uid;
 
   const glide = useGlide(daysRef);
-  const pillRef = useSharedFlip<HTMLSpanElement>(pillId, { timing: UIMotion.t.settle });
 
   const inRange = (key: string): boolean => within(key, min, max);
 
@@ -190,7 +191,15 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                     onClick={() => pickDay(key)}
                     onPointerEnter={(e) => glide.enter(e.currentTarget)}
                   >
-                    {sel ? <span className="dtp__pill" aria-hidden="true" ref={pillRef}></span> : null}
+                    {sel ? (
+                      <Motion
+                        as="span"
+                        layoutId={pillId}
+                        layoutTransition={PILL_FLIP}
+                        className="dtp__pill"
+                        aria-hidden="true"
+                      />
+                    ) : null}
                     <span className="dtp__num">{d.getDate()}</span>
                     {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
                   </button>

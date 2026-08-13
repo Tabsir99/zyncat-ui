@@ -102,7 +102,8 @@ export function Tag({
       ref={ref}
       animate={group?.animate}
       exit={group?.exit}
-      layout={group?.layout}
+      layout={!!group}
+      layoutTransition={group?.layout}
       className={cls}
       style={style}
       data-disabled={disabled ? 'true' : undefined}

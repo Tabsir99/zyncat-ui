@@ -12,6 +12,8 @@ import { Odometer } from '../../primitives/badge/odometer';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { cx } from '../../internal/utils/cx';
 
+const ROW_FLIP = { timing: UIMotion.t.layout };
+
 export type TableAlign = 'start' | 'end' | 'center';
 export type TableHideBelow = 'sm' | 'md';
 
@@ -216,7 +218,6 @@ export function Table<Row = any>({
     return a;
   }
 
-  const t = UIMotion.t;
   const colCount = columns.length + (selectable ? 1 : 0);
   const showEmpty = !loading && sortedRows.length === 0;
   const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
@@ -328,7 +329,8 @@ export function Table<Row = any>({
                     <Motion
                       as="tr"
                       key={k}
-                      layout={{ timing: t.layout }}
+                      layout
+                      layoutTransition={ROW_FLIP}
                       className="tbl__row"
                       data-selected={isSel ? '' : undefined}
                       onClick={onRowClick ? () => onRowClick(row) : undefined}
