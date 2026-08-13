@@ -234,6 +234,7 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json",
     "check:css": "node scripts/check-css-graph.mjs",
+    "check:llms": "node scripts/check-llms.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepublishOnly": "pnpm build"

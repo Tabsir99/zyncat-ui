@@ -39,9 +39,9 @@ Collapse - @zyncat/ui/collapse
 
 Glide / GlidePill - @zyncat/ui/glide
   A persistent background pill that glides smoothly between hovered/active elements. Container must be `position: relative`.
-  const glide = useGlide(containerRef);
+  const glide = useGlide(containerRef);   // { ref, enter, leave } - pass the whole thing to GlidePill
   <nav ref={containerRef} onPointerLeave={glide.leave}>
-    <GlidePill rect={glide.rect} active={glide.active} className="my-pill" />
+    <GlidePill glide={glide} className="my-pill" />
     <button onPointerEnter={(e) => glide.enter(e.currentTarget)}>Item 1</button>
   </nav>
 
@@ -119,11 +119,11 @@ ToggleTag - @zyncat/ui/toggle-tag
 
 Table - @zyncat/ui/table
   Declare columns + rows; owns sort, selection, stickiness, overflow. columns: TableColumn<T>[] ({ key, label, render?, sortable?, sortBy?, align?, mono?, strong?, grow? }); selectable, defaultSort, footer.
-  <Table<Invoice> label="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
+  <Table<Invoice> ariaLabel="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
 
 Pagination - @zyncat/ui/pagination
-  Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext.
-  <Pagination label="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={...} onNext={...} />
+  Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext, ariaLabel.
+  <Pagination ariaLabel="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={...} onNext={...} />
 
 ============================================================ DATE, TIME & TABS
 (value is a string; onChange(value | null); timezone, min/max, disabled)
@@ -146,7 +146,7 @@ TimeField - @zyncat/ui/time-field
 
 Tabs / TabPanel - @zyncat/ui/tabs
   Line tabs; the ink reaches then releases; panels enter from the side you moved toward. items: TabItem[]; value/onChange(value, dir). Pair with <TabPanel name tab dir>.
-  <Tabs name="views" label="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
+  <Tabs name="views" ariaLabel="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
   <TabPanel name="views" tab={view} dir={dir}>...</TabPanel>
 
 ============================================================ OVERLAYS & FEEDBACK
