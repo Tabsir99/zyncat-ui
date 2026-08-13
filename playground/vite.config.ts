@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { readdirSync, statSync } from 'node:fs';
@@ -54,8 +54,21 @@ export const dsAliases = [
   })),
 ];
 
+const REACT_SCAN_URL = 'https://unpkg.com/react-scan@0.5.7/dist/auto.global.js';
+
+function reactScanDevOnly(): Plugin {
+  return {
+    name: 'react-scan-dev-only',
+    apply: 'serve',
+    transformIndexHtml: {
+      order: 'pre',
+      handler: () => [{ tag: 'script', attrs: { src: REACT_SCAN_URL }, injectTo: 'head-prepend' }],
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), reactScanDevOnly()],
   resolve: { alias: dsAliases, dedupe: ['react', 'react-dom', 'motion', '@phosphor-icons/react'] },
   server: { fs: { allow: [r('..')] }, port: 5179 },
 });
