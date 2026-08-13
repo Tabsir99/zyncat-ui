@@ -34,6 +34,9 @@
   "sideEffects": [
     "*.css"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "zyncat-ui-mcp": "./dist/mcp.js"
   },
