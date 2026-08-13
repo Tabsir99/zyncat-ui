@@ -47,6 +47,29 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
   const wasExiting = useRef(false);
   const complete = useRef(onExitComplete);
   complete.current = onExitComplete;
+  const claims = useRef(new Map<string, Set<object>>());
+
+  const drop = (key: string) =>
+    setShown((previous) => {
+      const next = previous.filter((entry) => entry.key !== key || !entry.exiting);
+      return next.length === previous.length ? previous : next;
+    });
+
+  const claimExit = (key: string) => (): (() => void) => {
+    let tokens = claims.current.get(key);
+    if (!tokens) {
+      tokens = new Set<object>();
+      claims.current.set(key, tokens);
+    }
+    const token = {};
+    const held = tokens;
+    held.add(token);
+    return () => {
+      if (!held.delete(token) || held.size) return;
+      if (claims.current.get(key) === held) claims.current.delete(key);
+      drop(key);
+    };
+  };
 
   useLayoutEffect(() => {
     setShown((previous) => {
@@ -54,6 +77,7 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
       const merged: Entry[] = incoming.map((entry) => ({ ...entry }));
       previous.forEach((entry, index) => {
         if (live.has(entry.key)) return;
+        if (!claims.current.get(entry.key)?.size) return;
         merged.splice(index, 0, entry.exiting ? entry : { ...entry, exiting: true });
       });
       return merged;
@@ -81,7 +105,7 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
           value: {
             isPresent: !entry.exiting,
             initial: initial || !bornAtMount.current.has(entry.key),
-            safeToRemove: () => setShown((previous) => previous.filter((e) => e.key !== entry.key || !e.exiting)),
+            claimExit: claimExit(entry.key),
           },
         },
         fresh.get(entry.key) ?? entry.node,

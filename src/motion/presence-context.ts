@@ -7,11 +7,12 @@ export interface PresenceState {
   isPresent: boolean;
   /** False for children present at the Presence's own first paint when `initial={false}`. */
   initial: boolean;
-  /** Called by the child when its exit has finished; lets Presence drop it from the tree. */
-  safeToRemove: () => void;
+  /** Claims responsibility for animating this child out; call the returned release once the
+   *  exit has finished. A child nobody claims is dropped as soon as it leaves `children`. */
+  claimExit: () => () => void;
 }
 
-const DETACHED: PresenceState = { isPresent: true, initial: true, safeToRemove: () => {} };
+const DETACHED: PresenceState = { isPresent: true, initial: true, claimExit: () => () => {} };
 
 export const PresenceContext = createContext<PresenceState>(DETACHED);
 
