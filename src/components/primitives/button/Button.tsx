@@ -19,10 +19,6 @@ interface ButtonOwnProps {
   disabled?: boolean;
   /** Loading - swaps content for a spinner and makes the button inert. */
   loading?: boolean;
-  /** Leading icon node (e.g. a 16px <Icon>). Sized & aligned by the component. */
-  iconLeft?: ReactNode;
-  /** Trailing icon node. */
-  iconRight?: ReactNode;
   /** Stretch to fill the container width. */
   fullWidth?: boolean;
   /** Extra class(es) merged onto the button. */
@@ -51,8 +47,6 @@ export function Button({
   type = 'button',
   disabled = false,
   loading = false,
-  iconLeft = null,
-  iconRight = null,
   fullWidth = false,
   className = '',
   style,
@@ -85,17 +79,7 @@ export function Button({
       {...rest}
       {...htmlProps}
     >
-      {iconLeft ? (
-        <span className="btn__icon" aria-hidden="true">
-          {iconLeft}
-        </span>
-      ) : null}
       <span className="btn__label">{children}</span>
-      {iconRight ? (
-        <span className="btn__icon" aria-hidden="true">
-          {iconRight}
-        </span>
-      ) : null}
       {loading ? <span className="btn__spinner" aria-hidden="true" /> : null}
     </button>
   );

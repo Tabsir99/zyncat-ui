@@ -102,8 +102,8 @@ later.)
 
 Components render their own glyphs from a small curated Phosphor set, **bundled in** - no icon peer
 to install. Zyncat UI does **not** export an `Icon` component, so where a prop takes an icon
-(`iconLeft`, `leadingIcon`, a `Tag`'s `icon`, ...) pass your own node - any `ReactNode` (e.g. an
-`@phosphor-icons/react` element, if you choose to use it).
+(`leadingIcon`, a `Tag`'s `icon`, ...) or a component composes icons as children (`Button`), pass
+your own node - any `ReactNode` (e.g. an `@phosphor-icons/react` element, if you choose to use it).
 
 ## What's inside
 

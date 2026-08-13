@@ -27,8 +27,9 @@ Agents: prefer the bundled MCP server over scanning this file or node_modules - 
 ============================================================ PRIMITIVES
 
 Button - @zyncat/ui/button
-  One control for every click; exactly one primary per view. variant primary|secondary|ghost|danger|link, size sm|md|lg, iconLeft/iconRight (ReactNode), loading, disabled.
-  <Button variant="primary" iconLeft={<Icon name="plus" size="sm" />}>Schedule post</Button>
+  One control for every click; exactly one primary per view. variant primary|secondary|ghost|danger|link, size sm|md|lg|icon, loading, disabled. Icons are plain children - Button lays them out in a centered row with gap, no iconLeft/iconRight slots.
+  <Button variant="primary"><Icon name="plus" size="sm" />Schedule post</Button>
+  <Button size="icon" aria-label="Close"><Icon name="x" size="sm" /></Button>
 
 Collapse - @zyncat/ui/collapse
   Layout-transition primitive; eases height open/closed, never teleports. Closed content also

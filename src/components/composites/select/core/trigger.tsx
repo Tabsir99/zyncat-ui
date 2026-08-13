@@ -51,24 +51,20 @@ export function SelectTrigger({
         ...htmlProps,
       }}
       onClick={() => (open ? requestClose() : show())}
-      iconRight={
-        <span className="select__caret">
-          <Icon name="caret-down" size="sm" />
-        </span>
-      }
-      iconLeft={
-        leading && (
-          <span className="select__leading">
-            <IconSlot size="sm">{leading}</IconSlot>
-          </span>
-        )
-      }
       {...rest}
     >
+      {leading && (
+        <span className="select__leading">
+          <IconSlot size="sm">{leading}</IconSlot>
+        </span>
+      )}
       <span className="select__value" data-placeholder={isPlaceholder ? 'true' : undefined}>
         {text}
       </span>
       {count != null && count > 0 && <span className="select__count">+{count}</span>}
+      <span className="select__caret">
+        <Icon name="caret-down" size="sm" />
+      </span>
     </Button>
   );
 }
