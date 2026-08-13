@@ -14,9 +14,9 @@ export const primitives: Record<string, ComponentDoc> = {
       },
       {
         name: 'size',
-        type: "'sm' | 'md' | 'lg'",
+        type: "'sm' | 'md' | 'lg' | 'icon'",
         default: "'md'",
-        description: 'Control height: sm 28px, md 36px, lg 40px.',
+        description: 'Control height: sm 28px, md 36px, lg 40px, icon 28px square.',
       },
       {
         name: 'loading',
@@ -24,8 +24,6 @@ export const primitives: Record<string, ComponentDoc> = {
         default: 'false',
         description: 'Swaps content for a spinner and makes the button inert.',
       },
-      { name: 'iconLeft', type: 'ReactNode', description: 'Leading icon node, sized and aligned by the component.' },
-      { name: 'iconRight', type: 'ReactNode', description: 'Trailing icon node.' },
       { name: 'fullWidth', type: 'boolean', default: 'false', description: 'Stretch to fill the container width.' },
       {
         name: '...rest',
@@ -37,9 +35,10 @@ export const primitives: Record<string, ComponentDoc> = {
 
   icon: {
     example: `import { Button } from '@zyncat/ui/button';
-// bring your own icon library
+// bring your own icon library - compose it straight into children
 
-<Button iconLeft={<PaperPlaneTilt />}>Publish</Button>`,
+<Button><PaperPlaneTilt />Publish</Button>
+<Button size="icon" aria-label="Publish"><PaperPlaneTilt /></Button>`,
     props: [],
   },
 

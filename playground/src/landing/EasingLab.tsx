@@ -73,12 +73,8 @@ export function EasingLab() {
       <div className="ld-lab__race">
         <div className="ld-lab__race-head">
           <span className="ld-lab__race-label">900ms · same distance · five curves</span>
-          <Button
-            size="sm"
-            variant="secondary"
-            iconLeft={<Icon name="play" size="sm" />}
-            onClick={() => setRun((r) => r + 1)}
-          >
+          <Button size="sm" variant="secondary" onClick={() => setRun((r) => r + 1)}>
+            <Icon name="play" size="sm" />
             Race
           </Button>
         </div>

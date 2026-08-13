@@ -25,9 +25,16 @@ export function ButtonPage() {
         <Button size="lg">Large</Button>
       </Demo>
       <Demo label="icon - loading - disabled">
-        <Button iconLeft={<Icon name="plus" size="sm" />}>New project</Button>
-        <Button variant="secondary" iconRight={<Icon name="more" size="sm" />}>
+        <Button>
+          <Icon name="plus" size="sm" />
+          New project
+        </Button>
+        <Button variant="secondary">
           More
+          <Icon name="more" size="sm" />
+        </Button>
+        <Button size="icon" variant="secondary" aria-label="More options">
+          <Icon name="more" size="sm" />
         </Button>
         <Button loading>Saving</Button>
         <Button disabled>Disabled</Button>

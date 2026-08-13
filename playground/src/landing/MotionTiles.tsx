@@ -101,7 +101,8 @@ export function FlipTile() {
           Re-sort, archive, filter — rows travel to their new position, so your eye never loses the one it was
           following.
         </p>
-        <Button size="sm" variant="secondary" iconLeft={<Icon name="shuffle" size="sm" />} onClick={rerun}>
+        <Button size="sm" variant="secondary" onClick={rerun}>
+          <Icon name="shuffle" size="sm" />
           Re-run benchmark
         </Button>
         <span className="ld-tile__token">--transition-layout</span>

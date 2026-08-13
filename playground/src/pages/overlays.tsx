@@ -141,7 +141,8 @@ export function TooltipPage() {
           <Button variant="secondary">Bottom</Button>
         </Tooltip>
         <Tooltip placement="right" content="Re-runs the check and reports any new issues it finds.">
-          <Button variant="secondary" iconLeft={<Icon name="info" size="sm" />}>
+          <Button variant="secondary">
+            <Icon name="info" size="sm" />
             Re-run
           </Button>
         </Tooltip>
@@ -199,8 +200,9 @@ export function PopoverPage() {
         open={open}
         onOpenChange={setOpen}
         trigger={
-          <Button variant="secondary" iconRight={<Icon name="caret-down" size="sm" />}>
+          <Button variant="secondary">
             Actions
+            <Icon name="caret-down" size="sm" />
           </Button>
         }
       >
@@ -230,13 +232,13 @@ export function PopoverPage() {
               key={it.label}
               variant="ghost"
               size="sm"
-              iconLeft={<Icon name={it.icon} size="sm" />}
               style={{ justifyContent: 'flex-start', width: '100%' }}
               onClick={() => {
                 setOpen(false);
                 toast(it.msg);
               }}
             >
+              <Icon name={it.icon} size="sm" />
               {it.label}
             </Button>
           ))}
