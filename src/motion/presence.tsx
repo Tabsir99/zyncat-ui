@@ -6,7 +6,6 @@ import {
   createElement,
   isValidElement,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   type ReactElement,
@@ -20,12 +19,30 @@ interface Entry {
   exiting: boolean;
 }
 
+type Claims = Map<string, Set<object>>;
+
+interface Tracked {
+  shown: Entry[];
+  signature: string;
+}
+
 function toEntries(children: ReactNode): Entry[] {
   const out: Entry[] = [];
   Children.forEach(children, (child, index) => {
     if (isValidElement(child)) out.push({ key: String(child.key ?? index), node: child, exiting: false });
   });
   return out;
+}
+
+function withExiting(previous: Entry[], incoming: Entry[], claims: Claims): Entry[] {
+  const live = new Set(incoming.map((entry) => entry.key));
+  const merged: Entry[] = incoming.map((entry) => ({ ...entry }));
+  previous.forEach((entry, index) => {
+    if (live.has(entry.key)) return;
+    if (!claims.get(entry.key)?.size) return;
+    merged.splice(index, 0, entry.exiting ? entry : { ...entry, exiting: true });
+  });
+  return merged;
 }
 
 export interface PresenceProps {
@@ -42,17 +59,23 @@ export interface PresenceProps {
 export function Presence({ children, initial = true, mode = 'sync', onExitComplete }: PresenceProps) {
   const incoming = toEntries(children);
   const signature = incoming.map((entry) => entry.key).join('|');
-  const [shown, setShown] = useState<Entry[]>(incoming);
+  const claims = useRef<Claims>(new Map());
+  const [tracked, setTracked] = useState<Tracked>({ shown: incoming, signature });
   const bornAtMount = useRef(new Set(incoming.map((entry) => entry.key)));
   const wasExiting = useRef(false);
   const complete = useRef(onExitComplete);
   complete.current = onExitComplete;
-  const claims = useRef(new Map<string, Set<object>>());
+
+  let shown = tracked.shown;
+  if (tracked.signature !== signature) {
+    shown = withExiting(tracked.shown, incoming, claims.current);
+    setTracked({ shown, signature });
+  }
 
   const drop = (key: string) =>
-    setShown((previous) => {
-      const next = previous.filter((entry) => entry.key !== key || !entry.exiting);
-      return next.length === previous.length ? previous : next;
+    setTracked((previous) => {
+      const next = previous.shown.filter((entry) => entry.key !== key || !entry.exiting);
+      return next.length === previous.shown.length ? previous : { ...previous, shown: next };
     });
 
   const claimExit = (key: string) => (): (() => void) => {
@@ -70,19 +93,6 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
       drop(key);
     };
   };
-
-  useLayoutEffect(() => {
-    setShown((previous) => {
-      const live = new Set(incoming.map((entry) => entry.key));
-      const merged: Entry[] = incoming.map((entry) => ({ ...entry }));
-      previous.forEach((entry, index) => {
-        if (live.has(entry.key)) return;
-        if (!claims.current.get(entry.key)?.size) return;
-        merged.splice(index, 0, entry.exiting ? entry : { ...entry, exiting: true });
-      });
-      return merged;
-    });
-  }, [signature]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const leaving = shown.some((entry) => entry.exiting);
 

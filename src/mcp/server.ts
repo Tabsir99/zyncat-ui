@@ -39,9 +39,7 @@ interface Db {
 const SECTION_RE = /^=+\s+(.+?)\s*$/;
 const HEADING_RE = /^([A-Za-z][\w /]*?) - @zyncat\/ui\/([a-z][a-z0-9-]*)\b.*$/;
 
-let cached: Db | null = null;
 function db(): Db {
-  if (cached) return cached;
   const root = findRoot();
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   const subpaths = Object.entries(pkg.exports ?? {})
@@ -84,8 +82,7 @@ function db(): Db {
   }
   while (preamble.length && !preamble[preamble.length - 1].trim()) preamble.pop();
 
-  cached = { root, version: String(pkg.version ?? '0'), subpaths, preamble, sections, entries };
-  return cached;
+  return { root, version: String(pkg.version ?? '0'), subpaths, preamble, sections, entries };
 }
 
 const norm = (s: string) =>

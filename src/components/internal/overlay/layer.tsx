@@ -130,19 +130,9 @@ function ovCloneTrigger(
 }
 
 function OverlayPortal({ container, children }: { container?: HTMLElement | null; children: ReactNode }) {
-  const hostRef = useRef<HTMLDivElement | null>(null);
-  if (typeof document !== 'undefined' && !hostRef.current) {
-    hostRef.current = document.createElement('div');
-    hostRef.current.setAttribute('data-overlay-root', '');
-  }
-  useLayoutEffect(() => {
-    const el = hostRef.current;
-    if (!el) return;
-    (container ?? document.body).appendChild(el);
-    return () => el.remove();
-  }, [container]);
-  if (!hostRef.current) return null;
-  return createPortal(children, hostRef.current);
+  const host = container ?? (typeof document === 'undefined' ? null : document.body);
+  if (!host) return null;
+  return createPortal(<div data-overlay-root="">{children}</div>, host);
 }
 
 export { ovIsTop, ovInOverlayAbove, useOverlayEntry, useOutsidePress, ovCloneTrigger, OverlayPortal };
