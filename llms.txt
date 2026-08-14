@@ -169,16 +169,39 @@ Tooltip - @zyncat/ui/tooltip
   <Tooltip content="Save changes" shortcut="⌘S"><Button>Save</Button></Tooltip>
 
 Dialog - @zyncat/ui/dialog
-  Styled modal: scrim, focus trap, scroll lock. open/onOpenChange, tone, icon, title, description, footer: (close) => node.
+  DEFAULT CHOICE for modals - the styled surface: header (icon/title/description/close), scrolling body,
+  footer actions, on top of scrim + focus trap + scroll lock. Reach for Modal only if this chrome is wrong.
+  open/onOpenChange, tone, icon, title, description, footer: (close) => node. Header is omitted entirely
+  when there is no icon/title/description and dismissible={false}.
+  container mounts it inside a positioned element instead of the viewport; scrim, scroll lock and
+  inert then scope to that box and the rest of the page stays live.
   <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
 
+Modal - @zyncat/ui/modal
+  The SAME modality as Dialog (scrim, focus trap, scroll lock, inert, Esc, motion) with ZERO paint - no
+  header, no body padding, no width cap, no border/radius/shadow. You supply the whole surface AND its
+  semantics (role="dialog" + a label).
+  Use it ONLY when Dialog's chrome is the problem: lightbox / image viewer, full-bleed media, video,
+  a custom layout that owns its own edges. If the content is a title + text + buttons, use Dialog instead.
+  htmlProps paints the panel (centered by default; width+height 100% = full-bleed), layerProps reaches the
+  box behind it (set --bg-overlay to retint the scrim). Also takes trigger, dismissible, container, animation.
+  <Modal open={!!src} onOpenChange={() => setSrc(null)} htmlProps={{ className: 'lightbox' }} layerProps={{ style: { '--bg-overlay': 'rgb(0 0 0 / 0.92)' } }}>
+    <div role="dialog" aria-label="Image viewer"><img src={src} alt="" /></div>
+  </Modal>
+
 Popover - @zyncat/ui/popover
-  Headless anchored panel, non-modal. side, align, arrow, trigger (node), asChild; children: ({ close }) => node.
-  <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}>{({ close }) => <menu>...</menu>}</Popover>
+  Headless anchored panel, non-modal. side, align, arrow, trigger (node), dismissible.
+  Anchor without a trigger: pass anchor - anything with getBoundingClientRect (a DOMRect source, an
+  element) - and drive open yourself. Pass a new object to re-place a moving anchor.
+  <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}><menu>...</menu></Popover>
+  <Popover open={!!spot} onOpenChange={dismiss} anchor={spot} side="right"><menu>...</menu></Popover>
 
 Sheet - @zyncat/ui/sheet
-  Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), asChild; children: ({ close }) => node.
-  <Sheet side="right" trigger={<Button>Filters</Button>}>{({ close }) => <div role="dialog">...</div>}</Sheet>
+  Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), dismissible.
+  container docks it inside a positioned element instead of the viewport; scrim, scroll lock and
+  inert then scope to that box and the rest of the page stays live.
+  <Sheet side="right" trigger={<Button>Filters</Button>}><div role="dialog">...</div></Sheet>
+  <Sheet side="bottom" container={panel} open={o} onOpenChange={setO}><div role="dialog">...</div></Sheet>
 
 ============================================================ DEV TOOLS
 
