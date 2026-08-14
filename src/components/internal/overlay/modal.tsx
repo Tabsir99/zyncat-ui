@@ -11,49 +11,51 @@ import { cx } from '../utils/cx';
 
 const SM = UIMotion;
 
-let ovLocks = 0;
-let ovSavedOverflow = '';
-let ovSavedPad = '';
-function useScrollLock() {
-  useEffect(() => {
-    if (++ovLocks === 1) {
-      const body = document.body;
-      const gutter = window.innerWidth - document.documentElement.clientWidth;
-      ovSavedOverflow = body.style.overflow;
-      ovSavedPad = body.style.paddingRight;
-      body.style.overflow = 'hidden';
-      if (gutter > 0) body.style.paddingRight = (parseFloat(getComputedStyle(body).paddingRight) || 0) + gutter + 'px';
-    }
-    return () => {
-      if (--ovLocks === 0) {
-        document.body.style.overflow = ovSavedOverflow;
-        document.body.style.paddingRight = ovSavedPad;
-      }
-    };
-  }, []);
+interface OvScopeLock {
+  depth: number;
+  overflow: string;
+  paddingRight: string;
+  inerted: HTMLElement[];
 }
 
-let ovInertCount = 0;
-const ovInerted = new Set<HTMLElement>();
-function useInertOutside() {
+const ovScopeLocks = new Map<HTMLElement, OvScopeLock>();
+
+function ovGutter(scope: HTMLElement, cs: CSSStyleDeclaration): number {
+  if (scope === document.body) return window.innerWidth - document.documentElement.clientWidth;
+  return scope.offsetWidth - scope.clientWidth - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+}
+
+function useScopeLock(container?: HTMLElement | null) {
   useEffect(() => {
-    if (++ovInertCount === 1) {
-      for (const el of Array.from(document.body.children) as HTMLElement[]) {
+    const scope = container ?? document.body;
+    const lock: OvScopeLock = ovScopeLocks.get(scope) ?? {
+      depth: 0,
+      overflow: scope.style.overflow,
+      paddingRight: scope.style.paddingRight,
+      inerted: [],
+    };
+    ovScopeLocks.set(scope, lock);
+
+    if (++lock.depth === 1) {
+      const cs = getComputedStyle(scope);
+      const gutter = ovGutter(scope, cs);
+      scope.style.overflow = 'hidden';
+      if (gutter > 0) scope.style.paddingRight = (parseFloat(cs.paddingRight) || 0) + gutter + 'px';
+      for (const el of Array.from(scope.children) as HTMLElement[]) {
         if (el.hasAttribute('data-overlay-root') || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.inert)
           continue;
         el.inert = true;
-        ovInerted.add(el);
+        lock.inerted.push(el);
       }
     }
     return () => {
-      if (--ovInertCount === 0) {
-        ovInerted.forEach((el) => {
-          el.inert = false;
-        });
-        ovInerted.clear();
-      }
+      if (--lock.depth > 0) return;
+      scope.style.overflow = lock.overflow;
+      scope.style.paddingRight = lock.paddingRight;
+      for (const el of lock.inerted) el.inert = false;
+      ovScopeLocks.delete(scope);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 const ovScrimTiming = {
@@ -92,6 +94,7 @@ export function ModalShell({
   panelId,
   dismissible,
   requestClose,
+  container,
   panelRef: externalPanelRef = null,
   panelProps = {},
   animate: animateSpec,
@@ -103,6 +106,7 @@ export function ModalShell({
   panelId: string;
   dismissible: boolean;
   requestClose: () => void;
+  container?: HTMLElement | null;
   panelRef?: RefObject<HTMLElement> | null;
   panelProps?: Record<string, any>;
   children: ReactNode;
@@ -120,12 +124,11 @@ export function ModalShell({
   };
 
   useMotion(layerRef, { animate: withScrim('open', animateSpec), exit: withScrim('close', exit) });
-  useScrollLock();
-  useInertOutside();
+  useScopeLock(container);
   useReturnFocus(layerRef);
   useFocusTrap({ panelRef, entry });
   return (
-    <div ref={layerRef} className={'overlay-layer ' + layerClass}>
+    <div ref={layerRef} className={cx('overlay-layer', container && 'overlay-layer--scoped', layerClass)}>
       <OverlayScrim dismissible={dismissible} onPress={requestClose} scrimRef={scrimRef} />
       <div
         id={panelId}

@@ -40,6 +40,9 @@ export interface DialogProps {
   icon?: ReactNode;
   /** Close button + backdrop/Esc dismissal. Default true. */
   dismissible?: boolean;
+  /** Center inside this element instead of the viewport - it must be positioned (`position: relative` or similar).
+   *  Scrim, scroll lock and inert scope to it; the rest of the page stays interactive. */
+  container?: HTMLElement | null;
   /** Action row - a node, or a render fn `(close) => node` so uncontrolled dialogs can dismiss. */
   footer?: ReactNode | ((close: () => void) => ReactNode);
   /** Dialog body - scrolls when tall; its scroll edges flag the header lift + footer divider. */
@@ -145,6 +148,7 @@ export function Dialog({
   tone = 'default',
   icon = null,
   dismissible = true,
+  container = null,
   footer = null,
   children,
   id,
@@ -162,7 +166,7 @@ export function Dialog({
   return (
     <Fragment>
       {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
-      <OverlayPortal>
+      <OverlayPortal container={container}>
         <Presence>
           {open && (
             <ModalShell
@@ -173,6 +177,7 @@ export function Dialog({
               panelClass="overlay-panel--dialog"
               panelId={panelId}
               dismissible={dismissible}
+              container={container}
               requestClose={close}
             >
               <DialogSurface

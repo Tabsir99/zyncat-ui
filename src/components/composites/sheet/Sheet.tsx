@@ -35,6 +35,10 @@ export interface SheetProps {
   /** Scrim/Esc dismissal + drag-to-edge. Default true. */
   dismissible?: boolean;
 
+  /** Dock inside this element instead of the viewport - it must be positioned (`position: relative` or similar).
+   *  Scrim, scroll lock and inert scope to it; the rest of the page stays interactive. */
+  container?: HTMLElement | null;
+
   /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
   /** Standard attributes (className, style, data-*, ...) forwarded to the sheet panel. */
@@ -54,6 +58,7 @@ function SheetShell({
   side,
   panelId,
   dismissible,
+  container,
   requestClose,
   htmlProps,
   animate,
@@ -63,6 +68,7 @@ function SheetShell({
   side: 'right' | 'bottom';
   panelId: string;
   dismissible: boolean;
+  container?: HTMLElement | null;
   requestClose: () => void;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   children: ReactNode;
@@ -77,6 +83,7 @@ function SheetShell({
       panelClass={'overlay-panel--sheet-' + side}
       panelId={panelId}
       dismissible={dismissible}
+      container={container}
       requestClose={requestClose}
       panelRef={panelRef}
       panelProps={{ ...htmlProps, ...dragProps }}
@@ -93,6 +100,7 @@ export function Sheet({
   trigger = null,
   side = 'right',
   dismissible = true,
+  container = null,
   id,
   htmlProps,
   animation,
@@ -108,7 +116,7 @@ export function Sheet({
   return (
     <Fragment>
       {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
-      <OverlayPortal>
+      <OverlayPortal container={container}>
         <Presence>
           {open && (
             <SheetShell
@@ -122,6 +130,7 @@ export function Sheet({
               side={side}
               panelId={panelId}
               dismissible={dismissible}
+              container={container}
               requestClose={close}
               htmlProps={htmlProps}
             >

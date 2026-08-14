@@ -129,7 +129,7 @@ function ovCloneTrigger(
   } as Partial<typeof trigger.props>);
 }
 
-function OverlayPortal({ children }: { children: ReactNode }) {
+function OverlayPortal({ container, children }: { container?: HTMLElement | null; children: ReactNode }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
   if (typeof document !== 'undefined' && !hostRef.current) {
     hostRef.current = document.createElement('div');
@@ -138,9 +138,9 @@ function OverlayPortal({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     const el = hostRef.current;
     if (!el) return;
-    document.body.appendChild(el);
+    (container ?? document.body).appendChild(el);
     return () => el.remove();
-  }, []);
+  }, [container]);
   if (!hostRef.current) return null;
   return createPortal(children, hostRef.current);
 }
