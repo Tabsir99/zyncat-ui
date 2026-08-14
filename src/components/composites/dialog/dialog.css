@@ -136,6 +136,9 @@
   color: var(--text-body);
   font: var(--type-body);
 }
+.dialog__body:first-child {
+  padding-top: var(--space-5);
+}
 .dialog:has(.dialog__icon) .dialog__body {
   padding-left: calc(var(--space-5) + 2.25rem + var(--space-3));
 }

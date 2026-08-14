@@ -103,30 +103,32 @@ function DialogSurface({
       aria-labelledby={title ? titleId : undefined}
       aria-describedby={description ? descId : undefined}
     >
-      <header className="dialog__header">
-        {icon && (
-          <span className="dialog__icon">
-            <IconSlot size="md">{icon}</IconSlot>
-          </span>
-        )}
-        <div className="dialog__heading">
-          {title && (
-            <h2 className="dialog__title" id={titleId}>
-              {title}
-            </h2>
+      {(icon || title || description || dismissible) && (
+        <header className="dialog__header">
+          {icon && (
+            <span className="dialog__icon">
+              <IconSlot size="md">{icon}</IconSlot>
+            </span>
           )}
-          {description && (
-            <p className="dialog__desc" id={descId}>
-              {description}
-            </p>
+          <div className="dialog__heading">
+            {title && (
+              <h2 className="dialog__title" id={titleId}>
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p className="dialog__desc" id={descId}>
+                {description}
+              </p>
+            )}
+          </div>
+          {dismissible && (
+            <button type="button" className="dialog__close" aria-label="Close dialog" onClick={requestClose}>
+              <Icon name="x" size="sm" weight="bold" />
+            </button>
           )}
-        </div>
-        {dismissible && (
-          <button type="button" className="dialog__close" aria-label="Close dialog" onClick={requestClose}>
-            <Icon name="x" size="sm" weight="bold" />
-          </button>
-        )}
-      </header>
+        </header>
+      )}
 
       <div className="dialog__body" ref={bodyRef}>
         {children}
