@@ -97,6 +97,7 @@ export function ModalShell({
   container,
   panelRef: externalPanelRef = null,
   panelProps = {},
+  layerProps = {},
   animate: animateSpec,
   exit,
   children,
@@ -109,6 +110,7 @@ export function ModalShell({
   container?: HTMLElement | null;
   panelRef?: RefObject<HTMLElement> | null;
   panelProps?: Record<string, any>;
+  layerProps?: Record<string, any>;
   children: ReactNode;
 } & MotionSpecs) {
   const layerRef = useRef<HTMLDivElement>(null);
@@ -128,7 +130,11 @@ export function ModalShell({
   useReturnFocus(layerRef);
   useFocusTrap({ panelRef, entry });
   return (
-    <div ref={layerRef} className={cx('overlay-layer', container && 'overlay-layer--scoped', layerClass)}>
+    <div
+      {...layerProps}
+      ref={layerRef}
+      className={cx('overlay-layer', container && 'overlay-layer--scoped', layerClass, layerProps.className)}
+    >
       <OverlayScrim dismissible={dismissible} onPress={requestClose} scrimRef={scrimRef} />
       <div
         id={panelId}

@@ -26,7 +26,7 @@ const SUPPORTING = new Set(['toast-store', 'motion-tokens', 'next']);
 
 /* Components rendered inside an example that are not the entry itself; their attributes
    belong to them, not to the documented component. */
-const NESTED = ['Icon', 'Avatar', 'Button', 'Toaster', 'div', 'nav', 'menu', 'span', 'input'];
+const NESTED = ['Icon', 'Avatar', 'Button', 'Toaster', 'div', 'nav', 'menu', 'span', 'input', 'img'];
 
 /* Attributes every host element accepts, so no props interface needs to declare them.
    Deliberately excludes camelCase ariaLabel - that is a real prop a component must declare

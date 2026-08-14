@@ -181,6 +181,11 @@
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
     },
+    "./modal": {
+      "source": "./src/components/composites/modal/Modal.tsx",
+      "types": "./dist/modal.d.ts",
+      "import": "./dist/modal.js"
+    },
     "./tooltip": {
       "source": "./src/components/composites/tooltip/Tooltip.tsx",
       "types": "./dist/tooltip.d.ts",

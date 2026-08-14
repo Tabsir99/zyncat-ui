@@ -1,0 +1,95 @@
+'use client';
+
+import './modal.css';
+import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
+import { Presence } from '../../../motion/presence';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import type { DisableableAnimation } from '../../../motion/timing';
+import { useControllable } from '../../internal/hooks/use-controllable';
+import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
+import { ModalShell } from '../../internal/overlay/modal';
+import type { DataAttributes } from '../../../dom-props';
+
+const MODAL_TIMING = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'base', ease: 'standard' },
+} as const;
+
+export interface ModalProps {
+  /** Controlled open state. Omit to stay uncontrolled. */
+  open?: boolean;
+  /** Initial state when uncontrolled. Default false. */
+  defaultOpen?: boolean;
+  /** Fires whenever the open state changes. Pair with `open` for controlled use. */
+  onOpenChange?: (open: boolean) => void;
+
+  /** Cloned to open the modal on click. */
+  trigger?: ReactElement | null;
+
+  /** Scrim/Esc dismissal. Default true. */
+  dismissible?: boolean;
+
+  /** Mount inside this element instead of the viewport - it must be positioned (`position: relative` or similar).
+   *  Scrim, scroll lock and inert scope to it; the rest of the page stays interactive. */
+  container?: HTMLElement | null;
+
+  /** Base id for the panel; drives the trigger's `aria-controls`. Auto-generated when omitted. */
+  id?: string;
+  /** Standard attributes (className, style, data-*, ...) forwarded to the panel - this is where your paint goes.
+   *  Centered by default; `width: 100%; height: 100%` makes it full-bleed. */
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Standard attributes forwarded to the layer behind the panel - set `--bg-overlay` here to retint the scrim. */
+  layerProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Open/close timing - motion tokens only, or `null` to disable. @default open 'slow'/'entrance', close 'base'/'standard' */
+  animation?: DisableableAnimation;
+  /** The ENTIRE surface - paint AND semantics (`role="dialog"`, a label). Nothing is painted for you. */
+  children: ReactNode;
+}
+
+export function Modal({
+  open: controlledOpen,
+  defaultOpen = false,
+  onOpenChange,
+  trigger = null,
+  dismissible = true,
+  container = null,
+  id,
+  htmlProps,
+  layerProps,
+  animation,
+  children,
+}: ModalProps) {
+  const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
+  const triggerRef = useRef<HTMLElement>(null);
+  const autoId = useId();
+  const panelId = id || 'modal-' + autoId;
+  const close = () => setOpen(false);
+  const timings = resolveMotionTiming(animation, MODAL_TIMING);
+
+  return (
+    <Fragment>
+      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
+      <OverlayPortal container={container}>
+        <Presence>
+          {open && (
+            <ModalShell
+              key="modal"
+              animate={{ opacity: [0, 1], scale: [0.98, 1], timing: timings.open }}
+              exit={{ opacity: [0], scale: [0.98], timing: timings.close }}
+              layerClass="overlay-layer--modal"
+              panelClass="overlay-panel--modal"
+              panelId={panelId}
+              dismissible={dismissible}
+              container={container}
+              requestClose={close}
+              panelProps={htmlProps}
+              layerProps={layerProps}
+            >
+              {children}
+            </ModalShell>
+          )}
+        </Presence>
+      </OverlayPortal>
+    </Fragment>
+  );
+}
