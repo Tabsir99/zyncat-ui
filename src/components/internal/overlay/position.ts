@@ -3,18 +3,23 @@
 import { useLayoutEffect, type RefObject } from 'react';
 import { tokenPx } from '../utils/token-px';
 
+export interface VirtualAnchor {
+  getBoundingClientRect(): DOMRect;
+}
+
 interface UseAnchorPositionProps {
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   arrow: boolean;
+  anchor?: VirtualAnchor | null;
   triggerRef: RefObject<HTMLElement>;
   panelRef: RefObject<HTMLElement>;
 }
 
-export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: UseAnchorPositionProps) {
+export function useAnchorPosition({ side, align, arrow, anchor, triggerRef, panelRef }: UseAnchorPositionProps) {
   useLayoutEffect(() => {
     const place = () => {
-      const t = triggerRef.current;
+      const t = anchor ?? triggerRef.current;
       const p = panelRef.current;
       if (!t || !p) return;
 
@@ -99,5 +104,5 @@ export function useAnchorPosition({ side, align, arrow, triggerRef, panelRef }: 
       window.removeEventListener('resize', place);
       ro.disconnect();
     };
-  }, [side, align, arrow]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [side, align, arrow, anchor]); // eslint-disable-line react-hooks/exhaustive-deps
 }

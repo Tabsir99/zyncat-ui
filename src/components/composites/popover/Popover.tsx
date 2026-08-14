@@ -9,9 +9,11 @@ import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from '../../internal/overlay/layer';
 import { useReturnFocus } from '../../internal/overlay/focus';
-import { useAnchorPosition } from '../../internal/overlay/position';
+import { useAnchorPosition, type VirtualAnchor } from '../../internal/overlay/position';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+
+export type { VirtualAnchor };
 
 const POPOVER_TIMING = {
   open: { duration: 'base', ease: 'entrance' },
@@ -26,8 +28,11 @@ export interface PopoverProps {
   /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
 
-  /** Cloned to toggle the panel; required as the anchor. */
+  /** Cloned to toggle the panel, and used as the anchor unless `anchor` is set. */
   trigger?: ReactElement | null;
+  /** Anchor to an arbitrary rect instead of the trigger - any `{ getBoundingClientRect() }`, which an element also satisfies.
+   *  Drive `open` yourself; pass a new object to re-place a moving anchor. */
+  anchor?: VirtualAnchor | null;
 
   /** Preferred side; flips to the opposite side when cramped. Default 'bottom'. */
   side?: 'top' | 'bottom' | 'left' | 'right';
@@ -56,6 +61,7 @@ function PopoverPanel({
   arrow,
   dismissible,
   requestClose,
+  anchor,
   triggerRef,
   htmlProps,
   animate,
@@ -68,6 +74,7 @@ function PopoverPanel({
   arrow: boolean;
   dismissible: boolean;
   requestClose: () => void;
+  anchor?: VirtualAnchor | null;
   triggerRef: RefObject<HTMLElement>;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   children: ReactNode;
@@ -76,7 +83,7 @@ function PopoverPanel({
   const entry = useOverlayEntry({ nodeRef: panelRef, dismissible, requestClose });
   useMotion(panelRef, { animate, exit });
   useReturnFocus(panelRef);
-  useAnchorPosition({ side, align, arrow, triggerRef, panelRef });
+  useAnchorPosition({ side, align, arrow, anchor, triggerRef, panelRef });
   useOutsidePress({ entry, refs: [triggerRef, panelRef], enabled: dismissible, onPress: requestClose });
   return (
     <div
@@ -96,6 +103,7 @@ export function Popover({
   defaultOpen = false,
   onOpenChange,
   trigger = null,
+  anchor = null,
   side = 'bottom',
   align = 'start',
   arrow = false,
@@ -128,6 +136,7 @@ export function Popover({
               arrow={arrow}
               dismissible={dismissible}
               requestClose={close}
+              anchor={anchor}
               triggerRef={triggerRef}
               htmlProps={htmlProps}
             >
