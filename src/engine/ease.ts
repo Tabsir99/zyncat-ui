@@ -98,6 +98,7 @@ export interface Timing extends Omit<MotionTransition, 'ease'> {
   ease?: EaseValue | EaseValue[];
   times?: number[];
   fill?: FillMode;
+  release?: boolean;
 }
 
 export interface ResolvedTiming {

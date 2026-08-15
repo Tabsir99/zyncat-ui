@@ -124,7 +124,7 @@ function play(el: HTMLElement, layer: Layer): Playback | null {
 
   const finished = animation.finished.then(
     (): void => {
-      if (!autoKeys.length) return;
+      if (!autoKeys.length && !timing?.release) return;
       commitIfRendered(animation);
       animation.cancel();
       for (const key of autoKeys) el.style.setProperty(key, 'auto');

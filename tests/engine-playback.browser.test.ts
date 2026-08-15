@@ -92,6 +92,26 @@ test('a percentage travel resolves against the element rather than the viewport'
   expect(wide.getBoundingClientRect().left - narrow.getBoundingClientRect().left).toBeCloseTo(200, 0);
 });
 
+test('a finished animation keeps holding its property against a later style write', async () => {
+  const el = box();
+  await animate(el, { x: [0, 60], timing: { duration: 0.05 } }).finished;
+
+  el.style.translate = '10px 0px';
+
+  expect(getComputedStyle(el).translate).toBe('60px');
+});
+
+test('a released animation keeps its end value and hands the property back', async () => {
+  const el = box();
+  await animate(el, { x: [0, 60], timing: { duration: 0.05, release: true } }).finished;
+
+  expect(getComputedStyle(el).translate, 'the end value was not kept').toBe('60px');
+  expect(el.getAnimations(), 'the animation is still holding the property').toHaveLength(0);
+
+  el.style.translate = '10px 0px';
+  expect(getComputedStyle(el).translate, 'a plain style write was still overridden').toBe('10px');
+});
+
 test('set lands its value without waiting for a frame', async () => {
   const el = box();
   set(el, { x: [120], width: [200] });
