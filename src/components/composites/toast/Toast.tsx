@@ -69,15 +69,12 @@ function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
   }, [tone]);
 }
 
-function useReplay<T extends HTMLElement>(token: unknown, build: () => Layer[]) {
-  const ref = useRef<T>(null);
-  const latest = useRef(build);
-  latest.current = build;
-  useLayoutEffect(() => {
-    if (ref.current) animate(ref.current, ...latest.current());
-  }, [token]);
-  return ref;
-}
+const GLYPH_POP: Layer[] = [
+  { scale: [0.5, 1], timing: SM.t.settle },
+  { opacity: [0, 1], timing: SM.t.enter },
+];
+const TEXT_FADE: Layer[] = [{ opacity: [0, 1], timing: SM.t.enter }];
+const COUNT_POP: Layer[] = [{ scale: [0.6, 1], timing: SM.t.settle }];
 
 function ToastItem({
   t,
@@ -172,27 +169,18 @@ function ToastItem({
 }
 
 function ToastBody({ t }: { t: ToastRecord }) {
-  const glyphRef = useReplay<HTMLSpanElement>(t.tone, () => [
-    { scale: [0.5, 1], timing: SM.t.settle },
-    { opacity: [0, 1], timing: SM.t.enter },
-  ]);
-  const textRef = useReplay<HTMLDivElement>(String(t.message) + '-' + String(t.description), () => [
-    { opacity: [0, 1], timing: SM.t.enter },
-  ]);
-  const countRef = useReplay<HTMLSpanElement>(t.count, () => [{ scale: [0.6, 1], timing: SM.t.settle }]);
-
   return (
     <div className="toast__inner">
       {(t.tone !== 'default' || isFinite(t.duration)) && (
         <span className="toast__icon">
           {t.tone !== 'default' && (
-            <span ref={glyphRef} className="toast__icon-glyph">
+            <Motion as="span" className="toast__icon-glyph" animate={GLYPH_POP} deps={[t.tone]}>
               {t.tone === 'loading' ? (
                 <span className="toast__spinner" aria-hidden="true"></span>
               ) : (
                 <Icon name={TONE_ICON[t.tone] || 'info'} weight="fill" />
               )}
-            </span>
+            </Motion>
           )}
           {isFinite(t.duration) && (
             <svg key={'ring-' + t.timerKey} className="toast__ring" viewBox="0 0 36 36" aria-hidden="true">
@@ -209,14 +197,14 @@ function ToastBody({ t }: { t: ToastRecord }) {
           )}
         </span>
       )}
-      <div ref={textRef} className="toast__text">
+      <Motion className="toast__text" animate={TEXT_FADE} deps={[String(t.message) + '-' + String(t.description)]}>
         <p className="toast__message">{t.message}</p>
         {t.description != null && <p className="toast__desc">{t.description}</p>}
-      </div>
+      </Motion>
       {t.count > 1 && (
-        <span ref={countRef} className="toast__count">
+        <Motion as="span" className="toast__count" animate={COUNT_POP} deps={[t.count]}>
           ×{t.count}
-        </span>
+        </Motion>
       )}
       {t.action && (
         <Button
