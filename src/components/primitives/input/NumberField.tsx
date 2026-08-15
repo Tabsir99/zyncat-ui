@@ -1,10 +1,17 @@
 'use client';
 
 import './input.css';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import type { CSSProperties, InputHTMLAttributes } from 'react';
 import { Icon } from '../../internal/icon/Icon';
-import { FieldLabel, FieldMessage, type FieldCoreMessagingProps, type FieldIdProps } from './field-chrome';
+import {
+  FieldLabel,
+  FieldMessage,
+  fieldMessageId,
+  joinIds,
+  type FieldCoreMessagingProps,
+  type FieldIdProps,
+} from './field-chrome';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
@@ -61,6 +68,9 @@ export function NumberField({
   style,
   htmlProps,
 }: NumberFieldProps) {
+  const autoId = useId();
+  const message = error || helper;
+  const msgId = fieldMessageId(id ?? autoId, message);
   const resolvedValue = value === undefined ? undefined : typeof value === 'number' ? value : parseFloat(value) || 0;
   const [num, setNum] = useControllable<number>(resolvedValue, defaultValue, onChange);
   const [draft, setDraft] = useState<string | null>(null);
@@ -110,6 +120,7 @@ export function NumberField({
             if (e.key === 'Enter') commit(v);
           }}
           {...htmlProps}
+          aria-describedby={joinIds(msgId, htmlProps?.['aria-describedby'])}
         />
         {unit && <span className="numf__unit">{unit}</span>}
         <div className="numf__steppers">
@@ -133,7 +144,7 @@ export function NumberField({
           </button>
         </div>
       </div>
-      <FieldMessage message={error || helper} icon={error ? 'warning-circle' : null} />
+      <FieldMessage id={msgId} message={message} icon={error ? 'warning-circle' : null} />
     </div>
   );
 }

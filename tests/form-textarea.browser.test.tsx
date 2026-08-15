@@ -128,7 +128,7 @@ describe('Textarea auto-grow', () => {
     expect(hostHeight('cap4')).toBeGreaterThan(hostHeight('cap4empty'));
   });
 
-  test.fails('text past the row cap can be reached by scrolling', async () => {
+  test('text past the row cap can be reached by scrolling', async () => {
     renderApp(<Composer host="capped" initial={FORTY_LINES} maxRows={4} />);
     await settle();
 

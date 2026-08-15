@@ -31,7 +31,8 @@ export function dropShared(key: string): void {
 }
 
 export interface FlipOptions {
-  scale?: boolean;
+  /** How a changed box size is reconciled: cheap scale correction, a real width/height morph, or left alone. */
+  size?: 'scale' | 'morph' | 'none';
   timing?: Timing;
 }
 
@@ -39,21 +40,28 @@ export function flip(el: HTMLElement, from: Box, options: FlipOptions = {}): Pla
   const to = measure(el);
   if (!to.width || !to.height) return null;
 
+  const size = options.size ?? 'scale';
   const dx = from.left - to.left;
   const dy = from.top - to.top;
-  const sx = options.scale === false ? 1 : from.width / to.width;
-  const sy = options.scale === false ? 1 : from.height / to.height;
+  const sx = from.width / to.width;
+  const sy = from.height / to.height;
 
   const moved = Math.abs(dx) > MOVE_EPSILON || Math.abs(dy) > MOVE_EPSILON;
-  const scaled = Math.abs(sx - 1) > SCALE_EPSILON || Math.abs(sy - 1) > SCALE_EPSILON;
-  if (!moved && !scaled) return null;
+  const resized = size !== 'none' && (Math.abs(sx - 1) > SCALE_EPSILON || Math.abs(sy - 1) > SCALE_EPSILON);
+  if (!moved && !resized) return null;
 
-  const layer: Layer = { x: [dx, 0], y: [dy, 0], timing: { ...options.timing, fill: 'none' } };
-  if (scaled)
-    layer.scale = [
-      [sx, sy],
-      [1, 1],
-    ];
+  const timing = { ...options.timing, fill: 'none' as const };
+  const layers: Layer[] = [{ x: [dx, 0], y: [dy, 0], timing, composite: 'add' }];
+  if (resized && size === 'scale')
+    layers.push({
+      scale: [
+        [sx, sy],
+        [1, 1],
+      ],
+      timing,
+    });
+  if (resized && size === 'morph')
+    layers.push({ width: [from.width, to.width], height: [from.height, to.height], timing });
 
-  return animate(el, layer);
+  return animate(el, ...layers);
 }

@@ -1,12 +1,19 @@
 'use client';
 
-import { useEffect, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { type OverlayEntry, ovIsTop, ovInOverlayAbove } from './layer';
 
 export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
-  useEffect(() => {
-    const prev = document.activeElement as HTMLElement | null;
-    return () => {
+  const opener = useRef<HTMLElement | null | undefined>(undefined);
+
+  useLayoutEffect(() => {
+    if (opener.current !== undefined) return;
+    opener.current = document.activeElement as HTMLElement | null;
+  }, []);
+
+  useEffect(
+    () => () => {
+      const prev = opener.current;
       const a = document.activeElement;
       const orphaned = !a || a === document.body || (nodeRef.current && nodeRef.current.contains(a));
       if (orphaned && prev && prev.isConnected && typeof prev.focus === 'function') {
@@ -14,15 +21,24 @@ export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
           if (prev.isConnected) prev.focus({ preventScroll: true });
         });
       }
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    },
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 }
 
 const OV_FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
   'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export function useFocusTrap({ panelRef, entry }: { panelRef: RefObject<HTMLElement>; entry: OverlayEntry }) {
+export function useFocusTrap({
+  panelRef,
+  entry,
+  scoped,
+}: {
+  panelRef: RefObject<HTMLElement>;
+  entry: OverlayEntry;
+  scoped: boolean;
+}) {
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return undefined;
@@ -59,10 +75,10 @@ export function useFocusTrap({ panelRef, entry }: { panelRef: RefObject<HTMLElem
     };
 
     panel.addEventListener('keydown', onKeyDown);
-    document.addEventListener('focusin', onFocusIn);
+    if (!scoped) document.addEventListener('focusin', onFocusIn);
     return () => {
       panel.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('focusin', onFocusIn);
+      if (!scoped) document.removeEventListener('focusin', onFocusIn);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }

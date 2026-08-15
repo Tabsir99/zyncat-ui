@@ -3,6 +3,7 @@
 import './textarea.css';
 import {
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   type ChangeEventHandler,
@@ -11,7 +12,14 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from 'react';
-import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from '../input/field-chrome';
+import {
+  FieldLabel,
+  FieldMessage,
+  fieldMessageId,
+  joinIds,
+  resolveFieldMessage,
+  type FieldMessagingProps,
+} from '../input/field-chrome';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 
@@ -89,6 +97,8 @@ export function Textarea({
   const meterState = over ? 'is-over' : max && remaining <= warnAt ? 'is-near' : '';
 
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
+  const autoId = useId();
+  const msgId = fieldMessageId(id ?? autoId, msg);
 
   const resize = () => {
     const el = taRef.current,
@@ -100,11 +110,8 @@ export function Textarea({
     const content = el.offsetHeight;
     const maxPx = parseFloat(getComputedStyle(stack).maxHeight) || Infinity;
     const target = Math.min(content, maxPx);
-    if (target === start) {
-      stack.style.overflowY = content > maxPx ? 'auto' : 'clip';
-      return;
-    }
-    stack.style.overflowY = 'clip';
+    stack.style.overflowY = content > maxPx ? 'auto' : 'clip';
+    if (target === start) return;
     stack.style.height = start + 'px';
     void stack.offsetHeight;
     stack.style.height = target + 'px';
@@ -162,6 +169,7 @@ export function Textarea({
             }}
             aria-invalid={error ? true : undefined}
             {...htmlProps}
+            aria-describedby={joinIds(msgId, htmlProps?.['aria-describedby'])}
           />
         </div>
         {(max || hint) && (
@@ -184,7 +192,7 @@ export function Textarea({
           </div>
         )}
       </div>
-      <FieldMessage message={msg} icon={msgIcon} />
+      <FieldMessage id={msgId} message={msg} icon={msgIcon} />
     </div>
   );
 }

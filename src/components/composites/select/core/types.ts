@@ -11,6 +11,8 @@ export interface SelectOption {
   icon?: ReactNode;
   /** Not selectable - skipped by keyboard nav and typeahead, and marked `aria-disabled`. @default false */
   disabled?: boolean;
+  /** Text used for `searchable` filtering and typeahead. Required when `label` is not a string. */
+  searchText?: string;
 }
 export interface SelectGroup {
   /** Section heading rendered above the options; omit for an unlabeled group. */
@@ -35,5 +37,8 @@ export function normalize(options: SelectOption[] | SelectGroup[]): {
   return { groups, flat: groups.flatMap((g) => g.options) };
 }
 
+export const optionText = (o: SelectOption): string =>
+  o.searchText ?? (typeof o.label === 'string' ? o.label : o.value);
+
 export const matches = (o: SelectOption, q: string) =>
-  !q || (o.label + ' ' + (o.description || '')).toLowerCase().includes(q.toLowerCase());
+  !q || (optionText(o) + ' ' + (o.description || '')).toLowerCase().includes(q.toLowerCase());

@@ -1,11 +1,18 @@
 'use client';
 
 import './input.css';
-import { useRef } from 'react';
+import { useId, useRef } from 'react';
 import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { FieldLabel, FieldMessage, resolveFieldMessage, type FieldMessagingProps } from './field-chrome';
+import {
+  FieldLabel,
+  FieldMessage,
+  fieldMessageId,
+  joinIds,
+  resolveFieldMessage,
+  type FieldMessagingProps,
+} from './field-chrome';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 
@@ -62,6 +69,8 @@ export function TextField({
 }: TextFieldProps) {
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
   const inputRef = useRef<HTMLInputElement>(null);
+  const autoId = useId();
+  const msgId = fieldMessageId(rest.id ?? autoId, msg);
   const showClear = clearable && value && !rest.disabled && !rest.readOnly;
 
   function clear() {
@@ -97,6 +106,7 @@ export function TextField({
           aria-invalid={error ? true : undefined}
           {...rest}
           {...htmlProps}
+          aria-describedby={joinIds(msgId, htmlProps?.['aria-describedby'])}
         />
         {showClear && (
           <button type="button" className="fld__action" aria-label="Clear" onClick={clear}>
@@ -104,7 +114,7 @@ export function TextField({
           </button>
         )}
       </div>
-      <FieldMessage message={msg} icon={msgIcon} />
+      <FieldMessage id={msgId} message={msg} icon={msgIcon} />
     </div>
   );
 }

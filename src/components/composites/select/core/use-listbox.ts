@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useGlide } from '../../../../motion/glide';
-import { normalize, matches, type SelectOption, type SelectGroup } from './types';
+import { normalize, matches, optionText, type SelectOption, type SelectGroup } from './types';
 
 export interface UseListboxArgs {
   options: SelectOption[] | SelectGroup[];
@@ -70,6 +70,10 @@ export function useListbox({
     const sel = navItems.findIndex((o) => isSelected(o.value) && !o.disabled);
     const first = navItems.findIndex((o) => !o.disabled);
     setActiveIdx(sel >= 0 ? sel : first);
+  }, [open, query]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!open) return;
     const ref = searchable ? searchRef : listRef;
     setTimeout(() => {
       if (ref.current) ref.current.focus();
@@ -112,7 +116,7 @@ export function useListbox({
     clearTimeout(ta.t);
     ta.buf += ch.toLowerCase();
     ta.t = setTimeout(() => (ta.buf = ''), 600);
-    const i = navItems.findIndex((o) => !o.disabled && o.value.toLowerCase().startsWith(ta.buf));
+    const i = navItems.findIndex((o) => !o.disabled && optionText(o).toLowerCase().startsWith(ta.buf));
     if (i >= 0) setActiveIdx(i);
   }
 
@@ -145,6 +149,12 @@ export function useListbox({
         break;
       case 'Tab':
         requestClose();
+        break;
+      case ' ':
+        if (searchable) break;
+        e.preventDefault();
+        if (typeahead.current.buf) typeAhead(e.key);
+        else if (activeIdx >= 0) commit(navItems[activeIdx]);
         break;
       default:
         if (!searchable && e.key.length === 1 && !e.metaKey && !e.ctrlKey) typeAhead(e.key);

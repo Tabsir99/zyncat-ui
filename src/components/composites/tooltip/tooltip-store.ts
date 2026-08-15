@@ -9,6 +9,7 @@ export interface ActivePayload {
   content: ReactNode;
   shortcut?: string | null;
   placement: Placement;
+  anchor: () => HTMLElement | null;
   rect: () => DOMRect;
 }
 
@@ -19,6 +20,7 @@ const WARM_WINDOW = 300;
 
 export const store = {
   active: null as ActivePayload | null,
+  described: null as HTMLElement | null,
   closeTimer: 0 as ReturnType<typeof setTimeout> | 0,
   warmUntil: 0,
   listeners: new Set<() => void>(),
@@ -31,9 +33,16 @@ export const store = {
     store.listeners.forEach((l) => l());
   },
   isWarm: () => store.active !== null || performance.now() < store.warmUntil,
+  describe(el: HTMLElement | null) {
+    if (store.described === el) return;
+    store.described?.removeAttribute('aria-describedby');
+    store.described = el;
+    el?.setAttribute('aria-describedby', TOOLTIP_DOM_ID);
+  },
   open(payload: ActivePayload) {
     clearTimeout(store.closeTimer);
     store.active = payload;
+    store.describe(payload.anchor());
     store.emit();
   },
   close(id: string, grace = CLOSE_GRACE) {
@@ -44,6 +53,7 @@ export const store = {
   },
   closeNow() {
     clearTimeout(store.closeTimer);
+    store.describe(null);
     if (!store.active) return;
     store.warmUntil = performance.now() + WARM_WINDOW;
     store.active = null;

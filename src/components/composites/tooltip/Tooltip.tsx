@@ -12,7 +12,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, TOOLTIP_DOM_ID, type Placement } from './tooltip-store';
+import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, type Placement } from './tooltip-store';
 import { TooltipHost } from './tooltip-host';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
@@ -68,18 +68,21 @@ export function Tooltip({
   function show(immediate: boolean) {
     if (disabled) return;
     clearTimeout(openTimer.current);
-    const el = anchorEl();
-    if (!el) return;
-    el.setAttribute('aria-describedby', TOOLTIP_DOM_ID);
+    if (!anchorEl()) return;
     const open = () =>
-      store.open({ id: myId, content, shortcut, placement, rect: () => anchorEl()!.getBoundingClientRect() });
+      store.open({
+        id: myId,
+        content,
+        shortcut,
+        placement,
+        anchor: anchorEl,
+        rect: () => anchorEl()!.getBoundingClientRect(),
+      });
     if (immediate || store.isWarm()) open();
     else openTimer.current = setTimeout(open, openDelay);
   }
   function hide() {
     clearTimeout(openTimer.current);
-    const el = anchorEl();
-    if (el) el.removeAttribute('aria-describedby');
     store.close(myId, closeDelay);
   }
 

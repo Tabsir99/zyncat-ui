@@ -14,7 +14,7 @@ import type { FieldRequirementProps } from '../input/field-chrome';
 
 const SM = UIMotion;
 const LAYOUT_FLIP = { timing: SM.t.layout };
-const HOVER_FLIP = { scale: false, timing: SM.t.layout };
+const HOVER_FLIP = { size: 'none' as const, timing: SM.t.layout };
 
 export interface RadioOption {
   /** The stored value - what `onChange` returns and `value` matches. */
@@ -98,19 +98,17 @@ export function RadioGroup({
   return (
     <fieldset className={cls} style={style} aria-invalid={error ? true : undefined} {...htmlProps}>
       {label && (
-        <div className="rg__head">
-          <legend className="rg__label">
-            {label}
-            {required && (
-              <span className="rg__req" aria-hidden="true">
-                *
-              </span>
-            )}
-            {optional && <span className="rg__optional">(optional)</span>}
-          </legend>
-          {helper && <p className="rg__helper">{helper}</p>}
-        </div>
+        <legend className="rg__label">
+          {label}
+          {required && (
+            <span className="rg__req" aria-hidden="true">
+              *
+            </span>
+          )}
+          {optional && <span className="rg__optional">(optional)</span>}
+        </legend>
       )}
+      {label && helper && <p className="rg__helper">{helper}</p>}
 
       <div
         className="rg__options"

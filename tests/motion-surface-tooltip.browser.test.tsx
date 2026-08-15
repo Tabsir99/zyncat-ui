@@ -5,7 +5,7 @@ import { userEvent } from 'vitest/browser';
 import { Tooltip } from '@zyncat/ui/tooltip';
 import { Modal } from '@zyncat/ui/modal';
 import { Popover } from '@zyncat/ui/popover';
-import { Probe, ledger, renderApp, settle } from './harness';
+import { Probe, ledger, nextFrame, renderApp, settle } from './harness';
 
 const WARM_WINDOW = 400;
 
@@ -64,6 +64,22 @@ function Hinted({
 
 const trigger = () => screen.getByRole('button', { name: 'Save' });
 const bubble = () => screen.queryByRole('tooltip');
+
+function LowPair() {
+  return (
+    <div style={{ paddingTop: 240 }}>
+      <Tooltip content="Saves the draft" openDelay={0} closeDelay={0}>
+        <button type="button">Save</button>
+      </Tooltip>
+      <Tooltip content="Publishes the draft" openDelay={0} closeDelay={0}>
+        <button type="button">Publish</button>
+      </Tooltip>
+    </div>
+  );
+}
+
+const publish = () => screen.getByRole('button', { name: 'Publish' });
+const topOf = (el: HTMLElement) => el.getBoundingClientRect().top;
 
 beforeEach(() => wait(WARM_WINDOW));
 
@@ -162,7 +178,7 @@ test('the open tooltip is wired to its trigger through aria-describedby', async 
   expect(bubble().textContent).toContain('Saves the draft');
 });
 
-test.fails('a dismissed trigger is never left describing another control tooltip', async () => {
+test('a dismissed trigger is never left describing another control tooltip', async () => {
   renderApp(
     <div>
       <Hinted openDelay={4000} />
@@ -191,6 +207,43 @@ test.fails('a dismissed trigger is never left describing another control tooltip
   );
 
   await unhover(publish);
+});
+
+test('a dismissed tooltip eases out from where it stood, not from the viewport origin', async () => {
+  renderApp(<LowPair />);
+
+  await hover(trigger());
+  await wait(150);
+  const settled = topOf(bubble());
+  expect(settled, 'the fixture never moved the tooltip away from the origin').toBeGreaterThan(80);
+
+  await unhover(trigger());
+  await nextFrame();
+  await nextFrame();
+
+  const leaving = bubble();
+  expect(leaving, 'the tooltip left before it could ease out').not.toBeNull();
+  expect(Math.abs(topOf(leaving) - settled), 'the tooltip jumped before playing its exit').toBeLessThan(12);
+});
+
+test('a tooltip dismissed after moving to a second trigger still plays its exit', async () => {
+  renderApp(<LowPair />);
+
+  await hover(trigger());
+  await wait(150);
+  await hover(publish());
+  await wait(150);
+  const settled = topOf(bubble());
+  expect(bubble().textContent).toContain('Publishes the draft');
+
+  await unhover(publish());
+  await nextFrame();
+  await nextFrame();
+
+  const leaving = bubble();
+  expect(leaving, 'the moved tooltip vanished instead of easing out').not.toBeNull();
+  expect(Number(getComputedStyle(leaving).opacity), 'the moved tooltip never faded').toBeLessThan(1);
+  expect(Math.abs(topOf(leaving) - settled), 'the moved tooltip jumped before playing its exit').toBeLessThan(12);
 });
 
 test('a disabled tooltip never opens, however long the pointer rests on the trigger', async () => {

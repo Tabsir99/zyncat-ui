@@ -23,7 +23,7 @@ export function useFlip<T extends HTMLElement>(
   const ref = useRef<T | null>(null);
   const privateBox = useRef<Box | null>(null);
   const playing = useRef<{ play: Playback; el: T } | null>(null);
-  const { scale, timing } = tuning;
+  const { size, timing } = tuning;
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -34,7 +34,7 @@ export function useFlip<T extends HTMLElement>(
     const settled = measure(el);
     if (sharedId === null) privateBox.current = settled;
     else keepShared(sharedId, settled);
-    const next = from && !UIMotion.reduced ? flip(el, from, { scale, timing }) : null;
+    const next = from && !UIMotion.reduced ? flip(el, from, { size, timing }) : null;
     playing.current = next ? { play: next, el } : null;
     next?.finished.then(() => {
       if (playing.current?.play === next) playing.current = null;

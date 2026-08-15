@@ -145,7 +145,7 @@ describe('Select accessibility wiring', () => {
     expect(activeDescendantOf(field)!.textContent).toBe('Cherry');
   });
 
-  test.fails('the element holding focus points at the active option with aria-activedescendant', async () => {
+  test('the element holding focus points at the active option with aria-activedescendant', async () => {
     const user = userEvent.setup();
     renderApp(<Select options={FRUITS} ariaLabel="Fruit" />);
     await open(user);

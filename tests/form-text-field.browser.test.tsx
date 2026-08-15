@@ -246,7 +246,7 @@ describe('TextField accessibility', () => {
     expect(input.getAttribute('aria-describedby')).toBe('rules');
   });
 
-  test.fails('an invalid field points assistive technology at the message explaining why', async () => {
+  test('an invalid field points assistive technology at the message explaining why', async () => {
     renderApp(<TextField id="f" label="Username" error="Must be at least 4 characters." />);
     await settle();
 

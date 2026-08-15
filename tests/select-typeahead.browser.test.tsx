@@ -136,7 +136,7 @@ describe('Select typeahead', () => {
     expect(activeOptionLabel()).toBe('Blackberry');
   });
 
-  test.fails('typeahead matches the option label the user can read, not its stored value', async () => {
+  test('typeahead matches the option label the user can read, not its stored value', async () => {
     const user = userEvent.setup();
     renderApp(<Select options={LABELLED_BY_CODE} ariaLabel="Fruit" />);
     await openMenu(user);
@@ -227,7 +227,7 @@ describe('Select searchable filtering', () => {
     expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('');
   });
 
-  test.fails('Enter commits the sole remaining match after filtering from a later option', async () => {
+  test('Enter commits the sole remaining match after filtering from a later option', async () => {
     const user = userEvent.setup();
     renderApp(<Select options={BERRIES} searchable ariaLabel="Berry" />);
     await openMenu(user);

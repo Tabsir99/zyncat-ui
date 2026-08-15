@@ -149,7 +149,7 @@ describe('interrupted transitions', () => {
     expect(document.body.style.overflow).toBe('');
   });
 
-  test.fails('reopening before the closing animation has finished leaves the surface visible', async () => {
+  test('reopening before the closing animation has finished leaves the surface visible', async () => {
     renderApp(<App startOpen />);
     await settle();
 

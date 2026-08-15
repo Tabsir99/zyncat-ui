@@ -143,7 +143,7 @@ test('a message that grows while the alert is open reflows to its new natural he
   expect(heightOf(host())).toBeCloseTo(wrapped, 0);
 });
 
-test.fails('an alert re-opened while it is easing shut settles back at its natural height', async () => {
+test('an alert re-opened while it is easing shut settles back at its natural height', async () => {
   const slowClose = { duration: { close: 'slowest' } } as const;
   const view = renderApp(<Sized open animation={slowClose} title="Deploy finished" />);
   await settle();

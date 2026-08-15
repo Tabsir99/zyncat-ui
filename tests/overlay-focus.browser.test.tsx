@@ -127,7 +127,7 @@ describe('modal focus containment', () => {
 });
 
 describe('modal focus return', () => {
-  test.fails('focus returns to the trigger after Escape closes the surface', async () => {
+  test('focus returns to the trigger after Escape closes the surface', async () => {
     const user = userEvent.setup();
     renderApp(
       <Modal id={PANEL_ID} trigger={<button type="button">open</button>}>
@@ -148,7 +148,7 @@ describe('modal focus return', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
-  test.fails('focus returns to the trigger after a dialog is closed with its close button', async () => {
+  test('focus returns to the trigger after a dialog is closed with its close button', async () => {
     const user = userEvent.setup();
     renderApp(
       <Dialog trigger={<button type="button">open</button>} title="Settings">

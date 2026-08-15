@@ -131,7 +131,7 @@ describe('Select keyboard navigation', () => {
     expect(document.activeElement).toBe(trigger());
   });
 
-  test.fails('Space commits the active option like Enter does', async () => {
+  test('Space commits the active option like Enter does', async () => {
     const user = userEvent.setup();
     renderApp(<Select options={FRUITS} ariaLabel="Fruit" />);
     await openWithPointer(user);

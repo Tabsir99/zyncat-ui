@@ -20,6 +20,7 @@ interface Entry {
 }
 
 type Claims = Map<string, Set<object>>;
+type Latest = Map<string, ReactElement>;
 
 interface Tracked {
   shown: Entry[];
@@ -34,13 +35,14 @@ function toEntries(children: ReactNode): Entry[] {
   return out;
 }
 
-function withExiting(previous: Entry[], incoming: Entry[], claims: Claims): Entry[] {
+function withExiting(previous: Entry[], incoming: Entry[], claims: Claims, latest: Latest): Entry[] {
   const live = new Set(incoming.map((entry) => entry.key));
   const merged: Entry[] = incoming.map((entry) => ({ ...entry }));
   previous.forEach((entry, index) => {
     if (live.has(entry.key)) return;
     if (!claims.get(entry.key)?.size) return;
-    merged.splice(index, 0, entry.exiting ? entry : { ...entry, exiting: true });
+    const node = latest.get(entry.key) ?? entry.node;
+    merged.splice(index, 0, entry.exiting ? entry : { ...entry, node, exiting: true });
   });
   return merged;
 }
@@ -60,6 +62,8 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
   const incoming = toEntries(children);
   const signature = incoming.map((entry) => entry.key).join('|');
   const claims = useRef<Claims>(new Map());
+  const latest = useRef<Latest>(new Map());
+  for (const entry of incoming) latest.current.set(entry.key, entry.node);
   const [tracked, setTracked] = useState<Tracked>({ shown: incoming, signature });
   const bornAtMount = useRef(new Set(incoming.map((entry) => entry.key)));
   const wasExiting = useRef(false);
@@ -68,15 +72,17 @@ export function Presence({ children, initial = true, mode = 'sync', onExitComple
 
   let shown = tracked.shown;
   if (tracked.signature !== signature) {
-    shown = withExiting(tracked.shown, incoming, claims.current);
+    shown = withExiting(tracked.shown, incoming, claims.current, latest.current);
     setTracked({ shown, signature });
   }
 
-  const drop = (key: string) =>
+  const drop = (key: string) => {
+    latest.current.delete(key);
     setTracked((previous) => {
       const next = previous.shown.filter((entry) => entry.key !== key || !entry.exiting);
       return next.length === previous.shown.length ? previous : { ...previous, shown: next };
     });
+  };
 
   const claimExit = (key: string) => (): (() => void) => {
     let tokens = claims.current.get(key);

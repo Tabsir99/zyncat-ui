@@ -222,7 +222,7 @@ describe('RadioGroup disabled and invalid states', () => {
     expect(getComputedStyle(screen.getByText('Pick a role.')).visibility).toBe('visible');
   });
 
-  test.fails('the group carries its label as its accessible name', () => {
+  test('the group carries its label as its accessible name', () => {
     renderApp(<ControlledRoles />);
 
     expect(screen.getByRole('group', { name: 'Member role' })).toBeInstanceOf(HTMLFieldSetElement);

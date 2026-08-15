@@ -34,6 +34,7 @@ export function useMotion(ref: RefObject<HTMLElement | null>, { animate, exit, i
   const presence = usePresence();
   const playing = useRef<Playback[]>([]);
   const mounted = useRef(false);
+  const exiting = useRef(false);
   const spec = useRef({ animate, exit, initial });
   spec.current = { animate, exit, initial };
   const release = useRef<(() => void) | null>(null);
@@ -64,11 +65,22 @@ export function useMotion(ref: RefObject<HTMLElement | null>, { animate, exit, i
   }, deps ?? []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
-    if (presence.isPresent || !ownsExit) return;
     const el = ref.current;
+    if (presence.isPresent) {
+      if (!exiting.current) return;
+      exiting.current = false;
+      stop();
+      if (el) playing.current = run(spec.current.animate, el);
+      return;
+    }
+    if (!ownsExit) return;
+    exiting.current = true;
     stop();
-    playing.current = el ? run(spec.current.exit, el) : [];
-    allSettled(playing.current).then(() => release.current?.());
+    const exitPlays = el ? run(spec.current.exit, el) : [];
+    playing.current = exitPlays;
+    allSettled(exitPlays).then(() => {
+      if (playing.current === exitPlays) release.current?.();
+    });
   }, [presence.isPresent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => stop, []);

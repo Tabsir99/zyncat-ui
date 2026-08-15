@@ -16,9 +16,6 @@
   --rg-dot-inner: 7px;
 }
 
-.rg__head {
-  margin-bottom: var(--space-4);
-}
 .rg__label {
   font: var(--type-caption);
   font-weight: var(--weight-medium);
@@ -47,6 +44,10 @@
   position: relative; /* anchors the rows' shared glide pill */
   display: grid;
   gap: var(--space-1);
+}
+.rg__label + .rg__options,
+.rg__helper + .rg__options {
+  margin-top: var(--space-4);
 }
 .rg--horizontal .rg__options {
   display: flex;

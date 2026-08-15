@@ -128,7 +128,7 @@ export function ModalShell({
   useMotion(layerRef, { animate: withScrim('open', animateSpec), exit: withScrim('close', exit) });
   useScopeLock(container);
   useReturnFocus(layerRef);
-  useFocusTrap({ panelRef, entry });
+  useFocusTrap({ panelRef, entry, scoped: !!container });
   return (
     <div
       {...layerProps}

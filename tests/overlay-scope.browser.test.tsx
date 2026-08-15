@@ -176,7 +176,7 @@ describe('a container-scoped surface', () => {
     expect(onPageClick).toHaveBeenCalledTimes(1);
   });
 
-  test.fails('a field outside a container-scoped surface can still be typed into', async () => {
+  test('a field outside a container-scoped surface can still be typed into', async () => {
     const user = userEvent.setup();
     const view = renderApp(<ScopedApp open={false} />);
 

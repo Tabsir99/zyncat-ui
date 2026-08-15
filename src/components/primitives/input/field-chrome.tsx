@@ -54,20 +54,27 @@ export function FieldLabel({ id, label, required, optional }: FieldLabelProps) {
 }
 
 export interface FieldMessageProps {
+  id?: string;
   message?: ReactNode;
   icon?: IconName | null;
 }
 
-export function FieldMessage({ message, icon }: FieldMessageProps) {
+export function FieldMessage({ id, message, icon }: FieldMessageProps) {
   return (
     <Collapse open={!!message} className="fld__msg-wrap">
-      <div className="fld__msg">
+      <div className="fld__msg" id={id}>
         {icon && <Icon name={icon} size="sm" weight="fill" />}
         {message}
       </div>
     </Collapse>
   );
 }
+
+export const fieldMessageId = (baseId: string, message: ReactNode): string | undefined =>
+  message ? baseId + '-msg' : undefined;
+
+export const joinIds = (...ids: (string | undefined | null)[]): string | undefined =>
+  ids.filter(Boolean).join(' ') || undefined;
 
 export function resolveFieldMessage(
   error: ReactNode,

@@ -89,6 +89,7 @@ export function ListboxPanel({
         aria-multiselectable={multiple || undefined}
         tabIndex={-1}
         aria-label={ariaLabel}
+        aria-activedescendant={searchable ? undefined : lb.adId}
         onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
       >
         <GlidePill className="select__glide" glide={lb.glide} />
