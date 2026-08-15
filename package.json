@@ -245,6 +245,8 @@
     "check:css": "node scripts/check-css-graph.mjs",
     "check:llms": "node scripts/check-llms.mjs",
     "check:authoring": "node scripts/check-authoring.mjs",
+    "check:docs": "node scripts/gen-docs.mjs --check",
+    "docs:gen": "node scripts/gen-docs.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepublishOnly": "pnpm build",
