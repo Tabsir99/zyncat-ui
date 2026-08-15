@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import { act, screen } from '@testing-library/react';
 import { toast } from '@zyncat/ui/toast-store';
-import { Probe, firstSighting, ledger, settle } from './harness';
+import { Probe, firstSighting, ledger, nextFrame, settle } from './harness';
 import {
   NEVER,
   cards,
@@ -126,6 +126,61 @@ describe('toasts interrupted mid-animation', () => {
 
     expect(messages()).toEqual(['burst 2', 'burst 4', 'burst 6']);
     expect(cards().every((card) => getComputedStyle(card).opacity === '1')).toBe(true);
+  });
+});
+
+describe('swipe to dismiss', () => {
+  const centre = (el: HTMLElement) => {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  };
+
+  const dragBy = async (card: HTMLElement, dx: number) => {
+    const from = centre(card);
+    await act(async () => {
+      card.dispatchEvent(
+        new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: from.x, clientY: from.y }),
+      );
+      window.dispatchEvent(new PointerEvent('pointermove', { clientX: from.x + dx, clientY: from.y }));
+      await nextFrame();
+    });
+  };
+
+  test('dragging a toast sideways carries the whole card, not just the text inside it', async () => {
+    await mountToaster();
+    await fire(() => {
+      toast('Deploy finished', { duration: NEVER });
+    });
+    await settle();
+
+    const card = cards()[0];
+    const text = screen.getByText('Deploy finished');
+    const cardBefore = card.getBoundingClientRect().left;
+    const insetBefore = text.getBoundingClientRect().left - cardBefore;
+
+    await dragBy(card, 100);
+
+    const cardAfter = card.getBoundingClientRect().left;
+    const insetAfter = text.getBoundingClientRect().left - cardAfter;
+
+    expect(cardAfter - cardBefore, 'the card itself never moved').toBeGreaterThan(20);
+    expect(insetAfter, 'the text slid within a stationary card').toBeCloseTo(insetBefore, 0);
+  });
+
+  test('a toast dragged sideways keeps the vertical offset its place in the stack gave it', async () => {
+    await mountToaster();
+    await fire(() => {
+      toast('underneath', { duration: NEVER });
+      toast('on top', { duration: NEVER });
+    });
+    await settle();
+
+    const card = cards().find((c) => c.textContent?.includes('on top'))!;
+    const topBefore = card.getBoundingClientRect().top;
+
+    await dragBy(card, 100);
+
+    expect(card.getBoundingClientRect().top, 'the drag reset the stack offset').toBeCloseTo(topBefore, 0);
   });
 });
 

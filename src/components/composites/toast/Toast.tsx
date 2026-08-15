@@ -35,6 +35,7 @@ const store = UIToast;
 const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
 const SWIPE_V = 480;
+const SWIPE_FLING_X = 420;
 
 let GAP = 0;
 function stackGap() {
@@ -57,11 +58,10 @@ function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
     if (tone === prev) return;
     if (tone === 'success') return fireGlint(ref.current);
     if (tone === 'danger' && ref.current) {
-      const shake = ref.current.firstElementChild as HTMLElement | null;
-      if (!shake) return;
-      const fall = animate(shake, {
+      const fall = animate(ref.current, {
         x: [0, -7, 5, -2, 0],
-        timing: { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base },
+        timing: { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base, fill: 'none' },
+        composite: 'add',
       });
       fall.finished.then(() => fall.stop());
       return () => fall.stop();
@@ -98,6 +98,8 @@ function ToastItem({
   const ref = useRef<HTMLLIElement>(null);
   const settled = useRef(false);
   const swipeBack = useRef<Playback | null>(null);
+  const swipeX = useRef(0);
+  const restY = useRef(0);
   useToneGesture(t.tone, ref);
 
   useLayoutEffect(() => {
@@ -111,10 +113,11 @@ function ToastItem({
     el.style.pointerEvents = hidden ? 'none' : 'auto';
     const y = isTop ? offset : -offset;
     const scale = 1 - depth * 0.05;
+    restY.current = y;
     if (settled.current) {
       animate(
         el,
-        { y: [y], scale: [scale], height: [frameHeight ?? 'auto'], timing: SM.t.settle },
+        { x: [swipeX.current], y: [y], scale: [scale], height: [frameHeight ?? 'auto'], timing: SM.t.settle },
         { opacity: [hidden ? 0 : 1], timing: SM.t.enter },
       );
       return;
@@ -128,22 +131,30 @@ function ToastItem({
   }, [offset, depth, hidden, frameHeight, isTop]);
 
   const onPointerDown = (e: ReactPointerEvent) => {
-    const inner = ref.current?.firstElementChild as HTMLElement | null;
-    if (!t.dismissible || e.button !== 0 || !inner) return;
+    const el = ref.current;
+    if (!t.dismissible || e.button !== 0 || !el) return;
     swipeBack.current?.stop();
+    swipeBack.current = null;
+    const place = (x: number) => {
+      swipeX.current = x;
+      animate(el, { x: [x], y: [restY.current], timing: { duration: 0 } });
+    };
+    place(swipeX.current);
     startDrag(e, {
       onMove: (info) => {
         const dx = info.offset.x;
-        inner.style.translate = `${dx > 0 ? dx * 0.9 : dx * 0.04}px 0px`;
+        place(dx > 0 ? dx * 0.9 : dx * 0.04);
       },
       onEnd: (info) => {
         if (info.offset.x > SWIPE_X || info.velocity.x > SWIPE_V) {
-          animate(inner, { x: [420], timing: SM.t.exit }).finished.then(() => store.dismiss(t.id));
+          swipeX.current = SWIPE_FLING_X;
+          animate(el, { x: [SWIPE_FLING_X], y: [restY.current], timing: SM.t.exit }).finished.then(() =>
+            store.dismiss(t.id),
+          );
           return;
         }
-        const back = animate(inner, { x: [0], timing: SM.t.settle });
-        swipeBack.current = back;
-        back.finished.then(() => back.stop());
+        swipeX.current = 0;
+        swipeBack.current = animate(el, { x: [0], y: [restY.current], timing: SM.t.settle });
       },
     });
   };
