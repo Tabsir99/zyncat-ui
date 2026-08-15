@@ -173,6 +173,7 @@ export function Dialog({
           {open && (
             <ModalShell
               key="dialog"
+              timings={timings}
               animate={{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }}
               exit={{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }}
               layerClass="overlay-layer--dialog"

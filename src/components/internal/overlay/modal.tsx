@@ -4,12 +4,10 @@ import './overlay.css';
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { animate, type Layer, type Playback } from '../../../engine';
 import { useMotion, run, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
-import { UIMotion } from '../../../tokens/motion-tokens';
+import type { MotionTimings } from '../../../motion/motion-timing';
 import { useOverlayEntry } from './layer';
 import { useReturnFocus, useFocusTrap } from './focus';
 import { cx } from '../utils/cx';
-
-const SM = UIMotion;
 
 interface OvScopeLock {
   depth: number;
@@ -58,11 +56,6 @@ function useScopeLock(container?: HTMLElement | null) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-const ovScrimTiming = {
-  open: { duration: SM.dur.slow, ease: SM.ease.entrance },
-  close: { duration: SM.dur.base, ease: SM.ease.standard },
-};
-
 function OverlayScrim({
   dismissible,
   onPress,
@@ -98,6 +91,7 @@ export function ModalShell({
   panelRef: externalPanelRef = null,
   panelProps = {},
   layerProps = {},
+  timings,
   animate: animateSpec,
   exit,
   children,
@@ -111,6 +105,7 @@ export function ModalShell({
   panelRef?: RefObject<HTMLElement> | null;
   panelProps?: Record<string, any>;
   layerProps?: Record<string, any>;
+  timings: MotionTimings;
   children: ReactNode;
 } & MotionSpecs) {
   const layerRef = useRef<HTMLDivElement>(null);
@@ -120,7 +115,7 @@ export function ModalShell({
   const entry = useOverlayEntry({ nodeRef: layerRef, dismissible, requestClose });
 
   const withScrim = (dir: 'open' | 'close', panelSpec: MotionSpec | undefined) => (): Playback[] => {
-    const fade: Layer = { opacity: dir === 'open' ? [0, 1] : [0], timing: ovScrimTiming[dir] };
+    const fade: Layer = { opacity: dir === 'open' ? [0, 1] : [0], timing: timings[dir] };
     const plays = scrimRef.current ? [animate(scrimRef.current, fade)] : [];
     return panelRef.current ? plays.concat(run(panelSpec, panelRef.current)) : plays;
   };

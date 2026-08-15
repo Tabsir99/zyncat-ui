@@ -5,7 +5,7 @@ import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type R
 import { animate, type Layer } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import type { MotionSpecs } from '../../../motion/use-motion';
-import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { resolveMotionTiming, type MotionTimings } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
@@ -61,6 +61,7 @@ function SheetShell({
   container,
   requestClose,
   htmlProps,
+  timings,
   animate,
   exit,
   children,
@@ -71,12 +72,14 @@ function SheetShell({
   container?: HTMLElement | null;
   requestClose: () => void;
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  timings: MotionTimings;
   children: ReactNode;
 } & MotionSpecs) {
   const panelRef = useRef<HTMLElement>(null);
   const dragProps = useSheetDrag({ side, panelRef, enabled: dismissible, requestClose });
   return (
     <ModalShell
+      timings={timings}
       animate={animate}
       exit={exit}
       layerClass={'overlay-layer--sheet-' + side}
@@ -121,6 +124,7 @@ export function Sheet({
           {open && (
             <SheetShell
               key="sheet"
+              timings={timings}
               animate={(slot) => {
                 const play = animate(slot, { ...sheetSlide(slot, side, [1, 0]), timing: timings.open });
                 play.finished.then(() => play.stop());

@@ -74,6 +74,7 @@ export function Modal({
           {open && (
             <ModalShell
               key="modal"
+              timings={timings}
               animate={{ opacity: [0, 1], scale: [0.98, 1], timing: timings.open }}
               exit={{ opacity: [0], scale: [0.98], timing: timings.close }}
               layerClass="overlay-layer--modal"
