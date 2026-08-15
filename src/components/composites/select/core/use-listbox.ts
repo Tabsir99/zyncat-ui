@@ -75,9 +75,7 @@ export function useListbox({
   useEffect(() => {
     if (!open) return;
     const ref = searchable ? searchRef : listRef;
-    setTimeout(() => {
-      if (ref.current) ref.current.focus();
-    }, 0);
+    if (ref.current) ref.current.focus();
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
