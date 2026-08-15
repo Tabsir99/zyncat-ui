@@ -63,7 +63,6 @@ function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
         timing: { duration: SM.dur.slow, ease: SM.ease.standard, delay: SM.dur.base, fill: 'none' },
         composite: 'add',
       });
-      fall.finished.then(() => fall.stop());
       return () => fall.stop();
     }
   }, [tone]);
