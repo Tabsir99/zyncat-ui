@@ -66,6 +66,32 @@ test("a composite 'add' layer does not evict the element's own animation of the 
   expect(running(el)).toHaveLength(2);
 });
 
+test('width and height take a percentage the same way x and y do', async () => {
+  const parent = box();
+  parent.style.width = '400px';
+  parent.style.height = '300px';
+  const child = document.createElement('div');
+  parent.appendChild(child);
+
+  set(child, { width: ['25%'], height: ['50%'] });
+
+  const rect = child.getBoundingClientRect();
+  expect(rect.width, 'width ignored the percentage').toBeCloseTo(100, 0);
+  expect(rect.height, 'height ignored the percentage').toBeCloseTo(150, 0);
+});
+
+test('a percentage travel resolves against the element rather than the viewport', async () => {
+  const wide = box();
+  wide.style.width = '250px';
+  const narrow = box();
+  narrow.style.width = '50px';
+
+  set(wide, { x: ['100%'] });
+  set(narrow, { x: ['100%'] });
+
+  expect(wide.getBoundingClientRect().left - narrow.getBoundingClientRect().left).toBeCloseTo(200, 0);
+});
+
 test('set lands its value without waiting for a frame', async () => {
   const el = box();
   set(el, { x: [120], width: [200] });

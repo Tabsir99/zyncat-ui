@@ -8,11 +8,12 @@ export interface Playback {
 }
 
 type Vec = [number, number];
-export type Size = number | 'auto';
+export type Length = number | `${number}%`;
+export type Size = Length | 'auto';
 
 export interface Layer {
-  x?: number[];
-  y?: number[];
+  x?: Length[];
+  y?: Length[];
   scale?: number[] | Vec[];
   opacity?: number[];
   width?: Size[];
@@ -36,8 +37,12 @@ function measureAuto(el: HTMLElement, key: 'width' | 'height'): number {
   return measured;
 }
 
-function held(list: number[], index: number): number {
+function held<T>(list: T[], index: number): T {
   return list[Math.min(index, list.length - 1)];
+}
+
+function cssLength(value: Length): string {
+  return typeof value === 'number' ? `${value}px` : value;
 }
 
 function currentValue(el: HTMLElement, key: string): string {
@@ -53,7 +58,7 @@ function compile(el: HTMLElement, layer: Layer) {
     const x = layer.x?.length ? layer.x : [0];
     const y = layer.y?.length ? layer.y : [0];
     const count = Math.max(x.length, y.length);
-    frames.translate = Array.from({ length: count }, (_, i) => `${held(x, i)}px ${held(y, i)}px`);
+    frames.translate = Array.from({ length: count }, (_, i) => `${cssLength(held(x, i))} ${cssLength(held(y, i))}`);
   }
   if (layer.scale) frames.scale = layer.scale.map((v) => (typeof v === 'number' ? String(v) : `${v[0]} ${v[1]}`));
   if (layer.opacity) frames.opacity = layer.opacity.map(String);
@@ -63,7 +68,7 @@ function compile(el: HTMLElement, layer: Layer) {
     if (!list) continue;
     if (list[list.length - 1] === 'auto') autoKeys.push(key);
     const measured = list.includes('auto') ? measureAuto(el, key) : 0;
-    frames[key] = list.map((v) => `${v === 'auto' ? measured : v}px`);
+    frames[key] = list.map((v) => (v === 'auto' ? `${measured}px` : cssLength(v)));
   }
 
   for (const [key, list] of Object.entries(frames)) if (list.length === 1) list.unshift(currentValue(el, key));
