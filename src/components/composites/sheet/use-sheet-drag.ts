@@ -29,7 +29,7 @@ function sheetScrim(panel: HTMLElement | null): HTMLElement | null {
   return panel?.parentElement?.querySelector<HTMLElement>('.overlay-scrim') ?? null;
 }
 
-export function sheetSpan(panel: HTMLElement, side: 'right' | 'bottom'): number {
+function sheetSpan(panel: HTMLElement, side: 'right' | 'bottom'): number {
   return side === 'bottom' ? panel.offsetHeight : panel.offsetWidth;
 }
 

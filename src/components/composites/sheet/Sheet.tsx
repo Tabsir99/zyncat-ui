@@ -2,7 +2,6 @@
 
 import './sheet.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { animate, type Layer } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import type { MotionSpecs } from '../../../motion/use-motion';
 import { resolveMotionTiming, type MotionTimings } from '../../../motion/motion-timing';
@@ -10,7 +9,7 @@ import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell } from '../../internal/overlay/modal';
-import { useSheetDrag, sheetSpan } from './use-sheet-drag';
+import { useSheetDrag } from './use-sheet-drag';
 import type { DataAttributes } from '../../../dom-props';
 
 const SHEET_TIMING = {
@@ -47,11 +46,6 @@ export interface SheetProps {
   animation?: DisableableAnimation;
   /** The ENTIRE surface - paint AND semantics. Drive dismissal with `open`/`onOpenChange`. */
   children: ReactNode;
-}
-
-function sheetSlide(slot: HTMLElement, side: 'right' | 'bottom', at: number[]): Layer {
-  const frames = at.map((ratio) => ratio * sheetSpan(slot, side));
-  return side === 'bottom' ? { y: frames } : { x: frames };
 }
 
 function SheetShell({
@@ -115,6 +109,7 @@ export function Sheet({
   const panelId = id || 'sheet-' + autoId;
   const close = () => setOpen(false);
   const timings = resolveMotionTiming(animation, SHEET_TIMING);
+  const axis = side === 'bottom' ? 'y' : 'x';
 
   return (
     <Fragment>
@@ -125,12 +120,8 @@ export function Sheet({
             <SheetShell
               key="sheet"
               timings={timings}
-              animate={(slot) => {
-                const play = animate(slot, { ...sheetSlide(slot, side, [1, 0]), timing: timings.open });
-                play.finished.then(() => play.stop());
-                return play;
-              }}
-              exit={(slot) => animate(slot, { ...sheetSlide(slot, side, [1]), timing: timings.close })}
+              animate={{ [axis]: ['100%', 0], timing: { ...timings.open, release: true } }}
+              exit={{ [axis]: ['100%'], timing: timings.close }}
               side={side}
               panelId={panelId}
               dismissible={dismissible}
