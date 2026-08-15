@@ -6,6 +6,7 @@ import { Alert, type AlertProps } from '@zyncat/ui/alert';
 import { Probe, firstSighting, ledger, nextFrame, renderApp, settle, useOpenProbe, type Ledger } from './harness';
 
 const heightOf = (el: HTMLElement) => el.getBoundingClientRect().height;
+const scaleOf = (el: HTMLElement) => parseFloat(getComputedStyle(el).scale) || 1;
 const host = () => screen.getByTestId('host');
 const reference = () => screen.getByTestId('reference');
 
@@ -143,23 +144,29 @@ test('a message that grows while the alert is open reflows to its new natural he
   expect(heightOf(host())).toBeCloseTo(wrapped, 0);
 });
 
-test('an alert re-opened while it is easing shut settles back at its natural height', async () => {
+test('an alert re-opened while it is easing shut settles back fully opaque and unscaled', async () => {
   const slowClose = { duration: { close: 'slowest' } } as const;
   const view = renderApp(<Sized open animation={slowClose} title="Deploy finished" />);
   await settle();
   const natural = heightOf(reference());
   expect(heightOf(host())).toBeCloseTo(natural, 0);
+  const shell = host().firstElementChild as HTMLElement;
 
   view.rerender(<Sized open={false} animation={slowClose} title="Deploy finished" />);
   await nextFrame();
-  await nextFrame();
-  const midClose = heightOf(host());
-  expect(midClose, 'the exit never started').toBeLessThan(natural);
-  expect(midClose, 'the exit finished before it could be interrupted').toBeGreaterThan(0);
+  await waitFor(() => {
+    const midExit = Number(getComputedStyle(shell).opacity);
+    expect(midExit, 'the exit never started').toBeLessThan(1);
+    expect(midExit, 'the exit finished before it could be interrupted').toBeGreaterThan(0);
+    expect(scaleOf(shell), 'the exit did not scale the alert down').toBeLessThan(1);
+  });
 
   view.rerender(<Sized open animation={slowClose} title="Deploy finished" />);
 
-  await waitFor(() => expect(heightOf(host())).toBeCloseTo(natural, 0));
+  await settle();
+  expect(heightOf(host())).toBeCloseTo(natural, 0);
+  expect(Number(getComputedStyle(shell).opacity)).toBe(1);
+  expect(getComputedStyle(shell).scale).toBe('none');
 });
 
 test('a consumer effect keyed on open sees connected, measurable alert content with resolved tokens', async () => {

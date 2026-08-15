@@ -51,7 +51,7 @@ export const overlays: Record<string, ComponentDoc> = {
       {
         name: 'open',
         type: 'boolean',
-        description: 'Controlled visibility; omit for uncontrolled (animates height collapse on exit).',
+        description: 'Controlled visibility; omit for uncontrolled (scales down and fades on exit).',
       },
       {
         name: 'banner',

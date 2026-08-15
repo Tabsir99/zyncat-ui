@@ -34,7 +34,8 @@ interface AlertOwnProps {
   dismissible?: boolean;
   /** Fires on dismiss. With `open` set, the parent owns hiding the alert. */
   onDismiss?: () => void;
-  /** Controlled visibility; omit for uncontrolled. Exit eases shut (height collapse). */
+  /** Controlled visibility; omit for uncontrolled. Exit scales down and fades; the slot it
+   *  occupied is released when it unmounts, so content below moves up then rather than during. */
   open?: boolean;
   /** App-level strip: square corners, hairline below only. Paint modifier. */
   banner?: boolean;
@@ -44,8 +45,8 @@ interface AlertOwnProps {
   className?: string;
   /** Inline styles merged onto the alert. */
   style?: CSSProperties;
-  /** Enter/exit timing - motion tokens only, or `null` to disable (the height collapse snaps).
-   *  @default height 'slow'/'entrance'; opacity in 'base'/'entrance', out 'fast'/'exit' */
+  /** Enter/exit timing - motion tokens only, or `null` to disable (enter and exit snap).
+   *  @default entrance height 'slow'/'entrance' + opacity 'base'/'entrance'; exit scale + opacity 'fast'/'exit' */
   animation?: DisableableAnimation;
 }
 
@@ -104,10 +105,7 @@ export function Alert({
             { height: [0, 'auto'], timing: h.open },
             { opacity: [0, 1], timing: o.open },
           ]}
-          exit={[
-            { height: ['auto', 0], timing: h.close },
-            { opacity: [1, 0], timing: o.close },
-          ]}
+          exit={[{ scale: [1, 0.96], opacity: [1, 0], timing: o.close }]}
         >
           <div className={cls} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (
