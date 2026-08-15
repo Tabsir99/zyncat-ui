@@ -15,7 +15,16 @@ const failures = [];
 const fail = (doc, message) => failures.push(`${doc}: ${message}`);
 
 const TOP_LEVEL_DIRS = ['src', 'tests', 'scripts', 'docs', 'playground', 'dist'];
-const ROOT_FILES = ['package.json', 'tsup.config.ts', 'vitest.config.ts', 'llms.txt', 'TESTING.md', 'README.md'];
+const ROOT_FILES = [
+  'package.json',
+  'tsup.config.ts',
+  'vitest.config.ts',
+  'llms.txt',
+  'TESTING.md',
+  'README.md',
+  'CLAUDE.md',
+  '.mcp.json',
+];
 const FILE_EXTENSIONS = ['.ts', '.tsx', '.css', '.md', '.json', '.txt', '.mjs'];
 
 const NOT_EXPECTED_TO_RESOLVE = new Set([
@@ -154,23 +163,30 @@ const layerBlock = readFileSync(join(ROOT, 'src/engine/animate.ts'), 'utf8').mat
 const layerKeys = new Set(layerBlock ? [...layerBlock[1].matchAll(/^\s{2}(\w+)\??:/gm)].map((m) => m[1]) : []);
 if (!layerKeys.size) fail('src/engine/animate.ts', 'Layer interface not found - the lint cannot run.');
 
-const docs = readdirSync(DOCS_DIR)
+const guides = readdirSync(DOCS_DIR)
   .filter((f) => f.endsWith('.md'))
   .sort();
-if (!docs.length) fail('docs/authoring', 'no markdown files found.');
+if (!guides.length) fail('docs/authoring', 'no markdown files found.');
+
+const linted = [
+  ...guides.map((f) => ({ label: f, path: join(DOCS_DIR, f), isGuide: true })),
+  ...(existsSync(join(ROOT, 'CLAUDE.md'))
+    ? [{ label: 'CLAUDE.md', path: join(ROOT, 'CLAUDE.md'), isGuide: false }]
+    : []),
+];
 
 const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const serverSrc = readFileSync(join(ROOT, 'src/mcp/server.ts'), 'utf8');
 const GUIDE_TOOL_DOCS = { motion_guide: 'motion.md', design_rules: 'design-system.md' };
 
-for (const file of docs) {
-  const text = readFileSync(join(DOCS_DIR, file), 'utf8');
+for (const { label: file, path: docPath, isGuide } of linted) {
+  const text = readFileSync(docPath, 'utf8');
   const fenced = [...text.matchAll(/```(\w*)\n([\s\S]*?)```/g)];
   const prose = text.replace(/```[\s\S]*?```/g, '');
 
   const sections = [...text.matchAll(/^##\s+(.+?)\s*$/gm)].map((m) => m[1]);
-  if (!sections.length) fail(file, 'no "## " sections - the MCP guide tools cannot select a topic.');
+  if (isGuide && !sections.length) fail(file, 'no "## " sections - the MCP guide tools cannot select a topic.');
 
   for (const m of prose.matchAll(/`([^`\n]+)`/g)) {
     const token = m[1].trim();
@@ -247,4 +263,4 @@ if (failures.length) {
   console.error(`\n${failures.length} stale reference(s) in docs/authoring.`);
   process.exit(1);
 }
-console.log(`check-authoring: ${docs.length} guides clean, ${layerKeys.size} Layer keys documented.`);
+console.log(`check-authoring: ${linted.length} docs clean, ${layerKeys.size} Layer keys documented.`);
