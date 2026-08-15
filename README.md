@@ -3,8 +3,28 @@
 A premium React design system - modern CSS + a small, closed token vocabulary, applied
 consistently. Restraint, calm motion, no Tailwind, no CSS-in-JS, no UI libraries.
 
-**React 19 - TypeScript - ships compiled ESM + types.** Import the whole library or a single
-component; link one base stylesheet - each component loads its own CSS automatically.
+**React 19 - TypeScript - ships compiled ESM + types.** Import one component per subpath;
+link one base stylesheet - each component loads its own CSS automatically.
+
+## What this is, and who it is for
+
+Zyncat UI is built first for my own applications. Every component exists because a real
+product needed it, and the API is the one that made that product simpler - not the one that
+covers the widest set of hypothetical uses. That it also serves as a portfolio piece is a
+side effect, not the goal.
+
+That focus is the point. The token vocabulary stays small because one person has to hold it
+in their head; the component set stays narrow because every component is a permanent
+maintenance surface; the motion engine is ~2.5 kB because the alternative was a dependency
+with a hundred features I would not use. A design system built to please everyone ends up
+with a settings panel instead of a point of view.
+
+**On licensing and openness.** The code here is MIT-licensed and you are welcome to use it.
+It is not, however, run as a community open-source project: there is no public roadmap, no
+support commitment, no issue triage and no contribution process, and none of those are
+planned right now. Development is driven by what my own applications need. Parts of it may
+later move to an open-core or commercial arrangement - that decision has not been made. Use
+it with those expectations, and pin a version.
 
 ## Install
 
@@ -28,7 +48,8 @@ No bundler config and no `transpilePackages` - the package ships built ESM with 
 directives intact, so Next.js App Router boundaries just work.
 
 ```tsx
-import { Button, toast } from '@zyncat/ui';
+import { Button } from '@zyncat/ui/button';
+import { toast } from '@zyncat/ui/toast-store';
 import '@zyncat/ui/styles.css'; // base layer - link once, at the app root
 ```
 
@@ -40,18 +61,17 @@ bundler code-splits and lazy-loads it with the component. Import `@zyncat/ui/dia
 only `dialog.css` ships (plus the `overlay`/`icon` styles it reuses, deduped) - not the
 other 30 components' CSS.
 
-### Import a single component
-
-Every component is also a subpath export, so you can pull just one:
+### One subpath per component
 
 ```tsx
 import { Button } from '@zyncat/ui/button';
 import { DateField } from '@zyncat/ui/date-field';
 ```
 
-The barrel is side-effect-free and tree-shakes, so `import { Button } from '@zyncat/ui'` is
-equally lean in a bundler - subpaths help in non-bundled or explicit setups. CSS follows the
-same module graph: components you don't use drop their stylesheets too.
+**There is no barrel entry, deliberately.** `import … from '@zyncat/ui'` does not resolve.
+A barrel makes it possible for one import to pull in modules - and stylesheets - the app
+never asked for, and no amount of tree-shaking makes that guarantee hold across every
+bundler and every non-bundled setup. Subpaths make it structural instead.
 
 ## Components
 
@@ -63,8 +83,8 @@ same module graph: components you don't use drop their stylesheets too.
 | Date, time & tabs   | DateField, DateTimeField, DateRangeField, TimeField, Tabs                                     |
 | Overlays & feedback | Alert, Toast, Tooltip, Dialog, Popover, Sheet                                                 |
 
-Each is a named export from the barrel and a subpath (`@zyncat/ui/<kebab-name>`). Props are
-documented inline in the types; see [`llms.txt`](./llms.txt) for per-component examples.
+Each is a named export from its own subpath (`@zyncat/ui/<kebab-name>`). Props are documented
+inline in the types; see [`llms.txt`](./llms.txt) for per-component examples.
 
 ## For AI coding agents
 
@@ -108,13 +128,19 @@ your own node - any `ReactNode` (e.g. an `@phosphor-icons/react` element, if you
 ## What's inside
 
 ```
-src/                source (also shipped, for copy-paste)
--- index.ts         public barrel
+src/                source (also shipped, for reading)
 -- styles.css       base layer: fonts + tokens + glass (link once)
--- tokens/          CSS custom properties + motion-tokens.ts (JS and CSS motion bridge)
--- components/      <domain>/Name.tsx + name.css (each Tsx imports its own CSS -> lazy-loaded)
+-- tokens/          CSS custom properties + the TypeScript readers that mirror them
+-- engine/          the WAAPI motion engine
+-- motion/          the React motion layer: Presence, Motion, presets
+-- components/      primitives/ composites/ internal/ - each Tsx imports its own CSS
+-- mcp/             the bundled MCP server
 dist/               compiled ESM + .d.ts - what you import
 ```
+
+See [`docs/import-graph.md`](docs/import-graph.md) and
+[`docs/component-sizes.md`](docs/component-sizes.md) for the current shape; both are
+generated by `pnpm docs:gen`.
 
 ## Notes
 
@@ -127,7 +153,16 @@ dist/               compiled ESM + .d.ts - what you import
 
 ```bash
 pnpm install
-pnpm build       # tsup - dist/ (ESM + .d.ts)
-pnpm typecheck   # tsc --noEmit
-pnpm format      # prettier --write
+pnpm build            # tsup - dist/ (ESM + .d.ts)
+pnpm typecheck        # tsc --noEmit
+pnpm format           # prettier --write
+pnpm check:css        # every rendered class is reachable from its own module
+pnpm check:llms       # llms.txt covers every subpath, and its examples typecheck
+pnpm check:authoring  # docs/authoring + CLAUDE.md still match the code
+pnpm check:docs       # the generated docs are current
+pnpm docs:gen         # regenerate them
+node scripts/test.mjs # the suite - see TESTING.md
 ```
+
+Contributing to this repo? Start at [`CLAUDE.md`](CLAUDE.md), then
+[`docs/authoring/`](docs/authoring/).
