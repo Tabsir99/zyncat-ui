@@ -27,6 +27,28 @@ can see and when. What keyboard and pointer input does. Which callbacks fire,
 with which arguments, how many times. What survives unmount, remount and rapid
 toggling. What one component does to the rest of the page while it is open.
 
+### The engine
+
+`src/engine` is not a published subpath, so "what a consumer observes" does not
+reach it directly. It is tested anyway, against the same rule one level down:
+every component here is a consumer of `animate`, `Playback` and `resolveTiming`,
+and those are an interface, not an implementation.
+
+Engine tests assert only what that interface promises — the values
+`resolveTiming` returns, whether `Playback.finished` settles, which properties an
+element still has animating. They never reach for the ownership map, the spring
+cache or `compile()`. A test that would break because the ownership map became an
+array is testing the wrong thing, exactly as it would be for a component.
+
+These two files are the one documented exception to importing the way a consumer
+does: they import from `../src/engine`, because no consumer subpath exists to
+import instead.
+
+Two rules keep them honest. Every assertion must name a mutation it catches —
+write the test, then break the engine that way and watch it fail. And a
+plausible-sounding risk is not a reason for a test: measure first, and if the
+failure mode turns out to be unreachable, do not write it.
+
 ## Why this document exists
 
 Two bugs shipped in v0.10.0 that no internal test would have caught, because
@@ -163,3 +185,4 @@ Run a single file while iterating. The full browser suite is for the end.
 | Toast           | Toast, toast store, queueing, stacking, timers                             | `toast-`          |
 | Motion surfaces | Tabs, Collapse, Alert, Tooltip                                             | `motion-surface-` |
 | Forms           | TextField, NumberField, OtpField, Textarea, Checkbox, Toggle, RadioGroup   | `form-`           |
+| Engine          | `animate`, the `Playback` contract, timing resolution, FLIP                | `engine-`         |
