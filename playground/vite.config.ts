@@ -70,5 +70,5 @@ function reactScanDevOnly(): Plugin {
 export default defineConfig({
   plugins: [react(), reactScanDevOnly()],
   resolve: { alias: dsAliases, dedupe: ['react', 'react-dom', 'motion', '@phosphor-icons/react'] },
-  server: { fs: { allow: [r('..')] }, port: 5179 },
+  server: { fs: { allow: [r('..')] }, port: 5179, strictPort: true },
 });
