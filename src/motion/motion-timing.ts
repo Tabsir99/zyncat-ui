@@ -1,6 +1,6 @@
 import { UIMotion, type MotionTransition } from '../tokens/motion-tokens';
 import type { DurationToken, EaseToken } from '../tokens/motion-scale';
-import { resolveDirection, type DisableableAnimation } from './timing';
+import { resolveDirection, type DisableableAnimation, type TimingDirection } from './timing';
 
 export interface DirectionDefault {
   duration: DurationToken;
@@ -23,7 +23,7 @@ export function resolveMotionTiming(
 ): MotionTimings {
   if (animation === null) return { open: { duration: 0 }, close: { duration: 0 } };
 
-  const build = (dir: 'open' | 'close'): MotionTransition => {
+  const build = (dir: TimingDirection): MotionTransition => {
     const durToken = (animation && resolveDirection(animation.duration, dir)) || defaults[dir].duration;
     const easeToken = (animation && resolveDirection(animation.ease, dir)) || defaults[dir].ease;
     return { duration: UIMotion.dur[durToken], ease: UIMotion.ease[easeToken] };
