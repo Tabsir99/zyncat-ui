@@ -21,6 +21,8 @@ export interface Layer {
   composite?: CompositeOperation;
 }
 
+export type Placement = Omit<Layer, 'timing' | 'composite'>;
+
 const RESET: Record<string, string> = { translate: '0px 0px', scale: '1' };
 const AUTO_METRIC = { width: 'offsetWidth', height: 'offsetHeight' } as const;
 const SIZES = ['width', 'height'] as const;
@@ -144,4 +146,8 @@ export function animate(el: HTMLElement, ...layers: Layer[]): Playback {
     },
     finished: Promise.all(plays.map((started) => started.finished)).then((): void => {}),
   };
+}
+
+export function set(el: HTMLElement, ...placements: Placement[]): void {
+  for (const placement of placements) play(el, { ...placement, timing: { duration: 0 } });
 }

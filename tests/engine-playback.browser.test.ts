@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from 'vitest';
-import { animate } from '../src/engine';
+import { animate, set } from '../src/engine';
 
 const mounted: HTMLElement[] = [];
 
@@ -64,4 +64,23 @@ test("a composite 'add' layer does not evict the element's own animation of the 
   animate(el, { x: [20, 0], timing: { duration: 1 }, composite: 'add' });
 
   expect(running(el)).toHaveLength(2);
+});
+
+test('set lands its value without waiting for a frame', async () => {
+  const el = box();
+  set(el, { x: [120], width: [200] });
+
+  expect(getComputedStyle(el).translate).toBe('120px');
+  expect(getComputedStyle(el).width).toBe('200px');
+});
+
+test('set wins over an animation already running on the same property', async () => {
+  const el = box();
+  animate(el, { x: [0, 500], timing: { duration: 5 } });
+
+  set(el, { x: [120] });
+
+  expect(running(el)).toHaveLength(0);
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  expect(getComputedStyle(el).translate).toBe('120px');
 });

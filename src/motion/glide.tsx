@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, type RefObject } from 'react';
-import { animate, flip, measure } from '../engine';
+import { animate, flip, measure, set } from '../engine';
 import { UIMotion as SM } from '../tokens/motion-tokens';
 
 export type GlideApi = ReturnType<typeof useGlide>;
@@ -18,9 +18,12 @@ export function useGlide<T extends HTMLElement>(containerRef: RefObject<T | null
     const b = box.getBoundingClientRect();
     const t = target.getBoundingClientRect();
     const s = box.offsetWidth ? b.width / box.offsetWidth : 1;
-    pill.style.translate = `${(t.left - b.left) / s + box.scrollLeft}px ${(t.top - b.top) / s + box.scrollTop}px`;
-    pill.style.width = `${t.width / s}px`;
-    pill.style.height = `${t.height / s}px`;
+    set(pill, {
+      x: [(t.left - b.left) / s + box.scrollLeft],
+      y: [(t.top - b.top) / s + box.scrollTop],
+      width: [t.width / s],
+      height: [t.height / s],
+    });
     animate(pill, { opacity: [1], timing: { duration: SM.dur.fast, ease: SM.ease.standard } });
     const glided = visible.current && !SM.reduced;
     visible.current = true;

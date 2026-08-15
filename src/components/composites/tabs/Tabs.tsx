@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { animate } from '../../../engine';
+import { animate, set } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { GlidePill, useGlide } from '../../../motion/glide';
@@ -95,7 +95,7 @@ export function Tabs({ items = [], value, onChange, name, ariaLabel, className =
     ink.style.opacity = '1';
 
     if (!animated || !placedRef.current || SM.reduced) {
-      animate(ink, { x: [next.x], width: [next.w], timing: { duration: 0 } });
+      set(ink, { x: [next.x], width: [next.w] });
     } else {
       const lr = list.getBoundingClientRect();
       const ir = ink.getBoundingClientRect();
