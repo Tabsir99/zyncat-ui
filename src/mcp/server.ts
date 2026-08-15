@@ -273,7 +273,64 @@ function getTokens(group?: string): string {
   return out.join('\n\n');
 }
 
-const TOOLS = [
+const GUIDES = { motion: 'motion.md', design: 'design-system.md', authoring: 'authoring.md' } as const;
+
+const inRepo = (root: string): boolean => existsSync(join(root, 'tsup.config.ts'));
+
+function contributorRoot(tool: string): string {
+  const root = findRoot();
+  if (!inRepo(root)) {
+    throw new Error(
+      `${tool} is a contributor tool and is only available inside the zyncat-ui repository. ` +
+        'In a consumer install use list_components / get_component / search_api / get_tokens.',
+    );
+  }
+  return root;
+}
+
+interface GuideSection {
+  title: string;
+  subtitles: string[];
+  lines: string[];
+}
+
+function guideSections(root: string, file: string): GuideSection[] {
+  const path = join(root, 'docs/authoring', file);
+  if (!existsSync(path)) throw new Error(`docs/authoring/${file} is missing from the repository.`);
+  const sections: GuideSection[] = [{ title: '', subtitles: [], lines: [] }];
+  for (const line of readFileSync(path, 'utf8').split('\n')) {
+    const head = line.match(/^##\s+(.+?)\s*$/);
+    const sub = line.match(/^###\s+(.+?)\s*$/);
+    if (head) sections.push({ title: head[1], subtitles: [], lines: [line] });
+    else {
+      const current = sections[sections.length - 1];
+      if (sub) current.subtitles.push(sub[1]);
+      current.lines.push(line);
+    }
+  }
+  return sections;
+}
+
+function guide(tool: string, file: string, topic?: string): string {
+  const sections = guideSections(contributorRoot(tool), file);
+  const text = (picked: GuideSection[]) =>
+    picked
+      .flatMap((s) => s.lines)
+      .join('\n')
+      .trim();
+  if (!topic) return text(sections);
+  const q = norm(topic);
+  const matches = (title: string) => norm(title).includes(q) || q.includes(norm(title));
+  const named = sections.filter((s) => s.title);
+  const hits = named.filter((s) => matches(s.title) || s.subtitles.some(matches));
+  if (!hits.length) {
+    const titles = named.flatMap((s) => [s.title, ...s.subtitles]);
+    throw new Error(`No section of ${file} matches "${topic}". Sections: ${titles.join(', ')}.`);
+  }
+  return text(hits);
+}
+
+const CONSUMER_TOOLS = [
   {
     name: 'list_components',
     description:
@@ -321,12 +378,67 @@ const TOOLS = [
   },
 ];
 
-const INSTRUCTIONS =
+const CONTRIBUTOR_TOOLS = [
+  {
+    name: 'motion_guide',
+    description:
+      'How to animate inside this repo: which layer to reach for (CSS transition vs the engine vs Presence vs FLIP vs glide), the complete Layer keyframe vocabulary, [to] vs [from,to] semantics, timing, the one-writer-per-property ownership rules, sequencing, global reduced motion, and the canonical enter/exit recipes. Read this before writing any motion code - most of it is not guessable from the source.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        topic: { type: 'string', description: 'One section, e.g. "ownership", "timing", "recipes". Omit for all.' },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'design_rules',
+    description:
+      'The design-system rules for this repo: what the library is for, the token vocabulary and when to add a token rather than use an existing one, compose vs build a new component, which tier a component belongs in, and the internal machinery to reuse instead of hand-rolling.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        topic: { type: 'string', description: 'One section, e.g. "tokens", "compose", "tier". Omit for all.' },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: 'authoring_checklist',
+    description:
+      'The complete checklist to add a component to this repo: file placement and tsup auto-discovery, the exports-map entry that fails silently when skipped, the per-component stylesheet and CSS-graph rule, the llms.txt entry, which tests to write, and the checks to run.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+  },
+];
+
+function tools() {
+  try {
+    return inRepo(findRoot()) ? [...CONSUMER_TOOLS, ...CONTRIBUTOR_TOOLS] : CONSUMER_TOOLS;
+  } catch {
+    return CONSUMER_TOOLS;
+  }
+}
+
+const CONSUMER_INSTRUCTIONS =
   'Zyncat UI design-system API. Before writing Zyncat UI code, use these tools instead of reading ' +
   'node_modules or guessing props: list_components (what exists + setup and conventions), get_component ' +
   '(one component: usage docs + complete prop types), search_api (find the component/prop/token for a ' +
   'keyword), get_tokens (CSS custom-property vocabulary with real values, for theming). Imports are ' +
   'per-subpath (@zyncat/ui/button - no barrel); link @zyncat/ui/styles.css once at the root.';
+
+const CONTRIBUTOR_INSTRUCTIONS =
+  ' You are inside the zyncat-ui repository, so the contributor tools are also available and you are ' +
+  'expected to use them before writing library code: motion_guide (call it before any motion code - the ' +
+  'keyframe vocabulary and the ownership rules are not guessable from the source), design_rules (tokens, ' +
+  'compose vs build, the internals to reuse), authoring_checklist (adding a component end to end).';
+
+function instructions(): string {
+  try {
+    return inRepo(findRoot()) ? CONSUMER_INSTRUCTIONS + CONTRIBUTOR_INSTRUCTIONS : CONSUMER_INSTRUCTIONS;
+  } catch {
+    return CONSUMER_INSTRUCTIONS;
+  }
+}
 
 function callTool(name: string, args: Record<string, unknown>): string {
   const str = (k: string) => (typeof args[k] === 'string' ? (args[k] as string) : undefined);
@@ -345,6 +457,12 @@ function callTool(name: string, args: Record<string, unknown>): string {
     }
     case 'get_tokens':
       return getTokens(str('group'));
+    case 'motion_guide':
+      return guide(name, GUIDES.motion, str('topic'));
+    case 'design_rules':
+      return guide(name, GUIDES.design, str('topic'));
+    case 'authoring_checklist':
+      return guide(name, GUIDES.authoring);
     default:
       throw new Error(`Unknown tool: ${name}`);
   }
@@ -374,13 +492,13 @@ function handle(req: { id?: RpcId; method?: string; params?: Record<string, unkn
         protocolVersion: typeof params?.protocolVersion === 'string' ? params.protocolVersion : '2025-06-18',
         capabilities: { tools: {} },
         serverInfo: { name: 'zyncat-ui', version },
-        instructions: INSTRUCTIONS,
+        instructions: instructions(),
       });
     }
     case 'ping':
       return reply(id!, {});
     case 'tools/list':
-      return reply(id!, { tools: TOOLS });
+      return reply(id!, { tools: tools() });
     case 'tools/call': {
       try {
         const name = typeof params?.name === 'string' ? params.name : '';
