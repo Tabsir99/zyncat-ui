@@ -20,6 +20,7 @@ import { createPortal } from 'react-dom';
 import { animate, startDrag, type Layer, type Playback } from '../../../engine';
 import { Presence } from '../../../motion/presence';
 import { Motion } from '../../../motion/element';
+import { popOut } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
 import { tokenPx } from '../../internal/utils/token-px';
@@ -124,7 +125,7 @@ function ToastItem({
     settled.current = true;
     animate(
       el,
-      { y: [isTop ? -24 : 24, y], scale: [0.97, scale], timing: SM.t.settle },
+      { y: [isTop ? -SM.dist.lg : SM.dist.lg, y], scale: [SM.scale.floating, scale], timing: SM.t.settle },
       { opacity: [0, hidden ? 0 : 1], timing: SM.t.enter },
     );
   }, [offset, depth, hidden, frameHeight, isTop]);
@@ -162,7 +163,7 @@ function ToastItem({
     <Motion
       as="li"
       ref={ref}
-      exit={{ opacity: [0], scale: [0.96], timing: SM.t.exit }}
+      exit={popOut(SM.scale.floating, SM.t.exit)}
       className="toast glass"
       data-tone={t.tone}
       data-behind={behind ? '' : undefined}

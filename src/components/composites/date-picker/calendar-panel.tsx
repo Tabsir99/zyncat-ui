@@ -8,6 +8,7 @@ import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { Motion } from '../../../motion/element';
+import { slideIn } from '../../../motion/presets';
 import { useDayFocus } from './use-day-focus';
 import { MONTHS, DOW, toKey, parse, col, today, grid, tzLabel, within } from './date-utils';
 import { cx } from '../../internal/utils/cx';
@@ -72,7 +73,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
     const el = daysRef.current;
     if (prev == null || prev === viewIdx || !el) return;
     const dir = viewIdx > prev ? 1 : -1;
-    animate(el, { x: [dir * 16, 0], opacity: [0, 1], timing: UIMotion.t.enter });
+    animate(el, slideIn(dir * UIMotion.dist.md, UIMotion.t.enter));
   }, [viewIdx]);
 
   function moveFocus(deltaDays: number, deltaMonths: number) {

@@ -4,10 +4,12 @@ import './tag.css';
 import { createContext, useContext, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import { Presence } from '../../../motion/presence';
 import { Motion } from '../../../motion/element';
+import { popIn, popOut } from '../../../motion/presets';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { FlipTuning } from '../../../motion/flip';
 import type { Layer } from '../../../engine';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
@@ -129,8 +131,8 @@ export function TagGroup({ ariaLabel, className = '', style, children, htmlProps
   const layout = resolveMotionTiming(animation, TAG_LAYOUT_TIMING).open;
 
   const motion = {
-    animate: { opacity: [0, 1], scale: [0.9, 1], timing: step.open },
-    exit: { opacity: [1, 0], scale: [1, 0.9], timing: step.close },
+    animate: popIn(UIMotion.scale.chip, step.open),
+    exit: popOut(UIMotion.scale.chip, step.close),
     layout: { timing: layout },
   };
 

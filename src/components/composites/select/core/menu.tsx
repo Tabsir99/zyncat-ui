@@ -18,13 +18,14 @@ const SELECT_MENU_TIMING = {
 function selectMenuLayers(animation: DisableableAnimation | undefined, dir: 'open' | 'close'): Layer[] {
   const t = resolveMotionTiming(animation, SELECT_MENU_TIMING)[dir];
   const fade = (d: MotionTransition) => ({ duration: d.duration === 0 ? 0 : UIMotion.dur.fast, ease: d.ease });
+  const drop = -UIMotion.dist.sm;
   return dir === 'open'
     ? [
-        { y: [-6, 0], scale: [0.96, 1], timing: t },
+        { y: [drop, 0], scale: [UIMotion.scale.floating, 1], timing: t },
         { opacity: [0, 1], timing: fade(t) },
       ]
     : [
-        { y: [-6], scale: [0.96], timing: t },
+        { y: [drop], scale: [UIMotion.scale.floating], timing: t },
         { opacity: [0], timing: fade(t) },
       ];
 }

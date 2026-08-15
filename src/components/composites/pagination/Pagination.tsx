@@ -4,7 +4,7 @@ import './pagination.css';
 import { useEffect, useRef, type HTMLAttributes } from 'react';
 import { animate } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
-import { tokenPx } from '../../internal/utils/token-px';
+import { slideIn } from '../../../motion/presets';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import type { DataAttributes } from '../../../dom-props';
@@ -31,12 +31,6 @@ export interface PaginationProps {
   className?: string;
   /** Standard <nav> attributes (style, data-*, aria-*, ...) forwarded to the root. */
   htmlProps?: Omit<HTMLAttributes<HTMLElement>, 'className'> & DataAttributes;
-}
-
-let pgnTravelPx: number | null = null;
-function pgnTravel() {
-  if (pgnTravelPx == null) pgnTravelPx = tokenPx('--space-2');
-  return pgnTravelPx;
 }
 
 function pgnFormat(n: number) {
@@ -70,8 +64,7 @@ export function Pagination({
     if (pf === from && pt === to) return;
     const dir = from > pf ? 1 : -1;
     shownRef.current = range;
-    if (rangeRef.current)
-      animate(rangeRef.current, { x: [dir * pgnTravel(), 0], opacity: [0, 1], timing: UIMotion.t.enter });
+    if (rangeRef.current) animate(rangeRef.current, slideIn(dir * UIMotion.dist.sm, UIMotion.t.enter));
   }, [from, to]);
 
   useEffect(() => {

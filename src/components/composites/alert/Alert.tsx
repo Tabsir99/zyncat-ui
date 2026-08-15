@@ -4,8 +4,10 @@ import './alert.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import { Presence } from '../../../motion/presence';
 import { Motion } from '../../../motion/element';
+import { popOut } from '../../../motion/presets';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
 import { IconSlot } from '../../internal/icon/IconSlot';
@@ -105,7 +107,7 @@ export function Alert({
             { height: [0, 'auto'], timing: h.open },
             { opacity: [0, 1], timing: o.open },
           ]}
-          exit={[{ scale: [1, 0.96], opacity: [1, 0], timing: o.close }]}
+          exit={[popOut(UIMotion.scale.floating, o.close)]}
         >
           <div className={cls} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (

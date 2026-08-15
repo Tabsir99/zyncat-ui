@@ -4,6 +4,7 @@ import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternal
 import { createPortal } from 'react-dom';
 import { Presence } from '../../../motion/presence';
 import { Motion } from '../../../motion/element';
+import { popIn, popOut } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';
 import { store, TOOLTIP_DOM_ID, type ActivePayload, type Placement } from './tooltip-store';
@@ -58,8 +59,8 @@ function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
 }
 
 const fromEdge = (p: Placement) => ({
-  x: p === 'left' ? 4 : p === 'right' ? -4 : 0,
-  y: p === 'top' ? 4 : p === 'bottom' ? -4 : 0,
+  x: p === 'left' ? SM.dist.sm : p === 'right' ? -SM.dist.sm : 0,
+  y: p === 'top' ? SM.dist.sm : p === 'bottom' ? -SM.dist.sm : 0,
 });
 
 function Body({ a, width }: { a: ActivePayload; width?: number }) {
@@ -90,11 +91,11 @@ function TipSurface({ a, box }: { a: ActivePayload; box: RenderedBox }) {
       style={{ translate: `${box.x}px ${box.y}px`, width: box.w, height: box.h }}
       animate={[
         { x: [edge.x, 0], y: [edge.y, 0], timing: { ...SM.t.layout, fill: 'none' }, composite: 'add' },
-        { opacity: [0, 1], scale: [0.96, 1], timing: SM.t.enter },
+        popIn(SM.scale.floating, SM.t.enter),
       ]}
       exit={[
         { x: [0, edge.x], y: [0, edge.y], timing: SM.t.exit, composite: 'add' },
-        { opacity: [0], scale: [0.96], timing: SM.t.exit },
+        popOut(SM.scale.floating, SM.t.exit),
       ]}
     >
       <Motion as="span" key={a.id} animate={{ opacity: [0, 1], timing: SM.t.enter }}>

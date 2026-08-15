@@ -3,8 +3,10 @@
 import './modal.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { Presence } from '../../../motion/presence';
+import { popIn, popOut } from '../../../motion/presets';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
@@ -70,8 +72,8 @@ export function Modal({
             <ModalShell
               key="modal"
               timings={timings}
-              animate={{ opacity: [0, 1], scale: [0.98, 1], timing: timings.open }}
-              exit={{ opacity: [0], scale: [0.98], timing: timings.close }}
+              animate={popIn(UIMotion.scale.panel, timings.open)}
+              exit={popOut(UIMotion.scale.panel, timings.close)}
               layerClass="overlay-layer--modal"
               panelClass="overlay-panel--modal"
               panelId={panelId}

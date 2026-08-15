@@ -4,8 +4,10 @@ import './popover.css';
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
 import { Presence } from '../../../motion/presence';
 import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
+import { popIn, popOut } from '../../../motion/presets';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from '../../internal/overlay/layer';
 import { useReturnFocus } from '../../internal/overlay/focus';
@@ -128,8 +130,8 @@ export function Popover({
           {open && (
             <PopoverPanel
               key="panel"
-              animate={{ opacity: [0, 1], scale: [0.96, 1], timing: timings.open }}
-              exit={{ opacity: [0], scale: [0.96], timing: timings.close }}
+              animate={popIn(UIMotion.scale.floating, timings.open)}
+              exit={popOut(UIMotion.scale.floating, timings.close)}
               panelId={panelId}
               side={side}
               align={align}

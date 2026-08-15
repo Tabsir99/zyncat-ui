@@ -5,6 +5,7 @@ import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type R
 import { Presence } from '../../../motion/presence';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
@@ -169,8 +170,13 @@ export function Dialog({
             <ModalShell
               key="dialog"
               timings={timings}
-              animate={{ y: [6, 0], scale: [0.98, 1], opacity: [0, 1], timing: timings.open }}
-              exit={{ y: [6], scale: [0.98], opacity: [0], timing: timings.close }}
+              animate={{
+                y: [UIMotion.dist.sm, 0],
+                scale: [UIMotion.scale.panel, 1],
+                opacity: [0, 1],
+                timing: timings.open,
+              }}
+              exit={{ y: [UIMotion.dist.sm], scale: [UIMotion.scale.panel], opacity: [0], timing: timings.close }}
               layerClass="overlay-layer--dialog"
               panelClass="overlay-panel--dialog"
               panelId={panelId}
