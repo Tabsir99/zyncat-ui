@@ -15,3 +15,7 @@ export type DurationToken = 'fast' | 'base' | 'slow' | 'slower' | 'slowest';
  *  - `glide` cubic-bezier(0.55, 0, 0.15, 1) - symmetric in-out travel; a persistent element moving
  *    between positions, never enter/exit. */
 export type EaseToken = 'standard' | 'entrance' | 'exit' | 'spring' | 'glide';
+
+export type DistanceToken = 'sm' | 'md' | 'lg';
+
+export type ScaleToken = 'panel' | 'floating' | 'chip';

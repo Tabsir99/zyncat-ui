@@ -1,4 +1,5 @@
-/* Motion system - durations, brand curves, and pre-composed transitions; smooths every layout shift by default. */
+/* Motion system - durations, brand curves, travel distances, rest scales, and pre-composed transitions;
+   smooths every layout shift by default. */
 
 :root {
   --duration-fast: 140ms;
@@ -19,6 +20,19 @@
     0.15,
     1
   ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
+
+  /* Travel - how far a surface moves on the way in or out. A magnitude scale, snapped to the 4px
+     spacing spine; pick by how far the surface has conceptually come, not by how big it is. */
+  --distance-sm: 0.5rem; /* 8px - settling into place; the surface is already where it belongs */
+  --distance-md: 1rem; /* 16px - arriving from an adjacent position - page turns, tab panels, paged ranges */
+  --distance-lg: 1.5rem; /* 24px - arriving from outside the surface - a toast joining its stack */
+
+  /* Rest scale - what a surface scales from on the way in, and to on the way out. Picked by surface
+     size, not by taste: the same ratio reads as more movement the wider the surface, so a dialog
+     needs a smaller one than a tag to land at the same perceived distance. */
+  --scale-panel: 0.98; /* full-width surfaces - dialog, modal, sheet */
+  --scale-floating: 0.96; /* floating surfaces - popover, tooltip, menu, toast, alert */
+  --scale-chip: 0.9; /* small inline elements - tag, badge, count */
 
   --transition-control:
     color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),

@@ -184,5 +184,6 @@ Run a single file while iterating. The full browser suite is for the end.
 | Table           | Table, Pagination                                                          | `table-`          |
 | Toast           | Toast, toast store, queueing, stacking, timers                             | `toast-`          |
 | Motion surfaces | Tabs, Collapse, Alert, Tooltip                                             | `motion-surface-` |
+| Motion tokens   | `UIMotion` reads of duration, ease, distance and scale; theme retuning     | `motion-tokens`   |
 | Forms           | TextField, NumberField, OtpField, Textarea, Checkbox, Toggle, RadioGroup   | `form-`           |
 | Engine          | `animate`, the `Playback` contract, timing resolution, FLIP                | `engine-`         |
