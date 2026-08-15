@@ -197,7 +197,7 @@ describe('cleanup', () => {
     expect(strayCards()).toHaveLength(0);
   });
 
-  test.fails('unmounting the Toaster while a toast is still animating raises nothing into the dead tree', async () => {
+  test('unmounting the Toaster while a toast is still animating raises nothing into the dead tree', async () => {
     const failures: string[] = [];
     const onError = (event: ErrorEvent) => failures.push(event.message);
     const onRejection = (event: PromiseRejectionEvent) => {

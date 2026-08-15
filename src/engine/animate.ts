@@ -68,6 +68,12 @@ function compile(el: HTMLElement, layer: Layer) {
   return { frames, autoKeys };
 }
 
+function commitIfRendered(animation: Animation): void {
+  try {
+    animation.commitStyles();
+  } catch {}
+}
+
 const owned = new WeakMap<HTMLElement, Map<string, Animation>>();
 
 function claim(el: HTMLElement, keys: string[], animation: Animation | null): void {
@@ -112,7 +118,7 @@ function play(el: HTMLElement, layer: Layer): Playback | null {
   const finished = animation.finished.then(
     (): void => {
       if (!autoKeys.length) return;
-      animation.commitStyles();
+      commitIfRendered(animation);
       animation.cancel();
       for (const key of autoKeys) el.style.setProperty(key, 'auto');
     },
