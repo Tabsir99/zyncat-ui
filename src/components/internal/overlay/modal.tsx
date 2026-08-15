@@ -4,10 +4,15 @@ import './overlay.css';
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { animate, type Layer, type Playback } from '../../../engine';
 import { useMotion, run, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
-import type { MotionTimings } from '../../../motion/motion-timing';
+import type { MotionTimingDefaults, MotionTimings } from '../../../motion/motion-timing';
 import { useOverlayEntry } from './layer';
 import { useReturnFocus, useFocusTrap } from './focus';
 import { cx } from '../utils/cx';
+
+export const OV_TAKEOVER_TIMING: MotionTimingDefaults = {
+  open: { duration: 'slow', ease: 'entrance' },
+  close: { duration: 'base', ease: 'standard' },
+};
 
 interface OvScopeLock {
   depth: number;

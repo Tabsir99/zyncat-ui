@@ -7,17 +7,12 @@ import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell } from '../../internal/overlay/modal';
+import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
-
-const DIALOG_TIMING = {
-  open: { duration: 'slow', ease: 'entrance' },
-  close: { duration: 'base', ease: 'standard' },
-} as const;
 
 export interface DialogProps {
   /** Controlled open state. Omit for uncontrolled (use defaultOpen + trigger). */
@@ -163,7 +158,7 @@ export function Dialog({
   const triggerRef = useRef<HTMLElement>(null);
   const close = () => setOpen(false);
 
-  const timings = resolveMotionTiming(animation, DIALOG_TIMING);
+  const timings = resolveMotionTiming(animation, OV_TAKEOVER_TIMING);
 
   return (
     <Fragment>
