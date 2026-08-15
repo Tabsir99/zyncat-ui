@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { UIMotion } from '../src/tokens/motion-tokens';
+import { UIMotion } from '@zyncat/ui/motion-tokens';
 
 const rootFontSize = () => parseFloat(getComputedStyle(document.documentElement).fontSize);
 
