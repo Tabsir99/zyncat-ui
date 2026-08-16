@@ -180,6 +180,7 @@ Run a single file while iterating. The full browser suite is for the end.
 | --------------- | -------------------------------------------------------------------------- | ----------------- |
 | Overlay         | Modal, Dialog, Sheet, Popover, presence, stacking, scroll lock, inert      | `overlay-`        |
 | Select          | Select, MultiSelect, listbox, typeahead                                    | `select-`         |
+| Dropdown        | Dropdown, the menu keyboard contract, submenus                             | `dropdown-`       |
 | Date            | DateField, DateTimeField, DateRangeField, TimeField, calendar, range panel | `date-`           |
 | Table           | Table, Pagination                                                          | `table-`          |
 | Toast           | Toast, toast store, queueing, stacking, timers                             | `toast-`          |

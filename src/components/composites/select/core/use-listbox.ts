@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useGlide } from '../../../../motion/glide';
+import { useTypeahead } from '../../../internal/hooks/use-typeahead';
+import { edgeEnabled, matchPrefix, stepEnabled } from '../../../internal/collection/collection';
 import { normalize, matches, optionText, type SelectOption, type SelectGroup } from './types';
 
 export interface UseListboxArgs {
@@ -32,7 +34,7 @@ export function useListbox({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIdx, setActiveIdx] = useState(-1);
-  const typeahead = useRef<{ buf: string; t: ReturnType<typeof setTimeout> | number }>({ buf: '', t: 0 });
+  const typeahead = useTypeahead();
 
   const triggerRef = useRef<HTMLButtonElement>(null),
     listRef = useRef<HTMLDivElement>(null),
@@ -68,8 +70,7 @@ export function useListbox({
   useEffect(() => {
     if (!open) return;
     const sel = navItems.findIndex((o) => isSelected(o.value) && !o.disabled);
-    const first = navItems.findIndex((o) => !o.disabled);
-    setActiveIdx(sel >= 0 ? sel : first);
+    setActiveIdx(sel >= 0 ? sel : edgeEnabled(navItems, false));
   }, [open, query]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -97,24 +98,15 @@ export function useListbox({
   }, [open, activeIdx, query]);
 
   function moveActive(dir: number) {
-    if (!navItems.length) return;
-    let i = activeIdx;
-    for (let s = 0; s < navItems.length; s++) {
-      i = (i + dir + navItems.length) % navItems.length;
-      if (!navItems[i].disabled) return setActiveIdx(i);
-    }
+    const i = stepEnabled(navItems, activeIdx, dir);
+    if (i >= 0) setActiveIdx(i);
   }
   function edgeActive(toEnd: boolean) {
-    const order = [...navItems.keys()];
-    if (toEnd) order.reverse();
-    for (const i of order) if (!navItems[i].disabled) return setActiveIdx(i);
+    const i = edgeEnabled(navItems, toEnd);
+    if (i >= 0) setActiveIdx(i);
   }
   function typeAhead(ch: string) {
-    const ta = typeahead.current;
-    clearTimeout(ta.t);
-    ta.buf += ch.toLowerCase();
-    ta.t = setTimeout(() => (ta.buf = ''), 600);
-    const i = navItems.findIndex((o) => !o.disabled && optionText(o).toLowerCase().startsWith(ta.buf));
+    const i = matchPrefix(navItems, optionText, typeahead.push(ch));
     if (i >= 0) setActiveIdx(i);
   }
 
@@ -151,7 +143,7 @@ export function useListbox({
       case ' ':
         if (searchable) break;
         e.preventDefault();
-        if (typeahead.current.buf) typeAhead(e.key);
+        if (typeahead.buffered()) typeAhead(e.key);
         else if (activeIdx >= 0) commit(navItems[activeIdx]);
         break;
       default:

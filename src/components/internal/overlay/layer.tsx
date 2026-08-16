@@ -5,6 +5,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactElement,
   type ReactNode,
   type Ref,
@@ -105,14 +106,31 @@ function ovCloneTrigger(
   {
     open,
     onPress,
+    onKeyDown,
     panelId,
     haspopup,
     triggerRef,
-  }: { open: boolean; onPress: () => void; panelId: string; haspopup: string; triggerRef: RefObject<HTMLElement> },
+  }: {
+    open: boolean;
+    onPress: () => void;
+    onKeyDown?: (e: ReactKeyboardEvent<HTMLElement>) => void;
+    panelId: string;
+    haspopup: string;
+    triggerRef: RefObject<HTMLElement>;
+  },
 ): ReactElement | null {
   if (!trigger) return null;
-  const own = trigger.props as { onClick?: (...args: unknown[]) => void };
+  const own = trigger.props as {
+    onClick?: (...args: unknown[]) => void;
+    onKeyDown?: (e: ReactKeyboardEvent<HTMLElement>) => void;
+  };
   const ownRef = (trigger as ReactElement & { ref?: Ref<HTMLElement> }).ref;
+  const keys = onKeyDown && {
+    onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => {
+      own.onKeyDown?.(e);
+      onKeyDown(e);
+    },
+  };
   return cloneElement(trigger, {
     'aria-haspopup': haspopup,
     'aria-expanded': open,
@@ -121,6 +139,7 @@ function ovCloneTrigger(
       own.onClick?.(...args);
       onPress();
     },
+    ...keys,
     ref: (node: HTMLElement | null) => {
       triggerRef.current = node;
       if (typeof ownRef === 'function') ownRef(node);

@@ -68,7 +68,7 @@ function MenuSurface({
   return (
     <div
       ref={menuRef}
-      className="select__menu"
+      className="menu-surface select__menu"
       id={menuId}
       role="presentation"
       data-multiple={multiple ? 'true' : undefined}

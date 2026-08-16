@@ -196,6 +196,24 @@ Popover - @zyncat/ui/popover
   <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}><menu>...</menu></Popover>
   <Popover open={!!spot} onOpenChange={dismiss} anchor={spot} side="right"><menu>...</menu></Popover>
 
+Dropdown - @zyncat/ui/dropdown
+  Menu button - a list of ACTIONS the trigger commits, with submenus. NOT a Select: it runs a
+  command instead of holding a value, so there is no selected state and no form value; rows carry
+  an icon, a shortcut hint, a description and destructive styling.
+  items takes DropdownItem[] or DropdownGroup[] (labelled, divided sections). A row is
+  { id, label, description?, icon?, shortcut?, danger?, disabled?, onSelect? } - give it its own
+  items and it opens a submenu instead of committing, nesting as deep as you like.
+  trigger (node, gets the aria-haspopup="menu" wiring), side, align, open/onOpenChange,
+  onSelect(id, item), ariaLabel, htmlProps, animation.
+  Keyboard is the APG menu button: arrows move, Right/Left open and close a submenu, Enter/Space
+  commit, letters typeahead, Esc closes one level, Tab closes the lot and returns focus.
+  <Dropdown trigger={<Button variant="secondary">Actions</Button>} onSelect={(id) => run(id)} items={[
+    { id: 'rename', label: 'Rename', shortcut: 'R' },
+    { id: 'move', label: 'Move to', items: [{ id: 'drafts', label: 'Drafts' }, { id: 'archive', label: 'Archive' }] },
+    { id: 'delete', label: 'Delete', danger: true },
+  ]} />
+  <Dropdown open={o} onOpenChange={setO} side="top" align="end" ariaLabel="Row actions" trigger={<Button>...</Button>} items={groups} />
+
 Sheet - @zyncat/ui/sheet
   Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), dismissible.
   container docks it inside a positioned element instead of the viewport; scrim, scroll lock and

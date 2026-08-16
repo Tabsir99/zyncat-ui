@@ -46,8 +46,9 @@ for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(/@im
 }
 
 /* strings that double as aria/role/mode enum values while also naming a block class;
-   the class's real renderer imports its stylesheet directly (Dialog.tsx, Alert.tsx) */
-const AMBIGUOUS = new Set(['dialog', 'alert']);
+   the class's real renderer imports its stylesheet directly (Dialog.tsx, Alert.tsx,
+   and Button's size="icon", which builds a btn--icon class and never a bare .icon) */
+const AMBIGUOUS = new Set(['dialog', 'alert', 'icon']);
 
 /* 2 - import graph */
 const resolveImport = (from, spec) => {

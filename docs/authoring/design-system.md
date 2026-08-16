@@ -2,7 +2,7 @@
 
 ## What this library is for
 
-A premium React 19 design system built on modern CSS and a **small, closed token
+A premium and highly polished React 19 design system built on modern CSS and a **small, closed token
 vocabulary**, applied consistently. No Tailwind, no CSS-in-JS, no component
 library underneath, no animation dependency.
 

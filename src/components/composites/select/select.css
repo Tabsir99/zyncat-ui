@@ -125,35 +125,14 @@
   border-radius: var(--radius-sm);
 }
 
-.select__value,
-.select__option-label,
-.select__option-desc {
+.select__value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Menu enter/exit are Motion-owned inline styles (selectMenuVariants); this sheet only sets the look + transform-origin. */
-.select__menu {
-  position: fixed;
-  margin: 0;
-  inset: auto; /* JS sets top/left/min-width - anchor() needs the top layer, which we don't use */
-  z-index: var(
-    --layer-overlay
-  ); /* base of the overlay band (tokens/layers.css) - plain React-owned node, not the top layer */
-  width: max-content;
-  max-width: min(22rem, 92vw);
-  background: var(--bg-surface-raised);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  padding: var(--space-1);
-  transform-origin: top left;
-}
-/* flipped above the trigger (data-side from useAnchorPosition) - scale from the anchored edge */
-.select__menu[data-side='top'] {
-  transform-origin: bottom left;
-}
+/* Chrome, origin, scroll box, row skeleton and pill all come from
+   internal/menu/menu-surface.css; JS sets top/left/min-width. Listbox-only states live here. */
 
 .select__search {
   display: flex;
@@ -185,16 +164,7 @@
    position: relative anchors the glide pill (a single absolute child) to the scrolled content. */
 .select__list {
   position: relative;
-  max-height: 16.5rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   scroll-behavior: smooth;
-  scrollbar-width: none;
-}
-.select__list::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
 }
 
 .select__group-label {
@@ -202,11 +172,6 @@
   top: 0;
   z-index: 1;
   background: var(--bg-surface-raised);
-  padding: var(--space-2) var(--space-2) var(--space-1);
-  font: var(--type-micro);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
-  color: var(--text-subtle);
 }
 .select__group + .select__group .select__group-label {
   border-top: var(--border-hairline) solid var(--border-subtle);
@@ -214,53 +179,23 @@
 }
 
 .select__option {
-  padding: var(--option-padding);
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  color: var(--text-body);
-  user-select: none;
   transition:
     background-color var(--duration-base) var(--ease-standard),
     color var(--duration-base) var(--ease-standard);
 }
 
 .select__option[data-size='sm'] {
-  --option-padding: var(--space-1);
+  --menu-row-padding: var(--space-1);
 }
 
 .select__option[data-size='md'] {
-  --option-padding: var(--space-2);
+  --menu-row-padding: var(--space-2);
 }
 
 .select__option[data-size='lg'] {
-  --option-padding: var(--space-4);
+  --menu-row-padding: var(--space-4);
 }
 
-.select__option-icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  font-size: var(--icon-sm);
-  color: var(--text-muted);
-}
-.select__option-text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-px);
-  min-width: 0;
-  flex: 1 1 auto;
-}
-.select__option-label {
-  font-size: var(--size-body);
-  line-height: var(--leading-body);
-}
-.select__option-desc {
-  font: var(--type-caption);
-  color: var(--text-subtle);
-}
 .select__option-check {
   display: inline-flex;
   align-items: center;
@@ -273,34 +208,21 @@
   transition: var(--transition-opacity);
 }
 
-/* Hover pill - one persistent fill in the list (../motion/glide) that travels to the active row and
-   animates its real size, so it's never clipped by the searchable rows' collapse and never scales.
-   GlidePill sets x/y/width/height inline; the option (position: relative) paints above it. */
-.select__glide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  border-radius: var(--radius-md);
-  background: var(--neutral-wash);
-  pointer-events: none;
-}
-
 /* Active row: the pill carries the fill; here we only lift the text. Selected rules follow, so source order wins. */
 .select__option[data-active='true'] {
   color: var(--text-strong);
 }
-.select__option[data-active='true'] .select__option-icon {
+.select__option[data-active='true'] .menu-row__icon {
   color: var(--text-body);
 }
 .select__option[data-selected='true'] {
   background-color: var(--accent-wash);
 }
-.select__option[data-selected='true'] .select__option-label {
+.select__option[data-selected='true'] .menu-row__label {
   color: var(--text-accent);
   font-weight: var(--weight-medium);
 }
-.select__option[data-selected='true'] .select__option-icon {
+.select__option[data-selected='true'] .menu-row__icon {
   color: var(--text-accent);
 }
 .select__option[data-selected='true'] .select__option-check {
@@ -310,7 +232,7 @@
   cursor: not-allowed;
   color: var(--text-disabled);
 }
-.select__option[data-disabled='true'] .select__option-icon {
+.select__option[data-disabled='true'] .menu-row__icon {
   color: var(--text-disabled);
 }
 

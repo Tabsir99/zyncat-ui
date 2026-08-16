@@ -3,6 +3,7 @@ import { Alert } from '@zyncat/ui/alert';
 import { Tooltip } from '@zyncat/ui/tooltip';
 import { Dialog } from '@zyncat/ui/dialog';
 import { Popover } from '@zyncat/ui/popover';
+import { Dropdown, type DropdownGroup } from '@zyncat/ui/dropdown';
 import { Sheet } from '@zyncat/ui/sheet';
 import { Button } from '@zyncat/ui/button';
 import { toast } from '@zyncat/ui/toast';
@@ -245,6 +246,122 @@ export function PopoverPage() {
         </div>
       </Popover>
     </Demo>
+  );
+}
+
+const POST_ACTIONS: DropdownGroup[] = [
+  {
+    label: 'Edit',
+    items: [
+      { id: 'rename', label: 'Rename', icon: <Icon name="pencil-simple" size="sm" />, shortcut: 'R' },
+      { id: 'duplicate', label: 'Duplicate', icon: <Icon name="copy" size="sm" />, shortcut: 'D' },
+      {
+        id: 'move',
+        label: 'Move to',
+        icon: <Icon name="archive" size="sm" />,
+        items: [
+          { id: 'drafts', label: 'Drafts', description: 'Not visible to anyone' },
+          { id: 'scheduled', label: 'Scheduled' },
+          {
+            id: 'campaigns',
+            label: 'Campaigns',
+            items: [
+              { id: 'launch', label: 'Product launch' },
+              { id: 'newsletter', label: 'Newsletter' },
+              {
+                id: 'seasonal',
+                label: 'Seasonal',
+                items: [
+                  { id: 'spring', label: 'Spring' },
+                  { id: 'summer', label: 'Summer' },
+                  { id: 'winter', label: 'Winter' },
+                ],
+              },
+              { id: 'archived-campaigns', label: 'Archived', disabled: true },
+            ],
+          },
+          {
+            id: 'workspaces',
+            label: 'Another workspace',
+            items: [
+              { id: 'ws-design', label: 'Design' },
+              { id: 'ws-growth', label: 'Growth' },
+              {
+                id: 'ws-eng',
+                label: 'Engineering',
+                items: [
+                  { id: 'ws-eng-web', label: 'Web' },
+                  { id: 'ws-eng-mobile', label: 'Mobile' },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Share',
+    items: [
+      { id: 'link', label: 'Copy link', icon: <Icon name="hash" size="sm" />, shortcut: 'L' },
+      { id: 'members', label: 'Invite people', icon: <Icon name="users" size="sm" /> },
+      {
+        id: 'export',
+        label: 'Export as',
+        icon: <Icon name="cloud" size="sm" />,
+        items: [
+          { id: 'export-pdf', label: 'PDF' },
+          { id: 'export-md', label: 'Markdown' },
+          { id: 'export-html', label: 'HTML' },
+        ],
+      },
+    ],
+  },
+  { items: [{ id: 'delete', label: 'Delete post', icon: <Icon name="trash" size="sm" />, danger: true }] },
+];
+
+export function DropdownPage() {
+  return (
+    <>
+      <Demo label="menu button - groups, shortcuts, nested submenus">
+        <Dropdown
+          items={POST_ACTIONS}
+          ariaLabel="Post actions"
+          onSelect={(id) => toast('Ran ' + id)}
+          trigger={
+            <Button variant="secondary">
+              Actions
+              <Icon name="caret-down" size="sm" />
+            </Button>
+          }
+        />
+      </Demo>
+      <Demo label="align end, flips above when cramped">
+        <Dropdown
+          items={POST_ACTIONS}
+          align="end"
+          ariaLabel="Post actions"
+          onSelect={(id) => toast('Ran ' + id)}
+          trigger={
+            <Button variant="ghost" size="icon" aria-label="More actions">
+              <Icon name="more" size="sm" />
+            </Button>
+          }
+        />
+      </Demo>
+      <Demo label="flat items, no groups">
+        <Dropdown
+          items={[
+            { id: 'profile', label: 'Profile', icon: <Icon name="user" size="sm" /> },
+            { id: 'settings', label: 'Settings', icon: <Icon name="gear" size="sm" />, shortcut: 'S' },
+            { id: 'sign-out', label: 'Sign out', icon: <Icon name="lock" size="sm" />, danger: true },
+          ]}
+          ariaLabel="Account"
+          onSelect={(id) => toast('Ran ' + id)}
+          trigger={<Button variant="ghost">Account</Button>}
+        />
+      </Demo>
+    </>
   );
 }
 

@@ -315,6 +315,84 @@ toast.promise(publishBatch(), {
     ],
   },
 
+  dropdown: {
+    example: `import { Dropdown } from '@zyncat/ui/dropdown';
+
+<Dropdown
+  ariaLabel="Post actions"
+  trigger={<Button variant="secondary">Actions</Button>}
+  onSelect={(id) => run(id)}
+  items={[
+    {
+      label: 'Edit',
+      items: [
+        { id: 'rename', label: 'Rename', icon: <PencilIcon />, shortcut: 'R' },
+        {
+          id: 'move',
+          label: 'Move to',
+          items: [
+            { id: 'drafts', label: 'Drafts', description: 'Not visible to anyone' },
+            { id: 'campaigns', label: 'Campaigns', items: [{ id: 'launch', label: 'Product launch' }] },
+          ],
+        },
+      ],
+    },
+    { items: [{ id: 'delete', label: 'Delete post', danger: true }] },
+  ]}
+/>`,
+    props: [
+      {
+        name: 'items',
+        type: 'DropdownItem[] | DropdownGroup[]',
+        required: true,
+        description:
+          'The rows, flat or in divided sections. A row with its own `items` opens a submenu instead of committing.',
+      },
+      {
+        name: 'trigger',
+        type: 'React.ReactElement',
+        required: true,
+        description: 'Element cloned to toggle the menu; it is also the anchor and gets the aria-haspopup wiring.',
+      },
+      {
+        name: 'onSelect',
+        type: '(id: string, item: DropdownItem) => void',
+        description: 'Fires when a row commits, with its id and the full item. Committing closes every level.',
+      },
+      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
+      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
+      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the menu opens or closes.' },
+      {
+        name: 'side',
+        type: "'top' | 'bottom' | 'left' | 'right'",
+        default: "'bottom'",
+        description: 'Preferred side of the trigger; flips to the opposite side when cramped.',
+      },
+      {
+        name: 'align',
+        type: "'start' | 'center' | 'end'",
+        default: "'start'",
+        description: 'Cross-axis alignment against the trigger. Submenus always align to their own row.',
+      },
+      {
+        name: 'ariaLabel',
+        type: 'string',
+        description: 'Accessible name for the menu. Submenus take theirs from the row that opens them.',
+      },
+      { name: 'id', type: 'string', description: 'Base id for the menu and its rows; drives aria-controls.' },
+      {
+        name: 'htmlProps',
+        type: 'React.HTMLAttributes<HTMLDivElement>',
+        description: 'Standard attributes forwarded to the top-level menu panel.',
+      },
+      {
+        name: 'animation',
+        type: 'AnimationTiming | null',
+        default: "{ open: 'base'/'entrance', close: 'fast'/'exit' }",
+        description: 'Open/close timing - motion tokens only, or null to disable.',
+      },
+    ],
+  },
   popover: {
     example: `import { useState } from 'react';
 import { Popover } from '@zyncat/ui/popover';

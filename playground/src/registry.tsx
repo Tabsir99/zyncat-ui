@@ -230,6 +230,12 @@ export const GROUPS: DocGroup[] = [
         Component: O.PopoverPage,
       },
       {
+        slug: 'dropdown',
+        label: 'Dropdown',
+        blurb: 'Menu button for actions - grouped rows, shortcuts, and submenus that nest as deep as you like.',
+        Component: O.DropdownPage,
+      },
+      {
         slug: 'sheet',
         label: 'Sheet',
         blurb: 'Modal panel docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',

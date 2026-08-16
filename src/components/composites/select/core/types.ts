@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { normalizeCollection, type NormalizedGroup as CollectionGroup } from '../../../internal/collection/collection';
 
 export interface SelectOption {
   /** The stored value - what `onChange` returns and `value` matches; must be unique. */
@@ -21,21 +22,16 @@ export interface SelectGroup {
   options: SelectOption[];
 }
 
-export interface NormalizedGroup {
-  label: string | null | undefined;
-  options: SelectOption[];
-}
+export type NormalizedGroup = CollectionGroup<SelectOption>;
 
-export function normalize(options: SelectOption[] | SelectGroup[]): {
-  groups: NormalizedGroup[];
-  flat: SelectOption[];
-} {
-  const grouped = options.length > 0 && options[0] && Array.isArray((options[0] as SelectGroup).options);
-  const groups: NormalizedGroup[] = grouped
-    ? (options as SelectGroup[]).map((g) => ({ label: g.label, options: g.options || [] }))
-    : [{ label: null, options: options as SelectOption[] }];
-  return { groups, flat: groups.flatMap((g) => g.options) };
-}
+export const normalize = (
+  options: SelectOption[] | SelectGroup[],
+): { groups: NormalizedGroup[]; flat: SelectOption[] } =>
+  normalizeCollection<SelectOption, SelectGroup>(options, {
+    isGroup: (entry): entry is SelectGroup => Array.isArray((entry as SelectGroup).options),
+    itemsOf: (group) => group.options,
+    labelOf: (group) => group.label,
+  });
 
 export const optionText = (o: SelectOption): string =>
   o.searchText ?? (typeof o.label === 'string' ? o.label : o.value);

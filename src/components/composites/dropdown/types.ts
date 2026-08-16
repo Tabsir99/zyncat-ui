@@ -1,0 +1,92 @@
+import type { HTMLAttributes, ReactNode, RefObject } from 'react';
+import type { DataAttributes } from '../../../dom-props';
+import { normalizeCollection, type NormalizedGroup } from '../../internal/collection/collection';
+
+export interface DropdownItem {
+  /** Unique id - what `onSelect` receives, and what identifies this row's open submenu. */
+  id: string;
+  /** Primary row text. */
+  label: ReactNode;
+  /** Optional secondary line under the label. */
+  description?: string;
+  /** Your own icon node shown before the label. */
+  icon?: ReactNode;
+  /** Keyboard hint shown at the trailing edge, mono. Display only - you still bind the key. */
+  shortcut?: string;
+  /** Destructive action - the row reads in the danger hue. @default false */
+  danger?: boolean;
+  /** Not selectable - skipped by arrow keys and typeahead, and marked `aria-disabled`. @default false */
+  disabled?: boolean;
+  /** Nested menu. The row opens it instead of committing, and can nest again without limit. */
+  items?: DropdownItem[] | DropdownGroup[];
+  /** Text used for typeahead. Required when `label` is not a string. */
+  searchText?: string;
+  /** Fires when this row commits, before the menu's own `onSelect`. */
+  onSelect?: () => void;
+}
+
+export interface DropdownGroup {
+  /** Section heading rendered above the rows; omit for an unlabeled but still divided group. */
+  label?: string;
+  /** The rows in this section. */
+  items: DropdownItem[];
+}
+
+export type DropdownItems = DropdownItem[] | DropdownGroup[];
+
+export const normalize = (source: DropdownItems): { groups: NormalizedGroup<DropdownItem>[]; flat: DropdownItem[] } =>
+  normalizeCollection<DropdownItem, DropdownGroup>(source, {
+    isGroup: (entry): entry is DropdownGroup => !('id' in entry),
+    itemsOf: (group) => group.items,
+    labelOf: (group) => group.label,
+  });
+
+export const itemText = (item: DropdownItem): string =>
+  item.searchText ?? (typeof item.label === 'string' ? item.label : item.id);
+
+export const submenuOf = (item: DropdownItem): DropdownItems | null =>
+  item.items && item.items.length > 0 ? item.items : null;
+
+export const ROOT_LEVEL = 'root';
+export const levelKey = (depth: number, ownerId: string) => depth + ':' + ownerId;
+
+export interface Level {
+  key: string;
+  items: DropdownItems;
+  owner: DropdownItem | null;
+  ownerIdx: number;
+}
+
+/* The open chain, root first: path[d] names the row in level d whose submenu is level d + 1. */
+export function resolveLevels(items: DropdownItems, path: string[]): Level[] {
+  const levels: Level[] = [{ key: ROOT_LEVEL, items, owner: null, ownerIdx: -1 }];
+  for (const id of path) {
+    const { flat } = normalize(levels[levels.length - 1].items);
+    const ownerIdx = flat.findIndex((item) => item.id === id);
+    const sub = ownerIdx >= 0 && submenuOf(flat[ownerIdx]);
+    if (!sub) break;
+    levels.push({ key: levelKey(levels.length, id), items: sub, owner: flat[ownerIdx], ownerIdx });
+  }
+  return levels;
+}
+
+export type SeedFocus = 'first' | 'last' | 'none';
+
+/* Everything a level needs to render itself and act on the chain. One object, built once by
+   Dropdown, so a panel takes its place in the chain rather than twenty separate props. */
+export interface MenuChain {
+  levels: Level[];
+  menuId: string;
+  side: 'top' | 'bottom' | 'left' | 'right';
+  align: 'start' | 'center' | 'end';
+  ariaLabel?: string;
+  htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  seed: { key: string; focus: SeedFocus };
+  hoverDepth: { current: number };
+  refFor: (key: string) => RefObject<HTMLElement>;
+  openSub: (depth: number, item: DropdownItem, focus: SeedFocus) => void;
+  closeSub: (depth: number) => void;
+  cancel: (depth: number) => void;
+  dismiss: (returnFocus: boolean) => void;
+  select: (item: DropdownItem) => void;
+}

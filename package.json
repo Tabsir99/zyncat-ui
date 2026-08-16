@@ -166,6 +166,11 @@
       "types": "./dist/tabs.d.ts",
       "import": "./dist/tabs.js"
     },
+    "./dropdown": {
+      "source": "./src/components/composites/dropdown/Dropdown.tsx",
+      "types": "./dist/dropdown.d.ts",
+      "import": "./dist/dropdown.js"
+    },
     "./popover": {
       "source": "./src/components/composites/popover/Popover.tsx",
       "types": "./dist/popover.d.ts",

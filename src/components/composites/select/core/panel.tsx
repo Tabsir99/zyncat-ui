@@ -1,8 +1,9 @@
 'use client';
 
+import '../../../internal/menu/menu-surface.css';
 import { Fragment, useMemo, type ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
-import { IconSlot } from '../../../internal/icon/IconSlot';
+import { MenuRow } from '../../../internal/menu/menu-row';
 import { Collapse } from '../../../primitives/collapse/Collapse';
 import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
@@ -82,7 +83,7 @@ export function ListboxPanel({
       )}
 
       <div
-        className="select__list"
+        className="menu-scroller select__list"
         ref={lb.listRef}
         id={lb.listId}
         role="listbox"
@@ -92,22 +93,22 @@ export function ListboxPanel({
         aria-activedescendant={searchable ? undefined : lb.adId}
         onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
       >
-        <GlidePill className="select__glide" glide={lb.glide} />
+        <GlidePill className="menu-glide select__glide" glide={lb.glide} />
         {loading ? (
           <LoadingRows />
         ) : (
           <Fragment>
             {lb.groups.map((g, gi) => (
               <div className="select__group" role="group" aria-label={g.label || undefined} key={gi}>
-                {g.label && g.options.some((o) => navIndex.has(o.value)) && (
-                  <div className="select__group-label">{g.label}</div>
+                {g.label && g.items.some((o) => navIndex.has(o.value)) && (
+                  <div className="menu-group-label select__group-label">{g.label}</div>
                 )}
-                {g.options.map((opt) => {
+                {g.items.map((opt) => {
                   const i = navIndex.get(opt.value) ?? -1;
                   const visible = i !== -1;
                   const isSel = lb.isSelected(opt.value);
                   const row = (
-                    <div
+                    <MenuRow
                       key={opt.value}
                       id={visible ? lb.optId(opt.value) : undefined}
                       data-idx={visible ? i : undefined}
@@ -119,22 +120,15 @@ export function ListboxPanel({
                       data-selected={isSel ? 'true' : undefined}
                       data-active={visible && i === lb.activeIdx ? 'true' : undefined}
                       data-disabled={opt.disabled ? 'true' : undefined}
+                      data-size={size}
                       onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => visible && lb.commit(opt)}
-                      data-size={size}
-                    >
-                      {opt.icon && (
-                        <span className="select__option-icon">
-                          <IconSlot size="sm">{opt.icon}</IconSlot>
-                        </span>
-                      )}
-                      <span className="select__option-text">
-                        <span className="select__option-label">{opt.label}</span>
-                        {opt.description && <span className="select__option-desc">{opt.description}</span>}
-                      </span>
-                      {check(isSel) ? <span className="select__option-check">{check(isSel)}</span> : null}
-                    </div>
+                      icon={opt.icon}
+                      label={opt.label}
+                      description={opt.description}
+                      trailing={check(isSel) ? <span className="select__option-check">{check(isSel)}</span> : null}
+                    />
                   );
                   return searchable ? (
                     <Collapse key={opt.value} open={visible} fade>
