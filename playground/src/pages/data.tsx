@@ -68,7 +68,7 @@ export function TagPage() {
         </Tag>
       </Demo>
       <Demo label="TagGroup - removable">
-        <TagGroup label="Labels">
+        <TagGroup ariaLabel="Labels">
           {labels.map((l) => (
             <Tag
               key={l.id}
@@ -156,12 +156,12 @@ export function TablePage() {
   return (
     <Demo label="sortable - status cell - selectable - footer" fill>
       <Table<Invoice>
-        label="Invoices"
+        ariaLabel="Invoices"
         columns={COLUMNS}
         rows={INVOICES}
         selectable
         defaultSort={{ key: 'amount', dir: 'desc' }}
-        footer={<Pagination label="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />}
+        footer={<Pagination ariaLabel="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />}
       />
     </Demo>
   );
@@ -178,7 +178,7 @@ export function PaginationPage() {
     <>
       <Demo label="cursor range (controlled)">
         <Pagination
-          label="Rows"
+          ariaLabel="Rows"
           range={[from, to]}
           total={PAGE_TOTAL}
           hasPrev={from > 1}
@@ -188,7 +188,7 @@ export function PaginationPage() {
         />
       </Demo>
       <Demo label="endless - no total">
-        <Pagination label="Activity" range={[101, 125]} hasPrev hasNext />
+        <Pagination ariaLabel="Activity" range={[101, 125]} hasPrev hasNext />
       </Demo>
     </>
   );

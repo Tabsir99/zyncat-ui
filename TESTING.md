@@ -188,3 +188,4 @@ Run a single file while iterating. The full browser suite is for the end.
 | Motion tokens   | `UIMotion` reads of duration, ease, distance and scale; theme retuning     | `motion-tokens`   |
 | Forms           | TextField, NumberField, OtpField, Textarea, Checkbox, Toggle, RadioGroup   | `form-`           |
 | Engine          | `animate`, the `Playback` contract, timing resolution, FLIP                | `engine-`         |
+| Package surface | The exports map: every subpath resolves, and its dist targets exist        | `package-`        |

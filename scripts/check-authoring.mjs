@@ -244,6 +244,21 @@ if (!vocabTable) {
     if (!layerKeys.has(key)) fail('motion.md', `Layer key \`${key}\` is documented but no longer exists in the engine`);
 }
 
+const testingDoc = readFileSync(join(ROOT, 'TESTING.md'), 'utf8');
+const ownershipTable = testingDoc.match(/## Ownership[\s\S]*?\n\n((?:\|.*\n)+)/);
+if (!ownershipTable) {
+  fail('TESTING.md', 'the Ownership table was not found - nothing pins a test file to a group.');
+} else {
+  const prefixes = [...ownershipTable[1].matchAll(/\|\s*`([\w-]+)`\s*\|/g)].map((m) => m[1]);
+  const testFiles = walk(join(ROOT, 'tests'), ['.test.ts', '.test.tsx']).map((f) => basename(f));
+  const orphans = new Set();
+  for (const file of testFiles) if (!prefixes.some((p) => file.startsWith(p))) orphans.add(file);
+  for (const file of orphans) fail('TESTING.md', `tests/${file} matches no file prefix in the Ownership table`);
+  for (const prefix of prefixes)
+    if (!testFiles.some((f) => f.startsWith(prefix)))
+      fail('TESTING.md', `the Ownership table claims prefix \`${prefix}\`, but no test file uses it`);
+}
+
 for (const [tool, doc] of Object.entries(GUIDE_TOOL_DOCS)) {
   const block = serverSrc.match(new RegExp(`name: '${tool}'[\\s\\S]*?e\\.g\\. ([^.]*)\\.`));
   if (!block) {

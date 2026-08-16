@@ -12,7 +12,7 @@ export function GlideTile() {
     <div className="ld-tile" data-reveal>
       <div className="ld-tile__demo">
         <Tabs
-          label="Glide demo"
+          ariaLabel="Glide demo"
           items={[
             { value: 'overview', label: 'Overview' },
             { value: 'activity', label: 'Activity', count: 12 },
@@ -93,7 +93,7 @@ export function FlipTile() {
   return (
     <div className="ld-tile ld-tile--wide" data-reveal>
       <div className="ld-tile__demo ld-tile__demo--fill">
-        <Table<BenchRow> label="p99 latency leaderboard" columns={BENCH_COLUMNS} rows={rows} density="compact" />
+        <Table<BenchRow> ariaLabel="p99 latency leaderboard" columns={BENCH_COLUMNS} rows={rows} density="compact" />
       </div>
       <div className="ld-tile__meta">
         <h3>Rows FLIP, never teleport.</h3>

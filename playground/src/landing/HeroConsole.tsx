@@ -78,7 +78,7 @@ export function HeroConsole() {
 
       <div className="ld-console__tabs">
         <Tabs
-          label="Filter deploys by environment"
+          ariaLabel="Filter deploys by environment"
           items={[
             { value: 'all', label: 'All', count: rows.length },
             { value: 'production', label: 'Production', count: count('production') },
@@ -91,7 +91,7 @@ export function HeroConsole() {
 
       <div className="ld-console__body">
         <Table<Deploy>
-          label="Recent deploys"
+          ariaLabel="Recent deploys"
           columns={COLUMNS}
           rows={visible}
           density="compact"
@@ -133,7 +133,7 @@ export function HeroConsole() {
         />
       </div>
       <div className="ld-console__foot">
-        <Pagination label="Deploys" range={[visible.length ? 1 : 0, visible.length]} total={visible.length} />
+        <Pagination ariaLabel="Deploys" range={[visible.length ? 1 : 0, visible.length]} total={visible.length} />
       </div>
     </div>
   );

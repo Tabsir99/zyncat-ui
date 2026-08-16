@@ -2,8 +2,12 @@
 
 Read `design-system.md` first and confirm you should be building a new component
 at all. If you are, this is the complete checklist. Every step has a check that
-fails loudly when you skip it — except step 2, which fails silently, so do not
-skip step 2.
+fails loudly when you skip it, and `pnpm verify` runs all of them.
+
+Two of the steps are owned by agents rather than by you: **`zyncat-tester`**
+takes step 6, **`zyncat-docs`** takes step 5 and the prose half of step 7. Hand
+those off. What is left — the component, its CSS, its prop JSDoc and its demo
+page — is the design work, and it is the only part worth your context.
 
 ## 1. Place the file
 
@@ -19,7 +23,8 @@ PascalCase `.tsx` files and derives the public entry name by kebab-casing the
 filename. `TextField.tsx` becomes `@zyncat/ui/text-field`. Nothing to register.
 
 If the derived name is wrong, add an override to `NAME_OVERRIDES` in
-`tsup.config.ts` rather than renaming the file away from the component name.
+`scripts/lib/entries.mjs` rather than renaming the file away from the component
+name. That module is the single scanner every consumer of the entry list reads.
 
 Put helper modules for the component in the same directory — hooks, a store,
 subcomponents. Only PascalCase `.tsx` files become entries, so a
@@ -27,25 +32,29 @@ subcomponents. Only PascalCase `.tsx` files become entries, so a
 
 Start the file with `'use client'` if it uses state, effects, refs or events.
 
-## 2. Add the exports map entry
+## 2. Sync the manifests
 
-This one is manual, and it is the step that fails silently — tsup will happily
-build a `dist/thing.js` that nobody can import.
-
-In `package.json`:
-
-```json
-"./thing": {
-  "source": "./src/components/composites/thing/Thing.tsx",
-  "types": "./dist/thing.d.ts",
-  "import": "./dist/thing.js"
-}
+```bash
+pnpm sync
 ```
+
+`scripts/lib/entries.mjs` is the one scanner that derives the public entry list
+from the file tree; tsup, the playground's Vite aliases and these two syncs all
+read it, so there is nothing to register by hand:
+
+| Written                                      | By                   | Why it matters                                            |
+| -------------------------------------------- | -------------------- | --------------------------------------------------------- |
+| `package.json` `exports`                     | `pnpm sync:exports`  | Subpaths are the only public API — no entry, no import    |
+| `playground/tsconfig.json` `paths`           | `pnpm sync:tsconfig` | The playground resolves `@zyncat/ui/thing` to your source |
+| `props.generated.ts` in the playground       | `pnpm docs:props`    | The docs prop table, read out of `dist/*.d.ts`            |
+| `docs/import-graph.md`, `component-sizes.md` | `pnpm docs:gen`      | Repo shape                                                |
+
+`pnpm verify` runs the check half of each, so a manifest you forgot to sync
+fails the build instead of failing silently.
 
 Subpaths are the **only** public API. There is no barrel entry, deliberately: it
 guarantees one import can never pull in modules or CSS the app did not ask for.
-
-`vitest.config.ts` builds its test aliases from this exports map, so a component
+`vitest.config.ts` builds its test aliases from the exports map, so a component
 without an entry cannot be imported the way a consumer imports it — which is how
 every browser test in this repo imports things.
 
@@ -75,7 +84,29 @@ Classes defined under `src/tokens` are always satisfied — those ship in
 Use tokens, not literals. If the component animates a property from JS, do not
 put that property in a CSS `transition` — see `motion.md`.
 
-## 4. Add the `llms.txt` entry
+## 4. Document the props where they live
+
+The consumer's editor tooltip, the docs site's prop table and the MCP's answer
+all come from **one** place: the JSDoc on the public props interface. Write it
+there, with an `@default` tag on every prop that has a default:
+
+```tsx
+export interface ThingProps {
+  /** Preferred side of the trigger; flips when cramped. @default 'bottom' */
+  side?: 'top' | 'bottom';
+}
+```
+
+`pnpm docs:props` reads it back out of `dist/*.d.ts` into the playground's prop
+table, and **fails the build on any public prop with no JSDoc** — a blank cell
+in the docs is not an option. It also emits a table for each named shape a prop
+references — `DropdownItem`, `TableColumn`, `SelectOption` — so a row type
+documents itself.
+
+Never hand-write a prop table. `playground/src/content/*.ts` carries only the
+`example` string.
+
+## 5. Add the `llms.txt` entry
 
 Consumers and coding agents read `llms.txt`, and the bundled MCP server parses
 it with two regexes. The heading format is load-bearing:
@@ -95,7 +126,10 @@ on the built types. It needs `dist/`, so run `pnpm build` first.
 That second check is why examples here do not rot: a renamed prop breaks the
 build, not just the docs.
 
-## 5. Write the tests
+## 6. Write the tests
+
+Hand this to the **`zyncat-tester`** agent, which owns the suite. What follows
+is what it works from, and what you need to know to read its report.
 
 `TESTING.md` is the contract — read it. In short:
 
@@ -120,6 +154,10 @@ applies to every component; the ones that apply are not optional. For anything
 portalled, animated or measured, the observation contract (axis 2) is the one
 that catches the bugs this suite exists for.
 
+The file prefix you choose must have a row in the Ownership table at the bottom
+of `TESTING.md`; `pnpm check:authoring` fails on a prefix with no row, and on a
+row with no files.
+
 Anything with layout, animation or measurement is a **browser** test. jsdom has
 no layout engine and no Web Animations API, so a unit test passes straight
 through the interesting failures.
@@ -132,21 +170,30 @@ node scripts/test.mjs thing        # one file while iterating
 node scripts/test.mjs              # the whole suite, at the end
 ```
 
-## 6. Add it to the playground
+## 7. Add it to the playground
 
-`playground/` is how you look at the thing. Add a page or a section to the
-existing content so the component is exercised in a real app rather than only in
-tests.
+`playground/` is how you look at the thing, and it is also the public docs site.
+Two separate jobs:
 
-## 7. Run the checks
+- **The demo page**, one file per group in `playground/src/pages/`, is yours. It is the
+  design work — the component exercised in a real app, in the states worth
+  looking at. Nothing generates this and nothing should.
+- **The registry row, the blurb and the canonical example** go to the
+  **`zyncat-docs`** agent, together with the `llms.txt` entry from step 5.
+
+## 8. Run the checks
 
 ```bash
-pnpm typecheck
-pnpm exec prettier --write src tests
-pnpm check:css
-pnpm build && pnpm check:llms     # check:llms needs dist/
-node scripts/test.mjs
+pnpm exec prettier --write .
+pnpm sync                        # regenerate every manifest and doc
+pnpm verify                      # the whole gate, ending in the full suite
 ```
+
+`pnpm verify` is `check:exports`, `check:tsconfig`, `typecheck`, `format:check`,
+`check:css`, `check:authoring`, `check:docs`, `build`, `check:llms`,
+`check:props` and the test suite, in that order — the build sits in the middle
+because the three checks after it read `dist/`. Run the individual scripts while
+iterating; run `verify` before you hand the work over.
 
 ## Conventions the linters do not catch
 

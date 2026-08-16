@@ -1,49 +1,5 @@
 import { defineConfig, type Options } from 'tsup';
-import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
-
-// PascalCase filename → kebab-case entry name (Button → button, TextField → text-field).
-function toKebab(name: string): string {
-  return name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-    .toLowerCase();
-}
-
-// Exceptions where the auto-derived kebab name doesn't match the desired public entry name.
-const NAME_OVERRIDES: Record<string, string> = { DateTimeField: 'datetime-field' };
-
-// Scan primitives/, composites/, compound/ for PascalCase .tsx files → entry map.
-function discoverComponentEntries(): Record<string, string> {
-  const entries: Record<string, string> = {};
-  for (const tier of ['primitives', 'composites', 'compound']) {
-    const tierDir = join('src/components', tier);
-    let dirs: string[];
-    try {
-      dirs = readdirSync(tierDir);
-    } catch {
-      continue;
-    }
-    for (const comp of dirs) {
-      const compDir = join(tierDir, comp);
-      if (!statSync(compDir).isDirectory()) continue;
-      for (const file of readdirSync(compDir)) {
-        if (!file.endsWith('.tsx') || !/^[A-Z]/.test(file)) continue;
-        const stem = file.replace('.tsx', '');
-        entries[NAME_OVERRIDES[stem] ?? toKebab(stem)] = join(compDir, file);
-      }
-    }
-  }
-  return entries;
-}
-
-// Non-component public entries that don't follow the PascalCase .tsx convention.
-const EXPLICIT_ENTRIES: Record<string, string> = {
-  'toast-store': 'src/components/composites/toast/toast-store.ts',
-  'motion-tokens': 'src/tokens/motion-tokens.ts',
-  'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
-  glide: 'src/motion/glide.tsx',
-};
+import { publicEntries } from './scripts/lib/entries.mjs';
 
 // One entry per public module - one dist file + .d.ts each. Subpaths
 // (`@zyncat/ui/button`) are the ONLY public API - there is no barrel entry, so
@@ -51,7 +7,7 @@ const EXPLICIT_ENTRIES: Record<string, string> = {
 // splitting:true hoists shared internals (overlay/*, select/core,
 // field-shell, ...) into shared chunks instead of duplicating them per entry.
 const library: Options = {
-  entry: { ...discoverComponentEntries(), ...EXPLICIT_ENTRIES },
+  entry: publicEntries(),
   format: ['esm'],
 
   // tsup injects a (now-deprecated) baseUrl into the dts compiler; silence it here

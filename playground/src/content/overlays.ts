@@ -12,64 +12,6 @@ export const overlays: Record<string, ComponentDoc> = {
 >
   Switch to a paid plan to keep your scheduled posts running.
 </Alert>`,
-    props: [
-      {
-        name: 'tone',
-        type: "'info' | 'success' | 'warning' | 'danger'",
-        default: "'info'",
-        description: 'Status tone; info and success are polite, warning and danger are assertive.',
-      },
-      {
-        name: 'title',
-        type: 'React.ReactNode',
-        required: true,
-        description: 'The main message, sentence case, ideally one line.',
-      },
-      {
-        name: 'children',
-        type: 'React.ReactNode',
-        default: 'null',
-        description: 'Optional body text shown below the title.',
-      },
-      {
-        name: 'action',
-        type: '{ label: string; onClick?: () => void }',
-        default: 'null',
-        description: 'One action button max, rendered as a secondary small button.',
-      },
-      {
-        name: 'dismissible',
-        type: 'boolean',
-        default: 'false',
-        description: 'Renders a close button; triggers uncontrolled dismissal unless `open` is also set.',
-      },
-      {
-        name: 'onDismiss',
-        type: '() => void',
-        description: 'Fires when the alert is dismissed; with `open` set, the parent owns visibility.',
-      },
-      {
-        name: 'open',
-        type: 'boolean',
-        description: 'Controlled visibility; omit for uncontrolled (scales down and fades on exit).',
-      },
-      {
-        name: 'banner',
-        type: 'boolean',
-        default: 'false',
-        description: 'App-level strip mode: square corners and bottom border only.',
-      },
-      {
-        name: 'icon',
-        type: 'React.ReactNode | null',
-        description: 'Override the tone icon; pass null to render no icon.',
-      },
-      {
-        name: '...rest',
-        type: 'React.HTMLAttributes<HTMLDivElement>',
-        description: 'All other props forwarded to the root div element.',
-      },
-    ],
   },
 
   toast: {
@@ -201,46 +143,6 @@ toast.promise(publishBatch(), {
 <Tooltip content="Schedule to queue" shortcut="S">
   <button type="button">Schedule</button>
 </Tooltip>`,
-    props: [
-      {
-        name: 'content',
-        type: 'ReactNode',
-        required: true,
-        description: 'The hint text or node; never use interactive content here.',
-      },
-      {
-        name: 'shortcut',
-        type: 'string | null',
-        default: 'null',
-        description: 'Optional keyboard hint shown as secondary mono text alongside the content.',
-      },
-      {
-        name: 'placement',
-        type: "'top' | 'bottom' | 'left' | 'right'",
-        default: "'top'",
-        description: 'Preferred side; auto-flips when the chosen side has insufficient viewport room.',
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        default: 'false',
-        description: 'Suppress the tooltip entirely; the trigger renders normally.',
-      },
-      {
-        name: 'openDelay',
-        type: 'number',
-        default: '350',
-        description: 'Delay in ms before a cold hover opens the tooltip.',
-      },
-      {
-        name: 'closeDelay',
-        type: 'number',
-        default: '140',
-        description: 'Delay in ms the bubble lingers after the cursor leaves.',
-      },
-      { name: 'id', type: 'string', description: 'ID applied to the tooltip trigger wrapper.' },
-      { name: 'children', type: 'ReactElement', required: true, description: 'The trigger element.' },
-    ],
   },
 
   dialog: {
@@ -259,60 +161,6 @@ toast.promise(publishBatch(), {
 >
   This will remove the post from the queue permanently.
 </Dialog>`,
-    props: [
-      { name: 'open', type: 'boolean', description: 'Controlled open state; omit for uncontrolled mode.' },
-      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
-      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the dialog opens or closes.' },
-      {
-        name: 'trigger',
-        type: 'React.ReactElement | null',
-        default: 'null',
-        description: 'Element cloned to open the dialog; useful for uncontrolled ergonomics.',
-      },
-      { name: 'title', type: 'React.ReactNode', description: 'Heading shown in the dialog header.' },
-      {
-        name: 'description',
-        type: 'React.ReactNode',
-        default: 'null',
-        description: 'Subheading shown below the title.',
-      },
-      {
-        name: 'size',
-        type: "'sm' | 'md' | 'lg'",
-        default: "'md'",
-        description: 'Width preset for the dialog surface.',
-      },
-      {
-        name: 'tone',
-        type: "'default' | 'danger'",
-        default: "'default'",
-        description: "'danger' tints the header badge; use for destructive confirms.",
-      },
-      {
-        name: 'icon',
-        type: 'React.ReactNode',
-        default: 'null',
-        description: 'Icon node for the header badge, useful for alert-style dialogs.',
-      },
-      {
-        name: 'dismissible',
-        type: 'boolean',
-        default: 'true',
-        description: 'Renders a close button and enables backdrop and Esc dismissal.',
-      },
-      {
-        name: 'footer',
-        type: 'React.ReactNode | ((close: () => void) => React.ReactNode)',
-        default: 'null',
-        description: 'Action row content; use the render function form to call close from uncontrolled dialogs.',
-      },
-      {
-        name: 'children',
-        type: 'React.ReactNode',
-        description: 'Body content rendered inside the scrollable dialog body.',
-      },
-      { name: 'id', type: 'string', description: 'ID applied to the dialog element.' },
-    ],
   },
 
   dropdown: {
@@ -340,58 +188,6 @@ toast.promise(publishBatch(), {
     { items: [{ id: 'delete', label: 'Delete post', danger: true }] },
   ]}
 />`,
-    props: [
-      {
-        name: 'items',
-        type: 'DropdownItem[] | DropdownGroup[]',
-        required: true,
-        description:
-          'The rows, flat or in divided sections. A row with its own `items` opens a submenu instead of committing.',
-      },
-      {
-        name: 'trigger',
-        type: 'React.ReactElement',
-        required: true,
-        description: 'Element cloned to toggle the menu; it is also the anchor and gets the aria-haspopup wiring.',
-      },
-      {
-        name: 'onSelect',
-        type: '(id: string, item: DropdownItem) => void',
-        description: 'Fires when a row commits, with its id and the full item. Committing closes every level.',
-      },
-      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
-      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
-      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the menu opens or closes.' },
-      {
-        name: 'side',
-        type: "'top' | 'bottom' | 'left' | 'right'",
-        default: "'bottom'",
-        description: 'Preferred side of the trigger; flips to the opposite side when cramped.',
-      },
-      {
-        name: 'align',
-        type: "'start' | 'center' | 'end'",
-        default: "'start'",
-        description: 'Cross-axis alignment against the trigger. Submenus always align to their own row.',
-      },
-      {
-        name: 'ariaLabel',
-        type: 'string',
-        description: 'Accessible name for the menu. Submenus take theirs from the row that opens them.',
-      },
-      { name: 'id', type: 'string', description: 'Base id for the menu and its rows; drives aria-controls.' },
-      {
-        name: 'htmlProps',
-        type: 'React.HTMLAttributes<HTMLDivElement>',
-        description: 'Standard attributes forwarded to the top-level menu panel.',
-      },
-      {
-        name: 'animation',
-        type: 'AnimationTiming | null',
-        default: "{ open: 'base'/'entrance', close: 'fast'/'exit' }",
-        description: 'Open/close timing - motion tokens only, or null to disable.',
-      },
-    ],
   },
   popover: {
     example: `import { useState } from 'react';
@@ -411,48 +207,6 @@ const [open, setOpen] = useState(false);
     <li><button type="button" onClick={() => setOpen(false)}>Move to drafts</button></li>
   </menu>
 </Popover>`,
-    props: [
-      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
-      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
-      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the panel opens or closes.' },
-      {
-        name: 'trigger',
-        type: 'React.ReactElement | null',
-        default: 'null',
-        description: 'Element cloned to toggle the panel; also serves as the anchor.',
-      },
-      {
-        name: 'side',
-        type: "'top' | 'bottom' | 'left' | 'right'",
-        default: "'bottom'",
-        description: 'Preferred side; flips to the opposite side when cramped.',
-      },
-      {
-        name: 'align',
-        type: "'start' | 'center' | 'end'",
-        default: "'start'",
-        description: 'Cross-axis alignment of the panel relative to the trigger.',
-      },
-      {
-        name: 'arrow',
-        type: 'boolean',
-        default: 'false',
-        description: 'Renders a pointing caret tracking the trigger center.',
-      },
-      {
-        name: 'dismissible',
-        type: 'boolean',
-        default: 'true',
-        description: 'Enables Esc and outside-press dismissal.',
-      },
-      { name: 'id', type: 'string', description: 'ID applied to the panel element.' },
-      {
-        name: 'children',
-        type: 'React.ReactNode | ((api: { close: () => void }) => React.ReactNode)',
-        required: true,
-        description: 'The panel content; pass a function to receive the close callback.',
-      },
-    ],
   },
 
   sheet: {
@@ -473,30 +227,5 @@ const [open, setOpen] = useState(false);
     <button type="button" onClick={() => setOpen(false)}>Done</button>
   </div>
 </Sheet>`,
-    props: [
-      { name: 'side', type: "'right' | 'bottom'", default: "'right'", description: 'Edge the sheet slides in from.' },
-      { name: 'open', type: 'boolean', description: 'Controlled open state; omit to stay uncontrolled.' },
-      { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial open state when uncontrolled.' },
-      { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the sheet opens or closes.' },
-      {
-        name: 'trigger',
-        type: 'React.ReactElement | null',
-        default: 'null',
-        description: 'Element cloned to open the sheet.',
-      },
-      {
-        name: 'dismissible',
-        type: 'boolean',
-        default: 'true',
-        description: 'Enables the scrim, Esc key, and drag-to-edge gesture to close.',
-      },
-      { name: 'id', type: 'string', description: 'ID applied to the sheet panel element.' },
-      {
-        name: 'children',
-        type: 'React.ReactNode | ((api: { close: () => void }) => React.ReactNode)',
-        required: true,
-        description: 'The sheet content; pass a function to receive the close callback.',
-      },
-    ],
   },
 };

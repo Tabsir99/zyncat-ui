@@ -8,10 +8,10 @@ export interface PropRow {
   description: string;
 }
 
-export function PropsTable({ rows }: { rows: PropRow[] }) {
+export function PropsTable({ rows, title = 'Props' }: { rows: PropRow[]; title?: string }) {
   return (
-    <section className="props" aria-label="Props">
-      <h2 className="props__title">Props</h2>
+    <section className="props" aria-label={title}>
+      <h2 className="props__title">{title}</h2>
       <div className="props__scroll">
         <table className="props__table">
           <thead>

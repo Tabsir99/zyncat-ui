@@ -11,43 +11,43 @@ Internal module dependencies in `src/`, from [`madge`](https://github.com/pahen/
 
 Modules imported by four or more others. A change here ripples widest.
 
-| In-degree | Module | Part of |
-| --------: | ------ | ------- |
-| 33 | `components/internal/utils/cx.ts` | shared internal machinery |
-| 30 | `dom-props.ts` | library code |
-| 22 | `tokens/motion-tokens.ts` | the token vocabulary |
-| 16 | `components/internal/icon/Icon.tsx` | shared internal machinery |
-| 15 | `components/internal/hooks/use-controllable.ts` | shared internal machinery |
-| 15 | `motion/timing.ts` | the React motion layer |
-| 13 | `engine/index.ts` | the WAAPI engine |
-| 10 | `components/primitives/button/Button.tsx` | a primitive |
-| 10 | `motion/motion-timing.ts` | the React motion layer |
-| 10 | `motion/presence.tsx` | the React motion layer |
-| 9 | `components/internal/icon/IconSlot.tsx` | shared internal machinery |
-| 9 | `components/internal/overlay/layer.tsx` | shared internal machinery |
-| 9 | `motion/presets.ts` | the React motion layer |
-| 8 | `motion/element.tsx` | the React motion layer |
-| 7 | `motion/glide.tsx` | the React motion layer |
-| 6 | `motion/use-motion.ts` | the React motion layer |
-| 5 | `components/composites/date-picker/date-utils.ts` | a composite |
-| 5 | `components/primitives/collapse/Collapse.tsx` | a primitive |
-| 5 | `components/primitives/input/field-chrome.tsx` | a primitive |
-| 4 | `components/composites/date-picker/field-shell.tsx` | a composite |
-| 4 | `components/internal/collection/collection.ts` | shared internal machinery |
-| 4 | `tokens/motion-scale.ts` | the token vocabulary |
+| In-degree | Module                                              | Part of                   |
+| --------: | --------------------------------------------------- | ------------------------- |
+|        33 | `components/internal/utils/cx.ts`                   | shared internal machinery |
+|        30 | `dom-props.ts`                                      | library code              |
+|        22 | `tokens/motion-tokens.ts`                           | the token vocabulary      |
+|        16 | `components/internal/icon/Icon.tsx`                 | shared internal machinery |
+|        15 | `components/internal/hooks/use-controllable.ts`     | shared internal machinery |
+|        15 | `motion/timing.ts`                                  | the React motion layer    |
+|        13 | `engine/index.ts`                                   | the WAAPI engine          |
+|        10 | `components/primitives/button/Button.tsx`           | a primitive               |
+|        10 | `motion/motion-timing.ts`                           | the React motion layer    |
+|        10 | `motion/presence.tsx`                               | the React motion layer    |
+|         9 | `components/internal/icon/IconSlot.tsx`             | shared internal machinery |
+|         9 | `components/internal/overlay/layer.tsx`             | shared internal machinery |
+|         9 | `motion/presets.ts`                                 | the React motion layer    |
+|         8 | `motion/element.tsx`                                | the React motion layer    |
+|         7 | `motion/glide.tsx`                                  | the React motion layer    |
+|         6 | `motion/use-motion.ts`                              | the React motion layer    |
+|         5 | `components/composites/date-picker/date-utils.ts`   | a composite               |
+|         5 | `components/primitives/collapse/Collapse.tsx`       | a primitive               |
+|         5 | `components/primitives/input/field-chrome.tsx`      | a primitive               |
+|         4 | `components/composites/date-picker/field-shell.tsx` | a composite               |
+|         4 | `components/internal/collection/collection.ts`      | shared internal machinery |
+|         4 | `tokens/motion-scale.ts`                            | the token vocabulary      |
 
 ## Shared stylesheets
 
 Stylesheets imported by more than one module. Every other `.css` file is imported
 only by its own component, which is what `pnpm check:css` enforces.
 
-| Importers | Stylesheet |
-| --------: | ---------- |
-| 8 | `components/composites/date-picker/date-picker.css` |
-| 4 | `components/primitives/input/input.css` |
-| 2 | `components/composites/select/select.css` |
-| 2 | `components/internal/icon/icon.css` |
-| 2 | `components/primitives/avatar/avatar.css` |
-| 2 | `components/primitives/badge/badge.css` |
-| 2 | `components/primitives/checkbox/checkbox.css` |
-| 2 | `components/primitives/tag/tag.css` |
+| Importers | Stylesheet                                          |
+| --------: | --------------------------------------------------- |
+|         8 | `components/composites/date-picker/date-picker.css` |
+|         4 | `components/primitives/input/input.css`             |
+|         2 | `components/composites/select/select.css`           |
+|         2 | `components/internal/icon/icon.css`                 |
+|         2 | `components/primitives/avatar/avatar.css`           |
+|         2 | `components/primitives/badge/badge.css`             |
+|         2 | `components/primitives/checkbox/checkbox.css`       |
+|         2 | `components/primitives/tag/tag.css`                 |

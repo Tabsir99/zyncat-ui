@@ -1,4 +1,5 @@
 import madge from 'madge';
+import prettier from 'prettier';
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
 
@@ -182,7 +183,13 @@ function componentSizes() {
   };
 }
 
-const generated = [await importGraph(), componentSizes()];
+const prettierOptions = await prettier.resolveConfig(join(DOCS, 'import-graph.md'));
+const generated = await Promise.all(
+  [await importGraph(), componentSizes()].map(async (doc) => ({
+    ...doc,
+    content: await prettier.format(doc.content, { ...prettierOptions, filepath: join(DOCS, doc.file) }),
+  })),
+);
 const checkOnly = process.argv.includes('--check');
 
 if (checkOnly) {

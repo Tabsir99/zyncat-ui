@@ -230,8 +230,8 @@ export function CheckboxPage() {
           <Checkbox label="Select all" indeterminate onChange={() => {}} />
           <Checkbox
             label="I agree to the terms"
-            invalid={!agree}
-            required
+            error={!agree}
+            htmlProps={{ required: true }}
             checked={agree}
             onChange={(e) => setAgree(e.target.checked)}
           />

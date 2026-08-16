@@ -9,6 +9,7 @@ import * as D from './pages/data';
 import * as T from './pages/datetime';
 import * as O from './pages/overlays';
 import { CONTENT } from './content';
+import { GENERATED_PROPS, GENERATED_TYPES, type NestedType } from './content/props.generated';
 import type { PropRow } from './PropsTable';
 
 export interface Doc {
@@ -18,6 +19,7 @@ export interface Doc {
   Component: ComponentType;
   example?: string;
   props?: PropRow[];
+  types?: NestedType[];
 }
 
 export interface DocGroup {
@@ -245,4 +247,9 @@ export const GROUPS: DocGroup[] = [
   },
 ];
 
-export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs).map((d) => ({ ...d, ...CONTENT[d.slug] }));
+export const DOCS: Doc[] = GROUPS.flatMap((g) => g.docs).map((d) => ({
+  ...d,
+  props: GENERATED_PROPS[d.slug],
+  types: GENERATED_TYPES[d.slug],
+  ...CONTENT[d.slug],
+}));

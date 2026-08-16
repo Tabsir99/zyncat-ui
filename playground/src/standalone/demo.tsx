@@ -88,7 +88,7 @@ export function StandaloneDemo({ healed, extras }: { healed: boolean; extras?: R
         ))}
       </ol>
 
-      <Table<Deploy> label="Deploys" columns={COLUMNS} rows={ROWS} selectable density="compact" />
+      <Table<Deploy> ariaLabel="Deploys" columns={COLUMNS} rows={ROWS} selectable density="compact" />
 
       <p style={{ marginTop: 24 }}>
         <button

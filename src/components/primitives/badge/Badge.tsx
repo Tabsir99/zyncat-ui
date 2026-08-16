@@ -12,7 +12,7 @@ interface BadgeOwnProps {
   tone?: BadgeTone;
   /** Surface. @default 'glass' */
   variant?: 'glass' | 'outline';
-  /** @default 'md' */
+  /** Chip density - `sm` tightens the vertical padding for inline use. @default 'md' */
   size?: 'sm' | 'md';
   /** Leading status dot. */
   dot?: boolean;

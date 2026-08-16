@@ -60,18 +60,37 @@ src/
     dev/         MotionDevtools
   mcp/           the bundled MCP server
 docs/authoring/  the guidance the MCP tools serve
-scripts/         the test runner and the lints
+scripts/         the test runner, the generators and the lints
+  lib/entries.mjs  the one scanner deriving the public entry list from the tree
 tests/           the suite - see TESTING.md for the seven axes
-playground/      a real app for looking at things
+playground/      a real app for looking at things, and the public docs site
+.claude/agents/  zyncat-tester (owns tests), zyncat-docs (owns consumer prose)
 ```
+
+## Delegate the satellite work
+
+Adding a component touches far more than `src/`. Most of it is now either
+generated or owned by an agent, so it does not need to cost you context:
+
+| Work                                                  | Who                           |
+| ----------------------------------------------------- | ----------------------------- |
+| The component, its CSS, its prop JSDoc, its demo page | you                           |
+| Tests, and the `TESTING.md` ownership row             | the **`zyncat-tester`** agent |
+| `llms.txt`, the registry row, the canonical example   | the **`zyncat-docs`** agent   |
+| exports map, playground paths, prop tables, repo docs | `pnpm sync`                   |
+
+Never hand-write a prop table: the JSDoc on the public props interface is the
+single source, and `pnpm docs:props` reads it back out of `dist/*.d.ts` into the
+docs site. It fails on any public prop with no JSDoc.
 
 ## Commands
 
 ```bash
-pnpm typecheck
-pnpm exec prettier --write src tests
-pnpm check:css               # every rendered class is reachable from its module
-pnpm check:authoring         # docs/authoring still matches the code
-pnpm build && pnpm check:llms   # check:llms needs dist/
+pnpm sync                    # regenerate every manifest and generated doc
+pnpm verify                  # the whole gate, in order, ending in the suite
 node scripts/test.mjs        # add a filename to run one file
 ```
+
+While iterating, the pieces of `verify` run alone: `typecheck`, `check:css`,
+`check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`,
+`check:props`, and `build && check:llms` (that one needs `dist/`).

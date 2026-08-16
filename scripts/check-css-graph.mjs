@@ -15,8 +15,8 @@
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
+import { ROOT, publicEntries } from './lib/entries.mjs';
 
-const ROOT = resolve(import.meta.dirname, '..');
 const COMPONENTS = join(ROOT, 'src/components');
 
 const walk = (dir, ext) =>
@@ -38,7 +38,8 @@ for (const file of walk(COMPONENTS, ['.css'])) {
 }
 /* classes served app-wide by the base manifest (tokens + glass) - always satisfied */
 const globalClasses = new Set();
-for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(/@import url\('([^']+)'\)/g)) {
+const MANIFEST_IMPORT = /@import\s+(?:url\()?['"]([^'"]+)['"]/g;
+for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(MANIFEST_IMPORT)) {
   const f = resolve(join(ROOT, 'src'), m[1]);
   if (!existsSync(f)) continue;
   const css = stripComments(readFileSync(f, 'utf8'));
@@ -100,11 +101,7 @@ function renderedClasses(src) {
 }
 
 /* tsup entries = the public subpaths that must each be style-complete */
-const tsupConfig = readFileSync(join(ROOT, 'tsup.config.ts'), 'utf8');
-const entries = [...tsupConfig.matchAll(/['"]?([\w-]+)['"]?:\s*'(src\/[^']+)'/g)].map((m) => ({
-  name: m[1],
-  file: join(ROOT, m[2]),
-}));
+const entries = Object.entries(publicEntries()).map(([name, source]) => ({ name, file: join(ROOT, source) }));
 
 let violations = 0;
 for (const entry of entries) {

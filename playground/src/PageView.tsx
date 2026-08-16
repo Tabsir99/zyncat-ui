@@ -10,7 +10,7 @@ import { PropsTable } from './PropsTable';
 const SITE = 'https://ui.zyncat.app';
 
 export function PageView({ doc }: { doc: Doc }) {
-  const { slug, label, blurb, Component, example, props } = doc;
+  const { slug, label, blurb, Component, example, props, types } = doc;
   const title = `${label} - Zyncat UI`;
   const url = `${SITE}/${slug}`;
   return (
@@ -37,6 +37,9 @@ export function PageView({ doc }: { doc: Doc }) {
       </div>
 
       {props && props.length > 0 ? <PropsTable rows={props} /> : null}
+      {types?.map((type) => (
+        <PropsTable key={type.name} rows={type.rows} title={type.name} />
+      ))}
     </article>
   );
 }

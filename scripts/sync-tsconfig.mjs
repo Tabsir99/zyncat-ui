@@ -1,52 +1,27 @@
-import { readdirSync, statSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import prettier from 'prettier';
+import { ROOT, publicEntries } from './lib/entries.mjs';
 
-function toKebab(name) {
-  return name
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-    .toLowerCase();
-}
+const tsconfigPath = join(ROOT, 'playground/tsconfig.json');
+const current = readFileSync(tsconfigPath, 'utf8');
+const tsconfig = JSON.parse(current);
 
-const NAME_OVERRIDES = { DateTimeField: 'datetime-field' };
+const paths = { '@zyncat/ui/styles.css': ['../src/styles.css'] };
+for (const [name, path] of Object.entries(publicEntries())) paths[`@zyncat/ui/${name}`] = [`../${path}`];
 
-const entries = {
-  'toast-store': 'components/composites/toast/toast-store.ts',
-  'motion-tokens': 'tokens/motion-tokens.ts',
-  'motion-devtools': 'components/dev/MotionDevtools.tsx',
-  glide: 'motion/glide.tsx',
-};
+tsconfig.compilerOptions.paths = paths;
 
-const baseDir = join(process.cwd(), 'src/components');
-for (const tier of ['primitives', 'composites', 'compound']) {
-  const tierDir = join(baseDir, tier);
-  let dirs;
-  try {
-    dirs = readdirSync(tierDir);
-  } catch {
-    continue;
+const options = await prettier.resolveConfig(tsconfigPath);
+const next = await prettier.format(JSON.stringify(tsconfig), { ...options, filepath: tsconfigPath });
+
+if (process.argv.includes('--check')) {
+  if (next !== current) {
+    console.error('✗ playground/tsconfig.json does not map every subpath - run "pnpm sync:tsconfig".');
+    process.exit(1);
   }
-  for (const comp of dirs) {
-    const compDir = join(tierDir, comp);
-    if (!statSync(compDir).isDirectory()) continue;
-    for (const file of readdirSync(compDir)) {
-      if (!file.endsWith('.tsx') || !/^[A-Z]/.test(file)) continue;
-      const stem = file.replace('.tsx', '');
-      entries[NAME_OVERRIDES[stem] ?? toKebab(stem)] = `components/${tier}/${comp}/${file}`;
-    }
-  }
+  console.log(`sync-tsconfig --check: ${Object.keys(paths).length} subpaths mapped.`);
+} else {
+  writeFileSync(tsconfigPath, next);
+  console.log(`sync-tsconfig: playground/tsconfig.json now maps ${Object.keys(paths).length} subpaths.`);
 }
-
-const tsconfigPath = join(process.cwd(), 'playground/tsconfig.json');
-const tsconfig = JSON.parse(readFileSync(tsconfigPath, 'utf8'));
-
-const newPaths = { '@zyncat/ui/styles.css': ['../src/styles.css'] };
-
-for (const [name, path] of Object.entries(entries)) {
-  newPaths[`@zyncat/ui/${name}`] = [`../src/${path}`];
-}
-
-tsconfig.compilerOptions.paths = newPaths;
-
-writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2) + '\n');
-console.log('Playground tsconfig.json updated dynamically.');

@@ -13,10 +13,6 @@
     "isolatedModules": true,
     "paths": {
       "@zyncat/ui/styles.css": ["../src/styles.css"],
-      "@zyncat/ui/toast-store": ["../src/components/composites/toast/toast-store.ts"],
-      "@zyncat/ui/motion-tokens": ["../src/tokens/motion-tokens.ts"],
-      "@zyncat/ui/motion-devtools": ["../src/components/dev/MotionDevtools.tsx"],
-      "@zyncat/ui/glide": ["../src/motion/glide.tsx"],
       "@zyncat/ui/avatar": ["../src/components/primitives/avatar/Avatar.tsx"],
       "@zyncat/ui/avatar-group": ["../src/components/primitives/avatar/AvatarGroup.tsx"],
       "@zyncat/ui/badge": ["../src/components/primitives/badge/Badge.tsx"],
@@ -39,6 +35,8 @@
       "@zyncat/ui/datetime-field": ["../src/components/composites/date-picker/DateTimeField.tsx"],
       "@zyncat/ui/time-field": ["../src/components/composites/date-picker/TimeField.tsx"],
       "@zyncat/ui/dialog": ["../src/components/composites/dialog/Dialog.tsx"],
+      "@zyncat/ui/dropdown": ["../src/components/composites/dropdown/Dropdown.tsx"],
+      "@zyncat/ui/modal": ["../src/components/composites/modal/Modal.tsx"],
       "@zyncat/ui/pagination": ["../src/components/composites/pagination/Pagination.tsx"],
       "@zyncat/ui/popover": ["../src/components/composites/popover/Popover.tsx"],
       "@zyncat/ui/multi-select": ["../src/components/composites/select/MultiSelect.tsx"],
@@ -47,7 +45,11 @@
       "@zyncat/ui/table": ["../src/components/composites/table/Table.tsx"],
       "@zyncat/ui/tabs": ["../src/components/composites/tabs/Tabs.tsx"],
       "@zyncat/ui/toast": ["../src/components/composites/toast/Toast.tsx"],
-      "@zyncat/ui/tooltip": ["../src/components/composites/tooltip/Tooltip.tsx"]
+      "@zyncat/ui/tooltip": ["../src/components/composites/tooltip/Tooltip.tsx"],
+      "@zyncat/ui/toast-store": ["../src/components/composites/toast/toast-store.ts"],
+      "@zyncat/ui/motion-tokens": ["../src/tokens/motion-tokens.ts"],
+      "@zyncat/ui/motion-devtools": ["../src/components/dev/MotionDevtools.tsx"],
+      "@zyncat/ui/glide": ["../src/motion/glide.tsx"]
     }
   },
   "include": ["src", "vite.config.ts"]

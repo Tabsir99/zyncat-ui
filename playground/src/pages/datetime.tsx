@@ -155,7 +155,7 @@ export function TabsPage() {
       <div className="stack" style={{ width: '100%', maxWidth: 560 }}>
         <Tabs
           name="views"
-          label="Workspace views"
+          ariaLabel="Workspace views"
           value={view}
           onChange={(v, d) => {
             setView(v);

@@ -176,7 +176,7 @@ export function ThemeBand() {
               </Badge>
             </div>
             <Tabs
-              label="Settings sections"
+              ariaLabel="Settings sections"
               items={[
                 { value: 'general', label: 'General' },
                 { value: 'members', label: 'Members', count: 12 },
