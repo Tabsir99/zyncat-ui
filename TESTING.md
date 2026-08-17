@@ -182,6 +182,7 @@ Run a single file while iterating. The full browser suite is for the end.
 | Select          | Select, MultiSelect, listbox, typeahead                                    | `select-`         |
 | Dropdown        | Dropdown, the menu keyboard contract, submenus                             | `dropdown-`       |
 | Date            | DateField, DateTimeField, DateRangeField, TimeField, calendar, range panel | `date-`           |
+| Emoji picker    | EmojiPickerPanel, the emoji grid, word search, the category rail, recents  | `emoji-picker-`   |
 | Table           | Table, Pagination                                                          | `table-`          |
 | Toast           | Toast, toast store, queueing, stacking, timers                             | `toast-`          |
 | Motion surfaces | Tabs, Collapse, Alert, Tooltip                                             | `motion-surface-` |
