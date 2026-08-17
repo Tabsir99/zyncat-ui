@@ -12,6 +12,10 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "paths": {
+      "react": ["../node_modules/@types/react"],
+      "react/*": ["../node_modules/@types/react/*"],
+      "react-dom": ["../node_modules/@types/react-dom"],
+      "react-dom/*": ["../node_modules/@types/react-dom/*"],
       "@zyncat/ui/styles.css": ["../src/styles.css"],
       "@zyncat/ui/avatar": ["../src/components/primitives/avatar/Avatar.tsx"],
       "@zyncat/ui/avatar-group": ["../src/components/primitives/avatar/AvatarGroup.tsx"],

@@ -7,7 +7,13 @@ const tsconfigPath = join(ROOT, 'playground/tsconfig.json');
 const current = readFileSync(tsconfigPath, 'utf8');
 const tsconfig = JSON.parse(current);
 
-const paths = { '@zyncat/ui/styles.css': ['../src/styles.css'] };
+const paths = {
+  react: ['../node_modules/@types/react'],
+  'react/*': ['../node_modules/@types/react/*'],
+  'react-dom': ['../node_modules/@types/react-dom'],
+  'react-dom/*': ['../node_modules/@types/react-dom/*'],
+  '@zyncat/ui/styles.css': ['../src/styles.css'],
+};
 for (const [name, path] of Object.entries(publicEntries())) paths[`@zyncat/ui/${name}`] = [`../${path}`];
 
 tsconfig.compilerOptions.paths = paths;
