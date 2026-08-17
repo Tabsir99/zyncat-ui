@@ -1,27 +1,17 @@
 'use client';
 
 import './date-picker.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Popover } from '../popover/Popover';
 import { Sheet } from '../sheet/Sheet';
 import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import { useMediaQuery } from '../../internal/hooks/use-media-query';
 import { DrpPanel, drpRangeText, type DateRange } from './range-panel';
 
 export type { DateRange };
 
-function useNarrowViewport(query?: string): boolean {
-  const q = query || '(max-width: 640px)';
-  const [narrow, setNarrow] = useState(() => (typeof matchMedia === 'function' ? matchMedia(q).matches : false));
-  useEffect(() => {
-    const mq = matchMedia(q);
-    const fn = (e: MediaQueryListEvent) => setNarrow(e.matches);
-    mq.addEventListener('change', fn);
-    setNarrow(mq.matches);
-    return () => mq.removeEventListener('change', fn);
-  }, [q]);
-  return narrow;
-}
+const NARROW_VIEWPORT = '(max-width: 640px)';
 
 export interface DateRangeFieldProps extends DateFieldBaseProps {
   /** Controlled value - both endpoints, or null when empty. */
@@ -59,7 +49,7 @@ export function DateRangeField({
 }: DateRangeFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
-  const narrow = useNarrowViewport();
+  const narrow = useMediaQuery(NARROW_VIEWPORT);
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const display = val && val.start && val.end ? drpRangeText(val.start, val.end) : null;
