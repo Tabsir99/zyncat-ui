@@ -1,15 +1,19 @@
 'use client';
 
-import '../styles.css';
+import './styles.css';
 import { useImperativeHandle, useMemo, useState, type ReactElement, type Ref } from 'react';
-import { Popover, type PopoverProps, type VirtualAnchor } from '../../popover/Popover';
-import { Sheet, type SheetProps } from '../../sheet/Sheet';
-import { TextField } from '../../../primitives/input/TextField';
-import { Icon } from '../../../internal/icon/Icon';
-import { useMediaQuery } from '../../../internal/hooks/use-media-query';
-import { useEmojiPicker, type EmojiPickerStore } from './useEmojiPicker';
-import { CategoryBar } from './category-bar';
-import type { GetEmojiUrl } from '../types';
+import { Popover, type PopoverProps, type VirtualAnchor } from '../popover/Popover';
+import { Sheet, type SheetProps } from '../sheet/Sheet';
+import { TextField } from '../../primitives/input/TextField';
+import { Icon } from '../../internal/icon/Icon';
+import { useMediaQuery } from '../../internal/hooks/use-media-query';
+import { useEmojiPicker, type EmojiPickerStore } from './react/useEmojiPicker';
+import { CategoryBar } from './react/category-bar';
+import type { GetEmojiUrl } from './types';
+
+export { loadEmojiData, onEmojiDataLoaded, type EmojiData, type Emoji } from './data';
+export { getEmojiUrl } from './getEmojiUrl';
+export type { GetEmojiUrl, EmojiUrlSource } from './types';
 
 export const SHEET_BREAKPOINT = '(max-width: 40rem)';
 
@@ -18,13 +22,17 @@ type Forwarded = 'open' | 'onOpenChange' | 'trigger' | 'children' | 'htmlProps';
 export type EmojiPickerHandle = Pick<EmojiPickerStore, 'renderAll' | 'renderFiltered' | 'handleKey' | 'selectFocused'>;
 
 export interface EmojiPickerPanelProps {
+  /** Controlled open state - the panel has no uncontrolled mode. */
   open: boolean;
+  /** Fires whenever the panel asks to open or close: trigger press, Esc, outside press, sheet drag. */
   onOpenChange: (open: boolean) => void;
+  /** Fires on pick, with the primary shortcode (`smile`, no colons) and the emoji's hex id. */
   onSelect: (shortcode: string, hexId: string) => void;
+  /** Builds the image URL for one emoji at one call site. Pass the bundled `getEmojiUrl` to use Twemoji and Noto. */
   getEmojiUrl: GetEmojiUrl;
   /** Element that both opens the panel and anchors it, when there is no anchor. */
   trigger?: ReactElement | null;
-  /** Gap between the anchor and the panel, in pixels. */
+  /** Gap in pixels between a custom `popoverProps.anchor` and the panel. Ignored when the panel anchors to its trigger. */
   offset?: number;
   /** Render the panel's own search field. Always on in sheet mode, where the
    *  sheet traps focus and an outside query can no longer reach the panel. */
@@ -37,7 +45,9 @@ export interface EmojiPickerPanelProps {
   popoverProps?: Omit<PopoverProps, Forwarded>;
   /** Narrow-viewport docking — `container`, `dismissible`, and every other Sheet knob. */
   sheetProps?: Omit<SheetProps, Forwarded | 'side'>;
+  /** Extra class(es) merged onto the panel frame. */
   className?: string;
+  /** Imperative handle - drive the grid from your own field: `handleKey`, `selectFocused`, `renderAll`, `renderFiltered`. */
   ref?: Ref<EmojiPickerHandle>;
 }
 

@@ -226,6 +226,11 @@
       "types": "./dist/glide.d.ts",
       "import": "./dist/glide.js"
     },
+    "./emoji-picker": {
+      "source": "./src/components/composites/emoji-picker/EmojiPickerPanel.tsx",
+      "types": "./dist/emoji-picker.d.ts",
+      "import": "./dist/emoji-picker.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

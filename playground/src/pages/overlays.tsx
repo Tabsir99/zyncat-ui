@@ -8,13 +8,8 @@ import { Sheet } from '@zyncat/ui/sheet';
 import { Button } from '@zyncat/ui/button';
 import { TextField } from '@zyncat/ui/text-field';
 import { toast } from '@zyncat/ui/toast';
-import {
-  EmojiPickerPanel,
-  type EmojiPickerHandle,
-} from '../../../src/components/composites/emoji-picker/react/EmojiPickerPanel';
+import { EmojiPickerPanel, loadEmojiData, getEmojiUrl, type EmojiPickerHandle } from '@zyncat/ui/emoji-picker';
 import { caretAnchor } from '../caret-anchor';
-import { loadEmojiData } from '../../../src/components/composites/emoji-picker/data';
-import { getEmojiUrl } from '../../../src/components/composites/emoji-picker/getEmojiUrl';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
 
@@ -617,7 +612,6 @@ export function EmojiPickerPage() {
           }}
           getEmojiUrl={getEmojiUrl}
           search
-          offset={6}
           popoverProps={{ side: 'bottom', align: 'start' }}
           trigger={
             <Button variant="secondary">
@@ -640,7 +634,6 @@ export function EmojiPickerPage() {
           onSelect={select}
           getEmojiUrl={getEmojiUrl}
           search
-          offset={4}
           popoverProps={{ side: 'right', align: 'center', arrow: true }}
           trigger={<Button variant="secondary">Pick an icon</Button>}
         />
