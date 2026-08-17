@@ -1,14 +1,55 @@
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Alert } from '@zyncat/ui/alert';
 import { Tooltip } from '@zyncat/ui/tooltip';
 import { Dialog } from '@zyncat/ui/dialog';
-import { Popover } from '@zyncat/ui/popover';
+import { Popover, type VirtualAnchor } from '@zyncat/ui/popover';
 import { Dropdown, type DropdownGroup } from '@zyncat/ui/dropdown';
 import { Sheet } from '@zyncat/ui/sheet';
 import { Button } from '@zyncat/ui/button';
+import { TextField } from '@zyncat/ui/text-field';
 import { toast } from '@zyncat/ui/toast';
+import {
+  EmojiPickerPanel,
+  type EmojiPickerHandle,
+} from '../../../src/components/composites/emoji-picker/react/EmojiPickerPanel';
+import { caretAnchor } from '../caret-anchor';
+import { loadEmojiData } from '../../../src/components/composites/emoji-picker/data';
+import { getEmojiUrl } from '../../../src/components/composites/emoji-picker/getEmojiUrl';
 import { Demo } from '../kit';
 import { Icon } from '../icon';
+
+const EMOJI_DATA_URL = '/emojis.json';
+
+function useEmojiData() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let live = true;
+    loadEmojiData(EMOJI_DATA_URL)
+      .then(() => live && setReady(true))
+      .catch(() => live && toast.error('Could not load the emoji dataset'));
+    return () => {
+      live = false;
+    };
+  }, []);
+  return ready;
+}
+
+function Picked({ shortcode, hexId }: { shortcode: string; hexId: string }) {
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 'var(--space-2)',
+        font: 'var(--type-body)',
+        color: 'var(--text-muted)',
+      }}
+    >
+      <img src={getEmojiUrl(hexId, 'inline')} alt="" width={20} height={20} />
+      <code>:{shortcode}:</code>
+    </span>
+  );
+}
 
 export function AlertPage() {
   return (
@@ -457,6 +498,152 @@ export function SheetPage() {
             </Button>
           </div>
         </Sheet>
+      </Demo>
+    </>
+  );
+}
+
+const EMOJI_TRIGGER = /(?:^|\s):([a-z0-9_+-]*)$/;
+
+interface EmojiCompletion {
+  query: string;
+  start: number;
+  end: number;
+}
+
+function readCompletion(input: HTMLInputElement): EmojiCompletion | null {
+  const end = input.selectionStart;
+  if (end === null || end !== input.selectionEnd) return null;
+  const match = EMOJI_TRIGGER.exec(input.value.slice(0, end));
+  return match ? { query: match[1], start: end - match[1].length - 1, end } : null;
+}
+
+function InlineEmojiField({ onPick }: { onPick: (shortcode: string, hexId: string) => void }) {
+  const fieldRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<EmojiPickerHandle>(null);
+  const pendingCaret = useRef<number | null>(null);
+  const [value, setValue] = useState('');
+  const [completion, setCompletion] = useState<EmojiCompletion | null>(null);
+  const [anchor, setAnchor] = useState<VirtualAnchor | null>(null);
+
+  useLayoutEffect(() => {
+    const at = pendingCaret.current;
+    const input = fieldRef.current?.querySelector('input');
+    if (at === null || !input) return;
+    pendingCaret.current = null;
+    input.focus();
+    input.setSelectionRange(at, at);
+  }, [value]);
+
+  const sync = (input: HTMLInputElement) => {
+    const next = readCompletion(input);
+    setCompletion(next);
+    setAnchor(next && caretAnchor(input, next.end));
+  };
+
+  const insert = (shortcode: string, hexId: string) => {
+    if (!completion) return;
+    const text = `:${shortcode}: `;
+    setValue(value.slice(0, completion.start) + text + value.slice(completion.end));
+    pendingCaret.current = completion.start + text.length;
+    setCompletion(null);
+    onPick(shortcode, hexId);
+  };
+
+  return (
+    <div className="stack" style={{ gap: 'var(--space-3)', width: '100%', maxWidth: 420 }}>
+      <div ref={fieldRef}>
+        <TextField
+          label="Message"
+          placeholder="Say something, then : to complete an emoji"
+          value={value}
+          onChange={(e) => {
+            setValue(e.currentTarget.value);
+            sync(e.currentTarget);
+          }}
+          onKeyDown={(e) => {
+            if (!completion) return;
+            if (e.key.startsWith('Arrow') || e.key === 'Enter') panelRef.current?.handleKey(e.nativeEvent);
+          }}
+          htmlProps={{ onSelect: (e) => sync(e.currentTarget), autoComplete: 'off', spellCheck: false }}
+        />
+      </div>
+      <EmojiPickerPanel
+        ref={panelRef}
+        open={completion !== null}
+        onOpenChange={(next) => {
+          if (!next) setCompletion(null);
+        }}
+        onSelect={insert}
+        getEmojiUrl={getEmojiUrl}
+        query={completion?.query ?? ''}
+        offset={6}
+        popoverProps={{ anchor, side: 'bottom', align: 'start' }}
+      />
+    </div>
+  );
+}
+
+export function EmojiPickerPage() {
+  const ready = useEmojiData();
+  const [ownSearchOpen, setOwnSearchOpen] = useState(false);
+  const [arrowOpen, setArrowOpen] = useState(false);
+  const [picked, setPicked] = useState<{ shortcode: string; hexId: string } | null>(null);
+
+  if (!ready) {
+    return (
+      <Demo label="loading the dataset">
+        <Button variant="secondary" disabled>
+          Loading emoji…
+        </Button>
+      </Demo>
+    );
+  }
+
+  const select = (shortcode: string, hexId: string) => {
+    setPicked({ shortcode, hexId });
+    toast(`Picked :${shortcode}:`);
+  };
+
+  return (
+    <>
+      <Demo label="popover - the panel owns its search">
+        <EmojiPickerPanel
+          open={ownSearchOpen}
+          onOpenChange={setOwnSearchOpen}
+          onSelect={(shortcode, hexId) => {
+            select(shortcode, hexId);
+            setOwnSearchOpen(false);
+          }}
+          getEmojiUrl={getEmojiUrl}
+          search
+          offset={6}
+          popoverProps={{ side: 'bottom', align: 'start' }}
+          trigger={
+            <Button variant="secondary">
+              Add reaction
+              <Icon name="caret-down" size="sm" />
+            </Button>
+          }
+        />
+        {picked ? <Picked shortcode={picked.shortcode} hexId={picked.hexId} /> : null}
+      </Demo>
+
+      <Demo label="typed ':' completion - query driven from outside, anchored to the caret" fill>
+        <InlineEmojiField onPick={select} />
+      </Demo>
+
+      <Demo label="arrow, anchored right">
+        <EmojiPickerPanel
+          open={arrowOpen}
+          onOpenChange={setArrowOpen}
+          onSelect={select}
+          getEmojiUrl={getEmojiUrl}
+          search
+          offset={4}
+          popoverProps={{ side: 'right', align: 'center', arrow: true }}
+          trigger={<Button variant="secondary">Pick an icon</Button>}
+        />
       </Demo>
     </>
   );

@@ -243,6 +243,12 @@ export const GROUPS: DocGroup[] = [
         blurb: 'Modal panel docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',
         Component: O.SheetPage,
       },
+      {
+        slug: 'emoji-picker',
+        label: 'EmojiPicker',
+        blurb: 'Vanilla-DOM emoji panel in a popover - scrollspy rail, word search, gliding focus marker.',
+        Component: O.EmojiPickerPage,
+      },
     ],
   },
 ];
