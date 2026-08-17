@@ -23,7 +23,10 @@ export default defineConfig({
   resolve: { alias: publishedSubpathAliases() },
   test: {
     projects: [
-      { extends: true, test: { name: 'unit', environment: 'node', include: NODE_INCLUDE } },
+      {
+        extends: true,
+        test: { name: 'unit', environment: 'node', include: NODE_INCLUDE, sequence: { groupOrder: 0 } },
+      },
       {
         extends: true,
         test: {
@@ -32,8 +35,8 @@ export default defineConfig({
           setupFiles: ['./tests/setup.browser.ts'],
           testTimeout: 15_000,
           hookTimeout: 15_000,
-          fileParallelism: false,
-          maxWorkers: 1,
+          sequence: { groupOrder: 1 },
+          maxWorkers: 4,
           browser: {
             enabled: true,
             headless: true,
