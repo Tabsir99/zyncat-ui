@@ -3,6 +3,8 @@
 import { useLayoutEffect, type RefObject } from 'react';
 import { tokenPx } from '../utils/token-px';
 
+const GLIDE = 'left var(--duration-fast) var(--ease-standard), top var(--duration-fast) var(--ease-standard)';
+
 export interface VirtualAnchor {
   getBoundingClientRect(): DOMRect;
 }
@@ -18,7 +20,7 @@ interface UseAnchorPositionProps {
 
 export function useAnchorPosition({ side, align, arrow, anchor, triggerRef, panelRef }: UseAnchorPositionProps) {
   useLayoutEffect(() => {
-    const place = () => {
+    const place = (moved: boolean) => {
       const t = anchor ?? triggerRef.current;
       const p = panelRef.current;
       if (!t || !p) return;
@@ -70,8 +72,13 @@ export function useAnchorPosition({ side, align, arrow, anchor, triggerRef, pane
         x = Math.max(Math.min(x, vw - pw - edge), edge);
       }
 
-      p.style.left = Math.round(x) + 'px';
-      p.style.top = Math.round(y) + 'px';
+      const left = Math.round(x) + 'px';
+      const top = Math.round(y) + 'px';
+      if (p.style.left !== left || p.style.top !== top) {
+        p.style.transition = moved && p.style.left ? GLIDE : '';
+        p.style.left = left;
+        p.style.top = top;
+      }
 
       p.setAttribute('data-side', s);
       p.setAttribute('data-align', align);
@@ -91,17 +98,19 @@ export function useAnchorPosition({ side, align, arrow, anchor, triggerRef, pane
       }
     };
 
-    place();
+    place(true);
 
-    window.addEventListener('scroll', place, true);
-    window.addEventListener('resize', place);
+    const track = () => place(false);
 
-    const ro = new ResizeObserver(place);
+    window.addEventListener('scroll', track, true);
+    window.addEventListener('resize', track);
+
+    const ro = new ResizeObserver(track);
     ro.observe(panelRef.current!);
 
     return () => {
-      window.removeEventListener('scroll', place, true);
-      window.removeEventListener('resize', place);
+      window.removeEventListener('scroll', track, true);
+      window.removeEventListener('resize', track);
       ro.disconnect();
     };
   }, [side, align, arrow, anchor]); // eslint-disable-line react-hooks/exhaustive-deps
