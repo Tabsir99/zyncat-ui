@@ -1370,6 +1370,73 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'The ENTIRE surface - paint AND semantics. Drive dismissal with `open`/`onOpenChange`.',
     },
   ],
+  'emoji-picker': [
+    {
+      name: 'open',
+      type: 'boolean',
+      required: true,
+      description: 'Controlled open state - the panel has no uncontrolled mode.',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      required: true,
+      description: 'Fires whenever the panel asks to open or close: trigger press, Esc, outside press, sheet drag.',
+    },
+    {
+      name: 'onSelect',
+      type: '(shortcode: string, hexId: string) => void',
+      required: true,
+      description: "Fires on pick, with the primary shortcode (`smile`, no colons) and the emoji's hex id.",
+    },
+    {
+      name: 'getEmojiUrl',
+      type: 'GetEmojiUrl',
+      required: true,
+      description:
+        'Builds the image URL for one emoji at one call site. Pass the bundled `getEmojiUrl` to use Twemoji and Noto.',
+    },
+    {
+      name: 'trigger',
+      type: 'ReactElement | null',
+      description: 'Element that both opens the panel and anchors it, when there is no anchor.',
+    },
+    {
+      name: 'offset',
+      type: 'number',
+      description:
+        'Gap in pixels between a custom `popoverProps.anchor` and the panel. Ignored when the panel anchors to its trigger.',
+    },
+    {
+      name: 'search',
+      type: 'boolean',
+      description:
+        "Render the panel's own search field. Always on in sheet mode, where the sheet traps focus and an outside query can no longer reach the panel.",
+    },
+    {
+      name: 'query',
+      type: 'string',
+      description: 'Drive the results from outside — a `:` chip in a document, your own input.',
+    },
+    { name: 'breakpoint', type: 'string', description: 'Viewport at which the panel becomes a bottom sheet.' },
+    {
+      name: 'popoverProps',
+      type: 'Omit<PopoverProps, Forwarded>',
+      description: 'Desktop placement — `anchor`, `side`, `align`, `arrow`, and every other Popover knob.',
+    },
+    {
+      name: 'sheetProps',
+      type: "Omit<SheetProps, Forwarded | 'side'>",
+      description: 'Narrow-viewport docking — `container`, `dismissible`, and every other Sheet knob.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the panel frame.' },
+    {
+      name: 'ref',
+      type: 'Ref<EmojiPickerHandle>',
+      description:
+        'Imperative handle - drive the grid from your own field: `handleKey`, `selectFocused`, `renderAll`, `renderFiltered`.',
+    },
+  ],
 };
 
 export const GENERATED_TYPES: Record<string, NestedType[]> = {
@@ -1650,6 +1717,38 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           name: 'onSelect',
           type: '() => void',
           description: "Fires when this row commits, before the menu's own `onSelect`.",
+        },
+      ],
+    },
+  ],
+  'emoji-picker': [
+    {
+      name: 'EmojiPickerHandle',
+      rows: [
+        {
+          name: 'renderAll',
+          type: '() => void',
+          required: true,
+          description: 'Redraw the full category grid, dropping whatever query was showing.',
+        },
+        {
+          name: 'renderFiltered',
+          type: '(next: string) => void',
+          required: true,
+          description: 'Redraw the grid as the ranked results for `next`, with the first hit already marked.',
+        },
+        {
+          name: 'handleKey',
+          type: '(event: KeyboardEvent) => boolean',
+          required: true,
+          description:
+            'Feed a key event from your own field into the grid - arrows move, Enter picks. Returns true when the grid consumed the key, so you can leave the rest to your input.',
+        },
+        {
+          name: 'selectFocused',
+          type: '() => void',
+          required: true,
+          description: 'Commit the tile the marker is on, exactly as a click on it would.',
         },
       ],
     },

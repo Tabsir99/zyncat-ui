@@ -15,11 +15,11 @@ Modules imported by four or more others. A change here ripples widest.
 | --------: | --------------------------------------------------- | ------------------------- |
 |        33 | `components/internal/utils/cx.ts`                   | shared internal machinery |
 |        30 | `dom-props.ts`                                      | library code              |
-|        25 | `tokens/motion-tokens.ts`                           | the token vocabulary      |
+|        24 | `tokens/motion-tokens.ts`                           | the token vocabulary      |
 |        17 | `components/internal/icon/Icon.tsx`                 | shared internal machinery |
 |        15 | `components/internal/hooks/use-controllable.ts`     | shared internal machinery |
-|        15 | `engine/index.ts`                                   | the WAAPI engine          |
 |        15 | `motion/timing.ts`                                  | the React motion layer    |
+|        14 | `engine/index.ts`                                   | the WAAPI engine          |
 |        10 | `components/primitives/button/Button.tsx`           | a primitive               |
 |        10 | `motion/motion-timing.ts`                           | the React motion layer    |
 |        10 | `motion/presence.tsx`                               | the React motion layer    |
@@ -31,10 +31,10 @@ Modules imported by four or more others. A change here ripples widest.
 |         6 | `components/composites/emoji-picker/types.ts`       | a composite               |
 |         6 | `motion/use-motion.ts`                              | the React motion layer    |
 |         5 | `components/composites/date-picker/date-utils.ts`   | a composite               |
+|         5 | `components/composites/emoji-picker/data.ts`        | a composite               |
 |         5 | `components/primitives/collapse/Collapse.tsx`       | a primitive               |
 |         5 | `components/primitives/input/field-chrome.tsx`      | a primitive               |
 |         4 | `components/composites/date-picker/field-shell.tsx` | a composite               |
-|         4 | `components/composites/emoji-picker/data.ts`        | a composite               |
 |         4 | `components/composites/popover/Popover.tsx`         | a composite               |
 |         4 | `components/internal/collection/collection.ts`      | shared internal machinery |
 |         4 | `tokens/motion-scale.ts`                            | the token vocabulary      |
