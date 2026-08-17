@@ -221,6 +221,27 @@ Sheet - @zyncat/ui/sheet
   <Sheet side="right" trigger={<Button>Filters</Button>}><div role="dialog">...</div></Sheet>
   <Sheet side="bottom" container={panel} open={o} onOpenChange={setO}><div role="dialog">...</div></Sheet>
 
+EmojiPickerPanel - @zyncat/ui/emoji-picker
+  Searchable emoji panel - grid, scrollspy category rail, recents kept in localStorage - that lives in
+  a Popover and becomes a bottom Sheet under (max-width: 40rem); breakpoint moves that line.
+  The dataset is NOT bundled: call loadEmojiData(url | EmojiData) once before the panel first opens
+  or it throws - onEmojiDataLoaded(cb) fires when it lands. getEmojiUrl is REQUIRED: pass the
+  exported one for Twemoji tiles plus animated Noto category icons, or point it at your own host.
+  Open state is controlled only; onSelect(shortcode, hexId) gives the primary shortcode, no colons.
+  Two shapes. search renders the panel's own field, opened from trigger - it is forced on in sheet
+  mode, where the sheet traps focus and an outside query can no longer reach the grid. query drives
+  the grid from an input YOU own - a ":" completion, a chat composer: point popoverProps.anchor at
+  the caret rect and forward keys through the ref, where handleKey(event) returns true when the grid
+  consumed the arrow or Enter, and selectFocused / renderAll / renderFiltered drive it directly.
+  Matching is word-based, not fuzzy: every typed word must hit a name, shortcode or tag.
+  Also offset (gap from the anchor), popoverProps (side, align, arrow), sheetProps, className.
+  import { EmojiPickerPanel, loadEmojiData, getEmojiUrl } from '@zyncat/ui/emoji-picker';
+  loadEmojiData('/emojis.json');   // once, before the panel first opens
+  <EmojiPickerPanel open={open} onOpenChange={setOpen} onSelect={addReaction} getEmojiUrl={getEmojiUrl} search
+    popoverProps={{ side: 'bottom', align: 'start' }} trigger={<Button variant="secondary">Add reaction</Button>} />
+  <EmojiPickerPanel ref={panel} open={!!completion} onOpenChange={dismiss} onSelect={insert} getEmojiUrl={getEmojiUrl}
+    query={completion.query} offset={6} popoverProps={{ anchor: caretRect, side: 'bottom', align: 'start' }} />
+
 ============================================================ DEV TOOLS
 
 MotionDevtools - @zyncat/ui/motion-devtools

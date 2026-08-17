@@ -91,15 +91,20 @@ export function createEmojiPickerStore(listboxId: string, handlers: Handlers) {
       draw();
     },
     scrollToCategory: (key: string) => api?.scrollToCategory(key),
+    /** Redraw the full category grid, dropping whatever query was showing. */
     renderAll: () => {
       query = '';
       draw();
     },
+    /** Redraw the grid as the ranked results for `next`, with the first hit already marked. */
     renderFiltered: (next: string) => {
       query = next;
       draw();
     },
+    /** Feed a key event from your own field into the grid - arrows move, Enter picks.
+     *  Returns true when the grid consumed the key, so you can leave the rest to your input. */
     handleKey: (event: KeyboardEvent) => api?.handleKey(event) ?? false,
+    /** Commit the tile the marker is on, exactly as a click on it would. */
     selectFocused: () => api?.selectFocused(),
   };
 }

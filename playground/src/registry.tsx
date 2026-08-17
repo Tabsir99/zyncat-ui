@@ -246,7 +246,7 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'emoji-picker',
         label: 'EmojiPicker',
-        blurb: 'Vanilla-DOM emoji panel in a popover - scrollspy rail, word search, gliding focus marker.',
+        blurb: 'Searchable emoji grid with a scrollspy category rail - a popover on desktop, a bottom sheet on phones.',
         Component: O.EmojiPickerPage,
       },
     ],

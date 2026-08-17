@@ -228,4 +228,27 @@ const [open, setOpen] = useState(false);
   </div>
 </Sheet>`,
   },
+
+  'emoji-picker': {
+    example: `import { useState } from 'react';
+import { EmojiPickerPanel, loadEmojiData, getEmojiUrl } from '@zyncat/ui/emoji-picker';
+
+// The dataset is not bundled - load it once, before the panel first opens.
+loadEmojiData('/emojis.json');
+
+const [open, setOpen] = useState(false);
+
+<EmojiPickerPanel
+  open={open}
+  onOpenChange={setOpen}
+  onSelect={(shortcode, hexId) => {
+    addReaction(shortcode, hexId);
+    setOpen(false);
+  }}
+  getEmojiUrl={getEmojiUrl}
+  search
+  popoverProps={{ side: 'bottom', align: 'start' }}
+  trigger={<button type="button">Add reaction</button>}
+/>`,
+  },
 };
