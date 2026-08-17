@@ -1,15 +1,14 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import { type OverlayEntry, ovIsTop, ovInOverlayAbove } from './layer';
 
 export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
   const opener = useRef<HTMLElement | null | undefined>(undefined);
 
-  useLayoutEffect(() => {
-    if (opener.current !== undefined) return;
+  if (opener.current === undefined && typeof document !== 'undefined') {
     opener.current = document.activeElement as HTMLElement | null;
-  }, []);
+  }
 
   useEffect(
     () => () => {
