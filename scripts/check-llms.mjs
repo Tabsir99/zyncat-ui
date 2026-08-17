@@ -5,21 +5,33 @@
 // they demonstrate (a renamed prop still typechecks nowhere but is copy-pasted everywhere).
 //
 // Method:
-//   1. Parse llms.txt with the SAME regexes as src/mcp/server.ts, so the two never disagree.
+//   1. Parse llms.txt through scripts/lib/llms-format.mjs - the one parser src/mcp/server.ts
+//      also runs on, so the lint and the server can never disagree about what an entry is.
 //   2. Every public subpath in package.json exports must have an entry, unless listed in
 //      SUPPORTING - modules deliberately documented by their types alone.
 //   3. Every JSX attribute in an entry's examples must resolve to a prop the built types
 //      declare for that subpath (following the chunk imports tsup splits them across).
+//   4. Every entry ends with the count of component-specific props it does NOT name, so a
+//      reader who only ever sees this file is told, per component, that it is an index and
+//      what calling get_component would add. Run with --write to regenerate those counts.
+//   5. No entry exceeds MAX_ENTRY_LINES of prose. This file is an index; per-prop detail
+//      belongs in the props JSDoc, which get_component already ships beside the entry.
 // Requires dist/ - run pnpm build first.
 
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { PROP_COUNT_RE, entryProse, formatPropCount, parseLlms } from './lib/llms-format.mjs';
+import { NATIVE_PROP_RE, componentSpecific, publicPropsBySubpath } from './lib/dts-props.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const DIST = join(ROOT, 'dist');
+const LLMS = join(ROOT, 'llms.txt');
 
-const SECTION_RE = /^=+\s+(.+?)\s*$/;
-const HEADING_RE = /^([A-Za-z][\w /]*?) - @zyncat\/ui\/([a-z][a-z0-9-]*)\b.*$/;
+const write = process.argv.includes('--write');
+
+/* An entry is an index row, not a manual - purpose, the disambiguating sentence, the value
+   vocabularies, one or two examples. Anything longer belongs in the props JSDoc. */
+const MAX_ENTRY_LINES = 10;
 
 /* Public subpaths documented by their types alone - no llms.txt entry expected. */
 const SUPPORTING = new Set(['toast-store', 'motion-tokens', 'next']);
@@ -28,34 +40,15 @@ const SUPPORTING = new Set(['toast-store', 'motion-tokens', 'next']);
    belong to them, not to the documented component. */
 const NESTED = ['Icon', 'Avatar', 'Button', 'Toaster', 'div', 'nav', 'menu', 'span', 'input', 'img'];
 
-/* Attributes every host element accepts, so no props interface needs to declare them.
-   Deliberately excludes camelCase ariaLabel - that is a real prop a component must declare
-   (native ARIA is hyphenated, which the attribute scan does not match anyway). */
-const NATIVE_RE = /^(on[A-Z]\w*|id|className|style|key|ref|role|type|children)$/;
-
 if (!existsSync(DIST)) {
   console.error('✗ dist/ not found - run "pnpm build" first.');
   process.exit(1);
 }
 
 /* 1 - parse llms.txt exactly as the MCP server does */
-const entries = [];
-let current = null;
-readFileSync(join(ROOT, 'llms.txt'), 'utf8')
-  .split('\n')
-  .forEach((line, i) => {
-    if (SECTION_RE.test(line)) {
-      current = null;
-      return;
-    }
-    const head = line.match(HEADING_RE);
-    if (head) {
-      current = { title: head[1].trim(), subpath: head[2], line: i + 1, examples: [] };
-      entries.push(current);
-    } else if (current) {
-      current.examples.push({ text: line, line: i + 1 });
-    }
-  });
+const raw = readFileSync(LLMS, 'utf8');
+const parsed = parseLlms(raw);
+const entries = parsed.entries.map((entry) => ({ ...entry, examples: entryProse(entry) }));
 
 /* 2 - props the built types declare for a subpath, following tsup's chunk splits */
 function declaredProps(subpath) {
@@ -121,7 +114,7 @@ for (const entry of entries) {
     for (const tag of NESTED) stripped = stripped.replaceAll(new RegExp(`<${tag}\\b[^>]*>`, 'g'), '');
     for (const m of stripped.matchAll(/(?:^|\s)([a-zA-Z][a-zA-Z0-9]*)=[{"]/g)) {
       const prop = m[1];
-      if (props.has(prop) || NATIVE_RE.test(prop)) continue;
+      if (props.has(prop) || NATIVE_PROP_RE.test(prop)) continue;
       const near = [...props].find((p) => p.toLowerCase().endsWith(prop.toLowerCase()));
       fail(
         `llms.txt:${line} ${entry.title} example uses "${prop}", not a prop of @zyncat/ui/${entry.subpath}${near ? ` - did you mean "${near}"?` : ''}`,
@@ -130,8 +123,78 @@ for (const entry of entries) {
   }
 }
 
+/* 5 - the "+N more props" line closing each entry, counted off the built types */
+const publicProps = publicPropsBySubpath(entries.map((e) => e.subpath));
+
+const sectionBody = new Map(parsed.sections.map((s) => [s.title, s.body.join('\n')]));
+
+function unnamedProps(entry) {
+  const prose = [entry.examples.map((l) => l.text).join('\n'), sectionBody.get(entry.section) ?? ''].join('\n');
+  return componentSpecific(publicProps.get(entry.subpath) ?? []).filter(
+    (prop) => !new RegExp(`\\b${prop}\\b`).test(prose),
+  );
+}
+
+const wanted = new Map();
+for (const entry of entries) {
+  const missing = unnamedProps(entry);
+  wanted.set(entry, missing.length ? formatPropCount(missing.length, entry.subpath) : null);
+}
+
+if (write) {
+  const drop = new Set();
+  const append = new Map();
+  for (const entry of entries) {
+    for (const line of entry.body) if (PROP_COUNT_RE.test(line.text)) drop.add(line.line - 1);
+    const marker = wanted.get(entry);
+    const prose = entry.examples;
+    if (marker && prose.length) append.set(prose[prose.length - 1].line - 1, marker);
+  }
+  const next = [];
+  raw.split('\n').forEach((text, i) => {
+    if (!drop.has(i)) next.push(text);
+    const marker = append.get(i);
+    if (marker) next.push(marker);
+  });
+  writeFileSync(LLMS, next.join('\n'));
+  const marked = [...wanted.values()].filter(Boolean).length;
+  console.log(`check-llms --write: prop counts refreshed on ${marked} of ${entries.length} llms.txt entries.`);
+  process.exit(0);
+}
+
+/* 6 - an entry stays an index row */
+for (const entry of entries) {
+  const prose = entry.examples.length;
+  if (prose > MAX_ENTRY_LINES)
+    fail(
+      `llms.txt:${entry.line} ${entry.title} runs ${prose} lines, over the ${MAX_ENTRY_LINES}-line cap - ` +
+        `move the per-prop detail into the props JSDoc, which get_component ships next to this entry.`,
+    );
+}
+
+for (const entry of entries) {
+  const marker = wanted.get(entry);
+  const present = entry.body.filter((line) => PROP_COUNT_RE.test(line.text));
+  if (present.length > 1) {
+    fail(`${entry.title} has ${present.length} "+N more props" lines - run "pnpm sync:llms".`);
+    continue;
+  }
+  const actual = present[0];
+  if (marker && !actual)
+    fail(`${entry.title} has no prop count - it should end with "${marker.trim()}". Run "pnpm sync:llms".`);
+  else if (!marker && actual)
+    fail(`llms.txt:${actual.line} ${entry.title} names every public prop, so its prop-count line is wrong.`);
+  else if (marker && actual.text !== marker)
+    fail(`llms.txt:${actual.line} ${entry.title} claims "${actual.text.trim()}", expected "${marker.trim()}".`);
+  else if (marker && actual.line !== entry.body[entry.body.length - 1].line)
+    fail(`llms.txt:${actual.line} ${entry.title} "+N more props" must be the entry's last line.`);
+}
+
 if (violations) {
   console.error(`\n${violations} llms.txt problem(s).`);
   process.exit(1);
 }
-console.log(`check-llms: ${entries.length} entries clean, ${subpaths.length} public subpaths covered.`);
+const marked = [...wanted.values()].filter(Boolean).length;
+console.log(
+  `check-llms: ${entries.length} entries clean, ${subpaths.length} public subpaths covered, ${marked} prop counts current.`,
+);

@@ -30,6 +30,7 @@ Button - @zyncat/ui/button
   One control for every click; exactly one primary per view. variant primary|secondary|ghost|danger|link, size sm|md|lg|icon, loading, disabled. Icons are plain children - Button lays them out in a centered row with gap, no iconLeft/iconRight slots.
   <Button variant="primary"><Icon name="plus" size="sm" />Schedule post</Button>
   <Button size="icon" aria-label="Close"><Icon name="x" size="sm" /></Button>
+  +2 more props - get_component('button')
 
 Collapse - @zyncat/ui/collapse
   Layout-transition primitive; eases height open/closed, never teleports. Closed content also
@@ -37,6 +38,7 @@ Collapse - @zyncat/ui/collapse
   focusable immediately. animation takes motion tokens ONLY - { duration, ease }, each one token
   (fast|base|slow|slower|slowest / standard|entrance|exit|spring|glide) or per-direction { open, close }.
   <Collapse open={open} animation={{ duration: { close: 'fast' }, ease: { close: 'exit' } }}><div>...revealed content...</div></Collapse>
+  +5 more props - get_component('collapse')
 
 Glide / GlidePill - @zyncat/ui/glide
   A persistent background pill that glides smoothly between hovered/active elements. Container must be `position: relative`.
@@ -49,16 +51,19 @@ Glide / GlidePill - @zyncat/ui/glide
 Badge - @zyncat/ui/badge
   Glass or outline chip. tone neutral|info|success|warning|danger, dot, live, variant="outline", pill, size="sm".
   <Badge tone="success" pill>Published</Badge>
+  +2 more props - get_component('badge')
 
 StatusBadge - @zyncat/ui/status-badge
   Canonical post status - tone + one-word label. status draft|scheduled|processing|published|failed; add `morph` to animate in place as status changes.
   <StatusBadge status="published" />
   <StatusBadge status={s} morph />
+  +7 more props - get_component('status-badge')
 
 CountBadge - @zyncat/ui/count-badge
   Mono tabular count; `roll` animates digits like an odometer. value: number | string.
   <CountBadge value="7 / 10" />
   <CountBadge value={count} roll tone="info" />
+  +7 more props - get_component('count-badge')
 
 ============================================================ FORMS
 (all take label, helper/error/warning/success, size sm|md|lg, disabled)
@@ -67,64 +72,79 @@ TextField - @zyncat/ui/text-field
   Base text input; states disclose via Collapse. leadingIcon, clearable, optional/required.
   <TextField id="ws" label="Workspace name" required value={v} onChange={(e) => set(e.target.value)} />
   <TextField id="h" label="Username" error="Must be at least 4 characters." value={v} onChange={...} />
+  +1 more prop - get_component('text-field')
 
 NumberField - @zyncat/ui/number-field
   Tabular figures, caret steppers, unit suffix, clamp to [min,max]. onChange(value: number).
   <NumberField id="seats" label="Seats" unit="users" min={1} max={50} value={n} onChange={setN} />
+  +3 more props - get_component('number-field')
 
 OtpField - @zyncat/ui/otp-field
   Segmented one-time code; auto-advance, paste-to-fill. length, group, error, size.
   <OtpField length={6} group={3} value={code} onChange={setCode} />
+  +1 more prop - get_component('otp-field')
 
 Textarea - @zyncat/ui/textarea
   Auto-grow, char meter (max), ⌘/Ctrl+↵ submit (onSubmit). minRows/maxRows.
   <Textarea id="bio" label="Bio" max={280} minRows={4} value={v} onChange={(e) => set(e.target.value)} onSubmit={save} />
+  +5 more props - get_component('textarea')
 
 Checkbox - @zyncat/ui/checkbox
   Stages a choice. label, description, indeterminate, invalid, required, disabled. Standard checked/onChange.
   <Checkbox label="Email me about product updates" checked={on} onChange={(e) => set(e.target.checked)} />
+  +2 more props - get_component('checkbox')
 
 Toggle - @zyncat/ui/toggle
   Actuates a setting on the spot. label, description; checked/onChange like a checkbox.
   <Toggle label="Auto-save drafts" checked={on} onChange={(e) => set(e.target.checked)} />
+  +2 more props - get_component('toggle')
 
 RadioGroup - @zyncat/ui/radio-group
   Pick exactly one. options: RadioOption[] ({ value, label, description?, icon?, disabled? }); variant rows|cards, orientation; value/onChange(value).
   <RadioGroup name="role" label="Member role" value={role} onChange={setRole} options={ROLES} />
+  +3 more props - get_component('radio-group')
 
 Select - @zyncat/ui/select
   Single-select listbox. options: SelectOption[]; value: string|null, onChange(value); searchable, leadingIcon, placeholder, invalid, loading, ariaLabel.
   <Select options={TIMEZONES} value={tz} onChange={setTz} searchable placeholder="Choose a time zone" ariaLabel="Time zone" />
+  +6 more props - get_component('select')
 
 MultiSelect - @zyncat/ui/multi-select
   Many-of listbox; stays open while toggling, trigger summarises as first +N. value: string[], onChange(string[]); searchable.
   <MultiSelect options={PEOPLE} value={ids} onChange={setIds} placeholder="Choose members" ariaLabel="Members" />
+  +7 more props - get_component('multi-select')
 
 ============================================================ DATA DISPLAY
 
 Avatar - @zyncat/ui/avatar
   Identity mark: image, initials, or silhouette. name, src, size xs|sm|md|lg|xl, status online|away|busy|offline, shape, paletteIndex, icon.
   <Avatar name="Ana Ng" src="..." status="online" />
+  +1 more prop - get_component('avatar')
 
 AvatarGroup - @zyncat/ui/avatar-group
   Overlapping avatars with +N overflow. max, size; children are <Avatar>s.
   <AvatarGroup max={4} size="sm"><Avatar name="Ana Ng" />...</AvatarGroup>
+  +1 more prop - get_component('avatar-group')
 
 Tag / TagGroup - @zyncat/ui/tag
   User-owned label (a control, not a status). icon, size, disabled, onRemove + removeLabel (removable). TagGroup wraps a labelled set.
   <Tag icon={<Icon name="hash" />} onRemove={fn} removeLabel="Remove design">design</Tag>
+  +3 more props - get_component('tag')
 
 ToggleTag - @zyncat/ui/toggle-tag
   Many-of-many filter chip. selected/onChange(next) or defaultSelected; icon, count.
   <ToggleTag selected={on} onChange={setOn} icon={<Icon name="star" />} count={48}>Starred</ToggleTag>
+  +3 more props - get_component('toggle-tag')
 
 Table - @zyncat/ui/table
   Declare columns + rows; owns sort, selection, stickiness, overflow. columns: TableColumn<T>[] ({ key, label, render?, sortable?, sortBy?, align?, mono?, strong?, grow? }); selectable, defaultSort, footer.
   <Table<Invoice> ariaLabel="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
+  +8 more props - get_component('table')
 
 Pagination - @zyncat/ui/pagination
   Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext, ariaLabel.
   <Pagination ariaLabel="Rows" range={[from, to]} total={312} hasPrev hasNext onPrev={...} onNext={...} />
+  +2 more props - get_component('pagination')
 
 ============================================================ DATE, TIME & TABS
 (value is a string; onChange(value | null); timezone, min/max, disabled)
@@ -132,29 +152,35 @@ Pagination - @zyncat/ui/pagination
 DateField - @zyncat/ui/date-field
   Month calendar in a popover; value 'YYYY-MM-DD'.
   <DateField label="Start date" value={d} onChange={setD} timezone="Europe/Riga" min="2026-06-01" />
+  +7 more props - get_component('date-field')
 
 DateTimeField - @zyncat/ui/datetime-field
   Calendar + segmented HH:MM; value 'YYYY-MM-DDTHH:mm'. format 12h|24h, minuteStep.
   <DateTimeField label="Due at" value={v} onChange={setV} format="12h" minuteStep={15} />
+  +7 more props - get_component('datetime-field')
 
 DateRangeField - @zyncat/ui/date-range-field
   Two-tap auto-ordering window; value DateRange { start, end } | null; commits when both ends exist.
   <DateRangeField label="Reporting period" value={r} onChange={setR} />
+  +7 more props - get_component('date-range-field')
 
 TimeField - @zyncat/ui/time-field
   Standalone segmented time; value 'HH:mm'; bounds saturate. format, minuteStep.
   <TimeField label="Send at" value={t} onChange={setT} format="12h" minuteStep={15} />
+  +6 more props - get_component('time-field')
 
 Tabs / TabPanel - @zyncat/ui/tabs
   Line tabs; the ink reaches then releases; panels enter from the side you moved toward. items: TabItem[]; value/onChange(value, dir). Pair with <TabPanel name tab dir>.
   <Tabs name="views" ariaLabel="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
   <TabPanel name="views" tab={view} dir={dir}>...</TabPanel>
+  +2 more props - get_component('tabs')
 
 ============================================================ OVERLAYS & FEEDBACK
 
 Alert - @zyncat/ui/alert
   Persistent, in-flow status. tone, title, children (body), action { label, onClick }, dismissible, banner, open/onDismiss (controlled).
   <Alert tone="warning" title="Your trial ends in 5 days" action={{ label: 'Upgrade', onClick: fn }}>Add a plan...</Alert>
+  +3 more props - get_component('alert')
 
 Toast - @zyncat/ui/toast  (imperative; mount <Toaster /> once at the app root, then call toast() from anywhere)
   <Toaster /> props: position ('bottom-right' default), duration, visibleToasts, gap, offset, expand. Without it, toast() no-ops.
@@ -163,10 +189,12 @@ Toast - @zyncat/ui/toast  (imperative; mount <Toaster /> once at the app root, t
   // once at the root: <Toaster position="bottom-right" />
   toast.success('Changes saved', { description: 'Synced to the cloud' });
   toast.promise(save(), { loading: 'Saving...', success: (v) => `Saved - ${v.count}`, error: (e) => `Failed - ${e.message}` });
+  +1 more prop - get_component('toast')
 
 Tooltip - @zyncat/ui/tooltip
   Transient hint on hover/focus; wraps any child (no ref wiring needed). content, shortcut, placement top|bottom|left|right.
   <Tooltip content="Save changes" shortcut="⌘S"><Button>Save</Button></Tooltip>
+  +4 more props - get_component('tooltip')
 
 Dialog - @zyncat/ui/dialog
   DEFAULT CHOICE for modals - the styled surface: header (icon/title/description/close), scrolling body,
@@ -176,6 +204,7 @@ Dialog - @zyncat/ui/dialog
   container mounts it inside a positioned element instead of the viewport; scrim, scroll lock and
   inert then scope to that box and the rest of the page stays live.
   <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
+  +5 more props - get_component('dialog')
 
 Modal - @zyncat/ui/modal
   The SAME modality as Dialog (scrim, focus trap, scroll lock, inert, Esc, motion) with ZERO paint - no
@@ -188,6 +217,7 @@ Modal - @zyncat/ui/modal
   <Modal open={!!src} onOpenChange={() => setSrc(null)} htmlProps={{ className: 'lightbox' }} layerProps={{ style: { '--bg-overlay': 'rgb(0 0 0 / 0.92)' } }}>
     <div role="dialog" aria-label="Image viewer"><img src={src} alt="" /></div>
   </Modal>
+  +1 more prop - get_component('modal')
 
 Popover - @zyncat/ui/popover
   Headless anchored panel, non-modal. side, align, arrow, trigger (node), dismissible.
@@ -195,24 +225,20 @@ Popover - @zyncat/ui/popover
   element) - and drive open yourself. Pass a new object to re-place a moving anchor.
   <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}><menu>...</menu></Popover>
   <Popover open={!!spot} onOpenChange={dismiss} anchor={spot} side="right"><menu>...</menu></Popover>
+  +3 more props - get_component('popover')
 
 Dropdown - @zyncat/ui/dropdown
   Menu button - a list of ACTIONS the trigger commits, with submenus. NOT a Select: it runs a
-  command instead of holding a value, so there is no selected state and no form value; rows carry
-  an icon, a shortcut hint, a description and destructive styling.
-  items takes DropdownItem[] or DropdownGroup[] (labelled, divided sections). A row is
-  { id, label, description?, icon?, shortcut?, danger?, disabled?, onSelect? } - give it its own
-  items and it opens a submenu instead of committing, nesting as deep as you like.
-  trigger (node, gets the aria-haspopup="menu" wiring), side, align, open/onOpenChange,
-  onSelect(id, item), ariaLabel, htmlProps, animation.
-  Keyboard is the APG menu button: arrows move, Right/Left open and close a submenu, Enter/Space
-  commit, letters typeahead, Esc closes one level, Tab closes the lot and returns focus.
+  command instead of holding a value, so there is no selected state and no form value.
+  items takes DropdownItem[] or DropdownGroup[] (labelled sections); a row with its own items
+  opens a submenu, nesting as deep as you like. Keyboard is the APG menu button: arrows move,
+  Right/Left open and close a submenu, Enter/Space commit, typeahead, Esc one level, Tab the lot.
   <Dropdown trigger={<Button variant="secondary">Actions</Button>} onSelect={(id) => run(id)} items={[
     { id: 'rename', label: 'Rename', shortcut: 'R' },
-    { id: 'move', label: 'Move to', items: [{ id: 'drafts', label: 'Drafts' }, { id: 'archive', label: 'Archive' }] },
-    { id: 'delete', label: 'Delete', danger: true },
-  ]} />
+    { id: 'move', label: 'Move to', items: [{ id: 'drafts', label: 'Drafts' }] },
+    { id: 'delete', label: 'Delete', danger: true }]} />
   <Dropdown open={o} onOpenChange={setO} side="top" align="end" ariaLabel="Row actions" trigger={<Button>...</Button>} items={groups} />
+  +3 more props - get_component('dropdown')
 
 Sheet - @zyncat/ui/sheet
   Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), dismissible.
@@ -220,27 +246,20 @@ Sheet - @zyncat/ui/sheet
   inert then scope to that box and the rest of the page stays live.
   <Sheet side="right" trigger={<Button>Filters</Button>}><div role="dialog">...</div></Sheet>
   <Sheet side="bottom" container={panel} open={o} onOpenChange={setO}><div role="dialog">...</div></Sheet>
+  +3 more props - get_component('sheet')
 
 EmojiPickerPanel - @zyncat/ui/emoji-picker
-  Searchable emoji panel - grid, scrollspy category rail, recents kept in localStorage - that lives in
-  a Popover and becomes a bottom Sheet under (max-width: 40rem); breakpoint moves that line.
+  Searchable emoji panel - grid, scrollspy category rail, recents in localStorage - living in a
+  Popover, becoming a bottom Sheet on narrow viewports. Matching is word-based, not fuzzy.
   The dataset is NOT bundled: call loadEmojiData(url | EmojiData) once before the panel first opens
-  or it throws - onEmojiDataLoaded(cb) fires when it lands. getEmojiUrl is REQUIRED: pass the
-  exported one for Twemoji tiles plus animated Noto category icons, or point it at your own host.
-  Open state is controlled only; onSelect(shortcode, hexId) gives the primary shortcode, no colons.
-  Two shapes. search renders the panel's own field, opened from trigger - it is forced on in sheet
-  mode, where the sheet traps focus and an outside query can no longer reach the grid. query drives
-  the grid from an input YOU own - a ":" completion, a chat composer: point popoverProps.anchor at
-  the caret rect and forward keys through the ref, where handleKey(event) returns true when the grid
-  consumed the arrow or Enter, and selectFocused / renderAll / renderFiltered drive it directly.
-  Matching is word-based, not fuzzy: every typed word must hit a name, shortcode or tag.
-  Also offset (gap from the anchor), popoverProps (side, align, arrow), sheetProps, className.
+  or it throws; onEmojiDataLoaded(cb) fires when it lands. getEmojiUrl is REQUIRED.
+  Two shapes. search renders the panel's own field, opened from trigger. query drives the grid from
+  an input YOU own - point popoverProps.anchor at the caret rect and forward keys through the ref.
   import { EmojiPickerPanel, loadEmojiData, getEmojiUrl } from '@zyncat/ui/emoji-picker';
   loadEmojiData('/emojis.json');   // once, before the panel first opens
-  <EmojiPickerPanel open={open} onOpenChange={setOpen} onSelect={addReaction} getEmojiUrl={getEmojiUrl} search
-    popoverProps={{ side: 'bottom', align: 'start' }} trigger={<Button variant="secondary">Add reaction</Button>} />
-  <EmojiPickerPanel ref={panel} open={!!completion} onOpenChange={dismiss} onSelect={insert} getEmojiUrl={getEmojiUrl}
-    query={completion.query} offset={6} popoverProps={{ anchor: caretRect, side: 'bottom', align: 'start' }} />
+  <EmojiPickerPanel open={open} onOpenChange={setOpen} onSelect={addReaction} getEmojiUrl={getEmojiUrl}
+    search trigger={<Button variant="secondary">Add reaction</Button>} />
+  +3 more props - get_component('emoji-picker')
 
 ============================================================ DEV TOOLS
 

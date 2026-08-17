@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PROP_COUNT_RE, entryLines, parseLlms } from '../../scripts/lib/llms-format.mjs';
 
 function findRoot(): string {
   let dir = dirname(fileURLToPath(import.meta.url));
@@ -36,9 +37,6 @@ interface Db {
   entries: LlmsEntry[];
 }
 
-const SECTION_RE = /^=+\s+(.+?)\s*$/;
-const HEADING_RE = /^([A-Za-z][\w /]*?) - @zyncat\/ui\/([a-z][a-z0-9-]*)\b.*$/;
-
 function db(): Db {
   const root = findRoot();
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
@@ -46,43 +44,22 @@ function db(): Db {
     .filter(([, v]) => typeof v === 'object' && v !== null && 'types' in (v as object))
     .map(([k]) => k.replace(/^\.\//, ''));
 
-  const preamble: string[] = [];
-  const sections: LlmsSection[] = [];
-  const entries: LlmsEntry[] = [];
-  let section: LlmsSection | null = null;
-  let entry: LlmsEntry | null = null;
-  const close = (e: LlmsEntry | null) => {
-    if (!e) return;
-    while (e.lines.length && !e.lines[e.lines.length - 1].trim()) e.lines.pop();
-    entries.push(e);
-  };
-  for (const line of readFileSync(join(root, 'llms.txt'), 'utf8').split('\n')) {
-    const sec = line.match(SECTION_RE);
-    const head = line.match(HEADING_RE);
-    if (sec) {
-      close(entry);
-      entry = null;
-      section = { title: sec[1], body: [] };
-      sections.push(section);
-    } else if (head) {
-      close(entry);
-      entry = { title: head[1].trim(), subpath: head[2], section: section?.title ?? '', lines: [line] };
-    } else if (entry) {
-      entry.lines.push(line);
-    } else if (section) {
-      section.body.push(line);
-    } else {
-      preamble.push(line);
-    }
-  }
-  close(entry);
-  for (const s of sections) {
-    while (s.body.length && !s.body[s.body.length - 1].trim()) s.body.pop();
-    while (s.body.length && !s.body[0].trim()) s.body.shift();
-  }
-  while (preamble.length && !preamble[preamble.length - 1].trim()) preamble.pop();
+  const parsed = parseLlms(readFileSync(join(root, 'llms.txt'), 'utf8'));
+  const entries: LlmsEntry[] = parsed.entries.map((e) => ({
+    title: e.title,
+    subpath: e.subpath,
+    section: e.section,
+    lines: entryLines(e),
+  }));
 
-  return { root, version: String(pkg.version ?? '0'), subpaths, preamble, sections, entries };
+  return {
+    root,
+    version: String(pkg.version ?? '0'),
+    subpaths,
+    preamble: parsed.preamble,
+    sections: parsed.sections,
+    entries,
+  };
 }
 
 const norm = (s: string) =>
@@ -183,7 +160,7 @@ function getComponent(input: string): string {
   if (entry) {
     const note = d.sections.find((s) => s.title === entry.section)?.body ?? [];
     if (note.length) out.push(`Applies to every ${entry.section} component:`, ...note, '');
-    out.push('## Usage (llms.txt)', ...entry.lines, '');
+    out.push('## Usage (llms.txt)', ...entry.lines.filter((line) => !PROP_COUNT_RE.test(line)), '');
   } else {
     out.push('No llms.txt entry - this module is documented by its types below.', '');
   }
@@ -208,15 +185,16 @@ function searchApi(query: string): string {
 
   {
     const raw = readFileSync(join(d.root, 'llms.txt'), 'utf8');
+    const parsed = parseLlms(raw);
+    const marks = new Map<number, string>();
+    for (const s of parsed.sections) marks.set(s.line, `llms.txt » ${s.title}`);
+    for (const e of parsed.entries) marks.set(e.line, `llms.txt » ${e.title}`);
     const labels: string[] = [];
     let current = 'llms.txt';
-    for (const line of raw.split('\n')) {
-      const sec = line.match(SECTION_RE);
-      const head = line.match(HEADING_RE);
-      if (sec) current = `llms.txt » ${sec[1]}`;
-      else if (head) current = `llms.txt » ${head[1].trim()}`;
+    raw.split('\n').forEach((_line, i) => {
+      current = marks.get(i + 1) ?? current;
       labels.push(current);
-    }
+    });
     scan('llms.txt', raw, (_line, i) => labels[i]);
   }
   const distDir = join(d.root, 'dist');

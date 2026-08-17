@@ -14,14 +14,25 @@ If a prop's description is wrong, fix the JSDoc on the props interface in
 ### 1. The `llms.txt` entry
 
 Read the neighbouring entries first and match their voice. The heading format is
-parsed by two regexes in `src/mcp/server.ts` and is load-bearing:
+parsed by `scripts/lib/llms-format.mjs` and is load-bearing:
 
 ```
 Thing - @zyncat/ui/thing
   What it is, and when to pick it over the neighbour it is most often confused
   with. Then the prop vocabulary as prose, not a list.
   <Thing prop="value">...</Thing>
+  +4 more props - get_component('thing')
 ```
+
+**Ten lines of prose, hard cap** — `pnpm check:llms` enforces it. An entry is an
+index row: the disambiguating sentence, the value vocabularies
+(`variant primary|secondary|ghost`), one or two examples. Per-prop detail belongs
+in the props JSDoc instead, which `get_component` already ships beside the entry —
+writing it in both places only creates drift.
+
+The `+N more props` footer is **generated**; never type it. `pnpm sync:llms` writes
+it from `dist/*.d.ts`, counting the component-specific props your entry does not
+name. If it disappears, you enumerated the whole API — cut back to the vocabulary.
 
 The sentence that earns its place is the **disambiguating** one. `Dropdown`'s
 entry says it runs a command rather than holding a value, so it is not a
@@ -86,13 +97,16 @@ code — real prop values, plausible labels, no `foo`/`bar`.
 ## Proving it
 
 ```bash
-pnpm build && pnpm check:llms   # examples resolve against the real types
+pnpm build && pnpm sync:llms    # regenerate the +N footers (needs dist/)
+pnpm check:llms                 # examples resolve, entries inside the cap
 pnpm docs:props                 # regenerate the prop tables
 pnpm exec prettier --write llms.txt playground/src
 ```
 
 `check:llms` failing with "not a prop of @zyncat/ui/thing" means your example is
 wrong, or the build is stale. Rebuild before assuming the example is wrong.
+Failing with "over the 10-line cap" means the entry has become a manual — move
+the per-prop lines into the JSDoc rather than shortening the examples away.
 
 ## Reporting
 
