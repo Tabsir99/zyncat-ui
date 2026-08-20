@@ -3,10 +3,16 @@
 import './select.css';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { useListbox, ListboxPanel, SelectTrigger, type SelectOption, type SelectGroup } from './core';
+import {
+  useListbox,
+  ListboxPanel,
+  SelectTrigger,
+  type SelectOption,
+  type SelectGroup,
+  type SelectTriggerHtmlProps,
+} from './core';
 import type { DisableableAnimation } from '../../../motion/timing';
 import type { DataAttributes } from '../../../dom-props';
-import { ButtonProps } from '../../primitives/button/Button';
 import { cx } from '../../internal/utils/cx';
 
 export type { SelectOption, SelectGroup } from './core';
@@ -44,8 +50,10 @@ export interface SelectProps {
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
   /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
   animation?: DisableableAnimation;
-  /** Trigger props */
-  triggerProps?: ButtonProps;
+  /** Standard <button> attributes (className, style, aria-*, data-*, ...) merged onto the trigger.
+   *  `onClick` and `onKeyDown` run before the built-in open/close and arrow-key handling, which
+   *  cannot be replaced - the trigger is the combobox. */
+  triggerProps?: SelectTriggerHtmlProps;
   /** Show check icon on selected value */
   showCheck?: boolean;
 }

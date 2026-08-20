@@ -553,7 +553,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       default: "duration 'base' + ease 'entrance'/'exit'",
       description: 'Menu open/close timing - motion tokens only, or `null` to disable.',
     },
-    { name: 'triggerProps', type: 'ButtonProps', description: 'Trigger props' },
+    {
+      name: 'triggerProps',
+      type: 'SelectTriggerHtmlProps',
+      description:
+        'Standard <button> attributes (className, style, aria-*, data-*, ...) merged onto the trigger. `onClick` and `onKeyDown` run before the built-in open/close and arrow-key handling, which cannot be replaced - the trigger is the combobox.',
+    },
     { name: 'showCheck', type: 'boolean', description: 'Show check icon on selected value' },
   ],
   'multi-select': [

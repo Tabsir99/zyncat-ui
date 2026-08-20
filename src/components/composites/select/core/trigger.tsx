@@ -1,12 +1,15 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
+import { cx } from '../../../internal/utils/cx';
+import type { DataAttributes } from '../../../../dom-props';
 import type { ListboxState } from './use-listbox';
-import { Button, ButtonProps } from '../../../primitives/button/Button';
 
-export interface SelectTriggerProps extends ButtonProps {
+export type SelectTriggerHtmlProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & DataAttributes;
+
+export interface SelectTriggerProps extends SelectTriggerHtmlProps {
   lb: ListboxState;
   invalid?: boolean;
   ariaLabel?: string;
@@ -24,33 +27,37 @@ export function SelectTrigger({
   text,
   isPlaceholder,
   count,
-  htmlProps,
+  className,
+  onClick,
+  onKeyDown,
   ...rest
 }: SelectTriggerProps) {
   const { triggerRef, baseId, open, adId, show, requestClose } = lb;
   return (
-    <Button
+    <button
       type="button"
       ref={triggerRef}
-      variant="ghost"
-      htmlProps={{
-        id: baseId + '-trigger',
-        role: 'combobox',
-        'aria-haspopup': 'listbox',
-        'aria-expanded': open,
-        'aria-controls': baseId + '-list',
-        'aria-activedescendant': adId,
-        'aria-label': ariaLabel,
-        'aria-invalid': invalid || undefined,
-        onKeyDown: (e) => {
-          if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
-            e.preventDefault();
-            show();
-          }
-        },
-        ...htmlProps,
+      id={baseId + '-trigger'}
+      className={cx('select__trigger', className)}
+      role="combobox"
+      aria-haspopup="listbox"
+      aria-expanded={open}
+      aria-controls={baseId + '-list'}
+      aria-activedescendant={adId}
+      aria-label={ariaLabel}
+      aria-invalid={invalid || undefined}
+      onKeyDown={(e) => {
+        onKeyDown?.(e);
+        if (!open && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+          e.preventDefault();
+          show();
+        }
       }}
-      onClick={() => (open ? requestClose() : show())}
+      onClick={(e) => {
+        onClick?.(e);
+        if (open) requestClose();
+        else show();
+      }}
       {...rest}
     >
       {leading && (
@@ -65,6 +72,6 @@ export function SelectTrigger({
       <span className="select__caret">
         <Icon name="caret-down" size="sm" />
       </span>
-    </Button>
+    </button>
   );
 }
