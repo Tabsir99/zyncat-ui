@@ -24,3 +24,10 @@
 .overlay-panel--sheet-bottom {
   transform-origin: 50% 100%;
 }
+
+.overlay-panel--sheet-right[data-drag] {
+  touch-action: pan-y;
+}
+.overlay-panel--sheet-bottom[data-drag] {
+  touch-action: none;
+}

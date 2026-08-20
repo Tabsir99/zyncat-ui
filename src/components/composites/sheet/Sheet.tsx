@@ -17,6 +17,8 @@ const SHEET_TIMING = {
   close: { duration: 'base', ease: 'exit' },
 } as const;
 
+const SHEET_REST_SCALE: [number, number][] = [[1, 1]];
+
 export interface SheetProps {
   /** Controlled open state. Omit to stay uncontrolled. */
   open?: boolean;
@@ -121,7 +123,7 @@ export function Sheet({
               key="sheet"
               timings={timings}
               animate={{ [axis]: ['100%', 0], timing: { ...timings.open, release: true } }}
-              exit={{ [axis]: ['100%'], timing: timings.close }}
+              exit={{ [axis]: ['100%'], scale: SHEET_REST_SCALE, timing: timings.close }}
               side={side}
               panelId={panelId}
               dismissible={dismissible}

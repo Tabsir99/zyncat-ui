@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
-import { animate, startDrag, type PanInfo } from '../../../engine';
+import { animate, set, startDrag, type PanInfo } from '../../../engine';
 import { UIMotion } from '../../../tokens/motion-tokens';
 
 const SM = UIMotion;
@@ -9,6 +9,7 @@ const SM = UIMotion;
 const DISMISS_RATIO = 0.4;
 const DISMISS_VELOCITY = 500;
 const INTENT_PX = 4;
+const TOUCH_INTENT_PX = 8;
 const STRETCH_MAX = 0.06;
 
 function findScrollable(node: EventTarget | null, stop: HTMLElement | null): HTMLElement | null {
@@ -46,6 +47,7 @@ export function useSheetDrag({
 }) {
   const axis = side === 'bottom' ? 'y' : 'x';
   const savedUserSelect = useRef<string | null>(null);
+  const span = useRef(1);
 
   function suspendSelection() {
     const sel = window.getSelection();
@@ -61,23 +63,23 @@ export function useSheetDrag({
   useEffect(() => restoreSelection, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function paint(el: HTMLElement, travel: number, stretch: number) {
-    const span = sheetSpan(el, side);
-    el.style.translate = axis === 'y' ? `0px ${travel}px` : `${travel}px 0px`;
-    el.style.scale = axis === 'y' ? `1 ${stretch}` : `${stretch} 1`;
+    const stretched: [number, number] = axis === 'y' ? [1, stretch] : [stretch, 1];
+    set(el, { x: [axis === 'y' ? 0 : travel], y: [axis === 'y' ? travel : 0], scale: [stretched] });
     const scrim = sheetScrim(el);
-    if (scrim) scrim.style.opacity = String(1 - Math.min(Math.max(travel / span, 0), 1));
+    if (scrim) set(scrim, { opacity: [1 - Math.min(Math.max(travel / span.current, 0), 1)] });
   }
 
   function onPointerDown(e: ReactPointerEvent) {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || !e.isPrimary) return;
     const startX = e.clientX,
       startY = e.clientY;
+    const intent = e.pointerType === 'touch' ? TOUCH_INTENT_PX : INTENT_PX;
     const scrollable = findScrollable(e.target, panelRef.current);
 
     const onMove = (ev: PointerEvent) => {
       const dx = ev.clientX - startX,
         dy = ev.clientY - startY;
-      if (Math.max(Math.abs(dx), Math.abs(dy)) < INTENT_PX) return;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < intent) return;
       cleanup();
       const along = axis === 'y' ? dy : dx;
       const cross = axis === 'y' ? dx : dy;
@@ -86,6 +88,8 @@ export function useSheetDrag({
         if (along < 0) return;
         if (axis === 'y' ? scrollable.scrollTop > 0 : scrollable.scrollLeft > 0) return;
       }
+      if (!panelRef.current) return;
+      span.current = sheetSpan(panelRef.current, side);
       suspendSelection();
       startDrag(ev, { onMove: onDrag, onEnd: onDragEnd });
     };
@@ -104,23 +108,22 @@ export function useSheetDrag({
     const el = panelRef.current;
     if (!el) return;
     const o = info.offset[axis];
-    const span = sheetSpan(el, side);
-    paint(el, Math.max(o, 0), o < 0 ? 1 + Math.min(-o / span, 1) * STRETCH_MAX : 1);
+    paint(el, Math.max(o, 0), o < 0 ? 1 + Math.min(-o / span.current, 1) * STRETCH_MAX : 1);
   }
 
   function onDragEnd(info: PanInfo) {
     restoreSelection();
     const el = panelRef.current;
     if (!el) return;
-    const span = sheetSpan(el, side);
-    if (info.offset[axis] > span * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) {
+    if (info.offset[axis] > span.current * DISMISS_RATIO || info.velocity[axis] > DISMISS_VELOCITY) {
       requestClose();
       return;
     }
-    animate(el, { x: [0], y: [0], scale: [[1, 1]], timing: SM.t.settle });
+    const settle = { ...SM.t.settle, release: true };
+    animate(el, { x: [0], y: [0], scale: [[1, 1]], timing: settle });
     const scrim = sheetScrim(el);
-    if (scrim) animate(scrim, { opacity: [1], timing: SM.t.settle });
+    if (scrim) animate(scrim, { opacity: [1], timing: settle });
   }
 
-  return enabled ? { onPointerDown } : {};
+  return enabled ? { onPointerDown, 'data-drag': '' } : {};
 }
