@@ -78,15 +78,19 @@ function inspect(file) {
 }
 
 /* 3 - rendered-class extraction from one module's source */
+const blankInterpolations = (literal) => literal.replace(/\$\{[^{}]*\}/g, ' ');
+
 function renderedClasses(src) {
   const found = new Set();
   const literals = [];
   for (const m of src.matchAll(/'([^'\\\n]*)'|"([^"\\\n]*)"/g)) literals.push(m[1] ?? m[2]);
+  for (const m of src.matchAll(/`([^`]*)`/g)) literals.push(blankInterpolations(m[1]));
+  for (const m of src.matchAll(/class=["']([^"']*)["']/g)) literals.push(m[1]);
   for (const lit of literals) {
     const toks = lit.split(/\s+/).filter(Boolean);
     /* a class-list literal is short and ALL class-shaped - prose, aria copy and warning
        sentences always carry a token that fails this and disqualify the whole literal */
-    if (!toks.length || toks.length > 6 || !toks.every((t) => /^[a-z][a-z0-9_-]*$/.test(t))) continue;
+    if (!toks.length || toks.length > 6 || !toks.every((t) => /^[a-z][A-Za-z0-9_-]*$/.test(t))) continue;
     for (const tok of toks) {
       if (AMBIGUOUS.has(tok)) continue;
       if (classOwners.has(tok) && !globalClasses.has(tok)) found.add(tok);
@@ -133,8 +137,31 @@ for (const entry of entries) {
   }
 }
 
-if (violations) {
-  console.error(`\n${violations} unreachable class rendering(s).`);
+const RENDERERS = [join(ROOT, 'src'), join(ROOT, 'playground/src')];
+const renderedAnywhere = new Set();
+for (const dir of RENDERERS)
+  for (const file of walk(dir, ['.ts', '.tsx']))
+    for (const cls of renderedClasses(inspect(file).src)) renderedAnywhere.add(cls);
+
+const definedAt = (file, cls) => {
+  const at = readFileSync(file, 'utf8')
+    .split('\n')
+    .findIndex((line) => new RegExp('\\.' + cls + '(?![\\w-])').test(line));
+  return file.replace(ROOT + '/', '') + (at < 0 ? '' : ':' + (at + 1));
+};
+
+let dead = 0;
+for (const [cls, owners] of classOwners) {
+  if (globalClasses.has(cls) || AMBIGUOUS.has(cls) || renderedAnywhere.has(cls)) continue;
+  dead++;
+  console.error(
+    `✗ .${cls} is defined but no module renders it - ${[...owners].map((o) => definedAt(o, cls)).join(' | ')}`,
+  );
+}
+
+if (violations || dead) {
+  if (violations) console.error(`\n${violations} unreachable class rendering(s).`);
+  if (dead) console.error(`${dead} dead class definition(s).`);
   process.exit(1);
 }
-console.log(`check-css-graph: ${entries.length} entries clean.`);
+console.log(`check-css-graph: ${entries.length} entries clean, ${classOwners.size} classes all rendered.`);

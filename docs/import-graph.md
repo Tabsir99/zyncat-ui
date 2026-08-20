@@ -13,20 +13,20 @@ Modules imported by four or more others. A change here ripples widest.
 
 | In-degree | Module                                              | Part of                   |
 | --------: | --------------------------------------------------- | ------------------------- |
-|        33 | `components/internal/utils/cx.ts`                   | shared internal machinery |
-|        30 | `dom-props.ts`                                      | library code              |
+|        34 | `components/internal/utils/cx.ts`                   | shared internal machinery |
+|        31 | `dom-props.ts`                                      | library code              |
 |        24 | `tokens/motion-tokens.ts`                           | the token vocabulary      |
 |        17 | `components/internal/icon/Icon.tsx`                 | shared internal machinery |
 |        15 | `components/internal/hooks/use-controllable.ts`     | shared internal machinery |
 |        15 | `motion/timing.ts`                                  | the React motion layer    |
 |        14 | `engine/index.ts`                                   | the WAAPI engine          |
-|        10 | `components/primitives/button/Button.tsx`           | a primitive               |
 |        10 | `motion/motion-timing.ts`                           | the React motion layer    |
 |        10 | `motion/presence.tsx`                               | the React motion layer    |
 |         9 | `components/internal/icon/IconSlot.tsx`             | shared internal machinery |
 |         9 | `components/internal/overlay/layer.tsx`             | shared internal machinery |
 |         9 | `motion/element.tsx`                                | the React motion layer    |
 |         9 | `motion/presets.ts`                                 | the React motion layer    |
+|         8 | `components/primitives/button/Button.tsx`           | a primitive               |
 |         8 | `motion/glide.tsx`                                  | the React motion layer    |
 |         6 | `components/composites/emoji-picker/types.ts`       | a composite               |
 |         6 | `motion/use-motion.ts`                              | the React motion layer    |

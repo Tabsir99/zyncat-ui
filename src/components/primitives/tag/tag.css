@@ -51,31 +51,6 @@
   display: block;
 }
 
-/* Dual-weight icon crossfade - transitions, not animations, so nothing plays on first paint. */
-.tag__icon--dual {
-  display: inline-grid;
-}
-.tag__icon--dual > :is(i, svg) {
-  grid-area: 1 / 1;
-  transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-standard);
-}
-.tag__icon--dual > :is(i, svg):last-child {
-  opacity: 0;
-  transform: scale(0.6);
-}
-.tag--toggle[aria-pressed='true'] .tag__icon--dual > :is(i, svg):first-child {
-  opacity: 0;
-}
-.tag--toggle[aria-pressed='true'] .tag__icon--dual > :is(i, svg):last-child {
-  opacity: 1;
-  transform: scale(1);
-  transition:
-    opacity var(--duration-fast) var(--ease-standard),
-    transform var(--duration-slow) var(--ease-spring);
-}
-
 .tag__count {
   font-family: var(--font-mono);
   font-size: var(--size-micro);
@@ -241,8 +216,5 @@
   }
   .tag--toggle:active:not(:disabled) {
     transform: none;
-  }
-  .tag__icon--dual > :is(i, svg) {
-    transition: none;
   }
 }

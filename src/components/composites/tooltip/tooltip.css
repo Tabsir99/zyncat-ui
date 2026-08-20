@@ -81,6 +81,3 @@
 .tooltip p + p {
   margin-top: var(--space-1);
 }
-.tooltip .tooltip__muted {
-  color: var(--text-muted);
-}

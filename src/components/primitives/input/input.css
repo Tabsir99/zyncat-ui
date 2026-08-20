@@ -63,7 +63,6 @@
   color: var(--text-body);
 }
 
-/* On message TEXT change (normalanderrorandwarning), JS re-triggers .fld__msg--enter to fade and rise - never a hard pop. */
 .fld__msg {
   font: var(--type-caption);
   color: var(--text-subtle);
@@ -77,25 +76,6 @@
   font-size: var(--size-body);
   flex: none;
 }
-.fld__msg--enter {
-  animation: fld-msg-in var(--duration-base) var(--ease-entrance);
-}
-@keyframes fld-msg-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(var(--space-px) * -1));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .fld__msg--enter {
-    animation: none;
-  }
-}
-
 /* Gap is the message's padding-top (not margin) so it lives inside the Collapse and clips to zero when closed. */
 .fld .fld__msg {
   padding-top: var(--space-2);
@@ -126,17 +106,11 @@
 .fld__icon--lead {
   left: var(--space-2);
 }
-.fld__icon--trail {
-  right: var(--space-2);
-}
 .fld__control:focus-within .fld__icon {
   color: var(--text-muted);
 }
 .fld--has-lead .fld__input {
   padding-left: calc(var(--space-2) + var(--icon-md) + var(--space-2));
-}
-.fld--has-trail .fld__input {
-  padding-right: calc(var(--space-3) + var(--icon-md) + var(--space-2));
 }
 
 .fld__action {
