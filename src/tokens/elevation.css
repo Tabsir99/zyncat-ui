@@ -1,11 +1,18 @@
-/* Elevation - two-layer shadows, focus/selection rings, border widths. */
+/* Elevation - layered shadows, focus/selection rings, border widths.
+   The floating steps (lg, xl) are three layers: a tight contact shadow that pins the panel to
+   what it sits on, a mid layer for form, and a wide ambient one. Drop the contact layer and the
+   panel reads soft and unanchored no matter how large the ambient blur is. */
 
 :root {
   --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
   --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07);
-  --shadow-lg: 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1);
-  --shadow-xl: 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14);
+  --shadow-lg:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04),
+    0 12px 28px rgb(var(--shadow-rgb) / 0.1);
+  --shadow-xl:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06),
+    0 24px 48px rgb(var(--shadow-rgb) / 0.14);
 
   /* Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
   --border-hairline: 1px;

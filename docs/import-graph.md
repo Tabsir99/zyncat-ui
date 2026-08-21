@@ -26,8 +26,8 @@ Modules imported by four or more others. A change here ripples widest.
 |         9 | `components/internal/overlay/layer.tsx`             | shared internal machinery |
 |         9 | `motion/element.tsx`                                | the React motion layer    |
 |         9 | `motion/presets.ts`                                 | the React motion layer    |
-|         8 | `components/primitives/button/Button.tsx`           | a primitive               |
 |         8 | `motion/glide.tsx`                                  | the React motion layer    |
+|         7 | `components/primitives/button/Button.tsx`           | a primitive               |
 |         6 | `components/composites/emoji-picker/types.ts`       | a composite               |
 |         6 | `motion/use-motion.ts`                              | the React motion layer    |
 |         5 | `components/composites/date-picker/date-utils.ts`   | a composite               |

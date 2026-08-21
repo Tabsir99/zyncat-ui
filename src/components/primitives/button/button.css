@@ -12,6 +12,16 @@
   inherits: false;
   initial-value: transparent;
 }
+@property --btn-wash-a {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+@property --btn-wash-b {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
 
 .btn {
   --btn-shadow: none;
@@ -110,37 +120,45 @@
 .btn--primary {
   color: var(--text-on-accent);
   --btn-grad-a: var(--accent);
-  --btn-grad-b: var(--accent-hover);
-  background: linear-gradient(180deg, var(--btn-grad-a), var(--btn-grad-b));
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
+  --btn-grad-b: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
+  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
+  --btn-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
 }
 .btn--primary:hover:not(:disabled):not(.is-loading) {
   --btn-grad-a: var(--accent-lift);
-  --btn-grad-b: var(--accent);
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.22), var(--shadow-md);
+  --btn-grad-b: var(--accent-hover);
+  --btn-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
 }
 .btn--primary:active:not(:disabled):not(.is-loading) {
-  --btn-grad-a: var(--accent-hover);
-  --btn-grad-b: var(--accent-active);
+  --btn-grad-a: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
+  --btn-grad-b: var(--accent);
   transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
+  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
 }
 
 .btn--secondary {
   color: var(--text-body);
-  background: var(--bg-surface);
+  --btn-grad-a: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
+  --btn-grad-b: var(--bg-muted);
+  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 45%, var(--btn-grad-b) 100%);
   border-color: var(--border-default);
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6), 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+  --btn-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.045),
+    0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
 }
 .btn--secondary:hover:not(:disabled):not(.is-loading) {
   color: var(--text-strong);
-  background: var(--neutral-wash);
+  --btn-grad-a: var(--bg-muted);
+  --btn-grad-b: color-mix(in oklab, var(--bg-muted) 31%, var(--border-default));
   border-color: var(--border-strong);
 }
 .btn--secondary:active:not(:disabled):not(.is-loading) {
-  background: var(--neutral-wash-press);
+  --btn-grad-a: var(--bg-muted);
+  --btn-grad-b: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
   transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
+  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.06);
 }
 
 .btn--ghost {
@@ -161,7 +179,8 @@
   transition:
     transform var(--duration-fast) var(--ease-standard),
     opacity var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard);
+    --btn-wash-a var(--duration-fast) var(--ease-standard),
+    --btn-wash-b var(--duration-fast) var(--ease-standard);
 }
 .btn--ghost:hover:not(:disabled):not(.is-loading) {
   color: var(--text-strong);
@@ -180,21 +199,23 @@
 .btn--danger {
   color: var(--text-on-accent);
   --btn-grad-a: var(--red-500);
-  --btn-grad-b: var(--red-600);
-  background: linear-gradient(180deg, var(--btn-grad-a), var(--btn-grad-b));
+  --btn-grad-b: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
+  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
   --btn-ring: var(--ring-danger);
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.16), var(--shadow-sm);
+  --btn-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
 }
 .btn--danger:hover:not(:disabled):not(.is-loading) {
   --btn-grad-a: var(--red-400);
-  --btn-grad-b: var(--red-500);
-  --btn-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.22), var(--shadow-md);
+  --btn-grad-b: var(--red-600);
+  --btn-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
 }
 .btn--danger:active:not(:disabled):not(.is-loading) {
-  --btn-grad-a: var(--red-600);
-  --btn-grad-b: var(--red-700);
+  --btn-grad-a: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
+  --btn-grad-b: var(--red-500);
   transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.4), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.1);
+  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
 }
 
 .btn--link {
@@ -239,7 +260,7 @@
 }
 .btn--secondary:disabled {
   color: var(--text-disabled);
-  background: var(--bg-surface);
+  background: var(--bg-subtle);
   border-color: var(--border-subtle);
   --btn-shadow: none;
 }

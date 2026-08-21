@@ -184,18 +184,6 @@
     color var(--duration-base) var(--ease-standard);
 }
 
-.select__option[data-size='sm'] {
-  --menu-row-padding: var(--space-1);
-}
-
-.select__option[data-size='md'] {
-  --menu-row-padding: var(--space-2);
-}
-
-.select__option[data-size='lg'] {
-  --menu-row-padding: var(--space-4);
-}
-
 .select__option-check {
   display: inline-flex;
   align-items: center;
@@ -208,19 +196,14 @@
   transition: var(--transition-opacity);
 }
 
-/* Active row: the pill carries the fill; here we only lift the text. Selected rules follow, so source order wins. */
 .select__option[data-active='true'] {
   color: var(--text-strong);
 }
 .select__option[data-active='true'] .menu-row__icon {
   color: var(--text-body);
 }
-.select__option[data-selected='true'] {
-  background-color: var(--accent-wash);
-}
 .select__option[data-selected='true'] .menu-row__label {
   color: var(--text-accent);
-  font-weight: var(--weight-medium);
 }
 .select__option[data-selected='true'] .menu-row__icon {
   color: var(--text-accent);
@@ -251,7 +234,7 @@
   }
 }
 
-/* Multi-select: the reused Checkbox box IS the indicator - no row fill (avoid double-encoding); strip the .cbx standalone chrome. */
+/* Multi-select: the reused Checkbox box IS the indicator; strip the .cbx standalone chrome. */
 .select__menu[data-multiple='true'] .select__option-check {
   opacity: 1;
 }
@@ -269,10 +252,6 @@
 .select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx__box {
   transform: scale(0.86);
 }
-.select__menu[data-multiple='true'] .select__option[data-selected='true'] {
-  background-color: transparent;
-}
-
 .select__empty {
   padding: var(--space-4) var(--space-3);
   text-align: center;

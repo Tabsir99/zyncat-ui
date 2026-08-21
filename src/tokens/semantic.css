@@ -1,13 +1,15 @@
 /* Semantic layer - the intent-named aliases components consume; repoint these to re-theme. */
 
 :root {
+  /* Three real elevation steps: the canvas is coolest, a card sits above it, a floating panel
+     is the only true white. --gray-0 cannot carry hue, so surfaces start one step down. */
   --bg-app: var(--gray-25);
   --bg-surface: var(--gray-0);
   --bg-surface-raised: var(--gray-0);
   --bg-subtle: var(--gray-50);
   --bg-muted: var(--gray-100);
   --bg-inset: var(--gray-50);
-  --bg-overlay: oklch(0.225 0.01 264 / 0.44);
+  --bg-overlay: color-mix(in oklab, var(--gray-900) 44%, transparent);
 
   --text-strong: var(--gray-950);
   --text-body: var(--gray-800);

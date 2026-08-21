@@ -122,7 +122,6 @@ export function Select({
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
         animation={animation}
-        size={size}
         {...(!showCheck && { check: () => null })}
       />
     </div>

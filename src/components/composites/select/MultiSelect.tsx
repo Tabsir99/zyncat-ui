@@ -125,7 +125,6 @@ export function MultiSelect({
         ariaLabel={ariaLabel}
         multiple
         animation={animation}
-        size={size}
         check={(sel) => <CheckboxTick checked={sel} />}
       />
     </div>

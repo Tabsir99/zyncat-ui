@@ -1,20 +1,25 @@
-/* Color primitives - the closed neutral + status ramps. */
+/* Color primitives - the closed neutral + status ramps.
+   The neutral ramp is a cold gray: hue 262 throughout, with chroma arced to peak at the
+   mid steps (400-700) and fall away at both ends. Flat chroma reads dirty in the shadows
+   and tinted in the highlights; the arc keeps the near-whites clean and the darks blue.
+   Lightness is the contrast spine - retune chroma freely, move an L step and every
+   text-on-surface pair moves with it. */
 
 :root {
   --gray-0: oklch(1 0 0);
-  --gray-25: oklch(0.992 0.0015 264);
-  --gray-50: oklch(0.984 0.003 264);
-  --gray-100: oklch(0.968 0.004 264);
-  --gray-150: oklch(0.948 0.005 264);
-  --gray-200: oklch(0.922 0.006 264);
-  --gray-300: oklch(0.872 0.008 264);
-  --gray-400: oklch(0.765 0.01 264);
-  --gray-500: oklch(0.642 0.012 264);
-  --gray-600: oklch(0.532 0.013 264);
-  --gray-700: oklch(0.422 0.013 264);
-  --gray-800: oklch(0.305 0.012 264);
-  --gray-900: oklch(0.225 0.01 264);
-  --gray-950: oklch(0.165 0.008 264);
+  --gray-25: oklch(0.992 0.003 262);
+  --gray-50: oklch(0.984 0.005 262);
+  --gray-100: oklch(0.968 0.007 262);
+  --gray-150: oklch(0.948 0.009 262);
+  --gray-200: oklch(0.922 0.011 262);
+  --gray-300: oklch(0.872 0.015 262);
+  --gray-400: oklch(0.765 0.021 262);
+  --gray-500: oklch(0.642 0.027 262);
+  --gray-600: oklch(0.532 0.03 262);
+  --gray-700: oklch(0.422 0.03 262);
+  --gray-800: oklch(0.305 0.027 262);
+  --gray-900: oklch(0.225 0.022 262);
+  --gray-950: oklch(0.165 0.018 262);
 
   --teal-50: oklch(0.972 0.02 198);
   --teal-100: oklch(0.935 0.04 198);
@@ -46,8 +51,8 @@
 
   /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue.
      -strong is the press step of the gray wash (hover 6% < press 10%). */
-  --gray-wash: oklch(0.42 0.012 264 / 0.06);
-  --gray-wash-strong: oklch(0.42 0.012 264 / 0.1);
+  --gray-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
+  --gray-wash-strong: color-mix(in oklab, var(--gray-700) 10%, transparent);
   --teal-wash: oklch(0.63 0.118 198 / 0.05);
   --green-wash: oklch(0.62 0.13 152 / 0.1);
   --amber-wash: oklch(0.76 0.14 75 / 0.12);

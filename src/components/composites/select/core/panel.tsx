@@ -9,7 +9,6 @@ import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
 import type { DisableableAnimation } from '../../../../motion/timing';
-import type { ButtonProps } from '../../../primitives/button/Button';
 
 export interface ListboxPanelProps {
   lb: ListboxState;
@@ -21,7 +20,6 @@ export interface ListboxPanelProps {
   /** Menu open/close timing - motion tokens only, or `null` to disable. */
   animation?: DisableableAnimation;
   check?: (selected: boolean) => ReactNode;
-  size?: ButtonProps['size'];
 }
 
 const defaultCheck = (selected: boolean) => (selected ? <Icon key="on" name="check" size="sm" weight="bold" /> : null);
@@ -51,7 +49,6 @@ export function ListboxPanel({
   ariaLabel,
   multiple,
   animation,
-  size = 'md',
   check = defaultCheck,
 }: ListboxPanelProps) {
   const navIndex = useMemo(() => new Map(lb.navItems.map((o, i) => [o.value, i] as const)), [lb.navItems]);
@@ -120,7 +117,6 @@ export function ListboxPanel({
                       data-selected={isSel ? 'true' : undefined}
                       data-active={visible && i === lb.activeIdx ? 'true' : undefined}
                       data-disabled={opt.disabled ? 'true' : undefined}
-                      data-size={size}
                       onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => visible && lb.commit(opt)}

@@ -33,6 +33,13 @@ const PEOPLE: Option[] = [
   { value: 'el', label: 'Eli Stone', description: 'Support', disabled: true },
 ];
 
+const PRIORITIES: Option[] = [
+  { value: 'low', label: 'Low' },
+  { value: 'med', label: 'Medium' },
+  { value: 'high', label: 'High' },
+  { value: 'urg', label: 'Urgent' },
+];
+
 const TIMEZONES: Option[] = [
   { value: 'utc', label: 'UTC', description: 'Coordinated Universal Time' },
   { value: 'lon', label: 'London', description: 'GMT+1' },
@@ -320,8 +327,20 @@ export function RadioGroupPage() {
 export function SelectPage() {
   const [tz, setTz] = useState<string | null>('utc');
   const [assignee, setAssignee] = useState<string | null>(null);
+  const [priority, setPriority] = useState<string | null>('med');
   return (
     <>
+      <Demo label="labels only">
+        <div style={{ width: W }}>
+          <Select
+            options={PRIORITIES}
+            value={priority}
+            onChange={(v) => setPriority(v)}
+            placeholder="Set a priority"
+            ariaLabel="Priority"
+          />
+        </div>
+      </Demo>
       <Demo label="searchable - leading icon">
         <div style={{ width: W }}>
           <Select
