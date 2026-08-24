@@ -14,11 +14,5 @@ import { DOCS } from './registry';
 
 export const routes: RouteRecord[] = [
   { path: '/', element: <Landing /> },
-  {
-    element: <Layout />,
-    children: [
-      { path: '/components', element: <Home /> },
-      ...DOCS.map((d) => ({ path: `/${d.slug}`, element: <PageView doc={d} /> })),
-    ],
-  },
+  { element: <Layout />, children: DOCS.map((d) => ({ path: `/${d.slug}`, element: <PageView doc={d} /> })) },
 ];

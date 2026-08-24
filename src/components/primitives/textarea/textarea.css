@@ -118,16 +118,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.txa__kbd {
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  line-height: 1;
-  color: var(--text-muted);
-  padding: var(--space-1);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-}
 
 .txa__meter {
   margin-left: auto;

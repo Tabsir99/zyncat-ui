@@ -1,195 +1,162 @@
 import { useState } from 'react';
 import { Avatar } from '@zyncat/ui/avatar';
 import { AvatarGroup } from '@zyncat/ui/avatar-group';
-import { Tag, TagGroup } from '@zyncat/ui/tag';
+import { Tag } from '@zyncat/ui/tag';
 import { ToggleTag } from '@zyncat/ui/toggle-tag';
 import { Table, type TableColumn } from '@zyncat/ui/table';
 import { Pagination } from '@zyncat/ui/pagination';
 import { Badge } from '@zyncat/ui/badge';
-import { Demo } from '../kit';
 import { Icon } from '../icon';
 
-export function AvatarPage() {
+/* ==========================================================================
+   Avatar
+   ========================================================================== */
+export function AvatarHero() {
   return (
-    <>
-      <Demo label="sizes">
-        <Avatar name="Ana Ng" size="xs" />
-        <Avatar name="Ana Ng" size="sm" />
-        <Avatar name="Ana Ng" size="md" />
-        <Avatar name="Ana Ng" size="lg" />
-        <Avatar name="Ana Ng" size="xl" />
-      </Demo>
-      <Demo label="status">
-        <Avatar name="Bo Park" status="online" />
-        <Avatar name="Cira Diaz" status="away" />
-        <Avatar name="Dee Okafor" status="busy" />
-        <Avatar name="Eli Stone" status="offline" />
-      </Demo>
-      <Demo label="image - initials - square - anonymous">
-        <Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" status="online" />
-        <Avatar name="Bo Park" paletteIndex={5} />
-        <Avatar name="Acme" shape="square" icon={<span>AC</span>} />
-        <Avatar />
-      </Demo>
-      <Demo label="AvatarGroup - overflow +N">
-        <AvatarGroup max={4} size="sm">
-          <Avatar name="Ana Ng" />
-          <Avatar name="Bo Park" />
-          <Avatar name="Cira Diaz" />
-          <Avatar name="Dee Okafor" />
-          <Avatar name="Eli Stone" />
-          <Avatar name="Fang Wu" />
-        </AvatarGroup>
-      </Demo>
-    </>
+    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+      <Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" status="online" size="lg" />
+      <Avatar name="Bo Park" paletteIndex={5} status="busy" size="lg" />
+      <Avatar name="Dee Okafor" paletteIndex={2} size="lg" />
+    </div>
   );
 }
 
+export function AvatarSizesDemo() {
+  return (
+    <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+      <Avatar name="Ana Ng" size="xs" />
+      <Avatar name="Ana Ng" size="sm" />
+      <Avatar name="Ana Ng" size="md" />
+      <Avatar name="Ana Ng" size="lg" />
+      <Avatar name="Ana Ng" size="xl" />
+    </div>
+  );
+}
+
+export function AvatarStatusDemo() {
+  return (
+    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+      <Avatar name="Bo Park" status="online" />
+      <Avatar name="Cira Diaz" status="away" />
+      <Avatar name="Dee Okafor" status="busy" />
+      <Avatar name="Eli Stone" status="offline" />
+    </div>
+  );
+}
+
+export function AvatarGroupDemo() {
+  return (
+    <AvatarGroup max={4} size="md">
+      <Avatar name="Ana Ng" src="https://i.pravatar.cc/96?img=47" />
+      <Avatar name="Bo Park" />
+      <Avatar name="Cira Diaz" />
+      <Avatar name="Dee Okafor" />
+      <Avatar name="Eli Stone" />
+      <Avatar name="Fang Wu" />
+    </AvatarGroup>
+  );
+}
+
+/* ==========================================================================
+   Tag
+   ========================================================================== */
 const INITIAL_LABELS = [
   { id: 'a', name: 'design', icon: <Icon name="hash" /> },
   { id: 'b', name: 'frontend', icon: <Icon name="hash" /> },
   { id: 'c', name: 'urgent', icon: <Icon name="hash" /> },
-  { id: 'd', name: 'backlog', icon: <Icon name="hash" /> },
 ];
 
-const FILTERS = ['Open', 'In review', 'Merged', 'Closed'];
-
-export function TagPage() {
+export function TagHero() {
   const [labels, setLabels] = useState(INITIAL_LABELS);
-  const [filters, setFilters] = useState<string[]>(['Open', 'Merged']);
   return (
-    <>
-      <Demo label="static - icon - sizes - disabled">
-        <Tag>Spring 2026</Tag>
-        <Tag icon={<Icon name="hash" />}>label</Tag>
-        <Tag size="sm">dense row</Tag>
-        <Tag disabled onRemove={() => undefined}>
-          locked
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+      {labels.map((l) => (
+        <Tag key={l.id} icon={l.icon} onRemove={() => setLabels((arr) => arr.filter((x) => x.id !== l.id))}>
+          {l.name}
         </Tag>
-      </Demo>
-      <Demo label="TagGroup - removable">
-        <TagGroup ariaLabel="Labels">
-          {labels.map((l) => (
-            <Tag
-              key={l.id}
-              icon={l.icon}
-              removeLabel={`Remove ${l.name}`}
-              onRemove={() => setLabels((list) => list.filter((x) => x.id !== l.id))}
-            >
-              {l.name}
-            </Tag>
-          ))}
-        </TagGroup>
-      </Demo>
-      <Demo label="ToggleTag - many-of-many (controlled)">
-        {FILTERS.map((label) => (
-          <ToggleTag
-            key={label}
-            selected={filters.includes(label)}
-            onChange={(next) => setFilters((sel) => (next ? [...sel, label] : sel.filter((x) => x !== label)))}
-          >
-            {label}
-          </ToggleTag>
-        ))}
-      </Demo>
-      <Demo label="ToggleTag - icon + count">
-        <ToggleTag icon={<Icon name="star" />} count={48} defaultSelected>
-          Starred
-        </ToggleTag>
-        <ToggleTag icon={<Icon name="archive" />} count={7}>
-          Archived
-        </ToggleTag>
-      </Demo>
-    </>
+      ))}
+    </div>
   );
 }
 
-type InvoiceStatus = 'paid' | 'pending' | 'overdue' | 'draft';
-interface Invoice {
-  id: string;
-  number: string;
-  customer: string;
-  status: InvoiceStatus;
-  date: string;
-  ts: number;
-  amount: number;
+export function TagToggleGroupDemo() {
+  const [selected, setSelected] = useState<string[]>(['Open', 'Merged']);
+  const filters = ['Open', 'In review', 'Merged', 'Closed'];
+
+  const toggle = (f: string) => {
+    setSelected((prev) => (prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]));
+  };
+
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+      {filters.map((f) => (
+        <ToggleTag key={f} checked={selected.includes(f)} onChange={() => toggle(f)}>
+          {f}
+        </ToggleTag>
+      ))}
+    </div>
+  );
 }
 
-const STATUS_TONE: Record<InvoiceStatus, 'success' | 'warning' | 'danger' | undefined> = {
-  paid: 'success',
-  pending: 'warning',
-  overdue: 'danger',
-  draft: undefined,
-};
+/* ==========================================================================
+   Table
+   ========================================================================== */
+interface PostRow {
+  id: string;
+  title: string;
+  channel: string;
+  status: 'Published' | 'Scheduled' | 'Draft';
+  engagement: number;
+}
 
-const INVOICES: Invoice[] = [
-  { id: 'i1', number: 'INV-2041', customer: 'Northwind', status: 'paid', date: 'Jun 12', ts: 1718, amount: 4820 },
-  { id: 'i2', number: 'INV-2042', customer: 'Acme Inc', status: 'pending', date: 'Jun 14', ts: 1718.2, amount: 1290 },
-  { id: 'i3', number: 'INV-2043', customer: 'Globex', status: 'draft', date: '-', ts: 0, amount: 0 },
-  { id: 'i4', number: 'INV-2044', customer: 'Initech', status: 'overdue', date: 'May 30', ts: 1717, amount: 760 },
+const ROWS: PostRow[] = [
+  { id: '1', title: 'React 19 Release Highlights', channel: 'Twitter', status: 'Published', engagement: 4230 },
+  { id: '2', title: 'Design Tokens Architecture', channel: 'LinkedIn', status: 'Published', engagement: 1890 },
+  { id: '3', title: 'WAAPI Motion Deep Dive', channel: 'Twitter', status: 'Scheduled', engagement: 0 },
+  { id: '4', title: 'Q3 Product Roadmap Preview', channel: 'Newsletter', status: 'Draft', engagement: 0 },
 ];
 
-const COLUMNS: TableColumn<Invoice>[] = [
-  { key: 'number', label: 'Invoice', strong: true, grow: true, sortable: true },
-  { key: 'customer', label: 'Customer', sortable: true },
+const COLUMNS: TableColumn<PostRow>[] = [
+  { id: 'title', header: 'Post Title', cell: (r) => <strong>{r.title}</strong>, sortable: true },
+  { id: 'channel', header: 'Channel', cell: (r) => r.channel },
   {
-    key: 'status',
-    label: 'Status',
-    render: (r) => (
-      <Badge tone={STATUS_TONE[r.status]} pill>
-        {r.status[0].toUpperCase() + r.status.slice(1)}
+    id: 'status',
+    header: 'Status',
+    cell: (r) => (
+      <Badge tone={r.status === 'Published' ? 'success' : r.status === 'Scheduled' ? 'info' : 'warning'}>
+        {r.status}
       </Badge>
     ),
   },
-  { key: 'date', label: 'Date', mono: true, sortable: true, sortBy: (r) => r.ts },
   {
-    key: 'amount',
-    label: 'Amount',
-    mono: true,
-    align: 'end',
+    id: 'engagement',
+    header: 'Impressions',
+    cell: (r) => (r.engagement ? r.engagement.toLocaleString() : '—'),
+    align: 'right',
     sortable: true,
-    render: (r) => (r.amount ? `$${r.amount.toLocaleString()}` : '-'),
   },
 ];
 
-export function TablePage() {
+export function TableHero() {
+  const [selectedIds, setSelectedIds] = useState<string[]>(['1']);
   return (
-    <Demo label="sortable - status cell - selectable - footer" fill>
-      <Table<Invoice>
-        ariaLabel="Invoices"
+    <div style={{ width: '100%', overflowX: 'auto' }}>
+      <Table
+        data={ROWS}
         columns={COLUMNS}
-        rows={INVOICES}
+        keyField="id"
         selectable
-        defaultSort={{ key: 'amount', dir: 'desc' }}
-        footer={<Pagination ariaLabel="Invoices" range={[1, INVOICES.length]} total={INVOICES.length} />}
+        selectedIds={selectedIds}
+        onSelectionChange={setSelectedIds}
       />
-    </Demo>
+    </div>
   );
 }
 
-const PAGE_SIZE = 25;
-const PAGE_TOTAL = 312;
-
-export function PaginationPage() {
-  const [start, setStart] = useState(26);
-  const from = start;
-  const to = Math.min(start + PAGE_SIZE - 1, PAGE_TOTAL);
-  return (
-    <>
-      <Demo label="cursor range (controlled)">
-        <Pagination
-          ariaLabel="Rows"
-          range={[from, to]}
-          total={PAGE_TOTAL}
-          hasPrev={from > 1}
-          hasNext={to < PAGE_TOTAL}
-          onPrev={() => setStart((s) => Math.max(1, s - PAGE_SIZE))}
-          onNext={() => setStart((s) => s + PAGE_SIZE)}
-        />
-      </Demo>
-      <Demo label="endless - no total">
-        <Pagination ariaLabel="Activity" range={[101, 125]} hasPrev hasNext />
-      </Demo>
-    </>
-  );
+/* ==========================================================================
+   Pagination
+   ========================================================================== */
+export function PaginationHero() {
+  const [page, setPage] = useState(1);
+  return <Pagination page={page} pageSize={10} totalCount={94} onPageChange={setPage} />;
 }

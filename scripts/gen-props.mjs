@@ -9,7 +9,7 @@ const OUT = join(ROOT, 'playground/src/content/props.generated.ts');
 
 const SUBPATH_FOR_SLUG = { 'date-range': 'date-range-field' };
 
-const HAND_WRITTEN = new Set(['icon', 'toast']);
+const HAND_WRITTEN = new Set(['icon', 'toast', 'introduction', 'installation', 'mcp']);
 
 const NESTED_TYPE_DEPTH = 1;
 

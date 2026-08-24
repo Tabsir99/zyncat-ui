@@ -8,8 +8,10 @@ import { Toggle } from '@zyncat/ui/toggle';
 import { RadioGroup, type RadioOption } from '@zyncat/ui/radio-group';
 import { Select } from '@zyncat/ui/select';
 import { MultiSelect } from '@zyncat/ui/multi-select';
-import { Demo } from '../kit';
+import { toast } from '@zyncat/ui/toast';
 import { Icon } from '../icon';
+
+const W = 320;
 
 type Option = { value: string; label: string; description?: string; icon?: string; disabled?: boolean };
 
@@ -25,401 +27,297 @@ const PLAN: RadioOption[] = [
   { value: 'scale', label: 'Scale', description: 'For organizations', icon: <Icon name="crown" /> },
 ];
 
-const PEOPLE: Option[] = [
-  { value: 'an', label: 'Ana Ng', description: 'Design' },
-  { value: 'bo', label: 'Bo Park', description: 'Engineering' },
-  { value: 'ci', label: 'Cira Diaz', description: 'Product' },
-  { value: 'de', label: 'Dee Okafor', description: 'Marketing' },
-  { value: 'el', label: 'Eli Stone', description: 'Support', disabled: true },
-];
-
-const PRIORITIES: Option[] = [
-  { value: 'low', label: 'Low' },
-  { value: 'med', label: 'Medium' },
-  { value: 'high', label: 'High' },
-  { value: 'urg', label: 'Urgent' },
-];
-
 const TIMEZONES: Option[] = [
-  { value: 'utc', label: 'UTC', description: 'Coordinated Universal Time' },
-  { value: 'lon', label: 'London', description: 'GMT+1' },
-  { value: 'nyc', label: 'New York', description: 'GMT-4' },
-  { value: 'la', label: 'Los Angeles', description: 'GMT-7' },
-  { value: 'tok', label: 'Tokyo', description: 'GMT+9' },
+  { value: 'utc', label: 'UTC (Coordinated Universal Time)' },
+  { value: 'lon', label: 'London (GMT+1)' },
+  { value: 'nyc', label: 'New York (GMT-4)' },
+  { value: 'la', label: 'Los Angeles (GMT-7)' },
+  { value: 'tok', label: 'Tokyo (GMT+9)' },
 ];
 
-const W = 280;
+const CHANNELS: Option[] = [
+  { value: 'tw', label: 'Twitter / X' },
+  { value: 'ig', label: 'Instagram' },
+  { value: 'li', label: 'LinkedIn' },
+  { value: 'yt', label: 'YouTube' },
+  { value: 'tt', label: 'TikTok' },
+];
 
-export function TextFieldPage() {
+/* ==========================================================================
+   TextField
+   ========================================================================== */
+export function TextFieldHero() {
+  const [val, setVal] = useState('Quarterly review');
+  return (
+    <div style={{ width: '100%', maxWidth: W }}>
+      <TextField
+        id="hero-search"
+        label="Search projects"
+        leadingIcon={<Icon name="magnifying-glass" />}
+        clearable
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+      />
+    </div>
+  );
+}
+
+export function TextFieldLabelDemo() {
   const [name, setName] = useState('');
-  const [search, setSearch] = useState('Quarterly report');
-  const [handle, setHandle] = useState('');
   return (
-    <>
-      <Demo label="label - placeholder - helper">
-        <TextField
-          id="ws"
-          label="Workspace name"
-          required
-          placeholder="e.g. Acme"
-          helper="Shown to your team."
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ width: W }}
-        />
-      </Demo>
-      <Demo label="leading icon - clearable - optional">
-        <TextField
-          id="search"
-          label="Search"
-          optional
-          leadingIcon={<Icon name="magnifying-glass" />}
-          clearable
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ width: W }}
-        />
-      </Demo>
-      <Demo label="error - warning - success">
-        <TextField
-          id="handle"
-          label="Username"
-          error="Must be at least 4 characters."
-          value={handle}
-          onChange={(e) => setHandle(e.target.value)}
-          style={{ width: W }}
-        />
-        <TextField
-          id="warn"
-          label="Display name"
-          warning="This is already taken."
-          value="acme"
-          readOnly
-          style={{ width: W }}
-        />
-        <TextField id="ok" label="Slug" success="Available." value="acme-team" readOnly style={{ width: W }} />
-      </Demo>
-      <Demo label="sizes - disabled">
-        <TextField id="sm" size="sm" placeholder="Small" style={{ width: W }} />
-        <TextField id="md" size="md" placeholder="Medium (default)" style={{ width: W }} />
-        <TextField id="lg" size="lg" placeholder="Large" style={{ width: W }} />
-        <TextField id="dis" label="Region" disabled value="us-east-1" style={{ width: W }} />
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: W }}>
+      <TextField
+        id="ws"
+        label="Workspace name"
+        required
+        placeholder="e.g. Acme Studio"
+        helper="Visible to everyone on your team."
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+    </div>
   );
 }
 
-export function NumberFieldPage() {
-  const [seats, setSeats] = useState(7);
-  const [perPage, setPerPage] = useState(3);
+export function TextFieldValidationDemo() {
+  const [handle, setHandle] = useState('ab');
   return (
-    <>
-      <Demo label="unit - bounds - helper">
-        <NumberField
-          id="seats"
-          label="Seats"
-          unit="users"
-          min={1}
-          max={50}
-          value={seats}
-          onChange={setSeats}
-          helper="1-50 seats."
-          style={{ width: W }}
-        />
-      </Demo>
-      <Demo label="error - sizes">
-        <NumberField
-          id="pp"
-          label="Items per page"
-          min={0}
-          max={10}
-          value={perPage}
-          onChange={setPerPage}
-          error={perPage > 8 ? 'Keep it under 8.' : undefined}
-          style={{ width: W }}
-        />
-        <NumberField id="nsm" size="sm" unit="%" value={25} onChange={() => {}} style={{ width: W }} />
-        <NumberField id="nlg" size="lg" unit="hrs" value={2} onChange={() => {}} style={{ width: W }} />
-      </Demo>
-      <Demo label="disabled">
-        <NumberField id="ndis" label="Concurrency" value={4} onChange={() => {}} disabled style={{ width: W }} />
-      </Demo>
-    </>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', maxWidth: W }}>
+      <TextField
+        id="handle"
+        label="Username"
+        error={handle.length < 4 ? 'Must be at least 4 characters.' : undefined}
+        value={handle}
+        onChange={(e) => setHandle(e.target.value)}
+      />
+      <TextField id="ok" label="Workspace handle" success="Handle is available." value="acme-hq" readOnly />
+    </div>
   );
 }
 
-export function OtpFieldPage() {
+export function TextFieldSizesDemo() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: W }}>
+      <TextField id="sm" size="sm" placeholder="Small (28px)" />
+      <TextField id="md" size="md" placeholder="Medium (36px)" />
+      <TextField id="lg" size="lg" placeholder="Large (40px)" />
+    </div>
+  );
+}
+
+/* ==========================================================================
+   NumberField
+   ========================================================================== */
+export function NumberFieldHero() {
+  const [seats, setSeats] = useState(5);
+  return (
+    <div style={{ width: '100%', maxWidth: W }}>
+      <NumberField id="hero-num" label="Seats" unit="users" min={1} max={50} value={seats} onChange={setSeats} />
+    </div>
+  );
+}
+
+export function NumberFieldUnitDemo() {
+  const [posts, setPosts] = useState(3);
+  return (
+    <div style={{ width: '100%', maxWidth: W }}>
+      <NumberField
+        id="posts-per-day"
+        label="Posts per day"
+        unit="posts"
+        min={1}
+        max={20}
+        step={1}
+        value={posts}
+        onChange={setPosts}
+        helper="Maximum cadence allowed by your subscription."
+      />
+    </div>
+  );
+}
+
+/* ==========================================================================
+   OtpField
+   ========================================================================== */
+export function OtpFieldHero() {
+  const [code, setCode] = useState('492');
+  return <OtpField length={6} group={3} value={code} onChange={setCode} />;
+}
+
+export function OtpFieldSizesDemo() {
   const [code, setCode] = useState('');
-  const [pin, setPin] = useState('12');
   return (
-    <>
-      <Demo label="6 slots - grouped 3-3">
-        <OtpField length={6} group={3} value={code} onChange={setCode} />
-      </Demo>
-      <Demo label="error - small">
-        <OtpField length={4} value={pin} onChange={setPin} error size="sm" />
-      </Demo>
-      <Demo label="disabled">
-        <OtpField length={6} value="481" disabled onChange={() => {}} />
-      </Demo>
-    </>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <OtpField length={4} size="sm" value={code} onChange={setCode} />
+      <OtpField length={6} group={3} size="md" value={code} onChange={setCode} />
+    </div>
   );
 }
 
-export function TextareaPage() {
-  const [bio, setBio] = useState('');
-  const [note, setNote] = useState('Reviewed the latest draft - looks great to ship.');
+/* ==========================================================================
+   Textarea
+   ========================================================================== */
+export function TextareaHero() {
+  const [body, setBody] = useState('Launching our new React 19 design system today!');
   return (
-    <>
-      <Demo label="char meter - hint" fill>
-        <Textarea
-          id="bio"
-          label="Bio"
-          max={280}
-          minRows={4}
-          maxRows={12}
-          placeholder="Tell us about yourself..."
-          hint={
-            <>
-              <span className="txa__kbd">⌘</span>
-              <span className="txa__kbd">↵</span> to save
-            </>
-          }
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          onSubmit={(v) => setBio(v)}
-        />
-      </Demo>
-      <Demo label="helper - optional" fill>
-        <Textarea
-          id="note"
-          label="Internal note"
-          optional
-          helper="Only your team sees this."
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
-      </Demo>
-      <Demo label="error - large - disabled" fill>
-        <Textarea id="berr" label="Summary" max={280} error="Can't be empty." value="" onChange={() => {}} />
-        <Textarea id="blg" label="Composer" size="lg" placeholder="Prominent composer" value="" onChange={() => {}} />
-        <Textarea id="bdis" label="Template" disabled value="Read-only content" onChange={() => {}} />
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: 440 }}>
+      <Textarea
+        id="hero-ta"
+        label="Announcement draft"
+        placeholder="Write your post..."
+        max={280}
+        minRows={3}
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        onSubmit={() => toast.success('Draft submitted')}
+        hint="Cmd+Enter to submit"
+      />
+    </div>
   );
 }
 
-export function CheckboxPage() {
-  const [updates, setUpdates] = useState(true);
-  const [twofa, setTwofa] = useState(false);
-  const [agree, setAgree] = useState(false);
+export function TextareaAutoGrowDemo() {
+  const [text, setText] = useState('');
   return (
-    <>
-      <Demo label="label - description">
-        <div className="stack">
-          <Checkbox
-            label="Email me about product updates"
-            checked={updates}
-            onChange={(e) => setUpdates(e.target.checked)}
-          />
-          <Checkbox
-            size="sm"
-            label="Enable two-factor auth"
-            description="Adds a code prompt at sign-in."
-            checked={twofa}
-            onChange={(e) => setTwofa(e.target.checked)}
-          />
-        </div>
-      </Demo>
-      <Demo label="indeterminate - invalid - disabled">
-        <div className="stack">
-          <Checkbox label="Select all" indeterminate onChange={() => {}} />
-          <Checkbox
-            label="I agree to the terms"
-            error={!agree}
-            htmlProps={{ required: true }}
-            checked={agree}
-            onChange={(e) => setAgree(e.target.checked)}
-          />
-          <Checkbox label="Notify on failures" disabled defaultChecked />
-        </div>
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: 440 }}>
+      <Textarea
+        id="autogrow-ta"
+        label="Notes"
+        placeholder="Type multiple lines to test auto-growth..."
+        minRows={2}
+        maxRows={6}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+    </div>
   );
 }
 
-export function TogglePage() {
-  const [autosave, setAutosave] = useState(true);
-  const [pub, setPub] = useState(false);
-  const [twofa, setTwofa] = useState(false);
+/* ==========================================================================
+   Checkbox
+   ========================================================================== */
+export function CheckboxHero() {
+  const [checked, setChecked] = useState(true);
   return (
-    <>
-      <Demo label="label - description">
-        <div className="stack">
-          <Toggle label="Auto-save drafts" checked={autosave} onChange={(e) => setAutosave(e.target.checked)} />
-          <Toggle
-            size="sm"
-            label="Public profile"
-            description="Anyone with the link can view."
-            checked={pub}
-            onChange={(e) => setPub(e.target.checked)}
-          />
-        </div>
-      </Demo>
-      <Demo label="controlled - disabled">
-        <div className="stack">
-          <Toggle label="Two-factor auth" checked={twofa} onChange={(e) => setTwofa(e.target.checked)} />
-          <Toggle label="Locked setting" disabled defaultChecked />
-        </div>
-      </Demo>
-    </>
+    <Checkbox
+      label="Pin post to queue"
+      description="Published before any other scheduled items."
+      checked={checked}
+      onChange={(e) => setChecked(e.target.checked)}
+    />
   );
 }
 
-export function RadioGroupPage() {
-  const [role, setRole] = useState('owner');
+export function CheckboxStatesDemo() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <Checkbox label="Default uncontrolled" defaultChecked />
+      <Checkbox label="Indeterminate batch" indeterminate />
+      <Checkbox label="Disabled option" disabled defaultChecked />
+    </div>
+  );
+}
+
+/* ==========================================================================
+   Toggle
+   ========================================================================== */
+export function ToggleHero() {
+  const [toggled, setToggled] = useState(true);
+  return (
+    <Toggle
+      label="Auto-save drafts"
+      description="Changes sync automatically as you type."
+      checked={toggled}
+      onChange={(e) => setToggled(e.target.checked)}
+    />
+  );
+}
+
+export function ToggleControlledDemo() {
+  const [twoFa, setTwoFa] = useState(false);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <Toggle
+        label="Two-factor authentication"
+        description="Requires an authenticator app code on login."
+        checked={twoFa}
+        onChange={(e) => setTwoFa(e.target.checked)}
+      />
+      <Toggle label="Locked security policy" description="Managed by workspace admin." disabled defaultChecked />
+    </div>
+  );
+}
+
+/* ==========================================================================
+   RadioGroup
+   ========================================================================== */
+export function RadioGroupHero() {
   const [plan, setPlan] = useState('pro');
-  const [chosenRole, setChosenRole] = useState('');
   return (
-    <>
-      <Demo label="rows - helper - disabled option">
-        <RadioGroup
-          name="role"
-          value={role}
-          onChange={setRole}
-          label="Member role"
-          helper="Controls what they can access."
-          options={ROLES}
-          style={{ width: W }}
-        />
-      </Demo>
-      <Demo label="cards - horizontal - icons">
-        <RadioGroup
-          name="plan"
-          variant="cards"
-          orientation="horizontal"
-          value={plan}
-          onChange={setPlan}
-          label="Plan"
-          options={PLAN}
-        />
-      </Demo>
-      <Demo label="required - error">
-        <RadioGroup
-          name="rr"
-          required
-          value={chosenRole}
-          onChange={setChosenRole}
-          label="Assign a role"
-          error={!chosenRole ? 'Pick a role to continue.' : undefined}
-          options={[
-            { value: 'a', label: 'Admin' },
-            { value: 'm', label: 'Member' },
-          ]}
-          style={{ width: W }}
-        />
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: 400 }}>
+      <RadioGroup name="hero-plan" label="Select a plan" value={plan} onChange={setPlan} options={PLAN} />
+    </div>
   );
 }
 
-export function SelectPage() {
-  const [tz, setTz] = useState<string | null>('utc');
-  const [assignee, setAssignee] = useState<string | null>(null);
-  const [priority, setPriority] = useState<string | null>('med');
+export function RadioGroupRowsDemo() {
+  const [role, setRole] = useState('admin');
   return (
-    <>
-      <Demo label="labels only">
-        <div style={{ width: W }}>
-          <Select
-            options={PRIORITIES}
-            value={priority}
-            onChange={(v) => setPriority(v)}
-            placeholder="Set a priority"
-            ariaLabel="Priority"
-          />
-        </div>
-      </Demo>
-      <Demo label="searchable - leading icon">
-        <div style={{ width: W }}>
-          <Select
-            options={TIMEZONES}
-            value={tz}
-            onChange={(v) => setTz(v)}
-            searchable
-            searchPlaceholder="Search time zones"
-            leadingIcon={<Icon name="globe" />}
-            placeholder="Choose a time zone"
-            ariaLabel="Time zone"
-          />
-        </div>
-      </Demo>
-      <Demo label="placeholder - disabled option">
-        <div style={{ width: W }}>
-          <Select
-            options={PEOPLE}
-            value={assignee}
-            onChange={(v) => setAssignee(v)}
-            placeholder="Assign reviewer"
-            leadingIcon={<Icon name="user" />}
-            ariaLabel="Assignee"
-          />
-        </div>
-      </Demo>
-      <Demo label="sizes">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', width: W }}>
-          <Select options={PEOPLE} size="sm" placeholder="Small" ariaLabel="Small select" />
-          <Select options={PEOPLE} size="lg" placeholder="Large" ariaLabel="Large select" />
-        </div>
-      </Demo>
-      <Demo label="invalid - loading - disabled">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', width: W }}>
-          <Select options={PEOPLE} invalid placeholder="Pick someone" ariaLabel="Invalid select" />
-          <Select options={PEOPLE} loading ariaLabel="Loading select" />
-          <Select options={PEOPLE} disabled placeholder="Unavailable" ariaLabel="Disabled select" />
-        </div>
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: 400 }}>
+      <RadioGroup name="role-demo" label="Member permission" value={role} onChange={setRole} options={ROLES} />
+    </div>
   );
 }
 
-export function MultiSelectPage() {
-  const [labels, setLabels] = useState<string[]>(['an', 'bo']);
-  const [reviewers, setReviewers] = useState<string[]>([]);
+/* ==========================================================================
+   Select
+   ========================================================================== */
+export function SelectHero() {
+  const [tz, setTz] = useState('nyc');
   return (
-    <>
-      <Demo label="array value - summary">
-        <div style={{ width: W }}>
-          <MultiSelect
-            options={PEOPLE}
-            value={labels}
-            onChange={(v) => setLabels(v)}
-            placeholder="Choose members"
-            leadingIcon={<Icon name="users" />}
-            ariaLabel="Members"
-          />
-        </div>
-      </Demo>
-      <Demo label="searchable">
-        <div style={{ width: W }}>
-          <MultiSelect
-            options={PEOPLE}
-            value={reviewers}
-            onChange={(v) => setReviewers(v)}
-            searchable
-            searchPlaceholder="Filter people"
-            placeholder="Add reviewers"
-            ariaLabel="Reviewers"
-          />
-        </div>
-      </Demo>
-      <Demo label="invalid - disabled">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', width: W }}>
-          <MultiSelect options={PEOPLE} invalid placeholder="Pick at least one" ariaLabel="Invalid multi-select" />
-          <MultiSelect options={PEOPLE} disabled defaultValue={['an']} ariaLabel="Disabled multi-select" />
-        </div>
-      </Demo>
-    </>
+    <div style={{ width: '100%', maxWidth: W }}>
+      <Select
+        ariaLabel="Timezone"
+        placeholder="Choose timezone"
+        value={tz}
+        onChange={setTz}
+        options={TIMEZONES}
+        searchable
+      />
+    </div>
+  );
+}
+
+export function SelectOptionsDemo() {
+  const [val, setVal] = useState('');
+  return (
+    <div style={{ width: '100%', maxWidth: W }}>
+      <Select
+        ariaLabel="Publishing channel"
+        placeholder="Select destination"
+        value={val}
+        onChange={setVal}
+        options={CHANNELS}
+      />
+    </div>
+  );
+}
+
+/* ==========================================================================
+   MultiSelect
+   ========================================================================== */
+export function MultiSelectHero() {
+  const [channels, setChannels] = useState(['tw', 'li']);
+  return (
+    <div style={{ width: '100%', maxWidth: W }}>
+      <MultiSelect
+        ariaLabel="Connected channels"
+        placeholder="Select channels..."
+        value={channels}
+        onChange={setChannels}
+        options={CHANNELS}
+        searchable
+      />
+    </div>
   );
 }
