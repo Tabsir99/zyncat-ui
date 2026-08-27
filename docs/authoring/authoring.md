@@ -40,6 +40,10 @@ src/components/<tier>/<component>/<component>.css
 - Nothing on `:root`.
 - No `font-family` stacks. Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
 - A property animated from JS never appears in a CSS `transition` (motion.md).
+- Start the stylesheet with the layer order statement and wrap its rules in the components layer.
+- Hoist `@property` registrations above the layer block.
+- Never `@import` with `layer()`. Bundler css-loaders rewrite it into a dead `@media`.
+- Custom-property prefixes are registered in `scripts/check-contracts.mjs`.
 
 ## 4. Document the props where they live
 
@@ -81,7 +85,8 @@ Thing - @zyncat/ui/thing
 ## 7. Run the checks
 
 - `pnpm format`, then `pnpm sync`, then `pnpm verify`.
-- The build sits mid-gate because later checks read `dist/`.
+- `pnpm verify` runs everything in parallel lanes; `check:llms` and `check:props` wait on the build.
+- `check:contracts` enforces the mechanical contract rules and ratchets legacy debt via `scripts/contracts-baseline.json`.
 
 ## Conventions the linters do not catch
 

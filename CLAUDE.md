@@ -68,4 +68,4 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 
 - `pnpm sync`: regenerate every manifest and generated doc.
 - `pnpm verify`: the whole gate, in order.
-- Pieces run alone: `typecheck`, `check:css`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`, `check:props`, `build && check:llms`.
+- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`, `check:props`, `build && check:llms`.

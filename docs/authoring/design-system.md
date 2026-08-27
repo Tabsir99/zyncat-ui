@@ -62,6 +62,8 @@
 
 - Tokens are custom properties on `:root` in `src/tokens/*.css`, served verbatim by `get_tokens`.
 - The `.css` file is the source of truth and the documentation.
+- A token file starts with the layer order statement and wraps its rules in `@layer zyncat.tokens`.
+- Never `@import` with `layer()`. Bundler css-loaders rewrite it into a dead `@media`. Files wrap their own rules.
 - `color.css`, `semantic.css`: neutral ramp, brand and status hues, semantic names.
 - `spacing.css`: one 4px base, a short scale.
 - `typography.css`, `fonts.css`: type scale and families.
@@ -92,10 +94,10 @@
 
 ## Overrides
 
-- Level 0: all shipped CSS sits in a cascade layer, so plain consumer CSS wins. (phase 2)
+- Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
 - Level 1: retheme by overriding tokens on `:root`. JS follows via the DOM readers.
 - Level 2: retune one component through its scoped custom properties.
-- Level 3: restyle with `className` and `style` on every public component. (phase 2)
+- Level 3: restyle with `className` and `style` - direct props on primitives and fields, `htmlProps` on an overlay's panel.
 - Replicas answer to none of these, by design.
 
 ## Compose, or build new?
@@ -137,8 +139,8 @@
 
 ## Roadmap
 
-- Phase 2: cascade layers, universal `className` / `style`.
 - Phase 3: the engine `loop` simulation primitive. Until then, no simulations.
 - Phase 4: wire `src/components/expressive/` into the tsup scan. Port the motion primitives.
 - Phase 5: support widgets into `src/components/compound/`.
 - Phase 6: replicas. Phase 7: docs coverage, publish gate.
+- Legacy debt (comments, px literals, rAF call sites) is ratcheted by `check:contracts` against `scripts/contracts-baseline.json`.

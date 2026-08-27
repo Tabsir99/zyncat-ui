@@ -93,7 +93,7 @@
 
 - `motion.css` collapses every `--duration-*` to `1ms` under `prefers-reduced-motion: reduce`.
 - `UIMotion` reads the same properties, so CSS and JS shrink together.
-- Never add a per-component reduced-motion media query.
+- A per-component reduced-motion query may only disable or zero motion (`transition: none`, `animation: none`, a dropped stagger). Never introduce alternative motion in one.
 - Never branch on `matchMedia` in a component.
 - `UIMotion.reduced` is only for when fast is still wrong.
 - Under it: skip FLIP entirely, `t.settle` becomes `{ duration: 0 }`, simulations snap.
