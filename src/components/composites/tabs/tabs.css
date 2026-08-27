@@ -1,4 +1,7 @@
-/* tabs.css - line tabs for VIEW SWITCHING (overview / activity / settings), sitting on a
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  /* tabs.css - line tabs for VIEW SWITCHING (overview / activity / settings), sitting on a
    hairline baseline. NOT a form control: pick Segmented control for 2-3 filter options.
 
    Anatomy:  .tabs > .tabs__list[role=tablist] > .tab__hover? + .tab* + .tabs__ink
@@ -14,162 +17,162 @@
      first tab touched, springs between pads, and fades out where it rests on leave.
    Label color, icon weight and press dip remain trivial-tier CSS. */
 
-/* -- Shell - owns the full-width baseline ----------------------------------
+  /* -- Shell - owns the full-width baseline ----------------------------------
    The hairline is a ::after on the shell (not a border on the scroller) so it
    spans edge-to-edge while the scroller above it clips, masks and scrolls
    freely. The scroller gets z-index:1 so the ink paints OVER the hairline. */
-.tabs {
-  position: relative;
-}
-.tabs::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: var(--border-hairline);
-  background: var(--border-default);
-}
+  .tabs {
+    position: relative;
+  }
+  .tabs::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: var(--border-hairline);
+    background: var(--border-default);
+  }
 
-/* -- Scroller - the tablist ------------------------------------------------
+  /* -- Scroller - the tablist ------------------------------------------------
    Overflow is honest: the row scrolls (scrollbar hidden) and the clipped edge
    fades out via a mask. The fade lengths are two custom props flipped by
    data-fade (set from scroll geometry in Tabs.jsx) - at 0px the mask is fully
    opaque, i.e. a no-op. Negative margin + matching padding align the first
    label flush with the container edge while the hover pill still has room. */
-.tabs__list {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: var(--space-1);
-  overflow-x: auto;
-  scrollbar-width: none;
-  margin-inline: calc(var(--space-2) * -1);
-  padding-inline: var(--space-2);
+  .tabs__list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(var(--space-2) * -1);
+    padding-inline: var(--space-2);
 
-  --tabs-fade-start: 0px;
-  --tabs-fade-end: 0px;
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black var(--tabs-fade-start),
-    black calc(100% - var(--tabs-fade-end)),
-    transparent
-  );
-}
-.tabs__list::-webkit-scrollbar {
-  display: none;
-}
-.tabs__list[data-fade~='start'] {
-  --tabs-fade-start: var(--space-8);
-}
-.tabs__list[data-fade~='end'] {
-  --tabs-fade-end: var(--space-8);
-}
+    --tabs-fade-start: 0px;
+    --tabs-fade-end: 0px;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black var(--tabs-fade-start),
+      black calc(100% - var(--tabs-fade-end)),
+      transparent
+    );
+  }
+  .tabs__list::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs__list[data-fade~='start'] {
+    --tabs-fade-start: var(--space-8);
+  }
+  .tabs__list[data-fade~='end'] {
+    --tabs-fade-end: var(--space-8);
+  }
 
-/* -- Tab - the hit target --------------------------------------------------
+  /* -- Tab - the hit target --------------------------------------------------
    The button is pill + a bottom gap down to the baseline (total height 36px).
    All visual feedback lives on the inner pill so hover/press/focus read as a
    soft inset shape, while the ink below stays anchored to the baseline. */
-.tab {
-  appearance: none;
-  border: 0;
-  background: none;
-  margin: 0;
-  padding: 0 0 var(--space-2);
-  flex: none;
-  display: block;
-  font-family: var(--font-sans);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.tab:focus-visible {
-  outline: none;
-}
+  .tab {
+    appearance: none;
+    border: 0;
+    background: none;
+    margin: 0;
+    padding: 0 0 var(--space-2);
+    flex: none;
+    display: block;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tab:focus-visible {
+    outline: none;
+  }
 
-.tab__pad {
-  position: relative; /* positioned so every pad paints above the shared glide
+  .tab__pad {
+    position: relative; /* positioned so every pad paints above the shared glide
                              pill (z-index 0, first child of the list) */
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: var(--control-height-sm); /* 28 */
-  padding-inline: var(--space-2);
-  border-radius: var(--radius-md);
-  font: var(--type-micro);
-  line-height: 1;
-  white-space: nowrap;
-  color: var(--text-subtle);
-  transition:
-    var(--transition-control),
-    transform var(--duration-fast) var(--ease-standard);
-}
-.tab__pad .icon {
-  display: inline-flex;
-}
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    height: var(--control-height-sm); /* 28 */
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-md);
+    font: var(--type-micro);
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--text-subtle);
+    transition:
+      var(--transition-control),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  .tab__pad .icon {
+    display: inline-flex;
+  }
 
-/* States - hover strengthens the label (the shared glide pill supplies the
+  /* States - hover strengthens the label (the shared glide pill supplies the
    background), press dips 1px on a darker fill (tactile, like Button), focus
    is the composed accent ring, selection is text-strong + the ink. */
-.tab:hover:not(:disabled) .tab__pad {
-  color: var(--text-body);
-}
-.tab:active:not(:disabled) .tab__pad {
-  background: var(--neutral-wash-press);
-  transform: translateY(var(--space-px));
-}
-.tab.is-selected .tab__pad,
-.tab.is-selected:hover:not(:disabled) .tab__pad {
-  color: var(--text-strong);
-}
-.tab:focus-visible .tab__pad {
-  box-shadow: var(--ring-accent);
-}
-.tab:disabled {
-  cursor: not-allowed;
-}
-.tab:disabled .tab__pad {
-  color: var(--text-disabled);
-}
+  .tab:hover:not(:disabled) .tab__pad {
+    color: var(--text-body);
+  }
+  .tab:active:not(:disabled) .tab__pad {
+    background: var(--neutral-wash-press);
+    transform: translateY(var(--space-px));
+  }
+  .tab.is-selected .tab__pad,
+  .tab.is-selected:hover:not(:disabled) .tab__pad {
+    color: var(--text-strong);
+  }
+  .tab:focus-visible .tab__pad {
+    box-shadow: var(--ring-accent);
+  }
+  .tab:disabled {
+    cursor: not-allowed;
+  }
+  .tab:disabled .tab__pad {
+    color: var(--text-disabled);
+  }
 
-/* -- Count - always mono, always tabular -----------------------------------*/
-.tab__count {
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-subtle);
-  background: var(--bg-muted);
-  padding: var(--space-1);
-  border-radius: var(--radius-sm);
-  transition: var(--transition-colors);
-}
-.tab.is-selected .tab__count {
-  color: var(--text-accent);
-  background: var(--accent-wash);
-}
-.tab:disabled .tab__count {
-  color: var(--text-disabled);
-  background: var(--bg-subtle);
-}
+  /* -- Count - always mono, always tabular -----------------------------------*/
+  .tab__count {
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-subtle);
+    background: var(--bg-muted);
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-colors);
+  }
+  .tab.is-selected .tab__count {
+    color: var(--text-accent);
+    background: var(--accent-wash);
+  }
+  .tab:disabled .tab__count {
+    color: var(--text-disabled);
+    background: var(--bg-subtle);
+  }
 
-/* -- The gliding hover ------------------------------------------------------
+  /* -- The gliding hover ------------------------------------------------------
    One persistent pill, first child of the scroller (../motion/glide writes
    x/y/width/height/opacity inline; coordinates include scrollLeft, so it
    scrolls with its tab). z-index 0 + DOM order keep it under every tab's
    positioned pad in both travel directions. Nothing transitions here. */
-.tab__hover {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  border-radius: var(--radius-md);
-  background: var(--neutral-wash);
-  pointer-events: none;
-  will-change: transform, opacity;
-}
+  .tab__hover {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    border-radius: var(--radius-md);
+    background: var(--neutral-wash);
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
 
-/* -- The ink ---------------------------------------------------------------
+  /* -- The ink ---------------------------------------------------------------
    Positioned in the scroller's layout coordinates (offsetLeft space), so it
    scrolls WITH its tab. Motion writes transform + width at runtime; resting
    geometry is set the same way, so there is nothing to transition here.
@@ -177,32 +180,33 @@
    bespoke control dim - elevation.css reserves 2px for selected emphasis, but
    ships no width token for it (--border-emphasis is 1.5px, which renders as
    sub-pixel fuzz on 1x screens). Do not "fix" it to a token. */
-.tabs__ink {
-  --tabs-ink-h: 2px;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: var(--tabs-ink-h);
-  border-radius: var(--radius-full);
-  background: var(--accent);
-  pointer-events: none;
-  will-change: transform, width;
-}
+  .tabs__ink {
+    --tabs-ink-h: 2px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: var(--tabs-ink-h);
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    pointer-events: none;
+    will-change: transform, width;
+  }
 
-/* -- Panel -----------------------------------------------------------------
+  /* -- Panel -----------------------------------------------------------------
    The panel ROOT is static chrome - borders, padding, background put on it
    by the consumer never move. Only .tab-panel__inner (the content) enters
    from the direction of travel (Motion, TabPanel). The root is focusable per
    the APG (tabindex=0) so keyboard users land on content right after the
    tablist; the ring shows only for keyboard focus. */
-.tab-panel {
-  outline: none;
-  overflow: hidden;
-}
-.tab-panel:focus-visible {
-  box-shadow: var(--ring-accent);
-  border-radius: var(--radius-md);
-}
-.tab-panel__inner {
-  will-change: transform, opacity;
+  .tab-panel {
+    outline: none;
+    overflow: hidden;
+  }
+  .tab-panel:focus-visible {
+    box-shadow: var(--ring-accent);
+    border-radius: var(--radius-md);
+  }
+  .tab-panel__inner {
+    will-change: transform, opacity;
+  }
 }

@@ -1,177 +1,182 @@
-/* Checkbox - on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
+@layer zyncat.tokens, zyncat.components;
 
-.cbx {
-  --cbx-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  --cbx-on: var(--accent);
-  --cbx-off: var(--border-strong);
-  --cbx-ring: var(--ring-accent);
-  --cbx-size: var(--control-box);
-  --cbx-radius: var(--radius-sm);
-  --tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ~ the polyline path length */
-  --fill: 0;
-  --tick: 0;
-  --dash: 0;
-  --press: 1;
+@layer zyncat.components {
+  /* Checkbox - on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
 
-  display: inline-flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color var(--duration-base) var(--ease-standard);
+  .cbx {
+    --cbx-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
+    --cbx-on: var(--accent);
+    --cbx-off: var(--border-strong);
+    --cbx-ring: var(--ring-accent);
+    --cbx-size: var(--control-box);
+    --cbx-radius: var(--radius-sm);
+    --cbx-tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ~ the polyline path length */
+    --cbx-checked: 0;
+    --cbx-tick: 0;
+    --cbx-dash: 0;
+    --cbx-press: 1;
 
-  /* later rule wins, so indeterminate beats checked */
-  &:has(:checked) {
-    --fill: 1;
-    --tick: 1;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color var(--duration-base) var(--ease-standard);
+
+    /* later rule wins, so indeterminate beats checked */
+    &:has(:checked) {
+      --cbx-checked: 1;
+      --cbx-tick: 1;
+    }
+    &:has(:indeterminate) {
+      --cbx-checked: 1;
+      --cbx-tick: 0;
+      --cbx-dash: 1;
+    }
+
+    &:not(.cbx--disabled):hover {
+      background: var(--neutral-wash);
+    }
+    /* accent the empty box on hover */
+    &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
+      --cbx-off: var(--cbx-on);
+    }
+    &:not(.cbx--disabled):active {
+      --cbx-press: 0.88;
+    }
+    &:has(:focus-visible) .cbx__box {
+      box-shadow: var(--cbx-ring);
+    }
   }
-  &:has(:indeterminate) {
-    --fill: 1;
-    --tick: 0;
-    --dash: 1;
-  }
 
-  &:not(.cbx--disabled):hover {
-    background: var(--neutral-wash);
-  }
-  /* accent the empty box on hover */
-  &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
-    --cbx-off: var(--cbx-on);
-  }
-  &:not(.cbx--disabled):active {
-    --press: 0.88;
-  }
-  &:has(:focus-visible) .cbx__box {
-    box-shadow: var(--cbx-ring);
-  }
-}
-
-.cbx__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.cbx__box {
-  position: relative;
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: var(--cbx-size);
-  height: var(--cbx-size);
-  margin-top: calc((var(--leading-body) - var(--cbx-size)) / 2);
-  border: var(--border-hairline) solid color-mix(in oklab, var(--cbx-on) calc(var(--fill) * 100%), var(--cbx-off));
-  border-radius: var(--cbx-radius);
-  background: var(--bg-inset);
-  transform: scale(var(--press));
-  transition:
-    border-color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    transform var(--duration-base) var(--ease-spring);
-
-  &::before {
-    content: '';
+  .cbx__input {
     position: absolute;
-    inset: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
-    /* inner corner = outer radius - border, so the fill reaches the corners (no --bg-inset showing) */
-    border-radius: calc(var(--cbx-radius) - var(--border-hairline));
-    background: var(--cbx-fill);
-    opacity: var(--fill);
-    transform: scale(calc(0.4 + 0.6 * var(--fill)));
+  .cbx__box {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--cbx-size);
+    height: var(--cbx-size);
+    margin-top: calc((var(--leading-body) - var(--cbx-size)) / 2);
+    border: var(--border-hairline) solid
+      color-mix(in oklab, var(--cbx-on) calc(var(--cbx-checked) * 100%), var(--cbx-off));
+    border-radius: var(--cbx-radius);
+    background: var(--bg-inset);
+    transform: scale(var(--cbx-press));
+    transition:
+      border-color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-base) var(--ease-spring);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+
+      /* inner corner = outer radius - border, so the fill reaches the corners (no --bg-inset showing) */
+      border-radius: calc(var(--cbx-radius) - var(--border-hairline));
+      background: var(--cbx-fill);
+      opacity: var(--cbx-checked);
+      transform: scale(calc(0.4 + 0.6 * var(--cbx-checked)));
+      transition:
+        transform var(--duration-base) var(--ease-spring),
+        opacity var(--duration-fast) var(--ease-standard);
+    }
+  }
+
+  /* stagger lives in the delay: draw-on waits a beat (calc - --cbx-tick), retract fires immediately */
+  .cbx__mark {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--text-on-accent);
+    pointer-events: none;
+  }
+  .cbx__tick {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: var(--cbx-tick-len);
+    stroke-dashoffset: calc(var(--cbx-tick-len) * (1 - var(--cbx-tick)));
+    transition: stroke-dashoffset var(--duration-base) var(--ease-entrance) calc(var(--cbx-tick) * var(--duration-fast));
+  }
+
+  .cbx__dash {
+    position: absolute;
+    width: 56%;
+    height: 2px;
+    border-radius: var(--border-hairline);
+    background: var(--text-on-accent);
+    pointer-events: none;
+    opacity: var(--cbx-dash);
+    transform: scaleX(var(--cbx-dash));
     transition:
       transform var(--duration-base) var(--ease-spring),
       opacity var(--duration-fast) var(--ease-standard);
   }
-}
 
-/* stagger lives in the delay: draw-on waits a beat (calc - --tick), retract fires immediately */
-.cbx__mark {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  color: var(--text-on-accent);
-  pointer-events: none;
-}
-.cbx__tick {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: var(--tick-len);
-  stroke-dashoffset: calc(var(--tick-len) * (1 - var(--tick)));
-  transition: stroke-dashoffset var(--duration-base) var(--ease-entrance) calc(var(--tick) * var(--duration-fast));
-}
-
-.cbx__dash {
-  position: absolute;
-  width: 56%;
-  height: 2px;
-  border-radius: var(--border-hairline);
-  background: var(--text-on-accent);
-  pointer-events: none;
-  opacity: var(--dash);
-  transform: scaleX(var(--dash));
-  transition:
-    transform var(--duration-base) var(--ease-spring),
-    opacity var(--duration-fast) var(--ease-standard);
-}
-
-.cbx__text {
-  display: grid;
-  gap: var(--space-1);
-}
-.cbx__label {
-  font: var(--type-label);
-  color: var(--text-strong);
-}
-.cbx__desc {
-  font: var(--type-caption);
-  color: var(--text-muted);
-}
-
-.cbx--sm {
-  --cbx-size: var(--space-4);
-  & .cbx__label {
-    font: var(--type-caption);
-    font-weight: var(--weight-medium);
+  .cbx__text {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .cbx__label {
+    font: var(--type-label);
     color: var(--text-strong);
   }
-  & .cbx__box {
-    margin-top: calc((var(--leading-caption) - var(--cbx-size)) / 2);
+  .cbx__desc {
+    font: var(--type-caption);
+    color: var(--text-muted);
   }
-}
 
-.cbx--error {
-  --cbx-fill: linear-gradient(180deg, var(--danger), var(--danger));
-  --cbx-on: var(--danger);
-  --cbx-off: var(--danger);
-  --cbx-ring: var(--ring-danger);
-}
-
-/* disabled leaves the state flags untouched, so the mark still matches checked state */
-.cbx--disabled {
-  cursor: not-allowed;
-  --cbx-fill: var(--border-strong);
-  --cbx-on: var(--border-default);
-  --cbx-off: var(--border-subtle);
-  & .cbx__box {
-    background: var(--bg-muted);
+  .cbx--sm {
+    --cbx-size: var(--space-4);
+    & .cbx__label {
+      font: var(--type-caption);
+      font-weight: var(--weight-medium);
+      color: var(--text-strong);
+    }
+    & .cbx__box {
+      margin-top: calc((var(--leading-caption) - var(--cbx-size)) / 2);
+    }
   }
-  & .cbx__label,
-  & .cbx__desc {
-    color: var(--text-disabled);
+
+  .cbx--error {
+    --cbx-fill: linear-gradient(180deg, var(--danger), var(--danger));
+    --cbx-on: var(--danger);
+    --cbx-off: var(--danger);
+    --cbx-ring: var(--ring-danger);
+  }
+
+  /* disabled leaves the state flags untouched, so the mark still matches checked state */
+  .cbx--disabled {
+    cursor: not-allowed;
+    --cbx-fill: var(--border-strong);
+    --cbx-on: var(--border-default);
+    --cbx-off: var(--border-subtle);
+    & .cbx__box {
+      background: var(--bg-muted);
+    }
+    & .cbx__label,
+    & .cbx__desc {
+      color: var(--text-disabled);
+    }
   }
 }

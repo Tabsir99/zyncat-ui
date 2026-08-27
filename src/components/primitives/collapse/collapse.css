@@ -1,18 +1,5 @@
-/* Collapse - animates open/closed via a grid track interpolating 0fr and 1fr (never `auto`).
+@layer zyncat.tokens, zyncat.components;
 
-   Closed content leaves the page semantics, not just the paint: the root turns
-   visibility:hidden, dropping children out of the tab order, the accessibility tree and
-   hit-testing. The flip is directional by construction. Closing lists visibility with a
-   delay equal to the size duration, so removal lands only after the exit finishes and
-   nothing pops. Opening omits visibility from its transition list entirely, so content is
-   focusable the same frame it opens, before the entrance runs. The delay rides the duration
-   tokens, so the global reduced-motion collapse (~1ms) applies to it as well. The open state
-   deliberately declares no `visibility: visible` - it inherits instead, so a Collapse nested
-   inside a closed ancestor cannot poke a focusable hole through it. */
-
-/* Timing overrides - set inline by Collapse.tsx from the token-typed duration/ease props.
-   Registered non-inheriting so one Collapse's timing can never leak into a Collapse nested
-   inside it; where unset they resolve invalid and the var() fallbacks supply the defaults. */
 @property --collapse-dur-open {
   syntax: '*';
   inherits: false;
@@ -30,59 +17,81 @@
   inherits: false;
 }
 
-.collapse {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition:
-    grid-template-rows var(--collapse-dur-close, var(--duration-slow)) var(--collapse-ease-close, var(--ease-entrance)),
-    grid-template-columns var(--collapse-dur-close, var(--duration-slow))
-      var(--collapse-ease-close, var(--ease-entrance)),
-    visibility 0s linear var(--collapse-dur-close, var(--duration-slow));
-}
-.collapse[data-open='false'] {
-  visibility: hidden;
-}
-.collapse[data-open='true'] {
-  grid-template-rows: 1fr;
-  transition:
-    grid-template-rows var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance)),
-    grid-template-columns var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance));
-}
+@layer zyncat.components {
+  /* Collapse - animates open/closed via a grid track interpolating 0fr and 1fr (never `auto`).
 
-.collapse[data-axis='width'] {
-  grid-template-rows: 1fr;
-  grid-template-columns: 0fr;
-}
-.collapse[data-axis='width'][data-open='true'] {
-  grid-template-columns: 1fr;
-}
+   Closed content leaves the page semantics, not just the paint: the root turns
+   visibility:hidden, dropping children out of the tab order, the accessibility tree and
+   hit-testing. The flip is directional by construction. Closing lists visibility with a
+   delay equal to the size duration, so removal lands only after the exit finishes and
+   nothing pops. Opening omits visibility from its transition list entirely, so content is
+   focusable the same frame it opens, before the entrance runs. The delay rides the duration
+   tokens, so the global reduced-motion collapse (~1ms) applies to it as well. The open state
+   deliberately declares no `visibility: visible` - it inherits instead, so a Collapse nested
+   inside a closed ancestor cannot poke a focusable hole through it. */
 
-/* min-size:0 is what lets the grid track collapse to 0. */
-.collapse__inner {
-  overflow: hidden;
-  min-height: 0;
-  min-width: 0;
-}
+  /* Timing overrides - set inline by Collapse.tsx from the token-typed duration/ease props.
+   Registered non-inheriting so one Collapse's timing can never leak into a Collapse nested
+   inside it; where unset they resolve invalid and the var() fallbacks supply the defaults. */
 
-.collapse--fade .collapse__inner {
-  opacity: 0;
-  transition: opacity var(--collapse-dur-close, var(--duration-base)) var(--collapse-ease-close, var(--ease-standard));
-}
-.collapse--fade[data-open='true'] .collapse__inner {
-  opacity: 1;
-  /* fade in slightly after the size opens */
-  transition: opacity var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance))
-    60ms;
-}
+  .collapse {
+    --collapse-fade-stagger: 60ms;
 
-@media (prefers-reduced-motion: reduce) {
-  .collapse,
-  .collapse--fade .collapse__inner {
-    transition-duration: 1ms;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+      grid-template-rows var(--collapse-dur-close, var(--duration-slow))
+        var(--collapse-ease-close, var(--ease-entrance)),
+      grid-template-columns var(--collapse-dur-close, var(--duration-slow))
+        var(--collapse-ease-close, var(--ease-entrance)),
+      visibility 0s linear var(--collapse-dur-close, var(--duration-slow));
   }
-  /* drop the fade-in stagger so content is visible immediately; the visibility delay needs
-     no override - it rides the duration tokens, which this media query collapses to 1ms */
+  .collapse[data-open='false'] {
+    visibility: hidden;
+  }
+  .collapse[data-open='true'] {
+    grid-template-rows: 1fr;
+    transition:
+      grid-template-rows var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance)),
+      grid-template-columns var(--collapse-dur-open, var(--duration-slow))
+        var(--collapse-ease-open, var(--ease-entrance));
+  }
+
+  .collapse[data-axis='width'] {
+    grid-template-rows: 1fr;
+    grid-template-columns: 0fr;
+  }
+  .collapse[data-axis='width'][data-open='true'] {
+    grid-template-columns: 1fr;
+  }
+
+  /* min-size:0 is what lets the grid track collapse to 0. */
+  .collapse__inner {
+    overflow: hidden;
+    min-height: 0;
+    min-width: 0;
+  }
+
   .collapse--fade .collapse__inner {
-    transition-delay: 0ms;
+    opacity: 0;
+    transition: opacity var(--collapse-dur-close, var(--duration-base)) var(--collapse-ease-close, var(--ease-standard));
+  }
+  .collapse--fade[data-open='true'] .collapse__inner {
+    opacity: 1;
+    /* fade in slightly after the size opens */
+    transition: opacity var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance))
+      var(--collapse-fade-stagger);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collapse,
+    .collapse--fade .collapse__inner {
+      transition-duration: 1ms;
+    }
+    /* drop the fade-in stagger so content is visible immediately; the visibility delay needs
+     no override - it rides the duration tokens, which this media query collapses to 1ms */
+    .collapse--fade .collapse__inner {
+      transition-delay: 0ms;
+    }
   }
 }

@@ -1,348 +1,352 @@
-/* Table - geometry + paint: sticky header, sortable columns, row selection + bulk bar, pinned identity column. */
+@layer zyncat.tokens, zyncat.components;
 
-.tbl,
-.tbl * {
-  box-sizing: border-box;
-}
+@layer zyncat.components {
+  /* Table - geometry + paint: sticky header, sortable columns, row selection + bulk bar, pinned identity column. */
 
-.tbl {
-  --tbl-pad-y: var(--space-3);
-  --tbl-head-py: var(--space-3);
-  --tbl-head-h: calc(var(--leading-caption) + 2 * var(--tbl-head-py));
-  /* checkbox column: pad 8 + (8 + 18 + 8 hit area) + pad 8 - all tokens */
-  --tbl-check-w: calc(var(--control-box) + 4 * var(--space-2));
-
-  position: relative;
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  max-height: 100%;
-  background: var(--bg-surface);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
-  overflow: hidden;
-}
-
-.tbl--compact {
-  --tbl-pad-y: var(--space-2);
-  --tbl-head-py: var(--space-2);
-}
-
-.tbl__viewport {
-  position: relative;
-  display: flex; /* flex sizing, not % height - % inside a max-height parent resolves to auto, scroller would grow to content */
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-.tbl__scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-}
-
-.tbl__table {
-  width: 100%;
-  border-collapse: separate; /* collapse breaks sticky borders */
-  border-spacing: 0;
-}
-
-.tbl__table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  height: var(--tbl-head-h);
-  padding: var(--tbl-head-py) var(--space-3);
-  background: var(--bg-surface);
-  border-bottom: var(--border-hairline) solid var(--border-default);
-  font: var(--type-caption);
-  font-weight: var(--weight-medium);
-  color: var(--text-muted);
-  text-align: left;
-  vertical-align: middle;
-  white-space: nowrap;
-  transition: box-shadow var(--duration-base) var(--ease-standard);
-}
-.tbl[data-scrolled] .tbl__table thead th {
-  box-shadow: var(--shadow-sm);
-}
-
-.tbl__table td {
-  padding: var(--tbl-pad-y) var(--space-3);
-  border-bottom: var(--border-hairline) solid var(--border-subtle);
-  background: var(--row-bg, var(--bg-surface));
-  font: var(--type-body);
-  color: var(--text-body);
-  vertical-align: middle;
-  white-space: nowrap; /* data tables don't wrap - grow column absorbs slack; overflow scrolls + pins */
-  transition: background-color var(--duration-fast) var(--ease-standard);
-}
-.tbl__table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-/* outermost cells breathe a step more (16) - sortables do it via the button */
-.tbl__table th:first-child:not(.tbl__cell--check):not(.tbl__cell--sortable),
-.tbl__table td:first-child:not(.tbl__cell--check) {
-  padding-inline-start: var(--space-4);
-}
-.tbl__table th:last-child:not(.tbl__cell--sortable),
-.tbl__table td:last-child {
-  padding-inline-end: var(--space-4);
-}
-
-/* one opaque --row-bg per row, read by every cell - stays opaque so sticky cells cover scrolled content */
-.tbl__row {
-  --row-bg: var(--bg-surface);
-}
-.tbl__row:hover {
-  --row-bg: var(--bg-subtle);
-}
-.tbl__row[data-selected] {
-  --row-bg: color-mix(in oklab, var(--accent) 5%, var(--bg-surface));
-}
-.tbl__row[data-selected]:hover {
-  --row-bg: color-mix(in oklab, var(--accent) 5%, var(--bg-subtle));
-}
-.tbl--clickable tbody .tbl__row {
-  cursor: pointer;
-}
-
-.tbl__table td.tbl__cell--mono {
-  font: var(--type-mono);
-  font-variant-numeric: tabular-nums;
-}
-.tbl__table td.tbl__cell--strong {
-  color: var(--text-strong);
-  font-weight: var(--weight-medium);
-}
-.tbl__cell--end {
-  text-align: right;
-}
-.tbl__cell--center {
-  text-align: center;
-}
-.tbl__cell--grow {
-  width: 100%;
-} /* greedy column; auto table layout sizes the others to content */
-
-/* sort: full-cell button, inset by a margin so its focus ring isn't clipped */
-.tbl__table th.tbl__cell--sortable {
-  padding: 0;
-}
-.tbl__sort {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  width: calc(100% - 2 * var(--space-1));
-  height: calc(var(--tbl-head-h) - 2 * var(--space-1));
-  margin: var(--space-1);
-  padding-inline: var(--space-2);
-  border-radius: var(--radius-sm);
-  font: inherit;
-  font-weight: inherit;
-  color: inherit;
-  white-space: nowrap;
-  transition: var(--transition-colors);
-}
-.tbl__table th.tbl__cell--sortable:first-child .tbl__sort {
-  padding-inline-start: var(--space-3);
-}
-.tbl__table th.tbl__cell--sortable:last-child .tbl__sort {
-  padding-inline-end: var(--space-3);
-}
-.tbl__cell--end .tbl__sort {
-  justify-content: flex-end;
-}
-.tbl__cell--center .tbl__sort {
-  justify-content: center;
-}
-.tbl__sort:hover {
-  color: var(--text-strong);
-  background: var(--neutral-wash);
-}
-.tbl__sort:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-.tbl__table th[aria-sort] .tbl__sort {
-  color: var(--text-strong);
-}
-
-.tbl__sortIcon {
-  display: inline-flex;
-  flex: none;
-  opacity: 0;
-  transition:
-    opacity var(--duration-fast) var(--ease-standard),
-    transform var(--duration-base) var(--ease-glide);
-}
-.tbl__sort:hover .tbl__sortIcon,
-.tbl__sort:focus-visible .tbl__sortIcon {
-  opacity: 0.5;
-}
-.tbl__sortIcon.is-on {
-  opacity: 1;
-}
-.tbl__sortIcon.is-desc {
-  transform: rotate(180deg);
-}
-
-.tbl__table .tbl__cell--check {
-  width: var(--tbl-check-w);
-  padding: 0 var(--space-2);
-}
-.tbl__cbx {
-  display: inline-flex;
-}
-.tbl__cbx .cbx__box {
-  margin-top: 0;
-} /* no label - no baseline offset */
-
-/* bulk bar: absolute overlay that morphs from the header; the delayed visibility flip removes it from paint + tab order only after the exit fade, while pointer-events dies on close */
-.tbl__bulk {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 4;
-  height: calc(var(--tbl-head-h) + var(--border-hairline));
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding-inline: var(--space-2);
-  background: var(--accent-subtle);
-  border-bottom: var(--border-hairline) solid var(--accent-border);
-  opacity: 0;
-  transform: translateY(calc(-1 * var(--space-2)));
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity var(--duration-fast) var(--ease-exit),
-    transform var(--duration-fast) var(--ease-exit),
-    visibility 0s linear var(--duration-fast);
-}
-.tbl__bulk[data-open] {
-  opacity: 1;
-  transform: none;
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-base) var(--ease-entrance),
-    visibility 0s;
-}
-.tbl__bulk .cbx:not(.cbx--disabled):hover {
-  background: var(--accent-wash);
-}
-.tbl__bulkCount {
-  display: inline-flex;
-  align-items: baseline;
-  font-family: var(--font-mono);
-  font-size: var(--size-caption);
-  line-height: var(--leading-caption);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-accent);
-  white-space: pre; /* keep the space before "selected" */
-}
-.tbl__bulkSpacer {
-  flex: 1 1 auto;
-}
-
-.tbl--pin .tbl__cell--pin {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-}
-.tbl--pin thead .tbl__cell--pin {
-  z-index: 3;
-}
-.tbl--pin .tbl__cell--pinOff {
-  left: var(--tbl-check-w);
-}
-
-/* soft cast off the pinned edge once content scrolls behind it (gradient exception, section B3) */
-.tbl--pin .tbl__cell--pinEdge::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: calc(-1 * var(--border-hairline));
-  left: 100%;
-  width: var(--space-3);
-  background: linear-gradient(to right, var(--gray-wash), transparent);
-  opacity: 0;
-  transition: var(--transition-opacity);
-  pointer-events: none;
-}
-.tbl[data-x-back] .tbl__cell--pinEdge::after {
-  opacity: 1;
-}
-
-.tbl__edge {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: var(--space-6);
-  z-index: 3;
-  opacity: 0;
-  transition: var(--transition-opacity);
-  pointer-events: none;
-}
-.tbl__edge--l {
-  left: 0;
-  background: linear-gradient(to right, var(--bg-surface), transparent);
-}
-.tbl__edge--r {
-  right: 0;
-  background: linear-gradient(to left, var(--bg-surface), transparent);
-}
-.tbl[data-x-more] .tbl__edge--r {
-  opacity: 1;
-}
-.tbl[data-x-back]:not(.tbl--pin) .tbl__edge--l {
-  opacity: 1;
-} /* when pinned, the pinned column itself is the left-edge signal */
-
-.tbl__emptyCell {
-  padding: var(--space-7) var(--space-4);
-  text-align: center;
-  font: var(--type-body);
-  color: var(--text-muted);
-}
-
-.tbl__table tbody {
-  transition: var(--transition-opacity);
-}
-.tbl--loading .tbl__table tbody {
-  opacity: 0.45;
-  pointer-events: none;
-}
-
-.tbl__foot {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-subtle);
-  border-top: var(--border-hairline) solid var(--border-subtle);
-}
-
-/* column collapse at container breakpoints - 30rem / 42rem are intentional constants (no breakpoint tokens yet) */
-@container (max-width: 42rem) {
-  .tbl__cell--hide-md {
-    display: none;
+  .tbl,
+  .tbl * {
+    box-sizing: border-box;
   }
-}
-@container (max-width: 30rem) {
-  .tbl__cell--hide-sm {
-    display: none;
+
+  .tbl {
+    --tbl-pad-y: var(--space-3);
+    --tbl-head-py: var(--space-3);
+    --tbl-head-h: calc(var(--leading-caption) + 2 * var(--tbl-head-py));
+    /* checkbox column: pad 8 + (8 + 18 + 8 hit area) + pad 8 - all tokens */
+    --tbl-check-w: calc(var(--control-box) + 4 * var(--space-2));
+
+    position: relative;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    background: var(--bg-surface);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    overflow: hidden;
+  }
+
+  .tbl--compact {
+    --tbl-pad-y: var(--space-2);
+    --tbl-head-py: var(--space-2);
+  }
+
+  .tbl__viewport {
+    position: relative;
+    display: flex; /* flex sizing, not % height - % inside a max-height parent resolves to auto, scroller would grow to content */
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .tbl__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .tbl__table {
+    width: 100%;
+    border-collapse: separate; /* collapse breaks sticky borders */
+    border-spacing: 0;
+  }
+
+  .tbl__table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: var(--tbl-head-h);
+    padding: var(--tbl-head-py) var(--space-3);
+    background: var(--bg-surface);
+    border-bottom: var(--border-hairline) solid var(--border-default);
+    font: var(--type-caption);
+    font-weight: var(--weight-medium);
+    color: var(--text-muted);
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    transition: box-shadow var(--duration-base) var(--ease-standard);
+  }
+  .tbl[data-scrolled] .tbl__table thead th {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tbl__table td {
+    padding: var(--tbl-pad-y) var(--space-3);
+    border-bottom: var(--border-hairline) solid var(--border-subtle);
+    background: var(--row-bg, var(--bg-surface));
+    font: var(--type-body);
+    color: var(--text-body);
+    vertical-align: middle;
+    white-space: nowrap; /* data tables don't wrap - grow column absorbs slack; overflow scrolls + pins */
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+  .tbl__table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  /* outermost cells breathe a step more (16) - sortables do it via the button */
+  .tbl__table th:first-child:not(.tbl__cell--check):not(.tbl__cell--sortable),
+  .tbl__table td:first-child:not(.tbl__cell--check) {
+    padding-inline-start: var(--space-4);
+  }
+  .tbl__table th:last-child:not(.tbl__cell--sortable),
+  .tbl__table td:last-child {
+    padding-inline-end: var(--space-4);
+  }
+
+  /* one opaque --row-bg per row, read by every cell - stays opaque so sticky cells cover scrolled content */
+  .tbl__row {
+    --row-bg: var(--bg-surface);
+  }
+  .tbl__row:hover {
+    --row-bg: var(--bg-subtle);
+  }
+  .tbl__row[data-selected] {
+    --row-bg: color-mix(in oklab, var(--accent) 5%, var(--bg-surface));
+  }
+  .tbl__row[data-selected]:hover {
+    --row-bg: color-mix(in oklab, var(--accent) 5%, var(--bg-subtle));
+  }
+  .tbl--clickable tbody .tbl__row {
+    cursor: pointer;
+  }
+
+  .tbl__table td.tbl__cell--mono {
+    font: var(--type-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .tbl__table td.tbl__cell--strong {
+    color: var(--text-strong);
+    font-weight: var(--weight-medium);
+  }
+  .tbl__cell--end {
+    text-align: right;
+  }
+  .tbl__cell--center {
+    text-align: center;
+  }
+  .tbl__cell--grow {
+    width: 100%;
+  } /* greedy column; auto table layout sizes the others to content */
+
+  /* sort: full-cell button, inset by a margin so its focus ring isn't clipped */
+  .tbl__table th.tbl__cell--sortable {
+    padding: 0;
+  }
+  .tbl__sort {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    width: calc(100% - 2 * var(--space-1));
+    height: calc(var(--tbl-head-h) - 2 * var(--space-1));
+    margin: var(--space-1);
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-weight: inherit;
+    color: inherit;
+    white-space: nowrap;
+    transition: var(--transition-colors);
+  }
+  .tbl__table th.tbl__cell--sortable:first-child .tbl__sort {
+    padding-inline-start: var(--space-3);
+  }
+  .tbl__table th.tbl__cell--sortable:last-child .tbl__sort {
+    padding-inline-end: var(--space-3);
+  }
+  .tbl__cell--end .tbl__sort {
+    justify-content: flex-end;
+  }
+  .tbl__cell--center .tbl__sort {
+    justify-content: center;
+  }
+  .tbl__sort:hover {
+    color: var(--text-strong);
+    background: var(--neutral-wash);
+  }
+  .tbl__sort:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  .tbl__table th[aria-sort] .tbl__sort {
+    color: var(--text-strong);
+  }
+
+  .tbl__sortIcon {
+    display: inline-flex;
+    flex: none;
+    opacity: 0;
+    transition:
+      opacity var(--duration-fast) var(--ease-standard),
+      transform var(--duration-base) var(--ease-glide);
+  }
+  .tbl__sort:hover .tbl__sortIcon,
+  .tbl__sort:focus-visible .tbl__sortIcon {
+    opacity: 0.5;
+  }
+  .tbl__sortIcon.is-on {
+    opacity: 1;
+  }
+  .tbl__sortIcon.is-desc {
+    transform: rotate(180deg);
+  }
+
+  .tbl__table .tbl__cell--check {
+    width: var(--tbl-check-w);
+    padding: 0 var(--space-2);
+  }
+  .tbl__cbx {
+    display: inline-flex;
+  }
+  .tbl__cbx .cbx__box {
+    margin-top: 0;
+  } /* no label - no baseline offset */
+
+  /* bulk bar: absolute overlay that morphs from the header; the delayed visibility flip removes it from paint + tab order only after the exit fade, while pointer-events dies on close */
+  .tbl__bulk {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    height: calc(var(--tbl-head-h) + var(--border-hairline));
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-2);
+    background: var(--accent-subtle);
+    border-bottom: var(--border-hairline) solid var(--accent-border);
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-2)));
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity var(--duration-fast) var(--ease-exit),
+      transform var(--duration-fast) var(--ease-exit),
+      visibility 0s linear var(--duration-fast);
+  }
+  .tbl__bulk[data-open] {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      transform var(--duration-base) var(--ease-entrance),
+      visibility 0s;
+  }
+  .tbl__bulk .cbx:not(.cbx--disabled):hover {
+    background: var(--accent-wash);
+  }
+  .tbl__bulkCount {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: var(--size-caption);
+    line-height: var(--leading-caption);
+    font-weight: var(--weight-medium);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-accent);
+    white-space: pre; /* keep the space before "selected" */
+  }
+  .tbl__bulkSpacer {
+    flex: 1 1 auto;
+  }
+
+  .tbl--pin .tbl__cell--pin {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+  .tbl--pin thead .tbl__cell--pin {
+    z-index: 3;
+  }
+  .tbl--pin .tbl__cell--pinOff {
+    left: var(--tbl-check-w);
+  }
+
+  /* soft cast off the pinned edge once content scrolls behind it (gradient exception, section B3) */
+  .tbl--pin .tbl__cell--pinEdge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: calc(-1 * var(--border-hairline));
+    left: 100%;
+    width: var(--space-3);
+    background: linear-gradient(to right, var(--gray-wash), transparent);
+    opacity: 0;
+    transition: var(--transition-opacity);
+    pointer-events: none;
+  }
+  .tbl[data-x-back] .tbl__cell--pinEdge::after {
+    opacity: 1;
+  }
+
+  .tbl__edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--space-6);
+    z-index: 3;
+    opacity: 0;
+    transition: var(--transition-opacity);
+    pointer-events: none;
+  }
+  .tbl__edge--l {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-surface), transparent);
+  }
+  .tbl__edge--r {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-surface), transparent);
+  }
+  .tbl[data-x-more] .tbl__edge--r {
+    opacity: 1;
+  }
+  .tbl[data-x-back]:not(.tbl--pin) .tbl__edge--l {
+    opacity: 1;
+  } /* when pinned, the pinned column itself is the left-edge signal */
+
+  .tbl__emptyCell {
+    padding: var(--space-7) var(--space-4);
+    text-align: center;
+    font: var(--type-body);
+    color: var(--text-muted);
+  }
+
+  .tbl__table tbody {
+    transition: var(--transition-opacity);
+  }
+  .tbl--loading .tbl__table tbody {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .tbl__foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-subtle);
+    border-top: var(--border-hairline) solid var(--border-subtle);
+  }
+
+  /* column collapse at container breakpoints - 30rem / 42rem are intentional constants (no breakpoint tokens yet) */
+  @container (max-width: 42rem) {
+    .tbl__cell--hide-md {
+      display: none;
+    }
+  }
+  @container (max-width: 30rem) {
+    .tbl__cell--hide-sm {
+      display: none;
+    }
   }
 }

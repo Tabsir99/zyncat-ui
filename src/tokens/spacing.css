@@ -1,26 +1,30 @@
 /* Spacing spine - one 4px base and a short scale; every gap snaps to a step. */
 
-:root {
-  --space-px: 1px;
-  --space-0: 0;
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
-  --space-10: 8rem;
+@layer zyncat.tokens, zyncat.components;
 
-  --container-max: 72rem;
-  --measure-prose: 38rem;
-  --sidebar-width: 16rem;
+@layer zyncat.tokens {
+  :root {
+    --space-px: 1px;
+    --space-0: 0;
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+    --space-9: 6rem;
+    --space-10: 8rem;
 
-  --control-height-sm: 1.75rem;
-  --control-height: 2rem;
-  --control-height-lg: 2.3rem;
-  --control-box: 1.125rem;
-  --control-switch: 1.25rem; /* switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4 */
+    --container-max: 72rem;
+    --measure-prose: 38rem;
+    --sidebar-width: 16rem;
+
+    --control-height-sm: 1.75rem;
+    --control-height: 2rem;
+    --control-height-lg: 2.3rem;
+    --control-box: 1.125rem;
+    --control-switch: 1.25rem; /* switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4 */
+  }
 }

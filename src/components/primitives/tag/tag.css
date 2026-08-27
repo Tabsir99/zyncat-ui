@@ -1,220 +1,226 @@
-/* Tag / chip - interactive label (button-family chrome): base .tag + .tag--toggle sibling. */
+@layer zyncat.tokens, zyncat.components;
 
-.tag {
-  --tag-h: var(--control-height-sm);
-  /* button-family DNA: lit from above + a contact shadow (.btn--secondary) */
-  --tag-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6), 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+@layer zyncat.components {
+  /* Tag / chip - interactive label (button-family chrome): base .tag + .tag--toggle sibling. */
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  height: var(--tag-h);
-  max-width: 100%;
-  padding-inline: var(--space-2);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-  color: var(--text-body);
+  .tag {
+    --tag-check-delay: 60ms;
 
-  font-family: var(--font-sans);
-  font-size: var(--size-caption);
-  line-height: 1;
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-normal);
-  white-space: nowrap;
-  vertical-align: middle;
-  user-select: none;
-  -webkit-user-select: none;
-  box-shadow: var(--tag-shadow);
+    --tag-h: var(--control-height-sm);
+    /* button-family DNA: lit from above + a contact shadow (.btn--secondary) */
+    --tag-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6), 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
 
-  /* no transform transition here - Motion writes transforms on grouped tags (section C) */
-  transition: var(--transition-control);
-}
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    height: var(--tag-h);
+    max-width: 100%;
+    padding-inline: var(--space-2);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-body);
 
-.tag__label {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    font-family: var(--font-sans);
+    font-size: var(--size-caption);
+    line-height: 1;
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-normal);
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: var(--tag-shadow);
 
-.tag--sm {
-  --tag-h: var(--space-5);
-  font-size: var(--size-micro);
-}
+    /* no transform transition here - Motion writes transforms on grouped tags (section C) */
+    transition: var(--transition-control);
+  }
 
-.tag__icon {
-  display: inline-flex;
-  flex: none;
-}
-.tag__icon svg,
-.tag__icon i {
-  display: block;
-}
+  .tag__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.tag__count {
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-subtle);
-  transition: color var(--duration-fast) var(--ease-standard);
-}
+  .tag--sm {
+    --tag-h: var(--space-5);
+    font-size: var(--size-micro);
+  }
 
-.tag__remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: calc(var(--tag-h) - var(--space-2));
-  height: calc(var(--tag-h) - var(--space-2));
-  margin-right: calc(var(--space-1) * -1);
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-subtle);
-  cursor: pointer;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
-}
-.tag__remove svg {
-  display: block;
-  width: var(--space-3);
-  height: var(--space-3);
-  transition: transform var(--duration-base) var(--ease-standard);
-}
-.tag__remove:hover {
-  color: var(--text-strong);
-  background: var(--bg-muted);
-}
-.tag__remove:hover svg {
-  transform: rotate(30deg);
-}
-.tag__remove:active {
-  transform: scale(0.9);
-}
-.tag__remove:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
+  .tag__icon {
+    display: inline-flex;
+    flex: none;
+  }
+  .tag__icon svg,
+  .tag__icon i {
+    display: block;
+  }
 
-.tag:has(.tag__remove:hover):not([data-disabled]),
-.tag:has(.tag__remove:focus-visible) {
-  color: var(--text-muted);
-  border-color: var(--border-strong);
-}
+  .tag__count {
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-subtle);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
 
-.tag--toggle {
-  cursor: pointer;
-  appearance: none;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    var(--transition-control),
-    transform var(--duration-fast) var(--ease-standard);
-}
-.tag--toggle:hover:not(:disabled) {
-  color: var(--text-strong);
-  border-color: var(--border-strong);
-  background: var(--neutral-wash);
-}
-.tag--toggle:active:not(:disabled) {
-  transform: translateY(var(--space-px));
-  background: var(--bg-muted);
-  --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
-}
-/* composed ring - never erases the resting shadow (.btn pattern) */
-.tag--toggle:focus-visible {
-  outline: none;
-  box-shadow: var(--tag-shadow), var(--focus-ring);
-}
-
-/* Selected = accent wash, never a solid fill; the top sheen comes off (matte), the contact shadow stays. */
-.tag--toggle[aria-pressed='true'] {
-  color: var(--text-accent);
-  border-color: var(--accent-border);
-  background: var(--accent-wash);
-  --tag-shadow: 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
-}
-.tag--toggle[aria-pressed='true']:hover:not(:disabled) {
-  color: var(--accent-active);
-  border-color: var(--accent-border);
-  background: var(--accent-wash);
-}
-.tag--toggle[aria-pressed='true']:active:not(:disabled) {
-  background: var(--accent-subtle);
-}
-.tag--toggle[aria-pressed='true'] .tag__count {
-  color: inherit;
-}
-
-/* Tick slot (Collapse width mechanism); the negative margin cancels the flex gap while collapsed, the inner margin restores it when open. */
-.tag__check {
-  margin-right: calc(var(--space-1) * -1);
-}
-.tag__check svg {
-  display: block;
-  width: var(--space-3);
-  height: var(--space-3);
-  margin-right: var(--space-1);
-}
-.tag__check path {
-  stroke: currentColor;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset var(--duration-base) var(--ease-standard);
-}
-.tag--toggle[aria-pressed='true'] .tag__check path {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset var(--duration-slow) var(--ease-entrance) 60ms;
-}
-
-.tag[data-disabled],
-.tag--toggle:disabled {
-  color: var(--text-disabled);
-  border-color: var(--border-subtle);
-  background: var(--bg-surface);
-  cursor: default;
-  --tag-shadow: none;
-}
-.tag[data-disabled] .tag__count,
-.tag--toggle:disabled .tag__count {
-  color: var(--text-disabled);
-}
-.tag[data-disabled] .tag__remove {
-  color: var(--text-disabled);
-  background: transparent;
-  cursor: default;
-  pointer-events: none;
-}
-.tag--toggle:disabled {
-  transform: none;
-}
-.tag--toggle:disabled[aria-pressed='true'] {
-  background: var(--bg-muted);
-  border-color: var(--border-subtle);
-}
-
-.tag-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-@media (prefers-reduced-motion: reduce) {
+  .tag__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: calc(var(--tag-h) - var(--space-2));
+    height: calc(var(--tag-h) - var(--space-2));
+    margin-right: calc(var(--space-1) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-subtle);
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-standard);
+  }
   .tag__remove svg {
-    transition: none;
+    display: block;
+    width: var(--space-3);
+    height: var(--space-3);
+    transition: transform var(--duration-base) var(--ease-standard);
+  }
+  .tag__remove:hover {
+    color: var(--text-strong);
+    background: var(--bg-muted);
   }
   .tag__remove:hover svg {
-    transform: none;
+    transform: rotate(30deg);
   }
   .tag__remove:active {
-    transform: none;
+    transform: scale(0.9);
+  }
+  .tag__remove:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .tag:has(.tag__remove:hover):not([data-disabled]),
+  .tag:has(.tag__remove:focus-visible) {
+    color: var(--text-muted);
+    border-color: var(--border-strong);
+  }
+
+  .tag--toggle {
+    cursor: pointer;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      var(--transition-control),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  .tag--toggle:hover:not(:disabled) {
+    color: var(--text-strong);
+    border-color: var(--border-strong);
+    background: var(--neutral-wash);
   }
   .tag--toggle:active:not(:disabled) {
+    transform: translateY(var(--space-px));
+    background: var(--bg-muted);
+    --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
+  }
+  /* composed ring - never erases the resting shadow (.btn pattern) */
+  .tag--toggle:focus-visible {
+    outline: none;
+    box-shadow: var(--tag-shadow), var(--focus-ring);
+  }
+
+  /* Selected = accent wash, never a solid fill; the top sheen comes off (matte), the contact shadow stays. */
+  .tag--toggle[aria-pressed='true'] {
+    color: var(--text-accent);
+    border-color: var(--accent-border);
+    background: var(--accent-wash);
+    --tag-shadow: 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+  }
+  .tag--toggle[aria-pressed='true']:hover:not(:disabled) {
+    color: var(--accent-active);
+    border-color: var(--accent-border);
+    background: var(--accent-wash);
+  }
+  .tag--toggle[aria-pressed='true']:active:not(:disabled) {
+    background: var(--accent-subtle);
+  }
+  .tag--toggle[aria-pressed='true'] .tag__count {
+    color: inherit;
+  }
+
+  /* Tick slot (Collapse width mechanism); the negative margin cancels the flex gap while collapsed, the inner margin restores it when open. */
+  .tag__check {
+    margin-right: calc(var(--space-1) * -1);
+  }
+  .tag__check svg {
+    display: block;
+    width: var(--space-3);
+    height: var(--space-3);
+    margin-right: var(--space-1);
+  }
+  .tag__check path {
+    stroke: currentColor;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--duration-base) var(--ease-standard);
+  }
+  .tag--toggle[aria-pressed='true'] .tag__check path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset var(--duration-slow) var(--ease-entrance) var(--tag-check-delay);
+  }
+
+  .tag[data-disabled],
+  .tag--toggle:disabled {
+    color: var(--text-disabled);
+    border-color: var(--border-subtle);
+    background: var(--bg-surface);
+    cursor: default;
+    --tag-shadow: none;
+  }
+  .tag[data-disabled] .tag__count,
+  .tag--toggle:disabled .tag__count {
+    color: var(--text-disabled);
+  }
+  .tag[data-disabled] .tag__remove {
+    color: var(--text-disabled);
+    background: transparent;
+    cursor: default;
+    pointer-events: none;
+  }
+  .tag--toggle:disabled {
     transform: none;
+  }
+  .tag--toggle:disabled[aria-pressed='true'] {
+    background: var(--bg-muted);
+    border-color: var(--border-subtle);
+  }
+
+  .tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag__remove svg {
+      transition: none;
+    }
+    .tag__remove:hover svg {
+      transform: none;
+    }
+    .tag__remove:active {
+      transform: none;
+    }
+    .tag--toggle:active:not(:disabled) {
+      transform: none;
+    }
   }
 }

@@ -1,67 +1,71 @@
 /* Semantic layer - the intent-named aliases components consume; repoint these to re-theme. */
 
-:root {
-  /* Three real elevation steps: the canvas is coolest, a card sits above it, a floating panel
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.tokens {
+  :root {
+    /* Three real elevation steps: the canvas is coolest, a card sits above it, a floating panel
      is the only true white. --gray-0 cannot carry hue, so surfaces start one step down. */
-  --bg-app: var(--gray-25);
-  --bg-surface: var(--gray-0);
-  --bg-surface-raised: var(--gray-0);
-  --bg-subtle: var(--gray-50);
-  --bg-muted: var(--gray-100);
-  --bg-inset: var(--gray-50);
-  --bg-overlay: color-mix(in oklab, var(--gray-900) 44%, transparent);
+    --bg-app: var(--gray-25);
+    --bg-surface: var(--gray-0);
+    --bg-surface-raised: var(--gray-0);
+    --bg-subtle: var(--gray-50);
+    --bg-muted: var(--gray-100);
+    --bg-inset: var(--gray-50);
+    --bg-overlay: color-mix(in oklab, var(--gray-900) 44%, transparent);
 
-  --text-strong: var(--gray-950);
-  --text-body: var(--gray-800);
-  --text-secondary: var(--gray-700);
-  --text-muted: var(--gray-600);
-  --text-subtle: var(--gray-500);
-  --text-disabled: var(--gray-400);
-  --text-accent: var(--teal-700);
-  --text-on-accent: var(--gray-0);
-  --text-inverse: var(--gray-0);
+    --text-strong: var(--gray-950);
+    --text-body: var(--gray-800);
+    --text-secondary: var(--gray-700);
+    --text-muted: var(--gray-600);
+    --text-subtle: var(--gray-500);
+    --text-disabled: var(--gray-400);
+    --text-accent: var(--teal-700);
+    --text-on-accent: var(--gray-0);
+    --text-inverse: var(--gray-0);
 
-  --border-subtle: var(--gray-150);
-  --border-default: var(--gray-200);
-  --border-strong: var(--gray-300);
+    --border-subtle: var(--gray-150);
+    --border-default: var(--gray-200);
+    --border-strong: var(--gray-300);
 
-  --accent-lift: var(--teal-400);
-  --accent: var(--teal-500);
-  --accent-hover: var(--teal-600);
-  --accent-active: var(--teal-700);
-  --accent-subtle: var(--teal-50);
-  --accent-border: var(--teal-200);
-  --accent-disabled: var(--teal-300);
+    --accent-lift: var(--teal-400);
+    --accent: var(--teal-500);
+    --accent-hover: var(--teal-600);
+    --accent-active: var(--teal-700);
+    --accent-subtle: var(--teal-50);
+    --accent-border: var(--teal-200);
+    --accent-disabled: var(--teal-300);
 
-  --success-subtle: var(--green-50);
-  --success: var(--green-600);
-  --success-text: var(--green-700);
-  --warning-subtle: var(--amber-50);
-  --warning: var(--amber-600);
-  --warning-text: var(--amber-700);
-  --danger-subtle: var(--red-50);
-  --danger: var(--red-600);
-  --danger-text: var(--red-700);
-  --info-subtle: var(--teal-50);
-  --info: var(--teal-600);
-  --info-text: var(--teal-700);
-  --danger-disabled: var(--red-300);
+    --success-subtle: var(--green-50);
+    --success: var(--green-600);
+    --success-text: var(--green-700);
+    --warning-subtle: var(--amber-50);
+    --warning: var(--amber-600);
+    --warning-text: var(--amber-700);
+    --danger-subtle: var(--red-50);
+    --danger: var(--red-600);
+    --danger-text: var(--red-700);
+    --info-subtle: var(--teal-50);
+    --info: var(--teal-600);
+    --info-text: var(--teal-700);
+    --danger-disabled: var(--red-300);
 
-  /* State layer: interactive hover/press fills are translucent washes, never opaque
+    /* State layer: interactive hover/press fills are translucent washes, never opaque
      near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. */
-  --neutral-wash: var(--gray-wash);
-  --neutral-wash-press: var(--gray-wash-strong);
-  --accent-wash: var(--teal-wash);
-  --success-wash: var(--green-wash);
-  --warning-wash: var(--amber-wash);
-  --danger-wash: var(--red-wash);
+    --neutral-wash: var(--gray-wash);
+    --neutral-wash-press: var(--gray-wash-strong);
+    --accent-wash: var(--teal-wash);
+    --success-wash: var(--green-wash);
+    --warning-wash: var(--amber-wash);
+    --danger-wash: var(--red-wash);
 
-  /* Glass tints - per-tone translucent fills derived from the status hues; alpha kept low so the frost reads through. */
-  --glass-tint-neutral: color-mix(in oklab, var(--gray-600) 13%, transparent);
-  --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
-  --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);
-  --glass-tint-warning: color-mix(in oklab, var(--warning) 21%, transparent);
-  --glass-tint-danger: color-mix(in oklab, var(--danger) 17%, transparent);
+    /* Glass tints - per-tone translucent fills derived from the status hues; alpha kept low so the frost reads through. */
+    --glass-tint-neutral: color-mix(in oklab, var(--gray-600) 13%, transparent);
+    --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
+    --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);
+    --glass-tint-warning: color-mix(in oklab, var(--warning) 21%, transparent);
+    --glass-tint-danger: color-mix(in oklab, var(--danger) 17%, transparent);
 
-  --focus-ring: var(--ring-accent);
+    --focus-ring: var(--ring-accent);
+  }
 }

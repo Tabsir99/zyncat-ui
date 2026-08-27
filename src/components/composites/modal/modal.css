@@ -1,9 +1,13 @@
-/* modal.css - the unpainted modal surface: the shell layer centers the panel and
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  /* modal.css - the unpainted modal surface: the shell layer centers the panel and
    constrains it to the layer box. Everything else is the consumer's paint. */
-.overlay-layer--modal {
-  place-items: center;
-}
-.overlay-panel--modal {
-  max-width: 100%;
-  max-height: 100%;
+  .overlay-layer--modal {
+    place-items: center;
+  }
+  .overlay-panel--modal {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }

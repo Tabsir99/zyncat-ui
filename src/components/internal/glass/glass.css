@@ -1,100 +1,104 @@
-/* Glass surface - translucent tint + backdrop blur + a sheen layer; consumer sets --glass-tint and --glass-fg. */
+@layer zyncat.tokens, zyncat.components;
 
-.glass {
-  --glass-fg: var(--text-body);
-  --glass-tint: var(--glass-tint-neutral);
+@layer zyncat.components {
+  /* Glass surface - translucent tint + backdrop blur + a sheen layer; consumer sets --glass-tint and --glass-fg. */
 
-  position: relative;
-  isolation: isolate; /* local stacking for the sheen */
-  color: var(--glass-fg);
+  .glass {
+    --glass-fg: var(--text-body);
+    --glass-tint: var(--glass-tint-neutral);
 
-  background: var(--glass-tint);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow:
-    var(--glass-highlight),
-    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 22%, transparent),
-    var(--glass-shadow);
+    position: relative;
+    isolation: isolate; /* local stacking for the sheen */
+    color: var(--glass-fg);
 
-  transition:
-    transform var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard),
-    background-color var(--duration-base) var(--ease-standard);
-}
+    background: var(--glass-tint);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    box-shadow:
+      var(--glass-highlight),
+      inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 22%, transparent),
+      var(--glass-shadow);
 
-/* Sheen on its own layer so hover animates opacity/transform - gradients can't transition directly. */
-.glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  background: var(--glass-sheen);
-  opacity: var(--glass-sheen-rest);
-  pointer-events: none;
-  transition:
-    opacity var(--duration-base) var(--ease-standard),
-    transform var(--duration-slow) var(--ease-entrance);
-}
-.glass > * {
-  position: relative;
-  z-index: 1;
-} /* content rides above the sheen */
-
-.glass--strong {
-  --glass-blur: var(--glass-blur-strong);
-}
-
-.glass--interactive:hover {
-  transform: translateY(calc(var(--space-px) * -1));
-  box-shadow:
-    var(--glass-highlight),
-    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 26%, transparent),
-    var(--glass-shadow-hover);
-}
-.glass--interactive:hover::before {
-  opacity: var(--glass-sheen-hover);
-  transform: translateY(-8%);
-}
-
-/* Glint - one-shot light sweep; add .glass-glint to fire, remove after it ends (sits above content, z-index 2). */
-.glass-glint::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0; /* resting state is invisible - no mid-sweep flash */
-  background: linear-gradient(118deg, transparent 36%, rgb(255 255 255 / 0.7) 50%, transparent 64%);
-  animation: glass-glint var(--duration-slow) var(--ease-standard) 1 forwards;
-}
-@keyframes glass-glint {
-  0% {
-    opacity: 0;
-    transform: translateX(-28%);
+    transition:
+      transform var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) var(--ease-standard),
+      background-color var(--duration-base) var(--ease-standard);
   }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(28%);
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .glass,
+  /* Sheen on its own layer so hover animates opacity/transform - gradients can't transition directly. */
   .glass::before {
-    transition: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: var(--glass-sheen);
+    opacity: var(--glass-sheen-rest);
+    pointer-events: none;
+    transition:
+      opacity var(--duration-base) var(--ease-standard),
+      transform var(--duration-slow) var(--ease-entrance);
   }
+  .glass > * {
+    position: relative;
+    z-index: 1;
+  } /* content rides above the sheen */
+
+  .glass--strong {
+    --glass-blur: var(--glass-blur-strong);
+  }
+
   .glass--interactive:hover {
-    transform: none;
+    transform: translateY(calc(var(--space-px) * -1));
+    box-shadow:
+      var(--glass-highlight),
+      inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 26%, transparent),
+      var(--glass-shadow-hover);
   }
   .glass--interactive:hover::before {
-    transform: none;
+    opacity: var(--glass-sheen-hover);
+    transform: translateY(-8%);
   }
+
+  /* Glint - one-shot light sweep; add .glass-glint to fire, remove after it ends (sits above content, z-index 2). */
   .glass-glint::after {
-    animation: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0; /* resting state is invisible - no mid-sweep flash */
+    background: linear-gradient(118deg, transparent 36%, rgb(255 255 255 / 0.7) 50%, transparent 64%);
+    animation: glass-glint var(--duration-slow) var(--ease-standard) 1 forwards;
+  }
+  @keyframes glass-glint {
+    0% {
+      opacity: 0;
+      transform: translateX(-28%);
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(28%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass,
+    .glass::before {
+      transition: none;
+    }
+    .glass--interactive:hover {
+      transform: none;
+    }
+    .glass--interactive:hover::before {
+      transform: none;
+    }
+    .glass-glint::after {
+      animation: none;
+    }
   }
 }

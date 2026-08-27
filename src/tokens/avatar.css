@@ -1,20 +1,24 @@
 /* Avatar tokens - reserved identity palette + lit-from-above face finish. */
 
-:root {
-  --avatar-1-bg: oklch(0.945 0.04 250);
-  --avatar-1-fg: oklch(0.45 0.08 250);
-  --avatar-2-bg: oklch(0.945 0.04 292);
-  --avatar-2-fg: oklch(0.45 0.08 292);
-  --avatar-3-bg: oklch(0.945 0.04 334);
-  --avatar-3-fg: oklch(0.45 0.08 334);
-  --avatar-4-bg: oklch(0.945 0.04 5);
-  --avatar-4-fg: oklch(0.45 0.08 5);
-  --avatar-5-bg: oklch(0.945 0.04 55);
-  --avatar-5-fg: oklch(0.45 0.08 55);
-  --avatar-6-bg: oklch(0.945 0.04 125);
-  --avatar-6-fg: oklch(0.45 0.08 125);
+@layer zyncat.tokens, zyncat.components;
 
-  /* Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). */
-  --avatar-sheen: oklch(1 0 0 / 0.35);
-  --avatar-shade: oklch(0.225 0.012 264 / 0.05);
+@layer zyncat.tokens {
+  :root {
+    --avatar-1-bg: oklch(0.945 0.04 250);
+    --avatar-1-fg: oklch(0.45 0.08 250);
+    --avatar-2-bg: oklch(0.945 0.04 292);
+    --avatar-2-fg: oklch(0.45 0.08 292);
+    --avatar-3-bg: oklch(0.945 0.04 334);
+    --avatar-3-fg: oklch(0.45 0.08 334);
+    --avatar-4-bg: oklch(0.945 0.04 5);
+    --avatar-4-fg: oklch(0.45 0.08 5);
+    --avatar-5-bg: oklch(0.945 0.04 55);
+    --avatar-5-fg: oklch(0.45 0.08 55);
+    --avatar-6-bg: oklch(0.945 0.04 125);
+    --avatar-6-fg: oklch(0.45 0.08 125);
+
+    /* Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). */
+    --avatar-sheen: oklch(1 0 0 / 0.35);
+    --avatar-shade: oklch(0.225 0.012 264 / 0.05);
+  }
 }

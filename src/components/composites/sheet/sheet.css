@@ -1,46 +1,50 @@
-/* sheet.css - edge-docked placement on the modal shell: sheets dock flush (no layer padding); the panel spans the docked edge. */
-.overlay-layer--sheet-right {
-  align-items: stretch;
-  justify-items: end;
-}
-.overlay-panel--sheet-right {
-  height: 100%;
-  max-width: 100%;
-}
+@layer zyncat.tokens, zyncat.components;
 
-.overlay-layer--sheet-bottom {
-  align-items: end;
-  justify-items: stretch;
-}
-.overlay-panel--sheet-bottom {
-  width: 100%;
-  max-height: 100%;
-}
+@layer zyncat.components {
+  /* sheet.css - edge-docked placement on the modal shell: sheets dock flush (no layer padding); the panel spans the docked edge. */
+  .overlay-layer--sheet-right {
+    align-items: stretch;
+    justify-items: end;
+  }
+  .overlay-panel--sheet-right {
+    height: 100%;
+    max-width: 100%;
+  }
 
-/* Drag stretch scales the panel away from the edge it is docked to. */
-.overlay-panel--sheet-right {
-  transform-origin: 100% 50%;
-}
-.overlay-panel--sheet-bottom {
-  transform-origin: 50% 100%;
-}
+  .overlay-layer--sheet-bottom {
+    align-items: end;
+    justify-items: stretch;
+  }
+  .overlay-panel--sheet-bottom {
+    width: 100%;
+    max-height: 100%;
+  }
 
-.overlay-panel--sheet-right[data-drag] {
-  touch-action: pan-y;
-}
-.overlay-panel--sheet-bottom[data-drag] {
-  touch-action: none;
-}
+  /* Drag stretch scales the panel away from the edge it is docked to. */
+  .overlay-panel--sheet-right {
+    transform-origin: 100% 50%;
+  }
+  .overlay-panel--sheet-bottom {
+    transform-origin: 50% 100%;
+  }
 
-.overlay-panel--sheet-right,
-.overlay-panel--sheet-bottom {
-  background: var(--bg-surface);
-  color: var(--text-body);
-  box-shadow: var(--shadow-xl);
-}
-.overlay-panel--sheet-right {
-  border-inline-start: var(--border-hairline) solid var(--border-default);
-}
-.overlay-panel--sheet-bottom {
-  border-block-start: var(--border-hairline) solid var(--border-default);
+  .overlay-panel--sheet-right[data-drag] {
+    touch-action: pan-y;
+  }
+  .overlay-panel--sheet-bottom[data-drag] {
+    touch-action: none;
+  }
+
+  .overlay-panel--sheet-right,
+  .overlay-panel--sheet-bottom {
+    background: var(--bg-surface);
+    color: var(--text-body);
+    box-shadow: var(--shadow-xl);
+  }
+  .overlay-panel--sheet-right {
+    border-inline-start: var(--border-hairline) solid var(--border-default);
+  }
+  .overlay-panel--sheet-bottom {
+    border-block-start: var(--border-hairline) solid var(--border-default);
+  }
 }

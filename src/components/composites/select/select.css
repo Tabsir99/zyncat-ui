@@ -1,317 +1,321 @@
-/* Select family - <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
+@layer zyncat.tokens, zyncat.components;
 
-.select {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  font-family: var(--font-sans);
-}
+@layer zyncat.components {
+  /* Select family - <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
 
-.select__trigger {
-  appearance: none;
-  margin: 0;
-  font-family: inherit;
-  cursor: pointer;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  width: 100%;
-  height: var(--control-height);
-  padding: 0 var(--space-3);
-  background: var(--bg-inset);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-md);
-  color: var(--text-body);
-  font-size: var(--size-body);
-  line-height: var(--leading-body);
-  font-weight: var(--weight-regular);
-  transition:
-    color var(--duration-base) var(--ease-standard),
-    background-color var(--duration-base) var(--ease-standard),
-    border-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
-}
-.select__trigger:hover {
-  border-color: var(--border-strong);
-  background-color: var(--gray-wash-strong);
-}
-.select__trigger:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-surface);
-  box-shadow: var(--ring-accent);
-}
-.select[data-open='true'] .select__trigger {
-  border-color: var(--accent);
-  background: var(--bg-surface);
-  box-shadow: var(--ring-accent);
-}
+  .select {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    font-family: var(--font-sans);
+  }
 
-.select[data-size='sm'] .select__trigger {
-  height: var(--control-height-sm);
-  padding: 0 var(--space-2);
-  font-size: var(--size-caption);
-  line-height: var(--leading-caption);
-  gap: var(--space-1);
-}
-.select[data-size='lg'] .select__trigger {
-  height: var(--control-height-lg);
-  padding: 0 var(--space-4);
-}
+  .select__trigger {
+    appearance: none;
+    margin: 0;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    height: var(--control-height);
+    padding: 0 var(--space-3);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-md);
+    color: var(--text-body);
+    font-size: var(--size-body);
+    line-height: var(--leading-body);
+    font-weight: var(--weight-regular);
+    transition:
+      color var(--duration-base) var(--ease-standard),
+      background-color var(--duration-base) var(--ease-standard),
+      border-color var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) var(--ease-standard);
+  }
+  .select__trigger:hover {
+    border-color: var(--border-strong);
+    background-color: var(--gray-wash-strong);
+  }
+  .select__trigger:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-surface);
+    box-shadow: var(--ring-accent);
+  }
+  .select[data-open='true'] .select__trigger {
+    border-color: var(--accent);
+    background: var(--bg-surface);
+    box-shadow: var(--ring-accent);
+  }
 
-.select[data-invalid='true'] .select__trigger {
-  border-color: var(--danger);
-}
-.select[data-invalid='true'] .select__trigger:focus-visible,
-.select[data-invalid='true'][data-open='true'] .select__trigger {
-  border-color: var(--danger);
-  box-shadow: var(--ring-danger);
-}
+  .select[data-size='sm'] .select__trigger {
+    height: var(--control-height-sm);
+    padding: 0 var(--space-2);
+    font-size: var(--size-caption);
+    line-height: var(--leading-caption);
+    gap: var(--space-1);
+  }
+  .select[data-size='lg'] .select__trigger {
+    height: var(--control-height-lg);
+    padding: 0 var(--space-4);
+  }
 
-.select[data-disabled='true'] .select__trigger {
-  cursor: not-allowed;
-  background: var(--bg-muted);
-  border-color: var(--border-subtle);
-  color: var(--text-disabled);
-  box-shadow: none;
-}
-.select[data-disabled='true'] .select__value,
-.select[data-disabled='true'] .select__leading,
-.select[data-disabled='true'] .select__caret {
-  color: var(--text-disabled);
-}
+  .select[data-invalid='true'] .select__trigger {
+    border-color: var(--danger);
+  }
+  .select[data-invalid='true'] .select__trigger:focus-visible,
+  .select[data-invalid='true'][data-open='true'] .select__trigger {
+    border-color: var(--danger);
+    box-shadow: var(--ring-danger);
+  }
 
-.select[data-loading='true'] .select__value {
-  color: var(--text-muted);
-}
+  .select[data-disabled='true'] .select__trigger {
+    cursor: not-allowed;
+    background: var(--bg-muted);
+    border-color: var(--border-subtle);
+    color: var(--text-disabled);
+    box-shadow: none;
+  }
+  .select[data-disabled='true'] .select__value,
+  .select[data-disabled='true'] .select__leading,
+  .select[data-disabled='true'] .select__caret {
+    color: var(--text-disabled);
+  }
 
-.select__leading {
-  display: inline-flex;
-  flex: 0 0 auto;
-  font-size: var(--icon-sm);
-  color: var(--text-muted);
-}
-.select__value {
-  flex: 1 1 auto;
-  min-width: 0;
-  color: var(--text-body);
-}
-.select__value[data-placeholder='true'] {
-  color: var(--text-disabled);
-}
-.select__caret {
-  display: inline-flex;
-  flex: 0 0 auto;
-  font-size: var(--icon-sm);
-  color: var(--text-subtle);
-  transition:
-    transform var(--duration-base) var(--ease-entrance),
-    color var(--duration-fast) var(--ease-standard);
-}
-.select[data-open='true'] .select__caret {
-  transform: rotate(180deg);
-  color: var(--text-muted);
-}
-.select__count {
-  flex: 0 0 auto;
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-accent);
-  background: var(--accent-wash);
-  padding: var(--space-px) var(--space-1);
-  border-radius: var(--radius-sm);
-}
+  .select[data-loading='true'] .select__value {
+    color: var(--text-muted);
+  }
 
-.select__value {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .select__leading {
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--icon-sm);
+    color: var(--text-muted);
+  }
+  .select__value {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--text-body);
+  }
+  .select__value[data-placeholder='true'] {
+    color: var(--text-disabled);
+  }
+  .select__caret {
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--icon-sm);
+    color: var(--text-subtle);
+    transition:
+      transform var(--duration-base) var(--ease-entrance),
+      color var(--duration-fast) var(--ease-standard);
+  }
+  .select[data-open='true'] .select__caret {
+    transform: rotate(180deg);
+    color: var(--text-muted);
+  }
+  .select__count {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-accent);
+    background: var(--accent-wash);
+    padding: var(--space-px) var(--space-1);
+    border-radius: var(--radius-sm);
+  }
 
-/* Chrome, origin, scroll box, row skeleton and pill all come from
+  .select__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Chrome, origin, scroll box, row skeleton and pill all come from
    internal/menu/menu-surface.css; JS sets top/left/min-width. Listbox-only states live here. */
 
-.select__search {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
-  margin: 0 0 var(--space-1);
-  border-bottom: var(--border-hairline) solid var(--border-subtle);
-  font-size: var(--icon-sm);
-  color: var(--text-subtle);
-}
-.select__search-input {
-  appearance: none;
-  border: none;
-  outline: none;
-  background: transparent;
-  width: 100%;
-  padding: 0;
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  line-height: var(--leading-body);
-  color: var(--text-body);
-}
-.select__search-input::placeholder {
-  color: var(--text-disabled);
-}
+  .select__search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin: 0 0 var(--space-1);
+    border-bottom: var(--border-hairline) solid var(--border-subtle);
+    font-size: var(--icon-sm);
+    color: var(--text-subtle);
+  }
+  .select__search-input {
+    appearance: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    line-height: var(--leading-body);
+    color: var(--text-body);
+  }
+  .select__search-input::placeholder {
+    color: var(--text-disabled);
+  }
 
-/* Row-height motion is the Collapse primitive, not this scroll container.
+  /* Row-height motion is the Collapse primitive, not this scroll container.
    position: relative anchors the glide pill (a single absolute child) to the scrolled content. */
-.select__list {
-  position: relative;
-  scroll-behavior: smooth;
-}
-
-.select__group-label {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--bg-surface-raised);
-}
-.select__group + .select__group .select__group-label {
-  border-top: var(--border-hairline) solid var(--border-subtle);
-  margin-top: var(--space-1);
-}
-
-.select__option {
-  transition:
-    background-color var(--duration-base) var(--ease-standard),
-    color var(--duration-base) var(--ease-standard);
-}
-
-.select__option-check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  min-width: var(--icon-sm);
-  font-size: var(--icon-sm);
-  color: var(--accent);
-  opacity: 0;
-  transition: var(--transition-opacity);
-}
-
-.select__option[data-active='true'] {
-  color: var(--text-strong);
-}
-.select__option[data-active='true'] .menu-row__icon {
-  color: var(--text-body);
-}
-.select__option[data-selected='true'] .menu-row__label {
-  color: var(--text-accent);
-}
-.select__option[data-selected='true'] .menu-row__icon {
-  color: var(--text-accent);
-}
-.select__option[data-selected='true'] .select__option-check {
-  opacity: 1;
-}
-.select__option[data-disabled='true'] {
-  cursor: not-allowed;
-  color: var(--text-disabled);
-}
-.select__option[data-disabled='true'] .menu-row__icon {
-  color: var(--text-disabled);
-}
-
-/* check lands with a spring when a row becomes selected (remounts via React key) */
-.select__option[data-selected='true'] .select__option-check :is(i, svg) {
-  animation: select-check-in var(--duration-base) var(--ease-spring);
-}
-@keyframes select-check-in {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Multi-select: the reused Checkbox box IS the indicator; strip the .cbx standalone chrome. */
-.select__menu[data-multiple='true'] .select__option-check {
-  opacity: 1;
-}
-.select__menu[data-multiple='true'] .select__option .cbx {
-  padding: 0;
-  gap: 0;
-  pointer-events: none;
-}
-.select__menu[data-multiple='true'] .select__option .cbx__box {
-  margin-top: 0;
-}
-
-/* Row owns the press (.cbx is pointer-events:none): dip the box on press - explicit transform,
-   so a checked box (whose resting scale would otherwise dilute --press) still scales from center. */
-.select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx__box {
-  transform: scale(0.86);
-}
-.select__empty {
-  padding: var(--space-4) var(--space-3);
-  text-align: center;
-  font: var(--type-caption);
-  color: var(--text-subtle);
-}
-
-.select__loading {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-1);
-}
-.select__skeleton {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2);
-}
-.select__skeleton-dot {
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  border-radius: var(--radius-full);
-  background: var(--bg-muted);
-  flex: 0 0 auto;
-}
-.select__skeleton-bar {
-  height: 0.5rem;
-  border-radius: var(--radius-full);
-  background: var(--bg-muted);
-  flex: 1 1 auto;
-  max-width: 11rem;
-}
-.select__skeleton:nth-child(2) .select__skeleton-bar {
-  max-width: 7rem;
-}
-.select__skeleton:nth-child(3) .select__skeleton-bar {
-  max-width: 9rem;
-}
-.select__loading [data-pulse] {
-  animation: select-pulse var(--duration-spin) var(--ease-standard) infinite alternate;
-}
-@keyframes select-pulse {
-  from {
-    opacity: 0.55;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
   .select__list {
-    scroll-behavior: auto;
+    position: relative;
+    scroll-behavior: smooth;
   }
-  .select__option-check :is(i, svg),
-  .select__loading [data-pulse] {
-    animation: none;
+
+  .select__group-label {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg-surface-raised);
+  }
+  .select__group + .select__group .select__group-label {
+    border-top: var(--border-hairline) solid var(--border-subtle);
+    margin-top: var(--space-1);
+  }
+
+  .select__option {
+    transition:
+      background-color var(--duration-base) var(--ease-standard),
+      color var(--duration-base) var(--ease-standard);
+  }
+
+  .select__option-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    min-width: var(--icon-sm);
+    font-size: var(--icon-sm);
+    color: var(--accent);
+    opacity: 0;
+    transition: var(--transition-opacity);
+  }
+
+  .select__option[data-active='true'] {
+    color: var(--text-strong);
+  }
+  .select__option[data-active='true'] .menu-row__icon {
+    color: var(--text-body);
+  }
+  .select__option[data-selected='true'] .menu-row__label {
+    color: var(--text-accent);
+  }
+  .select__option[data-selected='true'] .menu-row__icon {
+    color: var(--text-accent);
+  }
+  .select__option[data-selected='true'] .select__option-check {
+    opacity: 1;
+  }
+  .select__option[data-disabled='true'] {
+    cursor: not-allowed;
+    color: var(--text-disabled);
+  }
+  .select__option[data-disabled='true'] .menu-row__icon {
+    color: var(--text-disabled);
+  }
+
+  /* check lands with a spring when a row becomes selected (remounts via React key) */
+  .select__option[data-selected='true'] .select__option-check :is(i, svg) {
+    animation: select-check-in var(--duration-base) var(--ease-spring);
+  }
+  @keyframes select-check-in {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Multi-select: the reused Checkbox box IS the indicator; strip the .cbx standalone chrome. */
+  .select__menu[data-multiple='true'] .select__option-check {
+    opacity: 1;
+  }
+  .select__menu[data-multiple='true'] .select__option .cbx {
+    padding: 0;
+    gap: 0;
+    pointer-events: none;
+  }
+  .select__menu[data-multiple='true'] .select__option .cbx__box {
+    margin-top: 0;
+  }
+
+  /* Row owns the press (.cbx is pointer-events:none): dip the box on press - explicit transform,
+   so a checked box (whose resting scale would otherwise dilute --press) still scales from center. */
+  .select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx__box {
+    transform: scale(0.86);
+  }
+  .select__empty {
+    padding: var(--space-4) var(--space-3);
+    text-align: center;
+    font: var(--type-caption);
+    color: var(--text-subtle);
+  }
+
+  .select__loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+  .select__skeleton {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+  .select__skeleton-dot {
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    border-radius: var(--radius-full);
+    background: var(--bg-muted);
+    flex: 0 0 auto;
+  }
+  .select__skeleton-bar {
+    height: 0.5rem;
+    border-radius: var(--radius-full);
+    background: var(--bg-muted);
+    flex: 1 1 auto;
+    max-width: 11rem;
+  }
+  .select__skeleton:nth-child(2) .select__skeleton-bar {
+    max-width: 7rem;
+  }
+  .select__skeleton:nth-child(3) .select__skeleton-bar {
+    max-width: 9rem;
   }
   .select__loading [data-pulse] {
-    opacity: 0.7;
+    animation: select-pulse var(--duration-spin) var(--ease-standard) infinite alternate;
+  }
+  @keyframes select-pulse {
+    from {
+      opacity: 0.55;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .select__list {
+      scroll-behavior: auto;
+    }
+    .select__option-check :is(i, svg),
+    .select__loading [data-pulse] {
+      animation: none;
+    }
+    .select__loading [data-pulse] {
+      opacity: 0.7;
+    }
   }
 }

@@ -1,183 +1,187 @@
-/* dialog.css - the styled dialog surface (the modal shell owns modality + motion). */
+@layer zyncat.tokens, zyncat.components;
 
-/* Modal placement - the shell layer centers the panel with breathing room. */
-.overlay-layer--dialog {
-  place-items: center;
-  padding: var(--space-6);
-}
-.overlay-panel--dialog {
-  max-width: 100%;
-  max-height: 100%;
-}
+@layer zyncat.components {
+  /* dialog.css - the styled dialog surface (the modal shell owns modality + motion). */
 
-/* The panel - flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
-.dialog {
-  --dialog-w: 32rem;
-  position: relative;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  width: var(--dialog-w);
-  max-width: 100%;
-  max-height: min(85dvh, 44rem);
-  padding: 0;
-  overflow: hidden;
-  background: var(--bg-surface);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
-  color: var(--text-body);
-  font-family: var(--font-sans);
-}
+  /* Modal placement - the shell layer centers the panel with breathing room. */
+  .overlay-layer--dialog {
+    place-items: center;
+    padding: var(--space-6);
+  }
+  .overlay-panel--dialog {
+    max-width: 100%;
+    max-height: 100%;
+  }
 
-.dialog[data-size='sm'] {
-  --dialog-w: 25rem;
-}
-.dialog[data-size='lg'] {
-  --dialog-w: 40rem;
-}
+  /* The panel - flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
+  .dialog {
+    --dialog-w: 32rem;
+    position: relative;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: var(--dialog-w);
+    max-width: 100%;
+    max-height: min(85dvh, 44rem);
+    padding: 0;
+    overflow: hidden;
+    background: var(--bg-surface);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+  }
 
-/* Header - icon - heading - close; flex-start keeps a tall heading top-aligned with the badge. */
-.dialog__header {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-5) var(--space-4);
-  transition:
-    border-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
-  border-bottom: var(--border-hairline) solid transparent;
-}
-/* divider + faint lift appears only once the body is scrolled under it */
-.dialog:has(.dialog__body[data-scroll-top]) .dialog__header {
-  border-bottom-color: var(--border-subtle);
-  box-shadow: var(--shadow-xs);
-}
+  .dialog[data-size='sm'] {
+    --dialog-w: 25rem;
+  }
+  .dialog[data-size='lg'] {
+    --dialog-w: 40rem;
+  }
 
-.dialog__icon {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-md);
-  background: var(--accent-subtle);
-  color: var(--text-accent);
-  font-size: var(--icon-md);
-}
-.dialog[data-tone='danger'] .dialog__icon {
-  background: var(--danger-subtle);
-  color: var(--danger-text);
-}
+  /* Header - icon - heading - close; flex-start keeps a tall heading top-aligned with the badge. */
+  .dialog__header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    transition:
+      border-color var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) var(--ease-standard);
+    border-bottom: var(--border-hairline) solid transparent;
+  }
+  /* divider + faint lift appears only once the body is scrolled under it */
+  .dialog:has(.dialog__body[data-scroll-top]) .dialog__header {
+    border-bottom-color: var(--border-subtle);
+    box-shadow: var(--shadow-xs);
+  }
 
-.dialog__heading {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  /* nudge text to optical-center against the 36px icon badge when present */
-  padding-top: var(--space-px);
-}
-.dialog__title {
-  margin: 0;
-  color: var(--text-strong);
-  font: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans);
-  letter-spacing: var(--tracking-tight);
-  text-wrap: pretty;
-}
-.dialog__desc {
-  margin: 0;
-  color: var(--text-muted);
-  font: var(--type-body);
-  text-wrap: pretty;
-}
+  .dialog__icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-md);
+    background: var(--accent-subtle);
+    color: var(--text-accent);
+    font-size: var(--icon-md);
+  }
+  .dialog[data-tone='danger'] .dialog__icon {
+    background: var(--danger-subtle);
+    color: var(--danger-text);
+  }
 
-/* close - a quiet ghost icon button; the hit box is bigger than the glyph */
-.dialog__close {
-  flex: 0 0 auto;
-  appearance: none;
-  margin: calc(var(--space-1) * -1) calc(var(--space-1) * -1) 0 0;
-  display: grid;
-  place-items: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--text-subtle);
-  cursor: pointer;
-  font-size: var(--icon-sm);
-  transition: var(--transition-control);
-}
-.dialog__close:hover {
-  background: var(--neutral-wash);
-  color: var(--text-strong);
-}
-.dialog__close:active {
-  background: var(--bg-muted);
-}
-.dialog__close:focus-visible {
-  outline: none;
-  color: var(--text-strong);
-  box-shadow: var(--ring-accent);
-}
+  .dialog__heading {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    /* nudge text to optical-center against the 36px icon badge when present */
+    padding-top: var(--space-px);
+  }
+  .dialog__title {
+    margin: 0;
+    color: var(--text-strong);
+    font: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans);
+    letter-spacing: var(--tracking-tight);
+    text-wrap: pretty;
+  }
+  .dialog__desc {
+    margin: 0;
+    color: var(--text-muted);
+    font: var(--type-body);
+    text-wrap: pretty;
+  }
 
-/* Body - the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
-.dialog__body {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 0 var(--space-5) var(--space-5);
-  color: var(--text-body);
-  font: var(--type-body);
-}
-.dialog__body:first-child {
-  padding-top: var(--space-5);
-}
-.dialog:has(.dialog__icon) .dialog__body {
-  padding-left: calc(var(--space-5) + 2.25rem + var(--space-3));
-}
-.dialog:has(.dialog__footer) .dialog__body {
-  padding-bottom: var(--space-4);
-}
-.dialog__body > :first-child {
-  margin-top: 0;
-}
-.dialog__body > :last-child {
-  margin-bottom: 0;
-}
+  /* close - a quiet ghost icon button; the hit box is bigger than the glyph */
+  .dialog__close {
+    flex: 0 0 auto;
+    appearance: none;
+    margin: calc(var(--space-1) * -1) calc(var(--space-1) * -1) 0 0;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-subtle);
+    cursor: pointer;
+    font-size: var(--icon-sm);
+    transition: var(--transition-control);
+  }
+  .dialog__close:hover {
+    background: var(--neutral-wash);
+    color: var(--text-strong);
+  }
+  .dialog__close:active {
+    background: var(--bg-muted);
+  }
+  .dialog__close:focus-visible {
+    outline: none;
+    color: var(--text-strong);
+    box-shadow: var(--ring-accent);
+  }
 
-.dialog__body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
-}
-.dialog__body::-webkit-scrollbar {
-  width: 10px;
-}
-.dialog__body::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: var(--radius-full);
-  border: 3px solid var(--bg-surface);
-  background-clip: padding-box;
-}
+  /* Body - the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
+  .dialog__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 var(--space-5) var(--space-5);
+    color: var(--text-body);
+    font: var(--type-body);
+  }
+  .dialog__body:first-child {
+    padding-top: var(--space-5);
+  }
+  .dialog:has(.dialog__icon) .dialog__body {
+    padding-left: calc(var(--space-5) + 2.25rem + var(--space-3));
+  }
+  .dialog:has(.dialog__footer) .dialog__body {
+    padding-bottom: var(--space-4);
+  }
+  .dialog__body > :first-child {
+    margin-top: 0;
+  }
+  .dialog__body > :last-child {
+    margin-bottom: 0;
+  }
 
-/* Footer - right-aligned actions; gains a top divider only when the body scrolls under it. */
-.dialog__footer {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  padding: var(--space-4) var(--space-5) var(--space-5);
-  border-top: var(--border-hairline) solid transparent;
-  transition: border-color var(--duration-base) var(--ease-standard);
-}
-.dialog:has(.dialog__body[data-scroll-bottom]) .dialog__footer {
-  border-top-color: var(--border-subtle);
+  .dialog__body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .dialog__body::-webkit-scrollbar {
+    width: 10px;
+  }
+  .dialog__body::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-full);
+    border: 3px solid var(--bg-surface);
+    background-clip: padding-box;
+  }
+
+  /* Footer - right-aligned actions; gains a top divider only when the body scrolls under it. */
+  .dialog__footer {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    padding: var(--space-4) var(--space-5) var(--space-5);
+    border-top: var(--border-hairline) solid transparent;
+    transition: border-color var(--duration-base) var(--ease-standard);
+  }
+  .dialog:has(.dialog__body[data-scroll-bottom]) .dialog__footer {
+    border-top-color: var(--border-subtle);
+  }
 }

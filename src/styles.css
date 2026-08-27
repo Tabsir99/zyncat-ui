@@ -1,10 +1,15 @@
 /* Zyncat UI base layer - import ONCE at your app root:  import '@zyncat/ui/styles.css';
    Fonts, design tokens (:root variables) and the shared `glass` utility.
 
+   Everything the library ships sits in the `zyncat` cascade layers, so any unlayered
+   rule in your own stylesheets beats the library without specificity games.
+
    Per-component CSS is NOT here on purpose: every component imports its own
    stylesheet, so the consumer's bundler code-splits and lazy-loads it with the
    component. This file is only the always-needed global layer.
    Order matters: fonts - primitives - semantics - shared utilities. */
+
+@layer zyncat.tokens, zyncat.components;
 
 @import './tokens/fonts.css';
 

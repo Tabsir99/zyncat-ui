@@ -1,152 +1,156 @@
-/* Toggle (switch) - immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
+@layer zyncat.tokens, zyncat.components;
 
-.sw {
-  --sw-on-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  --sw-off-fill: var(--bg-muted);
-  --sw-on-border: var(--accent);
-  --sw-off-border: var(--border-strong);
-  --sw-ring: var(--ring-accent);
-  /* track size is the only input; thumb + travel derive from it */
-  --sw-w: var(--control-height);
-  --sw-h: var(--control-switch);
-  --sw-inset: calc(2 * var(--space-px));
-  /* inner track height minus both borders and the gap each side, so the inset is uniform on all edges */
-  --sw-thumb: calc(var(--sw-h) - 2 * var(--border-hairline) - 2 * var(--sw-inset));
-  /* colors read this flag; the thumb is moved by transform, not by it */
-  --on: 0;
+@layer zyncat.components {
+  /* Toggle (switch) - immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
 
-  display: inline-flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-2);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color var(--duration-fast) var(--ease-standard);
+  .sw {
+    --sw-on-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
+    --sw-off-fill: var(--bg-muted);
+    --sw-on-border: var(--accent);
+    --sw-off-border: var(--border-strong);
+    --sw-ring: var(--ring-accent);
+    /* track size is the only input; thumb + travel derive from it */
+    --sw-w: var(--control-height);
+    --sw-h: var(--control-switch);
+    --sw-inset: calc(2 * var(--space-px));
+    /* inner track height minus both borders and the gap each side, so the inset is uniform on all edges */
+    --sw-thumb: calc(var(--sw-h) - 2 * var(--border-hairline) - 2 * var(--sw-inset));
+    /* colors read this flag; the thumb is moved by transform, not by it */
+    --sw-checked: 0;
 
-  &:has(:checked) {
-    --on: 1;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+
+    &:has(:checked) {
+      --sw-checked: 1;
+    }
+
+    &:not(.sw--disabled):hover {
+      background: var(--bg-muted);
+    }
+    &:not(.sw--disabled):hover:not(:has(:checked)) {
+      --sw-off-border: var(--text-subtle);
+    }
+    &:has(:focus-visible) .sw__track {
+      box-shadow: var(--sw-ring);
+    }
   }
 
-  &:not(.sw--disabled):hover {
-    background: var(--bg-muted);
-  }
-  &:not(.sw--disabled):hover:not(:has(:checked)) {
-    --sw-off-border: var(--text-subtle);
-  }
-  &:has(:focus-visible) .sw__track {
-    box-shadow: var(--sw-ring);
-  }
-}
-
-.sw__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-.sw__track {
-  position: relative;
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--sw-inset);
-  width: var(--sw-w);
-  height: var(--sw-h);
-  margin-top: calc((var(--leading-body) - var(--sw-h)) / 2);
-  border: var(--border-hairline) solid
-    color-mix(in oklab, var(--sw-on-border) calc(var(--on) * 100%), var(--sw-off-border));
-  border-radius: var(--radius-full);
-  background: var(--sw-off-fill);
-  transform: scale(1);
-  transition:
-    border-color var(--duration-base) var(--ease-standard),
-    background-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-spring);
-
-  &::before {
-    content: '';
+  .sw__input {
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--sw-on-fill);
-    opacity: var(--on);
-    transition: opacity var(--duration-base) var(--ease-standard);
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    overflow: hidden;
   }
-}
-/* --tx (travel) + --sx (press-stretch) compose one transform, so press and travel never fight over it */
-.sw__thumb {
-  --tx: 0px;
-  --sx: 1;
-  position: relative;
-  z-index: 1;
-  flex: none;
-  width: var(--sw-thumb);
-  height: var(--sw-thumb);
-  border-radius: var(--radius-full);
-  background: var(--bg-surface);
-  box-shadow: var(--shadow-sm);
-  transform: translateX(var(--tx)) scaleX(var(--sx));
-  transition: transform var(--duration-base) var(--ease-spring);
-}
-/* React-set [data-on] drives travel - no :has() twin to move the thumb out from under the spring and snap it */
-.sw__track[data-on='true'] .sw__thumb {
-  --tx: calc(var(--sw-w) - var(--sw-h));
-}
-.sw__track[data-pressed='true'] {
-  transform: scale(0.96);
-}
-.sw__track[data-pressed='true'] .sw__thumb {
-  --sx: 1.16;
-}
 
-.sw__text {
-  display: grid;
-  gap: var(--space-1);
-}
-.sw__label {
-  font: var(--type-label);
-  color: var(--text-strong);
-}
-.sw__desc {
-  font: var(--type-caption);
-  color: var(--text-muted);
-}
+  .sw__track {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--sw-inset);
+    width: var(--sw-w);
+    height: var(--sw-h);
+    margin-top: calc((var(--leading-body) - var(--sw-h)) / 2);
+    border: var(--border-hairline) solid
+      color-mix(in oklab, var(--sw-on-border) calc(var(--sw-checked) * 100%), var(--sw-off-border));
+    border-radius: var(--radius-full);
+    background: var(--sw-off-fill);
+    transform: scale(1);
+    transition:
+      border-color var(--duration-base) var(--ease-standard),
+      background-color var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-spring);
 
-.sw--sm {
-  --sw-w: var(--control-height-sm);
-  --sw-h: var(--space-4);
-  & .sw__label {
-    font: var(--type-caption);
-    font-weight: var(--weight-medium);
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--sw-on-fill);
+      opacity: var(--sw-checked);
+      transition: opacity var(--duration-base) var(--ease-standard);
+    }
+  }
+  /* --sw-tx (travel) + --sw-sx (press-stretch) compose one transform, so press and travel never fight over it */
+  .sw__thumb {
+    --sw-tx: 0px;
+    --sw-sx: 1;
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: var(--sw-thumb);
+    height: var(--sw-thumb);
+    border-radius: var(--radius-full);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(var(--sw-tx)) scaleX(var(--sw-sx));
+    transition: transform var(--duration-base) var(--ease-spring);
+  }
+  /* React-set [data-on] drives travel - no :has() twin to move the thumb out from under the spring and snap it */
+  .sw__track[data-on='true'] .sw__thumb {
+    --sw-tx: calc(var(--sw-w) - var(--sw-h));
+  }
+  .sw__track[data-pressed='true'] {
+    transform: scale(0.96);
+  }
+  .sw__track[data-pressed='true'] .sw__thumb {
+    --sw-sx: 1.16;
+  }
+
+  .sw__text {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .sw__label {
+    font: var(--type-label);
     color: var(--text-strong);
   }
-  & .sw__track {
-    margin-top: calc((var(--leading-caption) - var(--sw-h)) / 2);
+  .sw__desc {
+    font: var(--type-caption);
+    color: var(--text-muted);
   }
-}
 
-/* disabled leaves the flag untouched, so the thumb keeps its correct position */
-.sw--disabled {
-  cursor: not-allowed;
-  --sw-on-fill: var(--accent-disabled);
-  --sw-off-fill: var(--bg-muted);
-  --sw-on-border: var(--accent-disabled);
-  --sw-off-border: var(--border-default);
-  & .sw__thumb {
-    box-shadow: var(--shadow-xs);
+  .sw--sm {
+    --sw-w: var(--control-height-sm);
+    --sw-h: var(--space-4);
+    & .sw__label {
+      font: var(--type-caption);
+      font-weight: var(--weight-medium);
+      color: var(--text-strong);
+    }
+    & .sw__track {
+      margin-top: calc((var(--leading-caption) - var(--sw-h)) / 2);
+    }
   }
-  & .sw__label,
-  & .sw__desc {
-    color: var(--text-disabled);
+
+  /* disabled leaves the flag untouched, so the thumb keeps its correct position */
+  .sw--disabled {
+    cursor: not-allowed;
+    --sw-on-fill: var(--accent-disabled);
+    --sw-off-fill: var(--bg-muted);
+    --sw-on-border: var(--accent-disabled);
+    --sw-off-border: var(--border-default);
+    & .sw__thumb {
+      box-shadow: var(--shadow-xs);
+    }
+    & .sw__label,
+    & .sw__desc {
+      color: var(--text-disabled);
+    }
   }
 }

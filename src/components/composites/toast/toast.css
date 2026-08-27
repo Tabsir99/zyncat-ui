@@ -1,257 +1,261 @@
-/* toast.css - the glass notification card, tinted per tone (a draining timer ring). */
+@layer zyncat.tokens, zyncat.components;
 
-.toast-viewport {
-  position: fixed;
-  width: min(22.5rem, calc(100vw - 2 * var(--toast-offset, var(--space-6))));
-  z-index: var(--layer-toast);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  pointer-events: none; /* only the cards themselves are live */
-}
+@layer zyncat.components {
+  /* toast.css - the glass notification card, tinted per tone (a draining timer ring). */
 
-/* Anchored by [data-position]; --toast-offset (set by <Toaster offset>) overrides the edge inset. */
-.toast-viewport[data-position^='top'] {
-  top: var(--toast-offset, var(--space-6));
-}
-.toast-viewport[data-position^='bottom'] {
-  bottom: var(--toast-offset, var(--space-6));
-}
-.toast-viewport[data-position$='right'] {
-  right: var(--toast-offset, var(--space-6));
-}
-.toast-viewport[data-position$='left'] {
-  left: var(--toast-offset, var(--space-6));
-}
-.toast-viewport[data-position$='center'] {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* The card - a glass consumer (.glass is set in JSX). */
-.toast {
-  /* tone hooks - set by [data-tone] below */
-  --toast-hue: var(--text-subtle);
-  --glass-fg: var(--text-strong);
-  --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
-  --glass-sheen-rest: 0.45;
-
-  position: absolute;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  overflow: hidden; /* custom content stays in the pane   */
-  pointer-events: auto;
-  border-radius: var(--radius-lg);
-
-  /* Motion owns transform - keep only the color/shadow transitions (never smooth Motion's writes) */
-  transition:
-    background-color var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard);
-}
-
-/* Cards pin to the stack's edge; Motion offsets each one away from it (up from bottom, down from top). */
-.toast-viewport[data-position^='bottom'] .toast {
-  bottom: 0;
-  transform-origin: center bottom;
-}
-.toast-viewport[data-position^='top'] .toast {
-  top: 0;
-  transform-origin: center top;
-}
-
-/* rich panes for genuine status, diluted to stay glass; neutral otherwise */
-.toast[data-tone='success'] {
-  --toast-hue: var(--success);
-  --glass-fg: var(--success-text);
-  --glass-tint: color-mix(in oklab, var(--glass-tint-success) 70%, transparent);
-}
-.toast[data-tone='danger'] {
-  --toast-hue: var(--danger);
-  --glass-fg: var(--danger-text);
-  --glass-tint: color-mix(in oklab, var(--glass-tint-danger) 70%, transparent);
-}
-.toast[data-tone='warning'] {
-  --toast-hue: var(--warning);
-  --glass-fg: var(--warning-text);
-  --glass-tint: color-mix(in oklab, var(--glass-tint-warning) 70%, transparent);
-}
-.toast[data-tone='info'] {
-  --toast-hue: var(--info);
-  --glass-fg: var(--info-text);
-  --glass-tint: color-mix(in oklab, var(--glass-tint-info) 70%, transparent);
-}
-
-/* receding cards fall quiet: tone drains out, sheen dims, content fades */
-.toast[data-behind] {
-  --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
-  --glass-sheen-rest: 0.3;
-}
-.toast[data-behind] .toast__inner,
-.toast[data-behind] .toast__custom {
-  opacity: 0;
-}
-
-.toast__inner {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  transition: var(--transition-opacity);
-}
-
-/* the dial - glyph centered in the timer ring; one instrument, not two */
-.toast__icon {
-  position: relative;
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: calc(var(--icon-md) + 2 * var(--space-2));
-  height: calc(var(--icon-md) + 2 * var(--space-2));
-  color: var(--toast-hue);
-}
-.toast__icon-glyph {
-  display: grid;
-  place-items: center;
-}
-
-/* the ring - a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
-.toast__ring {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg); /* arc starts at 12 o'clock           */
-  pointer-events: none;
-}
-.toast__ring circle {
-  fill: none;
-  stroke-width: var(--border-emphasis);
-}
-.toast__ring-track {
-  stroke: color-mix(in oklab, var(--toast-hue) 16%, transparent);
-}
-.toast__ring-arc {
-  stroke: var(--toast-hue);
-  stroke-linecap: round;
-  stroke-dasharray: 1; /* pathLength=1 - offset is a fraction */
-  animation-name: toast-ring;
-  animation-timing-function: linear;
-  animation-fill-mode: both;
-}
-.toast-viewport.is-paused .toast__ring-arc {
-  animation-play-state: paused;
-}
-@keyframes toast-ring {
-  from {
-    stroke-dashoffset: 0;
+  .toast-viewport {
+    position: fixed;
+    width: min(22.5rem, calc(100vw - 2 * var(--toast-offset, var(--space-6))));
+    z-index: var(--layer-toast);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    pointer-events: none; /* only the cards themselves are live */
   }
-  to {
-    stroke-dashoffset: 1;
+
+  /* Anchored by [data-position]; --toast-offset (set by <Toaster offset>) overrides the edge inset. */
+  .toast-viewport[data-position^='top'] {
+    top: var(--toast-offset, var(--space-6));
   }
-}
-
-.toast__text {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.toast__message {
-  margin: 0;
-  font: var(--type-label);
-  color: var(--glass-fg);
-  text-wrap: pretty;
-}
-.toast__desc {
-  margin: var(--space-1) 0 0;
-  font: var(--type-caption);
-  color: color-mix(in oklab, var(--glass-fg) 76%, transparent);
-  text-wrap: pretty;
-}
-
-/* coalesce counter - same toast refired becomes a xN counter (mono) */
-.toast__count {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  line-height: var(--leading-micro);
-  font-variant-numeric: tabular-nums;
-  color: var(--glass-fg);
-  background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
-  border-radius: var(--radius-sm);
-  padding: 0 var(--space-1);
-}
-
-.toast__action {
-  flex: none;
-}
-
-/* dismiss - appears only while the card is hovered or holds focus */
-.toast__close {
-  flex: none;
-  appearance: none;
-  display: grid;
-  place-items: center;
-  width: var(--space-6);
-  height: var(--space-6);
-  margin: 0;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: color-mix(in oklab, var(--glass-fg) 64%, transparent);
-  cursor: pointer;
-  opacity: 0;
-  transition:
-    var(--transition-control),
-    opacity var(--duration-fast) var(--ease-standard);
-}
-.toast:hover .toast__close,
-.toast:focus-within .toast__close {
-  opacity: 1;
-}
-.toast__close:hover {
-  background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
-  color: var(--glass-fg);
-}
-.toast__close:active {
-  background: color-mix(in oklab, var(--glass-fg) 14%, transparent);
-}
-.toast__close:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-  opacity: 1;
-}
-
-/* Loading spinner - continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
-.toast__spinner {
-  display: block;
-  box-sizing: border-box;
-  width: var(--icon-sm);
-  height: var(--icon-sm);
-  border-radius: var(--radius-full);
-  border: var(--border-emphasis) solid currentColor;
-  border-right-color: transparent;
-  color: var(--text-muted);
-  animation: toast-spin var(--duration-spin) linear infinite;
-}
-@keyframes toast-spin {
-  to {
-    transform: rotate(1turn);
+  .toast-viewport[data-position^='bottom'] {
+    bottom: var(--toast-offset, var(--space-6));
   }
-}
+  .toast-viewport[data-position$='right'] {
+    right: var(--toast-offset, var(--space-6));
+  }
+  .toast-viewport[data-position$='left'] {
+    left: var(--toast-offset, var(--space-6));
+  }
+  .toast-viewport[data-position$='center'] {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-/* Custom slot - bare neutral glass; the consumer owns the interior. */
-.toast__custom {
-  padding: var(--space-3) var(--space-4);
-  transition: var(--transition-opacity);
-}
+  /* The card - a glass consumer (.glass is set in JSX). */
+  .toast {
+    /* tone hooks - set by [data-tone] below */
+    --toast-hue: var(--text-subtle);
+    --glass-fg: var(--text-strong);
+    --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
+    --glass-sheen-rest: 0.45;
 
-@media (prefers-reduced-motion: reduce) {
-  /* travel/gestures collapse via the tokens; the ring is data, so it keeps running */
-  .toast,
-  .toast__close,
-  .toast__inner,
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* custom content stays in the pane   */
+    pointer-events: auto;
+    border-radius: var(--radius-lg);
+
+    /* Motion owns transform - keep only the color/shadow transitions (never smooth Motion's writes) */
+    transition:
+      background-color var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) var(--ease-standard);
+  }
+
+  /* Cards pin to the stack's edge; Motion offsets each one away from it (up from bottom, down from top). */
+  .toast-viewport[data-position^='bottom'] .toast {
+    bottom: 0;
+    transform-origin: center bottom;
+  }
+  .toast-viewport[data-position^='top'] .toast {
+    top: 0;
+    transform-origin: center top;
+  }
+
+  /* rich panes for genuine status, diluted to stay glass; neutral otherwise */
+  .toast[data-tone='success'] {
+    --toast-hue: var(--success);
+    --glass-fg: var(--success-text);
+    --glass-tint: color-mix(in oklab, var(--glass-tint-success) 70%, transparent);
+  }
+  .toast[data-tone='danger'] {
+    --toast-hue: var(--danger);
+    --glass-fg: var(--danger-text);
+    --glass-tint: color-mix(in oklab, var(--glass-tint-danger) 70%, transparent);
+  }
+  .toast[data-tone='warning'] {
+    --toast-hue: var(--warning);
+    --glass-fg: var(--warning-text);
+    --glass-tint: color-mix(in oklab, var(--glass-tint-warning) 70%, transparent);
+  }
+  .toast[data-tone='info'] {
+    --toast-hue: var(--info);
+    --glass-fg: var(--info-text);
+    --glass-tint: color-mix(in oklab, var(--glass-tint-info) 70%, transparent);
+  }
+
+  /* receding cards fall quiet: tone drains out, sheen dims, content fades */
+  .toast[data-behind] {
+    --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
+    --glass-sheen-rest: 0.3;
+  }
+  .toast[data-behind] .toast__inner,
+  .toast[data-behind] .toast__custom {
+    opacity: 0;
+  }
+
+  .toast__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    transition: var(--transition-opacity);
+  }
+
+  /* the dial - glyph centered in the timer ring; one instrument, not two */
+  .toast__icon {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: calc(var(--icon-md) + 2 * var(--space-2));
+    height: calc(var(--icon-md) + 2 * var(--space-2));
+    color: var(--toast-hue);
+  }
+  .toast__icon-glyph {
+    display: grid;
+    place-items: center;
+  }
+
+  /* the ring - a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
+  .toast__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg); /* arc starts at 12 o'clock           */
+    pointer-events: none;
+  }
+  .toast__ring circle {
+    fill: none;
+    stroke-width: var(--border-emphasis);
+  }
+  .toast__ring-track {
+    stroke: color-mix(in oklab, var(--toast-hue) 16%, transparent);
+  }
+  .toast__ring-arc {
+    stroke: var(--toast-hue);
+    stroke-linecap: round;
+    stroke-dasharray: 1; /* pathLength=1 - offset is a fraction */
+    animation-name: toast-ring;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  .toast-viewport.is-paused .toast__ring-arc {
+    animation-play-state: paused;
+  }
+  @keyframes toast-ring {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  .toast__text {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .toast__message {
+    margin: 0;
+    font: var(--type-label);
+    color: var(--glass-fg);
+    text-wrap: pretty;
+  }
+  .toast__desc {
+    margin: var(--space-1) 0 0;
+    font: var(--type-caption);
+    color: color-mix(in oklab, var(--glass-fg) 76%, transparent);
+    text-wrap: pretty;
+  }
+
+  /* coalesce counter - same toast refired becomes a xN counter (mono) */
+  .toast__count {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    line-height: var(--leading-micro);
+    font-variant-numeric: tabular-nums;
+    color: var(--glass-fg);
+    background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-1);
+  }
+
+  .toast__action {
+    flex: none;
+  }
+
+  /* dismiss - appears only while the card is hovered or holds focus */
+  .toast__close {
+    flex: none;
+    appearance: none;
+    display: grid;
+    place-items: center;
+    width: var(--space-6);
+    height: var(--space-6);
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: color-mix(in oklab, var(--glass-fg) 64%, transparent);
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      var(--transition-control),
+      opacity var(--duration-fast) var(--ease-standard);
+  }
+  .toast:hover .toast__close,
+  .toast:focus-within .toast__close {
+    opacity: 1;
+  }
+  .toast__close:hover {
+    background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
+    color: var(--glass-fg);
+  }
+  .toast__close:active {
+    background: color-mix(in oklab, var(--glass-fg) 14%, transparent);
+  }
+  .toast__close:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    opacity: 1;
+  }
+
+  /* Loading spinner - continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
+  .toast__spinner {
+    display: block;
+    box-sizing: border-box;
+    width: var(--icon-sm);
+    height: var(--icon-sm);
+    border-radius: var(--radius-full);
+    border: var(--border-emphasis) solid currentColor;
+    border-right-color: transparent;
+    color: var(--text-muted);
+    animation: toast-spin var(--duration-spin) linear infinite;
+  }
+  @keyframes toast-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* Custom slot - bare neutral glass; the consumer owns the interior. */
   .toast__custom {
-    transition: none;
+    padding: var(--space-3) var(--space-4);
+    transition: var(--transition-opacity);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* travel/gestures collapse via the tokens; the ring is data, so it keeps running */
+    .toast,
+    .toast__close,
+    .toast__inner,
+    .toast__custom {
+      transition: none;
+    }
   }
 }

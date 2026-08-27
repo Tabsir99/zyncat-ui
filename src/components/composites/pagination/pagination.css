@@ -1,43 +1,47 @@
-/* Pagination - cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
+@layer zyncat.tokens, zyncat.components;
 
-.pgn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-}
+@layer zyncat.components {
+  /* Pagination - cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
 
-/* mono tabular readout; .pgn__range is the node Motion slides - keep it transformable (inline-block) */
-.pgn__readout {
-  font: var(--type-mono);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-subtle);
-  white-space: nowrap;
-}
-.pgn__range {
-  display: inline-block;
-}
-.pgn__range b {
-  font-weight: var(--weight-medium);
-  color: var(--text-body);
-}
+  .pgn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
 
-/* arrows kept adjacent (not flanking the readout) so repeated paging needs no mouse travel and a growing readout never shifts them */
-.pgn__nav {
-  display: flex;
-  gap: var(--space-1);
-}
-.pgn__btn {
-  width: var(--control-height-sm);
-  padding: 0;
-}
+  /* mono tabular readout; .pgn__range is the node Motion slides - keep it transformable (inline-block) */
+  .pgn__readout {
+    font: var(--type-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-subtle);
+    white-space: nowrap;
+  }
+  .pgn__range {
+    display: inline-block;
+  }
+  .pgn__range b {
+    font-weight: var(--weight-medium);
+    color: var(--text-body);
+  }
 
-/* Caret nudges toward its direction on hover - a 1px optical cue. */
-.pgn__btn .icon {
-  transition: transform var(--duration-fast) var(--ease-standard);
-}
-.pgn__btn--prev:hover:not(:disabled) .icon {
-  transform: translateX(calc(var(--space-px) * -1));
-}
-.pgn__btn--next:hover:not(:disabled) .icon {
-  transform: translateX(var(--space-px));
+  /* arrows kept adjacent (not flanking the readout) so repeated paging needs no mouse travel and a growing readout never shifts them */
+  .pgn__nav {
+    display: flex;
+    gap: var(--space-1);
+  }
+  .pgn__btn {
+    width: var(--control-height-sm);
+    padding: 0;
+  }
+
+  /* Caret nudges toward its direction on hover - a 1px optical cue. */
+  .pgn__btn .icon {
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .pgn__btn--prev:hover:not(:disabled) .icon {
+    transform: translateX(calc(var(--space-px) * -1));
+  }
+  .pgn__btn--next:hover:not(:disabled) .icon {
+    transform: translateX(var(--space-px));
+  }
 }

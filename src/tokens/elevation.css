@@ -3,27 +3,31 @@
    what it sits on, a mid layer for form, and a wide ambient one. Drop the contact layer and the
    panel reads soft and unanchored no matter how large the ambient blur is. */
 
-:root {
-  --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
-  --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
-  --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07);
-  --shadow-lg:
-    0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04),
-    0 12px 28px rgb(var(--shadow-rgb) / 0.1);
-  --shadow-xl:
-    0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06),
-    0 24px 48px rgb(var(--shadow-rgb) / 0.14);
+@layer zyncat.tokens, zyncat.components;
 
-  /* Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
-  --border-hairline: 1px;
-  --border-emphasis: 1.5px;
+@layer zyncat.tokens {
+  :root {
+    --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
+    --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
+    --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07);
+    --shadow-lg:
+      0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04),
+      0 12px 28px rgb(var(--shadow-rgb) / 0.1);
+    --shadow-xl:
+      0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06),
+      0 24px 48px rgb(var(--shadow-rgb) / 0.14);
 
-  /* Focus & selection rings - box-shadows (not outlines) so they follow border-radius. */
+    /* Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
+    --border-hairline: 1px;
+    --border-emphasis: 1.5px;
 
-  /* Derive from --accent so the ring tracks the active accent and theme, never a fixed hue. */
-  --ring-accent: 0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent);
-  --ring-danger: 0 0 0 3px oklch(0.602 0.196 27 / 0.3);
-  --ring-warning: 0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent);
-  --ring-success: 0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent);
-  --ring-offset: 0 0 0 2px var(--bg-surface), 0 0 0 4px color-mix(in oklab, var(--accent) 40%, transparent);
+    /* Focus & selection rings - box-shadows (not outlines) so they follow border-radius. */
+
+    /* Derive from --accent so the ring tracks the active accent and theme, never a fixed hue. */
+    --ring-accent: 0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent);
+    --ring-danger: 0 0 0 3px oklch(0.602 0.196 27 / 0.3);
+    --ring-warning: 0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent);
+    --ring-success: 0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent);
+    --ring-offset: 0 0 0 2px var(--bg-surface), 0 0 0 4px color-mix(in oklab, var(--accent) 40%, transparent);
+  }
 }

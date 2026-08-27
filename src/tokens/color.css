@@ -5,59 +5,63 @@
    Lightness is the contrast spine - retune chroma freely, move an L step and every
    text-on-surface pair moves with it. */
 
-:root {
-  --gray-0: oklch(1 0 0);
-  --gray-25: oklch(0.992 0.003 262);
-  --gray-50: oklch(0.984 0.005 262);
-  --gray-100: oklch(0.968 0.007 262);
-  --gray-150: oklch(0.948 0.009 262);
-  --gray-200: oklch(0.922 0.011 262);
-  --gray-300: oklch(0.872 0.015 262);
-  --gray-400: oklch(0.765 0.021 262);
-  --gray-500: oklch(0.642 0.027 262);
-  --gray-600: oklch(0.532 0.03 262);
-  --gray-700: oklch(0.422 0.03 262);
-  --gray-800: oklch(0.305 0.027 262);
-  --gray-900: oklch(0.225 0.022 262);
-  --gray-950: oklch(0.165 0.018 262);
+@layer zyncat.tokens, zyncat.components;
 
-  --teal-50: oklch(0.972 0.02 198);
-  --teal-100: oklch(0.935 0.04 198);
-  --teal-200: oklch(0.88 0.066 198);
-  --teal-300: oklch(0.795 0.092 198);
-  --teal-400: oklch(0.705 0.112 198);
-  --teal-500: oklch(0.63 0.118 198);
-  --teal-600: oklch(0.56 0.114 198);
-  --teal-700: oklch(0.478 0.1 198);
-  --teal-800: oklch(0.4 0.082 198);
-  --teal-900: oklch(0.32 0.062 198);
+@layer zyncat.tokens {
+  :root {
+    --gray-0: oklch(1 0 0);
+    --gray-25: oklch(0.992 0.003 262);
+    --gray-50: oklch(0.984 0.005 262);
+    --gray-100: oklch(0.968 0.007 262);
+    --gray-150: oklch(0.948 0.009 262);
+    --gray-200: oklch(0.922 0.011 262);
+    --gray-300: oklch(0.872 0.015 262);
+    --gray-400: oklch(0.765 0.021 262);
+    --gray-500: oklch(0.642 0.027 262);
+    --gray-600: oklch(0.532 0.03 262);
+    --gray-700: oklch(0.422 0.03 262);
+    --gray-800: oklch(0.305 0.027 262);
+    --gray-900: oklch(0.225 0.022 262);
+    --gray-950: oklch(0.165 0.018 262);
 
-  --green-50: oklch(0.965 0.028 152);
-  --green-500: oklch(0.62 0.13 152);
-  --green-600: oklch(0.548 0.122 152);
-  --green-700: oklch(0.462 0.1 152);
+    --teal-50: oklch(0.972 0.02 198);
+    --teal-100: oklch(0.935 0.04 198);
+    --teal-200: oklch(0.88 0.066 198);
+    --teal-300: oklch(0.795 0.092 198);
+    --teal-400: oklch(0.705 0.112 198);
+    --teal-500: oklch(0.63 0.118 198);
+    --teal-600: oklch(0.56 0.114 198);
+    --teal-700: oklch(0.478 0.1 198);
+    --teal-800: oklch(0.4 0.082 198);
+    --teal-900: oklch(0.32 0.062 198);
 
-  --amber-50: oklch(0.972 0.034 75);
-  --amber-500: oklch(0.76 0.14 75);
-  --amber-600: oklch(0.7 0.142 75);
-  --amber-700: oklch(0.56 0.118 75);
+    --green-50: oklch(0.965 0.028 152);
+    --green-500: oklch(0.62 0.13 152);
+    --green-600: oklch(0.548 0.122 152);
+    --green-700: oklch(0.462 0.1 152);
 
-  --red-50: oklch(0.968 0.02 27);
-  --red-300: oklch(0.8 0.09 27);
-  --red-400: oklch(0.64 0.2 27);
-  --red-500: oklch(0.602 0.196 27);
-  --red-600: oklch(0.545 0.196 27);
-  --red-700: oklch(0.478 0.172 27);
+    --amber-50: oklch(0.972 0.034 75);
+    --amber-500: oklch(0.76 0.14 75);
+    --amber-600: oklch(0.7 0.142 75);
+    --amber-700: oklch(0.56 0.118 75);
 
-  /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue.
+    --red-50: oklch(0.968 0.02 27);
+    --red-300: oklch(0.8 0.09 27);
+    --red-400: oklch(0.64 0.2 27);
+    --red-500: oklch(0.602 0.196 27);
+    --red-600: oklch(0.545 0.196 27);
+    --red-700: oklch(0.478 0.172 27);
+
+    /* Wash tints - glassy active/selected fills that let the surface show through; low alpha per hue.
      -strong is the press step of the gray wash (hover 6% < press 10%). */
-  --gray-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
-  --gray-wash-strong: color-mix(in oklab, var(--gray-700) 10%, transparent);
-  --teal-wash: oklch(0.63 0.118 198 / 0.05);
-  --green-wash: oklch(0.62 0.13 152 / 0.1);
-  --amber-wash: oklch(0.76 0.14 75 / 0.12);
-  --red-wash: oklch(0.602 0.196 27 / 0.1);
+    --gray-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
+    --gray-wash-strong: color-mix(in oklab, var(--gray-700) 10%, transparent);
+    --teal-wash: oklch(0.63 0.118 198 / 0.05);
+    --green-wash: oklch(0.62 0.13 152 / 0.1);
+    --amber-wash: oklch(0.76 0.14 75 / 0.12);
+    --red-wash: oklch(0.602 0.196 27 / 0.1);
 
-  /* Cool near-black shadow ink - pure black looks muddy on a cool canvas. */
-  --shadow-rgb: 13 18 30;
+    /* Cool near-black shadow ink - pure black looks muddy on a cool canvas. */
+    --shadow-rgb: 13 18 30;
+  }
 }

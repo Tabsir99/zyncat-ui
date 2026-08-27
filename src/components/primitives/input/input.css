@@ -1,307 +1,311 @@
-/* input.css - inputs: TextField - NumberField - OtpField. */
+@layer zyncat.tokens, zyncat.components;
 
-/* No row-gap - the label and message each own their adjacent gap, so an absent message reserves zero. */
-.fld {
-  display: grid;
-}
-.fld__label {
-  font: var(--type-caption);
-  font-weight: var(--weight-medium);
-  color: var(--text-body);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  line-height: 1;
-  margin-bottom: var(--space-2);
-}
-.fld__req {
-  color: var(--danger);
-}
-.fld__optional {
-  color: var(--text-subtle);
-  font-weight: var(--weight-regular);
-}
+@layer zyncat.components {
+  /* input.css - inputs: TextField - NumberField - OtpField. */
 
-.fld__control {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+  /* No row-gap - the label and message each own their adjacent gap, so an absent message reserves zero. */
+  .fld {
+    display: grid;
+  }
+  .fld__label {
+    font: var(--type-caption);
+    font-weight: var(--weight-medium);
+    color: var(--text-body);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    line-height: 1;
+    margin-bottom: var(--space-2);
+  }
+  .fld__req {
+    color: var(--danger);
+  }
+  .fld__optional {
+    color: var(--text-subtle);
+    font-weight: var(--weight-regular);
+  }
 
-.fld__input {
-  width: 100%;
-  height: var(--control-height);
-  padding: 0 var(--space-3);
-  font: var(--type-body);
-  color: var(--text-strong);
-  background: var(--bg-inset);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-md);
-  transition: var(--transition-control);
-  appearance: none;
-  -webkit-appearance: none;
-}
-.fld__input::placeholder {
-  color: var(--text-disabled);
-}
-.fld__input:hover:not(:disabled):not(:focus) {
-  border-color: var(--border-strong);
-}
-.fld__input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-surface);
-  box-shadow: var(--ring-accent);
-}
-.fld__input:disabled {
-  background: var(--bg-muted);
-  color: var(--text-disabled);
-  cursor: not-allowed;
-}
-.fld__input[readonly] {
-  background: var(--bg-subtle);
-  color: var(--text-body);
-}
+  .fld__control {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
 
-.fld__msg {
-  font: var(--type-caption);
-  color: var(--text-subtle);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 1em;
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-.fld__msg i {
-  font-size: var(--size-body);
-  flex: none;
-}
-/* Gap is the message's padding-top (not margin) so it lives inside the Collapse and clips to zero when closed. */
-.fld .fld__msg {
-  padding-top: var(--space-2);
-}
+  .fld__input {
+    width: 100%;
+    height: var(--control-height);
+    padding: 0 var(--space-3);
+    font: var(--type-body);
+    color: var(--text-strong);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-md);
+    transition: var(--transition-control);
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .fld__input::placeholder {
+    color: var(--text-disabled);
+  }
+  .fld__input:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+  .fld__input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-surface);
+    box-shadow: var(--ring-accent);
+  }
+  .fld__input:disabled {
+    background: var(--bg-muted);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+  .fld__input[readonly] {
+    background: var(--bg-subtle);
+    color: var(--text-body);
+  }
 
-.fld--sm .fld__input {
-  height: var(--control-height-sm);
-  font-size: var(--size-caption);
-  padding: 0 var(--space-2);
-  border-radius: var(--radius-sm);
-}
-.fld--lg .fld__input {
-  height: var(--control-height-lg);
-}
+  .fld__msg {
+    font: var(--type-caption);
+    color: var(--text-subtle);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 1em;
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+  .fld__msg i {
+    font-size: var(--size-body);
+    flex: none;
+  }
+  /* Gap is the message's padding-top (not margin) so it lives inside the Collapse and clips to zero when closed. */
+  .fld .fld__msg {
+    padding-top: var(--space-2);
+  }
 
-.fld__icon {
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-subtle);
-  pointer-events: none;
-  transition: var(--transition-control);
-}
-.fld__icon i {
-  font-size: var(--icon-md);
-}
-.fld__icon--lead {
-  left: var(--space-2);
-}
-.fld__control:focus-within .fld__icon {
-  color: var(--text-muted);
-}
-.fld--has-lead .fld__input {
-  padding-left: calc(var(--space-2) + var(--icon-md) + var(--space-2));
-}
+  .fld--sm .fld__input {
+    height: var(--control-height-sm);
+    font-size: var(--size-caption);
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+  .fld--lg .fld__input {
+    height: var(--control-height-lg);
+  }
 
-.fld__action {
-  position: absolute;
-  right: var(--space-2);
-  width: var(--control-height-sm);
-  height: var(--control-height-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: none;
-  color: var(--text-subtle);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition-control);
-}
-.fld__action i {
-  font-size: var(--icon-sm);
-}
-.fld__action:hover {
-  color: var(--text-strong);
-  background: var(--bg-muted);
-}
-.fld__action:focus-visible {
-  outline: none;
-  color: var(--text-strong);
-  box-shadow: var(--ring-accent);
-}
-.fld--has-action .fld__input {
-  padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
-}
+  .fld__icon {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subtle);
+    pointer-events: none;
+    transition: var(--transition-control);
+  }
+  .fld__icon i {
+    font-size: var(--icon-md);
+  }
+  .fld__icon--lead {
+    left: var(--space-2);
+  }
+  .fld__control:focus-within .fld__icon {
+    color: var(--text-muted);
+  }
+  .fld--has-lead .fld__input {
+    padding-left: calc(var(--space-2) + var(--icon-md) + var(--space-2));
+  }
 
-/* Per-state hover rule is required - the generic .fld__input:hover would otherwise win on specificity. */
-.fld.is-error .fld__input {
-  border-color: var(--danger);
-}
-.fld.is-error .fld__input:hover:not(:disabled):not(:focus) {
-  border-color: var(--danger-text);
-}
-.fld.is-error .fld__input:focus {
-  box-shadow: var(--ring-danger);
-}
-.fld.is-error .fld__msg,
-.fld.is-error .fld__icon {
-  color: var(--danger-text);
-}
-.fld.is-warning .fld__input {
-  border-color: var(--warning);
-}
-.fld.is-warning .fld__input:hover:not(:disabled):not(:focus) {
-  border-color: var(--warning-text);
-}
-.fld.is-warning .fld__input:focus {
-  box-shadow: var(--ring-warning);
-}
-.fld.is-warning .fld__msg {
-  color: var(--warning-text);
-}
-.fld.is-success .fld__input {
-  border-color: var(--success);
-}
-.fld.is-success .fld__input:hover:not(:disabled):not(:focus) {
-  border-color: var(--success-text);
-}
-.fld.is-success .fld__input:focus {
-  box-shadow: var(--ring-success);
-}
-.fld.is-success .fld__msg {
-  color: var(--success-text);
-}
+  .fld__action {
+    position: absolute;
+    right: var(--space-2);
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: none;
+    color: var(--text-subtle);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition-control);
+  }
+  .fld__action i {
+    font-size: var(--icon-sm);
+  }
+  .fld__action:hover {
+    color: var(--text-strong);
+    background: var(--bg-muted);
+  }
+  .fld__action:focus-visible {
+    outline: none;
+    color: var(--text-strong);
+    box-shadow: var(--ring-accent);
+  }
+  .fld--has-action .fld__input {
+    padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
+  }
 
-/* Stepper column width is the single source of truth - every clearance derives from it via calc(), so geometry can't drift. */
-.numf {
-  --numf-stepper-w: var(--space-6);
-}
-.numf .fld__input {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum';
-  padding-right: calc(var(--numf-stepper-w) + var(--space-2));
-}
-.numf--unit .fld__input {
-  padding-right: calc(var(--numf-stepper-w) + var(--numf-unit-w, var(--control-height-lg)) + var(--space-2));
-}
-.numf__unit {
-  position: absolute;
-  right: calc(var(--numf-stepper-w) + var(--space-2));
-  color: var(--text-subtle);
-  font: var(--type-caption);
-  pointer-events: none;
-}
-.numf__steppers {
-  position: absolute;
-  top: var(--border-hairline);
-  right: var(--border-hairline);
-  bottom: var(--border-hairline);
-  width: var(--numf-stepper-w);
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  border-left: var(--border-hairline) solid var(--border-default);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  overflow: hidden;
-}
-.numf__step {
-  border: 0;
-  background: var(--bg-surface);
-  color: var(--text-muted);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: var(--transition-control);
-  padding: 0;
-}
-.numf__step i {
-  font-size: var(--size-caption);
-}
-.numf__step:hover {
-  background: var(--neutral-wash);
-  color: var(--text-strong);
-}
-.numf__step:active {
-  background: var(--bg-muted);
-}
-.numf__step:disabled {
-  color: var(--text-disabled);
-  cursor: not-allowed;
-  background: var(--bg-surface);
-}
-.numf__step + .numf__step {
-  border-top: var(--border-hairline) solid var(--border-default);
-}
-.numf .fld__input:focus ~ .numf__steppers {
-  border-color: var(--accent);
-}
+  /* Per-state hover rule is required - the generic .fld__input:hover would otherwise win on specificity. */
+  .fld.is-error .fld__input {
+    border-color: var(--danger);
+  }
+  .fld.is-error .fld__input:hover:not(:disabled):not(:focus) {
+    border-color: var(--danger-text);
+  }
+  .fld.is-error .fld__input:focus {
+    box-shadow: var(--ring-danger);
+  }
+  .fld.is-error .fld__msg,
+  .fld.is-error .fld__icon {
+    color: var(--danger-text);
+  }
+  .fld.is-warning .fld__input {
+    border-color: var(--warning);
+  }
+  .fld.is-warning .fld__input:hover:not(:disabled):not(:focus) {
+    border-color: var(--warning-text);
+  }
+  .fld.is-warning .fld__input:focus {
+    box-shadow: var(--ring-warning);
+  }
+  .fld.is-warning .fld__msg {
+    color: var(--warning-text);
+  }
+  .fld.is-success .fld__input {
+    border-color: var(--success);
+  }
+  .fld.is-success .fld__input:hover:not(:disabled):not(:focus) {
+    border-color: var(--success-text);
+  }
+  .fld.is-success .fld__input:focus {
+    box-shadow: var(--ring-success);
+  }
+  .fld.is-success .fld__msg {
+    color: var(--success-text);
+  }
 
-/* Intentional exception: slot (44x52 - sm 38x44) and separator (10x2) are bespoke px - the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
-.otp {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.otp__slot {
-  width: 44px;
-  height: 52px;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: var(--size-title);
-  font-weight: var(--weight-medium);
-  color: var(--text-strong);
-  background: var(--bg-inset);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-md);
-  transition: var(--transition-control);
-  caret-color: var(--accent);
-  appearance: none;
-}
-.otp__slot:hover:not(:disabled):not(:focus) {
-  border-color: var(--border-strong);
-}
-.otp__slot:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-surface);
-  box-shadow: var(--ring-accent);
-}
-.otp__slot[data-filled='true'] {
-  border-color: var(--border-strong);
-}
-.otp__slot:disabled {
-  background: var(--bg-muted);
-  color: var(--text-disabled);
-  cursor: not-allowed;
-}
-.otp__sep {
-  width: 10px;
-  height: 2px;
-  background: var(--border-strong);
-  border-radius: var(--border-hairline);
-  flex: none;
-}
-.otp--sm .otp__slot {
-  width: 38px;
-  height: 44px;
-  font-size: var(--size-heading);
-}
-.otp.is-error .otp__slot {
-  border-color: var(--danger);
-}
-.otp.is-error .otp__slot:hover:not(:disabled):not(:focus) {
-  border-color: var(--danger-text);
-}
-.otp.is-error .otp__slot:focus {
-  box-shadow: var(--ring-danger);
+  /* Stepper column width is the single source of truth - every clearance derives from it via calc(), so geometry can't drift. */
+  .numf {
+    --numf-stepper-w: var(--space-6);
+  }
+  .numf .fld__input {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+    padding-right: calc(var(--numf-stepper-w) + var(--space-2));
+  }
+  .numf--unit .fld__input {
+    padding-right: calc(var(--numf-stepper-w) + var(--numf-unit-w, var(--control-height-lg)) + var(--space-2));
+  }
+  .numf__unit {
+    position: absolute;
+    right: calc(var(--numf-stepper-w) + var(--space-2));
+    color: var(--text-subtle);
+    font: var(--type-caption);
+    pointer-events: none;
+  }
+  .numf__steppers {
+    position: absolute;
+    top: var(--border-hairline);
+    right: var(--border-hairline);
+    bottom: var(--border-hairline);
+    width: var(--numf-stepper-w);
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    border-left: var(--border-hairline) solid var(--border-default);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    overflow: hidden;
+  }
+  .numf__step {
+    border: 0;
+    background: var(--bg-surface);
+    color: var(--text-muted);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: var(--transition-control);
+    padding: 0;
+  }
+  .numf__step i {
+    font-size: var(--size-caption);
+  }
+  .numf__step:hover {
+    background: var(--neutral-wash);
+    color: var(--text-strong);
+  }
+  .numf__step:active {
+    background: var(--bg-muted);
+  }
+  .numf__step:disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    background: var(--bg-surface);
+  }
+  .numf__step + .numf__step {
+    border-top: var(--border-hairline) solid var(--border-default);
+  }
+  .numf .fld__input:focus ~ .numf__steppers {
+    border-color: var(--accent);
+  }
+
+  /* Intentional exception: slot (44x52 - sm 38x44) and separator (10x2) are bespoke px - the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
+  .otp {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .otp__slot {
+    width: 44px;
+    height: 52px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--size-title);
+    font-weight: var(--weight-medium);
+    color: var(--text-strong);
+    background: var(--bg-inset);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-md);
+    transition: var(--transition-control);
+    caret-color: var(--accent);
+    appearance: none;
+  }
+  .otp__slot:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-strong);
+  }
+  .otp__slot:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-surface);
+    box-shadow: var(--ring-accent);
+  }
+  .otp__slot[data-filled='true'] {
+    border-color: var(--border-strong);
+  }
+  .otp__slot:disabled {
+    background: var(--bg-muted);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+  .otp__sep {
+    width: 10px;
+    height: 2px;
+    background: var(--border-strong);
+    border-radius: var(--border-hairline);
+    flex: none;
+  }
+  .otp--sm .otp__slot {
+    width: 38px;
+    height: 44px;
+    font-size: var(--size-heading);
+  }
+  .otp.is-error .otp__slot {
+    border-color: var(--danger);
+  }
+  .otp.is-error .otp__slot:hover:not(:disabled):not(:focus) {
+    border-color: var(--danger-text);
+  }
+  .otp.is-error .otp__slot:focus {
+    box-shadow: var(--ring-danger);
+  }
 }

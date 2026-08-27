@@ -1,123 +1,127 @@
-/* The floating menu surface shared by Select's listbox and Dropdown's menu: panel chrome,
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  /* The floating menu surface shared by Select's listbox and Dropdown's menu: panel chrome,
    scroll box, row skeleton and the travelling hover pill. Everything that differs between the
    two is a custom property set by the component, so neither sheet has to restate a rule.
    Enter/exit are Motion-owned inline styles; transform-origin belongs to the component. */
 
-.menu-surface {
-  position: fixed;
-  margin: 0;
-  inset: auto; /* JS sets top/left - anchor() needs the top layer, which we don't use */
-  z-index: var(
-    --layer-overlay
-  ); /* base of the overlay band (tokens/layers.css) - a nested menu is pushed one step up */
-  width: max-content;
-  max-width: var(--menu-max-width, min(22rem, 92vw));
-  padding: var(--space-1);
-  background: var(--bg-surface-raised);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  outline: none;
-  font-family: var(--font-sans);
-}
+  .menu-surface {
+    position: fixed;
+    margin: 0;
+    inset: auto; /* JS sets top/left - anchor() needs the top layer, which we don't use */
+    z-index: var(
+      --layer-overlay
+    ); /* base of the overlay band (tokens/layers.css) - a nested menu is pushed one step up */
+    width: max-content;
+    max-width: var(--menu-max-width, min(22rem, 92vw));
+    padding: var(--space-1);
+    background: var(--bg-surface-raised);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    outline: none;
+    font-family: var(--font-sans);
+  }
 
-/* data-side/data-align are written by useAnchorPosition after any flip - grow from the anchored edge. */
-.menu-surface[data-align='start'] {
-  --menu-origin: var(--space-4);
-}
-.menu-surface[data-align='center'] {
-  --menu-origin: 50%;
-}
-.menu-surface[data-align='end'] {
-  --menu-origin: calc(100% - var(--space-4));
-}
-.menu-surface[data-side='bottom'] {
-  transform-origin: var(--menu-origin) top;
-}
-.menu-surface[data-side='top'] {
-  transform-origin: var(--menu-origin) bottom;
-}
-.menu-surface[data-side='right'] {
-  transform-origin: left var(--menu-origin);
-}
-.menu-surface[data-side='left'] {
-  transform-origin: right var(--menu-origin);
-}
+  /* data-side/data-align are written by useAnchorPosition after any flip - grow from the anchored edge. */
+  .menu-surface[data-align='start'] {
+    --menu-origin: var(--space-4);
+  }
+  .menu-surface[data-align='center'] {
+    --menu-origin: 50%;
+  }
+  .menu-surface[data-align='end'] {
+    --menu-origin: calc(100% - var(--space-4));
+  }
+  .menu-surface[data-side='bottom'] {
+    transform-origin: var(--menu-origin) top;
+  }
+  .menu-surface[data-side='top'] {
+    transform-origin: var(--menu-origin) bottom;
+  }
+  .menu-surface[data-side='right'] {
+    transform-origin: left var(--menu-origin);
+  }
+  .menu-surface[data-side='left'] {
+    transform-origin: right var(--menu-origin);
+  }
 
-.menu-scroller {
-  max-height: var(--menu-max-height, 16.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-}
-.menu-scroller::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
-}
+  .menu-scroller {
+    max-height: var(--menu-max-height, 16.5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+  }
+  .menu-scroller::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
 
-/* position: relative keeps the row above the pill, which is a single absolute child. */
-.menu-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--menu-row-padding, var(--space-1)) var(--menu-row-inline, var(--space-3));
-  margin-block-end: var(--menu-row-gap, var(--space-1));
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  user-select: none;
-  outline: none;
-  color: var(--text-body);
-}
+  /* position: relative keeps the row above the pill, which is a single absolute child. */
+  .menu-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--menu-row-padding, var(--space-1)) var(--menu-row-inline, var(--space-3));
+    margin-block-end: var(--menu-row-gap, var(--space-1));
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    color: var(--text-body);
+  }
 
-.menu-row__icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  font-size: var(--icon-sm);
-  color: var(--text-muted);
-}
-.menu-row__text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 0;
-  flex: 1 1 auto;
-}
-.menu-row__label {
-  font-size: var(--size-body);
-  line-height: var(--leading-body);
-  font-weight: var(--weight-medium);
-}
-.menu-row__desc {
-  font: var(--type-caption);
-  color: var(--text-subtle);
-}
-.menu-row__label,
-.menu-row__desc {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .menu-row__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: var(--icon-sm);
+    color: var(--text-muted);
+  }
+  .menu-row__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .menu-row__label {
+    font-size: var(--size-body);
+    line-height: var(--leading-body);
+    font-weight: var(--weight-medium);
+  }
+  .menu-row__desc {
+    font: var(--type-caption);
+    color: var(--text-subtle);
+  }
+  .menu-row__label,
+  .menu-row__desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.menu-group-label {
-  padding: var(--space-2) var(--menu-row-inline, var(--space-3)) var(--space-1);
-  font: var(--type-micro);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-caps);
-  color: var(--text-subtle);
-}
+  .menu-group-label {
+    padding: var(--space-2) var(--menu-row-inline, var(--space-3)) var(--space-1);
+    font: var(--type-micro);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-caps);
+    color: var(--text-subtle);
+  }
 
-/* One persistent fill (../../../motion/glide) that travels to the active row and animates its
+  /* One persistent fill (../../../motion/glide) that travels to the active row and animates its
    real size, so it is never clipped and never scales. GlidePill writes x/y/width/height inline -
    nothing here may transition those. */
-.menu-glide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  border-radius: var(--radius-sm);
-  background: var(--menu-glide-fill, var(--neutral-wash));
-  pointer-events: none;
-  transition: background-color var(--duration-fast) var(--ease-standard);
+  .menu-glide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    border-radius: var(--radius-sm);
+    background: var(--menu-glide-fill, var(--neutral-wash));
+    pointer-events: none;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
 }

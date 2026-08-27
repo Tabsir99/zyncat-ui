@@ -1,7 +1,5 @@
-/* Button - variants, sizes, states; lit gradient, tactile press, composed focus ring. */
+@layer zyncat.tokens, zyncat.components;
 
-/* Gradient stops as typed properties: background-image can't transition, but registered
-   <color> values can - gradient variants set the stops once and states swap them. */
 @property --btn-grad-a {
   syntax: '<color>';
   inherits: false;
@@ -23,276 +21,283 @@
   initial-value: transparent;
 }
 
-.btn {
-  --btn-shadow: none;
-  --btn-ring: var(--ring-accent);
-  --btn-gap: var(--space-2);
+@layer zyncat.components {
+  /* Button - variants, sizes, states; lit gradient, tactile press, composed focus ring. */
 
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--btn-gap);
+  /* Gradient stops as typed properties: background-image can't transition, but registered
+   <color> values can - gradient variants set the stops once and states swap them. */
 
-  height: var(--control-height);
-  padding: 0 var(--space-4);
-  border: var(--border-hairline) solid transparent;
-  border-radius: var(--radius-md);
+  .btn {
+    --btn-shadow: none;
+    --btn-ring: var(--ring-accent);
+    --btn-gap: var(--space-2);
 
-  font-family: var(--font-sans);
-  font-size: var(--size-body);
-  font-weight: var(--weight-medium);
-  line-height: 1;
-  letter-spacing: var(--tracking-normal);
-  white-space: nowrap;
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
 
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  appearance: none;
-  box-shadow: var(--btn-shadow);
+    height: var(--control-height);
+    padding: 0 var(--space-4);
+    border: var(--border-hairline) solid transparent;
+    border-radius: var(--radius-md);
 
-  transition:
-    background-color var(--duration-fast) var(--ease-standard),
-    --btn-grad-a var(--duration-base) var(--ease-standard),
-    --btn-grad-b var(--duration-base) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
-}
+    font-family: var(--font-sans);
+    font-size: var(--size-body);
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    letter-spacing: var(--tracking-normal);
+    white-space: nowrap;
 
-/* Composed focus ring: keep the resting shadow, add the ring on top. */
-.btn:focus-visible {
-  outline: none;
-  box-shadow: var(--btn-shadow), var(--btn-ring);
-}
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    appearance: none;
+    box-shadow: var(--btn-shadow);
 
-.btn--sm {
-  height: var(--control-height-sm);
-  padding: 0 var(--space-3);
-  font-size: var(--size-caption);
-  border-radius: var(--radius-sm);
-  --btn-gap: var(--space-1);
-}
-.btn--lg {
-  height: var(--control-height-lg);
-  padding: 0 var(--space-5);
-  border-radius: var(--radius-md);
-}
-.btn--block {
-  width: 100%;
-}
-.btn--icon {
-  width: var(--control-height-sm);
-  height: var(--control-height-sm);
-  padding: 0;
-  border-radius: var(--radius-sm);
-}
+    transition:
+      background-color var(--duration-fast) var(--ease-standard),
+      --btn-grad-a var(--duration-base) var(--ease-standard),
+      --btn-grad-b var(--duration-base) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-fast) var(--ease-standard);
+  }
 
-.btn__label {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--btn-gap);
-}
+  /* Composed focus ring: keep the resting shadow, add the ring on top. */
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: var(--btn-shadow), var(--btn-ring);
+  }
 
-.btn__icon {
-  display: inline-flex;
-  flex: none;
-  width: 1em;
-  height: 1em;
-}
-.btn__icon svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-/* optical: pull icons slightly toward the label */
-.btn__icon:first-child {
-  margin-left: calc(var(--space-1) * -1);
-}
-.btn__icon:last-child {
-  margin-right: calc(var(--space-1) * -1);
-}
+  .btn--sm {
+    height: var(--control-height-sm);
+    padding: 0 var(--space-3);
+    font-size: var(--size-caption);
+    border-radius: var(--radius-sm);
+    --btn-gap: var(--space-1);
+  }
+  .btn--lg {
+    height: var(--control-height-lg);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-md);
+  }
+  .btn--block {
+    width: 100%;
+  }
+  .btn--icon {
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
+    padding: 0;
+    border-radius: var(--radius-sm);
+  }
 
-.btn--primary {
-  color: var(--text-on-accent);
-  --btn-grad-a: var(--accent);
-  --btn-grad-b: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
-  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
-}
-.btn--primary:hover:not(:disabled):not(.is-loading) {
-  --btn-grad-a: var(--accent-lift);
-  --btn-grad-b: var(--accent-hover);
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
-}
-.btn--primary:active:not(:disabled):not(.is-loading) {
-  --btn-grad-a: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
-  --btn-grad-b: var(--accent);
-  transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
-}
+  .btn__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--btn-gap);
+  }
 
-.btn--secondary {
-  color: var(--text-body);
-  --btn-grad-a: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
-  --btn-grad-b: var(--bg-muted);
-  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 45%, var(--btn-grad-b) 100%);
-  border-color: var(--border-default);
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.045),
-    0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
-}
-.btn--secondary:hover:not(:disabled):not(.is-loading) {
-  color: var(--text-strong);
-  --btn-grad-a: var(--bg-muted);
-  --btn-grad-b: color-mix(in oklab, var(--bg-muted) 31%, var(--border-default));
-  border-color: var(--border-strong);
-}
-.btn--secondary:active:not(:disabled):not(.is-loading) {
-  --btn-grad-a: var(--bg-muted);
-  --btn-grad-b: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
-  transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.06);
-}
+  .btn__icon {
+    display: inline-flex;
+    flex: none;
+    width: 1em;
+    height: 1em;
+  }
+  .btn__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* optical: pull icons slightly toward the label */
+  .btn__icon:first-child {
+    margin-left: calc(var(--space-1) * -1);
+  }
+  .btn__icon:last-child {
+    margin-right: calc(var(--space-1) * -1);
+  }
 
-.btn--ghost {
-  color: var(--text-body);
-  background: transparent;
-}
-/* hover wash grows from the center rather than flat-filling: a ::before scales up under the
+  .btn--primary {
+    color: var(--text-on-accent);
+    --btn-grad-a: var(--accent);
+    --btn-grad-b: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
+    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
+    --btn-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
+  }
+  .btn--primary:hover:not(:disabled):not(.is-loading) {
+    --btn-grad-a: var(--accent-lift);
+    --btn-grad-b: var(--accent-hover);
+    --btn-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
+  }
+  .btn--primary:active:not(:disabled):not(.is-loading) {
+    --btn-grad-a: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
+    --btn-grad-b: var(--accent);
+    transform: translateY(var(--space-px));
+    --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
+  }
+
+  .btn--secondary {
+    color: var(--text-body);
+    --btn-grad-a: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
+    --btn-grad-b: var(--bg-muted);
+    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 45%, var(--btn-grad-b) 100%);
+    border-color: var(--border-default);
+    --btn-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.045),
+      0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+  }
+  .btn--secondary:hover:not(:disabled):not(.is-loading) {
+    color: var(--text-strong);
+    --btn-grad-a: var(--bg-muted);
+    --btn-grad-b: color-mix(in oklab, var(--bg-muted) 31%, var(--border-default));
+    border-color: var(--border-strong);
+  }
+  .btn--secondary:active:not(:disabled):not(.is-loading) {
+    --btn-grad-a: var(--bg-muted);
+    --btn-grad-b: color-mix(in oklab, var(--bg-surface) 76%, var(--bg-muted));
+    transform: translateY(var(--space-px));
+    --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.06);
+  }
+
+  .btn--ghost {
+    color: var(--text-body);
+    background: transparent;
+  }
+  /* hover wash grows from the center rather than flat-filling: a ::before scales up under the
    label (.btn is isolated, so z-index:-1 stays inside the button, behind .btn__label). */
-.btn--ghost::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: var(--neutral-wash);
-  opacity: 0;
-  transform: scale(0.75);
-  transition:
-    transform var(--duration-fast) var(--ease-standard),
-    opacity var(--duration-fast) var(--ease-standard),
-    --btn-wash-a var(--duration-fast) var(--ease-standard),
-    --btn-wash-b var(--duration-fast) var(--ease-standard);
-}
-.btn--ghost:hover:not(:disabled):not(.is-loading) {
-  color: var(--text-strong);
-}
-.btn--ghost:hover:not(:disabled):not(.is-loading)::before {
-  opacity: 1;
-  transform: scale(1);
-}
-.btn--ghost:active:not(:disabled):not(.is-loading) {
-  transform: translateY(var(--space-px));
-}
-.btn--ghost:active:not(:disabled):not(.is-loading)::before {
-  background: var(--neutral-wash-press);
-}
+  .btn--ghost::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--neutral-wash);
+    opacity: 0;
+    transform: scale(0.75);
+    transition:
+      transform var(--duration-fast) var(--ease-standard),
+      opacity var(--duration-fast) var(--ease-standard),
+      --btn-wash-a var(--duration-fast) var(--ease-standard),
+      --btn-wash-b var(--duration-fast) var(--ease-standard);
+  }
+  .btn--ghost:hover:not(:disabled):not(.is-loading) {
+    color: var(--text-strong);
+  }
+  .btn--ghost:hover:not(:disabled):not(.is-loading)::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .btn--ghost:active:not(:disabled):not(.is-loading) {
+    transform: translateY(var(--space-px));
+  }
+  .btn--ghost:active:not(:disabled):not(.is-loading)::before {
+    background: var(--neutral-wash-press);
+  }
 
-.btn--danger {
-  color: var(--text-on-accent);
-  --btn-grad-a: var(--red-500);
-  --btn-grad-b: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
-  background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
-  --btn-ring: var(--ring-danger);
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
-}
-.btn--danger:hover:not(:disabled):not(.is-loading) {
-  --btn-grad-a: var(--red-400);
-  --btn-grad-b: var(--red-600);
-  --btn-shadow:
-    inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
-}
-.btn--danger:active:not(:disabled):not(.is-loading) {
-  --btn-grad-a: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
-  --btn-grad-b: var(--red-500);
-  transform: translateY(var(--space-px));
-  --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
-}
+  .btn--danger {
+    color: var(--text-on-accent);
+    --btn-grad-a: var(--red-500);
+    --btn-grad-b: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
+    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
+    --btn-ring: var(--ring-danger);
+    --btn-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
+  }
+  .btn--danger:hover:not(:disabled):not(.is-loading) {
+    --btn-grad-a: var(--red-400);
+    --btn-grad-b: var(--red-600);
+    --btn-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
+  }
+  .btn--danger:active:not(:disabled):not(.is-loading) {
+    --btn-grad-a: color-mix(in oklab, var(--red-600) 70%, var(--red-700));
+    --btn-grad-b: var(--red-500);
+    transform: translateY(var(--space-px));
+    --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
+  }
 
-.btn--link {
-  height: auto;
-  padding: 0;
-  border-radius: var(--radius-sm);
-  color: var(--text-accent);
-  background: none;
-  --btn-shadow: none;
-  font-weight: var(--weight-medium);
-}
-.btn--link:hover:not(:disabled):not(.is-loading) {
-  color: var(--accent-active);
-  text-decoration: underline;
-  text-underline-offset: var(--space-px);
-}
-.btn--link:active:not(:disabled):not(.is-loading) {
-  color: var(--accent-active);
-}
-.btn--link:focus-visible {
-  border-radius: var(--radius-sm);
-  box-shadow: var(--btn-ring);
-}
+  .btn--link {
+    height: auto;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-accent);
+    background: none;
+    --btn-shadow: none;
+    font-weight: var(--weight-medium);
+  }
+  .btn--link:hover:not(:disabled):not(.is-loading) {
+    color: var(--accent-active);
+    text-decoration: underline;
+    text-underline-offset: var(--space-px);
+  }
+  .btn--link:active:not(:disabled):not(.is-loading) {
+    color: var(--accent-active);
+  }
+  .btn--link:focus-visible {
+    border-radius: var(--radius-sm);
+    box-shadow: var(--btn-ring);
+  }
 
-/* Disabled - explicit per variant, never a blanket fade. */
-.btn:disabled,
-.btn.is-loading {
-  cursor: default;
-}
-.btn:disabled {
-  transform: none;
-}
-.btn--primary:disabled {
-  background: var(--accent-disabled);
-  color: var(--text-on-accent);
-  --btn-shadow: none;
-}
-.btn--danger:disabled {
-  background: var(--danger-disabled);
-  color: var(--text-on-accent);
-  --btn-shadow: none;
-}
-.btn--secondary:disabled {
-  color: var(--text-disabled);
-  background: var(--bg-subtle);
-  border-color: var(--border-subtle);
-  --btn-shadow: none;
-}
-.btn--ghost:disabled {
-  color: var(--text-disabled);
-  background: transparent;
-}
-.btn--link:disabled {
-  color: var(--text-disabled);
-  text-decoration: none;
-}
+  /* Disabled - explicit per variant, never a blanket fade. */
+  .btn:disabled,
+  .btn.is-loading {
+    cursor: default;
+  }
+  .btn:disabled {
+    transform: none;
+  }
+  .btn--primary:disabled {
+    background: var(--accent-disabled);
+    color: var(--text-on-accent);
+    --btn-shadow: none;
+  }
+  .btn--danger:disabled {
+    background: var(--danger-disabled);
+    color: var(--text-on-accent);
+    --btn-shadow: none;
+  }
+  .btn--secondary:disabled {
+    color: var(--text-disabled);
+    background: var(--bg-subtle);
+    border-color: var(--border-subtle);
+    --btn-shadow: none;
+  }
+  .btn--ghost:disabled {
+    color: var(--text-disabled);
+    background: transparent;
+  }
+  .btn--link:disabled {
+    color: var(--text-disabled);
+    text-decoration: none;
+  }
 
-/* Loading - content holds its width, spinner overlays. */
-.btn.is-loading .btn__label,
-.btn.is-loading .btn__icon {
-  opacity: 0;
-}
-.btn__spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1em;
-  height: 1em;
-  margin: -0.5em 0 0 -0.5em;
-  border-radius: var(--radius-full);
-  border: var(--border-emphasis) solid currentColor;
-  border-right-color: transparent;
-  opacity: 0.9;
-  animation: btn-spin var(--duration-spin) var(--ease-standard) infinite;
-}
-@keyframes btn-spin {
-  to {
-    transform: rotate(360deg);
+  /* Loading - content holds its width, spinner overlays. */
+  .btn.is-loading .btn__label,
+  .btn.is-loading .btn__icon {
+    opacity: 0;
+  }
+  .btn__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1em;
+    height: 1em;
+    margin: -0.5em 0 0 -0.5em;
+    border-radius: var(--radius-full);
+    border: var(--border-emphasis) solid currentColor;
+    border-right-color: transparent;
+    opacity: 0.9;
+    animation: btn-spin var(--duration-spin) var(--ease-standard) infinite;
+  }
+  @keyframes btn-spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 }

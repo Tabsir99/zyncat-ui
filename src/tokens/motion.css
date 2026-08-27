@@ -1,63 +1,67 @@
 /* Motion system - durations, brand curves, travel distances, rest scales, and pre-composed transitions;
    smooths every layout shift by default. */
 
-:root {
-  --duration-fast: 140ms;
-  --duration-base: 200ms;
-  --duration-slow: 300ms;
-  --duration-slower: 450ms; /* large-surface movement - dialog, sheet, page-scale reveals */
-  --duration-slowest: 900ms; /* hero-scale movement - card expansion, container transforms; the scale's ceiling */
-  --duration-spin: 600ms; /* continuous loaders only; deliberately outside the UI-transition scale */
-  --duration-pulse: 1600ms; /* ambient live/processing breathing; not collapsed under reduced motion */
+@layer zyncat.tokens, zyncat.components;
 
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
-  --ease-glide: cubic-bezier(
-    0.55,
-    0,
-    0.15,
-    1
-  ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
+@layer zyncat.tokens {
+  :root {
+    --duration-fast: 140ms;
+    --duration-base: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 450ms; /* large-surface movement - dialog, sheet, page-scale reveals */
+    --duration-slowest: 900ms; /* hero-scale movement - card expansion, container transforms; the scale's ceiling */
+    --duration-spin: 600ms; /* continuous loaders only; deliberately outside the UI-transition scale */
+    --duration-pulse: 1600ms; /* ambient live/processing breathing; not collapsed under reduced motion */
 
-  /* Travel - how far a surface moves on the way in or out. A magnitude scale, snapped to the 4px
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+    --ease-glide: cubic-bezier(
+      0.55,
+      0,
+      0.15,
+      1
+    ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
+
+    /* Travel - how far a surface moves on the way in or out. A magnitude scale, snapped to the 4px
      spacing spine; pick by how far the surface has conceptually come, not by how big it is. */
-  --distance-sm: 0.5rem; /* 8px - settling into place; the surface is already where it belongs */
-  --distance-md: 1rem; /* 16px - arriving from an adjacent position - page turns, tab panels, paged ranges */
-  --distance-lg: 1.5rem; /* 24px - arriving from outside the surface - a toast joining its stack */
+    --distance-sm: 0.5rem; /* 8px - settling into place; the surface is already where it belongs */
+    --distance-md: 1rem; /* 16px - arriving from an adjacent position - page turns, tab panels, paged ranges */
+    --distance-lg: 1.5rem; /* 24px - arriving from outside the surface - a toast joining its stack */
 
-  /* Rest scale - what a surface scales from on the way in, and to on the way out. Picked by surface
+    /* Rest scale - what a surface scales from on the way in, and to on the way out. Picked by surface
      size, not by taste: the same ratio reads as more movement the wider the surface, so a dialog
      needs a smaller one than a tag to land at the same perceived distance. */
-  --scale-panel: 0.98; /* full-width surfaces - dialog, modal, sheet */
-  --scale-floating: 0.96; /* floating surfaces - popover, tooltip, menu, toast, alert */
-  --scale-chip: 0.9; /* small inline elements - tag, badge, count */
+    --scale-panel: 0.98; /* full-width surfaces - dialog, modal, sheet */
+    --scale-floating: 0.96; /* floating surfaces - popover, tooltip, menu, toast, alert */
+    --scale-chip: 0.9; /* small inline elements - tag, badge, count */
 
-  --transition-control:
-    color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
-  --transition-colors:
-    color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
-  --transition-opacity: opacity var(--duration-base) var(--ease-standard);
-  --transition-transform: transform var(--duration-base) var(--ease-standard);
+    --transition-control:
+      color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+    --transition-colors:
+      color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+    --transition-opacity: opacity var(--duration-base) var(--ease-standard);
+    --transition-transform: transform var(--duration-base) var(--ease-standard);
 
-  /* Layout transition - animatable stand-ins for width/height; apply wherever size may change. */
-  --transition-layout:
-    grid-template-rows var(--duration-slow) var(--ease-entrance),
-    grid-template-columns var(--duration-slow) var(--ease-entrance),
-    max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance);
-}
+    /* Layout transition - animatable stand-ins for width/height; apply wherever size may change. */
+    --transition-layout:
+      grid-template-rows var(--duration-slow) var(--ease-entrance),
+      grid-template-columns var(--duration-slow) var(--ease-entrance),
+      max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance);
+  }
 
-/* Accessibility: honor reduced-motion globally - every consumer gets it free. */
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --duration-fast: 1ms;
-    --duration-base: 1ms;
-    --duration-slow: 1ms;
-    --duration-slower: 1ms;
-    --duration-slowest: 1ms;
-    --duration-spin: 1200ms; /* slow the loader, never freeze it (1ms = blur) */
+  /* Accessibility: honor reduced-motion globally - every consumer gets it free. */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --duration-fast: 1ms;
+      --duration-base: 1ms;
+      --duration-slow: 1ms;
+      --duration-slower: 1ms;
+      --duration-slowest: 1ms;
+      --duration-spin: 1200ms; /* slow the loader, never freeze it (1ms = blur) */
+    }
   }
 }

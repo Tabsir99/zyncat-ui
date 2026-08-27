@@ -1,301 +1,305 @@
-/* RadioGroup - single-select in two skins: rows (dot + label) and cards (selectable tiles). */
+@layer zyncat.tokens, zyncat.components;
 
-/* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps - don't "fix" to a token */
-.rg {
-  --rg-dot: 18px;
-  --rg-dot-inner: 8px;
+@layer zyncat.components {
+  /* RadioGroup - single-select in two skins: rows (dot + label) and cards (selectable tiles). */
 
-  display: grid;
-  border: 0;
-  margin: 0;
-  padding: 0;
-  min-width: 0;
-}
-.rg--sm {
-  --rg-dot: 16px;
-  --rg-dot-inner: 7px;
-}
+  /* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps - don't "fix" to a token */
+  .rg {
+    --radio-group-dot: 18px;
+    --radio-group-dot-inner: 8px;
 
-.rg__label {
-  font: var(--type-caption);
-  font-weight: var(--weight-medium);
-  color: var(--text-body);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  line-height: 1;
-  padding: 0;
-}
-.rg__req {
-  color: var(--danger);
-}
-.rg__optional {
-  color: var(--text-subtle);
-  font-weight: var(--weight-regular);
-}
-.rg__helper {
-  font: var(--type-caption);
-  color: var(--text-muted);
-  margin-top: var(--space-1);
-  max-width: var(--measure-prose);
-}
+    display: grid;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .rg--sm {
+    --radio-group-dot: 16px;
+    --radio-group-dot-inner: 7px;
+  }
 
-.rg__options {
-  position: relative; /* anchors the rows' shared glide pill */
-  display: grid;
-  gap: var(--space-1);
-}
-.rg__label + .rg__options,
-.rg__helper + .rg__options {
-  margin-top: var(--space-4);
-}
-.rg--horizontal .rg__options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-}
-.rg--cards .rg__options {
-  gap: var(--space-3);
-}
-.rg--cards.rg--horizontal .rg__options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-}
-.rg--cards.rg--horizontal .rg-opt {
-  flex: 1 1 0;
-  min-width: 12rem;
-}
+  .rg__label {
+    font: var(--type-caption);
+    font-weight: var(--weight-medium);
+    color: var(--text-body);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    line-height: 1;
+    padding: 0;
+  }
+  .rg__req {
+    color: var(--danger);
+  }
+  .rg__optional {
+    color: var(--text-subtle);
+    font-weight: var(--weight-regular);
+  }
+  .rg__helper {
+    font: var(--type-caption);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+    max-width: var(--measure-prose);
+  }
 
-/* align-items:flex-start pins the dot to the first text line when a description wraps below */
-.rg-opt {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: var(--transition-colors);
-  -webkit-tap-highlight-color: transparent;
-}
-/* Hover pill - one persistent fill (../motion/glide, first child of .rg__options) that
+  .rg__options {
+    position: relative; /* anchors the rows' shared glide pill */
+    display: grid;
+    gap: var(--space-1);
+  }
+  .rg__label + .rg__options,
+  .rg__helper + .rg__options {
+    margin-top: var(--space-4);
+  }
+  .rg--horizontal .rg__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+  .rg--cards .rg__options {
+    gap: var(--space-3);
+  }
+  .rg--cards.rg--horizontal .rg__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .rg--cards.rg--horizontal .rg-opt {
+    flex: 1 1 0;
+    min-width: 12rem;
+  }
+
+  /* align-items:flex-start pins the dot to the first text line when a description wraps below */
+  .rg-opt {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Hover pill - one persistent fill (../motion/glide, first child of .rg__options) that
    springs between rows; the positioned rows paint above it. Rows only; cards keep their
    own layoutId hover (their opaque bg + press transform need the fill inside the card). */
-.rg__hover {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  border-radius: var(--radius-md);
-  background: var(--neutral-wash);
-  pointer-events: none;
-}
-.rg-opt__control,
-.rg-opt__body {
-  position: relative;
-  z-index: 1;
-}
+  .rg__hover {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    border-radius: var(--radius-md);
+    background: var(--neutral-wash);
+    pointer-events: none;
+  }
+  .rg-opt__control,
+  .rg-opt__body {
+    position: relative;
+    z-index: 1;
+  }
 
-.rg-opt__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  padding: 0;
-  opacity: 0;
-  pointer-events: none;
-}
+  .rg-opt__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
 
-/* height = the label's line-box, so the dot optically centers on the first line */
-.rg-opt__control {
-  flex: none;
-  height: var(--leading-body);
-  display: grid;
-  place-items: center;
-}
-.rg--sm .rg-opt__control {
-  height: var(--leading-caption);
-}
+  /* height = the label's line-box, so the dot optically centers on the first line */
+  .rg-opt__control {
+    flex: none;
+    height: var(--leading-body);
+    display: grid;
+    place-items: center;
+  }
+  .rg--sm .rg-opt__control {
+    height: var(--leading-caption);
+  }
 
-.rg-opt__dot {
-  position: relative;
-  width: var(--rg-dot);
-  height: var(--rg-dot);
-  border-radius: var(--radius-full);
-  /* transparent so the ring-centre gap shows the surface behind (card tint), never a white halo */
-  background: transparent;
-  border: var(--border-hairline) solid var(--border-strong);
-  /* transform stays in the bundle so the press scale eases instead of snapping */
-  transition:
-    var(--transition-control),
-    transform var(--duration-fast) var(--ease-standard);
-}
-/* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here - Motion owns the move */
-.rg__marker {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: var(--rg-dot-inner);
-  height: var(--rg-dot-inner);
-  border-radius: var(--radius-full);
-  background: var(--accent);
-  pointer-events: none;
-  will-change: transform;
-}
+  .rg-opt__dot {
+    position: relative;
+    width: var(--radio-group-dot);
+    height: var(--radio-group-dot);
+    border-radius: var(--radius-full);
+    /* transparent so the ring-centre gap shows the surface behind (card tint), never a white halo */
+    background: transparent;
+    border: var(--border-hairline) solid var(--border-strong);
+    /* transform stays in the bundle so the press scale eases instead of snapping */
+    transition:
+      var(--transition-control),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  /* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here - Motion owns the move */
+  .rg__marker {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--radio-group-dot-inner);
+    height: var(--radio-group-dot-inner);
+    border-radius: var(--radius-full);
+    background: var(--accent);
+    pointer-events: none;
+    will-change: transform;
+  }
 
-.rg-opt__body {
-  display: grid;
-  gap: var(--space-px);
-  padding-top: 0;
-}
-.rg-opt__label {
-  font: var(--type-body);
-  color: var(--text-strong);
-}
-.rg--sm .rg-opt__label {
-  font: var(--type-caption);
-  font-weight: var(--weight-medium);
-}
-.rg-opt__desc {
-  font: var(--type-caption);
-  color: var(--text-muted);
-  text-wrap: pretty;
-}
+  .rg-opt__body {
+    display: grid;
+    gap: var(--space-px);
+    padding-top: 0;
+  }
+  .rg-opt__label {
+    font: var(--type-body);
+    color: var(--text-strong);
+  }
+  .rg--sm .rg-opt__label {
+    font: var(--type-caption);
+    font-weight: var(--weight-medium);
+  }
+  .rg-opt__desc {
+    font: var(--type-caption);
+    color: var(--text-muted);
+    text-wrap: pretty;
+  }
 
-.rg-opt:hover:not(.is-disabled):not(.is-selected) .rg-opt__dot {
-  border-color: var(--text-muted);
-}
-.rg-opt:active:not(.is-disabled) .rg-opt__dot {
-  transform: scale(0.92);
-}
+  .rg-opt:hover:not(.is-disabled):not(.is-selected) .rg-opt__dot {
+    border-color: var(--text-muted);
+  }
+  .rg-opt:active:not(.is-disabled) .rg-opt__dot {
+    transform: scale(0.92);
+  }
 
-/* .is-selected (React) drives selection, not :checked/:has - Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
-.rg-opt.is-selected .rg-opt__dot {
-  border-color: var(--accent);
-}
+  /* .is-selected (React) drives selection, not :checked/:has - Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
+  .rg-opt.is-selected .rg-opt__dot {
+    border-color: var(--accent);
+  }
 
-.rg-opt__input:focus-visible ~ .rg-opt__control .rg-opt__dot {
-  border-color: var(--accent);
-  box-shadow: var(--ring-accent);
-}
+  .rg-opt__input:focus-visible ~ .rg-opt__control .rg-opt__dot {
+    border-color: var(--accent);
+    box-shadow: var(--ring-accent);
+  }
 
-.rg-opt.is-disabled {
-  cursor: not-allowed;
-}
-.rg-opt.is-disabled .rg-opt__label {
-  color: var(--text-disabled);
-}
-.rg-opt.is-disabled .rg-opt__desc {
-  color: var(--text-disabled);
-}
-.rg-opt.is-disabled .rg-opt__dot {
-  background: var(--bg-muted);
-  border-color: var(--border-default);
-}
-.rg-opt.is-disabled.is-selected .rg-opt__dot {
-  border-color: var(--border-strong);
-}
-.rg-opt.is-disabled.is-selected .rg__marker {
-  background: var(--text-disabled);
-}
+  .rg-opt.is-disabled {
+    cursor: not-allowed;
+  }
+  .rg-opt.is-disabled .rg-opt__label {
+    color: var(--text-disabled);
+  }
+  .rg-opt.is-disabled .rg-opt__desc {
+    color: var(--text-disabled);
+  }
+  .rg-opt.is-disabled .rg-opt__dot {
+    background: var(--bg-muted);
+    border-color: var(--border-default);
+  }
+  .rg-opt.is-disabled.is-selected .rg-opt__dot {
+    border-color: var(--border-strong);
+  }
+  .rg-opt.is-disabled.is-selected .rg__marker {
+    background: var(--text-disabled);
+  }
 
-.rg--cards .rg-opt {
-  position: relative;
-  align-items: center;
-  padding: var(--space-4);
-  background: var(--bg-surface);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
-  transition:
-    var(--transition-control),
-    transform var(--duration-fast) var(--ease-standard);
-}
-.rg--cards .rg-opt:active:not(.is-disabled) {
-  transform: translateY(var(--space-px));
-  box-shadow: var(--shadow-xs);
-}
+  .rg--cards .rg-opt {
+    position: relative;
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--bg-surface);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xs);
+    transition:
+      var(--transition-control),
+      transform var(--duration-fast) var(--ease-standard);
+  }
+  .rg--cards .rg-opt:active:not(.is-disabled) {
+    transform: translateY(var(--space-px));
+    box-shadow: var(--shadow-xs);
+  }
 
-.rg--cards .rg-opt__control {
-  order: 3;
-  margin-left: auto;
-}
-.rg-opt__icon {
-  flex: none;
-  display: inline-flex;
-  color: var(--text-muted);
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-.rg-opt__icon svg {
-  display: block;
-}
+  .rg--cards .rg-opt__control {
+    order: 3;
+    margin-left: auto;
+  }
+  .rg-opt__icon {
+    flex: none;
+    display: inline-flex;
+    color: var(--text-muted);
+    transition: color var(--duration-fast) var(--ease-standard);
+  }
+  .rg-opt__icon svg {
+    display: block;
+  }
 
-/* selected fill is a shared layoutId layer that glides between cards - the card paints no selected bg/border of its own */
-.rg__card-fill {
-  position: absolute;
+  /* selected fill is a shared layoutId layer that glides between cards - the card paints no selected bg/border of its own */
+  .rg__card-fill {
+    position: absolute;
 
-  /* negative inset covers the card's hairline so the accent edge replaces it */
-  inset: calc(-1 * var(--border-hairline));
-  z-index: 0;
-  border: var(--border-hairline) solid var(--accent);
-  border-radius: var(--radius-lg);
-  background: var(--accent-subtle);
-  pointer-events: none;
-}
+    /* negative inset covers the card's hairline so the accent edge replaces it */
+    inset: calc(-1 * var(--border-hairline));
+    z-index: 0;
+    border: var(--border-hairline) solid var(--accent);
+    border-radius: var(--radius-lg);
+    background: var(--accent-subtle);
+    pointer-events: none;
+  }
 
-/* hover highlight - a neutral bordered fill that glides between cards (layoutId, non-selected
+  /* hover highlight - a neutral bordered fill that glides between cards (layoutId, non-selected
    only), mirroring the selected fill muted. Replaces the old per-card border/shadow swap. */
-.rg__card-hover {
-  position: absolute;
-  inset: calc(-1 * var(--border-hairline));
-  z-index: 0;
-  border: var(--border-hairline) solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--neutral-wash);
-  pointer-events: none;
-}
-.rg--cards .rg-opt > .rg-opt__icon,
-.rg--cards .rg-opt > .rg-opt__control,
-.rg--cards .rg-opt > .rg-opt__body {
-  position: relative;
-  z-index: 1;
-}
-.rg--cards .rg-opt.is-selected .rg-opt__icon {
-  color: var(--text-accent);
-}
-.rg--cards .rg-opt:has(.rg-opt__input:focus-visible) {
-  box-shadow: var(--ring-accent);
-}
+  .rg__card-hover {
+    position: absolute;
+    inset: calc(-1 * var(--border-hairline));
+    z-index: 0;
+    border: var(--border-hairline) solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--neutral-wash);
+    pointer-events: none;
+  }
+  .rg--cards .rg-opt > .rg-opt__icon,
+  .rg--cards .rg-opt > .rg-opt__control,
+  .rg--cards .rg-opt > .rg-opt__body {
+    position: relative;
+    z-index: 1;
+  }
+  .rg--cards .rg-opt.is-selected .rg-opt__icon {
+    color: var(--text-accent);
+  }
+  .rg--cards .rg-opt:has(.rg-opt__input:focus-visible) {
+    box-shadow: var(--ring-accent);
+  }
 
-.rg--cards .rg-opt.is-disabled {
-  background: var(--bg-subtle);
-  border-color: var(--border-subtle);
-  box-shadow: none;
-}
-.rg--cards .rg-opt.is-disabled .rg-opt__icon {
-  color: var(--text-disabled);
-}
+  .rg--cards .rg-opt.is-disabled {
+    background: var(--bg-subtle);
+    border-color: var(--border-subtle);
+    box-shadow: none;
+  }
+  .rg--cards .rg-opt.is-disabled .rg-opt__icon {
+    color: var(--text-disabled);
+  }
 
-/* in a <Collapse>: absent = zero reserved space; the padding-top is the options-message gap, inside the collapsible area */
-.rg__msg {
-  font: var(--type-caption);
-  color: var(--danger-text);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 1em;
-  padding-top: var(--space-3);
-}
-.rg__msg i,
-.rg__msg svg {
-  flex: none;
-}
+  /* in a <Collapse>: absent = zero reserved space; the padding-top is the options-message gap, inside the collapsible area */
+  .rg__msg {
+    font: var(--type-caption);
+    color: var(--danger-text);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: 1em;
+    padding-top: var(--space-3);
+  }
+  .rg__msg i,
+  .rg__msg svg {
+    flex: none;
+  }
 
-.rg.is-error .rg-opt:not(.is-selected) .rg-opt__dot {
-  border-color: var(--danger);
-}
-.rg.is-error.rg--cards .rg-opt:not(.is-selected) {
-  border-color: var(--danger);
+  .rg.is-error .rg-opt:not(.is-selected) .rg-opt__dot {
+    border-color: var(--danger);
+  }
+  .rg.is-error.rg--cards .rg-opt:not(.is-selected) {
+    border-color: var(--danger);
+  }
 }

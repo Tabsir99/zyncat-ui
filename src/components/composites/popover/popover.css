@@ -1,69 +1,73 @@
-/* popover.css - anchored panel paint: fixed coords from useAnchorPosition; entrance origin = arrow tip, else the aligned edge (inset --space-4), else center. */
-.overlay-popover {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: max-content;
-  outline: none;
-}
+@layer zyncat.tokens, zyncat.components;
 
-.overlay-popover[data-align='start'] {
-  --ov-origin: var(--space-4);
-}
-.overlay-popover[data-align='center'] {
-  --ov-origin: 50%;
-}
-.overlay-popover[data-align='end'] {
-  --ov-origin: calc(100% - var(--space-4));
-}
+@layer zyncat.components {
+  /* popover.css - anchored panel paint: fixed coords from useAnchorPosition; entrance origin = arrow tip, else the aligned edge (inset --space-4), else center. */
+  .overlay-popover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: max-content;
+    outline: none;
+  }
 
-.overlay-popover[data-side='bottom'] {
-  transform-origin: var(--overlay-arrow-x, var(--ov-origin)) top;
-}
-.overlay-popover[data-side='top'] {
-  transform-origin: var(--overlay-arrow-x, var(--ov-origin)) bottom;
-}
-.overlay-popover[data-side='right'] {
-  transform-origin: left var(--overlay-arrow-y, var(--ov-origin));
-}
-.overlay-popover[data-side='left'] {
-  transform-origin: right var(--overlay-arrow-y, var(--ov-origin));
-}
+  .overlay-popover[data-align='start'] {
+    --ov-origin: var(--space-4);
+  }
+  .overlay-popover[data-align='center'] {
+    --ov-origin: 50%;
+  }
+  .overlay-popover[data-align='end'] {
+    --ov-origin: calc(100% - var(--space-4));
+  }
 
-/* Arrow - a rotated square on the panel edge (--overlay-arrow-x/y); only its two outward edges keep the hairline, the panel covers the rest (must be opaque). */
-.overlay-popover__arrow {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: var(--overlay-arrow-bg, var(--bg-surface-raised));
-  border: var(--border-hairline) solid var(--border-default);
-  pointer-events: none;
-}
-.overlay-popover[data-side='bottom'] .overlay-popover__arrow {
-  top: -5px;
-  left: var(--overlay-arrow-x, 50%);
-  transform: translateX(-50%) rotate(45deg);
-  border-right: none;
-  border-bottom: none;
-}
-.overlay-popover[data-side='top'] .overlay-popover__arrow {
-  bottom: -5px;
-  left: var(--overlay-arrow-x, 50%);
-  transform: translateX(-50%) rotate(45deg);
-  border-left: none;
-  border-top: none;
-}
-.overlay-popover[data-side='right'] .overlay-popover__arrow {
-  left: -5px;
-  top: var(--overlay-arrow-y, 50%);
-  transform: translateY(-50%) rotate(45deg);
-  border-right: none;
-  border-top: none;
-}
-.overlay-popover[data-side='left'] .overlay-popover__arrow {
-  right: -5px;
-  top: var(--overlay-arrow-y, 50%);
-  transform: translateY(-50%) rotate(45deg);
-  border-left: none;
-  border-bottom: none;
+  .overlay-popover[data-side='bottom'] {
+    transform-origin: var(--overlay-arrow-x, var(--ov-origin)) top;
+  }
+  .overlay-popover[data-side='top'] {
+    transform-origin: var(--overlay-arrow-x, var(--ov-origin)) bottom;
+  }
+  .overlay-popover[data-side='right'] {
+    transform-origin: left var(--overlay-arrow-y, var(--ov-origin));
+  }
+  .overlay-popover[data-side='left'] {
+    transform-origin: right var(--overlay-arrow-y, var(--ov-origin));
+  }
+
+  /* Arrow - a rotated square on the panel edge (--overlay-arrow-x/y); only its two outward edges keep the hairline, the panel covers the rest (must be opaque). */
+  .overlay-popover__arrow {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--overlay-arrow-bg, var(--bg-surface-raised));
+    border: var(--border-hairline) solid var(--border-default);
+    pointer-events: none;
+  }
+  .overlay-popover[data-side='bottom'] .overlay-popover__arrow {
+    top: -5px;
+    left: var(--overlay-arrow-x, 50%);
+    transform: translateX(-50%) rotate(45deg);
+    border-right: none;
+    border-bottom: none;
+  }
+  .overlay-popover[data-side='top'] .overlay-popover__arrow {
+    bottom: -5px;
+    left: var(--overlay-arrow-x, 50%);
+    transform: translateX(-50%) rotate(45deg);
+    border-left: none;
+    border-top: none;
+  }
+  .overlay-popover[data-side='right'] .overlay-popover__arrow {
+    left: -5px;
+    top: var(--overlay-arrow-y, 50%);
+    transform: translateY(-50%) rotate(45deg);
+    border-right: none;
+    border-top: none;
+  }
+  .overlay-popover[data-side='left'] .overlay-popover__arrow {
+    right: -5px;
+    top: var(--overlay-arrow-y, 50%);
+    transform: translateY(-50%) rotate(45deg);
+    border-left: none;
+    border-bottom: none;
+  }
 }

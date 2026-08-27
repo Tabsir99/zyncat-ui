@@ -1,83 +1,87 @@
-/* tooltip.css - the floating tooltip surface (one shared bubble). */
+@layer zyncat.tokens, zyncat.components;
 
-.tooltip {
-  position: fixed;
-  left: 0;
-  top: 0;
-  box-sizing: border-box;
-  overflow: hidden; /* clips content while the box morphs  */
-  z-index: var(--layer-tooltip);
-  pointer-events: none;
-  width: max-content; /* the live bubble gets an animated width; this also sizes the measuring clone */
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-surface-raised);
-  color: var(--text-body);
-  border: var(--border-hairline) solid var(--border-default);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  font: var(--type-caption);
-  letter-spacing: var(--tracking-normal);
-}
+@layer zyncat.components {
+  /* tooltip.css - the floating tooltip surface (one shared bubble). */
 
-/* the hidden twin the host measures the NEXT box from (same styles, no motion) */
-.tooltip--measure {
-  visibility: hidden;
-  left: -9999px;
-  top: 0;
-}
+  .tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    overflow: hidden; /* clips content while the box morphs  */
+    z-index: var(--layer-tooltip);
+    pointer-events: none;
+    width: max-content; /* the live bubble gets an animated width; this also sizes the measuring clone */
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-surface-raised);
+    color: var(--text-body);
+    border: var(--border-hairline) solid var(--border-default);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font: var(--type-caption);
+    letter-spacing: var(--tracking-normal);
+  }
 
-/* default trigger wrapper - display:contents, so it adds no layout; carries the listeners + rect */
-.tooltip-anchor {
-  display: contents;
-}
+  /* the hidden twin the host measures the NEXT box from (same styles, no motion) */
+  .tooltip--measure {
+    visibility: hidden;
+    left: -9999px;
+    top: 0;
+  }
 
-/* wraps at the measure cap; the live body also gets its measured width inline (locked wrapping during the morph) */
-.tooltip__body {
-  display: block;
-  width: max-content;
-  max-inline-size: var(--measure-floating);
-  text-wrap: pretty;
-}
+  /* default trigger wrapper - display:contents, so it adds no layout; carries the listeners + rect */
+  .tooltip-anchor {
+    display: contents;
+  }
 
-/* grow from the trigger's edge (per placement) */
-.tooltip[data-placement='top'] {
-  transform-origin: center bottom;
-}
-.tooltip[data-placement='bottom'] {
-  transform-origin: center top;
-}
-.tooltip[data-placement='left'] {
-  transform-origin: right center;
-}
-.tooltip[data-placement='right'] {
-  transform-origin: left center;
-}
+  /* wraps at the measure cap; the live body also gets its measured width inline (locked wrapping during the morph) */
+  .tooltip__body {
+    display: block;
+    width: max-content;
+    max-inline-size: var(--measure-floating);
+    text-wrap: pretty;
+  }
 
-.tooltip__row {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-}
-.tooltip__shortcut {
-  flex: 0 0 auto;
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  font-variant-numeric: tabular-nums;
-  color: var(--text-subtle);
-  background: var(--bg-muted);
-  padding: 0 var(--space-1);
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-}
+  /* grow from the trigger's edge (per placement) */
+  .tooltip[data-placement='top'] {
+    transform-origin: center bottom;
+  }
+  .tooltip[data-placement='bottom'] {
+    transform-origin: center top;
+  }
+  .tooltip[data-placement='left'] {
+    transform-origin: right center;
+  }
+  .tooltip[data-placement='right'] {
+    transform-origin: left center;
+  }
 
-/* Multi-line content - rich nodes style themselves with these; keep hierarchy minimal. */
-.tooltip strong {
-  font-weight: var(--weight-medium);
-  color: var(--text-strong);
-}
-.tooltip p {
-  margin: 0;
-}
-.tooltip p + p {
-  margin-top: var(--space-1);
+  .tooltip__row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .tooltip__shortcut {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-subtle);
+    background: var(--bg-muted);
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  /* Multi-line content - rich nodes style themselves with these; keep hierarchy minimal. */
+  .tooltip strong {
+    font-weight: var(--weight-medium);
+    color: var(--text-strong);
+  }
+  .tooltip p {
+    margin: 0;
+  }
+  .tooltip p + p {
+    margin-top: var(--space-1);
+  }
 }

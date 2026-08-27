@@ -1,182 +1,188 @@
-/* Badge / status pill - shape, tones, dot, status morph. */
+@layer zyncat.tokens, zyncat.components;
 
-.badge {
-  /* wire the tone vars into the glass surface hooks */
-  --glass-fg: var(--badge-fg);
-  --glass-tint: var(--badge-tint);
+@layer zyncat.components {
+  /* Badge / status pill - shape, tones, dot, status morph. */
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding-block: var(--space-1);
-  padding-inline: var(--space-2);
-  border-radius: var(--radius-sm);
+  .badge {
+    /* wire the tone vars into the glass surface hooks */
+    --glass-fg: var(--badge-fg);
+    --glass-tint: var(--badge-tint);
+    --badge-sheen: rgb(255 255 255 / 0.5);
+    --badge-sheen-hover: rgb(255 255 255 / 0.6);
 
-  font-family: var(--font-mono);
-  font-size: var(--size-micro);
-  line-height: var(--leading-micro);
-  font-weight: var(--weight-medium);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-  white-space: nowrap;
-  vertical-align: middle;
-  color: var(--badge-fg);
-  user-select: none;
-  -webkit-user-select: none;
-}
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding-block: var(--space-1);
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-sm);
 
-.badge--sm {
-  padding-block: var(--space-px);
-  gap: var(--space-px);
-}
-
-.badge--pill {
-  border-radius: var(--radius-full);
-}
-
-.badge__dot {
-  position: relative;
-  width: 0.5em;
-  height: 0.5em;
-  flex: none;
-  border-radius: var(--radius-full);
-  background: var(--badge-dot, var(--badge-fg));
-  /* hue cross-fades as the status morphs */
-  transition: background-color var(--duration-base) var(--ease-standard);
-}
-.badge__dot--live::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: inherit;
-  animation: badge-pulse var(--duration-pulse) var(--ease-entrance) infinite;
-}
-@keyframes badge-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.5;
+    font-family: var(--font-mono);
+    font-size: var(--size-micro);
+    line-height: var(--leading-micro);
+    font-weight: var(--weight-medium);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+    white-space: nowrap;
+    vertical-align: middle;
+    color: var(--badge-fg);
+    user-select: none;
+    -webkit-user-select: none;
   }
-  70% {
-    transform: scale(2.6);
-    opacity: 0;
+
+  .badge--sm {
+    padding-block: var(--space-px);
+    gap: var(--space-px);
   }
-  100% {
-    transform: scale(2.6);
-    opacity: 0;
+
+  .badge--pill {
+    border-radius: var(--radius-full);
   }
-}
 
-.badge__icon {
-  display: inline-flex;
-  flex: none;
-  width: 1em;
-  height: 1em;
-  margin-left: calc(var(--space-px) * -1);
-}
-.badge__icon svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.badge--neutral {
-  --badge-fg: var(--text-muted);
-  --badge-tint: var(--glass-tint-neutral);
-  --badge-dot: var(--gray-500);
-}
-.badge--info {
-  --badge-fg: var(--info-text);
-  --badge-tint: var(--glass-tint-info);
-  --badge-dot: var(--info);
-}
-.badge--success {
-  --badge-fg: var(--success-text);
-  --badge-tint: var(--glass-tint-success);
-  --badge-dot: var(--success);
-}
-.badge--warning {
-  --badge-fg: var(--warning-text);
-  --badge-tint: var(--glass-tint-warning);
-  --badge-dot: var(--warning);
-}
-.badge--danger {
-  --badge-fg: var(--danger-text);
-  --badge-tint: var(--glass-tint-danger);
-  --badge-dot: var(--danger);
-}
-
-/* Outline variant - deliberately NOT glass: a flat, engraved hairline chip. */
-.badge--outline {
-  position: relative;
-  isolation: isolate;
-  background: color-mix(in oklab, var(--badge-fg) 6%, transparent);
-  box-shadow:
-    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 30%, transparent),
-    inset 0 1px 0 0 rgb(255 255 255 / 0.5),
-    var(--shadow-xs);
-  transition:
-    transform var(--duration-base) var(--ease-standard),
-    box-shadow var(--duration-base) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard);
-}
-.badge--outline .badge__dot {
-  box-shadow: 0 0 0 2.5px color-mix(in oklab, var(--badge-dot) 16%, transparent);
-}
-.badge--outline:hover {
-  transform: translateY(calc(var(--space-px) * -1));
-  box-shadow:
-    inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 42%, transparent),
-    inset 0 1px 0 0 rgb(255 255 255 / 0.6),
-    var(--shadow-sm);
-}
-
-/* Status morph - a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
-.badge__morph {
-  position: relative;
-  display: inline-grid;
-  align-items: center;
-  justify-items: start;
-  overflow: hidden;
-  transition: width var(--duration-base) var(--ease-entrance);
-}
-.badge__morph > * {
-  grid-area: 1 / 1;
-}
-.badge__ghost {
-  visibility: hidden;
-  pointer-events: none;
-}
-.badge__word {
-  display: inline-block;
-  transition:
-    transform var(--duration-base) var(--ease-entrance),
-    opacity var(--duration-base) var(--ease-standard);
-}
-.badge__word--out {
-  transform: translateY(-52%);
-  opacity: 0;
-}
-.badge__word--in {
-  transform: translateY(52%);
-  opacity: 0;
-  transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .badge--outline {
-    transition: none;
-  }
-  .badge--outline:hover {
-    transform: none;
+  .badge__dot {
+    position: relative;
+    width: 0.5em;
+    height: 0.5em;
+    flex: none;
+    border-radius: var(--radius-full);
+    background: var(--badge-dot, var(--badge-fg));
+    /* hue cross-fades as the status morphs */
+    transition: background-color var(--duration-base) var(--ease-standard);
   }
   .badge__dot--live::after {
-    animation: none;
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: badge-pulse var(--duration-pulse) var(--ease-entrance) infinite;
   }
+  @keyframes badge-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  .badge__icon {
+    display: inline-flex;
+    flex: none;
+    width: 1em;
+    height: 1em;
+    margin-left: calc(var(--space-px) * -1);
+  }
+  .badge__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .badge--neutral {
+    --badge-fg: var(--text-muted);
+    --badge-tint: var(--glass-tint-neutral);
+    --badge-dot: var(--gray-500);
+  }
+  .badge--info {
+    --badge-fg: var(--info-text);
+    --badge-tint: var(--glass-tint-info);
+    --badge-dot: var(--info);
+  }
+  .badge--success {
+    --badge-fg: var(--success-text);
+    --badge-tint: var(--glass-tint-success);
+    --badge-dot: var(--success);
+  }
+  .badge--warning {
+    --badge-fg: var(--warning-text);
+    --badge-tint: var(--glass-tint-warning);
+    --badge-dot: var(--warning);
+  }
+  .badge--danger {
+    --badge-fg: var(--danger-text);
+    --badge-tint: var(--glass-tint-danger);
+    --badge-dot: var(--danger);
+  }
+
+  /* Outline variant - deliberately NOT glass: a flat, engraved hairline chip. */
+  .badge--outline {
+    position: relative;
+    isolation: isolate;
+    background: color-mix(in oklab, var(--badge-fg) 6%, transparent);
+    box-shadow:
+      inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 30%, transparent),
+      inset 0 1px 0 0 var(--badge-sheen),
+      var(--shadow-xs);
+    transition:
+      transform var(--duration-base) var(--ease-standard),
+      box-shadow var(--duration-base) var(--ease-standard),
+      background-color var(--duration-fast) var(--ease-standard);
+  }
+  .badge--outline .badge__dot {
+    box-shadow: 0 0 0 2.5px color-mix(in oklab, var(--badge-dot) 16%, transparent);
+  }
+  .badge--outline:hover {
+    transform: translateY(calc(var(--space-px) * -1));
+    box-shadow:
+      inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--badge-fg) 42%, transparent),
+      inset 0 1px 0 0 var(--badge-sheen-hover),
+      var(--shadow-sm);
+  }
+
+  /* Status morph - a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
   .badge__morph {
-    transition: none;
+    position: relative;
+    display: inline-grid;
+    align-items: center;
+    justify-items: start;
+    overflow: hidden;
+    transition: width var(--duration-base) var(--ease-entrance);
+  }
+  .badge__morph > * {
+    grid-area: 1 / 1;
+  }
+  .badge__ghost {
+    visibility: hidden;
+    pointer-events: none;
   }
   .badge__word {
+    display: inline-block;
+    transition:
+      transform var(--duration-base) var(--ease-entrance),
+      opacity var(--duration-base) var(--ease-standard);
+  }
+  .badge__word--out {
+    transform: translateY(-52%);
+    opacity: 0;
+  }
+  .badge__word--in {
+    transform: translateY(52%);
+    opacity: 0;
     transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .badge--outline {
+      transition: none;
+    }
+    .badge--outline:hover {
+      transform: none;
+    }
+    .badge__dot--live::after {
+      animation: none;
+    }
+    .badge__morph {
+      transition: none;
+    }
+    .badge__word {
+      transition: none;
+    }
   }
 }
