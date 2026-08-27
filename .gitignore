@@ -1,6 +1,7 @@
 node_modules
 dist
 .next
+.next-dev
 .turbo
 apps/docs/out
 next-env.d.ts

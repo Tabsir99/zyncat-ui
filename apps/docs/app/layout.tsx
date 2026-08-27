@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
-import '@zyncat/ui/styles.css';
 import '@/styles/docs.css';
+import '@zyncat/ui/styles.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ui.zyncat.app'),
