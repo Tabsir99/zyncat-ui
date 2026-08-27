@@ -1,6 +1,6 @@
 # zyncat-ui
 
-- React 19 design system. Modern CSS, a closed token vocabulary, a ~2.5 kB WAAPI motion engine.
+- React 19 design system. Modern CSS, a closed token vocabulary, a ~3 kB WAAPI motion engine.
 - No Tailwind, no CSS-in-JS, no UI library, no animation dependency.
 
 ## Mission
@@ -28,7 +28,7 @@
 - No comments in source. Exceptions: public-props JSDoc and `src/tokens/*.css`.
 - Never sequence motion with `setTimeout`, `requestAnimationFrame`, `transitionend` or `animationend`.
 - Chain the `Playback` `finished` promise instead. Wall-clock assumptions are wrong by construction.
-- rAF exists only inside the engine `loop` simulation primitive (phase 3).
+- rAF exists only inside the engine `loop` simulation primitive.
 - One writer per property. JS and CSS never animate the same property.
 - Values follow the tier's contract. `design_rules('contracts')` has the rules.
 - Zero runtime dependencies.
@@ -38,7 +38,7 @@
 
 ```
 src/
-  engine/        the WAAPI engine: animate, set, flip, measure, startDrag
+  engine/        the WAAPI engine: animate, set, flip, measure, startDrag, loop
   motion/        the React layer: Presence, Motion, useMotion, presets, glide
   tokens/        *.css token vocabulary + the TypeScript readers
   components/

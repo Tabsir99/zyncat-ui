@@ -3,7 +3,7 @@
 ## Goal
 
 - Ship a premium, motion-first React 19 design system.
-- Modern CSS, a closed token vocabulary, a ~2.5 kB WAAPI engine, zero runtime dependencies.
+- Modern CSS, a closed token vocabulary, a ~3 kB WAAPI engine, zero runtime dependencies.
 - Be both: a complete system to build products on, and expressive components with real motion.
 - Design every state. Make every motion interruptible.
 
@@ -139,7 +139,6 @@
 
 ## Roadmap
 
-- Phase 3: the engine `loop` simulation primitive. Until then, no simulations.
 - Phase 4: wire `src/components/expressive/` into the tsup scan. Port the motion primitives.
 - Phase 5: support widgets into `src/components/compound/`.
 - Phase 6: replicas. Phase 7: docs coverage, publish gate.

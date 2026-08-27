@@ -1,6 +1,6 @@
 # Motion
 
-- One ~2.5 kB WAAPI engine in `src/engine` drives everything. No animation dependency.
+- One ~3 kB WAAPI engine in `src/engine` drives everything. No animation dependency.
 - Transitions are destination-driven. They run on the engine.
 - Simulations are input-coupled or endless. They run on the engine `loop` primitive.
 
@@ -9,12 +9,16 @@
 - Has a destination: use the engine (`animate`, `flip`, `set`) or a CSS transition.
 - Input-coupled or endless: use the engine `loop` primitive.
 - Simulations are things like cursor magnetism, flow fields, particles, sprung counters.
-- `loop` lands in phase 3. Until then, do not write simulations.
 - Never hand-roll a rAF loop.
-- A simulation claims its properties. One writer still holds.
-- A simulation respects global clock scaling.
-- A simulation snaps to its settled state under reduced motion.
-- A simulation pauses while hidden or off-screen.
+- `loop(frame, options?)` runs the simulation. It returns a `Playback`; `finished` resolves on stop.
+- `frame(k, dt, now)`: `k` is the 60fps-normalised step, `dt` is milliseconds.
+- `k` and `dt` are speed- and clock-scaled. `dt` is clamped to 34ms.
+- `options.speed` is sampled every frame. Feed it the live prop.
+- A speed of `0` idles the frame. An invalid speed runs at `1`.
+- `options.el` plus `options.claims` claim css properties. One writer still holds.
+- `animate()` on a claimed property stops the loop. Stopping releases the claim.
+- The loop pauses while the document is hidden or `options.el` is off-screen.
+- Under `UIMotion.reduced`, `loop` calls `options.snap` once and never starts.
 - Physics constants are named module constants.
 - Keep perceived settle inside the `--duration-*` bands.
 

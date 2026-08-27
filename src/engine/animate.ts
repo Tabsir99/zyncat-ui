@@ -81,17 +81,27 @@ function commitIfRendered(animation: Animation): void {
   } catch {}
 }
 
-const owned = new WeakMap<HTMLElement, Map<string, Animation>>();
+export interface PropertyHolder {
+  cancel(): void;
+}
 
-function claim(el: HTMLElement, keys: string[], animation: Animation | null): void {
-  const map = owned.get(el) ?? new Map<string, Animation>();
+const owned = new WeakMap<HTMLElement, Map<string, PropertyHolder>>();
+
+export function claim(el: HTMLElement, keys: string[], holder: PropertyHolder | null): void {
+  const map = owned.get(el) ?? new Map<string, PropertyHolder>();
   owned.set(el, map);
   for (const key of keys) {
     const previous = map.get(key);
-    if (previous && previous !== animation) previous.cancel();
-    if (animation) map.set(key, animation);
+    if (previous && previous !== holder) previous.cancel();
+    if (holder) map.set(key, holder);
     else map.delete(key);
   }
+}
+
+export function release(el: HTMLElement, keys: string[], holder: PropertyHolder): void {
+  const map = owned.get(el);
+  if (!map) return;
+  for (const key of keys) if (map.get(key) === holder) map.delete(key);
 }
 
 function play(el: HTMLElement, layer: Layer): Playback | null {

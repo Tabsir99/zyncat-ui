@@ -15,7 +15,7 @@ side effect, not the goal.
 
 That focus is the point. The token vocabulary stays small because one person has to hold it
 in their head; the component set stays narrow because every component is a permanent
-maintenance surface; the motion engine is ~2.5 kB because the alternative was a dependency
+maintenance surface; the motion engine is ~3 kB because the alternative was a dependency
 with a hundred features I would not use. A design system built to please everyone ends up
 with a settings panel instead of a point of view.
 
