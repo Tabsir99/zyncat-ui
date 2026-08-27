@@ -5,8 +5,9 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  type KeyboardEvent as ReactKeyboardEvent,
+  useSyncExternalStore,
   type ReactElement,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type Ref,
   type RefObject,
@@ -148,10 +149,20 @@ function ovCloneTrigger(
   } as Partial<typeof trigger.props>);
 }
 
+const subscribeToNothing = () => () => {};
+
+function useHydrated() {
+  return useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+}
+
 function OverlayPortal({ container, children }: { container?: HTMLElement | null; children: ReactNode }) {
-  const host = container ?? (typeof document === 'undefined' ? null : document.body);
-  if (!host) return null;
-  return createPortal(<div data-overlay-root="">{children}</div>, host);
+  const hydrated = useHydrated();
+  if (!hydrated) return null;
+  return createPortal(<div data-overlay-root="">{children}</div>, container ?? document.body);
 }
 
 export { ovIsTop, ovInOverlayAbove, useOverlayEntry, useOutsidePress, ovCloneTrigger, OverlayPortal };
