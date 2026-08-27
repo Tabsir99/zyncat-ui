@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { publicEntries, ROOT } from './lib/entries.mjs';
+import { distTypesPath, publicEntries, ROOT } from './lib/entries.mjs';
 
 const PKG_PATH = join(ROOT, 'package.json');
 const TAIL_KEYS = ['./styles.css', './next', './package.json'];
@@ -13,7 +13,7 @@ const pkg = JSON.parse(raw);
 const expected = new Map(
   Object.entries(publicEntries()).map(([name, source]) => [
     `./${name}`,
-    { source: `./${source}`, types: `./dist/${name}.d.ts`, import: `./dist/${name}.js` },
+    { source: `./${source}`, types: `./${distTypesPath(source)}`, import: `./dist/${name}.js` },
   ]),
 );
 

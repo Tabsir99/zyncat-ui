@@ -2,7 +2,9 @@ import { defineConfig, type Options } from 'tsup';
 
 import { publicEntries } from './scripts/lib/entries.mjs';
 
-// One entry per public module - one dist file + .d.ts each. Subpaths
+// One entry per public module - one dist JS file each; declarations are emitted
+// separately by `tsc -p tsconfig.build.json --emitDeclarationOnly` into dist/types
+// (the bundled-dts pass cost ~23s of every build for zero consumer benefit). Subpaths
 // (`@zyncat/ui/button`) are the ONLY public API - there is no barrel entry, so
 // one import can never pull modules (or CSS) the app didn't ask for.
 // splitting:true hoists shared internals (overlay/*, select/core,
@@ -10,10 +12,7 @@ import { publicEntries } from './scripts/lib/entries.mjs';
 const library: Options = {
   entry: publicEntries(),
   format: ['esm'],
-
-  // tsup injects a (now-deprecated) baseUrl into the dts compiler; silence it here
-  // so tsconfig.json stays clean for editors pinned to an older TypeScript.
-  dts: { compilerOptions: { ignoreDeprecations: '6.0' } },
+  dts: false,
   splitting: true,
   treeshake: true,
   sourcemap: true,

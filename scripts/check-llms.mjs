@@ -10,7 +10,7 @@
 //   2. Every public subpath in package.json exports must have an entry, unless listed in
 //      SUPPORTING - modules deliberately documented by their types alone.
 //   3. Every JSX attribute in an entry's examples must resolve to a prop the built types
-//      declare for that subpath (following the chunk imports tsup splits them across).
+//      declare for that subpath (following relative imports across the emitted tree).
 //   4. Every entry ends with the count of component-specific props it does NOT name, so a
 //      reader who only ever sees this file is told, per component, that it is an index and
 //      what calling get_component would add. Run with --write to regenerate those counts.
@@ -19,9 +19,9 @@
 // Requires dist/ - run pnpm build first.
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 
-import { componentSpecific, NATIVE_PROP_RE, publicPropsBySubpath } from './lib/dts-props.mjs';
+import { componentSpecific, NATIVE_PROP_RE, publicPropsBySubpath, typesFileBySubpath } from './lib/dts-props.mjs';
 import { entryProse, formatPropCount, parseLlms, PROP_COUNT_RE } from './lib/llms-format.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -51,17 +51,26 @@ const raw = readFileSync(LLMS, 'utf8');
 const parsed = parseLlms(raw);
 const entries = parsed.entries.map((entry) => ({ ...entry, examples: entryProse(entry) }));
 
-/* 2 - props the built types declare for a subpath, following tsup's chunk splits */
+/* 2 - props the built types declare for a subpath, following the declaration tree */
+const TYPES_BY_SUBPATH = typesFileBySubpath();
+
 function declaredProps(subpath) {
   const props = new Set();
   const seen = new Set();
-  const queue = [join(DIST, `${subpath}.d.ts`)];
+  const queue = [TYPES_BY_SUBPATH.get(subpath)].filter(Boolean);
   while (queue.length) {
     const file = queue.shift();
     if (seen.has(file) || !existsSync(file)) continue;
     seen.add(file);
     const src = readFileSync(file, 'utf8');
-    for (const m of src.matchAll(/from '(\.\/[\w.-]+)\.js'/g)) queue.push(join(DIST, `${m[1].slice(2)}.d.ts`));
+    const specifiers = [
+      ...[...src.matchAll(/from '(\.[^']+)'/g)].map((m) => m[1]),
+      ...[...src.matchAll(/import\("(\.[^"]+)"\)/g)].map((m) => m[1]),
+    ];
+    for (const spec of specifiers) {
+      const base = join(dirname(file), spec.replace(/\.js$/, ''));
+      queue.push(`${base}.d.ts`, join(base, 'index.d.ts'));
+    }
     /* Only component-level shapes: a nested row/option/column type must not satisfy a
        prop the component itself never declared. */
     for (const block of src.matchAll(
@@ -107,7 +116,7 @@ for (const [sub, n] of counts)
 for (const entry of entries) {
   const props = declaredProps(entry.subpath);
   if (!props.size) {
-    fail(`dist/${entry.subpath}.d.ts declared no props - is the build stale?`);
+    fail(`the built types for @zyncat/ui/${entry.subpath} declared no props - is the build stale?`);
     continue;
   }
   for (const { text, line } of entry.examples) {

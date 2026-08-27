@@ -1,10 +1,17 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import ts from 'typescript';
 
 import { ROOT } from './entries.mjs';
 
-const DIST = join(ROOT, 'dist');
+export function typesFileBySubpath() {
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
+  const map = new Map();
+  for (const [key, value] of Object.entries(pkg.exports))
+    if (value && typeof value === 'object' && typeof value.types === 'string')
+      map.set(key.replace(/^\.\//, ''), join(ROOT, value.types));
+  return map;
+}
 
 const isLibrarySymbol = (symbol) => {
   const declaration = symbol.declarations?.[0];
@@ -18,14 +25,15 @@ export const NATIVE_PROP_RE = /^(on[A-Z]\w*|id|className|style|key|ref|role|type
 export const componentSpecific = (names) => [...names].filter((name) => !NATIVE_PROP_RE.test(name)).sort();
 
 export function publicPropsBySubpath(subpaths) {
-  const files = subpaths.map((subpath) => join(DIST, `${subpath}.d.ts`)).filter(existsSync);
+  const typesFile = typesFileBySubpath();
+  const files = subpaths.map((subpath) => typesFile.get(subpath)).filter((f) => f && existsSync(f));
   const program = ts.createProgram(files, { noEmit: true, skipLibCheck: true, strict: true, jsx: ts.JsxEmit.ReactJSX });
   const checker = program.getTypeChecker();
 
   const found = new Map();
   for (const subpath of subpaths) {
-    const file = join(DIST, `${subpath}.d.ts`);
-    if (!existsSync(file)) continue;
+    const file = typesFile.get(subpath);
+    if (!file || !existsSync(file)) continue;
     const sourceFile = program.getSourceFile(file);
     const moduleSymbol = sourceFile && checker.getSymbolAtLocation(sourceFile);
     if (!moduleSymbol) continue;

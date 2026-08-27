@@ -54,3 +54,13 @@ export function discoverComponentEntries() {
 export function publicEntries() {
   return { ...discoverComponentEntries(), ...EXPLICIT_ENTRIES };
 }
+
+export function distTypesPath(source) {
+  return (
+    'dist/types/' +
+    source
+      .replace(/^\.\//, '')
+      .replace(/^src\//, '')
+      .replace(/\.tsx?$/, '.d.ts')
+  );
+}
