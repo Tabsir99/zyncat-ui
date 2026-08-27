@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, type RefObject } from 'react';
+
 import { animate, flip, measure, set } from '../engine';
 import { UIMotion as SM } from '../tokens/motion-tokens';
 
@@ -25,7 +26,7 @@ export function useGlide<T extends HTMLElement>(containerRef: RefObject<T | null
       height: [t.height / s],
     });
     animate(pill, { opacity: [1], timing: { duration: SM.dur.fast, ease: SM.ease.standard } });
-    const glided = visible.current && !SM.reduced;
+    const glided = visible.current && !SM.reduced && was.width > 0 && was.height > 0;
     visible.current = true;
     if (glided) flip(pill, was, { size: 'morph', timing: SM.t.settle });
   }

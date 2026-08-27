@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, type RefObject } from 'react';
+
 import {
   dropShared,
   flip,
@@ -15,6 +16,10 @@ import { UIMotion } from '../tokens/motion-tokens';
 
 export type FlipTuning = FlipOptions;
 
+const sharedOwner = new Map<string, HTMLElement>();
+
+const usable = (box: Box | null): box is Box => !!box && box.width > 0 && box.height > 0;
+
 export function useFlip<T extends HTMLElement>(
   sharedId: string | null,
   tuning: FlipTuning = {},
@@ -23,21 +28,33 @@ export function useFlip<T extends HTMLElement>(
   const ref = useRef<T | null>(null);
   const privateBox = useRef<Box | null>(null);
   const playing = useRef<{ play: Playback; el: T } | null>(null);
+  const interrupted = useRef<Box | null>(null);
   const { size, timing } = tuning;
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || !enabled) return;
     const live = playing.current;
-    const from = live && live.el === el ? measure(el) : sharedId === null ? privateBox.current : readShared(sharedId);
+    let from: Box | null;
+    if (live && live.el === el) from = measure(el);
+    else if (interrupted.current) from = interrupted.current;
+    else if (sharedId === null) from = privateBox.current;
+    else from = sharedOwner.get(sharedId) === el ? null : readShared(sharedId);
     live?.play.stop();
     const settled = measure(el);
     if (sharedId === null) privateBox.current = settled;
-    else keepShared(sharedId, settled);
-    const next = from && !UIMotion.reduced ? flip(el, from, { size, timing }) : null;
+    else {
+      keepShared(sharedId, settled);
+      sharedOwner.set(sharedId, el);
+    }
+    const next = usable(from) && !UIMotion.reduced ? flip(el, from, { size, timing }) : null;
     playing.current = next ? { play: next, el } : null;
+    interrupted.current = next ? from : null;
     next?.finished.then(() => {
-      if (playing.current?.play === next) playing.current = null;
+      if (playing.current?.play === next) {
+        playing.current = null;
+        interrupted.current = null;
+      }
     });
   });
 
@@ -45,14 +62,16 @@ export function useFlip<T extends HTMLElement>(
     if (!enabled || sharedId === null) return;
     return () => {
       const live = playing.current;
-      if (live) {
-        const box = measure(live.el);
-        if (box.width && box.height) keepShared(sharedId, box);
-        live.play.stop();
-      }
+      let box: Box | null = live ? measure(live.el) : null;
+      live?.play.stop();
+      playing.current = null;
+      if (!usable(box)) box = ref.current ? measure(ref.current) : null;
+      if (usable(box)) keepShared(sharedId, box);
       const mine = readShared(sharedId);
       queueMicrotask(() => {
         if (readShared(sharedId) === mine) dropShared(sharedId);
+        const owner = sharedOwner.get(sharedId);
+        if (owner && !owner.isConnected) sharedOwner.delete(sharedId);
       });
     };
   }, [sharedId, enabled]);
