@@ -1,17 +1,19 @@
 'use client';
 
 import './tag.css';
+
 import { createContext, useContext, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
-import { Presence } from '../../../motion/presence';
-import { Motion } from '../../../motion/element';
-import { popIn, popOut } from '../../../motion/presets';
-import { resolveMotionTiming } from '../../../motion/motion-timing';
-import type { DisableableAnimation } from '../../../motion/timing';
-import type { FlipTuning } from '../../../motion/flip';
+
+import type { DataAttributes } from '../../../dom-props';
 import type { Layer } from '../../../engine';
+import { Motion } from '../../../motion/element';
+import type { FlipTuning } from '../../../motion/flip';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { Presence } from '../../../motion/presence';
+import { popIn, popOut } from '../../../motion/presets';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 
 const TAG_TIMING = { open: { duration: 'base', ease: 'entrance' }, close: { duration: 'fast', ease: 'exit' } } as const;

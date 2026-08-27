@@ -1,9 +1,11 @@
 'use client';
 
 import './date-picker.css';
+
 import type { PointerEvent } from 'react';
-import { FieldShell, type DateFieldBaseProps } from './field-shell';
+
 import { useControllable } from '../../internal/hooks/use-controllable';
+import { FieldShell, type DateFieldBaseProps } from './field-shell';
 import { TimeSegments } from './time-core';
 
 export interface TimeFieldProps extends DateFieldBaseProps {

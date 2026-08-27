@@ -1,13 +1,15 @@
 'use client';
 
 import './date-picker.css';
-import { useState, useEffect } from 'react';
-import { Popover } from '../popover/Popover';
-import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
+
+import { useEffect, useState } from 'react';
+
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { TimeSegments, disp12 } from './time-core';
+import { Popover } from '../popover/Popover';
 import { DtpPanel } from './calendar-panel';
-import { pad, displayDay } from './date-utils';
+import { displayDay, pad } from './date-utils';
+import { FieldShell, FieldTrigger, type DateFieldBaseProps } from './field-shell';
+import { disp12, TimeSegments } from './time-core';
 
 interface DateTimeParts {
   date: string | null;

@@ -1,7 +1,9 @@
 'use client';
 
 import './button.css';
+
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode, Ref } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 

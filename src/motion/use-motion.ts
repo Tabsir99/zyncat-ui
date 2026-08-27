@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useRef, type RefObject } from 'react';
+
 import { animate, type Layer, type Playback } from '../engine';
 import { usePresence } from './presence-context';
 

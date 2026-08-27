@@ -1,6 +1,7 @@
 'use client';
 
 import './checkbox.css';
+
 import { Fragment, useEffect, useRef, type InputHTMLAttributes } from 'react';
 
 export interface CheckGlyphProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {

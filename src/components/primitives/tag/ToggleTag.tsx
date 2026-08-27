@@ -2,10 +2,12 @@
 
 import './tag.css';
 import '../collapse/collapse.css';
+
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
-import { IconSlot } from '../../internal/icon/IconSlot';
-import { useControllable } from '../../internal/hooks/use-controllable';
+
 import type { DataAttributes } from '../../../dom-props';
+import { useControllable } from '../../internal/hooks/use-controllable';
+import { IconSlot } from '../../internal/icon/IconSlot';
 import { cx } from '../../internal/utils/cx';
 
 interface ToggleTagOwnProps {

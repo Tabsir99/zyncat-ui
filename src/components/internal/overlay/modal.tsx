@@ -1,13 +1,15 @@
 'use client';
 
 import './overlay.css';
+
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
+
 import { animate, type Layer, type Playback } from '../../../engine';
-import { useMotion, run, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
 import type { MotionTimingDefaults, MotionTimings } from '../../../motion/motion-timing';
-import { useOverlayEntry } from './layer';
-import { useReturnFocus, useFocusTrap } from './focus';
+import { run, useMotion, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
 import { cx } from '../utils/cx';
+import { useFocusTrap, useReturnFocus } from './focus';
+import { useOverlayEntry } from './layer';
 
 export const OV_TAKEOVER_TIMING: MotionTimingDefaults = {
   open: { duration: 'slow', ease: 'entrance' },

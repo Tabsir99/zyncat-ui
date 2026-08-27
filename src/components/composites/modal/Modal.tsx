@@ -1,16 +1,18 @@
 'use client';
 
 import './modal.css';
+
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
 import { Presence } from '../../../motion/presence';
 import { popIn, popOut } from '../../../motion/presets';
-import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
-import type { DataAttributes } from '../../../dom-props';
 
 export interface ModalProps {
   /** Controlled open state. Omit to stay uncontrolled. */

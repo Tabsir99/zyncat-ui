@@ -1,7 +1,9 @@
 'use client';
 
 import './input.css';
+
 import type { ReactNode } from 'react';
+
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { Collapse } from '../collapse/Collapse';
 

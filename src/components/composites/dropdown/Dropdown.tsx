@@ -1,6 +1,7 @@
 'use client';
 
 import './dropdown.css';
+
 import {
   Fragment,
   useId,
@@ -11,24 +12,25 @@ import {
   type ReactElement,
   type RefObject,
 } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
 import { Presence } from '../../../motion/presence';
 import { popIn, popOut } from '../../../motion/presets';
-import { resolveMotionTiming } from '../../../motion/motion-timing';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { OverlayPortal, ovCloneTrigger } from '../../internal/overlay/layer';
+import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { MenuPanel } from './menu-panel';
 import {
-  ROOT_LEVEL,
   levelKey,
   resolveLevels,
+  ROOT_LEVEL,
   type DropdownItem,
   type DropdownItems,
   type MenuChain,
   type SeedFocus,
 } from './types';
-import type { DataAttributes } from '../../../dom-props';
 
 export type { DropdownItem, DropdownGroup } from './types';
 

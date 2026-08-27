@@ -1,5 +1,5 @@
-import { UIMotion, type MotionTransition } from '../tokens/motion-tokens';
 import type { DurationToken, EaseToken } from '../tokens/motion-scale';
+import { UIMotion, type MotionTransition } from '../tokens/motion-tokens';
 import { resolveDirection, type DisableableAnimation, type TimingDirection } from './timing';
 
 export interface DirectionDefault {

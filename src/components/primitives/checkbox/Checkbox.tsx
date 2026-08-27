@@ -1,10 +1,12 @@
 'use client';
 
 import './checkbox.css';
+
 import type { ChangeEventHandler, CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
-import { CheckGlyph } from './check-glyph';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+import { CheckGlyph } from './check-glyph';
 
 interface CheckboxOwnProps {
   /** Controlled checked state. Omit for uncontrolled (use `defaultChecked`). */

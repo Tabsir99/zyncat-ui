@@ -1,16 +1,18 @@
 'use client';
 
 import './sheet.css';
+
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { Presence } from '../../../motion/presence';
-import type { MotionSpecs } from '../../../motion/use-motion';
+
+import type { DataAttributes } from '../../../dom-props';
 import { resolveMotionTiming, type MotionTimings } from '../../../motion/motion-timing';
+import { Presence } from '../../../motion/presence';
 import type { DisableableAnimation } from '../../../motion/timing';
+import type { MotionSpecs } from '../../../motion/use-motion';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell } from '../../internal/overlay/modal';
 import { useSheetDrag } from './use-sheet-drag';
-import type { DataAttributes } from '../../../dom-props';
 
 const SHEET_TIMING = {
   open: { duration: 'slow', ease: 'entrance' },

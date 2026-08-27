@@ -1,7 +1,9 @@
 'use client';
 
 import './badge.css';
+
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 

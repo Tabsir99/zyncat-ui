@@ -1,6 +1,7 @@
 'use client';
 
 import './icon.css';
+
 import {
   ArrowUp,
   Calendar,
@@ -20,6 +21,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import type { IconWeight } from '@phosphor-icons/react';
+
 import { cx } from '../utils/cx';
 
 type Glyph = typeof X;

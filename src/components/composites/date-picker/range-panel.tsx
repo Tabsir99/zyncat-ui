@@ -1,14 +1,16 @@
 'use client';
 
 import './date-picker.css';
+
 import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+
+import { Motion } from '../../../motion/element';
+import { GlidePill, useGlide } from '../../../motion/glide';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { Button } from '../../primitives/button/Button';
-import { GlidePill, useGlide } from '../../../motion/glide';
-import { Motion } from '../../../motion/element';
+import { add, col, DOW, grid, MONTHS, pad, parse, today, toKey, tzLabel, within } from './date-utils';
 import { useDayFocus } from './use-day-focus';
-import { MONTHS, DOW, pad, toKey, parse, today, add, col, grid, tzLabel, within } from './date-utils';
 
 const CAP_FLIP = { timing: UIMotion.t.settle };
 

@@ -1,7 +1,9 @@
 'use client';
 
 import './avatar.css';
+
 import { useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 

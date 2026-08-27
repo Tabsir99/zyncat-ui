@@ -1,16 +1,18 @@
 'use client';
 
 import '../../internal/menu/menu-surface.css';
+
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type RefObject } from 'react';
-import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
+
 import { GlidePill, useGlide } from '../../../motion/glide';
-import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
-import { useReturnFocus } from '../../internal/overlay/focus';
-import { useAnchorPosition } from '../../internal/overlay/position';
-import { useTypeahead } from '../../internal/hooks/use-typeahead';
+import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
 import { edgeEnabled, matchPrefix, stepEnabled } from '../../internal/collection/collection';
-import { MenuRow } from '../../internal/menu/menu-row';
+import { useTypeahead } from '../../internal/hooks/use-typeahead';
 import { Icon } from '../../internal/icon/Icon';
+import { MenuRow } from '../../internal/menu/menu-row';
+import { useReturnFocus } from '../../internal/overlay/focus';
+import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
+import { useAnchorPosition } from '../../internal/overlay/position';
 import { cx } from '../../internal/utils/cx';
 import { itemText, levelKey, normalize, submenuOf, type DropdownItem, type MenuChain } from './types';
 

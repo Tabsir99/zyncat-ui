@@ -1,16 +1,18 @@
 'use client';
 
 import './table.css';
+
 import { useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
 import { Motion } from '../../../motion/element';
 import { UIMotion } from '../../../tokens/motion-tokens';
+import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { Icon } from '../../internal/icon/Icon';
-import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
+import { Odometer } from '../../primitives/badge/odometer';
 import { Button } from '../../primitives/button/Button';
 import { Checkbox } from '../../primitives/checkbox/Checkbox';
-import { Odometer } from '../../primitives/badge/odometer';
-import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
-import { cx } from '../../internal/utils/cx';
 
 const ROW_FLIP = { timing: UIMotion.t.layout };
 

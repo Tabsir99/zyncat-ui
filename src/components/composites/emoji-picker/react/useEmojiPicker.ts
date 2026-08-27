@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useMemo, useSyncExternalStore } from 'react';
+
 import { createEmojiPicker, type EmojiPickerApi } from '../picker';
 import type { GetEmojiUrl } from '../types';
 

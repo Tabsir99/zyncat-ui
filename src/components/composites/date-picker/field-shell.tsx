@@ -1,12 +1,14 @@
 'use client';
 
 import './date-picker.css';
+
 import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode, Ref } from 'react';
-import { Icon, type IconName } from '../../internal/icon/Icon';
-import { FieldLabel, FieldMessage } from '../../primitives/input/field-chrome';
-import type { DisableableAnimation } from '../../../motion/timing';
+
 import type { DataAttributes } from '../../../dom-props';
+import type { DisableableAnimation } from '../../../motion/timing';
+import { Icon, type IconName } from '../../internal/icon/Icon';
 import { cx } from '../../internal/utils/cx';
+import { FieldLabel, FieldMessage } from '../../primitives/input/field-chrome';
 
 export interface DateFieldBaseProps {
   /** Field label rendered above the trigger. */

@@ -1,6 +1,7 @@
 'use client';
 
 import './tooltip.css';
+
 import {
   Fragment,
   useEffect,
@@ -12,10 +13,11 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { store, useHostElection, OPEN_DELAY, CLOSE_GRACE, type Placement } from './tooltip-store';
-import { TooltipHost } from './tooltip-host';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+import { TooltipHost } from './tooltip-host';
+import { CLOSE_GRACE, OPEN_DELAY, store, useHostElection, type Placement } from './tooltip-store';
 
 export interface TooltipProps {
   /** The hint - a string or small node; never interactive content. */

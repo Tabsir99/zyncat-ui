@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, type RefObject } from 'react';
-import { type OverlayEntry, ovIsTop, ovInOverlayAbove } from './layer';
+
+import { ovInOverlayAbove, ovIsTop, type OverlayEntry } from './layer';
 
 export function useReturnFocus(nodeRef: RefObject<HTMLElement>) {
   const opener = useRef<HTMLElement | null | undefined>(undefined);

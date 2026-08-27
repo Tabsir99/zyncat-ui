@@ -1,10 +1,11 @@
 'use client';
 
 import { useId, useRef } from 'react';
+
 import { Motion } from '../../../../motion/element';
 import { GlidePill, useGlide, type GlideApi } from '../../../../motion/glide';
 import { UIMotion as SM } from '../../../../tokens/motion-tokens';
-import { CATEGORY_ICONS, CATEGORY_ICON_ATTRS } from '../category-icons';
+import { CATEGORY_ICON_ATTRS, CATEGORY_ICONS } from '../category-icons';
 import { useCategories, useIsActiveCategory, type EmojiPickerStore } from './useEmojiPicker';
 
 const RAIL_GLIDE = { timing: { duration: SM.dur.base, ease: SM.ease.standard } };

@@ -1,3 +1,5 @@
+import type { DistanceToken, DurationToken, EaseToken, ScaleToken } from './motion-scale';
+
 export interface MotionTransition {
   type?: 'spring' | 'tween' | 'inertia' | 'keyframes';
   duration?: number;
@@ -21,7 +23,6 @@ export interface MotionTransition {
 
 export type Bezier = [number, number, number, number];
 
-import type { DistanceToken, DurationToken, EaseToken, ScaleToken } from './motion-scale';
 export type { DistanceToken, DurationToken, EaseToken, ScaleToken } from './motion-scale';
 
 export interface MotionTokens {

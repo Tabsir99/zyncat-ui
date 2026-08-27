@@ -1,6 +1,7 @@
 'use client';
 
 import { useLayoutEffect, type RefObject } from 'react';
+
 import { tokenPx } from '../utils/token-px';
 
 const GLIDE = 'left var(--duration-fast) var(--ease-standard), top var(--duration-fast) var(--ease-standard)';

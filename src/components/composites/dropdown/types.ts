@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode, RefObject } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
 import { normalizeCollection, type NormalizedGroup } from '../../internal/collection/collection';
 

@@ -1,14 +1,16 @@
 'use client';
 
 import './pagination.css';
+
 import { useEffect, useRef, type HTMLAttributes } from 'react';
-import { animate } from '../../../engine';
-import { UIMotion } from '../../../tokens/motion-tokens';
-import { slideIn } from '../../../motion/presets';
-import { Icon } from '../../internal/icon/Icon';
-import { Button } from '../../primitives/button/Button';
+
 import type { DataAttributes } from '../../../dom-props';
+import { animate } from '../../../engine';
+import { slideIn } from '../../../motion/presets';
+import { UIMotion } from '../../../tokens/motion-tokens';
+import { Icon } from '../../internal/icon/Icon';
 import { cx } from '../../internal/utils/cx';
+import { Button } from '../../primitives/button/Button';
 
 export interface PaginationProps {
   /** Accessible name for the nav landmark - name the list ("Posts"), not "pagination". @default 'Pagination' */

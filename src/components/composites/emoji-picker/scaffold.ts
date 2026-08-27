@@ -1,7 +1,7 @@
 import { animate, flip, measure, set } from '../../../engine';
 import { UIMotion as SM } from '../../../tokens/motion-tokens';
-import { el } from './dom';
 import type { EmojiData } from './data';
+import { el } from './dom';
 import type { GetEmojiUrl } from './types';
 
 const IDLE_CAPTION = 'Pick an emoji…';

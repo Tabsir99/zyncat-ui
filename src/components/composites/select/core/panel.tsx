@@ -1,14 +1,16 @@
 'use client';
 
 import '../../../internal/menu/menu-surface.css';
+
 import { Fragment, useMemo, type ReactNode } from 'react';
+
+import { GlidePill } from '../../../../motion/glide';
+import type { DisableableAnimation } from '../../../../motion/timing';
 import { Icon } from '../../../internal/icon/Icon';
 import { MenuRow } from '../../../internal/menu/menu-row';
 import { Collapse } from '../../../primitives/collapse/Collapse';
-import { GlidePill } from '../../../../motion/glide';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
-import type { DisableableAnimation } from '../../../../motion/timing';
 
 export interface ListboxPanelProps {
   lb: ListboxState;

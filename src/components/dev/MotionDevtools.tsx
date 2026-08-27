@@ -1,13 +1,15 @@
 'use client';
 
 import './motion-devtools.css';
+
 import { useEffect, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
+
+import { cx } from '../internal/utils/cx';
 import { Button } from '../primitives/button/Button';
 import { Checkbox } from '../primitives/checkbox/Checkbox';
 import { Collapse } from '../primitives/collapse/Collapse';
 import { motionSlowmo, shouldBeActive, type SlowmoState } from './slowmo-engine';
-import { cx } from '../internal/utils/cx';
 
 export type MotionDevtoolsPlacement = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 

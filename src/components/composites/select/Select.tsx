@@ -1,19 +1,21 @@
 'use client';
 
 import './select.css';
+
 import type { HTMLAttributes, ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import { cx } from '../../internal/utils/cx';
 import {
-  useListbox,
   ListboxPanel,
   SelectTrigger,
-  type SelectOption,
+  useListbox,
   type SelectGroup,
+  type SelectOption,
   type SelectTriggerHtmlProps,
 } from './core';
-import type { DisableableAnimation } from '../../../motion/timing';
-import type { DataAttributes } from '../../../dom-props';
-import { cx } from '../../internal/utils/cx';
 
 export type { SelectOption, SelectGroup } from './core';
 

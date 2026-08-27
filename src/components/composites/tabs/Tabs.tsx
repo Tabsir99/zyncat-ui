@@ -1,6 +1,7 @@
 'use client';
 
 import './tabs.css';
+
 import {
   useId,
   useLayoutEffect,
@@ -10,14 +11,15 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { animate, set } from '../../../engine';
-import { UIMotion } from '../../../tokens/motion-tokens';
-import { IconSlot } from '../../internal/icon/IconSlot';
-import { GlidePill, useGlide } from '../../../motion/glide';
-import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
-import { type DisableableAnimation } from '../../../motion/timing';
-import { resolveMotionTiming } from '../../../motion/motion-timing';
+
 import type { DataAttributes } from '../../../dom-props';
+import { animate, set } from '../../../engine';
+import { GlidePill, useGlide } from '../../../motion/glide';
+import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { type DisableableAnimation } from '../../../motion/timing';
+import { UIMotion } from '../../../tokens/motion-tokens';
+import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
+import { IconSlot } from '../../internal/icon/IconSlot';
 import { cx } from '../../internal/utils/cx';
 
 const SM = UIMotion;

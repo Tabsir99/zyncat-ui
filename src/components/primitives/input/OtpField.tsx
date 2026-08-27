@@ -1,6 +1,7 @@
 'use client';
 
 import './input.css';
+
 import { useRef } from 'react';
 import type {
   ChangeEvent,
@@ -12,6 +13,7 @@ import type {
   MouseEvent,
   ReactNode,
 } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 

@@ -1,18 +1,20 @@
 'use client';
 
 import './popover.css';
+
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode, type RefObject } from 'react';
-import { Presence } from '../../../motion/presence';
-import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
-import { popIn, popOut } from '../../../motion/presets';
+
+import type { DataAttributes } from '../../../dom-props';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { Presence } from '../../../motion/presence';
+import { popIn, popOut } from '../../../motion/presets';
 import type { DisableableAnimation } from '../../../motion/timing';
+import { useMotion, type MotionSpecs } from '../../../motion/use-motion';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { ovCloneTrigger, useOverlayEntry, useOutsidePress, OverlayPortal } from '../../internal/overlay/layer';
 import { useReturnFocus } from '../../internal/overlay/focus';
+import { ovCloneTrigger, OverlayPortal, useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
 import { useAnchorPosition, type VirtualAnchor } from '../../internal/overlay/position';
-import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
 
 export type { VirtualAnchor };

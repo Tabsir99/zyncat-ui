@@ -1,10 +1,14 @@
 'use client';
 
 import './input.css';
+
 import { useId, useRef } from 'react';
 import type { CSSProperties, InputHTMLAttributes, ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
+import { cx } from '../../internal/utils/cx';
 import {
   FieldLabel,
   FieldMessage,
@@ -13,8 +17,6 @@ import {
   resolveFieldMessage,
   type FieldMessagingProps,
 } from './field-chrome';
-import type { DataAttributes } from '../../../dom-props';
-import { cx } from '../../internal/utils/cx';
 
 /** The native <input> props TextField surfaces at the top level (the rest live in `htmlProps`). */
 type TextFieldNative = Pick<

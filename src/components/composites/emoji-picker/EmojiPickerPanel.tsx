@@ -1,14 +1,16 @@
 'use client';
 
 import './styles.css';
+
 import { useImperativeHandle, useMemo, useState, type ReactElement, type Ref } from 'react';
+
+import { useMediaQuery } from '../../internal/hooks/use-media-query';
+import { Icon } from '../../internal/icon/Icon';
+import { TextField } from '../../primitives/input/TextField';
 import { Popover, type PopoverProps, type VirtualAnchor } from '../popover/Popover';
 import { Sheet, type SheetProps } from '../sheet/Sheet';
-import { TextField } from '../../primitives/input/TextField';
-import { Icon } from '../../internal/icon/Icon';
-import { useMediaQuery } from '../../internal/hooks/use-media-query';
-import { useEmojiPicker, type EmojiPickerStore } from './react/useEmojiPicker';
 import { CategoryBar } from './react/category-bar';
+import { useEmojiPicker, type EmojiPickerStore } from './react/useEmojiPicker';
 import type { GetEmojiUrl } from './types';
 
 export { loadEmojiData, onEmojiDataLoaded, type EmojiData, type Emoji } from './data';

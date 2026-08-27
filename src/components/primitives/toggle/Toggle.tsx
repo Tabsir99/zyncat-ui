@@ -1,6 +1,7 @@
 'use client';
 
 import './toggle.css';
+
 import {
   useState,
   type ChangeEvent,
@@ -9,8 +10,9 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from 'react';
-import { useControllable } from '../../internal/hooks/use-controllable';
+
 import type { DataAttributes } from '../../../dom-props';
+import { useControllable } from '../../internal/hooks/use-controllable';
 import { cx } from '../../internal/utils/cx';
 
 interface ToggleOwnProps {

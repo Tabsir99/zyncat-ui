@@ -1,11 +1,13 @@
 'use client';
 
 import './badge.css';
+
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Badge, type BadgeProps } from './Badge';
+
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
 import { cx } from '../../internal/utils/cx';
+import { Badge, type BadgeProps } from './Badge';
 
 const SM = UIMotion;
 

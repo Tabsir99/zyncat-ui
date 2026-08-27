@@ -1,13 +1,14 @@
 'use client';
 
 import { useLayoutEffect, useRef, type ReactNode, type RefObject } from 'react';
+
 import type { Layer } from '../../../../engine';
+import { resolveMotionTiming } from '../../../../motion/motion-timing';
 import { Presence } from '../../../../motion/presence';
+import type { DisableableAnimation } from '../../../../motion/timing';
 import { useMotion, type MotionSpecs } from '../../../../motion/use-motion';
 import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
-import { resolveMotionTiming } from '../../../../motion/motion-timing';
-import type { DisableableAnimation } from '../../../../motion/timing';
-import { OverlayPortal, useOverlayEntry, useOutsidePress } from '../../../internal/overlay/layer';
+import { OverlayPortal, useOutsidePress, useOverlayEntry } from '../../../internal/overlay/layer';
 import { useAnchorPosition } from '../../../internal/overlay/position';
 
 const SELECT_MENU_TIMING = {

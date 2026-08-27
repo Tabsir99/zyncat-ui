@@ -1,7 +1,8 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PROP_COUNT_RE, entryLines, parseLlms } from '../../scripts/lib/llms-format.mjs';
+
+import { entryLines, parseLlms, PROP_COUNT_RE } from '../../scripts/lib/llms-format.mjs';
 
 function findRoot(): string {
   let dir = dirname(fileURLToPath(import.meta.url));

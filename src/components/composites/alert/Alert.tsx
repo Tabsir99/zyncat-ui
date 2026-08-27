@@ -1,19 +1,21 @@
 'use client';
 
 import './alert.css';
+
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
-import { Presence } from '../../../motion/presence';
+
+import type { DataAttributes } from '../../../dom-props';
 import { Motion } from '../../../motion/element';
-import { popOut } from '../../../motion/presets';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { Presence } from '../../../motion/presence';
+import { popOut } from '../../../motion/presets';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
-import { Icon, type IconName } from '../../internal/icon/Icon';
-import { Button } from '../../primitives/button/Button';
-import { IconSlot } from '../../internal/icon/IconSlot';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import type { DataAttributes } from '../../../dom-props';
+import { Icon, type IconName } from '../../internal/icon/Icon';
+import { IconSlot } from '../../internal/icon/IconSlot';
 import { cx } from '../../internal/utils/cx';
+import { Button } from '../../primitives/button/Button';
 
 export type AlertTone = 'info' | 'success' | 'warning' | 'danger';
 

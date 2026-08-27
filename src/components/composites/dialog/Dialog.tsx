@@ -1,18 +1,20 @@
 'use client';
 
 import './dialog.css';
+
 import { Fragment, useId, useRef, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
-import { Presence } from '../../../motion/presence';
+
+import type { DataAttributes } from '../../../dom-props';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
+import { Presence } from '../../../motion/presence';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
-import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
+import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
-import type { DataAttributes } from '../../../dom-props';
+import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
+import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
 import { cx } from '../../internal/utils/cx';
 
 export interface DialogProps {

@@ -1,6 +1,7 @@
 'use client';
 
 import './avatar.css';
+
 import {
   Children,
   cloneElement,
@@ -10,9 +11,10 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import type { AvatarSize } from './Avatar';
+
 import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+import type { AvatarSize } from './Avatar';
 
 interface AvatarGroupOwnProps {
   /** The `Avatar` elements to stack; each is cloned to force `size`, then sliced to `max`. */

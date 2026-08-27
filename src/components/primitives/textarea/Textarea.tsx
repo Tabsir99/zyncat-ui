@@ -1,6 +1,7 @@
 'use client';
 
 import './textarea.css';
+
 import {
   useEffect,
   useId,
@@ -12,6 +13,9 @@ import {
   type ReactNode,
   type TextareaHTMLAttributes,
 } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import { cx } from '../../internal/utils/cx';
 import {
   FieldLabel,
   FieldMessage,
@@ -20,8 +24,6 @@ import {
   resolveFieldMessage,
   type FieldMessagingProps,
 } from '../input/field-chrome';
-import type { DataAttributes } from '../../../dom-props';
-import { cx } from '../../internal/utils/cx';
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 

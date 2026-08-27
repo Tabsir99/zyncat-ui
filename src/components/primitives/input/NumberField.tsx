@@ -1,9 +1,14 @@
 'use client';
 
 import './input.css';
+
 import { useId, useState } from 'react';
 import type { CSSProperties, InputHTMLAttributes } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import { useControllable } from '../../internal/hooks/use-controllable';
 import { Icon } from '../../internal/icon/Icon';
+import { cx } from '../../internal/utils/cx';
 import {
   FieldLabel,
   FieldMessage,
@@ -12,9 +17,6 @@ import {
   type FieldCoreMessagingProps,
   type FieldIdProps,
 } from './field-chrome';
-import { useControllable } from '../../internal/hooks/use-controllable';
-import type { DataAttributes } from '../../../dom-props';
-import { cx } from '../../internal/utils/cx';
 
 interface NumberFieldOwnProps extends FieldIdProps, FieldCoreMessagingProps {
   /** Unit suffix shown inside the field (e.g. "days", "%"). */

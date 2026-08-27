@@ -2,8 +2,8 @@
 
 import {
   Children,
-  Fragment,
   createElement,
+  Fragment,
   isValidElement,
   useEffect,
   useRef,
@@ -11,6 +11,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
+
 import { PresenceContext } from './presence-context';
 
 interface Entry {

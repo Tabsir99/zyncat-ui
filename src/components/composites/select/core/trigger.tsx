@@ -1,10 +1,11 @@
 'use client';
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../../dom-props';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
 import { cx } from '../../../internal/utils/cx';
-import type { DataAttributes } from '../../../../dom-props';
 import type { ListboxState } from './use-listbox';
 
 export type SelectTriggerHtmlProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & DataAttributes;

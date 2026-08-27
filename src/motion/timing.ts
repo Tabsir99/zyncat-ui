@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+
 import type { DurationToken, EaseToken } from '../tokens/motion-scale';
 
 export type TimingDirection = 'open' | 'close';

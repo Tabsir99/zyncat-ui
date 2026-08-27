@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+
 import { normalizeCollection, type NormalizedGroup as CollectionGroup } from '../../../internal/collection/collection';
 
 export interface SelectOption {

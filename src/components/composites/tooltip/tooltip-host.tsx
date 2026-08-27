@@ -2,8 +2,9 @@
 
 import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
-import { Presence } from '../../../motion/presence';
+
 import { Motion } from '../../../motion/element';
+import { Presence } from '../../../motion/presence';
 import { popIn, popOut } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { tokenPx } from '../../internal/utils/token-px';

@@ -1,15 +1,17 @@
 'use client';
 
 import './radio-group.css';
+
 import { useId, useRef, useState, type CSSProperties, type FieldsetHTMLAttributes, type ReactNode } from 'react';
+
+import type { DataAttributes } from '../../../dom-props';
+import { Motion } from '../../../motion/element';
+import { GlidePill, useGlide } from '../../../motion/glide';
+import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
-import { Collapse } from '../collapse/Collapse';
-import { GlidePill, useGlide } from '../../../motion/glide';
-import { Motion } from '../../../motion/element';
-import { UIMotion } from '../../../tokens/motion-tokens';
-import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+import { Collapse } from '../collapse/Collapse';
 import type { FieldRequirementProps } from '../input/field-chrome';
 
 const SM = UIMotion;

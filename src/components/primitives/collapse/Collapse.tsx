@@ -1,9 +1,10 @@
 'use client';
 
 import './collapse.css';
+
 import type { CSSProperties, HTMLAttributes, JSX, ReactNode } from 'react';
+
 import type { DataAttributes } from '../../../dom-props';
-import type { DurationToken, EaseToken } from '../../../tokens/motion-scale';
 import {
   timingVars,
   type AnimationTiming,
@@ -11,6 +12,7 @@ import {
   type DisableableAnimation,
   type TimingProps,
 } from '../../../motion/timing';
+import type { DurationToken, EaseToken } from '../../../tokens/motion-scale';
 import { cx } from '../../internal/utils/cx';
 
 /** Motion-scale duration tokens - the only values Collapse timing accepts. */

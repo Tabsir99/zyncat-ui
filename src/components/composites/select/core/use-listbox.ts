@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+
 import { useGlide } from '../../../../motion/glide';
-import { useTypeahead } from '../../../internal/hooks/use-typeahead';
 import { edgeEnabled, matchPrefix, stepEnabled } from '../../../internal/collection/collection';
-import { normalize, matches, optionText, type SelectOption, type SelectGroup } from './types';
+import { useTypeahead } from '../../../internal/hooks/use-typeahead';
+import { matches, normalize, optionText, type SelectGroup, type SelectOption } from './types';
 
 export interface UseListboxArgs {
   options: SelectOption[] | SelectGroup[];
