@@ -1,6 +1,7 @@
 'use client';
 
 import './toast.css';
+
 import {
   useEffect,
   useLayoutEffect,
@@ -8,27 +9,28 @@ import {
   useState,
   useSyncExternalStore,
   type CSSProperties,
-  type FocusEvent as ReactFocusEvent,
-  type KeyboardEvent as ReactKeyboardEvent,
-  type PointerEvent as ReactPointerEvent,
   type HTMLAttributes,
   type ReactElement,
+  type FocusEvent as ReactFocusEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
+  type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
+
+import type { DataAttributes } from '../../../dom-props';
 import { animate, startDrag, type Layer, type Playback } from '../../../engine';
-import { Presence } from '../../../motion/presence';
 import { Motion } from '../../../motion/element';
+import { Presence } from '../../../motion/presence';
 import { popOut } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
-import { tokenPx } from '../../internal/utils/token-px';
 import { Icon, type IconName } from '../../internal/icon/Icon';
-import { Button } from '../../primitives/button/Button';
-import { UIToast, DEFAULT_TOASTER_CONFIG, type ToastRecord, type ToastTone, type ToasterConfig } from './toast-store';
-import type { DataAttributes } from '../../../dom-props';
 import { cx } from '../../internal/utils/cx';
+import { tokenPx } from '../../internal/utils/token-px';
+import { Button } from '../../primitives/button/Button';
+import { DEFAULT_TOASTER_CONFIG, UIToast, type ToasterConfig, type ToastRecord, type ToastTone } from './toast-store';
 
 const SM = UIMotion;
 const store = UIToast;
@@ -52,11 +54,7 @@ const TONE_ICON: Partial<Record<ToastTone, IconName>> = {
 };
 
 function useToneGesture(tone: ToastTone, ref: RefObject<HTMLElement>) {
-  const prevTone = useRef<ToastTone | null>(null);
   useEffect(() => {
-    const prev = prevTone.current;
-    prevTone.current = tone;
-    if (tone === prev) return;
     if (tone === 'success') return fireGlint(ref.current);
     if (tone === 'danger' && ref.current) {
       const fall = animate(ref.current, {
