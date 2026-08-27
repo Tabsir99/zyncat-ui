@@ -1,7 +1,7 @@
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, resolve, sep } from 'node:path';
 import madge from 'madge';
 import prettier from 'prettier';
-import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
-import { join, resolve, sep } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const SRC = join(ROOT, 'src');

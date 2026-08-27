@@ -18,10 +18,11 @@
 //      belongs in the props JSDoc, which get_component already ships beside the entry.
 // Requires dist/ - run pnpm build first.
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { PROP_COUNT_RE, entryProse, formatPropCount, parseLlms } from './lib/llms-format.mjs';
-import { NATIVE_PROP_RE, componentSpecific, publicPropsBySubpath } from './lib/dts-props.mjs';
+
+import { componentSpecific, NATIVE_PROP_RE, publicPropsBySubpath } from './lib/dts-props.mjs';
+import { entryProse, formatPropCount, parseLlms, PROP_COUNT_RE } from './lib/llms-format.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const DIST = join(ROOT, 'dist');

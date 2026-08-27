@@ -37,13 +37,6 @@ the package.
   assumption is wrong by construction.
 - **Never animate from JS a property that CSS also transitions**, or the other
   way round. One writer per property.
-- **Never call `vitest` directly for browser tests.** Browser runs are
-  serialised machine-wide by an exclusive `flock` on
-  `/tmp/zyncat-ui-browser-test.lock` held by `scripts/test.mjs`; the dev machine
-  cannot host two Chromium instances comfortably. Go through
-  `node scripts/test.mjs`.
-- **Tests import components as a consumer does** — `@zyncat/ui/modal`, never a
-  relative `src/` path.
 - **Do not commit or stage anything** until the change has been reviewed.
 
 ## Layout
@@ -60,11 +53,10 @@ src/
     dev/         MotionDevtools
   mcp/           the bundled MCP server
 docs/authoring/  the guidance the MCP tools serve
-scripts/         the test runner, the generators and the lints
+scripts/         the generators and the lints
   lib/entries.mjs  the one scanner deriving the public entry list from the tree
-tests/           the suite - see TESTING.md for the seven axes
-playground/      a real app for looking at things, and the public docs site
-.claude/agents/  zyncat-tester (owns tests), zyncat-docs (owns consumer prose)
+apps/docs/       the Next.js docs site
+.claude/agents/  zyncat-docs (owns consumer prose)
 ```
 
 ## Delegate the satellite work
@@ -72,12 +64,11 @@ playground/      a real app for looking at things, and the public docs site
 Adding a component touches far more than `src/`. Most of it is now either
 generated or owned by an agent, so it does not need to cost you context:
 
-| Work                                                  | Who                           |
-| ----------------------------------------------------- | ----------------------------- |
-| The component, its CSS, its prop JSDoc, its demo page | you                           |
-| Tests, and the `TESTING.md` ownership row             | the **`zyncat-tester`** agent |
-| `llms.txt`, the registry row, the canonical example   | the **`zyncat-docs`** agent   |
-| exports map, playground paths, prop tables, repo docs | `pnpm sync`                   |
+| Work                                                  | Who                         |
+| ----------------------------------------------------- | --------------------------- |
+| The component, its CSS, its prop JSDoc, its demo page | you                         |
+| `llms.txt`, the registry row, the canonical example   | the **`zyncat-docs`** agent |
+| exports map, docs paths, prop tables, repo docs       | `pnpm sync`                 |
 
 Never hand-write a prop table: the JSDoc on the public props interface is the
 single source, and `pnpm docs:props` reads it back out of `dist/*.d.ts` into the
@@ -87,8 +78,7 @@ docs site. It fails on any public prop with no JSDoc.
 
 ```bash
 pnpm sync                    # regenerate every manifest and generated doc
-pnpm verify                  # the whole gate, in order, ending in the suite
-node scripts/test.mjs        # add a filename to run one file
+pnpm verify                  # the whole gate, in order
 ```
 
 While iterating, the pieces of `verify` run alone: `typecheck`, `check:css`,

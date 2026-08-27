@@ -4,5 +4,18 @@
   "trailingComma": "all",
   "printWidth": 120,
   "tabWidth": 2,
-  "objectWrap": "collapse"
+  "objectWrap": "collapse",
+  "importOrder": [
+    "^(react/(.*)$)|^(react$)",
+    "^(next/(.*)$)|^(next$)",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@zyncat/(.*)$",
+    "",
+    "^@/(.*)$",
+    "",
+    "^[./]"
+  ],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"]
 }

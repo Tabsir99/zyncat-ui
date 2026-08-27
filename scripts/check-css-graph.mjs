@@ -1,6 +1,6 @@
 // CSS-dependency lint: every class a module renders must be defined by a stylesheet
 // reachable through that module's import graph. This is the guard for the "works in the
-// playground, unstyled in a real app" class of bug - the playground loads every stylesheet
+// docs app, unstyled in a real app" class of bug - the docs app loads every stylesheet
 // at once, so it can never catch a missing per-component CSS import; each dist subpath
 // entry must be style-complete on its own.
 //
@@ -13,16 +13,38 @@
 //      one of its defining stylesheets is in the entry's CSS set.
 // Classes defined under src/tokens (loaded app-wide via styles.css) are always satisfied.
 
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
-import { ROOT, publicEntries } from './lib/entries.mjs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+
+import { publicEntries, ROOT } from './lib/entries.mjs';
 
 const COMPONENTS = join(ROOT, 'src/components');
 
-const walk = (dir, ext) =>
-  readdirSync(dir, { withFileTypes: true, recursive: true })
-    .filter((d) => d.isFile() && ext.some((e) => d.name.endsWith(e)))
-    .map((d) => join(d.parentPath, d.name));
+function walk(dir, ext) {
+  const results = [];
+  function step(current) {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      if (
+        entry.name === '.next' ||
+        entry.name === 'node_modules' ||
+        entry.name === 'out' ||
+        entry.name === 'dist' ||
+        entry.name === 'temp' ||
+        entry.name === '.git'
+      ) {
+        continue;
+      }
+      const full = join(current, entry.name);
+      if (entry.isDirectory()) {
+        step(full);
+      } else if (entry.isFile() && ext.some((e) => entry.name.endsWith(e))) {
+        results.push(full);
+      }
+    }
+  }
+  step(dir);
+  return results;
+}
 
 const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
 
@@ -137,7 +159,7 @@ for (const entry of entries) {
   }
 }
 
-const RENDERERS = [join(ROOT, 'src'), join(ROOT, 'playground/src')];
+const RENDERERS = [join(ROOT, 'src'), join(ROOT, 'apps/docs')];
 const renderedAnywhere = new Set();
 for (const dir of RENDERERS)
   for (const file of walk(dir, ['.ts', '.tsx']))

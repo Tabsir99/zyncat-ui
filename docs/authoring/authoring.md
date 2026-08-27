@@ -4,11 +4,6 @@ Read `design-system.md` first and confirm you should be building a new component
 at all. If you are, this is the complete checklist. Every step has a check that
 fails loudly when you skip it, and `pnpm verify` runs all of them.
 
-Two of the steps are owned by agents rather than by you: **`zyncat-tester`**
-takes step 6, **`zyncat-docs`** takes step 5 and the prose half of step 7. Hand
-those off. What is left — the component, its CSS, its prop JSDoc and its demo
-page — is the design work, and it is the only part worth your context.
-
 ## 1. Place the file
 
 ```
@@ -39,24 +34,20 @@ pnpm sync
 ```
 
 `scripts/lib/entries.mjs` is the one scanner that derives the public entry list
-from the file tree; tsup, the playground's Vite aliases and these two syncs all
-read it, so there is nothing to register by hand:
+from the file tree; tsup and these syncs all read it, so there is nothing to register by hand:
 
-| Written                                      | By                   | Why it matters                                            |
-| -------------------------------------------- | -------------------- | --------------------------------------------------------- |
-| `package.json` `exports`                     | `pnpm sync:exports`  | Subpaths are the only public API — no entry, no import    |
-| `playground/tsconfig.json` `paths`           | `pnpm sync:tsconfig` | The playground resolves `@zyncat/ui/thing` to your source |
-| `props.generated.ts` in the playground       | `pnpm docs:props`    | The docs prop table, read out of `dist/*.d.ts`            |
-| `docs/import-graph.md`, `component-sizes.md` | `pnpm docs:gen`      | Repo shape                                                |
+| Written                                      | By                   | Why it matters                                           |
+| -------------------------------------------- | -------------------- | -------------------------------------------------------- |
+| `package.json` `exports`                     | `pnpm sync:exports`  | Subpaths are the only public API — no entry, no import   |
+| `apps/docs/tsconfig.json` `paths`            | `pnpm sync:tsconfig` | The docs site resolves `@zyncat/ui/thing` to your source |
+| `apps/docs/content/props.generated.ts`       | `pnpm docs:props`    | The docs prop table, read out of `dist/*.d.ts`           |
+| `docs/import-graph.md`, `component-sizes.md` | `pnpm docs:gen`      | Repo shape                                               |
 
 `pnpm verify` runs the check half of each, so a manifest you forgot to sync
 fails the build instead of failing silently.
 
 Subpaths are the **only** public API. There is no barrel entry, deliberately: it
 guarantees one import can never pull in modules or CSS the app did not ask for.
-`vitest.config.ts` builds its test aliases from the exports map, so a component
-without an entry cannot be imported the way a consumer imports it — which is how
-every browser test in this repo imports things.
 
 ## 3. Give it its own stylesheet
 
@@ -74,9 +65,7 @@ import './thing.css';
 
 **Every class you render must be defined by a stylesheet reachable through that
 module's own import graph.** `pnpm check:css` enforces this. The failure it
-guards is "works in the playground, unstyled in a real app": the playground
-loads every stylesheet at once, so it can never catch a missing import, but each
-dist subpath must be style-complete on its own.
+guards is "works in the docs, unstyled in a real app": each dist subpath must be style-complete on its own.
 
 Classes defined under `src/tokens` are always satisfied — those ship in
 `styles.css`, which consumers link once at the app root.
@@ -97,13 +86,13 @@ export interface ThingProps {
 }
 ```
 
-`pnpm docs:props` reads it back out of `dist/*.d.ts` into the playground's prop
+`pnpm docs:props` reads it back out of `dist/*.d.ts` into the docs site's prop
 table, and **fails the build on any public prop with no JSDoc** — a blank cell
 in the docs is not an option. It also emits a table for each named shape a prop
 references — `DropdownItem`, `TableColumn`, `SelectOption` — so a row type
 documents itself.
 
-Never hand-write a prop table. `playground/src/content/*.ts` carries only the
+Never hand-write a prop table. `apps/docs/content/*.ts` carries only the
 `example` string.
 
 ## 5. Add the `llms.txt` entry
@@ -137,74 +126,26 @@ needs `dist/`, so run `pnpm build` first.
 That last check is why examples here do not rot: a renamed prop breaks the
 build, not just the docs.
 
-## 6. Write the tests
+## 6. Add it to the docs application
 
-Hand this to the **`zyncat-tester`** agent, which owns the suite. What follows
-is what it works from, and what you need to know to read its report.
+`apps/docs/` is the Next.js application that serves the docs and component showcase.
 
-`TESTING.md` is the contract — read it. In short:
+- **The demo page**, one file per group in `apps/docs/components/pages/`, is yours. It is the
+  design work — the component exercised in a real app, in the states worth looking at.
+- **The registry row, the blurb and the canonical example** are in `apps/docs/content/registry.tsx` and `apps/docs/content/`, together with the `llms.txt` entry from step 5.
 
-```
-tests/<group>-<topic>.browser.test.tsx    real Chromium
-tests/<group>-<topic>.unit.test.ts        pure logic only, no DOM
-```
-
-Browser tests import the component **exactly as a consumer does** —
-`@zyncat/ui/thing`, never a relative `src/` path. That is what makes a passing
-test evidence that the package actually works.
-
-There is a wrinkle worth knowing: `vitest` resolves that subpath to your
-**source** through an alias it builds from the exports map, but `tsc` resolves
-it to the **built** `dist/*.d.ts`. So a test that uses an API you just added
-typechecks against the last build and fails with "property does not exist" until
-you `pnpm build`. The test itself passes the whole time. Rebuild, do not reach
-for a relative import.
-
-Cover the component against the seven axes in `TESTING.md`. Not every axis
-applies to every component; the ones that apply are not optional. For anything
-portalled, animated or measured, the observation contract (axis 2) is the one
-that catches the bugs this suite exists for.
-
-The file prefix you choose must have a row in the Ownership table at the bottom
-of `TESTING.md`; `pnpm check:authoring` fails on a prefix with no row, and on a
-row with no files.
-
-Anything with layout, animation or measurement is a **browser** test. jsdom has
-no layout engine and no Web Animations API, so a unit test passes straight
-through the interesting failures.
-
-Browser runs are serialised machine-wide by a lock file. Run them through the
-script, never `vitest` directly:
+## 7. Run the checks
 
 ```bash
-node scripts/test.mjs thing        # one file while iterating
-node scripts/test.mjs              # the whole suite, at the end
-```
-
-## 7. Add it to the playground
-
-`playground/` is how you look at the thing, and it is also the public docs site.
-Two separate jobs:
-
-- **The demo page**, one file per group in `playground/src/pages/`, is yours. It is the
-  design work — the component exercised in a real app, in the states worth
-  looking at. Nothing generates this and nothing should.
-- **The registry row, the blurb and the canonical example** go to the
-  **`zyncat-docs`** agent, together with the `llms.txt` entry from step 5.
-
-## 8. Run the checks
-
-```bash
-pnpm exec prettier --write .
+pnpm format
 pnpm sync                        # regenerate every manifest and doc
-pnpm verify                      # the whole gate, ending in the full suite
+pnpm verify                      # the whole gate
 ```
 
 `pnpm verify` is `check:exports`, `check:tsconfig`, `typecheck`, `format:check`,
-`check:css`, `check:authoring`, `check:docs`, `build`, `check:llms`,
-`check:props` and the test suite, in that order — the build sits in the middle
-because the three checks after it read `dist/`. Run the individual scripts while
-iterating; run `verify` before you hand the work over.
+`check:css`, `check:authoring`, `check:docs`, `build`, `check:llms`, and
+`check:props`, in that order — the build sits in the middle because the checks
+after it read `dist/`. Run `pnpm verify` before handing work over.
 
 ## Conventions the linters do not catch
 
@@ -235,6 +176,6 @@ src/
     dev/         MotionDevtools
   mcp/           the bundled MCP server that serves llms.txt and the tokens
 docs/authoring/  this guidance
-scripts/         test runner and the three lints
-playground/      a real Vite app for looking at things
+scripts/         build scripts and lints
+apps/docs/       Next.js App Router static docs site
 ```

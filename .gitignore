@@ -1,7 +1,11 @@
 node_modules
 dist
-.vite-react-ssg-temp
+.next
+.turbo
+apps/docs/out
+next-env.d.ts
+temp
 *.log
 *.tsbuildinfo
 .DS_Store
-dist-standalone
+

@@ -277,9 +277,3 @@ exit={{ [axis]: ['100%'], timing: timings.close }}
 // Paged content swapping in a direction — calendar month, pagination range
 animate(el, slideIn(dir * UIMotion.dist.md, UIMotion.t.enter));
 ```
-
-## Testing motion
-
-Motion tests are browser tests, always. jsdom has no layout engine and no Web
-Animations API, so a unit test would pass straight through the bugs that matter.
-See `TESTING.md` for the seven axes and the machine-wide browser-test lock.

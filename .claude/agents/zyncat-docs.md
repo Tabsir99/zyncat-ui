@@ -1,6 +1,6 @@
 ---
 name: zyncat-docs
-description: Owns the consumer-facing prose for a zyncat-ui component - its llms.txt entry, its playground registry row, and its canonical usage example. Use once a component's props interface is settled. Give it the component name, its subpath, and one sentence on what the component is for; it writes the entries and proves them with the linter.
+description: Owns the consumer-facing prose for a zyncat-ui component - its llms.txt entry, its docs-site registry row, and its canonical usage example. Use once a component's props interface is settled. Give it the component name, its subpath, and one sentence on what the component is for; it writes the entries and proves them with the linter.
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 
@@ -43,9 +43,9 @@ types — `pnpm check:llms` enforces it against `dist/*.d.ts`, which is why thes
 examples do not rot. Give two examples: the common case, and one that shows the
 controlled or advanced shape.
 
-### 2. The playground registry row
+### 2. The docs registry row
 
-In `playground/src/registry.tsx`, inside the right group:
+In `apps/docs/content/registry.tsx`, inside the right group:
 
 ```tsx
 {
@@ -66,7 +66,7 @@ nest as deep as you like", not "a dropdown component".
 
 ### 3. The canonical example
 
-In `playground/src/content/<group>.ts`:
+In `apps/docs/content/<group>.ts`:
 
 ```ts
 thing: {
@@ -86,10 +86,10 @@ code — real prop values, plausible labels, no `foo`/`bar`.
 
 ## What you do not touch
 
-- `playground/src/pages/*.tsx` — the live demos. That is design work and belongs
-  to whoever is building the component.
+- `apps/docs/components/pages/*.tsx` — the live demos. That is design work and
+  belongs to whoever is building the component.
 - `docs/component-sizes.md`, `docs/import-graph.md`,
-  `playground/src/content/props.generated.ts` — all generated. Run the
+  `apps/docs/content/props.generated.ts` — all generated. Run the
   generator, never edit the output.
 - `src/` — with one exception: prop JSDoc on a **public** props interface, when
   a description is wrong or missing. Nothing else in `src/` takes a comment.
@@ -100,7 +100,7 @@ code — real prop values, plausible labels, no `foo`/`bar`.
 pnpm build && pnpm sync:llms    # regenerate the +N footers (needs dist/)
 pnpm check:llms                 # examples resolve, entries inside the cap
 pnpm docs:props                 # regenerate the prop tables
-pnpm exec prettier --write llms.txt playground/src
+pnpm exec prettier --write llms.txt apps/docs/content
 ```
 
 `check:llms` failing with "not a prop of @zyncat/ui/thing" means your example is

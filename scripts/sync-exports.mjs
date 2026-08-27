@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT, publicEntries } from './lib/entries.mjs';
+
+import { publicEntries, ROOT } from './lib/entries.mjs';
 
 const PKG_PATH = join(ROOT, 'package.json');
 const TAIL_KEYS = ['./styles.css', './next', './package.json'];

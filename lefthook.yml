@@ -1,0 +1,21 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:fix:
+      glob: '*.{js,ts,mjs,jsx,tsx}'
+      run: pnpm exec prettier --log-level silent --write --cache {staged_files}
+      stage_fixed: true
+    format:fix:
+      glob: '*.{js,ts,mjs,jsx,tsx,json,css,md}'
+      run: pnpm exec prettier --log-level silent --write --cache {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    typecheck:
+      run: pnpm typecheck
+
+commit-msg:
+  commands:
+    'lint commit message':
+      run: npx --no -- commitlint --edit {1}

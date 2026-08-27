@@ -1,4 +1,4 @@
-import { readdirSync, statSync, existsSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 
 function findRoot(start) {

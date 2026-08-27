@@ -50,6 +50,7 @@ directives intact, so Next.js App Router boundaries just work.
 ```tsx
 import { Button } from '@zyncat/ui/button';
 import { toast } from '@zyncat/ui/toast-store';
+
 import '@zyncat/ui/styles.css'; // base layer - link once, at the app root
 ```
 
@@ -161,7 +162,6 @@ pnpm check:llms       # llms.txt covers every subpath, and its examples typechec
 pnpm check:authoring  # docs/authoring + CLAUDE.md still match the code
 pnpm check:docs       # the generated docs are current
 pnpm docs:gen         # regenerate them
-node scripts/test.mjs # the suite - see TESTING.md
 ```
 
 Contributing to this repo? Start at [`CLAUDE.md`](CLAUDE.md), then

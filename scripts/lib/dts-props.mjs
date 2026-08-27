@@ -1,6 +1,7 @@
-import ts from 'typescript';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import ts from 'typescript';
+
 import { ROOT } from './entries.mjs';
 
 const DIST = join(ROOT, 'dist');

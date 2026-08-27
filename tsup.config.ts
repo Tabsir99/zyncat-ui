@@ -1,4 +1,5 @@
 import { defineConfig, type Options } from 'tsup';
+
 import { publicEntries } from './scripts/lib/entries.mjs';
 
 // One entry per public module - one dist file + .d.ts each. Subpaths

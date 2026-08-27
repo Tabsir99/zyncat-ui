@@ -1,5 +1,8 @@
 dist
-.vite-react-ssg-temp
+.next
+.turbo
+temp
 pnpm-lock.yaml
 *.txt
-playground/public
+apps/docs/public
+

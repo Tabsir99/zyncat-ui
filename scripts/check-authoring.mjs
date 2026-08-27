@@ -1,26 +1,46 @@
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { join, resolve, basename } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { basename, join, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const DOCS_DIR = join(ROOT, 'docs/authoring');
 
-const walk = (dir, exts) =>
-  existsSync(dir)
-    ? readdirSync(dir, { withFileTypes: true, recursive: true })
-        .filter((d) => d.isFile() && exts.some((e) => d.name.endsWith(e)))
-        .map((d) => join(d.parentPath, d.name))
-    : [];
+function walk(dir, exts) {
+  if (!existsSync(dir)) return [];
+  const results = [];
+  function step(current) {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      if (
+        entry.name === '.next' ||
+        entry.name === 'node_modules' ||
+        entry.name === 'out' ||
+        entry.name === 'dist' ||
+        entry.name === 'temp' ||
+        entry.name === '.git'
+      ) {
+        continue;
+      }
+      const full = join(current, entry.name);
+      if (entry.isDirectory()) {
+        step(full);
+      } else if (entry.isFile() && exts.some((e) => entry.name.endsWith(e))) {
+        results.push(full);
+      }
+    }
+  }
+  step(dir);
+  return results;
+}
 
 const failures = [];
 const fail = (doc, message) => failures.push(`${doc}: ${message}`);
 
-const TOP_LEVEL_DIRS = ['src', 'tests', 'scripts', 'docs', 'playground', 'dist'];
+const TOP_LEVEL_DIRS = ['src', 'scripts', 'docs', 'apps', 'dist'];
 const ROOT_FILES = [
   'package.json',
   'tsup.config.ts',
-  'vitest.config.ts',
+  'turbo.json',
+  'lefthook.yml',
   'llms.txt',
-  'TESTING.md',
   'README.md',
   'CLAUDE.md',
   '.mcp.json',
@@ -66,7 +86,7 @@ const GLOBALS = new Set([
 const sourceFiles = [
   ...walk(join(ROOT, 'src'), ['.ts', '.tsx']),
   ...walk(join(ROOT, 'scripts'), ['.mjs']),
-  ...[join(ROOT, 'tsup.config.ts'), join(ROOT, 'vitest.config.ts')].filter(existsSync),
+  ...[join(ROOT, 'tsup.config.ts')].filter(existsSync),
 ];
 
 const exportedNames = new Set();
@@ -242,21 +262,6 @@ if (!vocabTable) {
     if (!documented.has(key)) fail('motion.md', `Layer key \`${key}\` exists in the engine but is not documented`);
   for (const key of documented)
     if (!layerKeys.has(key)) fail('motion.md', `Layer key \`${key}\` is documented but no longer exists in the engine`);
-}
-
-const testingDoc = readFileSync(join(ROOT, 'TESTING.md'), 'utf8');
-const ownershipTable = testingDoc.match(/## Ownership[\s\S]*?\n\n((?:\|.*\n)+)/);
-if (!ownershipTable) {
-  fail('TESTING.md', 'the Ownership table was not found - nothing pins a test file to a group.');
-} else {
-  const prefixes = [...ownershipTable[1].matchAll(/\|\s*`([\w-]+)`\s*\|/g)].map((m) => m[1]);
-  const testFiles = walk(join(ROOT, 'tests'), ['.test.ts', '.test.tsx']).map((f) => basename(f));
-  const orphans = new Set();
-  for (const file of testFiles) if (!prefixes.some((p) => file.startsWith(p))) orphans.add(file);
-  for (const file of orphans) fail('TESTING.md', `tests/${file} matches no file prefix in the Ownership table`);
-  for (const prefix of prefixes)
-    if (!testFiles.some((f) => f.startsWith(prefix)))
-      fail('TESTING.md', `the Ownership table claims prefix \`${prefix}\`, but no test file uses it`);
 }
 
 for (const [tool, doc] of Object.entries(GUIDE_TOOL_DOCS)) {
