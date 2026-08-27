@@ -1,8 +1,7 @@
 # Adding a component
 
-Read `design-system.md` first and confirm you should be building a new component
-at all. If you are, this is the complete checklist. Every step has a check that
-fails loudly when you skip it, and `pnpm verify` runs all of them.
+- Read design-system.md first. Confirm build-new over compose. Pick the tier and contract.
+- Follow this checklist top to bottom. `pnpm verify` runs every check.
 
 ## 1. Place the file
 
@@ -10,44 +9,21 @@ fails loudly when you skip it, and `pnpm verify` runs all of them.
 src/components/<tier>/<component>/<Component>.tsx
 ```
 
-`<tier>` is `primitives`, `composites` or `compound` — the three tiers tsup
-scans. The component directory is kebab-case, the file is **PascalCase**.
-
-tsup discovers the entry automatically: it scans those three tiers for
-PascalCase `.tsx` files and derives the public entry name by kebab-casing the
-filename. `TextField.tsx` becomes `@zyncat/ui/text-field`. Nothing to register.
-
-If the derived name is wrong, add an override to `NAME_OVERRIDES` in
-`scripts/lib/entries.mjs` rather than renaming the file away from the component
-name. That module is the single scanner every consumer of the entry list reads.
-
-Put helper modules for the component in the same directory — hooks, a store,
-subcomponents. Only PascalCase `.tsx` files become entries, so a
-`use-thing.ts` next to `Thing.tsx` stays internal.
-
-Start the file with `'use client'` if it uses state, effects, refs or events.
+- Directory kebab-case. File PascalCase.
+- Scanned tiers today: `primitives`, `composites`, `compound`. `expressive` joins in phase 4.
+- tsup derives the entry: `TextField.tsx` becomes `@zyncat/ui/text-field`. Nothing to register.
+- Wrong derived name: add to `NAME_OVERRIDES` in `scripts/lib/entries.mjs`. Never rename the file.
+- Helpers live in the same directory. Only PascalCase `.tsx` files become entries.
+- Start with `'use client'` if it uses state, effects, refs or events.
 
 ## 2. Sync the manifests
 
-```bash
-pnpm sync
-```
-
-`scripts/lib/entries.mjs` is the one scanner that derives the public entry list
-from the file tree; tsup and these syncs all read it, so there is nothing to register by hand:
-
-| Written                                      | By                   | Why it matters                                           |
-| -------------------------------------------- | -------------------- | -------------------------------------------------------- |
-| `package.json` `exports`                     | `pnpm sync:exports`  | Subpaths are the only public API — no entry, no import   |
-| `apps/docs/tsconfig.json` `paths`            | `pnpm sync:tsconfig` | The docs site resolves `@zyncat/ui/thing` to your source |
-| `apps/docs/content/props.generated.ts`       | `pnpm docs:props`    | The docs prop table, read out of `dist/*.d.ts`           |
-| `docs/import-graph.md`, `component-sizes.md` | `pnpm docs:gen`      | Repo shape                                               |
-
-`pnpm verify` runs the check half of each, so a manifest you forgot to sync
-fails the build instead of failing silently.
-
-Subpaths are the **only** public API. There is no barrel entry, deliberately: it
-guarantees one import can never pull in modules or CSS the app did not ask for.
+- Run `pnpm sync`. Every generator reads `scripts/lib/entries.mjs`.
+- `pnpm sync:exports` writes `package.json` `exports`. Subpaths are the only public API.
+- `pnpm sync:tsconfig` writes `apps/docs/tsconfig.json` `paths`.
+- `pnpm docs:props` writes `apps/docs/content/props.generated.ts` from `dist/*.d.ts`.
+- `pnpm docs:gen` writes `docs/import-graph.md` and `component-sizes.md`.
+- No barrel entry. One import never pulls in code or CSS the app did not ask for.
 
 ## 3. Give it its own stylesheet
 
@@ -55,127 +31,63 @@ guarantees one import can never pull in modules or CSS the app did not ask for.
 src/components/<tier>/<component>/<component>.css
 ```
 
-Import it at the top of the `.tsx`, above everything else:
-
-```tsx
-'use client';
-
-import './thing.css';
-```
-
-**Every class you render must be defined by a stylesheet reachable through that
-module's own import graph.** `pnpm check:css` enforces this. The failure it
-guards is "works in the docs, unstyled in a real app": each dist subpath must be style-complete on its own.
-
-Classes defined under `src/tokens` are always satisfied — those ship in
-`styles.css`, which consumers link once at the app root.
-
-Use tokens, not literals. If the component animates a property from JS, do not
-put that property in a CSS `transition` — see `motion.md`.
+- Import it at the top of the `.tsx`, above everything else.
+- Every rendered class must resolve through the module's own import graph (`pnpm check:css`).
+- Classes under `src/tokens` are always satisfied. They ship in `styles.css`.
+- System contract: tokens, not literals.
+- Expressive contract: name every value.
+- A named value is a module constant or a `--<component>-<name>` property on the root class.
+- Nothing on `:root`.
+- No `font-family` stacks. Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
+- A property animated from JS never appears in a CSS `transition` (motion.md).
 
 ## 4. Document the props where they live
 
-The consumer's editor tooltip, the docs site's prop table and the MCP's answer
-all come from **one** place: the JSDoc on the public props interface. Write it
-there, with an `@default` tag on every prop that has a default:
+- JSDoc on the public props interface feeds the tooltip, the docs table and the MCP.
+- Put `@default` on every defaulted prop.
 
 ```tsx
-export interface ThingProps {
-  /** Preferred side of the trigger; flips when cramped. @default 'bottom' */
-  side?: 'top' | 'bottom';
-}
+/** Preferred side of the trigger; flips when cramped. @default 'bottom' */
+side?: 'top' | 'bottom';
 ```
 
-`pnpm docs:props` reads it back out of `dist/*.d.ts` into the docs site's prop
-table, and **fails the build on any public prop with no JSDoc** — a blank cell
-in the docs is not an option. It also emits a table for each named shape a prop
-references — `DropdownItem`, `TableColumn`, `SelectOption` — so a row type
-documents itself.
-
-Never hand-write a prop table. `apps/docs/content/*.ts` carries only the
-`example` string.
+- `pnpm docs:props` fails on any public prop with no JSDoc.
+- Referenced shapes (`DropdownItem`, `TableColumn`, `SelectOption`) document themselves.
+- Never hand-write a prop table. `apps/docs/content/*.ts` carries only the `example` string.
 
 ## 5. Add the `llms.txt` entry
 
-Consumers and coding agents read `llms.txt`, and the bundled MCP server parses it
-with `scripts/lib/llms-format.mjs` — the same parser the lint runs, so the two
-can never disagree. The heading format is load-bearing:
+- Consumers and agents read `llms.txt`. The MCP parses it with `scripts/lib/llms-format.mjs`.
+- The heading format is load-bearing:
 
 ```
 Thing - @zyncat/ui/thing
-  One or two sentences on what it is and when to pick it over the neighbour it
-  is most often confused with. Then the prop vocabulary as prose.
+  What it is, when to pick it over its neighbour. Prop vocabulary as prose.
   <Thing prop="value">...</Thing>
   +4 more props - get_component('thing')
 ```
 
-An entry is an **index row, capped at ten lines of prose** — the disambiguating
-sentence, the value vocabularies, one or two examples. Per-prop detail belongs in
-the props JSDoc, which `get_component` already returns beside the entry.
-
-The `+N more props` footer is generated by `pnpm sync:llms`, never hand-written.
-It counts the component-specific props the entry does not name, so a reader who
-only ever sees this file is told what `get_component` would add.
-
-`pnpm check:llms` verifies that every public subpath has an entry (unless it is
-in that script's `SUPPORTING` list, for modules documented by their types
-alone), that no entry exceeds the cap, that each footer matches the built types,
-and that **every JSX attribute in your example resolves to a real prop**. It
-needs `dist/`, so run `pnpm build` first.
-
-That last check is why examples here do not rot: a renamed prop breaks the
-build, not just the docs.
+- An entry is an index row, capped at ten lines. Per-prop detail lives in the props JSDoc.
+- The `+N more props` footer comes from `pnpm sync:llms`. Never hand-write it.
+- `pnpm check:llms` verifies coverage, the cap, footers and example props. Run `pnpm build` first.
 
 ## 6. Add it to the docs application
 
-`apps/docs/` is the Next.js application that serves the docs and component showcase.
-
-- **The demo page**, one file per group in `apps/docs/components/pages/`, is yours. It is the
-  design work — the component exercised in a real app, in the states worth looking at.
-- **The registry row, the blurb and the canonical example** are in `apps/docs/content/registry.tsx` and `apps/docs/content/`, together with the `llms.txt` entry from step 5.
+- The demo page in `apps/docs/components/pages/` is yours. Exercise the real states.
+- For an expressive component the demo is the polish proof.
+- Show every state, interruption mid-flight, and reduced motion.
+- Registry row, blurb and canonical example live in `apps/docs/content/`.
 
 ## 7. Run the checks
 
-```bash
-pnpm format
-pnpm sync                        # regenerate every manifest and doc
-pnpm verify                      # the whole gate
-```
-
-`pnpm verify` is `check:exports`, `check:tsconfig`, `typecheck`, `format:check`,
-`check:css`, `check:authoring`, `check:docs`, `build`, `check:llms`, and
-`check:props`, in that order — the build sits in the middle because the checks
-after it read `dist/`. Run `pnpm verify` before handing work over.
+- `pnpm format`, then `pnpm sync`, then `pnpm verify`.
+- The build sits mid-gate because later checks read `dist/`.
 
 ## Conventions the linters do not catch
 
-- **No comments in source.** Not `//`, not `/* */`, not JSDoc on internals.
-  Express it in the name, or put it in a `docs/` file. The exceptions are prop
-  JSDoc on the public props interface, which becomes the consumer's editor
-  tooltip, and the token `.css` files, which are shipped documentation.
-- **No `setTimeout` / `requestAnimationFrame` / `transitionend` to sequence
-  motion.** Use `Playback.finished`. See `motion.md`.
-- **`pnpm`, never `npm`.**
-- **Named constants, not magic numbers.** A threshold, a distance or a ratio
-  gets a `const` with a name at module scope.
-- **Reuse the internal machinery** rather than hand-rolling overlays, focus
-  return, positioning or controlled state. `design-system.md` has the table.
-
-## Repo map
-
-```
-src/
-  engine/        the WAAPI engine: animate, set, flip, measure, startDrag
-  motion/        the React layer: Presence, Motion, useMotion, presets, glide, flip
-  tokens/        *.css token vocabulary + the TypeScript readers
-  components/
-    primitives/  one control or one visual atom
-    composites/  several primitives plus behaviour
-    compound/    whole assembled patterns (scanned by tsup, not yet populated)
-    internal/    shared machinery, never exported
-    dev/         MotionDevtools
-  mcp/           the bundled MCP server that serves llms.txt and the tokens
-docs/authoring/  this guidance
-scripts/         build scripts and lints
-apps/docs/       Next.js App Router static docs site
-```
+- No comments in source. Exceptions: public-props JSDoc and the token `.css` files.
+- Sequence motion with `Playback.finished` only.
+- `pnpm`, never `npm`.
+- Named constants, not magic numbers.
+- Reuse the internal machinery. design-system.md has the list.
+- The repo map lives in `CLAUDE.md`.

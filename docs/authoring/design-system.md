@@ -1,142 +1,144 @@
 # The design system
 
-## What this library is for
+## Goal
 
-A premium and highly polished React 19 design system built on modern CSS and a **small, closed token
-vocabulary**, applied consistently. No Tailwind, no CSS-in-JS, no component
-library underneath, no animation dependency.
+- Ship a premium, motion-first React 19 design system.
+- Modern CSS, a closed token vocabulary, a ~2.5 kB WAAPI engine, zero runtime dependencies.
+- Be both: a complete system to build products on, and expressive components with real motion.
+- Design every state. Make every motion interruptible.
 
-The closed vocabulary is the whole point. Every colour, space, radius, duration,
-easing curve, travel distance and rest scale comes from a named token, and the
-set of names is deliberately short enough to hold in your head. A surface built
-from those names looks like it belongs without anyone coordinating; a surface
-built from ad-hoc values does not, no matter how carefully the values were
-chosen.
+## The two contracts
 
-Restraint is a feature. When in doubt, the answer is fewer variants, fewer
-props, and the token that is already there.
+- The tier decides which contract binds a component.
+- The invariants below bind every tier.
+
+### System contract
+
+- Applies to `src/components/primitives/` and `src/components/composites/`.
+- Every value is a named token. No literals.
+- No component-local fonts. No filters. No canvas. No per-frame JS.
+- Motion comes from the engine presets and duration bands only.
+- Prefer fewer variants and fewer props.
+- Pick the nearest token step. Never invent a value.
+
+### Expressive contract
+
+- Applies to `src/components/expressive/` and opted-in `src/components/compound/` patterns.
+- Open axes: geometry, filters, canvas, variable fonts, particles, simulation, physics.
+- Freedom props are allowed: accent, speed, intensity.
+- Name every arbitrary value.
+- A value used once becomes a named module constant.
+- A tunable value becomes a `--<component>-<name>` custom property on the root class.
+- Scoped custom properties are the component's public theming contract.
+- Default scoped properties from semantic tokens where a semantic exists.
+- Never declare anything on `:root`.
+- Never leak into another component's stylesheet.
+- Resolve ink, surface and accent from semantic tokens: `--text-strong`, `--bg-surface`, `--accent`.
+- A freedom prop defaults from a token, never a hex.
+- Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
+- No bundled font faces. No local font stacks.
+- Run simulations only on the engine `loop` primitive (motion.md).
+- A compound component declares its contract in its registry row. Undeclared means system.
+
+### Replica addendum
+
+- A replica reproduces an external platform's surface. Fidelity is the contract.
+- Pin platform metrics as named constants, not tokens.
+- Consumer theming must not move replica metrics.
+- Replicas live in the expressive tier, marked as replicas in their docs.
+- A11y, focus, reduced motion and zero dependencies still bind.
+
+### Invariants
+
+- Focus-visible treatment is the system's, everywhere.
+- Never trade roles, keyboard contracts or aria for looks.
+- Reduced motion collapses transitions and snaps simulations to their settled state.
+- Every motion is interruptible. One writer owns a property (motion.md).
+- Keep perceived settle inside the `--duration-*` bands.
+- Zero runtime dependencies.
+- Every component ships its own subpath, stylesheet, props JSDoc and `llms.txt` row.
 
 ## Tokens
 
-Tokens live in `src/tokens/*.css` as CSS custom properties on `:root`, and are
-served to consumers verbatim through the MCP `get_tokens` tool. The `.css` file
-is the source of truth and the documentation — a token's comment there is what
-a consumer reads.
-
-| File                                   | Vocabulary                                                                           |
-| -------------------------------------- | ------------------------------------------------------------------------------------ |
-| `color.css`, `semantic.css`            | The neutral ramp, brand hues, status hues, and the semantic names that map onto them |
-| `spacing.css`                          | One 4px base and a short scale; every gap snaps to a step                            |
-| `typography.css`, `fonts.css`          | Type scale and families                                                              |
-| `radius.css`, `elevation.css`          | Corner radii, shadow steps                                                           |
-| `motion.css`                           | Durations, easing curves, travel distances, rest scales                              |
-| `layers.css`                           | `z-index` bands                                                                      |
-| `glass.css`, `avatar.css`, `icons.css` | The shared glass utility, avatar sizing, icon sizing                                 |
-
-Anything in TypeScript that needs a token reads it back off the DOM
-(`UIMotion` for motion, `tokenPx()` for a one-off length) so that a theme
-override at `:root` retunes both the CSS and the JS together. Never duplicate a
-token value as a TypeScript literal.
+- Tokens are custom properties on `:root` in `src/tokens/*.css`, served verbatim by `get_tokens`.
+- The `.css` file is the source of truth and the documentation.
+- `color.css`, `semantic.css`: neutral ramp, brand and status hues, semantic names.
+- `spacing.css`: one 4px base, a short scale.
+- `typography.css`, `fonts.css`: type scale and families.
+- `radius.css`, `elevation.css`: radii and shadows.
+- `motion.css`: durations, easings, distances, rest scales.
+- `layers.css`: `z-index` bands.
+- `glass.css`, `avatar.css`, `icons.css`: glass utility, avatar and icon sizing.
+- TypeScript reads tokens off the DOM: `UIMotion`, `tokenPx`.
+- Never duplicate a token value as a TypeScript literal.
 
 ### Use an existing token, or add one?
 
-Use an existing token. That is the answer almost every time — pick the nearest
-step and let the design snap to the spine.
-
-Add a token only when **all** of these hold:
-
-1. The value is genuinely a new _kind_ of thing, not a new value of an existing
-   kind. `--distance-*` was worth adding because no scale described travel;
-   `--space-3-5` would not be, because the spacing spine already describes gaps.
-2. More than one component needs it, or will. A single component's constant
-   belongs in that component's module as a named constant, not in `:root`.
-3. A theme would plausibly want to retune it. Tokens are the theming surface; a
-   value nobody would ever override is not a token, it is a constant.
-4. You can write the one-line comment that says when to pick it over its
-   neighbours. If you cannot describe the choice, the scale has too many steps.
-
-When you do add one: declare it in the right `src/tokens/*.css` file with that
-comment, mirror it into the TypeScript reader if code needs it, and give it a
-browser test that proves a `:root` override actually reaches the reader.
+- Default to an existing token. Snap to the nearest step.
+- Add a token only when all four hold:
+  1. It is a new kind of thing, not a new value of an existing kind.
+  2. More than one component needs it.
+  3. A theme would plausibly retune it.
+  4. You can write the one-line "when to pick it" comment.
+- A single component's value is a constant or a scoped property, never `:root`.
+- Declare new tokens in the right `src/tokens/*.css` file with that comment.
+- Mirror into the TypeScript reader if code needs it.
 
 ### Naming
 
-Follow the existing pattern rather than inventing one. CSS spells the concept
-out and TypeScript abbreviates it: `--duration-fast` is `dur.fast`,
-`--distance-sm` is `dist.sm`. Scales are named either by magnitude (`fast`,
-`base`, `slow`; `sm`, `md`, `lg`) or by the thing they apply to (`panel`,
-`floating`, `chip`) — pick whichever describes how an author actually chooses,
-and do not mix the two within one scale.
+- CSS spells the concept out. TypeScript abbreviates it: `--duration-fast` is `dur.fast`.
+- Name a scale by magnitude or by target, never both.
+- Scoped properties: `--<component>-<name>`, kebab-case, root class only.
+
+## Overrides
+
+- Level 0: all shipped CSS sits in a cascade layer, so plain consumer CSS wins. (phase 2)
+- Level 1: retheme by overriding tokens on `:root`. JS follows via the DOM readers.
+- Level 2: retune one component through its scoped custom properties.
+- Level 3: restyle with `className` and `style` on every public component. (phase 2)
+- Replicas answer to none of these, by design.
 
 ## Compose, or build new?
 
-**Compose first.** A new component is a permanent maintenance surface: an entry
-in the exports map, its own stylesheet, an `llms.txt` entry, a test file per
-relevant axis, and a prop contract you cannot quietly change later.
-
-Compose when the thing you want is an existing component with different content,
-different props, or a wrapper that arranges two of them. Most "new component"
-requests are this.
-
-Build new when:
-
-- It has its **own semantics** — a role, an aria relationship, a keyboard
-  contract — that no existing component expresses. A Dropdown is not a Select
-  with different children; it commits actions rather than a value.
-- It has **its own state machine**. If wrapping the existing component means
-  reaching past its props into its internals, the composition is fake.
-- Two or more places already hand-roll it. Duplication that already exists is
-  the strongest evidence.
-
-Do **not** build new merely because a prop is missing. Add the prop — as long as
-it is a real axis of the component and not a one-off escape hatch.
+- Compose first. A new component is permanent public surface.
+- Build new only for own semantics, an own state machine, or existing duplication.
+- Never build new because a prop is missing. Add the prop if it is a real axis.
 
 ### Which tier
 
-| Tier      | Directory                    | What lives there                                                                                                                                     |
-| --------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Primitive | `src/components/primitives/` | One control or one visual atom, no internal layout policy. Button, Badge, Collapse.                                                                  |
-| Composite | `src/components/composites/` | Several primitives plus behaviour — overlays, fields with state, anything with a keyboard contract. Modal, Select, Table, Toast.                     |
-| Compound  | `src/components/compound/`   | A whole assembled pattern built out of composites. tsup scans this tier, but nothing lives there yet — creating the directory is enough to claim it. |
-| Internal  | `src/components/internal/`   | Shared machinery, never exported. Overlay layering, focus, positioning, icons, `cx`.                                                                 |
-
-If you are unsure between primitive and composite, ask whether it owns any
-behaviour that outlives a single event handler. If it does, it is a composite.
+- Primitive: one control or visual atom. `src/components/primitives/`.
+- Composite: primitives plus behaviour and keyboard contracts. `src/components/composites/`.
+- Compound: whole assembled patterns. `src/components/compound/`.
+- Expressive: creative components and replicas. `src/components/expressive/`.
+- Internal: shared machinery, never exported. `src/components/internal/`.
+- Behaviour that outlives one event handler means composite.
+- Utility belongs in composites. Delight belongs in expressive.
 
 ## Behaviour that already exists
 
-Before hand-rolling any of these, use the existing one. Each was written once
-and is covered by the test suite; a second copy is a second set of bugs.
+- Controlled state: `useControllable`.
+- Overlay root and stacking: `OverlayPortal`, `useOverlayEntry`, `ovIsTop`.
+- Click-outside dismissal: `useOutsidePress`.
+- Trigger cloning with aria: `ovCloneTrigger`.
+- Floating panel anchoring: `useAnchorPosition`.
+- Focus return: `useReturnFocus`. Focus trap: `useFocusTrap`.
+- Scrim, scroll lock, `inert`, panel shell: `ModalShell`.
+- Token as a number: `tokenPx`. Scroller edges: `useScrollEdges`. Class names: `cx`.
+- Listbox keyboard navigation: `useListbox`. Generalise it for new shapes, never fork it.
+- Scroll-into-view lives inline in `use-listbox.ts`. A second consumer lifts it out.
 
-| Need                                                                        | Use                                           |
-| --------------------------------------------------------------------------- | --------------------------------------------- |
-| Controlled / uncontrolled state with a change callback                      | `useControllable`                             |
-| Rendering into an overlay root, stacking, top-of-stack checks               | `OverlayPortal`, `useOverlayEntry`, `ovIsTop` |
-| Click-outside dismissal that respects stacking                              | `useOutsidePress`                             |
-| Cloning a trigger element with the aria wiring                              | `ovCloneTrigger`                              |
-| Anchoring a floating panel to a trigger or a virtual point                  | `useAnchorPosition`                           |
-| Returning focus where it came from                                          | `useReturnFocus`                              |
-| Seeding focus into a panel, cycling Tab inside it, pulling stray focus back | `useFocusTrap`                                |
-| Scrim, scroll lock, `inert` on everything outside, and the panel shell      | `ModalShell`                                  |
-| Reading a token as a number                                                 | `tokenPx`                                     |
-| Detecting whether a scroller is at its top / bottom edge                    | `useScrollEdges`                              |
-| Conditional class names                                                     | `cx`                                          |
-| Listbox keyboard navigation, typeahead, active-descendant                   | `useListbox`                                  |
+## Conventions
 
-`useListbox` is currently typed to `SelectOption` / `SelectGroup`. If you need
-listbox navigation for a differently shaped option, **generalise it** — do not
-fork it. Forking it is how you get two keyboard contracts that drift.
-
-There is no extracted scroll-into-view helper. The arithmetic lives inline in
-`use-listbox.ts`; if a second component needs it, that is the moment to lift it
-out rather than to copy it.
-
-## Conventions that apply to every surface
-
-- Sentence case. No emoji, no exclamation marks in UI copy.
+- Sentence case. No emoji. No exclamation marks in UI copy.
 - One primary `Button` per view.
 - Numbers, times, IDs and status read mono and tabular.
-- Status hues (info / success / warning / danger) are for genuine status only.
-  Visual hierarchy comes from the neutral ramp.
-- Every component imports its own stylesheet. There is no barrel entry and no
-  global CSS bundle — see `authoring.md`.
+- Status hues mark genuine status only.
+- Every component imports its own stylesheet. No barrel entry.
+
+## Roadmap
+
+- Phase 2: cascade layers, universal `className` / `style`.
+- Phase 3: the engine `loop` simulation primitive. Until then, no simulations.
+- Phase 4: wire `src/components/expressive/` into the tsup scan. Port the motion primitives.
+- Phase 5: support widgets into `src/components/compound/`.
+- Phase 6: replicas. Phase 7: docs coverage, publish gate.

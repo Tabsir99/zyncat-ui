@@ -57,6 +57,7 @@ const NOT_EXPECTED_TO_RESOLVE = new Set([
   '.tsx',
   '.css',
   'src/components/compound/',
+  'src/components/expressive/',
 ]);
 
 const ILLUSTRATIVE_VARS = new Set(['--space-3-5']);
@@ -251,13 +252,13 @@ for (const { label: file, path: docPath, isGuide } of linted) {
 }
 
 const motionDoc = readFileSync(join(DOCS_DIR, 'motion.md'), 'utf8');
-const vocabTable = motionDoc.match(/## The Layer vocabulary[\s\S]*?\n\n((?:\|.*\n)+)/);
-if (!vocabTable) {
-  fail('motion.md', 'the Layer vocabulary table was not found - it is the promise that the list is complete.');
+const vocabSection = motionDoc.match(/## The Layer vocabulary\n([\s\S]*?)(?:\n## |\s*$)/);
+if (!vocabSection) {
+  fail('motion.md', 'the Layer vocabulary section was not found - it is the promise that the list is complete.');
 } else {
   const documented = new Set();
-  for (const row of vocabTable[1].split('\n').slice(2))
-    for (const m of row.split('|')[1]?.matchAll(/`(\w+)`/g) ?? []) documented.add(m[1]);
+  for (const row of vocabSection[1].matchAll(/^- ((?:`\w+`(?:, )?)+) — /gm))
+    for (const m of row[1].matchAll(/`(\w+)`/g)) documented.add(m[1]);
   for (const key of layerKeys)
     if (!documented.has(key)) fail('motion.md', `Layer key \`${key}\` exists in the engine but is not documented`);
   for (const key of documented)

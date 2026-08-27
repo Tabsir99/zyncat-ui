@@ -1,43 +1,38 @@
 # zyncat-ui
 
-A React 19 design system: modern CSS, a small closed token vocabulary, and a
-~2.5 kB WAAPI motion engine. No Tailwind, no CSS-in-JS, no UI library, no
-animation dependency.
+- React 19 design system. Modern CSS, a closed token vocabulary, a ~2.5 kB WAAPI motion engine.
+- No Tailwind, no CSS-in-JS, no UI library, no animation dependency.
+
+## Mission
+
+- Premium polish, genuinely good motion, creative components.
+- Still a complete system a product is built on. Nothing else ships both.
+- System components keep the closed token vocabulary.
+- Expressive components get scoped freedom: named constants and `--<component>-<name>` properties.
+- Replicas pin platform metrics as constants, immune to theming.
+- Invariants bind every tier: focus, reduced motion, interruptibility, a11y, zero dependencies.
 
 ## Read the guidance before writing library code
 
-The substantive rules live in `docs/authoring/` and are served over the bundled
-MCP server, which is registered in `.mcp.json`. **Call the tool, do not
-reconstruct the rules from source** — most of what matters is not guessable from
-reading the implementation, and `pnpm check:authoring` verifies the guidance
-against the code, which no summary of it can claim.
-
-| Before you                              | Call                                                           | Or read                           |
-| --------------------------------------- | -------------------------------------------------------------- | --------------------------------- |
-| write any motion code                   | `motion_guide(topic?)`                                         | `docs/authoring/motion.md`        |
-| add a token, or decide compose vs build | `design_rules(topic?)`                                         | `docs/authoring/design-system.md` |
-| add a component                         | `authoring_checklist()`                                        | `docs/authoring/authoring.md`     |
-| use a component                         | `list_components`, `get_component`, `search_api`, `get_tokens` | `llms.txt`                        |
-
-The first three appear only inside this repo; the four consumer tools ship with
-the package.
+- The rules live in `docs/authoring/`, served by the bundled MCP server (`.mcp.json`).
+- Call the tool. Do not reconstruct the rules from source.
+- Motion code: `motion_guide(topic?)` or `docs/authoring/motion.md`.
+- Tokens, contracts, overrides, tiers: `design_rules(topic?)` or `docs/authoring/design-system.md`.
+- Adding a component: `authoring_checklist()` or `docs/authoring/authoring.md`.
+- Using components: `list_components`, `get_component`, `search_api`, `get_tokens`, or `llms.txt`.
+- `pnpm check:authoring` verifies the guidance against the code.
 
 ## Non-negotiables
 
-- **`pnpm`, never `npm`.**
-- **No comments in source.** Not `//`, not `/* */`, not JSDoc on internals.
-  Express it in the name, or put it in a `docs/` file. Two exceptions: prop
-  JSDoc on a public props interface, which becomes the consumer's editor
-  tooltip, and `src/tokens/*.css`, which the MCP ships verbatim as the token
-  documentation.
-- **Never sequence motion with `setTimeout`, `requestAnimationFrame`,
-  `transitionend` or `animationend`.** The engine returns a `Playback` whose
-  `finished` promise resolves — chain off it. Playback rate is scaled by
-  `clock.scale` and durations collapse under reduced motion, so any wall-clock
-  assumption is wrong by construction.
-- **Never animate from JS a property that CSS also transitions**, or the other
-  way round. One writer per property.
-- **Do not commit or stage anything** until the change has been reviewed.
+- `pnpm`, never `npm`.
+- No comments in source. Exceptions: public-props JSDoc and `src/tokens/*.css`.
+- Never sequence motion with `setTimeout`, `requestAnimationFrame`, `transitionend` or `animationend`.
+- Chain the `Playback` `finished` promise instead. Wall-clock assumptions are wrong by construction.
+- rAF exists only inside the engine `loop` simulation primitive (phase 3).
+- One writer per property. JS and CSS never animate the same property.
+- Values follow the tier's contract. `design_rules('contracts')` has the rules.
+- Zero runtime dependencies.
+- Do not commit or stage anything until the change has been reviewed.
 
 ## Layout
 
@@ -47,8 +42,10 @@ src/
   motion/        the React layer: Presence, Motion, useMotion, presets, glide
   tokens/        *.css token vocabulary + the TypeScript readers
   components/
-    primitives/  one control or one visual atom
-    composites/  several primitives plus behaviour
+    primitives/  one control or one visual atom            (system contract)
+    composites/  several primitives plus behaviour         (system contract)
+    compound/    whole assembled patterns                  (contract declared per component)
+    expressive/  creative motion components and replicas   (expressive contract; wired in phase 4)
     internal/    shared machinery, never exported
     dev/         MotionDevtools
   mcp/           the bundled MCP server
@@ -57,30 +54,18 @@ scripts/         the generators and the lints
   lib/entries.mjs  the one scanner deriving the public entry list from the tree
 apps/docs/       the Next.js docs site
 .claude/agents/  zyncat-docs (owns consumer prose)
+temp/            imported source material (dc.html decks, magicui reference) - never ships
 ```
 
 ## Delegate the satellite work
 
-Adding a component touches far more than `src/`. Most of it is now either
-generated or owned by an agent, so it does not need to cost you context:
-
-| Work                                                  | Who                         |
-| ----------------------------------------------------- | --------------------------- |
-| The component, its CSS, its prop JSDoc, its demo page | you                         |
-| `llms.txt`, the registry row, the canonical example   | the **`zyncat-docs`** agent |
-| exports map, docs paths, prop tables, repo docs       | `pnpm sync`                 |
-
-Never hand-write a prop table: the JSDoc on the public props interface is the
-single source, and `pnpm docs:props` reads it back out of `dist/*.d.ts` into the
-docs site. It fails on any public prop with no JSDoc.
+- You: the component, its CSS, its prop JSDoc, its demo page.
+- The `zyncat-docs` agent: `llms.txt`, the registry row, the canonical example.
+- `pnpm sync`: exports map, docs paths, prop tables, repo docs.
+- Never hand-write a prop table. `pnpm docs:props` generates it from `dist/*.d.ts`.
 
 ## Commands
 
-```bash
-pnpm sync                    # regenerate every manifest and generated doc
-pnpm verify                  # the whole gate, in order
-```
-
-While iterating, the pieces of `verify` run alone: `typecheck`, `check:css`,
-`check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`,
-`check:props`, and `build && check:llms` (that one needs `dist/`).
+- `pnpm sync`: regenerate every manifest and generated doc.
+- `pnpm verify`: the whole gate, in order.
+- Pieces run alone: `typecheck`, `check:css`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`, `check:props`, `build && check:llms`.

@@ -361,11 +361,14 @@ const CONTRIBUTOR_TOOLS = [
   {
     name: 'motion_guide',
     description:
-      'How to animate inside this repo: which layer to reach for (CSS transition vs the engine vs Presence vs FLIP vs glide), the complete Layer keyframe vocabulary, [to] vs [from,to] semantics, timing, the one-writer-per-property ownership rules, sequencing, global reduced motion, and the canonical enter/exit recipes. Read this before writing any motion code - most of it is not guessable from the source.',
+      'How to animate inside this repo: the transitions-vs-simulations boundary, which layer to reach for (CSS transition vs the engine vs Presence vs FLIP vs glide), the complete Layer keyframe vocabulary, [to] vs [from,to] semantics, timing, the one-writer-per-property ownership rules, sequencing, global reduced motion, and the canonical enter/exit recipes. Read this before writing any motion code - most of it is not guessable from the source.',
     inputSchema: {
       type: 'object',
       properties: {
-        topic: { type: 'string', description: 'One section, e.g. "ownership", "timing", "recipes". Omit for all.' },
+        topic: {
+          type: 'string',
+          description: 'One section, e.g. "ownership", "timing", "simulations", "recipes". Omit for all.',
+        },
       },
       additionalProperties: false,
     },
@@ -373,11 +376,14 @@ const CONTRIBUTOR_TOOLS = [
   {
     name: 'design_rules',
     description:
-      'The design-system rules for this repo: what the library is for, the token vocabulary and when to add a token rather than use an existing one, compose vs build a new component, which tier a component belongs in, and the internal machinery to reuse instead of hand-rolling.',
+      'The design-system rules for this repo: what the library is for, the system / expressive / replica contracts and the invariants that bind every tier, the token vocabulary and when to add a token rather than use an existing one, the consumer override levels, compose vs build a new component, which tier a component belongs in, and the internal machinery to reuse instead of hand-rolling.',
     inputSchema: {
       type: 'object',
       properties: {
-        topic: { type: 'string', description: 'One section, e.g. "tokens", "compose", "tier". Omit for all.' },
+        topic: {
+          type: 'string',
+          description: 'One section, e.g. "tokens", "contracts", "overrides", "compose", "tier". Omit for all.',
+        },
       },
       additionalProperties: false,
     },
