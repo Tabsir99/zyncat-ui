@@ -31,3 +31,16 @@
 .overlay-panel--sheet-bottom[data-drag] {
   touch-action: none;
 }
+
+.overlay-panel--sheet-right,
+.overlay-panel--sheet-bottom {
+  background: var(--bg-surface);
+  color: var(--text-body);
+  box-shadow: var(--shadow-xl);
+}
+.overlay-panel--sheet-right {
+  border-inline-start: var(--border-hairline) solid var(--border-default);
+}
+.overlay-panel--sheet-bottom {
+  border-block-start: var(--border-hairline) solid var(--border-default);
+}
