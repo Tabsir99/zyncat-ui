@@ -28,7 +28,7 @@
     color: var(--text-body);
     font-size: var(--size-body);
     line-height: var(--leading-body);
-    font-weight: var(--weight-regular);
+    font-weight: var(--weight-medium);
     transition:
       color var(--duration-base) var(--ease-standard),
       background-color var(--duration-base) var(--ease-standard),
