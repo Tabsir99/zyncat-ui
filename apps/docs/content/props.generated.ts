@@ -198,6 +198,39 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
   ],
+  'typing-lines': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLSpanElement>, keyof TypingLinesOwnProps> & DataAttributes',
+      description: 'Standard <span> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+    {
+      name: 'lines',
+      type: 'string[]',
+      required: true,
+      description: 'The lines to type, in order; the sequence restarts once the last one has been deleted.',
+    },
+    {
+      name: 'unit',
+      type: 'TypingUnit',
+      default: "'character'",
+      description: 'Whether the line arrives one character or one whole word at a time.',
+    },
+    {
+      name: 'caret',
+      type: 'TypingCaret',
+      default: "'line'",
+      description: 'Caret shape. It holds solid while characters land and blinks only once the line is idle.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the typing rate; sampled live on every frame.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
   'text-field': [
     {
       name: 'htmlProps',

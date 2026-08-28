@@ -1,0 +1,92 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .typing-lines {
+    --typing-lines-ink: var(--text-strong);
+    --typing-lines-caret-ink: var(--accent);
+    --typing-lines-size: var(--size-title);
+    --typing-lines-weight: var(--weight-regular);
+    --typing-lines-leading: 1.4;
+    --typing-lines-blink: 1080ms;
+    --typing-lines-caret-gap: 0.12em;
+
+    position: relative;
+    display: block;
+    min-height: calc(var(--typing-lines-size) * var(--typing-lines-leading));
+    font-family: var(--font-sans);
+    font-size: var(--typing-lines-size);
+    font-weight: var(--typing-lines-weight);
+    line-height: var(--typing-lines-leading);
+    color: var(--typing-lines-ink);
+    text-wrap: pretty;
+  }
+
+  .typing-lines__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .typing-lines__caret {
+    display: inline-block;
+    margin-left: var(--typing-lines-caret-gap);
+    background: var(--typing-lines-caret-ink);
+    vertical-align: -0.16em;
+  }
+
+  .typing-lines__caret--line {
+    width: 2px;
+    height: 1.1em;
+  }
+
+  .typing-lines__caret--block {
+    width: 0.52em;
+    height: 1.05em;
+    border-radius: 1px;
+    vertical-align: -0.14em;
+  }
+
+  .typing-lines__caret--underscore {
+    width: 0.55em;
+    height: 2px;
+    vertical-align: -0.08em;
+  }
+
+  .typing-lines__caret--blinking {
+    animation: typing-lines-blink var(--typing-lines-blink) step-end infinite;
+  }
+
+  .typing-lines__word {
+    display: inline-block;
+    animation: typing-lines-word var(--duration-base) var(--ease-entrance) both;
+  }
+
+  @keyframes typing-lines-blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes typing-lines-word {
+    from {
+      opacity: 0;
+      translate: 0 0.2em;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .typing-lines__caret--blinking {
+      animation: none;
+    }
+  }
+}

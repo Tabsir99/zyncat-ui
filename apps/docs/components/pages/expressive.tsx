@@ -4,6 +4,7 @@ import { useState, type CSSProperties } from 'react';
 
 import { Button } from '@zyncat/ui/button';
 import { Odometer } from '@zyncat/ui/odometer';
+import { TypingLines, type TypingCaret } from '@zyncat/ui/typing-lines';
 
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-5)', alignItems: 'center', flexWrap: 'wrap' };
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
@@ -84,6 +85,61 @@ export function OdometerThemeDemo() {
       <Button size="sm" variant="secondary" onClick={() => setValue((v) => v + 5309)}>
         Roll
       </Button>
+    </div>
+  );
+}
+
+const CARETS: { caret: TypingCaret; label: string; lines: string[] }[] = [
+  { caret: 'line', label: 'Line', lines: ['A caret that blinks only at rest.', 'Steady, and out of the way.'] },
+  {
+    caret: 'block',
+    label: 'Block',
+    lines: ['The block rides the next character.', 'Terminal habits, kept on purpose.'],
+  },
+  {
+    caret: 'underscore',
+    label: 'Underscore',
+    lines: ['A rule that sits under the line.', 'Softer than a bar, still legible.'],
+  },
+];
+
+export function TypingLinesHero() {
+  return <TypingLines lines={['Design every state.', 'Make every motion interruptible.']} />;
+}
+
+export function TypingLinesCaretsDemo() {
+  return (
+    <div style={COLUMN}>
+      {CARETS.map((row) => (
+        <div key={row.caret} style={{ display: 'grid', gap: 'var(--space-1)' }}>
+          <span style={{ font: 'var(--type-caption)', color: 'var(--text-muted)' }}>{row.label}</span>
+          <TypingLines lines={row.lines} caret={row.caret} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function TypingLinesWordDemo() {
+  return (
+    <TypingLines
+      unit="word"
+      caret="none"
+      lines={['Words arrive whole, one at a time.', 'No caret, because nothing is pending.']}
+    />
+  );
+}
+
+export function TypingLinesThemeDemo() {
+  const loud: CSSProperties = {
+    '--typing-lines-size': 'var(--size-display)',
+    '--typing-lines-weight': 'var(--weight-semibold)',
+    '--typing-lines-caret-ink': 'var(--accent-active)',
+  } as CSSProperties;
+  return (
+    <div style={COLUMN}>
+      <TypingLines lines={['Retuned through scoped properties.']} style={loud} />
+      <TypingLines lines={['The default, for comparison.']} />
     </div>
   );
 }

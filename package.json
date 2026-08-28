@@ -237,6 +237,11 @@
       "types": "./dist/types/components/expressive/odometer/Odometer.d.ts",
       "import": "./dist/odometer.js"
     },
+    "./typing-lines": {
+      "source": "./src/components/expressive/typing-lines/TypingLines.tsx",
+      "types": "./dist/types/components/expressive/typing-lines/TypingLines.d.ts",
+      "import": "./dist/typing-lines.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

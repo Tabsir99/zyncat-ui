@@ -273,6 +273,36 @@ export const GROUPS: DocGroup[] = [
           },
         ],
       },
+      {
+        slug: 'typing-lines',
+        label: 'TypingLines',
+        blurb: 'A line types itself, holds, deletes, and moves to the next one.',
+        HeroComponent: E.TypingLinesHero,
+        heroCode: `import { TypingLines } from '@zyncat/ui/typing-lines';\n\n<TypingLines lines={['Design every state.', 'Make every motion interruptible.']} />`,
+        examples: [
+          {
+            id: 'carets',
+            title: 'Carets',
+            description: 'Every caret holds solid while characters land and blinks only once the line is idle.',
+            Component: E.TypingLinesCaretsDemo,
+            code: `<TypingLines lines={lines} caret="line" />\n<TypingLines lines={lines} caret="block" />\n<TypingLines lines={lines} caret="underscore" />`,
+          },
+          {
+            id: 'word-reveal',
+            title: 'Word reveal',
+            description: 'unit="word" arrives a whole word at a time; the caret drops because nothing is pending.',
+            Component: E.TypingLinesWordDemo,
+            code: `<TypingLines unit="word" caret="none" lines={['Words arrive whole, one at a time.']} />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description: 'Level 2 override - size, weight and caret ink are scoped --typing-lines-* properties.',
+            Component: E.TypingLinesThemeDemo,
+            code: `<TypingLines lines={lines} style={{ '--typing-lines-size': 'var(--size-display)', '--typing-lines-caret-ink': 'var(--accent-active)' }} />`,
+          },
+        ],
+      },
     ],
   },
   {
