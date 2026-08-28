@@ -65,28 +65,48 @@
 
 ---
 
-### Phase 4: Port Motion Primitives (PENDING)
+### Phase 4: Port Motion Primitives (IN PROGRESS)
 
 **Objective:** Wire `src/components/expressive/` into tsup and port 8 motion primitives.
 
+#### What a component port includes
+
+Every component ships complete in its own task. `authoring_checklist` step 6 and CLAUDE.md
+both put the demo page on the component author, not in a later batch:
+
+- The component, its stylesheet, its prop JSDoc
+- Its demo page in `apps/docs/components/pages/expressive.tsx` and its registry row
+- A live-browser proof, because a green build proves nothing about CSS delivery
+
+The prop JSDoc must sit on an **exported** interface. `check-contracts.mjs:112` only legalises
+JSDoc on exported types, so the repo's non-exported `XOwnProps` idiom counts as comment debt
+(Badge.tsx carries 10 that way). Existing components are baselined; new files start at 0.
+
+Only the `llms.txt` entries stay batched — one file, shared format, generated footers.
+
 #### Scope
 
+- Tier wiring: `'expressive'` added to `TIERS` in `scripts/lib/entries.mjs`. `check:contracts`
+  already covered the tier (hex ban, prefix registration, `systemTier` exclusion), so no
+  linter work was needed.
 - 8 motion primitives from `temp/Motion showcase components.zip`:
-  - Odometer (sprung counter)
-  - Typing Lines (staggered line reveal)
+  - ✓ **Odometer** — sprung digit columns, velocity blur and accent tint
+  - Typing Lines (04 — four caret variants)
   - Lens (cursor magnetism)
-  - Chrome Text (morphing text)
-  - Morphing Text (variable font morphs)
-  - Flow Field (particle simulation)
-  - Weight Field (font-weight lerp)
+  - Chrome Text (03 — banded metal ramp)
+  - Morphing Text (02 — gooey threshold word morph)
+  - Weight Field (01 — variable-axis magnetism)
+  - Flow Field (05 — needle field)
   - Confetti (particle burst)
-- Integrate into tsup scan and package.json exports (flat namespace `@zyncat/ui/odometer`)
-- Replace fonts: reference design-system semantics (`--font-sans`, `--font-mono`, `--size-*`)
-- Scoped custom props: `--<component>-<name>` with semantic defaults
-- Accent defaults: `var(--accent)`
-- Wire into check:contracts (custom-prop prefixes, hex-literal ban in expressive tier)
-- Generate llms.txt entries and registry rows
-- Run full verify + docs build
+- Scoped custom props `--<component>-<name>`, defaulted from semantic tokens
+- Type from `--font-sans` / `--font-mono` and the `--size-*` scale; weights from `--weight-*`
+- Accent defaults from `var(--accent)`; no hex literals anywhere in the tier
+- `llms.txt` entries for all 8, then full verify
+
+#### Naming resolved
+
+`Odometer` collided with a private CSS-strip helper in `primitives/badge/` used by CountBadge
+**and** Table. The helper was renamed `DigitStrip`; the public name went to the sprung component.
 
 **Blocking:** Phase 3 must be complete (✓ done).
 
@@ -101,8 +121,10 @@
 - Support Fan (radial menu of action buttons)
 - Support Rail (vertical action strip)
 - From `temp/Support Widget Deck.zip`
-- System-tier reusable patterns for product layouts
-- Integrate into compound tier with full CSS, props, a11y, motion
+- `src/components/compound/` does not exist yet; the tier is already in `TIERS`
+- Each declares its contract in its registry row. Undeclared means system.
+- Reuse the existing machinery: `OverlayPortal`, `useOutsidePress`, `useListbox`, `useAnchorPosition`
+- Each ships its own demo page and registry row, as in phase 4
 
 **Blocking:** Phase 4 must reach first review gate.
 
@@ -119,9 +141,12 @@
   - Instagram Feed
   - TikTok
   - YouTube
+- All four live in the same `Motion showcase components.zip` as the primitives, alongside
+  the `scraps/tt-*` and `scraps/yt-*` reference captures
 - Pin platform metrics as named constants (immune to theming)
-- Expressive tier, marked as replicas in docs
+- Expressive tier, marked as replicas in docs and in their registry rows
 - Motion: spring-driven scroll, feed loads, card transitions
+- Each ships its own demo page and registry row, as in phase 4
 
 **Blocking:** Phase 5 must be complete.
 
@@ -134,9 +159,10 @@
 #### Scope
 
 - Docs application:
-  - Component registry (30+ items)
-  - Props tables (auto-generated from JSDoc)
-  - Demo pages (every component, every state)
+  - Demo pages and registry rows already landed with each component in phases 4-6
+  - Cross-cutting sweep: override levels 0-3, reduced motion, mid-flight interruption
+  - Props tables regenerate from `dist/*.d.ts`; a registry slug is what makes `gen-props`
+    emit a table at all
   - Authoring guidance
 - llms.txt registry entries for all 41 subpaths
 - Consumer override documentation (levels 0–3)
@@ -188,11 +214,13 @@
 ### Ratcheted Debt (scripts/contracts-baseline.json)
 
 - TS comments: 209 items / 31 files
-- CSS comments: 217 items / 30 files
+- CSS comments: 216 items / 29 files
 - px literals in system CSS: 39 items / 13 files
 - rAF outside engine: 3 items / 2 files (StatusBadge, emoji-picker)
 - UIMotion-coupled setTimeout: 1 item / 1 file (glint)
-- **Total:** 469 baseline items; any new violations fail the gate
+- **Total:** 468 baseline items; any new violations fail the gate
+- Counts only ever shrink. Renaming a file orphans its baseline key, which forces that file
+  to zero debt - that is how `odometer.css` lost its comment on the way to `digit-strip.css`.
 
 ---
 
@@ -237,7 +265,16 @@
 
 ## Notes for Cloud Sessions
 
-1. **Before starting phase 4:** The loop is proven and live in the engine. Read `src/engine/loop.ts` and `docs/authoring/motion.md` section "Transitions versus simulations" to familiarize.
-2. **Roadmap is durable:** Phases 4–7 are summarized in `docs/authoring/design-system.md` roadmap section. This file (ROADMAP.md) is the expanded breakdown.
-3. **Memory files:** The local memory at `~/.claude/projects/-home-tabsir-ap-reactp-zyncat-ui/memory/MEMORY.md` won't transfer to cloud. Create a new memory session by resuming the URL above.
-4. **Verify always:** `pnpm verify` is the gate. All phases end at a user review gate before committing and pushing.
+1. **The loop is the porting substrate.** `src/engine/loop.ts` is a strict superset of the deck's
+   own `motion-utils.js` helper — same `k = dt/16.667`, same 34 ms clamp, same live speed
+   sampling, plus clock scaling, ownership, auto-pause and reduced-motion snap. Port the deck's
+   `MU.loop(...)` calls straight onto it.
+2. **Follow the Odometer.** It is the worked example for the remaining ports: value-driven props
+   rather than the deck's self-animating demo, physics as named module constants, JS writing
+   `translate` plus custom properties while CSS derives colour through `color-mix` — the
+   pattern already used at `checkbox.css:76`.
+3. **Roadmap is durable:** Phases 4–7 are summarized in `docs/authoring/design-system.md` roadmap section. This file (ROADMAP.md) is the expanded breakdown.
+4. **Memory files:** The local memory at `~/.claude/projects/-home-tabsir-ap-reactp-zyncat-ui/memory/MEMORY.md` won't transfer to cloud. Create a new memory session by resuming the URL above.
+5. **Verify always:** `pnpm verify` is the gate, and it is not sufficient. Check the component
+   in a live browser too — a green build once passed while css-loader silently dropped every
+   token. All phases end at a user review gate before committing and pushing.
