@@ -362,7 +362,7 @@ export function Lens({
 
     const playback = loop(
       (k, dt) => {
-        const step = Math.min(MAX_STEP, k || 1);
+        const step = Math.min(MAX_STEP, k);
         optics.sinceClone += dt;
         if (optics.dirty && optics.sinceClone > RECLONE_INTERVAL_MS) {
           optics.dirty = false;
