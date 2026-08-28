@@ -1,0 +1,84 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .morphing-text {
+    --morphing-text-ink: var(--text-strong);
+    --morphing-text-size: var(--size-display-lg);
+    --morphing-text-weight: var(--weight-medium);
+    --morphing-text-leading: 1.2;
+    --morphing-text-tracking: var(--tracking-display);
+    --morphing-text-smear: 1;
+    --morphing-text-rule-ink: var(--text-strong);
+    --morphing-text-rule-accent: var(--accent);
+    --morphing-text-rule-height: 1px;
+    --morphing-text-rule-gap: var(--space-3);
+    --morphing-text-rule-rest: 0.1;
+    --morphing-text-rule-lift: 0.3;
+
+    position: relative;
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--morphing-text-size);
+    font-weight: var(--morphing-text-weight);
+    line-height: var(--morphing-text-leading);
+    letter-spacing: var(--morphing-text-tracking);
+    color: var(--morphing-text-ink);
+  }
+
+  .morphing-text__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .morphing-text__stage {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: calc(1em * var(--morphing-text-leading));
+  }
+
+  .morphing-text__word {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    white-space: pre;
+  }
+
+  .morphing-text__letter {
+    --morphing-text-letter-blur: 0;
+
+    display: inline-block;
+  }
+
+  .morphing-text__stage--fused .morphing-text__letter {
+    filter: blur(calc(var(--morphing-text-letter-blur) * var(--morphing-text-smear) * 1em));
+  }
+
+  .morphing-text__rule {
+    --morphing-text-heat: 0;
+
+    display: block;
+    height: var(--morphing-text-rule-height);
+    margin-block-start: var(--morphing-text-rule-gap);
+    margin-inline: auto;
+    opacity: calc(var(--morphing-text-rule-rest) + var(--morphing-text-rule-lift) * var(--morphing-text-heat));
+    background: color-mix(
+      in oklab,
+      var(--morphing-text-rule-accent) calc(var(--morphing-text-heat) * 100%),
+      var(--morphing-text-rule-ink)
+    );
+  }
+
+  .morphing-text__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+}

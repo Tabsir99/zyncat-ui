@@ -1,0 +1,49 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .flow-field {
+    --flow-field-ink: var(--text-subtle);
+    --flow-field-accent: var(--accent);
+    --flow-field-min-height: var(--space-10);
+
+    --flow-field-ramp-0: var(--flow-field-ink);
+    --flow-field-ramp-1: color-mix(in oklab, var(--flow-field-accent) 9%, var(--flow-field-ink));
+    --flow-field-ramp-2: color-mix(in oklab, var(--flow-field-accent) 18%, var(--flow-field-ink));
+    --flow-field-ramp-3: color-mix(in oklab, var(--flow-field-accent) 27%, var(--flow-field-ink));
+    --flow-field-ramp-4: color-mix(in oklab, var(--flow-field-accent) 36%, var(--flow-field-ink));
+    --flow-field-ramp-5: color-mix(in oklab, var(--flow-field-accent) 45%, var(--flow-field-ink));
+    --flow-field-ramp-6: color-mix(in oklab, var(--flow-field-accent) 55%, var(--flow-field-ink));
+    --flow-field-ramp-7: color-mix(in oklab, var(--flow-field-accent) 64%, var(--flow-field-ink));
+    --flow-field-ramp-8: color-mix(in oklab, var(--flow-field-accent) 73%, var(--flow-field-ink));
+    --flow-field-ramp-9: color-mix(in oklab, var(--flow-field-accent) 82%, var(--flow-field-ink));
+    --flow-field-ramp-10: color-mix(in oklab, var(--flow-field-accent) 91%, var(--flow-field-ink));
+    --flow-field-ramp-11: var(--flow-field-accent);
+
+    position: relative;
+    display: block;
+    min-height: var(--flow-field-min-height);
+  }
+
+  .flow-field__canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .flow-field__probe {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .flow-field__content {
+    position: relative;
+  }
+}

@@ -1,0 +1,45 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .confetti {
+    --confetti-paper-1: oklch(0.53 0.2 288);
+    --confetti-paper-2: var(--accent);
+    --confetti-paper-3: oklch(0.78 0.115 62);
+    --confetti-paper-4: oklch(0.67 0.18 12);
+    --confetti-paper-5: var(--text-strong);
+    --confetti-weights: 1 1 1 1 0.45;
+
+    --confetti-ink: var(--text-strong);
+    --confetti-light: var(--bg-surface);
+    --confetti-shade: 42%;
+    --confetti-gloss: 66%;
+    --confetti-layer: var(--layer-toast);
+
+    --confetti-reverse-1: color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-1));
+    --confetti-reverse-2: color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-2));
+    --confetti-reverse-3: color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-3));
+    --confetti-reverse-4: color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-4));
+    --confetti-reverse-5: color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-5));
+
+    --confetti-sheen-1: color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-1));
+    --confetti-sheen-2: color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-2));
+    --confetti-sheen-3: color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-3));
+    --confetti-sheen-4: color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-4));
+    --confetti-sheen-5: color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-5));
+
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    touch-action: none;
+    user-select: none;
+    background: none;
+  }
+
+  .confetti--viewport {
+    position: fixed;
+    z-index: var(--confetti-layer);
+  }
+}

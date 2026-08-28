@@ -1,0 +1,62 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .weight-field {
+    --weight-field-ink: var(--text-strong);
+    --weight-field-accent: var(--accent);
+    --weight-field-size: clamp(3.5rem, 11vw, 8.75rem);
+    --weight-field-leading: 1;
+    --weight-field-align: center;
+    --weight-field-pad: var(--space-6) var(--space-4);
+    --weight-field-reach: 2.6;
+    --weight-field-rest-weight: 300;
+    --weight-field-peak-weight: 700;
+    --weight-field-lift: 0.08em;
+    --weight-field-tracking: 0.012em;
+    --weight-field-tint: 0.9;
+
+    position: relative;
+    display: block;
+    padding: var(--weight-field-pad);
+    font-family: var(--font-sans);
+    font-size: var(--weight-field-size);
+    line-height: var(--weight-field-leading);
+    text-align: var(--weight-field-align);
+    color: var(--weight-field-ink);
+  }
+
+  .weight-field__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .weight-field__glyphs {
+    display: block;
+    user-select: none;
+  }
+
+  .weight-field__word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .weight-field__unit {
+    --weight-field-pull: 0;
+    --weight-field-wght: var(--weight-field-rest-weight);
+
+    display: inline-block;
+    font-weight: var(--weight-field-rest-weight);
+    font-variation-settings: 'wght' var(--weight-field-wght);
+    letter-spacing: calc(var(--weight-field-pull) * var(--weight-field-tracking));
+    color: color-mix(
+      in oklab,
+      var(--weight-field-accent) calc(clamp(0, var(--weight-field-pull), 1) * var(--weight-field-tint) * 100%),
+      var(--weight-field-ink)
+    );
+    translate: 0 calc(var(--weight-field-pull) * var(--weight-field-lift) * -1);
+  }
+}

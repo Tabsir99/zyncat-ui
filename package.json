@@ -247,6 +247,26 @@
       "types": "./dist/types/components/expressive/lens/Lens.d.ts",
       "import": "./dist/lens.js"
     },
+    "./confetti": {
+      "source": "./src/components/expressive/confetti/Confetti.tsx",
+      "types": "./dist/types/components/expressive/confetti/Confetti.d.ts",
+      "import": "./dist/confetti.js"
+    },
+    "./flow-field": {
+      "source": "./src/components/expressive/flow-field/FlowField.tsx",
+      "types": "./dist/types/components/expressive/flow-field/FlowField.d.ts",
+      "import": "./dist/flow-field.js"
+    },
+    "./morphing-text": {
+      "source": "./src/components/expressive/morphing-text/MorphingText.tsx",
+      "types": "./dist/types/components/expressive/morphing-text/MorphingText.d.ts",
+      "import": "./dist/morphing-text.js"
+    },
+    "./weight-field": {
+      "source": "./src/components/expressive/weight-field/WeightField.tsx",
+      "types": "./dist/types/components/expressive/weight-field/WeightField.d.ts",
+      "import": "./dist/weight-field.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

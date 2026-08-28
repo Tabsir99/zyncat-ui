@@ -298,6 +298,57 @@ Lens - @zyncat/ui/lens
   <Lens magnification={2.6} radius={132}><TypeSpecimen /></Lens>
   +1 more prop - get_component('lens')
 
+WeightField - @zyncat/ui/weight-field
+  A display headline where cursor proximity drives each glyph's variable-font wght axis through
+  a damped spring, so letters swell toward the pointer and overshoot on the way back to rest.
+  The weight is real font-variation-settings, carried by a lift, optical tracking and an accent
+  tint, so the field still reads when the resolved face turns out not to be variable.
+  text is the headline; speed is sampled live every frame. Under 48 glyphs each glyph springs
+  on its own; past that the split falls back to one spring per word.
+  Retune through --weight-field-* on the root: ink, accent, size, leading, align, pad, reach,
+  rest-weight, peak-weight, lift, tracking, tint. The headline is exposed to screen readers,
+  the glyph layer is aria-hidden; reduced motion renders it at rest weight and wires no pointer.
+  <WeightField text="Kinetic" speed={1.2} />
+  +1 more prop - get_component('weight-field')
+
+MorphingText - @zyncat/ui/morphing-text
+  A headline that cycles a word list, morphing each word into the next. Both words blur per
+  letter through one SVG alpha threshold, so their letterforms pool and split like liquid; the
+  threshold attaches only during the morph, so a resting word is untouched type. A hairline
+  under the word stretches between the two word widths and heats to the accent at the peak.
+  words is the list, hold is the resting time in ms, speed is sampled live. Hovering holds the
+  current word; a morph already in flight always finishes.
+  Retune through --morphing-text-* on the root: ink, size, weight, leading, tracking, smear,
+  rule-ink, rule-accent, rule-height, rule-gap, rule-rest, rule-lift.
+  The current word is real text for screen readers; reduced motion shows it unblurred, unmorphed.
+  <MorphingText words={['Weight', 'Timing', 'Ease', 'Rest']} hold={1800} />
+  +1 more prop - get_component('morphing-text')
+
+FlowField - @zyncat/ui/flow-field
+  A canvas field of needles that breathe on a noise loop, then swing away from the pointer
+  with per-cell lag - a decorative backdrop for a hero or a card. Children render above it.
+  speed is sampled live every frame; spacing 12-72 px sets needle density and widens on its
+  own so the field never draws more than 1600 needles; radius 40-640 px is the pointer's
+  reach. Retune through --flow-field-* on the root: ink, accent, min-height, and ramp-0 to
+  ramp-11, the twelve oklab stops the needles are drawn from.
+  The canvas is aria-hidden and adds no tab stop; your children keep their own semantics.
+  Reduced motion paints one static frame of the settled field and never starts the loop.
+  <FlowField spacing={26} radius={210}><Hero /></FlowField>
+  +1 more prop - get_component('flow-field')
+
+Confetti - @zyncat/ui/confetti
+  A canvas particle burst you fire yourself: paper flakes, curls, ribbons and foil sequins
+  tumbling on real drag, lift and flip, across three depth layers. Fire it from the ref
+  handle - ref.current.fire({count, duration, emitter}) - bursts coexist, never cancel.
+  emitter sides|top|corners is the launch geometry; count is pieces per fire (cap 520, the
+  oldest piece retires past it); duration is the seconds the emitter stays open, 0.15 for
+  one shove and 2.5 for a taper; speed is sampled live; field container|viewport picks what
+  the canvas covers. Retune through --confetti-* on the canvas: paper-1..5, weights, ink,
+  light, shade, gloss, layer. Purely decorative - aria-hidden, pointer-events none, never
+  focusable, no live region: announce the success yourself.
+  Reduced motion renders nothing and fire() is a no-op. <Confetti ref={confetti} count={170} />
+  +1 more prop - get_component('confetti')
+
 ============================================================ DEV TOOLS
 
 MotionDevtools - @zyncat/ui/motion-devtools
