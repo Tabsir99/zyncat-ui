@@ -232,6 +232,11 @@
       "types": "./dist/types/components/composites/emoji-picker/EmojiPickerPanel.d.ts",
       "import": "./dist/emoji-picker.js"
     },
+    "./odometer": {
+      "source": "./src/components/expressive/odometer/Odometer.tsx",
+      "types": "./dist/types/components/expressive/odometer/Odometer.d.ts",
+      "import": "./dist/odometer.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

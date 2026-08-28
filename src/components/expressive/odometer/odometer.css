@@ -1,0 +1,61 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .odometer {
+    --odometer-cell: 1em;
+    --odometer-digit: 1ch;
+    --odometer-gap: 0.02em;
+    --odometer-ink: var(--text-strong);
+    --odometer-accent: var(--accent);
+    --odometer-separator-ink: var(--text-muted);
+    --odometer-size: var(--size-display);
+    --odometer-weight: var(--weight-medium);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--odometer-gap);
+    font-family: var(--font-sans);
+    font-size: var(--odometer-size);
+    font-weight: var(--odometer-weight);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--odometer-ink);
+  }
+
+  .odometer__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .odometer__col {
+    display: block;
+    width: var(--odometer-digit);
+    height: var(--odometer-cell);
+    overflow: hidden;
+  }
+
+  .odometer__strip {
+    --odometer-velocity: 0;
+    --odometer-blur: 0;
+
+    display: block;
+    will-change: translate, filter;
+    filter: blur(calc(var(--odometer-blur) * 1px));
+    color: color-mix(in oklab, var(--odometer-accent) calc(var(--odometer-velocity) * 100%), var(--odometer-ink));
+  }
+
+  .odometer__cell {
+    display: grid;
+    place-items: center;
+    height: var(--odometer-cell);
+  }
+
+  .odometer__separator {
+    color: var(--odometer-separator-ink);
+  }
+}

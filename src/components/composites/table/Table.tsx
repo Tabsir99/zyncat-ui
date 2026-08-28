@@ -10,7 +10,7 @@ import { UIMotion } from '../../../tokens/motion-tokens';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { Icon } from '../../internal/icon/Icon';
 import { cx } from '../../internal/utils/cx';
-import { Odometer } from '../../primitives/badge/odometer';
+import { DigitStrip } from '../../primitives/badge/digit-strip';
 import { Button } from '../../primitives/button/Button';
 import { Checkbox } from '../../primitives/checkbox/Checkbox';
 
@@ -256,7 +256,7 @@ export function Table<Row = any>({
             onChange={toggleAll}
           />
           <span className="tbl__bulkCount" aria-live="polite" aria-atomic="true">
-            <Odometer value={bulkOpen ? selected.size : lastCountRef.current} />
+            <DigitStrip value={bulkOpen ? selected.size : lastCountRef.current} />
             <span> selected</span>
           </span>
           <span className="tbl__bulkSpacer"></span>

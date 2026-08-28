@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import * as D from '../components/pages/data';
 import * as T from '../components/pages/datetime';
+import * as E from '../components/pages/expressive';
 import * as F from '../components/pages/forms';
 import { InstallationDoc } from '../components/pages/installation';
 import { IntroductionDoc } from '../components/pages/introduction';
@@ -54,7 +55,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'introduction',
         label: 'Introduction',
         blurb:
-          'A React 19 design system with modern CSS, a small closed token vocabulary, and a ~2.5 kB WAAPI motion engine.',
+          'A React 19 design system with modern CSS, a small closed token vocabulary, and a ~3 kB WAAPI motion engine.',
         Content: IntroductionDoc,
         toc: [
           { id: 'overview', title: 'Overview', level: 2 },
@@ -231,6 +232,44 @@ export const GROUPS: DocGroup[] = [
             description: 'Tabular monospace readouts with tone variants.',
             Component: P.CountBadgeStaticDemo,
             code: `<CountBadge value="7 / 10" />\n<CountBadge value="99+" tone="warning" />`,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'expressive',
+    title: 'Expressive',
+    docs: [
+      {
+        slug: 'odometer',
+        label: 'Odometer',
+        blurb: 'Rolling figures at display size; every digit column carries its own spring.',
+        HeroComponent: E.OdometerHero,
+        heroCode: `import { Odometer } from '@zyncat/ui/odometer';\n\n<Odometer value={count} format={(v) => v.toLocaleString('en-US')} />`,
+        examples: [
+          {
+            id: 'formatting',
+            title: 'Formatting',
+            description:
+              'format renders the value to a string - digits roll, everything else stays put as a separator.',
+            Component: E.OdometerFormatDemo,
+            code: `<Odometer value={v} />\n<Odometer value={v} format={(n) => n.toLocaleString('en-US')} />\n<Odometer value={v} format={(n) => String(n).padStart(8, '0')} />`,
+          },
+          {
+            id: 'speed',
+            title: 'Speed',
+            description:
+              'speed is sampled live on every frame, so it can track a prop while the columns are still moving.',
+            Component: E.OdometerSpeedDemo,
+            code: `<Odometer value={v} speed={0.4} />\n<Odometer value={v} />\n<Odometer value={v} speed={2} />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description: 'Level 2 override - the scoped --odometer-* properties are the theming contract.',
+            Component: E.OdometerThemeDemo,
+            code: `<Odometer value={v} style={{ '--odometer-size': 'var(--size-title)', '--odometer-weight': '600' }} />\n<Odometer value={v} style={{ '--odometer-accent': 'var(--accent-active)', '--odometer-gap': '0.14em' }} />`,
           },
         ],
       },

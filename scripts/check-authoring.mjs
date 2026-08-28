@@ -57,7 +57,6 @@ const NOT_EXPECTED_TO_RESOLVE = new Set([
   '.tsx',
   '.css',
   'src/components/compound/',
-  'src/components/expressive/',
 ]);
 
 const ILLUSTRATIVE_VARS = new Set(['--space-3-5']);

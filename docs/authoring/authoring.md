@@ -10,7 +10,7 @@ src/components/<tier>/<component>/<Component>.tsx
 ```
 
 - Directory kebab-case. File PascalCase.
-- Scanned tiers today: `primitives`, `composites`, `compound`. `expressive` joins in phase 4.
+- Scanned tiers: `primitives`, `composites`, `compound`, `expressive`.
 - tsup derives the entry: `TextField.tsx` becomes `@zyncat/ui/text-field`. Nothing to register.
 - Wrong derived name: add to `NAME_OVERRIDES` in `scripts/lib/entries.mjs`. Never rename the file.
 - Helpers live in the same directory. Only PascalCase `.tsx` files become entries.
@@ -48,6 +48,7 @@ src/components/<tier>/<component>/<component>.css
 ## 4. Document the props where they live
 
 - JSDoc on the public props interface feeds the tooltip, the docs table and the MCP.
+- Export the interface the JSDoc sits on. `check:contracts` counts JSDoc on an unexported type as comment debt.
 - Put `@default` on every defaulted prop.
 
 ```tsx

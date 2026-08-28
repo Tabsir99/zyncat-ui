@@ -1,6 +1,6 @@
 'use client';
 
-import './odometer.css';
+import './digit-strip.css';
 
 function Digit({ d }: { d: number }) {
   return (
@@ -14,11 +14,11 @@ function Digit({ d }: { d: number }) {
   );
 }
 
-export interface OdometerProps {
+export interface DigitStripProps {
   value: string | number;
 }
 
-export function Odometer({ value }: OdometerProps) {
+export function DigitStrip({ value }: DigitStripProps) {
   const str = String(value);
   return (
     <span className="odo" role="text" aria-label={str}>

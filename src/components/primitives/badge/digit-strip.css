@@ -1,7 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Odometer - each digit is a column clipping a 0-9 strip; .odo__strip--N sets the translateY (no inline styles). */
   .odo {
     display: inline-flex;
     align-items: center;

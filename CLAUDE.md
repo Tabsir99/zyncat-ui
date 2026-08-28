@@ -45,7 +45,7 @@ src/
     primitives/  one control or one visual atom            (system contract)
     composites/  several primitives plus behaviour         (system contract)
     compound/    whole assembled patterns                  (contract declared per component)
-    expressive/  creative motion components and replicas   (expressive contract; wired in phase 4)
+    expressive/  creative motion components and replicas   (expressive contract)
     internal/    shared machinery, never exported
     dev/         MotionDevtools
   mcp/           the bundled MCP server

@@ -10,7 +10,7 @@ function findRoot(start) {
 
 export const ROOT = findRoot(import.meta.dirname);
 
-export const TIERS = ['primitives', 'composites', 'compound'];
+export const TIERS = ['primitives', 'composites', 'compound', 'expressive'];
 
 export const NAME_OVERRIDES = { DateTimeField: 'datetime-field', EmojiPickerPanel: 'emoji-picker' };
 

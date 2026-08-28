@@ -7,7 +7,7 @@ Setup:
   import { Button } from '@zyncat/ui/button';   // one subpath per component - there is no barrel entry
   import '@zyncat/ui/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
-Animation is built in - a ~2.5 kB WAAPI engine, no animation library to install.
+Animation is built in - a ~3 kB WAAPI engine, no animation library to install.
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 
 Conventions:
@@ -260,6 +260,19 @@ EmojiPickerPanel - @zyncat/ui/emoji-picker
   <EmojiPickerPanel open={open} onOpenChange={setOpen} onSelect={addReaction} getEmojiUrl={getEmojiUrl}
     search trigger={<Button variant="secondary">Add reaction</Button>} />
   +3 more props - get_component('emoji-picker')
+
+============================================================ EXPRESSIVE
+
+Odometer - @zyncat/ui/odometer
+  Rolling number display. Each digit column carries its own spring, so digits arrive out of
+  sync and blur in proportion to their velocity; a travelling digit tints toward the accent.
+  Expressive tier - retune it through --odometer-* on the root: cell, digit, gap, ink, accent,
+  separator-ink, size, weight. Pick it over CountBadge roll for display-size figures.
+  value is the number; format renders it to a string, where digits become rolling columns and
+  everything else becomes a static separator. speed is sampled live every frame.
+  Reduced motion snaps to the value without rolling.
+  <Odometer value={12480} format={(v) => v.toLocaleString('en-US')} speed={1.2} />
+  +1 more prop - get_component('odometer')
 
 ============================================================ DEV TOOLS
 

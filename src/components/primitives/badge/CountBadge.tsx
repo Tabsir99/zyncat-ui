@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge, type BadgeProps } from './Badge';
-import { Odometer } from './odometer';
+import { DigitStrip } from './digit-strip';
 
 export interface CountBadgeProps extends Omit<BadgeProps, 'children'> {
   /** The chip content - stringified; in `roll` mode each digit becomes an odometer column. */
@@ -14,7 +14,7 @@ export function CountBadge({ value, tone = 'neutral', roll = false, ...rest }: C
   const str = String(value);
   return (
     <Badge tone={tone} {...rest}>
-      {roll ? <Odometer value={str} /> : str}
+      {roll ? <DigitStrip value={str} /> : str}
     </Badge>
   );
 }

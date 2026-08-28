@@ -170,6 +170,34 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'pill', type: 'boolean', description: 'Fully-rounded shape.' },
     { name: 'icon', type: 'ReactNode', description: 'Optional leading <Icon> (overrides dot if both set).' },
   ],
+  odometer: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLSpanElement>, keyof OdometerOwnProps> & DataAttributes',
+      description: 'Standard <span> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+    {
+      name: 'value',
+      type: 'number',
+      required: true,
+      description: 'The number to roll to. Every digit column carries its own spring, so digits arrive out of sync.',
+    },
+    {
+      name: 'format',
+      type: '(value: number) => string',
+      default: 'String(Math.trunc(value))',
+      description:
+        'Renders the value into the displayed string; digits become rolling columns, everything else becomes a static separator.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the simulation rate; sampled live on every frame.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
   'text-field': [
     {
       name: 'htmlProps',
