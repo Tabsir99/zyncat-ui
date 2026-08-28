@@ -303,6 +303,31 @@ export const GROUPS: DocGroup[] = [
           },
         ],
       },
+      {
+        slug: 'lens',
+        label: 'Lens',
+        blurb: 'An optical loupe over live DOM - magnified type is re-rasterised, never upscaled.',
+        HeroComponent: E.LensHero,
+        heroCode: `import { Lens } from '@zyncat/ui/lens';\n\n<Lens magnification={2.6} radius={132}>\n  <TypeSpecimen />\n</Lens>`,
+        examples: [
+          {
+            id: 'optics',
+            title: 'Optics',
+            description:
+              'magnification is clamped to 1.2-6 and radius to 60-260. Two concentric copies are drawn, the outer one scaled harder, so the image crowds toward the edge the way thick glass does.',
+            Component: E.LensOpticsDemo,
+            code: `<Lens magnification={3.8} radius={172}>\n  <TypeSpecimen />\n</Lens>`,
+          },
+          {
+            id: 'chromatic',
+            title: 'Chromatic fringing',
+            description:
+              'Colour separation at the rim that strengthens with travel speed. Turn it off for a clean edge.',
+            Component: E.LensChromaticDemo,
+            code: `<Lens chromatic={false} magnification={3.4}>\n  <TypeSpecimen />\n</Lens>`,
+          },
+        ],
+      },
     ],
   },
   {

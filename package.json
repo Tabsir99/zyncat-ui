@@ -242,6 +242,11 @@
       "types": "./dist/types/components/expressive/typing-lines/TypingLines.d.ts",
       "import": "./dist/typing-lines.js"
     },
+    "./lens": {
+      "source": "./src/components/expressive/lens/Lens.tsx",
+      "types": "./dist/types/components/expressive/lens/Lens.d.ts",
+      "import": "./dist/lens.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

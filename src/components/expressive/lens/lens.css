@@ -1,0 +1,119 @@
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.components {
+  .lens {
+    --lens-ink: var(--text-strong);
+    --lens-surface: var(--bg-surface);
+    --lens-edge: color-mix(in oklab, var(--lens-ink) 16%, transparent);
+    --lens-highlight: color-mix(in oklab, var(--bg-surface) 90%, transparent);
+    --lens-shadow-alpha: 0.26;
+    --lens-lift: 10;
+    --lens-blur: 26;
+    --lens-vignette-mid: 5%;
+    --lens-vignette-edge: 15%;
+    --lens-fringe-warm: oklch(0.72 0.16 12 / 0.3);
+    --lens-fringe-cool: oklch(0.7 0.15 265 / 0.34);
+    --lens-rim-start: 79%;
+    --lens-rim-end: 87%;
+
+    position: relative;
+    display: block;
+    overflow: clip;
+    touch-action: none;
+  }
+
+  .lens:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .lens--active {
+    cursor: none;
+  }
+
+  .lens__content {
+    position: relative;
+  }
+
+  .lens__copy {
+    position: absolute;
+    margin: 0;
+    max-width: none;
+    will-change: scale;
+  }
+
+  .lens__glass {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: var(--radius-full);
+    opacity: 0;
+    pointer-events: none;
+    will-change: translate, opacity;
+  }
+
+  .lens__core,
+  .lens__rim,
+  .lens__fringe,
+  .lens__vignette,
+  .lens__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-full);
+  }
+
+  .lens__core {
+    overflow: hidden;
+    background: var(--lens-surface);
+  }
+
+  .lens__rim {
+    overflow: hidden;
+    mask-image: radial-gradient(
+      circle at 50% 50%,
+      transparent 0 var(--lens-rim-start),
+      #000 var(--lens-rim-end),
+      #000 100%
+    );
+  }
+
+  .lens__fringe {
+    opacity: 0;
+    mix-blend-mode: multiply;
+    background: radial-gradient(
+      circle at 50% 50%,
+      transparent 78%,
+      var(--lens-fringe-warm) 90%,
+      var(--lens-fringe-cool) 97%,
+      transparent 100%
+    );
+  }
+
+  .lens__vignette {
+    background: radial-gradient(
+      circle at 50% 50%,
+      transparent 58%,
+      color-mix(in oklab, var(--lens-ink) var(--lens-vignette-mid), transparent) 84%,
+      color-mix(in oklab, var(--lens-ink) var(--lens-vignette-edge), transparent) 100%
+    );
+  }
+
+  .lens__specular {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: var(--radius-full);
+    opacity: 0;
+    filter: blur(11px);
+    background: radial-gradient(closest-side, var(--lens-highlight), transparent);
+  }
+
+  .lens__ring {
+    box-shadow:
+      0 calc(var(--lens-lift) * 1px) calc(var(--lens-blur) * 1px) calc(var(--lens-blur) * -0.42px)
+        color-mix(in oklab, var(--lens-ink) calc(var(--lens-shadow-alpha) * 100%), transparent),
+      inset 0 0 0 1px var(--lens-edge),
+      inset 0 1px 1px var(--lens-highlight),
+      inset 0 0 calc(var(--lens-blur) * 0.5px) color-mix(in oklab, var(--lens-ink) 7%, transparent);
+  }
+}

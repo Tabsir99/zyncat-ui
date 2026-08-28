@@ -56,6 +56,7 @@
       "@zyncat/ui/tabs": ["../../src/components/composites/tabs/Tabs.tsx"],
       "@zyncat/ui/toast": ["../../src/components/composites/toast/Toast.tsx"],
       "@zyncat/ui/tooltip": ["../../src/components/composites/tooltip/Tooltip.tsx"],
+      "@zyncat/ui/lens": ["../../src/components/expressive/lens/Lens.tsx"],
       "@zyncat/ui/odometer": ["../../src/components/expressive/odometer/Odometer.tsx"],
       "@zyncat/ui/typing-lines": ["../../src/components/expressive/typing-lines/TypingLines.tsx"],
       "@zyncat/ui/toast-store": ["../../src/components/composites/toast/toast-store.ts"],

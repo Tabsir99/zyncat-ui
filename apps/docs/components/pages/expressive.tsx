@@ -3,6 +3,7 @@
 import { useState, type CSSProperties } from 'react';
 
 import { Button } from '@zyncat/ui/button';
+import { Lens } from '@zyncat/ui/lens';
 import { Odometer } from '@zyncat/ui/odometer';
 import { TypingLines, type TypingCaret } from '@zyncat/ui/typing-lines';
 
@@ -127,6 +128,98 @@ export function TypingLinesWordDemo() {
       caret="none"
       lines={['Words arrive whole, one at a time.', 'No caret, because nothing is pending.']}
     />
+  );
+}
+
+const SPECIMEN_ROWS = [
+  { text: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', weight: 'var(--weight-semibold)', ink: 'var(--text-strong)' },
+  { text: 'abcdefghijklmnopqrstuvwxyz', weight: 'var(--weight-regular)', ink: 'var(--text-strong)' },
+  { text: '0123456789', weight: 'var(--weight-regular)', ink: 'var(--text-muted)' },
+];
+
+const RULE: CSSProperties = { height: 'var(--border-hairline)', background: 'var(--border-default)' };
+
+function Specimen() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)', padding: 'var(--space-6)' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 'var(--space-6)' }}>
+        <span style={{ font: 'var(--type-display-lg)', letterSpacing: '-0.05em', lineHeight: 0.8 }}>Aa</span>
+        <span
+          style={{
+            font: 'var(--type-micro)',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+          }}
+        >
+          Geist
+        </span>
+      </div>
+      <div style={RULE} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        {SPECIMEN_ROWS.map((row) => (
+          <div
+            key={row.text}
+            style={{
+              font: 'var(--type-title)',
+              fontWeight: row.weight,
+              color: row.ink,
+              letterSpacing: '0.05em',
+              lineHeight: 1.1,
+            }}
+          >
+            {row.text}
+          </div>
+        ))}
+      </div>
+      <div style={RULE} />
+      <div style={{ font: 'var(--type-caption)', color: 'var(--text-muted)', letterSpacing: '0.07em' }}>
+        . , : ; … ! ? &lsquo; &rsquo; &ldquo; &rdquo; ( ) [ ] &#123; &#125; / \ | - – — @ &amp; # % ‰ + × ÷ = ≠ ± ~ ° √
+        ∞ µ π Ω
+      </div>
+    </div>
+  );
+}
+
+export function LensHero() {
+  return (
+    <Lens>
+      <Specimen />
+    </Lens>
+  );
+}
+
+export function LensOpticsDemo() {
+  const [magnification, setMagnification] = useState(2.6);
+  const [radius, setRadius] = useState(132);
+  return (
+    <div style={COLUMN}>
+      <div style={ROW}>
+        <Button size="sm" variant="secondary" onClick={() => setMagnification((m) => (m >= 5 ? 1.4 : m + 1.2))}>
+          Magnification {magnification.toFixed(1)}x
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => setRadius((r) => (r >= 200 ? 80 : r + 40))}>
+          Radius {radius}px
+        </Button>
+      </div>
+      <Lens magnification={magnification} radius={radius}>
+        <Specimen />
+      </Lens>
+    </div>
+  );
+}
+
+export function LensChromaticDemo() {
+  const [chromatic, setChromatic] = useState(false);
+  return (
+    <div style={COLUMN}>
+      <Button size="sm" variant="secondary" onClick={() => setChromatic((c) => !c)}>
+        Chromatic {chromatic ? 'on' : 'off'}
+      </Button>
+      <Lens chromatic={chromatic} magnification={3.4}>
+        <Specimen />
+      </Lens>
+    </div>
   );
 }
 

@@ -231,6 +231,35 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
   ],
+  lens: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLDivElement>, keyof LensOwnProps> & DataAttributes',
+      description: 'Standard <div> attributes (aria-*, data-*, title, ...) forwarded to the stage.',
+    },
+    {
+      name: 'children',
+      type: 'ReactNode',
+      required: true,
+      description:
+        'The specimen the glass magnifies. It stays in the accessibility tree; the magnified copy is aria-hidden.',
+    },
+    {
+      name: 'magnification',
+      type: 'number',
+      default: '2.6',
+      description: 'How much the glass magnifies, clamped to 1.2-6.',
+    },
+    { name: 'radius', type: 'number', default: '132', description: 'Glass radius in pixels, clamped to 60-260.' },
+    {
+      name: 'chromatic',
+      type: 'boolean',
+      default: 'true',
+      description: 'Chromatic fringing at the rim, which strengthens with travel speed.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the stage.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the stage.' },
+  ],
   'text-field': [
     {
       name: 'htmlProps',
