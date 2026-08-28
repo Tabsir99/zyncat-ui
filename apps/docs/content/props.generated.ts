@@ -260,6 +260,137 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the stage.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the stage.' },
   ],
+  'weight-field': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLSpanElement>, keyof WeightFieldOwnProps> & DataAttributes',
+      description: 'Standard <span> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+    {
+      name: 'text',
+      type: 'string',
+      required: true,
+      description:
+        'The headline the field is built from. Under the animated-unit cap every glyph gets its own spring; past it the split falls back to one spring per word.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the simulation rate; sampled live on every frame.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
+  'morphing-text': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLSpanElement>, keyof MorphingTextOwnProps> & DataAttributes',
+      description: 'Standard <span> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+    {
+      name: 'words',
+      type: 'string[]',
+      required: true,
+      description:
+        'The words to cycle through, in order; the last one morphs back into the first. Fewer than two words renders as still type.',
+    },
+    {
+      name: 'hold',
+      type: 'number',
+      default: '1500',
+      description: 'How long a word rests fully legible before the next morph starts, in milliseconds; sampled live.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the simulation rate; sampled live on every frame.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
+  'flow-field': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLDivElement>, keyof FlowFieldOwnProps> & DataAttributes',
+      description: 'Standard <div> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+    {
+      name: 'children',
+      type: 'ReactNode',
+      description:
+        'Content layered over the field. It stays in the accessibility tree; only the canvas is aria-hidden.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the simulation rate; sampled live on every frame.',
+    },
+    {
+      name: 'spacing',
+      type: 'number',
+      default: '26',
+      description:
+        'Distance in pixels between neighbouring needles, clamped to 12-72. Widened automatically on large surfaces so the field never exceeds 1600 needles.',
+    },
+    {
+      name: 'radius',
+      type: 'number',
+      default: '210',
+      description: "Radius in pixels of the pointer's steering influence, clamped to 40-640.",
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
+  confetti: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLCanvasElement>, keyof ConfettiOwnProps> & DataAttributes',
+      description: 'Standard <canvas> attributes (aria-*, data-*, title, ...) forwarded to the canvas.',
+    },
+    {
+      name: 'emitter',
+      type: 'ConfettiEmitter',
+      default: "'sides'",
+      description: 'Where pieces are launched from: two side cannons, a full-width fall, or two floor-corner cannons.',
+    },
+    {
+      name: 'count',
+      type: 'number',
+      default: '170',
+      description:
+        'Pieces one fire sends, clamped to 1-520. The field itself holds 520; beyond that the oldest piece is retired.',
+    },
+    {
+      name: 'duration',
+      type: 'number',
+      default: '0.15',
+      description:
+        'Seconds the emitter stays open, clamped to 0-10. Pieces leave front-loaded inside that window, so 0.15 reads as one shove and 2.5 as a burst that tapers into a fall.',
+    },
+    {
+      name: 'speed',
+      type: 'number',
+      default: '1',
+      description: 'Multiplies the simulation rate; sampled live on every frame.',
+    },
+    {
+      name: 'field',
+      type: 'ConfettiField',
+      default: "'container'",
+      description:
+        '`container` fills the nearest positioned ancestor; `viewport` pins the field to the window above the toast layer.',
+    },
+    {
+      name: 'ref',
+      type: 'Ref<ConfettiHandle>',
+      description: 'Imperative handle - call `fire()` on it to send a burst, `clear()` to empty the field.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the canvas.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the canvas.' },
+  ],
   'text-field': [
     {
       name: 'htmlProps',
@@ -1535,6 +1666,46 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
 };
 
 export const GENERATED_TYPES: Record<string, NestedType[]> = {
+  confetti: [
+    {
+      name: 'ConfettiFireOptions',
+      rows: [
+        {
+          name: 'count',
+          type: 'number',
+          description: 'Pieces this burst sends, clamped to 1-520. Falls back to the `count` prop.',
+        },
+        {
+          name: 'duration',
+          type: 'number',
+          description: "Seconds this burst's emitter stays open, clamped to 0-10. Falls back to the `duration` prop.",
+        },
+        {
+          name: 'emitter',
+          type: 'ConfettiEmitter',
+          description: 'Emitter geometry for this burst. Falls back to the `emitter` prop.',
+        },
+      ],
+    },
+    {
+      name: 'ConfettiHandle',
+      rows: [
+        {
+          name: 'fire',
+          type: '(options?: ConfettiFireOptions) => void',
+          required: true,
+          description:
+            'Sends one burst. Bursts coexist - firing again while pieces are still airborne adds to the field rather than replacing it.',
+        },
+        {
+          name: 'clear',
+          type: '() => void',
+          required: true,
+          description: 'Empties the field and stops the simulation immediately.',
+        },
+      ],
+    },
+  ],
   'radio-group': [
     {
       name: 'RadioOption',

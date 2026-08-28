@@ -328,6 +328,137 @@ export const GROUPS: DocGroup[] = [
           },
         ],
       },
+      {
+        slug: 'weight-field',
+        label: 'WeightField',
+        blurb: 'A display headline whose glyphs gain weight as the cursor approaches, and overshoot on the way back.',
+        HeroComponent: E.WeightFieldHero,
+        heroCode: `import { WeightField } from '@zyncat/ui/weight-field';\n\n<WeightField text="Kinetic" />`,
+        examples: [
+          {
+            id: 'speed',
+            title: 'Speed',
+            description:
+              'speed is sampled live on every frame, so it can change while the glyphs are still travelling.',
+            Component: E.WeightFieldSpeedDemo,
+            code: `<WeightField text="Damped" speed={0.4} />\n<WeightField text="Damped" speed={1} />\n<WeightField text="Damped" speed={2} />`,
+          },
+          {
+            id: 'splitting',
+            title: 'Splitting',
+            description:
+              'Up to 48 animated units every glyph springs on its own; past that the split falls back to one spring per word, so the node count stays bounded and no text is dropped.',
+            Component: E.WeightFieldSplitDemo,
+            code: `<WeightField text="Kinetic type" />\n<WeightField text="A headline long enough that per glyph springs would outnumber the animated unit cap" />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description: 'Level 2 override - the scoped --weight-field-* properties are the theming contract.',
+            Component: E.WeightFieldThemeDemo,
+            code: `<WeightField text="Restrained" style={{ '--weight-field-rest-weight': '400', '--weight-field-peak-weight': '600', '--weight-field-lift': '0em', '--weight-field-tint': '0' }} />\n<WeightField text="Exaggerated" style={{ '--weight-field-accent': 'var(--accent-active)', '--weight-field-reach': '4', '--weight-field-lift': '0.16em' }} />`,
+          },
+        ],
+      },
+      {
+        slug: 'morphing-text',
+        label: 'MorphingText',
+        blurb: 'A word list that morphs word into word through one alpha threshold, so letterforms pool like liquid.',
+        HeroComponent: E.MorphingTextHero,
+        heroCode: `import { MorphingText } from '@zyncat/ui/morphing-text';\n\n<MorphingText words={['Weight', 'Timing', 'Ease', 'Rest']} />`,
+        examples: [
+          {
+            id: 'pacing',
+            title: 'Pacing',
+            description:
+              'hold is the resting time between morphs and speed scales the whole clock - both are sampled live, so pressing either mid-morph retimes the morph already in flight.',
+            Component: E.MorphingTextPacingDemo,
+            code: `<MorphingText words={words} hold={hold} speed={speed} />`,
+          },
+          {
+            id: 'phrases',
+            title: 'Phrases',
+            description:
+              'Each letter runs its own window, so the pooling has a direction; spaces stay as text nodes and never smear.',
+            Component: E.MorphingTextPhrasesDemo,
+            code: `<MorphingText words={['Design every state', 'Interrupt every motion', 'Ship the polish']} hold={2200} />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description:
+              'Level 2 override - the scoped --morphing-text-* properties are the theming contract; smear is how far letterforms melt, and the hairline is removed by zeroing its height.',
+            Component: E.MorphingTextThemeDemo,
+            code: `<MorphingText words={words} style={{ '--morphing-text-smear': '1.6', '--morphing-text-rule-accent': 'var(--accent-active)' }} />\n<MorphingText words={words} style={{ '--morphing-text-smear': '0.5', '--morphing-text-rule-height': '0' }} />`,
+          },
+        ],
+      },
+      {
+        slug: 'flow-field',
+        label: 'FlowField',
+        blurb: 'A canvas needle field that breathes on a noise loop and swings away from the pointer.',
+        HeroComponent: E.FlowFieldHero,
+        heroCode: `import { FlowField } from '@zyncat/ui/flow-field';\n\n<FlowField spacing={26} radius={210}>\n  <Hero />\n</FlowField>`,
+        examples: [
+          {
+            id: 'density',
+            title: 'Density',
+            description:
+              'spacing is the gap between needles, clamped to 12-72 px. On a large surface the gap widens on its own so the field never draws more than 1600 needles - a 1920x1080 panel settles at a 36 px gap and 1590 needles.',
+            Component: E.FlowFieldDensityDemo,
+            code: `<FlowField spacing={14} />`,
+          },
+          {
+            id: 'reach',
+            title: 'Reach and rate',
+            description:
+              'radius is how far the pointer steers, clamped to 40-640 px; speed multiplies the simulation and is sampled live every frame. The grip takes hold in 83 ms and lets go over 400 ms, so the field never snaps back.',
+            Component: E.FlowFieldReachDemo,
+            code: `<FlowField radius={420} speed={1.8} />`,
+          },
+          {
+            id: 'palette',
+            title: 'Needle palette',
+            description:
+              'The needles are drawn from a twelve-stop ramp mixed in oklab between --flow-field-ink and --flow-field-accent; a needle picks its stop from how hard the pointer is steering it. Override a single --flow-field-ramp-N to bend the ramp.',
+            Component: E.FlowFieldPaletteDemo,
+            code: `<FlowField style={{ '--flow-field-ink': 'var(--border-strong)', '--flow-field-accent': 'var(--text-strong)' }} />`,
+          },
+        ],
+      },
+      {
+        slug: 'confetti',
+        label: 'Confetti',
+        blurb: 'A canvas burst you fire yourself - paper, curls, ribbons and foil on real drag, lift and tumble.',
+        HeroComponent: E.ConfettiHero,
+        heroCode: `import { Confetti, type ConfettiHandle } from '@zyncat/ui/confetti';\n\nconst confetti = useRef<ConfettiHandle>(null);\n\n<div style={{ position: 'relative' }}>\n  <Confetti ref={confetti} />\n  <Button onClick={() => confetti.current?.fire()}>Celebrate</Button>\n</div>`,
+        examples: [
+          {
+            id: 'emitters',
+            title: 'Emitters',
+            description:
+              'sides fires two cannons in from the edges, top drops a full-width fall, corners fires up from the floor. fire() takes a per-burst override, so one instance covers all three without re-rendering.',
+            Component: E.ConfettiEmitterDemo,
+            code: `<Confetti ref={confetti} emitter="top" />\n\nconfetti.current?.fire({ emitter: 'corners' });`,
+          },
+          {
+            id: 'window',
+            title: 'Burst and taper',
+            description:
+              'duration is the seconds the emitter stays open, clamped to 0-10. Pieces leave front-loaded inside it - 69% are out by the halfway mark - so 0 reads as one shove and 2.5 as a burst that thins into a fall. Bursts coexist: firing again mid-flight adds to the field instead of restarting it.',
+            Component: E.ConfettiWindowDemo,
+            code: `confetti.current?.fire({ duration: 0, count: 220 });\nconfetti.current?.fire({ duration: 2.5, count: 300 });`,
+          },
+          {
+            id: 'papers',
+            title: 'Paper stock',
+            description:
+              'Five paper slots, each with a reverse side mixed toward --confetti-ink and a specular mixed toward --confetti-light, so every piece flashes as it turns edge-on. --confetti-weights sets how often each slot is cut.',
+            Component: E.ConfettiPaletteDemo,
+            code: `<Confetti\n  ref={confetti}\n  style={{\n    '--confetti-paper-1': 'oklch(0.82 0.13 88)',\n    '--confetti-weights': '1 0.8 0.9 1 0.3',\n    '--confetti-gloss': '78%',\n  } as CSSProperties}\n/>`,
+          },
+        ],
+      },
     ],
   },
   {
