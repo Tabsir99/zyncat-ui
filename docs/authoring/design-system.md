@@ -25,6 +25,7 @@
 
 - Applies to `src/components/expressive/` and opted-in `src/components/compound/` patterns.
 - Open axes: geometry, filters, canvas, variable fonts, particles, simulation, physics.
+- Also open: colour ramps and lighting models - gradient stops, specular bands, shading curves.
 - Freedom props are allowed: accent, speed, intensity.
 - Name every arbitrary value.
 - A value used once becomes a named module constant.
@@ -33,7 +34,10 @@
 - Default scoped properties from semantic tokens where a semantic exists.
 - Never declare anything on `:root`.
 - Never leak into another component's stylesheet.
-- Resolve ink, surface and accent from semantic tokens: `--text-strong`, `--bg-surface`, `--accent`.
+- Ink, surface and accent as roles resolve from semantic tokens: `--text-strong`, `--bg-surface`, `--accent`.
+- Ink as material does not. A ramp's stops are a lighting model, not nine ink roles.
+- Snapping a material to the nearest token is a system-tier habit and it deletes the component.
+- A material is still named: module constants, or scoped properties a theme opts into.
 - A freedom prop defaults from a token, never a hex.
 - Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
 - No bundled font faces. No local font stacks.
@@ -73,6 +77,18 @@
 - `glass.css`, `avatar.css`, `icons.css`: glass utility, avatar and icon sizing.
 - TypeScript reads tokens off the DOM: `UIMotion`, `tokenPx`.
 - Never duplicate a token value as a TypeScript literal.
+
+### Token, or constant?
+
+- Ownership decides. Ask whether a theme is entitled to move this value.
+- Repointing `--accent` should move it: it is a role. Use a semantic token, every tier.
+- Repointing `--accent` should leave it alone: it is a material or a metric. Use a constant.
+- The replica addendum is this rule, scoped. It binds outside replicas too.
+- Range check before you snap: compare the range you need to the range the scale covers.
+- Outside that range, "nearest" is truncation. It ships a duller version of your component.
+- Substitution check after you snap: put the token in and look at it.
+- If the swap turns the component into a blander thing, the value was never a role.
+- Assertions cannot run this check. Screenshot before the metrics pass, not after.
 
 ### Use an existing token, or add one?
 
