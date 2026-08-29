@@ -406,10 +406,11 @@ FacebookFeed - @zyncat/ui/facebook-feed
   rail. surface post|reel|story, width mobile|web, stage narrow|wide, type image|video,
   ratio 4:5|1.1:1|1:1|3:4|16:9. name, caption, stamp, audio, avatar and media take a URL
   string or your own node; follow, ring, verified toggle the chrome; likes/comments/shares
-  stay exact below 1,000. muted/onMutedChange drive the one real control. Fixed pixel
-  widths and no theming knobs - fidelity is the contract.
+  stay exact below 1,000. liked and muted are controllable toggles; onAction reports comment,
+  share, follow, menu, dismiss, more, search, play. Fixed widths, no theming knobs - fidelity
+  is the contract.
   <FacebookFeed surface="post" width="web" media={<img src={src} alt="" />} likes={267} />
-  +4 more props - get_component('facebook-feed')
+  +5 more props - get_component('facebook-feed')
 
 TikTok - @zyncat/ui/tiktok
   A replica of TikTok's post surface: pick surface="desktop" for the 1584x912 web player with
@@ -418,10 +419,10 @@ TikTok - @zyncat/ui/tiktok
   name, caption, location (desktop) or music + sound (mobile), likes, comments, saves, shares.
   slides takes an array for the desktop carousel, with slide/defaultSlide/onSlideChange
   controlling the page; ratio letterboxes inside the frame. Chevrons, drag and arrow keys page
-  it; muted/onMutedChange drives the mute chrome. Counts print exactly below 10,000 then
-  abbreviate. No autoplay, no network request, no wordmark.
+  it; muted, liked, saved, followed are controllable toggles; onAction reports comment, share,
+  menu, search. Counts print exact below 10,000 then abbreviate. No autoplay, no fetch, no wordmark.
   <TikTok surface="desktop" name="Lena" caption="coast road" slides={[a, b]} likes={3149} />
-  +3 more props - get_component('tiktok')
+  +7 more props - get_component('tiktok')
 
 YouTube - @zyncat/ui/youtube
   Replica of three YouTube surfaces, picked with surface: a feed grid card (video),
@@ -430,10 +431,11 @@ YouTube - @zyncat/ui/youtube
   title, channel, views, age, duration, verified, likes, comments, remixes, text.
   paused and progress drive the Shorts overlay and bar as consumer state. carousel
   takes an array of images and turns the post frame into a draggable, arrow-keyed
-  paged strip; page/defaultPage/onPageChange control it. media and avatar take a URL
-  or your own node, and render CSS placeholders when empty. Never fetches, never plays.
+  paged strip; page/defaultPage/onPageChange control it. media and avatar take a URL or your
+  own node, with CSS placeholders when empty. liked and disliked are controllable toggles;
+  onAction reports comment, share, remix, menu, expand. Never fetches, never plays.
   <YouTube surface="video" title="..." channel="..." views="2m views" age="1 year ago" duration="34:46" verified />
-  +2 more props - get_component('youtube')
+  +4 more props - get_component('youtube')
 
 ============================================================ DEV TOOLS
 
@@ -445,8 +447,41 @@ MotionDevtools - @zyncat/ui/motion-devtools
   scaleTimers, persist, defaultOpen. Also exports motionSlowmo for console/hotkey control.
   {import.meta.env.DEV && <MotionDevtools placement="bottom-right" />}
 
-============================================================ THEMING
-  Re-skin by overriding the CSS custom properties (tokens) in your own stylesheet, loaded after
-  @zyncat/ui/styles.css - never fork the source. Token groups: spacing --space-*, type --type-*,
-  color (--bg-*, --text-*, --border-*, --accent), --radius-*, elevation --shadow-*, motion
-  (--duration-*, --ease-*).
+============================================================ THEMING - THE FOUR OVERRIDE LEVELS
+  Load your own stylesheet after @zyncat/ui/styles.css, then reach for the lowest level that
+  does the job. Never fork the source.
+
+  LEVEL 0 - your plain CSS already wins. Every shipped rule lives inside @layer zyncat.tokens
+  or @layer zyncat.components, and unlayered CSS beats every layer however specific the layered
+  rule is. `.btn { border-radius: 0 }` in your sheet lands: no !important, no specificity
+  ladder, no parent selector. Even `:where(.btn)` at specificity (0,0,0) wins. Class names are
+  BEM off a short base - .btn, .btn--primary, .btn__label; .fld, .fld__input; .dialog__body.
+
+  LEVEL 1 - retheme the whole system. Repoint the semantic tokens on :root: --accent and its
+  ramp, --bg-*, --text-*, --border-*, --radius-*, --shadow-*, --space-*, --size-*, --type-*,
+  --duration-*, --ease-*, --focus-ring. Components read them live and the WAAPI engine reads
+  the same DOM values, so motion retimes with the CSS. get_tokens prints the whole vocabulary
+  with real values. Reduced motion is already handled here - every --duration-* collapses to
+  1ms under prefers-reduced-motion, so derive your own delays from a duration token.
+
+  LEVEL 2 - retune one component. Expressive and compound components publish scoped
+  --<component>-<name> properties as their public contract: --odometer-size/-accent/-gap,
+  --typing-lines-caret-ink/-blink, --lens-surface/-fringe-warm, --morphing-text-size/-smear,
+  --weight-field-reach/-peak-weight, --flow-field-ramp-0..11, --confetti-paper-1..5,
+  --support-fan-*, --support-rail-*. Set them on any ancestor or inline via style. The canvas
+  simulations sample theirs at their next measure - WeightField and FlowField on resize,
+  FlowField also on a theme attribute change, Confetti on the next fire(). A few are
+  per-frame state the component writes to itself, not knobs - --odometer-velocity/-blur,
+  --lens-lift/-blur/-shadow-alpha, --morphing-text-heat/-letter-blur, --weight-field-pull/-wght,
+  --support-fan-x/-y, --support-rail-drag, --youtube-progress. Setting those does nothing.
+  System primitives and composites publish none by design - retheme those at level 1.
+
+  LEVEL 3 - restyle one instance. Primitives and fields take className and style directly;
+  on a field they land on the wrapper, and htmlProps reaches the native <input>. Overlays
+  (Dialog, Modal, Sheet, Popover, Tooltip, Dropdown) have no className prop - pass
+  htmlProps={{ className }} and it lands on the panel itself.
+
+  REPLICAS answer to none of this, on purpose. FacebookFeed, InstagramFeed, TikTok and YouTube
+  pin platform metrics as constants; only --font-sans, --focus-ring and the duration tokens
+  reach them, and there are no scoped properties to set. Fidelity is the contract. If you want
+  a card that follows your theme, build one from primitives instead.
