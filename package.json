@@ -267,6 +267,16 @@
       "types": "./dist/types/components/expressive/weight-field/WeightField.d.ts",
       "import": "./dist/weight-field.js"
     },
+    "./support-fan": {
+      "source": "./src/components/compound/support-fan/SupportFan.tsx",
+      "types": "./dist/types/components/compound/support-fan/SupportFan.d.ts",
+      "import": "./dist/support-fan.js"
+    },
+    "./support-rail": {
+      "source": "./src/components/compound/support-rail/SupportRail.tsx",
+      "types": "./dist/types/components/compound/support-rail/SupportRail.d.ts",
+      "import": "./dist/support-rail.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",
