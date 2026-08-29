@@ -391,6 +391,170 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the canvas.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the canvas.' },
   ],
+  'support-fan': [
+    {
+      name: 'actions',
+      type: 'SupportAction[]',
+      required: true,
+      description: 'The chips the fan deploys, in order from the trigger outwards.',
+    },
+    {
+      name: 'layout',
+      type: 'SupportFanLayout',
+      default: "'arc'",
+      description:
+        '`arc` fans the chips onto a circle centred on the trigger, `dock` stacks them straight with their metadata, `icon-dock` runs a row of icon-only chips sideways.',
+    },
+    { name: 'open', type: 'boolean', description: 'Controlled open state. Omit to stay uncontrolled.' },
+    { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial state when uncontrolled.' },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description: 'Fires whenever the open state changes. Pair with `open` for controlled use.',
+    },
+    {
+      name: 'onSelect',
+      type: '(id: string, action: SupportAction) => void',
+      description: 'Fires when a chip commits - gets its `id` and the full action. Committing closes the fan.',
+    },
+    {
+      name: 'caption',
+      type: 'string',
+      description:
+        "The resting line above the row. Pointing at or focusing a chip replaces it with the action's label and its `meta` (or `description`).",
+    },
+    {
+      name: 'glide',
+      type: 'number',
+      default: '1',
+      description: "How far the row slides away from the pointer, as a multiple of the layout's own step.",
+    },
+    {
+      name: 'magnify',
+      type: 'number',
+      default: '1',
+      description: 'How much the chip under the pointer swells. Deliberately small - the glide carries it.',
+    },
+    {
+      name: 'bow',
+      type: 'number',
+      default: '1',
+      description: "How far the focused chip bows off the row, along the row's normal.",
+    },
+    {
+      name: 'spread',
+      type: 'number',
+      default: '1.45',
+      description: "Width of the bow's gaussian - 0.6 pops one chip out of line, 3 sweeps the whole row.",
+    },
+    {
+      name: 'label',
+      type: 'string',
+      default: "'Support'",
+      description: 'Accessible name for the trigger and for the deployed menu.',
+    },
+    {
+      name: 'triggerIcon',
+      type: 'ReactNode',
+      default: 'a plus sign',
+      description: 'Glyph inside the trigger; it turns 135 degrees while the fan is open.',
+    },
+    {
+      name: 'live',
+      type: 'boolean',
+      default: 'true',
+      description: 'Availability dot on the trigger, shown while the fan is closed.',
+    },
+    {
+      name: 'className',
+      type: 'string',
+      description: 'Extra class(es) merged onto the root. Override `position` here to pin the fan to the viewport.',
+    },
+    {
+      name: 'style',
+      type: 'CSSProperties',
+      description: 'Inline styles merged onto the root - the place to retune the `--support-fan-*` properties.',
+    },
+    {
+      name: 'htmlProps',
+      type: 'HTMLAttributes<HTMLDivElement> & DataAttributes',
+      description: 'Standard <div> attributes (aria-*, data-*, title, ...) forwarded to the root.',
+    },
+  ],
+  'support-rail': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLDivElement>, keyof SupportRailOwnProps> & DataAttributes',
+      description: 'Standard <div> attributes (aria-*, data-*, id, ...) forwarded to the rail root.',
+    },
+    {
+      name: 'actions',
+      type: 'SupportAction[]',
+      default: '[]',
+      required: true,
+      description:
+        'The rows, in order. Each renders a button carrying its label, optional description and optional meta.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      default: "'Talk to us'",
+      description: "Panel heading, and the panel's accessible name.",
+    },
+    {
+      name: 'status',
+      type: 'string',
+      description: 'Small uppercase mono line under the heading - opening hours, queue depth, a shift note.',
+    },
+    {
+      name: 'side',
+      type: "'right' | 'left'",
+      default: "'right'",
+      description:
+        'Container edge the rail pins to. Flips the needle, the collapse origin, the drag axis and the vertical label.',
+    },
+    { name: 'open', type: 'boolean', description: 'Controlled open state. Omit to stay uncontrolled.' },
+    { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial state when uncontrolled.' },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description: 'Fires whenever the open state changes. Pair with `open` for controlled use.',
+    },
+    {
+      name: 'onSelect',
+      type: '(id: string, action: SupportAction) => void',
+      description:
+        'Fires when a row commits - gets its `id` and the full action. The rail stays open; render what happens next in `children`.',
+    },
+    {
+      name: 'needleLabel',
+      type: 'string',
+      default: "'Support'",
+      description: "The vertical mono word on the needle. Doubles as the needle's accessible name.",
+    },
+    {
+      name: 'live',
+      type: 'boolean',
+      default: 'false',
+      description: 'Availability dot on the needle, with an ambient halo.',
+    },
+    {
+      name: 'children',
+      type: 'ReactNode',
+      description: 'Arbitrary content below the rows; it takes the leftover height and scrolls.',
+    },
+    {
+      name: 'footer',
+      type: 'ReactNode',
+      description: 'Pinned bottom strip - on-shift avatars, an SLA line, a link out.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the rail root.' },
+    {
+      name: 'style',
+      type: 'CSSProperties',
+      description: 'Inline styles merged onto the rail root - the place to retune the `--support-rail-*` properties.',
+    },
+  ],
   'text-field': [
     {
       name: 'htmlProps',
@@ -1702,6 +1866,84 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           type: '() => void',
           required: true,
           description: 'Empties the field and stops the simulation immediately.',
+        },
+      ],
+    },
+  ],
+  'support-fan': [
+    {
+      name: 'SupportAction',
+      rows: [
+        {
+          name: 'id',
+          type: 'string',
+          required: true,
+          description: 'Stable identity. Handed back to `onSelect` and used as the React key.',
+        },
+        {
+          name: 'label',
+          type: 'string',
+          required: true,
+          description: 'The visible name - "Live chat", "Book a call".',
+        },
+        {
+          name: 'icon',
+          type: 'ReactNode',
+          description: 'Leading glyph. Any node; the widget sizes the box it sits in.',
+        },
+        {
+          name: 'meta',
+          type: 'string',
+          description: 'Trailing metadata - a wait time, a slot, a ticket number. Set in mono.',
+        },
+        {
+          name: 'description',
+          type: 'string',
+          description: 'Second line under the label. The rail shows it; the fan puts it in the caption.',
+        },
+        {
+          name: 'onSelect',
+          type: '() => void',
+          description: "Fires when this action commits, before the widget's own `onSelect`.",
+        },
+      ],
+    },
+  ],
+  'support-rail': [
+    {
+      name: 'SupportAction',
+      rows: [
+        {
+          name: 'id',
+          type: 'string',
+          required: true,
+          description: 'Stable identity. Handed back to `onSelect` and used as the React key.',
+        },
+        {
+          name: 'label',
+          type: 'string',
+          required: true,
+          description: 'The visible name - "Live chat", "Book a call".',
+        },
+        {
+          name: 'icon',
+          type: 'ReactNode',
+          description: 'Leading glyph. Any node; the widget sizes the box it sits in.',
+        },
+        {
+          name: 'meta',
+          type: 'string',
+          description: 'Trailing metadata - a wait time, a slot, a ticket number. Set in mono.',
+        },
+        {
+          name: 'description',
+          type: 'string',
+          description: 'Second line under the label. The rail shows it; the fan puts it in the caption.',
+        },
+        {
+          name: 'onSelect',
+          type: '() => void',
+          description: "Fires when this action commits, before the widget's own `onSelect`.",
         },
       ],
     },

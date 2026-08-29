@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 
+import * as C from '../components/pages/compound';
 import * as D from '../components/pages/data';
 import * as T from '../components/pages/datetime';
 import * as E from '../components/pages/expressive';
@@ -456,6 +457,167 @@ export const GROUPS: DocGroup[] = [
               'Five paper slots, each with a reverse side mixed toward --confetti-ink and a specular mixed toward --confetti-light, so every piece flashes as it turns edge-on. --confetti-weights sets how often each slot is cut.',
             Component: E.ConfettiPaletteDemo,
             code: `<Confetti\n  ref={confetti}\n  style={{\n    '--confetti-paper-1': 'oklch(0.82 0.13 88)',\n    '--confetti-weights': '1 0.8 0.9 1 0.3',\n    '--confetti-gloss': '78%',\n  } as CSSProperties}\n/>`,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'compound',
+    title: 'Compound',
+    docs: [
+      {
+        slug: 'support-fan',
+        label: 'SupportFan',
+        blurb:
+          'Expressive contract. A trigger that fans its actions onto an arc, with one pointer-tracked field the whole row glides along.',
+        HeroComponent: C.SupportFanHero,
+        heroCode: `import { SupportFan } from '@zyncat/ui/support-fan';\n\n<SupportFan actions={actions} caption="Studio open · GMT+1" onSelect={route} />`,
+        examples: [
+          {
+            id: 'layouts',
+            title: 'Layouts',
+            description:
+              'arc puts every chip the same distance from the trigger centre; dock stacks them straight and shows their meta; icon-dock runs icon-only chips sideways. The radius is derived from the chip box and the count, so the vertical pitch stays constant.',
+            Component: C.SupportFanLayoutDemo,
+            code: `<SupportFan actions={actions} layout="arc" />\n<SupportFan actions={actions} layout="dock" />\n<SupportFan actions={actions} layout="icon-dock" />`,
+          },
+          {
+            id: 'count',
+            title: 'Any number of actions',
+            description:
+              'The deck pinned five chips and five angles. Here the arc solves its own radius from the measured chip height, so two actions and seven actions both keep an even pitch. Past about seven, dock is the layout that still fits.',
+            Component: C.SupportFanCountDemo,
+            code: `<SupportFan actions={actions.slice(0, 2)} />\n<SupportFan actions={actions.slice(0, 7)} />`,
+          },
+          {
+            id: 'glide',
+            title: 'Glide',
+            description:
+              'The row is one deformable surface driven by a continuous fractional focus index, not by per-chip hover. Displacement is tanh, monotonic in the index, so the spacing only ever grows - chips cannot collide or tear a hole. glide 0 freezes the row without disabling anything else.',
+            Component: C.SupportFanGlideDemo,
+            code: `<SupportFan actions={actions} glide={0} magnify={0} />\n<SupportFan actions={actions} glide={1} />\n<SupportFan actions={actions} glide={1.8} />`,
+          },
+          {
+            id: 'bow',
+            title: 'Bow and spread',
+            description:
+              'bow lifts the focused chip off the row along the row normal; spread is the width of that gaussian. 0.6 pops a single chip out of line, 3 sweeps the whole row into a curve.',
+            Component: C.SupportFanBowDemo,
+            code: `<SupportFan actions={actions} bow={1.6} spread={0.6} />\n<SupportFan actions={actions} bow={1.6} spread={1.45} />\n<SupportFan actions={actions} bow={1.6} spread={3} />`,
+          },
+          {
+            id: 'keyboard',
+            title: 'Keyboard',
+            description:
+              'Down or Up on the closed trigger opens onto the first or last chip. Arrows step, Home and End jump, Escape returns focus. Focus aims the same field the pointer does, so the row glides to the focused chip and the caption follows - a keyboard user gets the component, not a reduced version of it.',
+            Component: C.SupportFanKeyboardDemo,
+            code: `<SupportFan actions={actions} layout="dock" caption="Keyboard drives the same field" />`,
+          },
+          {
+            id: 'controlled',
+            title: 'Controlled and interruptible',
+            description:
+              'Toggle mid-flight or switch layout while the row is still deploying: the slots retarget from wherever they are. The open transition and the pointer field live on two nested layers, so neither can cancel the other.',
+            Component: C.SupportFanControlledDemo,
+            code: `<SupportFan actions={actions} open={open} onOpenChange={setOpen} onSelect={handleSelect} />`,
+          },
+          {
+            id: 'trigger',
+            title: 'Trigger',
+            description:
+              'live shows the availability dot while the fan is closed. triggerIcon replaces the plus glyph and still turns 135 degrees on open; label names both the trigger and the deployed menu.',
+            Component: C.SupportFanTriggerDemo,
+            code: `<SupportFan actions={actions} />\n<SupportFan actions={actions} live={false} label="Get help" triggerIcon={<Lifebuoy />} />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description:
+              'Level 2 override - the scoped --support-fan-* properties are the theming contract. Surfaces, ink, accent, trigger size, caption tracking and every duration are knobs; none of them is a prop.',
+            Component: C.SupportFanThemeDemo,
+            code: `<SupportFan actions={actions} style={{ '--support-fan-surface': 'var(--gray-900)', '--support-fan-ink': 'var(--text-inverse)' } as CSSProperties} />\n<SupportFan actions={actions} style={{ '--support-fan-open-duration': 'var(--duration-base)' } as CSSProperties} />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description:
+              'The engine loop calls snap() once and never starts, so the pointer field settles instead of running; the slot transitions collapse with the global duration tokens. Every chip stays at its resting place and the caption still names what the pointer or the keyboard is on.',
+            Component: C.SupportFanReducedMotionDemo,
+            code: `<SupportFan actions={actions} caption="Studio open · GMT+1" />`,
+          },
+        ],
+      },
+      {
+        slug: 'support-rail',
+        label: 'SupportRail',
+        blurb:
+          'Expressive contract. An edge tab that grows a support panel out of its own measured box, and folds back into it.',
+        HeroComponent: C.SupportRailHero,
+        heroCode: `import { SupportRail } from '@zyncat/ui/support-rail';\n\n<SupportRail actions={actions} status="Open · closes 20:00" live onSelect={route} />`,
+        examples: [
+          {
+            id: 'sides',
+            title: 'Either edge',
+            description:
+              'side flips the needle radius, the collapse origin, the panel border, the grabber edge, the row hover nudge, the vertical label and the drag direction. It is a real axis, not a mirrored stylesheet.',
+            Component: C.SupportRailSidesDemo,
+            code: `<SupportRail actions={actions} side="right" />\n<SupportRail actions={actions} side="left" needleLabel="Aide" />`,
+          },
+          {
+            id: 'content',
+            title: 'Rows, children and footer',
+            description:
+              'actions renders the rows. Selecting one fires onSelect and leaves the rail open - what happens next is the app’s, and it renders through children. footer pins a strip to the bottom. Rows with no icon, meta or description still line up.',
+            Component: C.SupportRailSelectDemo,
+            code: `<SupportRail actions={actions} onSelect={route} footer={<Shift />}>\n  {picked ? <Thread id={picked} /> : null}\n</SupportRail>`,
+          },
+          {
+            id: 'minimal',
+            title: 'Minimal',
+            description: 'No status, no footer, no children, and actions carrying nothing but a label.',
+            Component: C.SupportRailMinimalDemo,
+            code: `<SupportRail actions={[{ id: 'chat', label: 'Live chat' }]} title="Need a hand?" needleLabel="Help" />`,
+          },
+          {
+            id: 'collapse',
+            title: 'Measured collapse',
+            description:
+              'The panel folds into the needle’s real box, not into pinned ratios: both boxes are measured and re-measured on resize, so the fold lands exactly on the tab at any container height.',
+            Component: C.SupportRailResizeDemo,
+            code: `<SupportRail actions={actions} status="Measured collapse" defaultOpen />`,
+          },
+          {
+            id: 'drag',
+            title: 'Drag to dismiss',
+            description:
+              'Drag the grabber outward past 88px, or flick it shorter than that above 500px/s. Dragging the wrong way rubber-bands at a sixth of the travel. The drag writes a custom property and CSS composes it into translate, so the release spring is the same writer.',
+            Component: C.SupportRailDragDemo,
+            code: `<SupportRail actions={actions} defaultOpen onOpenChange={setOpen} />`,
+          },
+          {
+            id: 'controlled',
+            title: 'Controlled',
+            description:
+              'Hit the outside toggle while the panel is still collapsing and the shell reverses from wherever it is. The shell stays mounted through the whole close so the collapse always plays; only the faded-out content unmounts, chained to the exit animation rather than to a timer.',
+            Component: C.SupportRailControlledDemo,
+            code: `<SupportRail actions={actions} open={open} onOpenChange={setOpen} />`,
+          },
+          {
+            id: 'retuning',
+            title: 'Retuning',
+            description:
+              'Level 2 override - the scoped --support-rail-* properties are the theming contract. Row padding is one of them, which is why there is no density prop: the knob reaches any value, an enum reached two.',
+            Component: C.SupportRailThemeDemo,
+            code: `<SupportRail actions={actions} style={{ '--support-rail-width': '272px', '--support-rail-row-pad-block': 'var(--space-2)' } as CSSProperties} />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description:
+              'Every duration knob is a calc() of a --duration-* token, so the whole choreography collapses under one frame. The live halo opts out on its own: a 2.6x expansion repeating forever is the class of motion the setting exists to stop, so it becomes a static ring and the status survives in colour and shape.',
+            Component: C.SupportRailReducedMotionDemo,
+            code: `<SupportRail actions={actions} live style={{ '--support-rail-open-duration': '0ms' } as CSSProperties} />`,
           },
         ],
       },

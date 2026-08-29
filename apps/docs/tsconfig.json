@@ -56,6 +56,8 @@
       "@zyncat/ui/tabs": ["../../src/components/composites/tabs/Tabs.tsx"],
       "@zyncat/ui/toast": ["../../src/components/composites/toast/Toast.tsx"],
       "@zyncat/ui/tooltip": ["../../src/components/composites/tooltip/Tooltip.tsx"],
+      "@zyncat/ui/support-fan": ["../../src/components/compound/support-fan/SupportFan.tsx"],
+      "@zyncat/ui/support-rail": ["../../src/components/compound/support-rail/SupportRail.tsx"],
       "@zyncat/ui/confetti": ["../../src/components/expressive/confetti/Confetti.tsx"],
       "@zyncat/ui/flow-field": ["../../src/components/expressive/flow-field/FlowField.tsx"],
       "@zyncat/ui/lens": ["../../src/components/expressive/lens/Lens.tsx"],
