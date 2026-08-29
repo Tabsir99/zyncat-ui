@@ -65,9 +65,9 @@
 
 ---
 
-### Phase 4: Port Motion Primitives (IN PROGRESS)
+### Phase 4: Port Motion Primitives ✓ COMPLETED
 
-**Objective:** Wire `src/components/expressive/` into tsup and port 8 motion primitives.
+**Objective:** Wire `src/components/expressive/` into tsup and port 7 motion primitives.
 
 #### What a component port includes
 
@@ -89,19 +89,26 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
 - Tier wiring: `'expressive'` added to `TIERS` in `scripts/lib/entries.mjs`. `check:contracts`
   already covered the tier (hex ban, prefix registration, `systemTier` exclusion), so no
   linter work was needed.
-- 8 motion primitives from `temp/Motion showcase components.zip`:
+- 7 motion primitives from `temp/Motion showcase components.zip`:
   - ✓ **Odometer** — sprung digit columns, velocity blur and accent tint
-  - Typing Lines (04 — four caret variants)
-  - Lens (cursor magnetism)
-  - Chrome Text (03 — banded metal ramp)
-  - Morphing Text (02 — gooey threshold word morph)
-  - Weight Field (01 — variable-axis magnetism)
-  - Flow Field (05 — needle field)
-  - Confetti (particle burst)
+  - ✓ **Typing Lines** (04 — four caret variants)
+  - ✓ **Lens** (cursor magnetism)
+  - ✓ **Morphing Text** (02 — gooey threshold word morph)
+  - ✓ **Weight Field** (01 — variable-axis magnetism)
+  - ✓ **Flow Field** (05 — needle field)
+  - ✓ **Confetti** (particle burst)
 - Scoped custom props `--<component>-<name>`, defaulted from semantic tokens
 - Type from `--font-sans` / `--font-mono` and the `--size-*` scale; weights from `--weight-*`
 - Accent defaults from `var(--accent)`; no hex literals anywhere in the tier
-- `llms.txt` entries for all 8, then full verify
+- `llms.txt` entries for all 7, then full verify
+
+#### Chrome Text: dropped
+
+The deck's eighth primitive (03 — banded metal ramp) is out of scope permanently. A metallic
+ramp is a fixed material, not a role: the band stops encode a specific chrome, so they cannot
+resolve from `--accent` or any other semantic token, and freezing them as expressive constants
+would ship a component whose entire visual identity ignores the theme it sits in. The tier's
+other seven all read their colour from the token vocabulary. Removed from scope; not deferred.
 
 #### Naming resolved
 
@@ -112,7 +119,7 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
 
 ---
 
-### Phase 5: Support Widgets (PENDING)
+### Phase 5: Support Widgets ✓ COMPLETED
 
 **Objective:** Port Support Fan and Support Rail into `src/components/compound/`.
 
@@ -130,7 +137,7 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
 
 ---
 
-### Phase 6: Platform Replicas (PENDING)
+### Phase 6: Platform Replicas ✓ COMPLETED
 
 **Objective:** Port replica components under the replica addendum contract.
 
@@ -152,7 +159,7 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
 
 ---
 
-### Phase 7: Docs Site & Publish Gate (PENDING)
+### Phase 7: Docs Site & Publish Gate ✓ COMPLETED
 
 **Objective:** Build docs site, populate llms.txt, verify publish readiness.
 
@@ -163,18 +170,37 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
   - Cross-cutting sweep: override levels 0-3, reduced motion, mid-flight interruption
   - Props tables regenerate from `dist/*.d.ts`; a registry slug is what makes `gen-props`
     emit a table at all
-  - Authoring guidance
-- llms.txt registry entries for all 41 subpaths
-- Consumer override documentation (levels 0–3)
+  - A `theming` guide page under Getting Started, proving levels 0-3 with live demos.
+    Content-only slugs must be listed in `HAND_WRITTEN` in `gen-props.mjs` or the generator
+    tries to resolve them to an export and hard-fails.
+- llms.txt registry entries for every subpath
+- Consumer override documentation (levels 0–3), in the `llms.txt` THEMING section, the
+  docs-site page, and the README
 - Full verify gate:
-  - check:contracts (469 baseline + new debt)
+  - check:contracts (468 baseline, ratchet only shrinks)
   - check:authoring (4 docs, 8 layer keys)
   - check:llms (all props documented)
   - type coverage
   - production build
 - Publish gate: MIT license, GitHub release, npm registry
 
-**Blocking:** Phase 6 must be complete.
+#### Publish gate results
+
+- `pnpm verify` 12/12 green; `pnpm build:docs` renders 49 static routes.
+- The packed tarball is 664 kB / 541 files: `dist`, `src`, `llms.txt`, `README.md`, `LICENSE`,
+  `next.mjs`, `next.d.mts`. No `temp/`, `apps/` or repo config leaks.
+- Installed from the tarball into a bare project with only `react` and `react-dom`: all 53
+  subpaths resolve and import, 67 runtime exports, zero runtime dependencies. The only bare
+  specifiers in `dist/` are `react`, `react-dom`, `react/jsx-runtime`, plus `fs`/`path`/`url`
+  in `dist/mcp.js`, which is a bin and never enters a browser graph.
+
+**Blocking:** Phase 6 must be complete (✓ done).
+
+#### Remaining, and owned by the maintainer
+
+The npm publish and the GitHub release are the two steps left. `package.json` is at 0.11.0
+while the newest tag is v0.9.0, so the release tag has not been cut. Both are deliberate
+manual steps, not gate failures.
 
 ---
 
