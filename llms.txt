@@ -380,6 +380,61 @@ SupportRail - @zyncat/ui/support-rail
   <SupportRail actions={actions} status="Open - closes 20:00" live onSelect={route} />
   +2 more props - get_component('support-rail')
 
+============================================================ REPLICAS
+  These four reproduce an external platform's surface, and fidelity is the contract. Platform
+  metrics are pinned constants, so there are no scoped custom properties and your tokens cannot
+  move them - only --font-sans, --focus-ring and the duration tokens are read. None of them ever
+  fetches anything: media and avatar take a URL string or your own node, and fall back to a
+  CSS-only placeholder. None autoplays.
+
+InstagramFeed - @zyncat/ui/instagram-feed
+  A replica of one Instagram feed post, pixel-pinned to the platform and immune to your theme.
+  type image|video is structural, not cosmetic: video runs the black frame full-bleed from the
+  top of the card and floats the header on it in white with the audio credit on a second line.
+  width mobile|web picks the 390px viewport or the 470px column, which alone carries Follow.
+  ratio 4:5|1:1 frames the media; media and avatar take a URL string or your own node, and
+  nothing is ever fetched. likes/comments/reposts render compacted inline beside each glyph.
+  liked, saved and muted are controllable toggles; double-tapping the frame likes it and bursts
+  a heart. onAction reports comment, repost, send, menu and follow.
+  <InstagramFeed type="video" handle="northfieldsupply" caption="Munnar vibe #kerala" media={clip} likes={760400} />
+  +5 more props - get_component('instagram-feed')
+
+FacebookFeed - @zyncat/ui/facebook-feed
+  Replica of Facebook's three post surfaces, pinned to the platform's real metrics: the feed
+  card, the reels stage and the story stage. Pick it over InstagramFeed when you need
+  Facebook's chrome - caption ABOVE the media, a blurred saturated letterbox, the 65px reels
+  rail. surface post|reel|story, width mobile|web, stage narrow|wide, type image|video,
+  ratio 4:5|1.1:1|1:1|3:4|16:9. name, caption, stamp, audio, avatar and media take a URL
+  string or your own node; follow, ring, verified toggle the chrome; likes/comments/shares
+  stay exact below 1,000. muted/onMutedChange drive the one real control. Fixed pixel
+  widths and no theming knobs - fidelity is the contract.
+  <FacebookFeed surface="post" width="web" media={<img src={src} alt="" />} likes={267} />
+  +4 more props - get_component('facebook-feed')
+
+TikTok - @zyncat/ui/tiktok
+  A replica of TikTok's post surface: pick surface="desktop" for the 1584x912 web player with
+  the photo carousel, or surface="mobile" for the 452x822 mobile-web viewport. Platform metrics
+  are pinned constants - no token, no --tiktok-* knob, so theming cannot move them.
+  name, caption, location (desktop) or music + sound (mobile), likes, comments, saves, shares.
+  slides takes an array for the desktop carousel, with slide/defaultSlide/onSlideChange
+  controlling the page; ratio letterboxes inside the frame. Chevrons, drag and arrow keys page
+  it; muted/onMutedChange drives the mute chrome. Counts print exactly below 10,000 then
+  abbreviate. No autoplay, no network request, no wordmark.
+  <TikTok surface="desktop" name="Lena" caption="coast road" slides={[a, b]} likes={3149} />
+  +3 more props - get_component('tiktok')
+
+YouTube - @zyncat/ui/youtube
+  Replica of three YouTube surfaces, picked with surface: a feed grid card (video),
+  a Shorts player with its action rail (short), or a community post (post). Platform
+  metrics are pinned; theming tokens do not move them. One prop set spans all three -
+  title, channel, views, age, duration, verified, likes, comments, remixes, text.
+  paused and progress drive the Shorts overlay and bar as consumer state. carousel
+  takes an array of images and turns the post frame into a draggable, arrow-keyed
+  paged strip; page/defaultPage/onPageChange control it. media and avatar take a URL
+  or your own node, and render CSS placeholders when empty. Never fetches, never plays.
+  <YouTube surface="video" title="..." channel="..." views="2m views" age="1 year ago" duration="34:46" verified />
+  +2 more props - get_component('youtube')
+
 ============================================================ DEV TOOLS
 
 MotionDevtools - @zyncat/ui/motion-devtools

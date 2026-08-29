@@ -12,7 +12,12 @@ export const ROOT = findRoot(import.meta.dirname);
 
 export const TIERS = ['primitives', 'composites', 'compound', 'expressive'];
 
-export const NAME_OVERRIDES = { DateTimeField: 'datetime-field', EmojiPickerPanel: 'emoji-picker' };
+export const NAME_OVERRIDES = {
+  DateTimeField: 'datetime-field',
+  EmojiPickerPanel: 'emoji-picker',
+  TikTok: 'tiktok',
+  YouTube: 'youtube',
+};
 
 export const EXPLICIT_ENTRIES = {
   'toast-store': 'src/components/composites/toast/toast-store.ts',

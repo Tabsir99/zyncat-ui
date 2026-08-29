@@ -277,6 +277,26 @@
       "types": "./dist/types/components/compound/support-rail/SupportRail.d.ts",
       "import": "./dist/support-rail.js"
     },
+    "./facebook-feed": {
+      "source": "./src/components/expressive/facebook-feed/FacebookFeed.tsx",
+      "types": "./dist/types/components/expressive/facebook-feed/FacebookFeed.d.ts",
+      "import": "./dist/facebook-feed.js"
+    },
+    "./instagram-feed": {
+      "source": "./src/components/expressive/instagram-feed/InstagramFeed.tsx",
+      "types": "./dist/types/components/expressive/instagram-feed/InstagramFeed.d.ts",
+      "import": "./dist/instagram-feed.js"
+    },
+    "./tiktok": {
+      "source": "./src/components/expressive/tiktok/TikTok.tsx",
+      "types": "./dist/types/components/expressive/tiktok/TikTok.d.ts",
+      "import": "./dist/tiktok.js"
+    },
+    "./youtube": {
+      "source": "./src/components/expressive/youtube/YouTube.tsx",
+      "types": "./dist/types/components/expressive/youtube/YouTube.d.ts",
+      "import": "./dist/youtube.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",
