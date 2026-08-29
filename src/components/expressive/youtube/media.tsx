@@ -4,6 +4,9 @@ import { cx } from '../../internal/utils/cx';
 
 export type YouTubeMedia = string | ReactNode;
 
+/** The surface actions that carry no state of their own. */
+export type YouTubeAction = 'comment' | 'share' | 'remix' | 'menu' | 'expand';
+
 function isEmpty(source: YouTubeMedia): boolean {
   return source === undefined || source === null || source === false || source === '';
 }

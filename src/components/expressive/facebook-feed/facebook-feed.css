@@ -10,6 +10,30 @@
     box-sizing: border-box;
   }
 
+  .facebook-feed-button {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: pointer;
+  }
+
+  .facebook-feed-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .facebook-feed-post__more,
+  .facebook-feed-post__follow-link,
+  .facebook-feed-reel__more,
+  .facebook-feed-reel__follow-label {
+    display: inline;
+  }
+
   .facebook-feed-post,
   .facebook-feed-reel,
   .facebook-feed-story {
@@ -411,6 +435,11 @@
     position: absolute;
     top: 34px;
     right: 100px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .facebook-feed-reel__search-glyph {
     width: 20px;
     height: 20px;
     fill: none;

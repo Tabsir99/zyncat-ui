@@ -3,7 +3,7 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 import { cx } from '../../internal/utils/cx';
-import { compactCount, countValue, MediaSurface, Portrait, type FacebookMediaType } from './chrome';
+import { compactCount, MediaSurface, Portrait, type FacebookFeedAction, type FacebookMediaType } from './chrome';
 import {
   CommentOutline,
   Magnifier,
@@ -22,6 +22,11 @@ const NOTE = '♪';
 const FOLLOW_LABEL = 'Follow';
 const MORE_LABEL = 'See more';
 const MUTE_LABEL = 'Mute';
+const LIKE_LABEL = 'Like';
+const COMMENT_LABEL = 'Comment';
+const SHARE_LABEL = 'Share';
+const MENU_LABEL = 'More options';
+const SEARCH_LABEL = 'Search';
 
 export interface FacebookReelProps {
   name: string;
@@ -38,6 +43,9 @@ export interface FacebookReelProps {
   shares: number;
   muted: boolean;
   onMutedChange: (muted: boolean) => void;
+  liked: boolean;
+  onLikedChange: (liked: boolean) => void;
+  onAction?: (action: FacebookFeedAction) => void;
   className: string;
   style?: CSSProperties;
   htmlProps?: HTMLAttributes<HTMLElement>;
@@ -58,6 +66,9 @@ export function FacebookReel({
   shares,
   muted,
   onMutedChange,
+  liked,
+  onLikedChange,
+  onAction,
   className,
   style,
   htmlProps,
@@ -88,26 +99,62 @@ export function FacebookReel({
         )}
       </button>
 
-      {wide ? <Magnifier className="facebook-feed-reel__search" /> : null}
+      {wide ? (
+        <button
+          type="button"
+          className="facebook-feed-button facebook-feed-reel__search"
+          aria-label={SEARCH_LABEL}
+          onClick={() => onAction?.('search')}
+        >
+          <Magnifier className="facebook-feed-reel__search-glyph" />
+        </button>
+      ) : null}
 
       <div className="facebook-feed-reel__rail">
-        <span className="facebook-feed-reel__stat" role="img" aria-label={`${countValue(likes)} likes`}>
-          <ThumbOutline className="facebook-feed-reel__stat-glyph" />
-          <span className="facebook-feed-reel__count">{compactCount(likes)}</span>
+        <span className="facebook-feed-reel__stat">
+          <button
+            type="button"
+            className="facebook-feed-button"
+            aria-label={LIKE_LABEL}
+            aria-pressed={liked}
+            onClick={() => onLikedChange(!liked)}
+          >
+            <ThumbOutline className="facebook-feed-reel__stat-glyph" />
+          </button>
+          <span className="facebook-feed-reel__count">{compactCount(likes + (liked ? 1 : 0))}</span>
         </span>
-        <span className="facebook-feed-reel__stat" role="img" aria-label={`${countValue(comments)} comments`}>
-          <CommentOutline className="facebook-feed-reel__stat-glyph" />
+        <span className="facebook-feed-reel__stat">
+          <button
+            type="button"
+            className="facebook-feed-button"
+            aria-label={COMMENT_LABEL}
+            onClick={() => onAction?.('comment')}
+          >
+            <CommentOutline className="facebook-feed-reel__stat-glyph" />
+          </button>
           <span className="facebook-feed-reel__count">{compactCount(comments)}</span>
         </span>
-        <span className="facebook-feed-reel__stat" role="img" aria-label={`${countValue(shares)} shares`}>
-          <ShareOutline className="facebook-feed-reel__stat-glyph" />
+        <span className="facebook-feed-reel__stat">
+          <button
+            type="button"
+            className="facebook-feed-button"
+            aria-label={SHARE_LABEL}
+            onClick={() => onAction?.('share')}
+          >
+            <ShareOutline className="facebook-feed-reel__stat-glyph" />
+          </button>
           <span className="facebook-feed-reel__count">{compactCount(shares)}</span>
         </span>
-        <span className="facebook-feed-reel__kebab" aria-hidden="true">
+        <button
+          type="button"
+          className="facebook-feed-button facebook-feed-reel__kebab"
+          aria-label={MENU_LABEL}
+          onClick={() => onAction?.('menu')}
+        >
           {KEBAB_PIPS.map((pip) => (
             <span key={pip} className="facebook-feed-reel__pip" />
           ))}
-        </span>
+        </button>
       </div>
 
       <div className="facebook-feed-reel__overlay">
@@ -118,7 +165,13 @@ export function FacebookReel({
           {follow ? (
             <span className="facebook-feed-reel__follow">
               <span className="facebook-feed-reel__follow-dot">{MIDDOT}</span>
-              <span className="facebook-feed-reel__follow-label">{FOLLOW_LABEL}</span>
+              <button
+                type="button"
+                className="facebook-feed-button facebook-feed-reel__follow-label"
+                onClick={() => onAction?.('follow')}
+              >
+                {FOLLOW_LABEL}
+              </button>
             </span>
           ) : null}
         </div>
@@ -132,7 +185,13 @@ export function FacebookReel({
         )}
         <div className="facebook-feed-reel__caption">
           <span className="facebook-feed-reel__caption-text">{caption}</span>
-          <span className="facebook-feed-reel__more">{MORE_LABEL}</span>
+          <button
+            type="button"
+            className="facebook-feed-button facebook-feed-reel__more"
+            onClick={() => onAction?.('more')}
+          >
+            {MORE_LABEL}
+          </button>
         </div>
       </div>
     </article>

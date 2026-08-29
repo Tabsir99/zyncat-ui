@@ -7,12 +7,12 @@ import type { CSSProperties, HTMLAttributes, ReactElement } from 'react';
 import type { DataAttributes } from '../../../dom-props';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { cx } from '../../internal/utils/cx';
-import type { YouTubeMedia } from './media';
+import type { YouTubeAction, YouTubeMedia } from './media';
 import { PostSurface } from './post';
 import { ShortSurface } from './short';
 import { VideoSurface } from './video';
 
-export type { YouTubeMedia } from './media';
+export type { YouTubeAction, YouTubeMedia } from './media';
 
 export type YouTubeSurface = 'video' | 'short' | 'post';
 
@@ -71,6 +71,20 @@ export interface YouTubeOwnProps {
   media?: YouTubeMedia;
   /** Channel avatar. A URL string or your own node. Nothing renders a flat grey disc. */
   avatar?: YouTubeMedia;
+  /** Controlled like state for the short's heart and the post's thumb-up. The displayed like count adds one while this is on. */
+  liked?: boolean;
+  /** Uncontrolled initial like state. @default false */
+  defaultLiked?: boolean;
+  /** Fires when the like toggles. */
+  onLikedChange?: (liked: boolean) => void;
+  /** Post only. Controlled dislike state for the thumb-down. */
+  disliked?: boolean;
+  /** Uncontrolled initial dislike state. @default false */
+  defaultDisliked?: boolean;
+  /** Fires when the dislike toggles. */
+  onDislikedChange?: (disliked: boolean) => void;
+  /** Fires for the actions that carry no state: comment, share, remix, menu, expand. */
+  onAction?: (action: YouTubeAction) => void;
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
@@ -104,12 +118,21 @@ export function YouTube({
   onPageChange,
   media,
   avatar,
+  liked: controlledLiked,
+  defaultLiked = false,
+  onLikedChange,
+  disliked: controlledDisliked,
+  defaultDisliked = false,
+  onDislikedChange,
+  onAction,
   className = EMPTY_TEXT,
   style,
   htmlProps,
 }: YouTubeProps): ReactElement {
   const [paused, setPaused] = useControllable(controlledPaused, defaultPaused, onPausedChange);
   const [page, setPage] = useControllable(controlledPage, defaultPage, onPageChange);
+  const [liked, setLiked] = useControllable(controlledLiked, defaultLiked, onLikedChange);
+  const [disliked, setDisliked] = useControllable(controlledDisliked, defaultDisliked, onDislikedChange);
   const slides = carousel && carousel.length ? carousel : [media];
 
   return (
@@ -124,6 +147,7 @@ export function YouTube({
           verified={verified}
           media={media}
           avatar={avatar}
+          onAction={onAction}
         />
       )}
 
@@ -139,6 +163,9 @@ export function YouTube({
           media={media}
           avatar={avatar}
           onTogglePaused={() => setPaused(!paused)}
+          liked={liked}
+          onLikedChange={setLiked}
+          onAction={onAction}
         />
       )}
 
@@ -153,6 +180,11 @@ export function YouTube({
           avatar={avatar}
           page={Math.min(page, slides.length - ONE_PAGE)}
           onPage={setPage}
+          liked={liked}
+          onLikedChange={setLiked}
+          disliked={disliked}
+          onDislikedChange={setDisliked}
+          onAction={onAction}
         />
       )}
     </article>

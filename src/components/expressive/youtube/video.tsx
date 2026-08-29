@@ -1,7 +1,11 @@
+'use client';
+
 import type { ReactElement } from 'react';
 
 import { KebabGlyph, VerifiedGlyph } from './glyphs';
-import { Media, type YouTubeMedia } from './media';
+import { Media, type YouTubeAction, type YouTubeMedia } from './media';
+
+const MENU_LABEL = 'More options';
 
 export interface VideoSurfaceProps {
   title: string;
@@ -12,6 +16,7 @@ export interface VideoSurfaceProps {
   verified: boolean;
   media?: YouTubeMedia;
   avatar?: YouTubeMedia;
+  onAction?: (action: YouTubeAction) => void;
 }
 
 export function VideoSurface({
@@ -23,6 +28,7 @@ export function VideoSurface({
   verified,
   media,
   avatar,
+  onAction,
 }: VideoSurfaceProps): ReactElement {
   return (
     <>
@@ -55,9 +61,14 @@ export function VideoSurface({
           </p>
         </div>
 
-        <span className="youtube-video__more" aria-hidden="true">
+        <button
+          type="button"
+          className="youtube-button youtube-video__more"
+          aria-label={MENU_LABEL}
+          onClick={() => onAction?.('menu')}
+        >
           <KebabGlyph />
-        </span>
+        </button>
       </div>
     </>
   );

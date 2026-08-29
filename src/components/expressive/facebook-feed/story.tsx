@@ -3,13 +3,15 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 import { cx } from '../../internal/utils/cx';
-import { MediaSurface, Portrait, type FacebookMediaType, type FacebookRatio } from './chrome';
+import { MediaSurface, Portrait, type FacebookFeedAction, type FacebookMediaType, type FacebookRatio } from './chrome';
 import { AudienceFriends, ChevronRight, PlaySolid, SpeakerSolidOff, SpeakerSolidOn } from './icons';
 
 const KEBAB_PIPS = [0, 1, 2];
 const MIDDOT = '·';
 const NOTE = '♪';
 const MUTE_LABEL = 'Mute';
+const PLAY_LABEL = 'Play';
+const MENU_LABEL = 'More options';
 
 export interface FacebookStoryProps {
   name: string;
@@ -23,6 +25,7 @@ export interface FacebookStoryProps {
   segment: number;
   muted: boolean;
   onMutedChange: (muted: boolean) => void;
+  onAction?: (action: FacebookFeedAction) => void;
   className: string;
   style?: CSSProperties;
   htmlProps?: HTMLAttributes<HTMLElement>;
@@ -40,6 +43,7 @@ export function FacebookStory({
   segment,
   muted,
   onMutedChange,
+  onAction,
   className,
   style,
   htmlProps,
@@ -103,12 +107,24 @@ export function FacebookStory({
               <SpeakerSolidOn className="facebook-feed-story__mute-glyph" />
             )}
           </button>
-          <PlaySolid className="facebook-feed-story__play" />
-          <span className="facebook-feed-story__kebab" aria-hidden="true">
+          <button
+            type="button"
+            className="facebook-feed-button"
+            aria-label={PLAY_LABEL}
+            onClick={() => onAction?.('play')}
+          >
+            <PlaySolid className="facebook-feed-story__play" />
+          </button>
+          <button
+            type="button"
+            className="facebook-feed-button facebook-feed-story__kebab"
+            aria-label={MENU_LABEL}
+            onClick={() => onAction?.('menu')}
+          >
             {KEBAB_PIPS.map((pip) => (
               <span key={pip} className="facebook-feed-story__pip" />
             ))}
-          </span>
+          </button>
         </div>
       </div>
     </article>

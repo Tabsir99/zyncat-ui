@@ -18,13 +18,20 @@
     margin: 0;
   }
 
-  .tiktok__sr {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .tiktok__button {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .tiktok__button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
 
   .tiktok__stage {

@@ -14,7 +14,7 @@ import {
   ShareGlyph,
   SpeakerGlyph,
 } from './glyphs';
-import { Media, type YouTubeMedia } from './media';
+import { Media, type YouTubeAction, type YouTubeMedia } from './media';
 
 const PROGRESS_PROPERTY = '--youtube-progress';
 const PROGRESS_MIN = 0;
@@ -27,7 +27,12 @@ const LIKES_LABEL = 'Likes';
 const COMMENTS_LABEL = 'Comments';
 const REMIXES_LABEL = 'Remixes';
 const SHARE_LABEL = 'Share';
+const LIKE_ACTION = 'Like';
+const COMMENT_ACTION = 'Comment';
+const REMIX_ACTION = 'Remix';
 const CAPTIONS_LABEL = 'cc';
+const MENU_LABEL = 'More options';
+const EXPAND_LABEL = 'Expand';
 
 function progressStyle(progress: number): CSSProperties {
   const clamped = Math.min(PROGRESS_MAX, Math.max(PROGRESS_MIN, Number(progress) || PROGRESS_MIN));
@@ -38,12 +43,32 @@ function progressValue(progress: number): number {
   return Math.min(PROGRESS_MAX, Math.max(PROGRESS_MIN, Number(progress) || PROGRESS_MIN));
 }
 
-function RailAction({ glyph, name, count }: { glyph: ReactElement; name: string; count?: string }): ReactElement {
+function RailAction({
+  glyph,
+  action,
+  name,
+  count,
+  pressed,
+  onClick,
+}: {
+  glyph: ReactElement;
+  action: string;
+  name: string;
+  count?: string;
+  pressed?: boolean;
+  onClick: () => void;
+}): ReactElement {
   return (
     <li className="youtube-short__action">
-      <span className="youtube-short__action-face" aria-hidden="true">
+      <button
+        type="button"
+        className="youtube-button youtube-short__action-face"
+        aria-label={action}
+        aria-pressed={pressed}
+        onClick={onClick}
+      >
         {glyph}
-      </span>
+      </button>
       <span className="youtube-short__action-label">
         {count !== undefined && <span className="youtube__sr">{name} </span>}
         {count ?? name}
@@ -63,6 +88,9 @@ export interface ShortSurfaceProps {
   media?: YouTubeMedia;
   avatar?: YouTubeMedia;
   onTogglePaused: () => void;
+  liked: boolean;
+  onLikedChange: (liked: boolean) => void;
+  onAction?: (action: YouTubeAction) => void;
 }
 
 export function ShortSurface({
@@ -76,6 +104,9 @@ export function ShortSurface({
   media,
   avatar,
   onTogglePaused,
+  liked,
+  onLikedChange,
+  onAction,
 }: ShortSurfaceProps): ReactElement {
   return (
     <>
@@ -109,16 +140,26 @@ export function ShortSurface({
           </span>
         </div>
 
-        <div className="youtube-short__pill" aria-hidden="true">
-          <span className="youtube-short__pill-cell">
+        <div className="youtube-short__pill">
+          <span className="youtube-short__pill-cell" aria-hidden="true">
             <span className="youtube-short__captions">{CAPTIONS_LABEL}</span>
           </span>
-          <span className="youtube-short__pill-cell">
+          <button
+            type="button"
+            className="youtube-button youtube-short__pill-cell"
+            aria-label={MENU_LABEL}
+            onClick={() => onAction?.('menu')}
+          >
             <KebabGlyph />
-          </span>
-          <span className="youtube-short__pill-cell">
+          </button>
+          <button
+            type="button"
+            className="youtube-button youtube-short__pill-cell"
+            aria-label={EXPAND_LABEL}
+            onClick={() => onAction?.('expand')}
+          >
             <ExpandGlyph />
-          </span>
+          </button>
         </div>
 
         <div
@@ -134,10 +175,34 @@ export function ShortSurface({
       </div>
 
       <ul className="youtube-short__rail">
-        <RailAction glyph={<HeartGlyph />} name={LIKES_LABEL} count={compactCount(likes)} />
-        <RailAction glyph={<BubbleGlyph />} name={COMMENTS_LABEL} count={groupedCount(comments)} />
-        <RailAction glyph={<ShareGlyph />} name={SHARE_LABEL} />
-        <RailAction glyph={<RemixGlyph />} name={REMIXES_LABEL} count={groupedCount(remixes)} />
+        <RailAction
+          glyph={<HeartGlyph />}
+          action={LIKE_ACTION}
+          name={LIKES_LABEL}
+          count={compactCount(likes + (liked ? 1 : 0))}
+          pressed={liked}
+          onClick={() => onLikedChange(!liked)}
+        />
+        <RailAction
+          glyph={<BubbleGlyph />}
+          action={COMMENT_ACTION}
+          name={COMMENTS_LABEL}
+          count={groupedCount(comments)}
+          onClick={() => onAction?.('comment')}
+        />
+        <RailAction
+          glyph={<ShareGlyph />}
+          action={SHARE_LABEL}
+          name={SHARE_LABEL}
+          onClick={() => onAction?.('share')}
+        />
+        <RailAction
+          glyph={<RemixGlyph />}
+          action={REMIX_ACTION}
+          name={REMIXES_LABEL}
+          count={groupedCount(remixes)}
+          onClick={() => onAction?.('remix')}
+        />
         <li className="youtube-short__rail-avatar" aria-hidden="true">
           <Media source={avatar} className="youtube__avatar-media" />
         </li>

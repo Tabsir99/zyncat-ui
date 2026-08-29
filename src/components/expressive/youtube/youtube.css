@@ -27,6 +27,22 @@
     border: 0;
   }
 
+  .youtube-button {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .youtube-button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
   .youtube__glyph {
     display: block;
     width: 100%;

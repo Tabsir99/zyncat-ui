@@ -7,6 +7,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type HTMLAttributes,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
@@ -47,10 +48,13 @@ const FLING_SPEED = 420;
 const PREVIOUS_STEP = -1;
 const NEXT_STEP = 1;
 
-const LIKES_LABEL = 'Likes';
-const COMMENTS_LABEL = 'Comments';
-const SAVES_LABEL = 'Saves';
-const SHARES_LABEL = 'Shares';
+const LIKES_LABEL = 'Like';
+const COMMENTS_LABEL = 'Comment';
+const SAVES_LABEL = 'Save';
+const SHARES_LABEL = 'Share';
+const FOLLOW_LABEL = 'Follow';
+const MENU_LABEL = 'Open menu';
+const SEARCH_LABEL = 'Search';
 const PREVIOUS_LABEL = 'Previous photo';
 const NEXT_LABEL = 'Next photo';
 const MUTE_LABEL = 'Mute';
@@ -113,7 +117,10 @@ export type TikTokSurface = 'desktop' | 'mobile';
 /** Aspect ratio of the post media inside the stage. */
 export type TikTokRatio = '3:2' | '4:3' | '1:1' | '16:9' | '9:16' | '3:4';
 
-export interface TikTokProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>, DataAttributes {
+/** The rail and chrome actions that carry no state of their own. */
+export type TikTokAction = 'comment' | 'share' | 'menu' | 'search';
+
+export interface TikTokOwnProps {
   /** Which platform surface to reproduce. Desktop is the 1584x912 web player with the photo carousel; mobile is the 452x822 mobile-web viewport. */
   surface?: TikTokSurface;
   /** Aspect ratio of the media inside the frame. Defaults to 3:2 on desktop and 4:3 on mobile. */
@@ -158,6 +165,35 @@ export interface TikTokProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onCha
   onMutedChange?: (muted: boolean) => void;
   /** Desktop only. Renders the platform's "See translation" line under the frame. */
   translation?: boolean;
+  /** Controlled like state. The displayed like count adds one while this is on. */
+  liked?: boolean;
+  /** Uncontrolled initial like state. @default false */
+  defaultLiked?: boolean;
+  /** Fires when the heart toggles the like. */
+  onLikedChange?: (liked: boolean) => void;
+  /** Desktop only. Controlled save state for the bookmark on the rail. */
+  saved?: boolean;
+  /** Uncontrolled initial save state. @default false */
+  defaultSaved?: boolean;
+  /** Fires when the bookmark toggles. */
+  onSavedChange?: (saved: boolean) => void;
+  /** Controlled follow state for the plus badge on the creator avatar. */
+  followed?: boolean;
+  /** Uncontrolled initial follow state. @default false */
+  defaultFollowed?: boolean;
+  /** Fires when the follow badge toggles. */
+  onFollowedChange?: (followed: boolean) => void;
+  /** Fires for the actions that carry no state: comment, share, menu, search. */
+  onAction?: (action: TikTokAction) => void;
+  /** Extra class(es) merged onto the root. */
+  className?: string;
+  /** Inline styles merged onto the root. */
+  style?: CSSProperties;
+}
+
+export interface TikTokProps extends TikTokOwnProps {
+  /** Standard element attributes (aria-*, data-*, id, ...) forwarded to the root. */
+  htmlProps?: Omit<HTMLAttributes<HTMLDivElement>, keyof TikTokOwnProps> & DataAttributes;
 }
 
 export function TikTok({
@@ -183,8 +219,19 @@ export function TikTok({
   defaultMuted = true,
   onMutedChange,
   translation = true,
+  liked,
+  defaultLiked = false,
+  onLikedChange,
+  saved,
+  defaultSaved = false,
+  onSavedChange,
+  followed,
+  defaultFollowed = false,
+  onFollowedChange,
+  onAction,
   className,
-  ...rest
+  style,
+  htmlProps,
 }: TikTokProps) {
   const desktop = surface === 'desktop';
   const count = desktop ? slideCount(media, slides) : SINGLE_SLIDE;
@@ -192,6 +239,9 @@ export function TikTok({
 
   const [position, setPosition] = useControllable(slide, defaultSlide, onSlideChange);
   const [quiet, setQuiet] = useControllable(muted, defaultMuted, onMutedChange);
+  const [hearted, setHearted] = useControllable(liked, defaultLiked, onLikedChange);
+  const [bookmarked, setBookmarked] = useControllable(saved, defaultSaved, onSavedChange);
+  const [following, setFollowing] = useControllable(followed, defaultFollowed, onFollowedChange);
   const [open, setOpen] = useState(false);
 
   const index = clamp(Math.round(position), FIRST_SLIDE, count) - FIRST_SLIDE;
@@ -258,24 +308,44 @@ export function TikTok({
 
   const rail = (
     <ul className="tiktok__rail">
-      <li className="tiktok__creator" aria-hidden="true">
-        <span className="tiktok__avatar">{renderMedia(avatar)}</span>
-        <span className="tiktok__follow">
-          <PlusGlyph className="tiktok__plus" />
+      <li className="tiktok__creator">
+        <span className="tiktok__avatar" aria-hidden="true">
+          {renderMedia(avatar)}
         </span>
+        <button
+          type="button"
+          className="tiktok__button tiktok__follow"
+          aria-label={FOLLOW_LABEL}
+          aria-pressed={following}
+          onClick={() => setFollowing(!following)}
+        >
+          <PlusGlyph className="tiktok__plus" />
+        </button>
       </li>
-      <RailAction surface={surface} label={LIKES_LABEL} count={likes}>
+      <RailAction
+        surface={surface}
+        label={LIKES_LABEL}
+        count={likes + (hearted ? 1 : 0)}
+        pressed={hearted}
+        onClick={() => setHearted(!hearted)}
+      >
         <HeartGlyph className="tiktok__glyph" />
       </RailAction>
-      <RailAction surface={surface} label={COMMENTS_LABEL} count={comments}>
+      <RailAction surface={surface} label={COMMENTS_LABEL} count={comments} onClick={() => onAction?.('comment')}>
         <CommentGlyph className="tiktok__glyph" holeClassName="tiktok__hole" />
       </RailAction>
       {desktop ? (
-        <RailAction surface={surface} label={SAVES_LABEL} count={saves}>
+        <RailAction
+          surface={surface}
+          label={SAVES_LABEL}
+          count={saves}
+          pressed={bookmarked}
+          onClick={() => setBookmarked(!bookmarked)}
+        >
           <BookmarkGlyph className="tiktok__glyph" />
         </RailAction>
       ) : null}
-      <RailAction surface={surface} label={SHARES_LABEL} count={shares}>
+      <RailAction surface={surface} label={SHARES_LABEL} count={shares} onClick={() => onAction?.('share')}>
         <ShareGlyph className="tiktok__glyph" />
       </RailAction>
       <li className="tiktok__disc" aria-hidden="true">
@@ -390,7 +460,11 @@ export function TikTok({
   );
 
   return (
-    <div className={cx('tiktok', desktop ? 'tiktok--desktop' : 'tiktok--mobile', className)} {...rest}>
+    <div
+      className={cx('tiktok', desktop ? 'tiktok--desktop' : 'tiktok--mobile', className)}
+      style={style}
+      {...htmlProps}
+    >
       <div className="tiktok__stage">
         {desktop ? (
           <button
@@ -408,9 +482,23 @@ export function TikTok({
           <>
             <span className="tiktok__scrim-top" aria-hidden="true" />
             <span className="tiktok__scrim-bottom" aria-hidden="true" />
-            <div className="tiktok__header" aria-hidden="true">
-              <MenuGlyph className="tiktok__nav" />
-              <SearchGlyph className="tiktok__nav" />
+            <div className="tiktok__header">
+              <button
+                type="button"
+                className="tiktok__button"
+                aria-label={MENU_LABEL}
+                onClick={() => onAction?.('menu')}
+              >
+                <MenuGlyph className="tiktok__nav" />
+              </button>
+              <button
+                type="button"
+                className="tiktok__button"
+                aria-label={SEARCH_LABEL}
+                onClick={() => onAction?.('search')}
+              >
+                <SearchGlyph className="tiktok__nav" />
+              </button>
             </div>
           </>
         )}
@@ -430,20 +518,23 @@ function RailAction({
   surface,
   label,
   count,
+  pressed,
+  onClick,
   children,
 }: {
   surface: TikTokSurface;
   label: string;
   count: number;
+  pressed?: boolean;
+  onClick: () => void;
   children: ReactNode;
 }) {
   return (
     <li className="tiktok__action">
-      {surface === 'desktop' ? <span className="tiktok__puck">{children}</span> : children}
-      <span className="tiktok__count">
-        <span className="tiktok__sr">{`${label} `}</span>
-        {abbreviate(count)}
-      </span>
+      <button type="button" className="tiktok__button" aria-label={label} aria-pressed={pressed} onClick={onClick}>
+        {surface === 'desktop' ? <span className="tiktok__puck">{children}</span> : children}
+      </button>
+      <span className="tiktok__count">{abbreviate(count)}</span>
     </li>
   );
 }

@@ -739,10 +739,29 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description:
         'Fires when the sound button is pressed. You own the actual `<video>`, so wire it to your own element.',
     },
+    {
+      name: 'liked',
+      type: 'boolean',
+      description:
+        'Controlled like state for the thumb on the feed card and the reels rail. The displayed reaction count adds one while this is on.',
+    },
+    { name: 'defaultLiked', type: 'boolean', default: 'false', description: 'Uncontrolled initial like state.' },
+    { name: 'onLikedChange', type: '(liked: boolean) => void', description: 'Fires when the thumb toggles the like.' },
+    {
+      name: 'onAction',
+      type: '(action: FacebookFeedAction) => void',
+      description:
+        'Fires for the actions that carry no state: comment, share, follow, menu, dismiss, more, search, play.',
+    },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the surface root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the surface root.' },
   ],
   tiktok: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLDivElement>, keyof TikTokOwnProps> & DataAttributes',
+      description: 'Standard element attributes (aria-*, data-*, id, ...) forwarded to the root.',
+    },
     {
       name: 'surface',
       type: 'TikTokSurface',
@@ -820,6 +839,38 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'boolean',
       description: 'Desktop only. Renders the platform\'s "See translation" line under the frame.',
     },
+    {
+      name: 'liked',
+      type: 'boolean',
+      description: 'Controlled like state. The displayed like count adds one while this is on.',
+    },
+    { name: 'defaultLiked', type: 'boolean', default: 'false', description: 'Uncontrolled initial like state.' },
+    { name: 'onLikedChange', type: '(liked: boolean) => void', description: 'Fires when the heart toggles the like.' },
+    {
+      name: 'saved',
+      type: 'boolean',
+      description: 'Desktop only. Controlled save state for the bookmark on the rail.',
+    },
+    { name: 'defaultSaved', type: 'boolean', default: 'false', description: 'Uncontrolled initial save state.' },
+    { name: 'onSavedChange', type: '(saved: boolean) => void', description: 'Fires when the bookmark toggles.' },
+    {
+      name: 'followed',
+      type: 'boolean',
+      description: 'Controlled follow state for the plus badge on the creator avatar.',
+    },
+    { name: 'defaultFollowed', type: 'boolean', default: 'false', description: 'Uncontrolled initial follow state.' },
+    {
+      name: 'onFollowedChange',
+      type: '(followed: boolean) => void',
+      description: 'Fires when the follow badge toggles.',
+    },
+    {
+      name: 'onAction',
+      type: '(action: TikTokAction) => void',
+      description: 'Fires for the actions that carry no state: comment, share, menu, search.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
   ],
   youtube: [
     {
@@ -924,6 +975,22 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'avatar',
       type: 'YouTubeMedia',
       description: 'Channel avatar. A URL string or your own node. Nothing renders a flat grey disc.',
+    },
+    {
+      name: 'liked',
+      type: 'boolean',
+      description:
+        "Controlled like state for the short's heart and the post's thumb-up. The displayed like count adds one while this is on.",
+    },
+    { name: 'defaultLiked', type: 'boolean', default: 'false', description: 'Uncontrolled initial like state.' },
+    { name: 'onLikedChange', type: '(liked: boolean) => void', description: 'Fires when the like toggles.' },
+    { name: 'disliked', type: 'boolean', description: 'Post only. Controlled dislike state for the thumb-down.' },
+    { name: 'defaultDisliked', type: 'boolean', default: 'false', description: 'Uncontrolled initial dislike state.' },
+    { name: 'onDislikedChange', type: '(disliked: boolean) => void', description: 'Fires when the dislike toggles.' },
+    {
+      name: 'onAction',
+      type: '(action: YouTubeAction) => void',
+      description: 'Fires for the actions that carry no state: comment, share, remix, menu, expand.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },

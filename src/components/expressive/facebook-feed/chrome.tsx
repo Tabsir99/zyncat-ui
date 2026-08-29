@@ -3,6 +3,9 @@ import type { CSSProperties, ReactNode } from 'react';
 export type FacebookRatio = '4:5' | '1.1:1' | '1:1' | '3:4' | '16:9';
 export type FacebookMediaType = 'image' | 'video';
 
+/** The actions a surface reports that carry no state of their own. */
+export type FacebookFeedAction = 'comment' | 'share' | 'follow' | 'menu' | 'dismiss' | 'more' | 'search' | 'play';
+
 const THOUSAND = 1e3;
 const TEN_THOUSAND = 1e4;
 const MILLION = 1e6;

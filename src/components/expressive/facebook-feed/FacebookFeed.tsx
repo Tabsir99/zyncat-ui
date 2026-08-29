@@ -6,12 +6,12 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { useControllable } from '../../internal/hooks/use-controllable';
-import type { FacebookMediaType, FacebookRatio } from './chrome';
+import type { FacebookFeedAction, FacebookMediaType, FacebookRatio } from './chrome';
 import { FacebookPost, type FacebookPostWidth } from './post';
 import { FacebookReel, type FacebookReelStage } from './reel';
 import { FacebookStory } from './story';
 
-export type { FacebookMediaType, FacebookRatio } from './chrome';
+export type { FacebookFeedAction, FacebookMediaType, FacebookRatio } from './chrome';
 export type { FacebookPostWidth } from './post';
 export type { FacebookReelStage } from './reel';
 
@@ -74,6 +74,14 @@ export interface FacebookFeedOwnProps {
   defaultMuted?: boolean;
   /** Fires when the sound button is pressed. You own the actual `<video>`, so wire it to your own element. */
   onMutedChange?: (muted: boolean) => void;
+  /** Controlled like state for the thumb on the feed card and the reels rail. The displayed reaction count adds one while this is on. */
+  liked?: boolean;
+  /** Uncontrolled initial like state. @default false */
+  defaultLiked?: boolean;
+  /** Fires when the thumb toggles the like. */
+  onLikedChange?: (liked: boolean) => void;
+  /** Fires for the actions that carry no state: comment, share, follow, menu, dismiss, more, search, play. */
+  onAction?: (action: FacebookFeedAction) => void;
   /** Extra class(es) merged onto the surface root. */
   className?: string;
   /** Inline styles merged onto the surface root. */
@@ -108,11 +116,16 @@ export function FacebookFeed({
   muted,
   defaultMuted,
   onMutedChange,
+  liked,
+  defaultLiked = false,
+  onLikedChange,
+  onAction,
   className = '',
   style,
   htmlProps,
 }: FacebookFeedProps) {
   const [sound, setSound] = useControllable(muted, defaultMuted ?? MUTED_BY_SURFACE[surface], onMutedChange);
+  const [reacted, setReacted] = useControllable(liked, defaultLiked, onLikedChange);
 
   if (surface === 'reel')
     return (
@@ -131,6 +144,9 @@ export function FacebookFeed({
         shares={shares}
         muted={sound}
         onMutedChange={setSound}
+        liked={reacted}
+        onLikedChange={setReacted}
+        onAction={onAction}
         className={className}
         style={style}
         htmlProps={htmlProps}
@@ -151,6 +167,7 @@ export function FacebookFeed({
         segment={segment}
         muted={sound}
         onMutedChange={setSound}
+        onAction={onAction}
         className={className}
         style={style}
         htmlProps={htmlProps}
@@ -172,6 +189,9 @@ export function FacebookFeed({
       comments={comments}
       shares={shares}
       width={width}
+      liked={reacted}
+      onLikedChange={setReacted}
+      onAction={onAction}
       className={className}
       style={style}
       htmlProps={htmlProps}
