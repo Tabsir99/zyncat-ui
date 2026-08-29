@@ -555,6 +555,379 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Inline styles merged onto the rail root - the place to retune the `--support-rail-*` properties.',
     },
   ],
+  'instagram-feed': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLElement>, keyof InstagramFeedOwnProps> & DataAttributes',
+      description: 'Standard <article> attributes (aria-*, data-*, title, ...) forwarded to the card.',
+    },
+    {
+      name: 'type',
+      type: "'image' | 'video'",
+      default: "'image'",
+      description: 'Post kind. `video` runs the black media frame full-bleed and floats the header on it in white.',
+    },
+    {
+      name: 'width',
+      type: "'mobile' | 'web'",
+      default: "'web'",
+      description:
+        'Which column to reproduce: the 390px mobile viewport, or the 470px web column that also carries Follow.',
+    },
+    {
+      name: 'handle',
+      type: 'string',
+      required: true,
+      description: 'Account name shown in the header and again in front of the caption.',
+    },
+    {
+      name: 'caption',
+      type: 'string',
+      description: 'Caption body. Clipped at 125 characters with a trailing "... more"; #tags and',
+    },
+    { name: 'ratio', type: "'4:5' | '1:1'", default: "'4:5'", description: 'Media frame proportion.' },
+    {
+      name: 'media',
+      type: 'ReactNode',
+      description:
+        "Post media. A string is read as an image URL; a node (`<img>`, `<video>`, `next/image`) is rendered as given and gets `alt` from you. Empty leaves the platform's flat placeholder.",
+    },
+    {
+      name: 'avatar',
+      type: 'ReactNode',
+      description: 'Avatar inside the story ring. A string is read as an image URL; a node is rendered as given.',
+    },
+    {
+      name: 'audio',
+      type: 'string',
+      default: "'Original audio'",
+      description: 'Audio credit on the second header line, video posts only.',
+    },
+    {
+      name: 'stamp',
+      type: 'string',
+      description: 'Relative time in the header, e.g. `1d`. Omitted entirely when unset.',
+    },
+    {
+      name: 'likes',
+      type: 'number',
+      default: '0',
+      description: 'Likes excluding you; the displayed count adds one while `liked` is on.',
+    },
+    { name: 'comments', type: 'number', default: '0', description: 'Comment count beside the speech glyph.' },
+    { name: 'reposts', type: 'number', default: '0', description: 'Repost count beside the repost glyph.' },
+    { name: 'liked', type: 'boolean', description: 'Controlled like state.' },
+    { name: 'defaultLiked', type: 'boolean', default: 'false', description: 'Uncontrolled initial like state.' },
+    {
+      name: 'onLikedChange',
+      type: '(liked: boolean) => void',
+      description: 'Fires when the heart or a double-tap on the media toggles the like.',
+    },
+    { name: 'saved', type: 'boolean', description: 'Controlled bookmark state.' },
+    { name: 'defaultSaved', type: 'boolean', default: 'false', description: 'Uncontrolled initial bookmark state.' },
+    { name: 'onSavedChange', type: '(saved: boolean) => void', description: 'Fires when the bookmark toggles.' },
+    { name: 'muted', type: 'boolean', description: 'Controlled mute state for the video mute chip.' },
+    { name: 'defaultMuted', type: 'boolean', default: 'true', description: 'Uncontrolled initial mute state.' },
+    {
+      name: 'onMutedChange',
+      type: '(muted: boolean) => void',
+      description: 'Fires when the mute chip toggles. The component never touches a media element you supplied.',
+    },
+    {
+      name: 'onAction',
+      type: '(action: InstagramFeedAction) => void',
+      description: 'Fires for the actions that carry no state: comment, repost, send, menu, follow.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the card.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the card.' },
+  ],
+  'facebook-feed': [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLElement>, keyof FacebookFeedOwnProps> & DataAttributes',
+      description: 'Standard element attributes (aria-*, data-*, title, ...) forwarded to the surface root.',
+    },
+    {
+      name: 'surface',
+      type: 'FacebookSurface',
+      default: "'post'",
+      description: 'Which Facebook surface to reproduce: the feed card, the reels stage, or the story stage.',
+    },
+    {
+      name: 'width',
+      type: 'FacebookPostWidth',
+      default: "'web'",
+      description: 'Feed card width. `mobile` is the 390px square-cornered card, `web` the 680px rounded one.',
+    },
+    {
+      name: 'stage',
+      type: 'FacebookReelStage',
+      default: "'narrow'",
+      description: 'Reels stage. `narrow` is 557x878 around a 9:16 video, `wide` is 1601x886 around a 16:9 one.',
+    },
+    {
+      name: 'type',
+      type: 'FacebookMediaType',
+      default: "'image'",
+      description:
+        "Whether `media` is a still or a clip. A still is echoed into the feed's blurred letterbox backdrop; a clip is not, so it is never fetched twice.",
+    },
+    { name: 'name', type: 'string', default: "'Swiss Nature'", description: 'Poster or page name in the header.' },
+    {
+      name: 'caption',
+      type: 'string',
+      description:
+        'Post body. The feed cuts it at 250 characters with `See more`; reels take one ellipsised line. Hashtags and',
+    },
+    {
+      name: 'ratio',
+      type: 'FacebookRatio',
+      default: "'4:5'",
+      description: 'Frame aspect for the feed card and the story card. Reels stages are fixed.',
+    },
+    {
+      name: 'media',
+      type: 'ReactNode',
+      description:
+        'A URL string, or your own node (`<img>`, `<video>`, `next/image`). Omit for a CSS-only placeholder. Nothing is ever autoplayed and no request is ever made for you.',
+    },
+    {
+      name: 'avatar',
+      type: 'ReactNode',
+      description: "A URL string, or your own node, for the header portrait. Omit for the platform's grey.",
+    },
+    {
+      name: 'follow',
+      type: 'boolean',
+      default: 'true',
+      description: 'Show the `· Follow` affordance. Blue in the feed, white on reels.',
+    },
+    { name: 'ring', type: 'boolean', default: 'true', description: 'Blue active-story ring around the feed avatar.' },
+    { name: 'stamp', type: 'string', default: "'31m'", description: 'Relative timestamp in the meta line.' },
+    { name: 'verified', type: 'boolean', default: 'true', description: 'Blue verified badge after the reels name.' },
+    {
+      name: 'audio',
+      type: 'string',
+      default: "'Original audio'",
+      description: 'Track name on the reels and story audio line.',
+    },
+    {
+      name: 'likes',
+      type: 'number',
+      default: '267',
+      description: 'Reaction count. Exact below 1,000, then `1.2K` / `48K` / `1.4M`.',
+    },
+    { name: 'comments', type: 'number', default: '12', description: 'Comment count, formatted like `likes`.' },
+    { name: 'shares', type: 'number', default: '4', description: 'Share count, formatted like `likes`.' },
+    { name: 'segments', type: 'number', default: '2', description: 'How many story progress segments to draw.' },
+    {
+      name: 'segment',
+      type: 'number',
+      default: '0',
+      description: 'Index of the newest filled story segment; every earlier one fills too.',
+    },
+    { name: 'muted', type: 'boolean', description: 'Controlled mute state for the reels and story sound button.' },
+    {
+      name: 'defaultMuted',
+      type: 'boolean',
+      default: 'true on reels, false on the story',
+      description: 'Uncontrolled initial mute state.',
+    },
+    {
+      name: 'onMutedChange',
+      type: '(muted: boolean) => void',
+      description:
+        'Fires when the sound button is pressed. You own the actual `<video>`, so wire it to your own element.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the surface root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the surface root.' },
+  ],
+  tiktok: [
+    {
+      name: 'surface',
+      type: 'TikTokSurface',
+      description:
+        'Which platform surface to reproduce. Desktop is the 1584x912 web player with the photo carousel; mobile is the 452x822 mobile-web viewport.',
+    },
+    {
+      name: 'ratio',
+      type: 'TikTokRatio',
+      description: 'Aspect ratio of the media inside the frame. Defaults to 3:2 on desktop and 4:3 on mobile.',
+    },
+    { name: 'name', type: 'string', description: 'Creator name shown over the media.' },
+    {
+      name: 'caption',
+      type: 'string',
+      description: 'Post caption. Ellipsised to one line on desktop and two on mobile until "more" is pressed.',
+    },
+    {
+      name: 'location',
+      type: 'string',
+      description: 'Desktop only. Place name in the pin chip above the creator name.',
+    },
+    { name: 'music', type: 'string', description: 'Mobile only. Music attribution shown first on the sound line.' },
+    { name: 'sound', type: 'string', description: 'Mobile only. Sound title shown after the music attribution.' },
+    {
+      name: 'likes',
+      type: 'number',
+      description: 'Like count. Printed exactly below 10,000, then abbreviated as the platform does.',
+    },
+    { name: 'comments', type: 'number', description: 'Comment count.' },
+    { name: 'saves', type: 'number', description: 'Desktop only. Save count - the mobile rail has no save action.' },
+    { name: 'shares', type: 'number', description: 'Share count.' },
+    {
+      name: 'media',
+      type: 'ReactNode',
+      description:
+        'Post media: a URL string rendered as a decorative image, or a node you render yourself. On desktop an array supplies one entry per carousel slide.',
+    },
+    { name: 'avatar', type: 'ReactNode', description: 'Creator avatar: a URL string, or a node you render yourself.' },
+    {
+      name: 'sticker',
+      type: 'ReactNode',
+      description: 'Sound artwork on the disc at the foot of the rail: a URL string, or a node you render yourself.',
+    },
+    {
+      name: 'slides',
+      type: 'number',
+      description: 'Desktop only. Number of carousel slides. Raised to the length of `media` when that is an array.',
+    },
+    { name: 'slide', type: 'number', description: 'Desktop only. Controlled 1-based carousel position.' },
+    { name: 'defaultSlide', type: 'number', description: 'Desktop only. Uncontrolled starting carousel position.' },
+    {
+      name: 'onSlideChange',
+      type: '(slide: number) => void',
+      description: 'Desktop only. Fires with the new 1-based position when the carousel pages.',
+    },
+    {
+      name: 'muted',
+      type: 'boolean',
+      description:
+        'Desktop only. Controlled state of the mute control. The component never plays or pauses media - wire this to your own player.',
+    },
+    {
+      name: 'defaultMuted',
+      type: 'boolean',
+      description: 'Desktop only. Uncontrolled starting state of the mute control.',
+    },
+    {
+      name: 'onMutedChange',
+      type: '(muted: boolean) => void',
+      description: 'Desktop only. Fires when the mute control is pressed.',
+    },
+    {
+      name: 'translation',
+      type: 'boolean',
+      description: 'Desktop only. Renders the platform\'s "See translation" line under the frame.',
+    },
+  ],
+  youtube: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLElement>, keyof YouTubeOwnProps> & DataAttributes',
+      description: 'Standard element attributes (aria-*, data-*, id, ...) forwarded to the root.',
+    },
+    {
+      name: 'surface',
+      type: 'YouTubeSurface',
+      default: "'video'",
+      description: 'Which YouTube surface to reproduce - a feed grid card, a Shorts player, or a community post.',
+    },
+    {
+      name: 'title',
+      type: 'string',
+      description:
+        'Video title on `video`, Shorts title on `short`. Clamps to two lines on `video`, one ellipsised line on `short`.',
+    },
+    {
+      name: 'channel',
+      type: 'string',
+      description: "The account's display name - channel name on `video`, `@handle` on `short`, author name on `post`.",
+    },
+    {
+      name: 'views',
+      type: 'string',
+      description: 'View count line on `video`, already formatted by the consumer ("2m views").',
+    },
+    {
+      name: 'age',
+      type: 'string',
+      description: 'Relative timestamp - "1 year ago" on `video`, "9 days ago" on `post`.',
+    },
+    {
+      name: 'duration',
+      type: 'string',
+      description: 'Runtime shown in the thumbnail badge on `video` ("34:46"). Omit to drop the badge.',
+    },
+    {
+      name: 'verified',
+      type: 'boolean',
+      default: 'false',
+      description: 'Renders the grey verified tick after the channel name on `video`.',
+    },
+    {
+      name: 'likes',
+      type: 'number',
+      default: '0',
+      description: 'Like count. Abbreviated the way YouTube abbreviates it - 187000 renders as "187k".',
+    },
+    {
+      name: 'comments',
+      type: 'number',
+      default: '0',
+      description: 'Comment count. Rendered exact with thousands separators - 3539 renders as "3,539".',
+    },
+    { name: 'remixes', type: 'number', default: '0', description: 'Remix count in the Shorts rail.' },
+    {
+      name: 'paused',
+      type: 'boolean',
+      description: 'Whether the Shorts overlay shows the play glyph. Controlled; pair with `onPausedChange`.',
+    },
+    {
+      name: 'defaultPaused',
+      type: 'boolean',
+      default: 'true',
+      description: 'Initial Shorts play state when `paused` is omitted.',
+    },
+    {
+      name: 'onPausedChange',
+      type: '(paused: boolean) => void',
+      description:
+        'Fires when the Shorts play control is pressed. The component never touches the media element itself.',
+    },
+    {
+      name: 'progress',
+      type: 'number',
+      default: '0',
+      description: 'Shorts playback position, 0-100. Consumer-driven: the bar renders where you put it.',
+    },
+    { name: 'text', type: 'string', description: 'Community post body copy.' },
+    {
+      name: 'carousel',
+      type: 'YouTubeMedia[]',
+      description: 'Community post images. Two or more turn the frame into a paged, draggable, arrow-keyed carousel.',
+    },
+    { name: 'page', type: 'number', description: 'Controlled carousel page index. Omit to stay uncontrolled.' },
+    { name: 'defaultPage', type: 'number', default: '0', description: 'Initial carousel page when uncontrolled.' },
+    {
+      name: 'onPageChange',
+      type: '(page: number) => void',
+      description: 'Fires whenever the carousel settles on a new page.',
+    },
+    {
+      name: 'media',
+      type: 'YouTubeMedia',
+      description:
+        'Thumbnail on `video`, player content on `short`, single image on `post`. A URL string or your own node (`<img>`, `<video>`, `next/image`). Nothing renders a CSS-only placeholder.',
+    },
+    {
+      name: 'avatar',
+      type: 'YouTubeMedia',
+      description: 'Channel avatar. A URL string or your own node. Nothing renders a flat grey disc.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+  ],
   'text-field': [
     {
       name: 'htmlProps',

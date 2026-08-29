@@ -4,12 +4,16 @@ import * as C from '../components/pages/compound';
 import * as D from '../components/pages/data';
 import * as T from '../components/pages/datetime';
 import * as E from '../components/pages/expressive';
+import * as FB from '../components/pages/facebook-feed';
 import * as F from '../components/pages/forms';
+import * as IG from '../components/pages/instagram-feed';
 import { InstallationDoc } from '../components/pages/installation';
 import { IntroductionDoc } from '../components/pages/introduction';
 import { McpDoc } from '../components/pages/mcp';
 import * as O from '../components/pages/overlays';
 import * as P from '../components/pages/primitives';
+import * as TT from '../components/pages/tiktok';
+import * as YT from '../components/pages/youtube';
 import type { PropRow } from '../components/PropsTable';
 import { CONTENT } from './content';
 import { GENERATED_PROPS, GENERATED_TYPES, type NestedType } from './props.generated';
@@ -618,6 +622,251 @@ export const GROUPS: DocGroup[] = [
               'Every duration knob is a calc() of a --duration-* token, so the whole choreography collapses under one frame. The live halo opts out on its own: a 2.6x expansion repeating forever is the class of motion the setting exists to stop, so it becomes a static ring and the status survives in colour and shape.',
             Component: C.SupportRailReducedMotionDemo,
             code: `<SupportRail actions={actions} live style={{ '--support-rail-open-duration': '0ms' } as CSSProperties} />`,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'replicas',
+    title: 'Replicas',
+    docs: [
+      {
+        slug: 'instagram-feed',
+        label: 'InstagramFeed',
+        blurb:
+          'Replica. An Instagram post, image or video, at both column widths. Fidelity is the contract - no theming knobs.',
+        HeroComponent: IG.InstagramFeedHero,
+        heroCode: `import { InstagramFeed } from '@zyncat/ui/instagram-feed';\n\n<InstagramFeed handle="studio.zyncat" caption="Shot on the roof." media={<img src={photo} alt="" />} likes={2600} />`,
+        examples: [
+          {
+            id: 'types',
+            title: 'The two post types are structurally different',
+            description:
+              'An image post has a white header strip above the photo with dark text and Follow as a grey pill. A video post runs the black frame full-bleed from the top of the card and puts the header on it in white, and Follow loses its pill. One data-type attribute flips it: the header goes absolute and sets color, and every descendant reads inherit or currentColor - including the menu pips - so one property carries the whole switch.',
+            Component: IG.InstagramFeedTypes,
+            code: `<InstagramFeed type="image" handle="studio.zyncat" media={photo} />\n<InstagramFeed type="video" handle="studio.zyncat" audio="Nils Frahm · Says" media={clip} />`,
+          },
+          {
+            id: 'widths',
+            title: 'Mobile and web',
+            description:
+              'A real behavioural axis, not a max-width: the web column adds the Follow action in the header and mobile does not.',
+            Component: IG.InstagramFeedWidths,
+            code: `<InstagramFeed width="mobile" handle="studio.zyncat" />\n<InstagramFeed width="web" handle="studio.zyncat" />`,
+          },
+          {
+            id: 'ratios',
+            title: 'Media ratios',
+            description:
+              '4:5 is the platform default; 1:1 is the square crop. Video letterboxes to black inside either.',
+            Component: IG.InstagramFeedRatios,
+            code: `<InstagramFeed ratio="4:5" media={photo} />\n<InstagramFeed ratio="1:1" media={photo} />`,
+          },
+          {
+            id: 'caption',
+            title: 'Caption, hashtags and mentions',
+            description:
+              'Hashtags and mentions render in link blue. The caption clips to one line with a "more" affordance, and counts sit inline beside each glyph - there is no separate likes line and no "View all N comments" line.',
+            Component: IG.InstagramFeedCaption,
+            code: `<InstagramFeed caption="Golden hour on the roof #goldenhour with @mara" likes={760400} comments={1280} />`,
+          },
+          {
+            id: 'placeholder',
+            title: 'No media supplied',
+            description:
+              'The replica reproduces the chrome; the content is yours. With no media prop it renders a CSS-only placeholder and makes no network request - the component never fetches anything.',
+            Component: IG.InstagramFeedPlaceholder,
+            code: `<InstagramFeed handle="studio.zyncat" />`,
+          },
+          {
+            id: 'controlled',
+            title: 'Controlled interaction',
+            description:
+              'Like, save and mute are controlled triples, so the consumer owns the value. Double-tap the media to like it - that is the platform behaviour, not an invention. Pass no handlers and the affordances stay inert.',
+            Component: IG.InstagramFeedControlled,
+            code: `<InstagramFeed liked={liked} onLikedChange={setLiked} saved={saved} onSavedChange={setSaved} onAction={track} />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description:
+              'The only motion is a token-timed press transition, so it collapses to 1ms globally and the surface is otherwise pixel-identical.',
+            Component: IG.InstagramFeedReducedMotion,
+            code: `<InstagramFeed handle="studio.zyncat" media={photo} />`,
+          },
+        ],
+      },
+      {
+        slug: 'facebook-feed',
+        label: 'FacebookFeed',
+        blurb: 'Replica. Three Facebook surfaces - feed post, reel and story - behind one surface prop.',
+        HeroComponent: FB.FacebookPostSurfaces,
+        heroCode: `import { FacebookFeed } from '@zyncat/ui/facebook-feed';\n\n<FacebookFeed surface="post" name="Zyncat Studio" caption="New build is live." media={photo} likes={1240} />`,
+        examples: [
+          {
+            id: 'post',
+            title: 'Feed post',
+            description:
+              'Mobile 390px and web 680px cards. The caption sits above the media - the opposite of Instagram. The action row is 42px with no divider above it, counts inline 9px from their 20px glyph, and the reaction pills right-aligned with a 1.5px white ring and a -5px overlap. Counts stay exact below 1,000.',
+            Component: FB.FacebookPostSurfaces,
+            code: `<FacebookFeed surface="post" width="mobile" name="Zyncat Studio" media={photo} />\n<FacebookFeed surface="post" width="web" name="Zyncat Studio" media={photo} />`,
+          },
+          {
+            id: 'reel',
+            title: 'Reels',
+            description:
+              'Narrow 557x878 with a 9:16 video and wide 1601x886 with a 16:9 one, sharing one bottom-anchored rail on a 65px pitch. Reels letterbox to flat black - no blurred backdrop - and their Follow is white, not blue.',
+            Component: FB.FacebookReelSurfaces,
+            code: `<FacebookFeed surface="reel" stage="narrow" name="Zyncat Studio" audio="Nils Frahm · Says" media={clip} />\n<FacebookFeed surface="reel" stage="wide" name="Zyncat Studio" media={clip} />`,
+          },
+          {
+            id: 'story',
+            title: 'Story',
+            description:
+              'A 486x864 9:16 stage. Two 4px segments at the top, the header at (14,28), and the whole stage behind the card filled with a blurred, heavily darkened copy of the same source.',
+            Component: FB.FacebookStorySurface,
+            code: `<FacebookFeed surface="story" name="Zyncat Studio" audio="Nils Frahm · Says" media={photo} />`,
+          },
+          {
+            id: 'letterbox',
+            title: 'Three letterbox treatments',
+            description:
+              'The feed fills the bars with a blurred, saturated copy of the same frame; reels go flat black; the story blurs and darkens the whole stage. They are three different treatments, not one with a knob - the blurred backdrop is suppressed only for node video, where duplicating it would mean a second network request.',
+            Component: FB.FacebookMuteControl,
+            code: `<FacebookFeed surface="post" ratio="16:9" media={photo} />\n<FacebookFeed surface="reel" media={clip} />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description:
+              'Motion is two CSS hover transitions on --duration-fast, which the global token collapses to 1ms. A reduced-motion user sees pixel-identical surfaces.',
+            Component: FB.FacebookReducedMotion,
+            code: `<FacebookFeed surface="post" name="Zyncat Studio" media={photo} />`,
+          },
+        ],
+      },
+      {
+        slug: 'tiktok',
+        label: 'TikTok',
+        blurb: 'Replica. The TikTok post surface, desktop and mobile, with the photo carousel.',
+        HeroComponent: TT.TikTokDesktopHero,
+        heroCode: `import { TikTok } from '@zyncat/ui/tiktok';\n\n<TikTok surface="desktop" name="zyncat.studio" caption="Build log 04" media={clip} likes={187000} />`,
+        examples: [
+          {
+            id: 'desktop',
+            title: 'Desktop',
+            description:
+              'The rail runs on a 78px pitch - 48px puck, 6px gap, 14px count, 10px - and sits flush to the stage floor, because the rail height and the video height sum to it exactly. Ratios from 3:2 through 9:16 reflow the stage.',
+            Component: TT.TikTokDesktopRatioDemo,
+            code: `<TikTok surface="desktop" ratio="16:9" media={clip} />\n<TikTok surface="desktop" ratio="9:16" media={clip} />`,
+          },
+          {
+            id: 'carousel',
+            title: 'Photo carousel',
+            description:
+              'slides pages a photo strip. Paging has a destination, so it runs through the engine, never the loop primitive - JS is the sole writer of translate on the track and the stylesheet has no transition at all. Arrows page it, and the strip carries a real role and an accessible name.',
+            Component: TT.TikTokCarouselDemo,
+            code: `<TikTok surface="desktop" slides={photos} slide={index} onSlideChange={setIndex} />`,
+          },
+          {
+            id: 'single',
+            title: 'A single slide',
+            description: 'With one slide the chevrons and the counter drop out rather than rendering as dead controls.',
+            Component: TT.TikTokSingleSlideDemo,
+            code: `<TikTok surface="desktop" slides={[photo]} />`,
+          },
+          {
+            id: 'mobile',
+            title: 'Mobile',
+            description:
+              'A different rail on a 65px pitch, a 44px avatar, and the sound line under the caption. Measured off the reference captures, not off the deck, which was wrong in nine places.',
+            Component: TT.TikTokMobileRatioDemo,
+            code: `<TikTok surface="mobile" name="zyncat.studio" music="original sound" media={clip} />`,
+          },
+          {
+            id: 'mute',
+            title: 'Sound',
+            description:
+              'The mute control is a real button with a keyboard path; it is one of the few glyphs that can act.',
+            Component: TT.TikTokMuteDemo,
+            code: `<TikTok surface="desktop" muted={muted} onMutedChange={setMuted} media={clip} />`,
+          },
+          {
+            id: 'placeholder',
+            title: 'No media supplied',
+            description: 'A CSS-only placeholder. The component never makes a network request.',
+            Component: TT.TikTokPlaceholderDemo,
+            code: `<TikTok surface="desktop" name="zyncat.studio" />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description: 'The carousel still pages to the right slide; it just arrives there without travelling.',
+            Component: TT.TikTokReducedMotionDemo,
+            code: `<TikTok surface="desktop" slides={photos} />`,
+          },
+        ],
+      },
+      {
+        slug: 'youtube',
+        label: 'YouTube',
+        blurb: 'Replica. Three YouTube surfaces - feed card, Short and community post - behind one surface prop.',
+        HeroComponent: YT.YouTubeVideoHero,
+        heroCode: `import { YouTube } from '@zyncat/ui/youtube';\n\n<YouTube surface="video" title="Building a design system from zero" channel="Zyncat" views="184K views" age="3 weeks ago" duration="14:22" media={photo} />`,
+        examples: [
+          {
+            id: 'video',
+            title: 'Feed card',
+            description:
+              'The duration badge scrim is rgba(0,0,0,.6), measured off the capture rather than taken from the deck: white thumbnail pixels under the badge read exactly (102,102,102). Thumbnail radius is 8px, and the gutter is 12px.',
+            Component: YT.YouTubeVideoPlaceholderDemo,
+            code: `<YouTube surface="video" title="Building a design system" channel="Zyncat" views="184K views" age="3 weeks ago" duration="14:22" verified />`,
+          },
+          {
+            id: 'short',
+            title: 'Shorts',
+            description:
+              'progress and paused are props, so the bar position is consumer state, not something animated on a timer. The bar is a CSS width transition off a channel property; under reduced motion it still shows the right position, it just does not travel there.',
+            Component: YT.YouTubeShortDemo,
+            code: `<YouTube surface="short" channel="@zyncat" title="One token, nine surfaces" progress={64} paused />`,
+          },
+          {
+            id: 'short-uncontrolled',
+            title: 'Shorts, uncontrolled',
+            description: 'Leave progress and paused off and the surface manages its own pair.',
+            Component: YT.YouTubeShortUncontrolledDemo,
+            code: `<YouTube surface="short" channel="@zyncat" title="One token, nine surfaces" media={clip} />`,
+          },
+          {
+            id: 'post-carousel',
+            title: 'Community post',
+            description:
+              'carousel takes an array rather than the deck’s boolean - a boolean carousel has nothing to page, and the boolean is subsumed by length > 1. Paging is a CSS translate off a page channel, with startDrag writing a separate drag channel while data-dragging suspends the transition. One writer per property.',
+            Component: YT.YouTubePostCarouselDemo,
+            code: `<YouTube surface="post" channel="Zyncat" age="9 days ago" text="Three surfaces, one component." carousel={photos} page={page} onPageChange={setPage} />`,
+          },
+          {
+            id: 'post-single',
+            title: 'Community post, one image',
+            description: 'With one entry the pager drops out.',
+            Component: YT.YouTubePostSingleDemo,
+            code: `<YouTube surface="post" channel="Zyncat" age="9 days ago" text="A single frame post." media={photo} />`,
+          },
+          {
+            id: 'counts',
+            title: 'Counts',
+            description:
+              'Counts abbreviate the way the platform does, and the accessible name carries the un-abbreviated number.',
+            Component: YT.YouTubeCountsDemo,
+            code: `<YouTube surface="short" likes={187000} comments={1280} remixes={412} />`,
+          },
+          {
+            id: 'reduced-motion',
+            title: 'Reduced motion',
+            description: 'Both channels collapse to 1ms and still land on the correct position.',
+            Component: YT.YouTubeReducedMotionDemo,
+            code: `<YouTube surface="post" carousel={photos} />`,
           },
         ],
       },
