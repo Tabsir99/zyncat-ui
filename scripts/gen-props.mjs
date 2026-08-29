@@ -10,7 +10,7 @@ const OUT = join(ROOT, 'apps/docs/content/props.generated.ts');
 
 const SUBPATH_FOR_SLUG = { 'date-range': 'date-range-field' };
 
-const HAND_WRITTEN = new Set(['icon', 'toast', 'introduction', 'installation', 'mcp']);
+const HAND_WRITTEN = new Set(['icon', 'toast', 'introduction', 'installation', 'mcp', 'theming']);
 
 const NESTED_TYPE_DEPTH = 1;
 

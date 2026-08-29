@@ -12,6 +12,7 @@ import { IntroductionDoc } from '../components/pages/introduction';
 import { McpDoc } from '../components/pages/mcp';
 import * as O from '../components/pages/overlays';
 import * as P from '../components/pages/primitives';
+import { ThemingDoc } from '../components/pages/theming';
 import * as TT from '../components/pages/tiktok';
 import * as YT from '../components/pages/youtube';
 import type { PropRow } from '../components/PropsTable';
@@ -81,6 +82,20 @@ export const GROUPS: DocGroup[] = [
           { id: 'styles-setup', title: 'Styles & CSS Tokens', level: 2 },
           { id: 'framework-setup', title: 'Framework Setup', level: 2 },
           { id: 'first-component', title: 'First Component', level: 2 },
+        ],
+      },
+      {
+        slug: 'theming',
+        label: 'Theming & Overrides',
+        blurb: 'The four ways to override Zyncat UI: cascade layers, tokens, scoped custom properties, and props.',
+        Content: ThemingDoc,
+        toc: [
+          { id: 'override-levels', title: 'The four override levels', level: 2 },
+          { id: 'level-0', title: 'Level 0 — Cascade layers', level: 2 },
+          { id: 'level-1', title: 'Level 1 — Tokens', level: 2 },
+          { id: 'level-2', title: 'Level 2 — Scoped properties', level: 2 },
+          { id: 'level-3', title: 'Level 3 — Instance props', level: 2 },
+          { id: 'replicas', title: 'Replicas', level: 2 },
         ],
       },
       {
@@ -737,6 +752,14 @@ export const GROUPS: DocGroup[] = [
             code: `<FacebookFeed surface="post" ratio="16:9" media={photo} />\n<FacebookFeed surface="reel" media={clip} />`,
           },
           {
+            id: 'controlled',
+            title: 'Controlled interaction',
+            description:
+              'Every action glyph is a real button with a focus ring and a keyboard path, matching InstagramFeed. liked is a controlled triple and the reaction count adds it; comment, share, follow, menu, dismiss, more, search and play carry no state and report through onAction.',
+            Component: FB.FacebookControlled,
+            code: `<FacebookFeed surface="post" liked={liked} onLikedChange={setLiked} onAction={track} />`,
+          },
+          {
             id: 'reduced-motion',
             title: 'Reduced motion',
             description:
@@ -793,6 +816,14 @@ export const GROUPS: DocGroup[] = [
             code: `<TikTok surface="desktop" muted={muted} onMutedChange={setMuted} media={clip} />`,
           },
           {
+            id: 'controlled',
+            title: 'Controlled interaction',
+            description:
+              'The rail is real buttons, not decorated spans. liked, saved and followed are controlled triples and the counts add yours; comment, share, menu and search carry no state and report through onAction.',
+            Component: TT.TikTokControlledDemo,
+            code: `<TikTok surface="desktop" liked={liked} onLikedChange={setLiked} saved={saved} onSavedChange={setSaved} onAction={track} />`,
+          },
+          {
             id: 'placeholder',
             title: 'No media supplied',
             description: 'A CSS-only placeholder. The component never makes a network request.',
@@ -837,6 +868,14 @@ export const GROUPS: DocGroup[] = [
             description: 'Leave progress and paused off and the surface manages its own pair.',
             Component: YT.YouTubeShortUncontrolledDemo,
             code: `<YouTube surface="short" channel="@zyncat" title="One token, nine surfaces" media={clip} />`,
+          },
+          {
+            id: 'controlled',
+            title: 'Controlled interaction',
+            description:
+              'The Shorts rail and the community post share one pair of controlled triples, liked and disliked, and the like count adds yours. Comment, share, remix, menu and expand carry no state and report through onAction.',
+            Component: YT.YouTubeControlledDemo,
+            code: `<YouTube surface="short" liked={liked} onLikedChange={setLiked} disliked={disliked} onDislikedChange={setDisliked} onAction={track} />`,
           },
           {
             id: 'post-carousel',

@@ -3,7 +3,7 @@
 import { useState, type CSSProperties } from 'react';
 
 import { Button } from '@zyncat/ui/button';
-import { YouTube } from '@zyncat/ui/youtube';
+import { YouTube, type YouTubeAction } from '@zyncat/ui/youtube';
 
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
@@ -150,6 +150,47 @@ export function YouTubeShortDemo() {
           100%
         </Button>
         <span style={CAPTION}>progress is a prop - the bar transitions to it, it never runs on a timer</span>
+      </div>
+    </div>
+  );
+}
+
+export function YouTubeControlledDemo() {
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [last, setLast] = useState<YouTubeAction | null>(null);
+
+  return (
+    <div style={COLUMN}>
+      <span style={CAPTION}>
+        Like and dislike are controlled triples shared by the Shorts rail and the community post - the like count picks
+        yours up. Comment, share, remix, menu and expand carry no state, so they report through onAction.
+      </span>
+      <div style={ROW}>
+        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
+          liked
+        </Button>
+        <Button size="sm" variant={disliked ? 'primary' : 'secondary'} onClick={() => setDisliked(!disliked)}>
+          disliked
+        </Button>
+        <span style={CAPTION}>last stateless action: {last ?? 'none yet'}</span>
+      </div>
+      <div style={WIDE_CANVAS}>
+        <YouTube
+          surface="short"
+          title={SHORT_TITLE}
+          channel="@actuallycarterpcs"
+          likes={187000}
+          comments={3539}
+          remixes={3}
+          media={SHORT_MEDIA}
+          avatar={AVATAR}
+          liked={liked}
+          onLikedChange={setLiked}
+          disliked={disliked}
+          onDislikedChange={setDisliked}
+          onAction={setLast}
+        />
       </div>
     </div>
   );

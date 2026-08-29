@@ -3,7 +3,7 @@
 import { useState, type CSSProperties, type ReactNode } from 'react';
 
 import { Button } from '@zyncat/ui/button';
-import { TikTok, type TikTokRatio } from '@zyncat/ui/tiktok';
+import { TikTok, type TikTokAction, type TikTokRatio } from '@zyncat/ui/tiktok';
 
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
@@ -225,6 +225,57 @@ export function TikTokMuteDemo() {
           comments={201}
           saves={480}
           shares={789}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function TikTokControlledDemo() {
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [followed, setFollowed] = useState(false);
+  const [last, setLast] = useState<TikTokAction | null>(null);
+
+  return (
+    <div style={COLUMN}>
+      <span style={CAPTION}>
+        Like, save and follow are controlled triples - the rail counts add your like and save as you toggle them.
+        Comment, share, menu and search carry no state of their own, so they report through onAction instead.
+      </span>
+      <div style={ROW}>
+        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
+          liked
+        </Button>
+        <Button size="sm" variant={saved ? 'primary' : 'secondary'} onClick={() => setSaved(!saved)}>
+          saved
+        </Button>
+        <Button size="sm" variant={followed ? 'primary' : 'secondary'} onClick={() => setFollowed(!followed)}>
+          followed
+        </Button>
+      </div>
+      <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
+      <div style={SCROLLER}>
+        <TikTok
+          surface="desktop"
+          translation={false}
+          name={NAME}
+          location={PLACE}
+          caption={STORY}
+          media={SHOT_C}
+          avatar={AVATAR}
+          sticker={DISC}
+          likes={3149}
+          comments={201}
+          saves={480}
+          shares={789}
+          liked={liked}
+          onLikedChange={setLiked}
+          saved={saved}
+          onSavedChange={setSaved}
+          followed={followed}
+          onFollowedChange={setFollowed}
+          onAction={setLast}
         />
       </div>
     </div>

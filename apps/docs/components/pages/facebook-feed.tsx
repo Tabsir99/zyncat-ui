@@ -2,7 +2,8 @@
 
 import { useState, type CSSProperties } from 'react';
 
-import { FacebookFeed } from '@zyncat/ui/facebook-feed';
+import { Button } from '@zyncat/ui/button';
+import { FacebookFeed, type FacebookFeedAction } from '@zyncat/ui/facebook-feed';
 
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-5)', flexDirection: 'column' };
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-5)', alignItems: 'flex-start', flexWrap: 'wrap' };
@@ -237,6 +238,39 @@ export function FacebookMuteControl() {
         </div>
       </div>
       <div style={LOG}>muted: {String(muted)}</div>
+    </div>
+  );
+}
+
+export function FacebookControlled() {
+  const [liked, setLiked] = useState(false);
+  const [last, setLast] = useState<FacebookFeedAction | null>(null);
+
+  return (
+    <div style={COLUMN}>
+      <span style={CAPTION}>
+        Every glyph on the action bar is a real button, reachable by Tab and ringed on focus. Like is the only one that
+        carries state - the count picks it up. The rest report through onAction so you decide what they mean.
+      </span>
+      <div style={CANVAS}>
+        <FacebookFeed
+          surface="post"
+          width="mobile"
+          caption="Three days above the fog line #alps"
+          media={<div style={RIDGE} />}
+          avatar={<div style={PORTRAIT} />}
+          likes={267}
+          liked={liked}
+          onLikedChange={setLiked}
+          onAction={setLast}
+        />
+      </div>
+      <div style={ROW}>
+        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
+          liked
+        </Button>
+      </div>
+      <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
     </div>
   );
 }

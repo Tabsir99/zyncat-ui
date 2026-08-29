@@ -1750,3 +1750,54 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.theming-pair {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  padding: var(--space-5);
+  border: var(--border-hairline) solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  background: var(--bg-subtle);
+}
+
+.theming-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+.theming-cell__label {
+  font: var(--type-micro);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.theming-cell__row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+:where(.theming-unlayered) :where(.btn) {
+  border-radius: var(--radius-0);
+  background: var(--gray-950);
+  border-color: var(--gray-950);
+  color: var(--gray-0);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.theming-retheme {
+  --accent: oklch(0.58 0.19 292);
+  --accent-hover: oklch(0.5 0.19 292);
+  --accent-active: oklch(0.43 0.17 292);
+  --accent-subtle: oklch(0.96 0.03 292);
+  --accent-border: oklch(0.86 0.07 292);
+  --text-accent: oklch(0.43 0.17 292);
+  --radius-md: var(--radius-full);
+  --radius-lg: var(--radius-full);
+}
