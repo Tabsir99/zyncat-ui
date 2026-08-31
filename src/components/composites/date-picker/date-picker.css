@@ -182,27 +182,27 @@
     will-change: transform, opacity;
   }
 
-  /* selection - the layoutId node, so fill + border travel together. */
+  /* selection - a quiet tint, not a solid fill (so it never outshouts Done); the layoutId node, so fill + border travel together. */
   .dtp__pill {
     position: absolute;
     inset: 0;
     z-index: 0;
     border-radius: var(--radius-md);
-    background: var(--accent);
-    border: var(--border-hairline) solid var(--accent);
+    background: var(--accent-subtle);
+    border: var(--border-hairline) solid var(--accent-border);
   }
   .dtp__num {
     position: relative;
     z-index: 1;
   }
-
-  /* today - accent numeral + a short bar, never a fill (fill means "picked"). */
-  .dtp__day.is-today .dtp__num {
+  .dtp__day.is-selected .dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
-  .dtp__day.is-selected .dtp__num {
-    color: var(--text-on-accent);
+
+  /* today - accent numeral + a short bar, never a fill (fill means "picked"); reads on the selection tint too. */
+  .dtp__day.is-today .dtp__num {
+    color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
   .dtp__dot {
@@ -215,9 +215,6 @@
     border-radius: var(--space-px);
     background: var(--accent);
     z-index: 1;
-  }
-  .dtp__day.is-selected .dtp__dot {
-    background: var(--text-on-accent);
   }
   .dtp__day:disabled .dtp__num {
     color: var(--text-disabled);
@@ -444,7 +441,7 @@
     inset: 0;
     z-index: 1;
     border-radius: var(--radius-md);
-    background: var(--accent);
+    background: var(--accent-border); /* more opaque than the band - a clear selection marker, not a heavy solid fill */
   }
   .drp__cap--ghost {
     background: transparent;
@@ -458,18 +455,13 @@
   .drp .dtp__day.is-in-range .dtp__num {
     color: var(--text-accent);
   }
-  .drp .dtp__day.is-cap .dtp__num {
-    color: var(--text-on-accent);
-    font-weight: var(--weight-semibold);
-  }
+  .drp .dtp__day.is-cap .dtp__num,
   .drp .dtp__day.is-cap-ghost .dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
 
-  .drp .dtp__day.is-cap .dtp__dot {
-    background: var(--text-on-accent);
-  }
+  .drp .dtp__day.is-cap .dtp__dot,
   .drp .dtp__day.is-cap-ghost .dtp__dot {
     background: var(--accent);
   }
