@@ -1373,6 +1373,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Standard <div> attributes (className, style, data-*, ...) forwarded to the select root.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description: 'Whether the trigger and the options fire on `pointerdown` (snappier) or wait for `click`.',
+    },
+    {
       name: 'animation',
       type: 'DisableableAnimation',
       default: "duration 'base' + ease 'entrance'/'exit'",
@@ -1457,6 +1463,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'htmlProps',
       type: 'HTMLAttributes<HTMLDivElement> & DataAttributes',
       description: 'Standard <div> attributes (className, style, data-*, ...) forwarded to the select root.',
+    },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description: 'Whether the trigger and the options fire on `pointerdown` (snappier) or wait for `click`.',
     },
     {
       name: 'animation',
@@ -1608,6 +1620,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'footer', type: 'ReactNode', description: 'Footer strip - pagination, summaries.' },
     { name: 'onRowClick', type: '(row: Row) => void', description: 'Makes rows clickable (checkbox cell excluded).' },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description: 'Whether a sortable header fires on `pointerdown` (snappier) or waits for `click`.',
+    },
+    {
       name: 'className',
       type: 'string',
       description: 'Size the table here - the internal scroller absorbs the constraint.',
@@ -1697,6 +1715,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description:
+        'Whether the trigger, the day cells and the panel controls fire on `pointerdown` (snappier) or wait for `click`. (Not used by TimeField, which is inline.)',
+    },
+    {
       name: 'animation',
       type: 'DisableableAnimation',
       description:
@@ -1752,6 +1777,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description:
+        'Whether the trigger, the day cells and the panel controls fire on `pointerdown` (snappier) or wait for `click`. (Not used by TimeField, which is inline.)',
+    },
+    {
       name: 'animation',
       type: 'DisableableAnimation',
       description:
@@ -1801,6 +1833,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description:
+        'Whether the trigger, the day cells and the panel controls fire on `pointerdown` (snappier) or wait for `click`. (Not used by TimeField, which is inline.)',
+    },
+    {
       name: 'animation',
       type: 'DisableableAnimation',
       description:
@@ -1845,6 +1884,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description:
+        'Whether the trigger, the day cells and the panel controls fire on `pointerdown` (snappier) or wait for `click`. (Not used by TimeField, which is inline.)',
+    },
+    {
       name: 'animation',
       type: 'DisableableAnimation',
       description:
@@ -1877,6 +1923,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
         'Shared id prefix wiring tab and panel aria. Give Tabs and its TabPanel the same `name`; omit it when the tabs have no managed panel.',
     },
     { name: 'ariaLabel', type: 'string', description: 'Accessible name for the tablist (e.g. "Section views").' },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description: 'Whether a tab switches on `pointerdown` (snappier) or waits for `click`.',
+    },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
   ],
@@ -1989,7 +2041,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     {
       name: 'trigger',
       type: 'ReactElement | null',
-      description: 'Optional element cloned to open the dialog on click (uncontrolled ergonomics).',
+      description: 'Optional element cloned to open the dialog (uncontrolled ergonomics).',
+    },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'click'",
+      description: 'Whether the trigger fires on `pointerdown` (snappier) or waits for `click`.',
     },
     {
       name: 'title',
@@ -2058,6 +2116,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Cloned to toggle the panel, and used as the anchor unless `anchor` is set.',
     },
     {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'click'",
+      description: 'Whether the trigger fires on `pointerdown` (snappier) or waits for `click`.',
+    },
+    {
       name: 'anchor',
       type: 'VirtualAnchor | null',
       description:
@@ -2112,6 +2176,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'ReactElement',
       required: true,
       description: 'Cloned to toggle the menu, and used as the anchor. Gets the `aria-haspopup="menu"` wiring.',
+    },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'pointerdown'",
+      description: 'Whether the trigger and the rows fire on `pointerdown` (snappier) or wait for `click`.',
     },
     { name: 'open', type: 'boolean', description: 'Controlled open state. Omit to stay uncontrolled.' },
     { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial state when uncontrolled.' },
@@ -2168,7 +2238,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: '(open: boolean) => void',
       description: 'Fires whenever the open state changes. Pair with `open` for controlled use.',
     },
-    { name: 'trigger', type: 'ReactElement | null', description: 'Cloned to open the sheet on click.' },
+    { name: 'trigger', type: 'ReactElement | null', description: 'Cloned to open the sheet.' },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'click'",
+      description: 'Whether the trigger fires on `pointerdown` (snappier) or waits for `click`.',
+    },
     { name: 'side', type: "'right' | 'bottom'", description: "Edge the sheet slides in from. Default 'right'." },
     { name: 'dismissible', type: 'boolean', description: 'Scrim/Esc dismissal + drag-to-edge. Default true.' },
     {
@@ -2247,6 +2323,12 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'query',
       type: 'string',
       description: 'Drive the results from outside — a `:` chip in a document, your own input.',
+    },
+    {
+      name: 'activateOn',
+      type: 'ActivateOn',
+      default: "'click'",
+      description: 'Whether the trigger, an emoji and a category fire on `pointerdown` (snappier) or wait for `click`.',
     },
     { name: 'breakpoint', type: 'string', description: 'Viewport at which the panel becomes a bottom sheet.' },
     {

@@ -34,7 +34,7 @@ about `--space-px`, not the current visible gap.
       `size: 'morph'`) so a taller or shorter tab grows into place instead of snapping
 - [x] Reviewed & accepted
 
-## Task 3 — pointerdown activation for responsiveness (IN PROGRESS)
+## Task 3 — pointerdown activation for responsiveness (IN REVIEW)
 
 Brief: components with a click action should switch to pointerdown to feel super responsive.
 Do NOT apply it to buttons directly — only internal things where the library controls the
@@ -42,10 +42,39 @@ trigger. It must be overridable. Open question to handle: when a consumer passes
 trigger element, how does their choice of pointer vs click interact with ours — make sure
 that works rather than assuming it does.
 
-- [ ] Audit which components own their trigger (dropdown, select, tabs, date fields, …)
-- [ ] pointerdown as the default activation there, overridable per component
-- [ ] Consumer-passed triggers keep working with either scheme
-- [ ] Done & reviewed
+- [x] One shared primitive, `activationProps` (`internal/utils/activation.ts`) — mouse/pen activate on
+      pointerdown, touch and keyboard fall through to click, modified and non-primary presses defer,
+      `disabled`/`aria-disabled` never fire, and the press takes focus itself (focus otherwise lands on
+      mousedown, one event too late for an overlay reading `activeElement` as it mounts)
+- [x] Round 1 rolled it out everywhere the library owns a trigger. Review: pointerdown paired with a
+      press effect feels unnatural — the surface arrives, then the control dips, reading as two events.
+      Scaled back to the three surfaces where the wait is actually felt.
+- [x] On by default: Select, MultiSelect, Dropdown (trigger + rows), Tabs, the date fields (trigger,
+      day cells, month nav, presets — their trigger is the select trigger's twin) and Table's sort
+      headers
+- [x] Back to click by default: Popover, Dialog, Modal, Sheet, EmojiPicker. `activationProps` itself
+      now defaults to click; a component opts in by defaulting its own `activateOn`
+- [x] `activateOn?: 'pointerdown' | 'click'` still on every one of them, both directions — the reverted
+      components can opt back in, the three can opt out
+- [x] Tabs keeps its `:active` press rule (removing it was reverted on review). Whether a dip that lands
+      after the surface has opened is worth keeping is a per-component judgement, not a rule
+- [x] Dropdown trigger matched to the select trigger — `ovCloneTrigger` marks a pointerdown trigger
+      `data-activate`, and `internal/overlay/trigger.css` drops its press transform and gives it the
+      accent border + ring while expanded. Measured identical to `.select__trigger`'s open style. No
+      scoped custom property of another component is touched, so a consumer's trigger keeps its own look
+- [x] Deliberately excluded throughout: `Button` and anything rendered as one (Pagination, calendar
+      Done, Alert action), native form controls, table rows (press-drag is text selection), dismiss buttons
+- [x] Consumer-passed triggers: their own `onPointerDown`/`onClick` run first, and `preventDefault()`
+      in their pointerdown cancels ours — measured: the click then activates normally
+- [x] Rows inside a focus-managing panel use `holdFocus`, which cancels the pointerdown so focus stays
+      where the panel put it (select option pick returns focus to the trigger; emoji grid keeps it out)
+- [x] Verified in Chrome over CDP, both rounds: single activation per press, keyboard Enter/Space intact,
+      touch defers to the tap, right-press and shift-press ignored, and the reverted components confirmed
+      inert at pointerdown
+- [ ] Reviewed & accepted
+
+Pre-existing, unrelated to this task: committing a Select option with the keyboard leaves the listbox
+open and focus off the trigger. Identical before and after this change (A/B'd against a stashed tree).
 
 ## Task 4 — "On this page" section readability
 

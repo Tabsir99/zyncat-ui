@@ -144,6 +144,42 @@
 - Token as a number: `tokenPx`. Scroller edges: `useScrollEdges`. Class names: `cx`.
 - Listbox keyboard navigation: `useListbox`. Generalise it for new shapes, never fork it.
 - Scroll-into-view lives inline in `use-listbox.ts`. A second consumer lifts it out.
+- Trigger activation: `activationProps`. Never hand-wire `onClick` on a trigger the library owns.
+
+### Activation
+
+A library-owned trigger fires on pointerdown, one frame ahead of click. `activationProps(activate, opts)`
+returns the `onPointerDown` + `onClick` pair that makes that safe:
+
+- Mouse and pen activate on pointerdown. Touch and keyboard fall through to click, so a tap can still
+  scroll and Enter/Space still work. The two never both fire - the click handler reads the event's
+  pointer type and stands down for the gesture the pointerdown already took.
+- A modified or non-primary press (shift, meta, middle, right) declines the pointerdown and waits for the
+  click, so modifier-aware handlers behave as before.
+- `disabled` and `aria-disabled` targets never activate, on either event.
+- The press takes focus itself, because focus otherwise lands on `mousedown` - one event too late for an
+  overlay that reads `document.activeElement` when it mounts.
+- `holdFocus: true` for a row inside a panel that places focus itself (select options, menu rows). It
+  cancels the pointerdown instead, which drops the compatibility mouse events and leaves focus untouched.
+- Every component exposing this takes `activateOn`, and a consumer's own `onPointerDown` cancels the
+  built-in activation by calling preventDefault on the event - the click then activates as usual.
+
+The helper defaults to click. A component opts in by defaulting its own `activateOn` to `'pointerdown'`,
+which is `Select`, `MultiSelect`, `Dropdown`, `Tabs`, the date fields and `Table`'s sort headers - the
+surfaces where a menu, a panel or a reorder follows the press and the wait is felt. Everywhere else the
+prop is there to opt in, not opted in.
+
+A cloned trigger that opens on pointerdown loses its press transform and takes the expanded treatment
+`.select__trigger` and `.dtf__trigger` already carry - `trigger.css`, keyed on the `data-activate` mark
+`ovCloneTrigger` sets. Those rules out-specify the primitive's own press rule on purpose; they never
+touch another component's scoped custom properties, so a consumer's trigger keeps its own resting look.
+
+A library-owned trigger keeps whatever press state it already had. A dip that lands after the surface
+has already opened is a judgement call per component, not a rule - `.tab` keeps its.
+
+Out of scope by design: `Button` and anything rendered as one, native form controls, content surfaces
+where a press-drag means selection or reordering, and dismiss buttons - a surface leaving the screen
+gains nothing from arriving a frame early.
 
 ## Conventions
 

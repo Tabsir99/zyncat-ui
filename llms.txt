@@ -107,12 +107,12 @@ RadioGroup - @zyncat/ui/radio-group
 Select - @zyncat/ui/select
   Single-select listbox. options: SelectOption[]; value: string|null, onChange(value); searchable, leadingIcon, placeholder, invalid, loading, ariaLabel.
   <Select options={TIMEZONES} value={tz} onChange={setTz} searchable placeholder="Choose a time zone" ariaLabel="Time zone" />
-  +6 more props - get_component('select')
+  +7 more props - get_component('select')
 
 MultiSelect - @zyncat/ui/multi-select
   Many-of listbox; stays open while toggling, trigger summarises as first +N. value: string[], onChange(string[]); searchable.
   <MultiSelect options={PEOPLE} value={ids} onChange={setIds} placeholder="Choose members" ariaLabel="Members" />
-  +7 more props - get_component('multi-select')
+  +8 more props - get_component('multi-select')
 
 ============================================================ DATA DISPLAY
 
@@ -139,7 +139,7 @@ ToggleTag - @zyncat/ui/toggle-tag
 Table - @zyncat/ui/table
   Declare columns + rows; owns sort, selection, stickiness, overflow. columns: TableColumn<T>[] ({ key, label, render?, sortable?, sortBy?, align?, mono?, strong?, grow? }); selectable, defaultSort, footer.
   <Table<Invoice> ariaLabel="Invoices" columns={COLUMNS} rows={INVOICES} selectable defaultSort={{ key: 'amount', dir: 'desc' }} />
-  +8 more props - get_component('table')
+  +9 more props - get_component('table')
 
 Pagination - @zyncat/ui/pagination
   Cursor strip: mono range readout + prev/next pair. range: [from,to], total?, hasPrev/hasNext, onPrev/onNext, ariaLabel.
@@ -152,28 +152,28 @@ Pagination - @zyncat/ui/pagination
 DateField - @zyncat/ui/date-field
   Month calendar in a popover; value 'YYYY-MM-DD'.
   <DateField label="Start date" value={d} onChange={setD} timezone="Europe/Riga" min="2026-06-01" />
-  +7 more props - get_component('date-field')
+  +8 more props - get_component('date-field')
 
 DateTimeField - @zyncat/ui/datetime-field
   Calendar + segmented HH:MM; value 'YYYY-MM-DDTHH:mm'. format 12h|24h, minuteStep.
   <DateTimeField label="Due at" value={v} onChange={setV} format="12h" minuteStep={15} />
-  +7 more props - get_component('datetime-field')
+  +8 more props - get_component('datetime-field')
 
 DateRangeField - @zyncat/ui/date-range-field
   Two-tap auto-ordering window; value DateRange { start, end } | null; commits when both ends exist.
   <DateRangeField label="Reporting period" value={r} onChange={setR} />
-  +7 more props - get_component('date-range-field')
+  +8 more props - get_component('date-range-field')
 
 TimeField - @zyncat/ui/time-field
   Standalone segmented time; value 'HH:mm'; bounds saturate. format, minuteStep.
   <TimeField label="Send at" value={t} onChange={setT} format="12h" minuteStep={15} />
-  +6 more props - get_component('time-field')
+  +7 more props - get_component('time-field')
 
 Tabs / TabPanel - @zyncat/ui/tabs
   Line tabs; the ink reaches then releases; panels enter from the side you moved toward. items: TabItem[]; value/onChange(value, dir). Pair with <TabPanel name tab dir>.
   <Tabs name="views" ariaLabel="Workspace views" value={view} onChange={(v, d) => { setView(v); setDir(d); }} items={items} />
   <TabPanel name="views" tab={view} dir={dir}>...</TabPanel>
-  +2 more props - get_component('tabs')
+  +3 more props - get_component('tabs')
 
 ============================================================ OVERLAYS & FEEDBACK
 
@@ -204,7 +204,7 @@ Dialog - @zyncat/ui/dialog
   container mounts it inside a positioned element instead of the viewport; scrim, scroll lock and
   inert then scope to that box and the rest of the page stays live.
   <Dialog open={o} onOpenChange={setO} tone="danger" title="Delete this project?" footer={(close) => <>...</>}>...</Dialog>
-  +5 more props - get_component('dialog')
+  +6 more props - get_component('dialog')
 
 Modal - @zyncat/ui/modal
   The SAME modality as Dialog (scrim, focus trap, scroll lock, inert, Esc, motion) with ZERO paint - no
@@ -217,7 +217,7 @@ Modal - @zyncat/ui/modal
   <Modal open={!!src} onOpenChange={() => setSrc(null)} htmlProps={{ className: 'lightbox' }} layerProps={{ style: { '--bg-overlay': 'rgb(0 0 0 / 0.92)' } }}>
     <div role="dialog" aria-label="Image viewer"><img src={src} alt="" /></div>
   </Modal>
-  +1 more prop - get_component('modal')
+  +2 more props - get_component('modal')
 
 Popover - @zyncat/ui/popover
   Headless anchored panel, non-modal. side, align, arrow, trigger (node), dismissible.
@@ -225,7 +225,7 @@ Popover - @zyncat/ui/popover
   element) - and drive open yourself. Pass a new object to re-place a moving anchor.
   <Popover side="bottom" align="start" trigger={<Button>Actions</Button>}><menu>...</menu></Popover>
   <Popover open={!!spot} onOpenChange={dismiss} anchor={spot} side="right"><menu>...</menu></Popover>
-  +3 more props - get_component('popover')
+  +4 more props - get_component('popover')
 
 Dropdown - @zyncat/ui/dropdown
   Menu button - a list of ACTIONS the trigger commits, with submenus. NOT a Select: it runs a
@@ -238,7 +238,7 @@ Dropdown - @zyncat/ui/dropdown
     { id: 'move', label: 'Move to', items: [{ id: 'drafts', label: 'Drafts' }] },
     { id: 'delete', label: 'Delete', danger: true }]} />
   <Dropdown open={o} onOpenChange={setO} side="top" align="end" ariaLabel="Row actions" trigger={<Button>...</Button>} items={groups} />
-  +3 more props - get_component('dropdown')
+  +4 more props - get_component('dropdown')
 
 Sheet - @zyncat/ui/sheet
   Edge-docked modal panel, drag-to-dismiss. side right|bottom, trigger (node), dismissible.
@@ -246,7 +246,7 @@ Sheet - @zyncat/ui/sheet
   inert then scope to that box and the rest of the page stays live.
   <Sheet side="right" trigger={<Button>Filters</Button>}><div role="dialog">...</div></Sheet>
   <Sheet side="bottom" container={panel} open={o} onOpenChange={setO}><div role="dialog">...</div></Sheet>
-  +3 more props - get_component('sheet')
+  +4 more props - get_component('sheet')
 
 EmojiPickerPanel - @zyncat/ui/emoji-picker
   Searchable emoji panel - grid, scrollspy category rail, recents in localStorage - living in a
@@ -259,7 +259,7 @@ EmojiPickerPanel - @zyncat/ui/emoji-picker
   loadEmojiData('/emojis.json');   // once, before the panel first opens
   <EmojiPickerPanel open={open} onOpenChange={setOpen} onSelect={addReaction} getEmojiUrl={getEmojiUrl}
     search trigger={<Button variant="secondary">Add reaction</Button>} />
-  +3 more props - get_component('emoji-picker')
+  +4 more props - get_component('emoji-picker')
 
 ============================================================ EXPRESSIVE
 
