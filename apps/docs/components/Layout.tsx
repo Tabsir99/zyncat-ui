@@ -9,26 +9,15 @@ import { Button } from '@zyncat/ui/button';
 import { Collapse } from '@zyncat/ui/collapse';
 import { MotionDevtools } from '@zyncat/ui/motion-devtools';
 import { Toaster } from '@zyncat/ui/toast';
-import { Tooltip } from '@zyncat/ui/tooltip';
 
 import { GROUPS, NEW_SLUGS } from '../content/registry';
 import { CommandMenu } from './CommandMenu';
 import { Icon } from './icon';
 
-const startThemeTransition = (apply: () => void) => {
-  const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
-  if (doc.startViewTransition) {
-    doc.startViewTransition(apply);
-  } else {
-    apply();
-  }
-};
-
 export function DocsShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [closedGroups, setClosedGroups] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -46,32 +35,6 @@ export function DocsShell({ children }: { children: ReactNode }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('zyncat-theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const shouldDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    setIsDark(shouldDark);
-    if (shouldDark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    startThemeTransition(() => {
-      if (next) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('zyncat-theme', 'dark');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('zyncat-theme', 'light');
-      }
-    });
-  };
 
   const toggleGroup = (id: string) => {
     setClosedGroups((prev) => {
@@ -161,12 +124,6 @@ export function DocsShell({ children }: { children: ReactNode }) {
               <span className="search-btn__placeholder">Search the index</span>
               <kbd className="search-btn__kbd">⌘K</kbd>
             </button>
-
-            <Tooltip content={isDark ? 'Light mode' : 'Dark mode'} placement="bottom">
-              <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle color theme">
-                <Icon name={isDark ? 'sun' : 'moon'} size="md" />
-              </Button>
-            </Tooltip>
           </div>
         </div>
       </header>
