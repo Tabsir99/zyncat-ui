@@ -19,14 +19,22 @@ system someone put thought into.
 - [x] Select + DateField trigger hover: the secondary button's hover tone (`color-mix(surface 55%, muted)`) — round-1 wash swap (10% → 6% gray) was imperceptibly subtle
 - [x] Reviewed & accepted
 
-## Task 2 — Tabs active indicator spacing (IN PROGRESS)
+## Task 2 — Tabs active indicator spacing (DONE)
 
 Brief: reduce the spacing between the tab items and the active indicator (ink) — should be
 about `--space-px`, not the current visible gap.
 
-- [ ] Done & reviewed
+- [x] Tab bottom gap 8px → the ink's own band plus a hairline, so pad-to-ink clearance is
+      exactly `--space-px` (tab height 36px → 31px); `--tabs-ink-h` hoisted to `.tabs` so the
+      relationship is stated in code, not a magic number
+- [x] Docs headers re-tuned to the new baseline (hero preview bar, example-card header) —
+      label and action-button centres measured at delta 0
+- [x] Panel entrance: vertical drift dropped, x-only travel
+- [x] Panel height teleport fixed — the root now FLIPs its box (`<Motion layout>` with
+      `size: 'morph'`) so a taller or shorter tab grows into place instead of snapping
+- [x] Reviewed & accepted
 
-## Task 3 — pointerdown activation for responsiveness
+## Task 3 — pointerdown activation for responsiveness (IN PROGRESS)
 
 Brief: components with a click action should switch to pointerdown to feel super responsive.
 Do NOT apply it to buttons directly — only internal things where the library controls the

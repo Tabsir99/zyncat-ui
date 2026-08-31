@@ -479,7 +479,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: 6px 10px 0 14px;
+  padding: 3px 10px 0 14px;
   border-bottom: var(--border-hairline) solid var(--border-default);
 }
 
@@ -495,7 +495,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding-bottom: 6px;
+  padding-bottom: 3px;
 }
 
 .hero-preview__canvas {
@@ -589,12 +589,12 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: 4px 8px 0 12px;
+  padding: 3px 8px 0 12px;
   border-bottom: var(--border-hairline) solid var(--border-default);
 }
 
 .example-card__header .btn {
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .example-card__canvas {
@@ -1408,7 +1408,7 @@ body {
 }
 
 .doc-tabs-group__header {
-  padding: 4px 12px 0;
+  padding: 3px 12px 0;
   border-bottom: var(--border-hairline) solid var(--border-default);
 }
 
