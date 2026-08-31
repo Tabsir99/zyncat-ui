@@ -34,7 +34,7 @@ about `--space-px`, not the current visible gap.
       `size: 'morph'`) so a taller or shorter tab grows into place instead of snapping
 - [x] Reviewed & accepted
 
-## Task 3 — pointerdown activation for responsiveness (IN REVIEW)
+## Task 3 — pointerdown activation for responsiveness (DONE)
 
 Brief: components with a click action should switch to pointerdown to feel super responsive.
 Do NOT apply it to buttons directly — only internal things where the library controls the
@@ -71,12 +71,12 @@ that works rather than assuming it does.
 - [x] Verified in Chrome over CDP, both rounds: single activation per press, keyboard Enter/Space intact,
       touch defers to the tap, right-press and shift-press ignored, and the reverted components confirmed
       inert at pointerdown
-- [ ] Reviewed & accepted
+- [x] Reviewed & accepted
 
 Pre-existing, unrelated to this task: committing a Select option with the keyboard leaves the listbox
 open and focus off the trigger. Identical before and after this change (A/B'd against a stashed tree).
 
-## Task 4 — "On this page" section readability
+## Task 4 — "On this page" section readability (IN PROGRESS)
 
 Brief: the ToC section feels uncomfortable to read (tiny uppercase mono links). Do something —
 make it comfortable.
