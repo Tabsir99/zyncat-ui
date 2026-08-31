@@ -6,6 +6,7 @@ import { useImperativeHandle, useMemo, useState, type ReactElement, type Ref } f
 
 import { useMediaQuery } from '../../internal/hooks/use-media-query';
 import { Icon } from '../../internal/icon/Icon';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { TextField } from '../../primitives/input/TextField';
 import { Popover, type PopoverProps, type VirtualAnchor } from '../popover/Popover';
 import { Sheet, type SheetProps } from '../sheet/Sheet';
@@ -41,6 +42,8 @@ export interface EmojiPickerPanelProps {
   search?: boolean;
   /** Drive the results from outside — a `:` chip in a document, your own input. */
   query?: string;
+  /** Whether the trigger, an emoji and a category fire on `pointerdown` (snappier) or wait for `click`. @default 'click' */
+  activateOn?: ActivateOn;
   /** Viewport at which the panel becomes a bottom sheet. */
   breakpoint?: string;
   /** Desktop placement — `anchor`, `side`, `align`, `arrow`, and every other Popover knob. */
@@ -72,6 +75,7 @@ export function EmojiPickerPanel({
   offset = 0,
   search = false,
   query,
+  activateOn,
   breakpoint = SHEET_BREAKPOINT,
   popoverProps,
   sheetProps,
@@ -81,7 +85,7 @@ export function EmojiPickerPanel({
   const asSheet = useMediaQuery(breakpoint);
   const [ownQuery, setOwnQuery] = useState('');
   const drivenFromOutside = !asSheet && query !== undefined;
-  const picker = useEmojiPicker({ onSelect, getEmojiUrl, query: drivenFromOutside ? query : ownQuery });
+  const picker = useEmojiPicker({ onSelect, getEmojiUrl, query: drivenFromOutside ? query : ownQuery, activateOn });
 
   useImperativeHandle(ref, () => picker, [picker]);
 
@@ -110,7 +114,7 @@ export function EmojiPickerPanel({
           />
         </div>
       ) : null}
-      <CategoryBar store={picker} />
+      <CategoryBar store={picker} activateOn={activateOn} />
       <div ref={mount} />
     </div>
   );
@@ -122,6 +126,7 @@ export function EmojiPickerPanel({
       onOpenChange={onOpenChange}
       side="bottom"
       trigger={trigger}
+      activateOn={activateOn}
       htmlProps={{ className: 'on-emoji-sheet' }}
     >
       <div role="dialog" aria-label="Emoji picker">
@@ -137,6 +142,7 @@ export function EmojiPickerPanel({
       open={open}
       onOpenChange={onOpenChange}
       trigger={trigger}
+      activateOn={activateOn}
       htmlProps={{ className: 'on-emoji-pop', 'aria-label': 'Emoji picker' }}
     >
       {frame}

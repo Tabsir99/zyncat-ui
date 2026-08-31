@@ -15,6 +15,7 @@ import { useControllable } from '../../internal/hooks/use-controllable';
 import { useReturnFocus } from '../../internal/overlay/focus';
 import { ovCloneTrigger, OverlayPortal, useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
 import { useAnchorPosition, type VirtualAnchor } from '../../internal/overlay/position';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 
 export type { VirtualAnchor };
@@ -34,6 +35,8 @@ export interface PopoverProps {
 
   /** Cloned to toggle the panel, and used as the anchor unless `anchor` is set. */
   trigger?: ReactElement | null;
+  /** Whether the trigger fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
+  activateOn?: ActivateOn;
   /** Anchor to an arbitrary rect instead of the trigger - any `{ getBoundingClientRect() }`, which an element also satisfies.
    *  Drive `open` yourself; pass a new object to re-place a moving anchor. */
   anchor?: VirtualAnchor | null;
@@ -107,6 +110,7 @@ export function Popover({
   defaultOpen = false,
   onOpenChange,
   trigger = null,
+  activateOn,
   anchor = null,
   side = 'bottom',
   align = 'start',
@@ -126,7 +130,14 @@ export function Popover({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(!open), panelId, haspopup: 'true', triggerRef })}
+      {ovCloneTrigger(trigger, {
+        open,
+        onPress: () => setOpen(!open),
+        panelId,
+        haspopup: 'true',
+        triggerRef,
+        activateOn,
+      })}
       <OverlayPortal>
         <Presence>
           {open && (

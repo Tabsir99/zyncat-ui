@@ -12,6 +12,7 @@ import type { MotionSpecs } from '../../../motion/use-motion';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell } from '../../internal/overlay/modal';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { useSheetDrag } from './use-sheet-drag';
 
 const SHEET_TIMING = {
@@ -29,8 +30,10 @@ export interface SheetProps {
   /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
 
-  /** Cloned to open the sheet on click. */
+  /** Cloned to open the sheet. */
   trigger?: ReactElement | null;
+  /** Whether the trigger fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
+  activateOn?: ActivateOn;
 
   /** Edge the sheet slides in from. Default 'right'. */
   side?: 'right' | 'bottom';
@@ -99,6 +102,7 @@ export function Sheet({
   defaultOpen = false,
   onOpenChange,
   trigger = null,
+  activateOn,
   side = 'right',
   dismissible = true,
   container = null,
@@ -117,7 +121,14 @@ export function Sheet({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
+      {ovCloneTrigger(trigger, {
+        open,
+        onPress: () => setOpen(true),
+        panelId,
+        haspopup: 'dialog',
+        triggerRef,
+        activateOn,
+      })}
       <OverlayPortal container={container}>
         <Presence>
           {open && (

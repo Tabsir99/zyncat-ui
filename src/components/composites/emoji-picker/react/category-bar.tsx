@@ -5,6 +5,7 @@ import { useId, useRef } from 'react';
 import { Motion } from '../../../../motion/element';
 import { GlidePill, useGlide, type GlideApi } from '../../../../motion/glide';
 import { UIMotion as SM } from '../../../../tokens/motion-tokens';
+import { activationProps, type ActivateOn } from '../../../internal/utils/activation';
 import { CATEGORY_ICON_ATTRS, CATEGORY_ICONS } from '../category-icons';
 import { useCategories, useIsActiveCategory, type EmojiPickerStore } from './useEmojiPicker';
 
@@ -15,9 +16,10 @@ interface CategoryProps {
   categoryKey: string;
   railId: string;
   glide: GlideApi;
+  activateOn?: ActivateOn;
 }
 
-function Category({ store, categoryKey, railId, glide }: CategoryProps) {
+function Category({ store, categoryKey, railId, glide, activateOn }: CategoryProps) {
   const isActive = useIsActiveCategory(store, categoryKey);
 
   return (
@@ -27,7 +29,10 @@ function Category({ store, categoryKey, railId, glide }: CategoryProps) {
       aria-label={categoryKey.replace(/-/g, ' ')}
       aria-current={isActive ? true : undefined}
       onPointerEnter={(e) => glide.enter(e.currentTarget)}
-      onClick={() => store.scrollToCategory(categoryKey)}
+      {...activationProps<HTMLButtonElement>(() => store.scrollToCategory(categoryKey), {
+        on: activateOn,
+        holdFocus: true,
+      })}
     >
       <svg
         {...CATEGORY_ICON_ATTRS}
@@ -46,7 +51,7 @@ function Category({ store, categoryKey, railId, glide }: CategoryProps) {
   );
 }
 
-export function CategoryBar({ store }: { store: EmojiPickerStore }) {
+export function CategoryBar({ store, activateOn }: { store: EmojiPickerStore; activateOn?: ActivateOn }) {
   const barRef = useRef<HTMLDivElement | null>(null);
   const glide = useGlide(barRef);
   const railId = useId();
@@ -65,7 +70,7 @@ export function CategoryBar({ store }: { store: EmojiPickerStore }) {
     >
       <GlidePill className="on-emoji-bar-marker" glide={glide} />
       {categories.map((key) => (
-        <Category key={key} store={store} categoryKey={key} railId={railId} glide={glide} />
+        <Category key={key} store={store} categoryKey={key} railId={railId} glide={glide} activateOn={activateOn} />
       ))}
     </div>
   );

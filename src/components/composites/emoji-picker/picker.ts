@@ -1,3 +1,9 @@
+import {
+  clickActivates,
+  declinePointerDown,
+  pointerDownActivates,
+  type ActivateOn,
+} from '../../internal/utils/activation';
 import { getEmojiData } from './data';
 import { createEmojiGrid } from './dom';
 import { createNavigator } from './navigation';
@@ -14,6 +20,7 @@ export interface EmojiPickerOptions {
   getEmojiUrl: GetEmojiUrl;
   listboxId: string;
   getFocusHost?: () => HTMLElement | null;
+  getActivateOn?: () => ActivateOn | undefined;
   onCategoriesChange?: (keys: string[]) => void;
   onActiveCategoryChange?: (key: string | null) => void;
 }
@@ -80,14 +87,24 @@ export function createEmojiPicker(root: HTMLElement, options: EmojiPickerOptions
     if (btn?.dataset.idx) nav.setFocus(parseInt(btn.dataset.idx));
   };
 
-  const handleClick = (e: PointerEvent) => {
-    e.preventDefault();
+  const selectPressed = (e: Event) => {
     const btn = (e.target as HTMLElement).closest('button');
     if (btn?.dataset.id && ui.scroll.contains(btn)) selectById(btn.dataset.id);
   };
 
+  const handlePointerDown = (e: PointerEvent) => {
+    if (options.getActivateOn?.() !== 'pointerdown') return declinePointerDown();
+    if (pointerDownActivates(e, true)) selectPressed(e);
+  };
+
+  const handleClick = (e: PointerEvent) => {
+    e.preventDefault();
+    if (clickActivates(e)) selectPressed(e);
+  };
+
   ui.scroll.addEventListener('scroll', scheduleSpy, { passive: true });
   ui.scroll.addEventListener('mousemove', handleMouseMove, { passive: true });
+  root.addEventListener('pointerdown', handlePointerDown);
   root.addEventListener('click', handleClick);
 
   const beginRender = (keys: string[]) => {
@@ -136,6 +153,7 @@ export function createEmojiPicker(root: HTMLElement, options: EmojiPickerOptions
     if (spyFrame) cancelAnimationFrame(spyFrame);
     ui.scroll.removeEventListener('scroll', scheduleSpy);
     ui.scroll.removeEventListener('mousemove', handleMouseMove);
+    root.removeEventListener('pointerdown', handlePointerDown);
     root.removeEventListener('click', handleClick);
     root.innerHTML = '';
   };

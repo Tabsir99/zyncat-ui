@@ -13,6 +13,7 @@ import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
+import type { ActivateOn } from '../../internal/utils/activation';
 
 export interface ModalProps {
   /** Controlled open state. Omit to stay uncontrolled. */
@@ -22,8 +23,10 @@ export interface ModalProps {
   /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
 
-  /** Cloned to open the modal on click. */
+  /** Cloned to open the modal. */
   trigger?: ReactElement | null;
+  /** Whether the trigger fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
+  activateOn?: ActivateOn;
 
   /** Scrim/Esc dismissal. Default true. */
   dismissible?: boolean;
@@ -50,6 +53,7 @@ export function Modal({
   defaultOpen = false,
   onOpenChange,
   trigger = null,
+  activateOn,
   dismissible = true,
   container = null,
   id,
@@ -67,7 +71,14 @@ export function Modal({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
+      {ovCloneTrigger(trigger, {
+        open,
+        onPress: () => setOpen(true),
+        panelId,
+        haspopup: 'dialog',
+        triggerRef,
+        activateOn,
+      })}
       <OverlayPortal container={container}>
         <Presence>
           {open && (

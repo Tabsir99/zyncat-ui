@@ -15,6 +15,7 @@ import { Icon } from '../../internal/icon/Icon';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
 import { ModalShell, OV_TAKEOVER_TIMING } from '../../internal/overlay/modal';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 
 export interface DialogProps {
@@ -24,8 +25,10 @@ export interface DialogProps {
   defaultOpen?: boolean;
   /** Fires whenever the open state changes. Pair with `open` for controlled use. */
   onOpenChange?: (open: boolean) => void;
-  /** Optional element cloned to open the dialog on click (uncontrolled ergonomics). */
+  /** Optional element cloned to open the dialog (uncontrolled ergonomics). */
   trigger?: ReactElement | null;
+  /** Whether the trigger fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
+  activateOn?: ActivateOn;
   /** Header title - rendered as the `<h2>` and wired to `aria-labelledby`. */
   title?: ReactNode;
   /** Subtext under the title - wired to `aria-describedby`. @default null */
@@ -142,6 +145,7 @@ export function Dialog({
   defaultOpen = false,
   onOpenChange,
   trigger = null,
+  activateOn,
   title,
   description = null,
   size = 'md',
@@ -165,7 +169,14 @@ export function Dialog({
 
   return (
     <Fragment>
-      {ovCloneTrigger(trigger, { open, onPress: () => setOpen(true), panelId, haspopup: 'dialog', triggerRef })}
+      {ovCloneTrigger(trigger, {
+        open,
+        onPress: () => setOpen(true),
+        panelId,
+        haspopup: 'dialog',
+        triggerRef,
+        activateOn,
+      })}
       <OverlayPortal container={container}>
         <Presence>
           {open && (

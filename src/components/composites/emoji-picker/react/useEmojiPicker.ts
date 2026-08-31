@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useSyncExternalStore } from 'react';
 
+import type { ActivateOn } from '../../../internal/utils/activation';
 import { createEmojiPicker, type EmojiPickerApi } from '../picker';
 import type { GetEmojiUrl } from '../types';
 
@@ -10,11 +11,13 @@ export interface UseEmojiPickerOptions {
   getEmojiUrl: GetEmojiUrl;
   /** Drive the results from outside — a `:` chip in a document, your own input. */
   query?: string;
+  /** Whether picking an emoji fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
+  activateOn?: ActivateOn;
 }
 
 export type EmojiPickerStore = ReturnType<typeof createEmojiPickerStore>;
 
-type Handlers = Pick<UseEmojiPickerOptions, 'onSelect' | 'getEmojiUrl'>;
+type Handlers = Pick<UseEmojiPickerOptions, 'onSelect' | 'getEmojiUrl' | 'activateOn'>;
 
 const FOCUSABLE = 'input, textarea, [tabindex]';
 const NO_CATEGORIES: string[] = [];
@@ -56,6 +59,7 @@ export function createEmojiPickerStore(listboxId: string, handlers: Handlers) {
             listboxId,
             getEmojiUrl: (...args) => handlers.getEmojiUrl(...args),
             getFocusHost: () => focusHost,
+            getActivateOn: () => handlers.activateOn,
             onSelect: (...args) => handlers.onSelect(...args),
             onCategoriesChange: (keys) => {
               categories = keys;
@@ -110,12 +114,12 @@ export function createEmojiPickerStore(listboxId: string, handlers: Handlers) {
   };
 }
 
-export function useEmojiPicker({ onSelect, getEmojiUrl, query }: UseEmojiPickerOptions): EmojiPickerStore {
+export function useEmojiPicker({ onSelect, getEmojiUrl, query, activateOn }: UseEmojiPickerOptions): EmojiPickerStore {
   const listboxId = useId();
   const store = useMemo(() => createEmojiPickerStore(listboxId, { onSelect, getEmojiUrl }), [listboxId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    store.setHandlers({ onSelect, getEmojiUrl });
+    store.setHandlers({ onSelect, getEmojiUrl, activateOn });
   });
 
   useEffect(() => {
