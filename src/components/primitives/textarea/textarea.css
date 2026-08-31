@@ -12,7 +12,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--bg-inset);
+    background: var(--bg-surface);
     border: var(--border-hairline) solid var(--border-default);
     border-radius: var(--radius-lg);
     transition: var(--transition-control);

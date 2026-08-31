@@ -75,7 +75,7 @@
     border: var(--border-hairline) solid
       color-mix(in oklab, var(--cbx-on) calc(var(--cbx-checked) * 100%), var(--cbx-off));
     border-radius: var(--cbx-radius);
-    background: var(--bg-inset);
+    background: var(--bg-surface);
     transform: scale(var(--cbx-press));
     transition:
       border-color var(--duration-fast) var(--ease-standard),

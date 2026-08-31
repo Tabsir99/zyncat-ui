@@ -22,7 +22,6 @@ src/components/<tier>/<component>/<Component>.tsx
 - `pnpm sync:exports` writes `package.json` `exports`. Subpaths are the only public API.
 - `pnpm sync:tsconfig` writes `apps/docs/tsconfig.json` `paths`.
 - `pnpm docs:props` writes `apps/docs/content/props.generated.ts` from `dist/*.d.ts`.
-- `pnpm docs:gen` writes `docs/import-graph.md` and `component-sizes.md`.
 - No barrel entry. One import never pulls in code or CSS the app did not ask for.
 
 ## 3. Give it its own stylesheet

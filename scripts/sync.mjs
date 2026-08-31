@@ -5,7 +5,6 @@ const startedAt = Date.now();
 const results = await lane([
   script('sync:exports', 'sync-exports.mjs', '--write'),
   script('sync:tsconfig', 'sync-tsconfig.mjs'),
-  script('docs:gen', 'gen-docs.mjs'),
   tool('build:js', 'tsup'),
   tool('build:types', 'tsc', '-p', 'tsconfig.build.json', '--emitDeclarationOnly'),
   script('docs:props', 'gen-props.mjs'),

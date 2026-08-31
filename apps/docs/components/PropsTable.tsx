@@ -1,3 +1,7 @@
+'use client';
+
+import { Table, type TableColumn } from '@zyncat/ui/table';
+
 export interface PropRow {
   name: string;
   type: string;
@@ -6,12 +10,16 @@ export interface PropRow {
   description: string;
 }
 
+interface DisplayRow extends PropRow {
+  displayName: string;
+  displayType: string;
+}
+
 function formatType(typeStr: string): string {
   if (!typeStr) return 'unknown';
 
   let s = typeStr.trim();
 
-  // Strip complex Omit HTML type noise
   if (
     s.startsWith('Omit<InputHTMLAttributes') ||
     s.startsWith('Omit<HTMLAttributes') ||
@@ -24,7 +32,6 @@ function formatType(typeStr: string): string {
     return 'ButtonHTMLAttributes';
   }
 
-  // Clean common React namespace boilerplate
   s = s.replace(/React\.MouseEventHandler<[^>]+>/g, '(e: MouseEvent) => void');
   s = s.replace(/React\.ChangeEventHandler<[^>]+>/g, '(e: ChangeEvent) => void');
   s = s.replace(/React\.PointerEventHandler<[^>]+>/g, '(e: PointerEvent) => void');
@@ -38,11 +45,40 @@ function formatType(typeStr: string): string {
   return s;
 }
 
+const COLUMNS: TableColumn<DisplayRow>[] = [
+  {
+    key: 'name',
+    label: 'Prop',
+    render: (r) => (
+      <code className="prop-name">
+        {r.displayName}
+        {r.required ? (
+          <span className="prop-required" title="Required">
+            *
+          </span>
+        ) : null}
+      </code>
+    ),
+  },
+  { key: 'type', label: 'Type', render: (r) => <code className="prop-type">{r.displayType}</code> },
+  {
+    key: 'default',
+    label: 'Default',
+    render: (r) =>
+      r.default ? <code className="prop-default">{r.default}</code> : <span className="prop-dash">—</span>,
+  },
+  {
+    key: 'description',
+    label: 'Description',
+    grow: true,
+    render: (r) => <span className="props-td-desc">{r.description}</span>,
+  },
+];
+
 export function PropsTable({ rows, title = 'Props' }: { rows: PropRow[]; title?: string }) {
   const id = `props-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
-  // Filter out redundant internal htmlProps if bare attributes are forwarded
-  const cleanedRows = rows.map((r) => ({
+  const displayRows: DisplayRow[] = rows.map((r) => ({
     ...r,
     displayName: r.name === 'htmlProps' ? '...htmlAttributes' : r.name,
     displayType: formatType(r.type),
@@ -51,43 +87,7 @@ export function PropsTable({ rows, title = 'Props' }: { rows: PropRow[]; title?:
   return (
     <section className="props-section" aria-label={title} id={id}>
       <h3 className="props-title">{title}</h3>
-      <div className="props-table-wrapper">
-        <table className="props-table">
-          <thead>
-            <tr>
-              <th style={{ width: '20%' }}>Prop</th>
-              <th style={{ width: '30%' }}>Type</th>
-              <th style={{ width: '16%' }}>Default</th>
-              <th style={{ width: '34%' }}>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cleanedRows.map((r) => (
-              <tr key={r.name}>
-                <td className="props-td-name">
-                  <code className="prop-badge prop-badge--name">{r.displayName}</code>
-                  {r.required ? (
-                    <span className="prop-required" title="Required">
-                      *
-                    </span>
-                  ) : null}
-                </td>
-                <td className="props-td-type">
-                  <code className="prop-badge prop-badge--type">{r.displayType}</code>
-                </td>
-                <td className="props-td-default">
-                  {r.default ? (
-                    <code className="prop-badge prop-badge--default">{r.default}</code>
-                  ) : (
-                    <span className="prop-dash">-</span>
-                  )}
-                </td>
-                <td className="props-td-desc">{r.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table columns={COLUMNS} rows={displayRows} rowKey="name" ariaLabel={`${title} props`} density="compact" />
     </section>
   );
 }

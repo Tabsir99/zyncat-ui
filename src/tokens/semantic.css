@@ -4,14 +4,16 @@
 
 @layer zyncat.tokens {
   :root {
-    /* Three real elevation steps: the canvas is coolest, a card sits above it, a floating panel
-     is the only true white. --gray-0 cannot carry hue, so surfaces start one step down. */
-    --bg-app: var(--gray-25);
+    /* The canvas is pure white; cards and floating panels share it and separate with
+     hairlines and shadow, the way print separates with rules rather than tint.
+     The tinted trio steps for real: subtle (hover wash) < muted (passive fill)
+     < inset (a recessed well - code, terminals), each one ramp stop apart. */
+    --bg-app: var(--gray-0);
     --bg-surface: var(--gray-0);
     --bg-surface-raised: var(--gray-0);
     --bg-subtle: var(--gray-50);
     --bg-muted: var(--gray-100);
-    --bg-inset: var(--gray-50);
+    --bg-inset: var(--gray-150);
     --bg-overlay: color-mix(in oklab, var(--gray-900) 44%, transparent);
 
     --text-strong: var(--gray-950);

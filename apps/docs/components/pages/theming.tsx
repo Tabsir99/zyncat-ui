@@ -1,14 +1,80 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 
 import { Badge } from '@zyncat/ui/badge';
 import { Button } from '@zyncat/ui/button';
 import { Odometer } from '@zyncat/ui/odometer';
 import { StatusBadge } from '@zyncat/ui/status-badge';
+import { Table, type TableColumn } from '@zyncat/ui/table';
 import { TextField } from '@zyncat/ui/text-field';
 
 import { Callout, CodeBlock, TabGroup } from '../kit';
+
+interface OverrideLevelRow {
+  level: string;
+  mechanism: ReactNode;
+  reaches: string;
+  when: string;
+}
+
+const OVERRIDE_LEVEL_COLUMNS: TableColumn<OverrideLevelRow>[] = [
+  { key: 'level', label: 'Level', mono: true, strong: true },
+  { key: 'mechanism', label: 'Mechanism', render: (r) => r.mechanism },
+  { key: 'reaches', label: 'Reaches' },
+  { key: 'when', label: 'Use it when', grow: true },
+];
+
+const OVERRIDE_LEVEL_ROWS: OverrideLevelRow[] = [
+  {
+    level: '0',
+    mechanism: 'Your own unlayered CSS',
+    reaches: 'Every instance',
+    when: 'You need a rule the token vocabulary has no name for.',
+  },
+  {
+    level: '1',
+    mechanism: (
+      <>
+        Tokens on <code className="doc-inline-code">:root</code>
+      </>
+    ),
+    reaches: 'The whole system',
+    when: 'You are rebranding, adding a dark theme, or retiming motion.',
+  },
+  {
+    level: '2',
+    mechanism: (
+      <>
+        Scoped <code className="doc-inline-code">--component-*</code> properties
+      </>
+    ),
+    reaches: 'One component',
+    when: 'An expressive or compound component needs retuning, not rebuilding.',
+  },
+  {
+    level: '3',
+    mechanism: (
+      <>
+        <code className="doc-inline-code">className</code>, <code className="doc-inline-code">style</code>,{' '}
+        <code className="doc-inline-code">htmlProps</code>
+      </>
+    ),
+    reaches: 'One instance',
+    when: 'This one button, in this one layout, needs to be different.',
+  },
+];
+
+const SCOPED_PROPERTY_COLUMNS: TableColumn<(typeof SCOPED_PROPERTIES)[number]>[] = [
+  { key: 'component', label: 'Component', mono: true, strong: true },
+  { key: 'count', label: 'Properties' },
+  {
+    key: 'sample',
+    label: 'For example',
+    grow: true,
+    render: (r) => <code className="doc-inline-code">{r.sample}</code>,
+  },
+];
 
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
 
@@ -156,59 +222,13 @@ export function ThemingDoc() {
           does the job, and never fork the source.
         </p>
 
-        <div className="props-table-wrapper">
-          <table className="props-table">
-            <thead>
-              <tr>
-                <th style={{ width: '10%' }}>Level</th>
-                <th style={{ width: '26%' }}>Mechanism</th>
-                <th style={{ width: '20%' }}>Reaches</th>
-                <th style={{ width: '44%' }}>Use it when</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <code className="prop-badge prop-badge--name">0</code>
-                </td>
-                <td>Your own unlayered CSS</td>
-                <td>Every instance</td>
-                <td>You need a rule the token vocabulary has no name for.</td>
-              </tr>
-              <tr>
-                <td>
-                  <code className="prop-badge prop-badge--name">1</code>
-                </td>
-                <td>
-                  Tokens on <code className="doc-inline-code">:root</code>
-                </td>
-                <td>The whole system</td>
-                <td>You are rebranding, adding a dark theme, or retiming motion.</td>
-              </tr>
-              <tr>
-                <td>
-                  <code className="prop-badge prop-badge--name">2</code>
-                </td>
-                <td>
-                  Scoped <code className="doc-inline-code">--component-*</code> properties
-                </td>
-                <td>One component</td>
-                <td>An expressive or compound component needs retuning, not rebuilding.</td>
-              </tr>
-              <tr>
-                <td>
-                  <code className="prop-badge prop-badge--name">3</code>
-                </td>
-                <td>
-                  <code className="doc-inline-code">className</code>, <code className="doc-inline-code">style</code>,{' '}
-                  <code className="doc-inline-code">htmlProps</code>
-                </td>
-                <td>One instance</td>
-                <td>This one button, in this one layout, needs to be different.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Table
+          columns={OVERRIDE_LEVEL_COLUMNS}
+          rows={OVERRIDE_LEVEL_ROWS}
+          rowKey="level"
+          ariaLabel="The four override levels"
+          density="compact"
+        />
       </section>
 
       <section className="guide-section" id="level-0">
@@ -347,30 +367,13 @@ export function ThemingDoc() {
 
         <CodeBlock code={LEVEL_2_CODE} language="tsx" />
 
-        <div className="props-table-wrapper">
-          <table className="props-table">
-            <thead>
-              <tr>
-                <th style={{ width: '22%' }}>Component</th>
-                <th style={{ width: '14%' }}>Properties</th>
-                <th style={{ width: '64%' }}>For example</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SCOPED_PROPERTIES.map((row) => (
-                <tr key={row.subpath}>
-                  <td>
-                    <code className="prop-badge prop-badge--name">{row.component}</code>
-                  </td>
-                  <td>{row.count}</td>
-                  <td className="props-td-desc">
-                    <code className="prop-badge prop-badge--type">{row.sample}</code>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          columns={SCOPED_PROPERTY_COLUMNS}
+          rows={SCOPED_PROPERTIES}
+          rowKey="subpath"
+          ariaLabel="Scoped custom properties per component"
+          density="compact"
+        />
 
         <Callout tone="note" title="A few are state, not knobs">
           The canvas and drag components write a handful of these to themselves every frame —{' '}

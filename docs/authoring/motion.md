@@ -1,6 +1,6 @@
 # Motion
 
-- One ~3 kB WAAPI engine in `src/engine` drives everything. No animation dependency.
+- One small WAAPI engine in `src/engine` drives everything. No animation dependency.
 - Transitions are destination-driven. They run on the engine.
 - Simulations are input-coupled or endless. They run on the engine `loop` primitive.
 

@@ -88,9 +88,8 @@ code — real prop values, plausible labels, no `foo`/`bar`.
 
 - `apps/docs/components/pages/*.tsx` — the live demos. That is design work and
   belongs to whoever is building the component.
-- `docs/component-sizes.md`, `docs/import-graph.md`,
-  `apps/docs/content/props.generated.ts` — all generated. Run the
-  generator, never edit the output.
+- `apps/docs/content/props.generated.ts` — generated. Run the generator,
+  never edit the output.
 - `src/` — with one exception: prop JSDoc on a **public** props interface, when
   a description is wrong or missing. Nothing else in `src/` takes a comment.
 

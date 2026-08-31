@@ -55,7 +55,8 @@
   - Under `UIMotion.reduced`: snap once, never start
 - Generalize claim/release in animate.ts to `PropertyHolder` interface
 - Proven with 17 live assertions (off-screen pause/resume, hidden pause/resume, speed scaling, clock scaling, animate-cancels-loop, loop-cancels-waapi, reduced-motion snap)
-- Update engine size claims: ~2.5 kB → ~3 kB (measured gzip)
+- Engine size claims carry no number. The figure moved twice, no gate can catch it going
+  stale, and it was wrong in three files at once; "small" stays true on its own.
 
 #### Commit
 

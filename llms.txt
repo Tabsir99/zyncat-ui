@@ -7,7 +7,7 @@ Setup:
   import { Button } from '@zyncat/ui/button';   // one subpath per component - there is no barrel entry
   import '@zyncat/ui/styles.css';               // base layer (fonts+tokens) - link ONCE; each component lazy-loads its own CSS
 Peers: react, react-dom. (The curated Phosphor glyphs used internally are bundled in - not a peer.)
-Animation is built in - a ~3 kB WAAPI engine, no animation library to install.
+Animation is built in - a small WAAPI engine, no animation library to install.
 No bundler/transpile config - built ESM keeps 'use client' intact for the Next.js App Router.
 
 Conventions:

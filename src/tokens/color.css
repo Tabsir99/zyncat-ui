@@ -1,28 +1,28 @@
 /* Color primitives - the closed neutral + status ramps.
-   The neutral ramp is a cold gray: hue 262 throughout, with chroma arced to peak at the
-   mid steps (400-700) and fall away at both ends. Flat chroma reads dirty in the shadows
-   and tinted in the highlights; the arc keeps the near-whites clean and the darks blue.
-   Lightness is the contrast spine - retune chroma freely, move an L step and every
-   text-on-surface pair moves with it. */
+   The neutral ramp is a warm ink gray: hue 96 throughout at very low chroma, arced to peak
+   at the mid steps (500-700) and fall away at both ends. The canvas is pure white, so the
+   ramp reads as ink on paper rather than a tinted wash; the arc keeps the near-whites clean
+   and the darks warm. Lightness is the contrast spine - retune chroma freely, move an L
+   step and every text-on-surface pair moves with it. */
 
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
     --gray-0: oklch(1 0 0);
-    --gray-25: oklch(0.992 0.003 262);
-    --gray-50: oklch(0.984 0.005 262);
-    --gray-100: oklch(0.968 0.007 262);
-    --gray-150: oklch(0.948 0.009 262);
-    --gray-200: oklch(0.922 0.011 262);
-    --gray-300: oklch(0.872 0.015 262);
-    --gray-400: oklch(0.765 0.021 262);
-    --gray-500: oklch(0.642 0.027 262);
-    --gray-600: oklch(0.532 0.03 262);
-    --gray-700: oklch(0.422 0.03 262);
-    --gray-800: oklch(0.305 0.027 262);
-    --gray-900: oklch(0.225 0.022 262);
-    --gray-950: oklch(0.165 0.018 262);
+    --gray-25: oklch(0.992 0.002 96);
+    --gray-50: oklch(0.984 0.003 96);
+    --gray-100: oklch(0.968 0.004 96);
+    --gray-150: oklch(0.948 0.005 96);
+    --gray-200: oklch(0.922 0.006 96);
+    --gray-300: oklch(0.872 0.007 96);
+    --gray-400: oklch(0.765 0.009 96);
+    --gray-500: oklch(0.642 0.011 96);
+    --gray-600: oklch(0.532 0.012 96);
+    --gray-700: oklch(0.422 0.012 96);
+    --gray-800: oklch(0.305 0.01 96);
+    --gray-900: oklch(0.225 0.008 96);
+    --gray-950: oklch(0.165 0.007 96);
 
     --teal-50: oklch(0.972 0.02 198);
     --teal-100: oklch(0.935 0.04 198);
@@ -61,7 +61,7 @@
     --amber-wash: oklch(0.76 0.14 75 / 0.12);
     --red-wash: oklch(0.602 0.196 27 / 0.1);
 
-    /* Cool near-black shadow ink - pure black looks muddy on a cool canvas. */
-    --shadow-rgb: 13 18 30;
+    /* Warm near-black shadow ink - matches the warm neutral ramp on the white canvas. */
+    --shadow-rgb: 24 23 19;
   }
 }

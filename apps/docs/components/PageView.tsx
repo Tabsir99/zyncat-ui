@@ -3,18 +3,24 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import { DOCS, GROUPS, type Doc } from '../content/registry';
+import { Badge } from '@zyncat/ui/badge';
+import { Button } from '@zyncat/ui/button';
+import { TabPanel, Tabs } from '@zyncat/ui/tabs';
+import { toast } from '@zyncat/ui/toast-store';
+import { Tooltip } from '@zyncat/ui/tooltip';
+
+import { DOCS, GROUPS, NEW_SLUGS, type Doc } from '../content/registry';
 import { Icon } from './icon';
-import { Breadcrumbs, CodeBlock, ExampleCard, InstallationBox } from './kit';
+import { CodeBlock, ExampleCard, InstallationBox } from './kit';
 import { PropsTable } from './PropsTable';
 import { TableOfContents } from './TableOfContents';
 
 export function PageView({ doc }: { doc: Doc }) {
-  const { slug, label, blurb, HeroComponent, heroCode, examples, props, types } = doc;
+  const { slug, label, headline, blurb, HeroComponent, heroCode, examples, props, types } = doc;
 
-  const [heroTab, setHeroTab] = useState<'preview' | 'code'>('preview');
+  const [heroTab, setHeroTab] = useState('preview');
+  const [heroDir, setHeroDir] = useState<1 | -1 | 0>(0);
   const [heroKey, setHeroKey] = useState(0);
-  const [pageCopied, setPageCopied] = useState(false);
 
   const group = GROUPS.find((g) => g.docs.some((d) => d.slug === slug));
   const groupTitle = group?.title ?? 'Components';
@@ -23,12 +29,15 @@ export function PageView({ doc }: { doc: Doc }) {
   const prevDoc = currentIndex > 0 ? DOCS[currentIndex - 1] : null;
   const nextDoc = currentIndex < DOCS.length - 1 ? DOCS[currentIndex + 1] : null;
 
+  const heroItems = [{ value: 'preview', label: 'Preview' }];
+  if (heroCode) heroItems.push({ value: 'code', label: 'Code' });
+
   const handleCopyPage = () => {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      const pageSnippet = `// ${label} - Zyncat UI\n// ${blurb}\n\n${heroCode || `import { ${label} } from '@zyncat/ui/${slug}';\nimport '@zyncat/ui/${slug}.css';`}`;
+      const pageSnippet =
+        heroCode || `import { ${label} } from '@zyncat/ui/${slug}';\nimport '@zyncat/ui/${slug}.css';`;
       navigator.clipboard.writeText(pageSnippet);
-      setPageCopied(true);
-      setTimeout(() => setPageCopied(false), 2000);
+      toast.success('Page code copied', { description: `${label} — ready to paste.` });
     }
   };
 
@@ -37,116 +46,115 @@ export function PageView({ doc }: { doc: Doc }) {
   };
 
   return (
-    <div className="doc-layout">
+    <div className="doc-layout" key={slug}>
       <article className="page">
-        <Breadcrumbs group={groupTitle} label={label} />
+        <div className="eyebrow">
+          <span className="eyebrow__left">{groupTitle}</span>
+          <span className="eyebrow__meta">{doc.Content ? 'Zyncat UI — Rev 0.11' : `@zyncat/ui/${slug}`}</span>
+        </div>
 
         <header className="page__head">
           <div className="page__title-row">
-            <h1 className="page__title">{label}</h1>
-            <div className="page__actions">
-              <button
-                type="button"
-                className="btn-page-action"
-                onClick={handleCopyPage}
-                aria-label="Copy page code"
-                title="Copy component code to clipboard"
-              >
-                <Icon name={pageCopied ? 'check' : 'copy'} size="sm" />
-                <span>{pageCopied ? 'Copied' : 'Copy Page'}</span>
-              </button>
-              <div className="page__nav-arrows">
-                {prevDoc ? (
-                  <Link
-                    href={`/${prevDoc.slug}`}
-                    className="btn-icon-nav"
-                    title={`Previous: ${prevDoc.label}`}
-                    aria-label={`Previous component: ${prevDoc.label}`}
-                  >
-                    <Icon name="arrow-left" size="sm" />
-                  </Link>
-                ) : (
-                  <span className="btn-icon-nav btn-icon-nav--disabled">
-                    <Icon name="arrow-left" size="sm" />
-                  </span>
-                )}
-                {nextDoc ? (
-                  <Link
-                    href={`/${nextDoc.slug}`}
-                    className="btn-icon-nav"
-                    title={`Next: ${nextDoc.label}`}
-                    aria-label={`Next component: ${nextDoc.label}`}
-                  >
-                    <Icon name="arrow-right" size="sm" />
-                  </Link>
-                ) : (
-                  <span className="btn-icon-nav btn-icon-nav--disabled">
-                    <Icon name="arrow-right" size="sm" />
-                  </span>
-                )}
+            <h1 className="page__title">{headline ?? label}</h1>
+            {doc.Content ? null : (
+              <div className="page__actions">
+                <Button variant="secondary" size="sm" onClick={handleCopyPage} aria-label="Copy page code">
+                  <Icon name="copy" size="sm" />
+                  Copy page
+                </Button>
+                <div className="page__nav-arrows">
+                  {prevDoc ? (
+                    <Tooltip content={prevDoc.label} placement="bottom">
+                      <Link
+                        href={`/${prevDoc.slug}`}
+                        className="btn-icon-nav"
+                        aria-label={`Previous component: ${prevDoc.label}`}
+                      >
+                        <Icon name="arrow-left" size="sm" />
+                      </Link>
+                    </Tooltip>
+                  ) : (
+                    <span className="btn-icon-nav btn-icon-nav--disabled">
+                      <Icon name="arrow-left" size="sm" />
+                    </span>
+                  )}
+                  {nextDoc ? (
+                    <Tooltip content={nextDoc.label} placement="bottom">
+                      <Link
+                        href={`/${nextDoc.slug}`}
+                        className="btn-icon-nav"
+                        aria-label={`Next component: ${nextDoc.label}`}
+                      >
+                        <Icon name="arrow-right" size="sm" />
+                      </Link>
+                    </Tooltip>
+                  ) : (
+                    <span className="btn-icon-nav btn-icon-nav--disabled">
+                      <Icon name="arrow-right" size="sm" />
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <p className="page__blurb">{blurb}</p>
         </header>
 
-        {/* Guide Content (Introduction, Installation, MCP) */}
         {doc.Content ? (
           <div className="doc-guide-content">
             <doc.Content />
           </div>
         ) : null}
 
-        {/* Hero Interactive Preview / Code block */}
         {HeroComponent ? (
           <section className="hero-preview" id="preview">
             <div className="hero-preview__tabs-bar">
-              <div className="hero-preview__tabs">
-                <button
-                  type="button"
-                  className={`hero-preview__tab ${heroTab === 'preview' ? 'hero-preview__tab--active' : ''}`}
-                  onClick={() => setHeroTab('preview')}
-                >
-                  Preview
-                </button>
-                {heroCode ? (
-                  <button
-                    type="button"
-                    className={`hero-preview__tab ${heroTab === 'code' ? 'hero-preview__tab--active' : ''}`}
-                    onClick={() => setHeroTab('code')}
-                  >
-                    Code
-                  </button>
-                ) : null}
-              </div>
+              <Tabs
+                items={heroItems}
+                value={heroTab}
+                onChange={(v, d) => {
+                  setHeroTab(v);
+                  setHeroDir(d);
+                }}
+                name={`hero-${slug}`}
+                ariaLabel={`${label} demo view`}
+                className="plate-tabs"
+              />
               <div className="hero-preview__actions">
-                <button
-                  type="button"
-                  className="hero-preview__btn-icon"
-                  onClick={handleHeroReplay}
-                  title="Restart component animation"
-                  aria-label="Restart component animation"
-                >
-                  <Icon name="arrow-counter-clockwise" size="sm" />
-                </button>
+                {NEW_SLUGS.has(slug) ? (
+                  <Badge tone="info" size="sm">
+                    New in 0.11
+                  </Badge>
+                ) : null}
+                <Tooltip content="Replay the demo" placement="bottom">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleHeroReplay}
+                    aria-label="Restart component animation"
+                  >
+                    <Icon name="arrow-counter-clockwise" size="sm" />
+                  </Button>
+                </Tooltip>
               </div>
             </div>
 
-            {heroTab === 'preview' ? (
-              <div className="hero-preview__canvas" key={heroKey}>
-                <div className="hero-preview__inner">
-                  <HeroComponent />
+            <TabPanel name={`hero-${slug}`} tab={heroTab} dir={heroDir}>
+              {heroTab === 'preview' ? (
+                <div className="hero-preview__canvas" key={heroKey}>
+                  <div className="hero-preview__inner">
+                    <HeroComponent />
+                  </div>
                 </div>
-              </div>
-            ) : heroCode ? (
-              <div className="hero-preview__code">
-                <CodeBlock code={heroCode} language="tsx" />
-              </div>
-            ) : null}
+              ) : heroCode ? (
+                <div className="hero-preview__code">
+                  <CodeBlock code={heroCode} language="tsx" />
+                </div>
+              ) : null}
+            </TabPanel>
           </section>
         ) : null}
 
-        {/* Examples Section */}
         {examples && examples.length > 0 ? (
           <section className="doc-section" id="examples">
             <div className="section-head">
@@ -164,10 +172,8 @@ export function PageView({ doc }: { doc: Doc }) {
           </section>
         ) : null}
 
-        {/* Installation */}
         {!doc.Content ? <InstallationBox slug={slug} /> : null}
 
-        {/* Usage */}
         {!doc.Content && heroCode ? (
           <section className="doc-section" id="usage">
             <div className="section-head">
@@ -175,13 +181,12 @@ export function PageView({ doc }: { doc: Doc }) {
             </div>
             <CodeBlock code={heroCode} language="tsx" />
             <p className="section-note">
-              Compose {label} in your application. No Tailwind or external styling library is required; all styles snap
-              directly to Zyncat UI&apos;s CSS custom properties.
+              Compose {label} in your application. No Tailwind or external styling library is required; every value
+              resolves from Zyncat UI&apos;s token vocabulary.
             </p>
           </section>
         ) : null}
 
-        {/* Props Reference */}
         {props && props.length > 0 ? (
           <section className="doc-section" id="props">
             <div className="section-head">
@@ -194,7 +199,6 @@ export function PageView({ doc }: { doc: Doc }) {
           </section>
         ) : null}
 
-        {/* Bottom Pagination */}
         <nav className="page-pagination" aria-label="Component navigation">
           {prevDoc ? (
             <Link href={`/${prevDoc.slug}`} className="pagination-card pagination-card--prev">
@@ -219,9 +223,9 @@ export function PageView({ doc }: { doc: Doc }) {
         </nav>
 
         <footer className="page-footer">
-          <span>
-            Built by <strong style={{ color: 'var(--text-strong)' }}>Tabsir Ahammed</strong>. The source code is
-            available on{' '}
+          <span>Set in Geist &amp; Newsreader — animated by the house engine</span>
+          <span className="page-footer__row">
+            Zyncat UI · Rev 0.11 · MIT · Built by Tabsir Ahammed · Source on{' '}
             <a
               href="https://github.com/Tabsir99/zyncat-ui"
               target="_blank"
@@ -230,7 +234,6 @@ export function PageView({ doc }: { doc: Doc }) {
             >
               GitHub
             </a>
-            .
           </span>
         </footer>
       </article>

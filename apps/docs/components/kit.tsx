@@ -1,6 +1,11 @@
 'use client';
 
-import { useState, type ComponentType, type ReactNode } from 'react';
+import { useId, useState, type ComponentType, type ReactNode } from 'react';
+
+import { Alert, type AlertTone } from '@zyncat/ui/alert';
+import { Button } from '@zyncat/ui/button';
+import { TabPanel, Tabs } from '@zyncat/ui/tabs';
+import { Tooltip } from '@zyncat/ui/tooltip';
 
 import { Icon } from './icon';
 
@@ -12,60 +17,53 @@ export interface ExampleCardProps {
 }
 
 export function ExampleCard({ Component, children, code, fill }: ExampleCardProps) {
-  const [tab, setTab] = useState<'preview' | 'code'>('preview');
+  const name = useId();
+  const [tab, setTab] = useState('preview');
+  const [dir, setDir] = useState<1 | -1 | 0>(0);
   const [replayKey, setReplayKey] = useState(0);
+
+  const items = [{ value: 'preview', label: 'Preview' }];
+  if (code) items.push({ value: 'code', label: 'Code' });
 
   return (
     <div className="example-card">
       <div className="example-card__header">
-        <div className="example-card__tabs">
-          <button
-            type="button"
-            className={`example-card__tab ${tab === 'preview' ? 'example-card__tab--active' : ''}`}
-            onClick={() => setTab('preview')}
-          >
-            Preview
-          </button>
-          {code ? (
-            <button
-              type="button"
-              className={`example-card__tab ${tab === 'code' ? 'example-card__tab--active' : ''}`}
-              onClick={() => setTab('code')}
-            >
-              Code
-            </button>
-          ) : null}
-        </div>
-        <div className="example-card__actions">
-          <button
-            type="button"
-            className="example-card__btn-icon"
-            onClick={() => setReplayKey((k) => k + 1)}
-            title="Restart animation"
-            aria-label="Restart animation"
-          >
+        <Tabs
+          items={items}
+          value={tab}
+          onChange={(v, d) => {
+            setTab(v);
+            setDir(d);
+          }}
+          name={name}
+          ariaLabel="Example view"
+          className="plate-tabs"
+        />
+        <Tooltip content="Replay the demo" placement="bottom">
+          <Button variant="ghost" size="icon" onClick={() => setReplayKey((k) => k + 1)} aria-label="Restart animation">
             <Icon name="arrow-counter-clockwise" size="sm" />
-          </button>
-        </div>
+          </Button>
+        </Tooltip>
       </div>
 
-      {tab === 'preview' ? (
-        <div
-          className={fill ? 'example-card__canvas example-card__canvas--fill' : 'example-card__canvas'}
-          key={replayKey}
-        >
-          <div className="example-card__inner">{Component ? <Component /> : children}</div>
-        </div>
-      ) : code ? (
-        <div className="example-card__code">
-          <CodeBlock code={code} language="tsx" />
-        </div>
-      ) : null}
+      <TabPanel name={name} tab={tab} dir={dir}>
+        {tab === 'preview' ? (
+          <div
+            className={fill ? 'example-card__canvas example-card__canvas--fill' : 'example-card__canvas'}
+            key={replayKey}
+          >
+            <div className="example-card__inner">{Component ? <Component /> : children}</div>
+          </div>
+        ) : code ? (
+          <div className="example-card__code">
+            <CodeBlock code={code} language="tsx" />
+          </div>
+        ) : null}
+      </TabPanel>
     </div>
   );
 }
 
-// Backward-compatible Demo wrapper
 export function Demo({
   label,
   description,
@@ -198,15 +196,15 @@ export function CodeBlock({
     <div className="code-block">
       <div className="code-block__header">
         <span className="code-block__lang">{language}</span>
-        <button
-          type="button"
-          className="code-block__copy"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={handleCopy}
           aria-label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
         >
           <Icon name={copied ? 'check' : 'copy'} size="sm" />
-          <span className="code-block__copy-text">{copied ? 'Copied' : 'Copy'}</span>
-        </button>
+          {copied ? 'Copied' : 'Copy'}
+        </Button>
       </div>
       <pre className="code-block__pre">
         <code className="code-block__code">
@@ -223,8 +221,12 @@ export function CodeBlock({
 }
 
 export function InstallationBox({ slug }: { slug: string }) {
-  const [tab, setTab] = useState<'cli' | 'manual'>('cli');
-  const [pkgManager, setPkgManager] = useState<'pnpm' | 'npm' | 'yarn' | 'bun'>('pnpm');
+  const name = useId();
+  const pmName = useId();
+  const [tab, setTab] = useState('cli');
+  const [dir, setDir] = useState<1 | -1 | 0>(0);
+  const [pkgManager, setPkgManager] = useState('pnpm');
+  const [pmDir, setPmDir] = useState<1 | -1 | 0>(0);
 
   const cliCommands: Record<string, string> = {
     pnpm: 'pnpm add @zyncat/ui',
@@ -239,66 +241,69 @@ export function InstallationBox({ slug }: { slug: string }) {
         <h2 className="section-head__title">Installation</h2>
       </div>
 
-      <div className="installation-box__tabs">
-        <button
-          type="button"
-          className={`installation-box__tab ${tab === 'cli' ? 'installation-box__tab--active' : ''}`}
-          onClick={() => setTab('cli')}
-        >
-          CLI
-        </button>
-        <button
-          type="button"
-          className={`installation-box__tab ${tab === 'manual' ? 'installation-box__tab--active' : ''}`}
-          onClick={() => setTab('manual')}
-        >
-          Manual
-        </button>
-      </div>
+      <Tabs
+        items={[
+          { value: 'cli', label: 'CLI' },
+          { value: 'manual', label: 'Manual' },
+        ]}
+        value={tab}
+        onChange={(v, d) => {
+          setTab(v);
+          setDir(d);
+        }}
+        name={name}
+        ariaLabel="Installation method"
+        className="installation-box__tabs"
+      />
 
-      {tab === 'cli' ? (
-        <div className="installation-cli">
-          <div className="installation-cli__pills">
-            {(['pnpm', 'npm', 'yarn', 'bun'] as const).map((pm) => (
-              <button
-                key={pm}
-                type="button"
-                className={`installation-cli__pill ${pkgManager === pm ? 'installation-cli__pill--active' : ''}`}
-                onClick={() => setPkgManager(pm)}
-              >
-                {pm}
-              </button>
-            ))}
+      <TabPanel name={name} tab={tab} dir={dir}>
+        {tab === 'cli' ? (
+          <div className="installation-cli">
+            <Tabs
+              items={['pnpm', 'npm', 'yarn', 'bun'].map((pm) => ({ value: pm, label: pm }))}
+              value={pkgManager}
+              onChange={(v, d) => {
+                setPkgManager(v);
+                setPmDir(d);
+              }}
+              name={pmName}
+              ariaLabel="Package manager"
+              className="installation-cli__pms"
+            />
+            <TabPanel name={pmName} tab={pkgManager} dir={pmDir}>
+              <CodeBlock code={cliCommands[pkgManager]} language="bash" showLineNumbers={false} />
+            </TabPanel>
           </div>
-          <CodeBlock code={cliCommands[pkgManager]} language="bash" showLineNumbers={false} />
-        </div>
-      ) : (
-        <div className="installation-manual">
-          <p className="installation-manual__step">1. Install package dependencies:</p>
-          <CodeBlock code="pnpm add @zyncat/ui" language="bash" showLineNumbers={false} />
-          <p className="installation-manual__step">2. Import component and styles:</p>
-          <CodeBlock
-            code={`import { ${slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())} } from '@zyncat/ui/${slug}';\nimport '@zyncat/ui/${slug}.css';`}
-            language="tsx"
-            showLineNumbers={false}
-          />
-        </div>
-      )}
+        ) : (
+          <div className="installation-manual">
+            <p className="installation-manual__step">1. Install package dependencies:</p>
+            <CodeBlock code="pnpm add @zyncat/ui" language="bash" showLineNumbers={false} />
+            <p className="installation-manual__step">2. Import component and styles:</p>
+            <CodeBlock
+              code={`import { ${slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())} } from '@zyncat/ui/${slug}';\nimport '@zyncat/ui/${slug}.css';`}
+              language="tsx"
+              showLineNumbers={false}
+            />
+          </div>
+        )}
+      </TabPanel>
     </section>
   );
 }
 
-export function Breadcrumbs({ group, label }: { group: string; label: string }) {
-  return (
-    <nav className="breadcrumbs" aria-label="Breadcrumbs">
-      <span className="breadcrumbs__text">Docs</span>
-      <span className="breadcrumbs__sep">/</span>
-      <span className="breadcrumbs__text">{group}</span>
-      <span className="breadcrumbs__sep">/</span>
-      <span className="breadcrumbs__current">{label}</span>
-    </nav>
-  );
-}
+const CALLOUT_TONES: Record<'info' | 'warning' | 'tip' | 'note', AlertTone> = {
+  info: 'info',
+  warning: 'warning',
+  tip: 'success',
+  note: 'info',
+};
+
+const CALLOUT_TITLES: Record<'info' | 'warning' | 'tip' | 'note', string> = {
+  info: 'Good to know',
+  warning: 'Heads up',
+  tip: 'Tip',
+  note: 'Note',
+};
 
 export function Callout({
   tone = 'info',
@@ -309,22 +314,11 @@ export function Callout({
   title?: string;
   children: ReactNode;
 }) {
-  const iconMap: Record<string, 'info' | 'warning-circle' | 'lightbulb' | 'sparkle'> = {
-    info: 'info',
-    warning: 'warning-circle',
-    tip: 'lightbulb',
-    note: 'sparkle',
-  };
-
   return (
-    <div className={`doc-callout doc-callout--${tone}`}>
-      <div className="doc-callout__icon">
-        <Icon name={iconMap[tone] || 'info'} size="sm" />
-      </div>
-      <div className="doc-callout__body">
-        {title ? <p className="doc-callout__title">{title}</p> : null}
-        <div className="doc-callout__content">{children}</div>
-      </div>
+    <div className="doc-callout">
+      <Alert tone={CALLOUT_TONES[tone]} title={title ?? CALLOUT_TITLES[tone]}>
+        {children}
+      </Alert>
     </div>
   );
 }
@@ -346,23 +340,26 @@ export function Step({ number, title, children }: { number: number; title: strin
 }
 
 export function TabGroup({ tabs }: { tabs: { id: string; label: string; content: ReactNode }[] }) {
+  const name = useId();
   const [activeTab, setActiveTab] = useState(tabs[0]?.id);
+  const [dir, setDir] = useState<1 | -1 | 0>(0);
 
   return (
     <div className="doc-tabs-group">
-      <div className="doc-tabs-group__header">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            className={`doc-tabs-group__tab ${activeTab === tab.id ? 'doc-tabs-group__tab--active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      <div className="doc-tabs-group__body">{tabs.find((t) => t.id === activeTab)?.content}</div>
+      <Tabs
+        items={tabs.map((t) => ({ value: t.id, label: t.label }))}
+        value={activeTab}
+        onChange={(v, d) => {
+          setActiveTab(v);
+          setDir(d);
+        }}
+        name={name}
+        ariaLabel="Code variants"
+        className="doc-tabs-group__header"
+      />
+      <TabPanel name={name} tab={activeTab ?? ''} dir={dir}>
+        <div className="doc-tabs-group__body">{tabs.find((t) => t.id === activeTab)?.content}</div>
+      </TabPanel>
     </div>
   );
 }

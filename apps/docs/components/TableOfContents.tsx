@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { Doc } from '../content/registry';
 import { Icon } from './icon';
@@ -11,72 +11,113 @@ interface TocItem {
   level: number;
 }
 
-export function TableOfContents({ doc }: { doc: Doc }) {
-  const defaultInitialId = doc.toc?.[0]?.id ?? (doc.HeroComponent ? 'preview' : 'installation');
-  const [activeId, setActiveId] = useState<string>(defaultInitialId);
+const ACTIVE_LINE = 108;
 
-  let items: TocItem[] = [];
-
+function buildItems(doc: Doc): TocItem[] {
   if (doc.toc && doc.toc.length > 0) {
-    items = doc.toc;
-  } else {
-    if (doc.examples && doc.examples.length > 0) {
-      items.push({ id: 'examples', title: 'Examples', level: 2 });
-      for (const ex of doc.examples) {
-        items.push({ id: `example-${ex.id}`, title: ex.title, level: 3 });
-      }
-    }
+    return doc.toc;
+  }
 
-    if (!doc.Content) {
-      items.push({ id: 'installation', title: 'Installation', level: 2 });
-    }
-    if (!doc.Content && doc.heroCode) {
-      items.push({ id: 'usage', title: 'Usage', level: 2 });
-    }
+  const items: TocItem[] = [];
 
-    if ((doc.props && doc.props.length > 0) || (doc.types && doc.types.length > 0)) {
-      items.push({ id: 'props', title: 'Props', level: 2 });
-      if (doc.props && doc.props.length > 0) {
-        items.push({ id: `props-${doc.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, title: doc.label, level: 3 });
-      }
-      if (doc.types) {
-        for (const type of doc.types) {
-          items.push({
-            id: `props-${type.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-            title: type.name,
-            level: 3,
-          });
-        }
+  if (doc.examples && doc.examples.length > 0) {
+    items.push({ id: 'examples', title: 'Examples', level: 2 });
+    for (const ex of doc.examples) {
+      items.push({ id: `example-${ex.id}`, title: ex.title, level: 3 });
+    }
+  }
+
+  if (!doc.Content) {
+    items.push({ id: 'installation', title: 'Installation', level: 2 });
+  }
+  if (!doc.Content && doc.heroCode) {
+    items.push({ id: 'usage', title: 'Usage', level: 2 });
+  }
+
+  if ((doc.props && doc.props.length > 0) || (doc.types && doc.types.length > 0)) {
+    items.push({ id: 'props', title: 'Props', level: 2 });
+    if (doc.props && doc.props.length > 0) {
+      items.push({ id: `props-${doc.label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, title: doc.label, level: 3 });
+    }
+    if (doc.types) {
+      for (const type of doc.types) {
+        items.push({ id: `props-${type.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, title: type.name, level: 3 });
       }
     }
   }
 
+  return items;
+}
+
+export function TableOfContents({ doc }: { doc: Doc }) {
+  const items = buildItems(doc);
+  const [activeId, setActiveId] = useState<string>(items[0]?.id ?? '');
+  const [marker, setMarker] = useState<{ top: number; height: number } | null>(null);
+  const linkRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const clickLockRef = useRef<string | null>(null);
+
   useEffect(() => {
-    setActiveId(doc.toc?.[0]?.id ?? (doc.HeroComponent ? 'preview' : 'installation'));
+    clickLockRef.current = null;
+    const ids = buildItems(doc).map((i) => i.id);
+    if (ids.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-            break;
-          }
+    const readActive = () => {
+      if (clickLockRef.current) {
+        setActiveId(clickLockRef.current);
+        return;
+      }
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom) {
+        setActiveId(ids[ids.length - 1]);
+        return;
+      }
+      let current = ids[0];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= ACTIVE_LINE) {
+          current = id;
+        } else {
+          break;
         }
-      },
-      { rootMargin: '-80px 0% -60% 0%', threshold: 0.1 },
-    );
+      }
+      setActiveId(current);
+    };
 
-    const headingElements = document.querySelectorAll(
-      'section[id], div[id].example-block, section.guide-section[id], div.guide-section[id]',
-    );
-    headingElements.forEach((el) => observer.observe(el));
+    const releaseLock = () => {
+      if (!clickLockRef.current) return;
+      clickLockRef.current = null;
+      readActive();
+    };
 
-    return () => observer.disconnect();
+    readActive();
+    window.addEventListener('scroll', readActive, { passive: true });
+    window.addEventListener('resize', readActive);
+    window.addEventListener('wheel', releaseLock, { passive: true });
+    window.addEventListener('touchstart', releaseLock, { passive: true });
+    window.addEventListener('pointerdown', releaseLock);
+    window.addEventListener('keydown', releaseLock);
+    return () => {
+      window.removeEventListener('scroll', readActive);
+      window.removeEventListener('resize', readActive);
+      window.removeEventListener('wheel', releaseLock);
+      window.removeEventListener('touchstart', releaseLock);
+      window.removeEventListener('pointerdown', releaseLock);
+      window.removeEventListener('keydown', releaseLock);
+    };
   }, [doc]);
+
+  useEffect(() => {
+    const el = linkRefs.current[activeId];
+    if (el) {
+      setMarker({ top: el.offsetTop, height: el.offsetHeight });
+    }
+  }, [activeId, doc]);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
+      clickLockRef.current = id;
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setActiveId(id);
     }
@@ -85,11 +126,17 @@ export function TableOfContents({ doc }: { doc: Doc }) {
   return (
     <aside className="toc">
       <div className="toc__group">
-        <p className="toc__title">On This Page</p>
+        <p className="toc__title">On this page</p>
         <nav className="toc__nav">
+          {marker ? (
+            <span className="toc__marker" style={{ top: marker.top, height: marker.height }} aria-hidden />
+          ) : null}
           {items.map((item) => (
             <button
               key={item.id}
+              ref={(el) => {
+                linkRefs.current[item.id] = el;
+              }}
               type="button"
               className={`toc__link toc__link--lvl${item.level} ${activeId === item.id ? 'toc__link--active' : ''}`}
               onClick={() => scrollTo(item.id)}
@@ -121,34 +168,7 @@ export function TableOfContents({ doc }: { doc: Doc }) {
             <Icon name="lightbulb" size="sm" />
             <span>Request a feature</span>
           </a>
-          <a
-            href="https://github.com/Tabsir99/zyncat-ui"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="toc__contrib-link"
-          >
-            <Icon name="pencil-simple" size="sm" />
-            <span>Edit this page</span>
-          </a>
         </div>
-      </div>
-
-      <div className="toc__card">
-        <div className="toc__card-badge">
-          <span className="toc__card-dot" />
-          <span>ZERO DEPENDENCIES</span>
-        </div>
-        <p className="toc__card-title">
-          Build <em>Faster</em> with Zyncat UI
-        </p>
-        <p className="toc__card-text">
-          Accessible, animated UI components crafted for React 19 on a pure CSS token system.
-        </p>
-        <ul className="toc__card-list">
-          <li>✔ React 19 + modern CSS</li>
-          <li>✔ ~2.5 kB WAAPI motion engine</li>
-          <li>✔ Zero animation dependencies</li>
-        </ul>
       </div>
     </aside>
   );

@@ -3,7 +3,7 @@
 ## Goal
 
 - Ship a premium, motion-first React 19 design system.
-- Modern CSS, a closed token vocabulary, a ~3 kB WAAPI engine, zero runtime dependencies.
+- Modern CSS, a closed token vocabulary, a small WAAPI engine, zero runtime dependencies.
 - Be both: a complete system to build products on, and expressive components with real motion.
 - Design every state. Make every motion interruptible.
 

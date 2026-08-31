@@ -1,6 +1,6 @@
 # zyncat-ui
 
-- React 19 design system. Modern CSS, a closed token vocabulary, a ~3 kB WAAPI motion engine.
+- React 19 design system. Modern CSS, a closed token vocabulary, a small WAAPI motion engine.
 - No Tailwind, no CSS-in-JS, no UI library, no animation dependency.
 
 ## Mission
@@ -68,4 +68,4 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 
 - `pnpm sync`: regenerate every manifest and generated doc.
 - `pnpm verify`: the whole gate, in order.
-- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:docs`, `check:props`, `build && check:llms`.
+- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:props`, `build && check:llms`.

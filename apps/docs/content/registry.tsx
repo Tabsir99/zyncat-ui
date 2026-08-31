@@ -33,9 +33,12 @@ export interface TocItem {
   level: number;
 }
 
+export const NEW_SLUGS = new Set(['count-badge', 'emoji-picker', 'date-range', 'multi-select']);
+
 export interface Doc {
   slug: string;
   label: string;
+  headline?: string;
   blurb: string;
   HeroComponent?: ComponentType;
   heroCode?: string;
@@ -60,8 +63,9 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'introduction',
         label: 'Introduction',
+        headline: 'A catalogue of moving parts.',
         blurb:
-          'A React 19 design system with modern CSS, a small closed token vocabulary, and a ~3 kB WAAPI motion engine.',
+          'React 19 components on a closed token vocabulary, animated by a house-built WAAPI engine — no Tailwind, no CSS-in-JS, no animation library underneath.',
         Content: IntroductionDoc,
         toc: [
           { id: 'overview', title: 'Overview', level: 2 },

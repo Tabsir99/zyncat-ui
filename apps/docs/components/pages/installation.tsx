@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import { TabPanel, Tabs } from '@zyncat/ui/tabs';
 
 import { Callout, CodeBlock, Step, Steps, TabGroup } from '../kit';
 
 export function InstallationDoc() {
-  const [pkgManager, setPkgManager] = useState<'pnpm' | 'npm' | 'yarn' | 'bun'>('pnpm');
+  const pmName = useId();
+  const [pkgManager, setPkgManager] = useState('pnpm');
+  const [pmDir, setPmDir] = useState<1 | -1 | 0>(0);
 
   const installCommands: Record<string, string> = {
     pnpm: 'pnpm add @zyncat/ui @phosphor-icons/react',
@@ -137,19 +141,20 @@ export function WorkspaceCreator() {
         </p>
 
         <div className="installation-cli">
-          <div className="installation-cli__pills">
-            {(['pnpm', 'npm', 'yarn', 'bun'] as const).map((pm) => (
-              <button
-                key={pm}
-                type="button"
-                className={`installation-cli__pill ${pkgManager === pm ? 'installation-cli__pill--active' : ''}`}
-                onClick={() => setPkgManager(pm)}
-              >
-                {pm}
-              </button>
-            ))}
-          </div>
-          <CodeBlock code={installCommands[pkgManager]} language="bash" showLineNumbers={false} />
+          <Tabs
+            items={['pnpm', 'npm', 'yarn', 'bun'].map((pm) => ({ value: pm, label: pm }))}
+            value={pkgManager}
+            onChange={(v, d) => {
+              setPkgManager(v);
+              setPmDir(d);
+            }}
+            name={pmName}
+            ariaLabel="Package manager"
+            className="installation-cli__pms"
+          />
+          <TabPanel name={pmName} tab={pkgManager} dir={pmDir}>
+            <CodeBlock code={installCommands[pkgManager]} language="bash" showLineNumbers={false} />
+          </TabPanel>
         </div>
 
         <Callout tone="info" title="Peer Dependencies">
