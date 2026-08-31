@@ -22,6 +22,7 @@
    spans edge-to-edge while the scroller above it clips, masks and scrolls
    freely. The scroller gets z-index:1 so the ink paints OVER the hairline. */
   .tabs {
+    --tabs-ink-h: 2px;
     position: relative;
   }
   .tabs::after {
@@ -70,7 +71,8 @@
   }
 
   /* -- Tab - the hit target --------------------------------------------------
-   The button is pill + a bottom gap down to the baseline (total height 36px).
+   The button is pill + the ink's own band + a hairline of clearance, so the
+   ink underlines the pad instead of floating below it (total height 31px).
    All visual feedback lives on the inner pill so hover/press/focus read as a
    soft inset shape, while the ink below stays anchored to the baseline. */
   .tab {
@@ -78,7 +80,7 @@
     border: 0;
     background: none;
     margin: 0;
-    padding: 0 0 var(--space-2);
+    padding: 0 0 calc(var(--tabs-ink-h) + var(--space-px));
     flex: none;
     display: block;
     font-family: var(--font-sans);
@@ -181,7 +183,6 @@
    ships no width token for it (--border-emphasis is 1.5px, which renders as
    sub-pixel fuzz on 1x screens). Do not "fix" it to a token. */
   .tabs__ink {
-    --tabs-ink-h: 2px;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -194,8 +195,10 @@
 
   /* -- Panel -----------------------------------------------------------------
    The panel ROOT is static chrome - borders, padding, background put on it
-   by the consumer never move. Only .tab-panel__inner (the content) enters
-   from the direction of travel (Motion, TabPanel). The root is focusable per
+   by the consumer never move; it clips (overflow: hidden) while the content
+   resizes. Only .tab-panel__inner (the content) enters from the direction of
+   travel and animates its own height between panels, so a taller or shorter
+   tab grows into place instead of snapping. The root is focusable per
    the APG (tabindex=0) so keyboard users land on content right after the
    tablist; the ring shows only for keyboard focus. */
   .tab-panel {

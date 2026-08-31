@@ -14,6 +14,7 @@ import {
 
 import type { DataAttributes } from '../../../dom-props';
 import { animate, set } from '../../../engine';
+import { Motion } from '../../../motion/element';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { resolveMotionTiming } from '../../../motion/motion-timing';
 import { type DisableableAnimation } from '../../../motion/timing';
@@ -251,19 +252,11 @@ const TABPANEL_TIMING = {
 
 export function TabPanel({ tab, name, dir = 0, className = '', style, children, animation, htmlProps }: TabPanelProps) {
   const enter = resolveMotionTiming(animation, TABPANEL_TIMING).open;
-  const innerRef = useRef<HTMLDivElement | null>(null);
-  const enterRef = useRef<ReturnType<typeof animate> | null>(null);
-
-  useLayoutEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-    enterRef.current?.stop();
-    enterRef.current = animate(el, { x: [dir * TABS_ENTER_X, 0], y: [4, 0], timing: enter });
-    return () => enterRef.current?.stop();
-  }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div
+    <Motion
+      layout
+      layoutTransition={{ size: 'morph', timing: enter }}
       role="tabpanel"
       tabIndex={0}
       id={name ? `${name}-panel-${tab}` : undefined}
@@ -272,9 +265,9 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
       style={style}
       {...htmlProps}
     >
-      <div ref={innerRef} className="tab-panel__inner">
+      <Motion className="tab-panel__inner" animate={{ x: [dir * TABS_ENTER_X, 0], timing: enter }} deps={[tab]}>
         {children}
-      </div>
-    </div>
+      </Motion>
+    </Motion>
   );
 }
