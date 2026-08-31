@@ -1,5 +1,7 @@
 'use client';
 
+import './trigger.css';
+
 import {
   cloneElement,
   useEffect,
@@ -8,11 +10,15 @@ import {
   useSyncExternalStore,
   type ReactElement,
   type KeyboardEvent as ReactKeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   type ReactNode,
+  type PointerEvent as ReactPointerEvent,
   type Ref,
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
+
+import { activationProps, type ActivateOn } from '../utils/activation';
 
 interface OverlayEntry {
   contains: (t: EventTarget | null) => boolean;
@@ -111,6 +117,7 @@ function ovCloneTrigger(
     panelId,
     haspopup,
     triggerRef,
+    activateOn,
   }: {
     open: boolean;
     onPress: () => void;
@@ -118,11 +125,13 @@ function ovCloneTrigger(
     panelId: string;
     haspopup: string;
     triggerRef: RefObject<HTMLElement>;
+    activateOn?: ActivateOn;
   },
 ): ReactElement | null {
   if (!trigger) return null;
   const own = trigger.props as {
-    onClick?: (...args: unknown[]) => void;
+    onClick?: (e: ReactMouseEvent<HTMLElement>) => void;
+    onPointerDown?: (e: ReactPointerEvent<HTMLElement>) => void;
     onKeyDown?: (e: ReactKeyboardEvent<HTMLElement>) => void;
   };
   const ownRef = (trigger as ReactElement & { ref?: Ref<HTMLElement> }).ref;
@@ -136,10 +145,12 @@ function ovCloneTrigger(
     'aria-haspopup': haspopup,
     'aria-expanded': open,
     'aria-controls': open ? panelId : undefined,
-    onClick: (...args: unknown[]) => {
-      own.onClick?.(...args);
-      onPress();
-    },
+    'data-activate': activateOn === 'pointerdown' ? 'pointerdown' : undefined,
+    ...activationProps<HTMLElement>(() => onPress(), {
+      on: activateOn,
+      onPointerDown: own.onPointerDown,
+      onClick: own.onClick,
+    }),
     ...keys,
     ref: (node: HTMLElement | null) => {
       triggerRef.current = node;
