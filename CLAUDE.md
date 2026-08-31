@@ -25,7 +25,9 @@
 ## Non-negotiables
 
 - `pnpm`, never `npm`.
-- No comments in source. Exceptions: public-props JSDoc and `src/tokens/*.css`.
+- No comments in source. Exceptions: public-props JSDoc, `src/tokens/*.css`, and a choice that
+  reads as a mistake - code that deliberately goes against the standard, where the constraint
+  forcing it cannot live in a name. Rare, and `check:contracts --write` has to accept the count.
 - Never sequence motion with `setTimeout`, `requestAnimationFrame`, `transitionend` or `animationend`.
 - Chain the `Playback` `finished` promise instead. Wall-clock assumptions are wrong by construction.
 - rAF exists only inside the engine `loop` simulation primitive.

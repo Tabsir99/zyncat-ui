@@ -90,7 +90,9 @@ Thing - @zyncat/ui/thing
 
 ## Conventions the linters do not catch
 
-- No comments in source. Exceptions: public-props JSDoc and the token `.css` files.
+- No comments in source. Exceptions: public-props JSDoc, the token `.css` files, and a choice that
+  reads as a mistake - code that deliberately goes against the standard, where the constraint forcing
+  it cannot live in a name. Rare, and `check:contracts --write` has to accept the raised count.
 - Sequence motion with `Playback.finished` only.
 - `pnpm`, never `npm`.
 - Named constants, not magic numbers.
