@@ -5,6 +5,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import type { DataAttributes } from '../../../../dom-props';
 import { Icon } from '../../../internal/icon/Icon';
 import { IconSlot } from '../../../internal/icon/IconSlot';
+import { activationProps, type ActivateOn } from '../../../internal/utils/activation';
 import { cx } from '../../../internal/utils/cx';
 import type { ListboxState } from './use-listbox';
 
@@ -18,6 +19,7 @@ export interface SelectTriggerProps extends SelectTriggerHtmlProps {
   text?: ReactNode;
   isPlaceholder?: boolean;
   count?: number;
+  activateOn?: ActivateOn;
 }
 
 export function SelectTrigger({
@@ -29,7 +31,9 @@ export function SelectTrigger({
   isPlaceholder,
   count,
   className,
+  activateOn,
   onClick,
+  onPointerDown,
   onKeyDown,
   ...rest
 }: SelectTriggerProps) {
@@ -54,11 +58,11 @@ export function SelectTrigger({
           show();
         }
       }}
-      onClick={(e) => {
-        onClick?.(e);
-        if (open) requestClose();
-        else show();
-      }}
+      {...activationProps<HTMLButtonElement>(() => (open ? requestClose() : show()), {
+        on: activateOn,
+        onPointerDown,
+        onClick,
+      })}
       {...rest}
     >
       {leading && (

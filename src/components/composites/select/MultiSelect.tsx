@@ -7,6 +7,7 @@ import type { HTMLAttributes, ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import { CheckGlyph } from '../../primitives/checkbox/check-glyph';
 import { ListboxPanel, SelectTrigger, useListbox, type SelectGroup, type SelectOption } from './core';
@@ -44,6 +45,9 @@ export interface MultiSelectProps {
   ariaLabel?: string;
   /** Standard <div> attributes (className, style, data-*, ...) forwarded to the select root. */
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Whether the trigger and the options fire on `pointerdown` (snappier) or wait for `click`.
+   *  @default 'pointerdown' */
+  activateOn?: ActivateOn;
   /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
   animation?: DisableableAnimation;
 }
@@ -72,6 +76,7 @@ export function MultiSelect({
   id,
   ariaLabel,
   htmlProps,
+  activateOn = 'pointerdown',
   animation,
 }: MultiSelectProps) {
   const [value, setValue] = useControllable<string[], SelectOption>(
@@ -118,6 +123,7 @@ export function MultiSelect({
         text={loading ? 'Loading...' : isPlaceholder ? placeholder : selectedOptions[0].label}
         isPlaceholder={isPlaceholder}
         count={selectedOptions.length - 1}
+        activateOn={activateOn}
       />
       <ListboxPanel
         lb={lb}
@@ -126,6 +132,7 @@ export function MultiSelect({
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
         multiple
+        activateOn={activateOn}
         animation={animation}
         check={(sel) => <CheckboxTick checked={sel} />}
       />

@@ -66,6 +66,7 @@ export function DateTimeField({
   disabled = false,
   className = '',
   htmlProps,
+  activateOn = 'pointerdown',
   animation,
 }: DateTimeFieldProps) {
   const [val, commit] = useControllable<string | null>(
@@ -127,6 +128,7 @@ export function DateTimeField({
         trigger={trigger}
         side="bottom"
         align="start"
+        activateOn={activateOn}
         animation={animation}
         open={pickerOpen}
         onOpenChange={setPickerOpen}
@@ -139,6 +141,7 @@ export function DateTimeField({
           max={maxL.date}
           timezone={timezone}
           label={label}
+          activateOn={activateOn}
           slot={
             <div className="dtp__time">
               <span className="dtp__timeLabel">Time</span>

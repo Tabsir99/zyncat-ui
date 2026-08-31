@@ -21,6 +21,7 @@ import { type DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { IconSlot } from '../../internal/icon/IconSlot';
+import { activationProps, type ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 
 const SM = UIMotion;
@@ -57,6 +58,8 @@ interface TabsOwnProps {
   name?: string;
   /** Accessible name for the tablist (e.g. "Section views"). */
   ariaLabel?: string;
+  /** Whether a tab switches on `pointerdown` (snappier) or waits for `click`. @default 'pointerdown' */
+  activateOn?: ActivateOn;
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
@@ -71,7 +74,17 @@ export interface TabsProps extends TabsOwnProps {
 const TABS_EDGE_PAD = 24;
 const TABS_ENTER_X = 20;
 
-export function Tabs({ items = [], value, onChange, name, ariaLabel, className = '', style, htmlProps }: TabsProps) {
+export function Tabs({
+  items = [],
+  value,
+  onChange,
+  name,
+  ariaLabel,
+  activateOn = 'pointerdown',
+  className = '',
+  style,
+  htmlProps,
+}: TabsProps) {
   const autoId = useId();
   const base = name || autoId;
 
@@ -203,7 +216,7 @@ export function Tabs({ items = [], value, onChange, name, ariaLabel, className =
               ref={(el) => {
                 tabRefs.current[it.value] = el;
               }}
-              onClick={() => select(it.value)}
+              {...activationProps<HTMLButtonElement>(() => select(it.value), { on: activateOn })}
               onPointerEnter={
                 it.disabled ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
               }

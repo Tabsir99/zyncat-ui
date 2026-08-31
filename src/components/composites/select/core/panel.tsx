@@ -8,6 +8,7 @@ import { GlidePill } from '../../../../motion/glide';
 import type { DisableableAnimation } from '../../../../motion/timing';
 import { Icon } from '../../../internal/icon/Icon';
 import { MenuRow } from '../../../internal/menu/menu-row';
+import { activationProps, type ActivateOn } from '../../../internal/utils/activation';
 import { Collapse } from '../../../primitives/collapse/Collapse';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
@@ -19,6 +20,7 @@ export interface ListboxPanelProps {
   searchPlaceholder?: string;
   ariaLabel?: string;
   multiple?: boolean;
+  activateOn?: ActivateOn;
   /** Menu open/close timing - motion tokens only, or `null` to disable. */
   animation?: DisableableAnimation;
   check?: (selected: boolean) => ReactNode;
@@ -50,6 +52,7 @@ export function ListboxPanel({
   searchPlaceholder,
   ariaLabel,
   multiple,
+  activateOn,
   animation,
   check = defaultCheck,
 }: ListboxPanelProps) {
@@ -121,7 +124,10 @@ export function ListboxPanel({
                       data-disabled={opt.disabled ? 'true' : undefined}
                       onMouseEnter={() => visible && !opt.disabled && lb.setActiveIdx(i)}
                       onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => visible && lb.commit(opt)}
+                      {...activationProps<HTMLDivElement>(() => visible && lb.commit(opt), {
+                        on: activateOn,
+                        holdFocus: true,
+                      })}
                       icon={opt.icon}
                       label={opt.label}
                       description={opt.description}

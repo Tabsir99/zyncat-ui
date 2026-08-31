@@ -21,6 +21,7 @@ import type { DisableableAnimation } from '../../../motion/timing';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { ovCloneTrigger, OverlayPortal } from '../../internal/overlay/layer';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { MenuPanel } from './menu-panel';
 import {
   levelKey,
@@ -45,6 +46,8 @@ export interface DropdownProps {
   items: DropdownItems;
   /** Cloned to toggle the menu, and used as the anchor. Gets the `aria-haspopup="menu"` wiring. */
   trigger: ReactElement;
+  /** Whether the trigger and the rows fire on `pointerdown` (snappier) or wait for `click`. @default 'pointerdown' */
+  activateOn?: ActivateOn;
 
   /** Controlled open state. Omit to stay uncontrolled. */
   open?: boolean;
@@ -73,6 +76,7 @@ export interface DropdownProps {
 export function Dropdown({
   items = [],
   trigger,
+  activateOn = 'pointerdown',
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
@@ -117,6 +121,7 @@ export function Dropdown({
   const chain: MenuChain = {
     levels,
     menuId,
+    activateOn,
     side,
     align,
     ariaLabel,
@@ -158,6 +163,7 @@ export function Dropdown({
         panelId: menuId,
         haspopup: 'menu',
         triggerRef,
+        activateOn,
       })}
       <OverlayPortal>
         <Presence>

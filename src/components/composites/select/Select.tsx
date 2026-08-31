@@ -7,6 +7,7 @@ import type { HTMLAttributes, ReactNode } from 'react';
 import type { DataAttributes } from '../../../dom-props';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { useControllable } from '../../internal/hooks/use-controllable';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import {
   ListboxPanel,
@@ -50,6 +51,9 @@ export interface SelectProps {
   ariaLabel?: string;
   /** Standard <div> attributes (className, style, data-*, ...) forwarded to the select root. */
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Whether the trigger and the options fire on `pointerdown` (snappier) or wait for `click`.
+   *  @default 'pointerdown' */
+  activateOn?: ActivateOn;
   /** Menu open/close timing - motion tokens only, or `null` to disable. @default duration 'base' + ease 'entrance'/'exit' */
   animation?: DisableableAnimation;
   /** Standard <button> attributes (className, style, aria-*, data-*, ...) merged onto the trigger.
@@ -76,6 +80,7 @@ export function Select({
   id,
   ariaLabel,
   htmlProps,
+  activateOn = 'pointerdown',
   animation,
   triggerProps,
   showCheck = true,
@@ -115,6 +120,7 @@ export function Select({
         leading={leadingIcon || (selected && selected.icon) || null}
         text={loading ? 'Loading...' : isPlaceholder ? placeholder : selected.label}
         isPlaceholder={isPlaceholder}
+        activateOn={activateOn}
         {...triggerProps}
       />
       <ListboxPanel
@@ -123,6 +129,7 @@ export function Select({
         searchable={searchable}
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
+        activateOn={activateOn}
         animation={animation}
         {...(!showCheck && { check: () => null })}
       />

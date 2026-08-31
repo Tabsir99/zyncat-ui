@@ -13,6 +13,7 @@ import { MenuRow } from '../../internal/menu/menu-row';
 import { useReturnFocus } from '../../internal/overlay/focus';
 import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
 import { useAnchorPosition } from '../../internal/overlay/position';
+import { activationProps } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import { itemText, levelKey, normalize, submenuOf, type DropdownItem, type MenuChain } from './types';
 
@@ -202,7 +203,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
           clearTimeout(timers.current.open);
           if (i === openIdx) travel.current.from = { x: e.clientX, y: e.clientY };
         }}
-        onClick={() => commit(item)}
+        {...activationProps<HTMLDivElement>(() => commit(item), { on: chain.activateOn, holdFocus: true })}
         icon={item.icon}
         label={item.label}
         description={item.description}

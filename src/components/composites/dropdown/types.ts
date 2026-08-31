@@ -2,6 +2,7 @@ import type { HTMLAttributes, ReactNode, RefObject } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { normalizeCollection, type NormalizedGroup } from '../../internal/collection/collection';
+import type { ActivateOn } from '../../internal/utils/activation';
 
 export interface DropdownItem {
   /** Unique id - what `onSelect` receives, and what identifies this row's open submenu. */
@@ -78,6 +79,7 @@ export type SeedFocus = 'first' | 'last' | 'none';
 export interface MenuChain {
   levels: Level[];
   menuId: string;
+  activateOn?: ActivateOn;
   side: 'top' | 'bottom' | 'left' | 'right';
   align: 'start' | 'center' | 'end';
   ariaLabel?: string;

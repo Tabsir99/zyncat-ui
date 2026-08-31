@@ -9,6 +9,7 @@ import { Motion } from '../../../motion/element';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useScrollEdges } from '../../internal/hooks/use-scroll-edges';
 import { Icon } from '../../internal/icon/Icon';
+import { activationProps, type ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import { DigitStrip } from '../../primitives/badge/digit-strip';
 import { Button } from '../../primitives/button/Button';
@@ -87,6 +88,8 @@ export interface TableProps<Row = any> {
 
   /** Makes rows clickable (checkbox cell excluded). */
   onRowClick?: (row: Row) => void;
+  /** Whether a sortable header fires on `pointerdown` (snappier) or waits for `click`. @default 'pointerdown' */
+  activateOn?: ActivateOn;
   /** Size the table here - the internal scroller absorbs the constraint. */
   className?: string;
   /** Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the table wrapper. */
@@ -118,6 +121,7 @@ export function Table<Row = any>({
   empty,
   footer,
   onRowClick,
+  activateOn = 'pointerdown',
   className = '',
   htmlProps,
 }: TableProps<Row>) {
@@ -295,7 +299,11 @@ export function Table<Row = any>({
                       aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined}
                     >
                       {c.sortable ? (
-                        <button type="button" className="tbl__sort" onClick={() => cycleSort(c)}>
+                        <button
+                          type="button"
+                          className="tbl__sort"
+                          {...activationProps<HTMLButtonElement>(() => cycleSort(c), { on: activateOn })}
+                        >
                           <span className="tbl__sortLbl">{c.label}</span>
                           <span
                             className={

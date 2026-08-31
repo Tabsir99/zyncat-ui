@@ -7,6 +7,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode, Ref } from 'react
 import type { DataAttributes } from '../../../dom-props';
 import type { DisableableAnimation } from '../../../motion/timing';
 import { Icon, type IconName } from '../../internal/icon/Icon';
+import type { ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import { FieldLabel, FieldMessage } from '../../primitives/input/field-chrome';
 
@@ -25,6 +26,9 @@ export interface DateFieldBaseProps {
   className?: string;
   /** Standard <div> attributes (style, data-*, aria-*, ...) forwarded to the field shell root. */
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
+  /** Whether the trigger, the day cells and the panel controls fire on `pointerdown` (snappier) or
+   *  wait for `click`. (Not used by TimeField, which is inline.) @default 'pointerdown' */
+  activateOn?: ActivateOn;
   /** Popover open/close timing - motion tokens only, or `null` to disable. (Not used by TimeField, which is inline.) */
   animation?: DisableableAnimation;
 }

@@ -10,6 +10,7 @@ import { GlidePill, useGlide } from '../../../motion/glide';
 import { slideIn } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
+import { activationProps, type ActivateOn } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
 import { Button } from '../../primitives/button/Button';
 import { col, DOW, grid, MONTHS, parse, today, toKey, tzLabel, within } from './date-utils';
@@ -26,9 +27,10 @@ interface DtpPanelProps {
   timezone?: string;
   label?: string;
   slot?: ReactNode;
+  activateOn?: ActivateOn;
 }
 
-export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }: DtpPanelProps) {
+export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, activateOn }: DtpPanelProps) {
   const seed = val ? parse(val) : new Date();
   const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
   const [focusKey, setFocusKey] = useState<string>(val || today());
@@ -136,7 +138,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
               className="dtp__nav"
               aria-label="Previous month"
               disabled={!canPrev}
-              onClick={() => nav(-1)}
+              {...activationProps<HTMLButtonElement>(() => nav(-1), { on: activateOn })}
             >
               <Icon name="caret-left" size="sm" />
             </button>
@@ -145,7 +147,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
               className="dtp__nav"
               aria-label="Go to today"
               disabled={viewIsCurrent}
-              onClick={goToToday}
+              {...activationProps<HTMLButtonElement>(goToToday, { on: activateOn })}
             >
               <Icon name="calendar-dot" size="sm" />
             </button>
@@ -154,7 +156,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
               className="dtp__nav"
               aria-label="Next month"
               disabled={!canNext}
-              onClick={() => nav(1)}
+              {...activationProps<HTMLButtonElement>(() => nav(1), { on: activateOn })}
             >
               <Icon name="caret-right" size="sm" />
             </button>
@@ -191,7 +193,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot }
                     tabIndex={key === tabKey ? 0 : -1}
                     aria-selected={sel || undefined}
                     aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
-                    onClick={() => pickDay(key)}
+                    {...activationProps<HTMLButtonElement>(() => pickDay(key), { on: activateOn })}
                     onPointerEnter={(e) => glide.enter(e.currentTarget)}
                   >
                     {sel ? (

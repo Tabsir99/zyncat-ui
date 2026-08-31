@@ -8,6 +8,7 @@ import { Motion } from '../../../motion/element';
 import { GlidePill, useGlide } from '../../../motion/glide';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { Icon } from '../../internal/icon/Icon';
+import { activationProps, type ActivateOn } from '../../internal/utils/activation';
 import { Button } from '../../primitives/button/Button';
 import { add, col, DOW, grid, MONTHS, pad, parse, today, toKey, tzLabel, within } from './date-utils';
 import { useDayFocus } from './use-day-focus';
@@ -72,9 +73,21 @@ interface DrpPanelProps {
   label?: string;
   months: number;
   layout: 'popover' | 'sheet';
+  activateOn?: ActivateOn;
 }
 
-export function DrpPanel({ value, commit, close, min, max, timezone, label, months, layout }: DrpPanelProps) {
+export function DrpPanel({
+  value,
+  commit,
+  close,
+  min,
+  max,
+  timezone,
+  label,
+  months,
+  layout,
+  activateOn,
+}: DrpPanelProps) {
   const seedKey = (value && value.start) || today();
   const seed = parse(seedKey);
   const [view, setView] = useState<{ y: number; m: number }>({ y: seed.getFullYear(), m: seed.getMonth() });
@@ -222,7 +235,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
         tabIndex={key === focusKey ? 0 : -1}
         aria-label={MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear()}
         aria-selected={isLo || isHi || undefined}
-        onClick={() => pickDay(key)}
+        {...activationProps<HTMLButtonElement>(() => pickDay(key), { on: activateOn })}
         onPointerEnter={(e) => {
           setHoverKey(key);
           if (!anchor && !disabled) gridGlide.enter(e.currentTarget);
@@ -270,7 +283,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
               className="dtp__nav"
               aria-label="Previous month"
               disabled={min && prevEnd < min}
-              onClick={() => nav(-1)}
+              {...activationProps<HTMLButtonElement>(() => nav(-1), { on: activateOn })}
             >
               <Icon name="caret-left" size="sm" />
             </button>
@@ -284,7 +297,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
               className="dtp__nav"
               aria-label="Next month"
               disabled={max && nextStart > max}
-              onClick={() => nav(1)}
+              {...activationProps<HTMLButtonElement>(() => nav(1), { on: activateOn })}
             >
               <Icon name="caret-right" size="sm" />
             </button>
@@ -333,7 +346,7 @@ export function DrpPanel({ value, commit, close, min, max, timezone, label, mont
               type="button"
               className={'drp__preset' + (presetActive(p) ? ' is-active' : '')}
               onPointerEnter={(e) => presetGlide.enter(e.currentTarget)}
-              onClick={() => applyPreset(p)}
+              {...activationProps<HTMLButtonElement>(() => applyPreset(p), { on: activateOn })}
             >
               {p.label}
             </button>

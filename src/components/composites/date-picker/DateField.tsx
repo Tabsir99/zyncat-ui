@@ -42,6 +42,7 @@ export function DateField({
   disabled = false,
   className = '',
   htmlProps,
+  activateOn = 'pointerdown',
   animation,
 }: DateFieldProps) {
   const [val, commit] = useControllable(value, defaultValue, onChange);
@@ -63,6 +64,7 @@ export function DateField({
         trigger={trigger}
         side="bottom"
         align="start"
+        activateOn={activateOn}
         animation={animation}
         open={pickerOpen}
         onOpenChange={setPickerOpen}
@@ -75,6 +77,7 @@ export function DateField({
           max={max}
           timezone={timezone}
           label={label}
+          activateOn={activateOn}
         />
       </Popover>
     </FieldShell>
