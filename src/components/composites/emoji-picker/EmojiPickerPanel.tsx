@@ -143,6 +143,8 @@ export function EmojiPickerPanel({
       onOpenChange={onOpenChange}
       trigger={trigger}
       activateOn={activateOn}
+      // Its exit because, emojipicker as of now looses frames during entry and entry animation is non existence on the "entrance" curve as a result
+      animation={{ ease: { open: 'exit' } }}
       htmlProps={{ className: 'on-emoji-pop', 'aria-label': 'Emoji picker' }}
     >
       {frame}

@@ -38,16 +38,16 @@ export interface MotionTokens {
 
 type MotionScales = Pick<MotionTokens, 'dur' | 'ease' | 'dist' | 'scale'>;
 
-const DEFAULT_DUR: MotionTokens['dur'] = { fast: 0.14, base: 0.2, slow: 0.3, slower: 0.45, slowest: 0.9 };
+const DEFAULT_DUR: MotionTokens['dur'] = { fast: 0.14, base: 0.25, slow: 0.33, slower: 0.45, slowest: 0.9 };
 const DEFAULT_EASE: MotionTokens['ease'] = {
   standard: [0.2, 0, 0, 1],
-  entrance: [0.16, 1, 0.3, 1],
+  entrance: [0.25, 1, 0.4, 1],
   exit: [0.4, 0, 1, 1],
   spring: [0.34, 1.4, 0.5, 1],
   glide: [0.55, 0, 0.15, 1],
 };
 const DEFAULT_DIST: MotionTokens['dist'] = { sm: 8, md: 16, lg: 24 };
-const DEFAULT_SCALE: MotionTokens['scale'] = { panel: 0.98, floating: 0.96, chip: 0.9 };
+const DEFAULT_SCALE: MotionTokens['scale'] = { panel: 0.98, floating: 0.95, chip: 0.9 };
 
 function build(scales: MotionScales): MotionTokens {
   const { dur, ease } = scales;

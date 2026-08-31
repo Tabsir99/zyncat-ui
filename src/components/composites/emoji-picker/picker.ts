@@ -128,7 +128,7 @@ export function createEmojiPicker(root: HTMLElement, options: EmojiPickerOptions
       if (!category) return;
       area.addCategory(category.id.replace('-', ' & '), category.id, category.emojis);
       spy();
-      area.timers.push(window.setTimeout(step, 0));
+      area.timers.push(window.setTimeout(step, 200));
     };
     step();
   };
