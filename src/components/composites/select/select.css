@@ -37,7 +37,7 @@
   }
   .select__trigger:hover {
     border-color: var(--border-strong);
-    background-color: var(--gray-wash-strong);
+    background-color: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
   }
   .select__trigger:focus-visible {
     outline: none;
