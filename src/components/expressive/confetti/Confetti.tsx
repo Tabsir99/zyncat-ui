@@ -2,7 +2,16 @@
 
 import './confetti.css';
 
-import { useEffect, useImperativeHandle, useRef, type CSSProperties, type HTMLAttributes, type Ref } from 'react';
+import {
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useSyncExternalStore,
+  type CSSProperties,
+  type HTMLAttributes,
+  type Ref,
+} from 'react';
+import { createPortal } from 'react-dom';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop, type Playback } from '../../../engine';
@@ -10,6 +19,7 @@ import { cx } from '../../internal/utils/cx';
 
 const TAU = Math.PI * 2;
 const MS_PER_SECOND = 1000;
+const subscribeToNothing = () => () => {};
 
 const MAX_PIECES = 520;
 const MIN_COUNT = 1;
@@ -591,7 +601,7 @@ export interface ConfettiOwnProps {
   duration?: number;
   /** Multiplies the simulation rate; sampled live on every frame. @default 1 */
   speed?: number;
-  /** `container` fills the nearest positioned ancestor; `viewport` pins the field to the window above the toast layer. @default 'container' */
+  /** `container` fills the nearest positioned ancestor; `viewport` portals the canvas to the body and pins it to the window above the toast layer, so a transformed ancestor cannot trap it. Switching field remounts the canvas and drops pieces in flight. @default 'container' */
   field?: ConfettiField;
   /** Imperative handle - call `fire()` on it to send a burst, `clear()` to empty the field. */
   ref?: Ref<ConfettiHandle>;
@@ -620,6 +630,11 @@ export function Confetti({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<Stage | null>(null);
   const settingsRef = useRef({ emitter, count, duration, speed });
+  const hydrated = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     settingsRef.current = { emitter, count, duration, speed };
@@ -654,7 +669,7 @@ export function Confetti({
       stage.playback = null;
       stageRef.current = null;
     };
-  }, []);
+  }, [field, hydrated]);
 
   useImperativeHandle(
     ref,
@@ -703,7 +718,7 @@ export function Confetti({
     [],
   );
 
-  return (
+  const canvas = (
     <canvas
       ref={canvasRef}
       className={cx('confetti', field === 'viewport' && VIEWPORT_CLASS, className)}
@@ -712,4 +727,8 @@ export function Confetti({
       {...htmlProps}
     />
   );
+
+  if (field !== 'viewport') return canvas;
+  if (!hydrated) return null;
+  return createPortal(canvas, document.body);
 }

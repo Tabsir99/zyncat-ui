@@ -381,7 +381,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'ConfettiField',
       default: "'container'",
       description:
-        '`container` fills the nearest positioned ancestor; `viewport` pins the field to the window above the toast layer.',
+        '`container` fills the nearest positioned ancestor; `viewport` portals the canvas to the body and pins it to the window above the toast layer, so a transformed ancestor cannot trap it. Switching field remounts the canvas and drops pieces in flight.',
     },
     {
       name: 'ref',
