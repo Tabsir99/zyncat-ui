@@ -59,21 +59,33 @@ side?: 'top' | 'bottom';
 - Referenced shapes (`DropdownItem`, `TableColumn`, `SelectOption`) document themselves.
 - Never hand-write a prop table. `apps/docs/content/*.ts` carries only the `example` string.
 
-## 5. Add the `llms.txt` entry
+## 5. Write the usage doc
 
-- Consumers and agents read `llms.txt`. The MCP parses it with `scripts/lib/llms-format.mjs`.
-- The heading format is load-bearing:
+- Every exported subpath ships a usage doc next to its source: `Thing.usage.md` beside `Thing.tsx`.
+- The MCP get_component tool serves it verbatim above the prop types; the skill index is generated
+  from its summary line. Parsed by `scripts/lib/usage-format.mjs`; the shape is load-bearing:
 
+````
+# Thing - @zyncat/ui/thing
+
+Group: primitives
+Docs: https://ui.zyncat.app/thing
+
+One line: what it is, and when to pick it over the neighbour it is confused with.
+
+Prop vocabulary as prose. Sixteen prose lines, hard cap - per-prop detail lives in the props JSDoc.
+
+```tsx
+<Thing prop="value">...</Thing>
 ```
-Thing - @zyncat/ui/thing
-  What it is, when to pick it over its neighbour. Prop vocabulary as prose.
-  <Thing prop="value">...</Thing>
-  +4 more props - get_component('thing')
-```
+````
 
-- An entry is an index row, capped at ten lines. Per-prop detail lives in the props JSDoc.
-- The `+N more props` footer comes from `pnpm sync:llms`. Never hand-write it.
-- `pnpm check:llms` verifies coverage, the cap, footers and example props. Run `pnpm build` first.
+- The Group line takes one of the ids in `usage-format.mjs`; the Docs line is the live docs page,
+  omitted only when the component has no page.
+- `pnpm check:usage` verifies coverage, the format, the caps and every example prop against the
+  built types. Run `pnpm build` first.
+- `pnpm sync:skill` regenerates the skill's component index from the summaries. Never edit
+  `components.md` by hand.
 
 ## 6. Add it to the docs application
 
@@ -85,7 +97,7 @@ Thing - @zyncat/ui/thing
 ## 7. Run the checks
 
 - `pnpm format`, then `pnpm sync`, then `pnpm verify`.
-- `pnpm verify` runs everything in parallel lanes; `check:llms` and `check:props` wait on the build.
+- `pnpm verify` runs everything in parallel lanes; `check:usage` and `check:props` wait on the build.
 - `check:contracts` enforces the mechanical contract rules and ratchets legacy debt via `scripts/contracts-baseline.json`.
 
 ## Conventions the linters do not catch

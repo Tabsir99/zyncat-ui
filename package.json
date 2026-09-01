@@ -39,7 +39,8 @@
     "access": "public"
   },
   "bin": {
-    "zyncat-ui-mcp": "./dist/mcp.js"
+    "zyncat-ui-mcp": "./dist/mcp.js",
+    "zyncat-ui": "./dist/cli.js"
   },
   "exports": {
     "./button": {
@@ -307,7 +308,7 @@
   "files": [
     "dist",
     "src",
-    "llms.txt",
+    "skills",
     "next.mjs",
     "next.d.mts"
   ],
@@ -319,7 +320,8 @@
     "typecheck": "tsc -p tsconfig.build.json --noEmit --declaration false && tsc -p tsconfig.node.json",
     "check:css": "node scripts/check-css-graph.mjs",
     "check:contracts": "node scripts/check-contracts.mjs",
-    "check:llms": "node scripts/check-llms.mjs",
+    "check:usage": "node scripts/check-usage.mjs",
+    "check:skill": "node scripts/gen-skill.mjs --check",
     "check:authoring": "node scripts/check-authoring.mjs",
     "check:exports": "node scripts/sync-exports.mjs",
     "check:props": "node scripts/gen-props.mjs --check",
@@ -327,7 +329,7 @@
     "docs:props": "node scripts/gen-props.mjs",
     "sync:exports": "node scripts/sync-exports.mjs --write",
     "sync:tsconfig": "node scripts/sync-tsconfig.mjs",
-    "sync:llms": "node scripts/check-llms.mjs --write",
+    "sync:skill": "node scripts/gen-skill.mjs",
     "sync": "node scripts/sync.mjs",
     "verify": "node scripts/verify.mjs",
     "format": "prettier --write --cache .",

@@ -10,6 +10,7 @@ const independent = [
   lane([script('check:css', 'check-css-graph.mjs')]),
   lane([script('check:authoring', 'check-authoring.mjs')]),
   lane([script('check:contracts', 'check-contracts.mjs')]),
+  lane([script('check:skill', 'gen-skill.mjs', '--check')]),
   lane([tool('build:js', 'tsup'), tool('build:types', 'tsc', '-p', 'tsconfig.build.json', '--emitDeclarationOnly')]),
 ];
 
@@ -18,10 +19,10 @@ const buildBroken = first.some((result) => result.label.startsWith('build:') && 
 
 const distDependent = buildBroken
   ? []
-  : [lane([script('check:llms', 'check-llms.mjs')]), lane([script('check:props', 'gen-props.mjs', '--check')])];
+  : [lane([script('check:usage', 'check-usage.mjs')]), lane([script('check:props', 'gen-props.mjs', '--check')])];
 
 const second = (await Promise.all(distDependent)).flat();
 
 const failures = report([...first, ...second], (Date.now() - startedAt) / 1000);
-if (buildBroken) console.error('  check:llms and check:props skipped - the build failed.');
+if (buildBroken) console.error('  check:usage and check:props skipped - the build failed.');
 process.exit(failures ? 1 : 0);

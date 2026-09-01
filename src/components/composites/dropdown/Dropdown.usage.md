@@ -1,0 +1,19 @@
+# Dropdown - @zyncat/ui/dropdown
+
+Group: overlays
+Docs: https://ui.zyncat.app/dropdown
+
+Menu button - a list of ACTIONS the trigger commits, with submenus.
+
+NOT a Select: it runs a command instead of holding a value, so there is no selected state and no
+form value. items takes DropdownItem[] or DropdownGroup[] (labelled sections); a row with its own
+items opens a submenu, nesting as deep as you like. Keyboard is the APG menu button: arrows move,
+Right/Left open and close a submenu, Enter/Space commit, typeahead, Esc one level, Tab the lot.
+
+```tsx
+<Dropdown trigger={<Button variant="secondary">Actions</Button>} onSelect={(id) => run(id)} items={[
+  { id: 'rename', label: 'Rename', shortcut: 'R' },
+  { id: 'move', label: 'Move to', items: [{ id: 'drafts', label: 'Drafts' }] },
+  { id: 'delete', label: 'Delete', danger: true }]} />
+<Dropdown open={o} onOpenChange={setO} side="top" align="end" ariaLabel="Row actions" trigger={<Button>...</Button>} items={groups} />
+```

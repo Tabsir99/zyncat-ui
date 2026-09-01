@@ -1,8 +1,15 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { entryLines, parseLlms, PROP_COUNT_RE } from '../../scripts/lib/llms-format.mjs';
+import { buildIndex, GROUPS, loadModules, type UsageModule } from '../../scripts/lib/usage-format.mjs';
+
+interface Db {
+  root: string;
+  version: string;
+  modules: UsageModule[];
+  index: string;
+}
 
 function findRoot(): string {
   let dir = dirname(fileURLToPath(import.meta.url));
@@ -19,48 +26,10 @@ function findRoot(): string {
   }
 }
 
-interface LlmsEntry {
-  title: string;
-  subpath: string;
-  section: string;
-  lines: string[];
-}
-interface LlmsSection {
-  title: string;
-  body: string[];
-}
-interface Db {
-  root: string;
-  version: string;
-  subpaths: string[];
-  preamble: string[];
-  sections: LlmsSection[];
-  entries: LlmsEntry[];
-}
-
 function db(): Db {
   const root = findRoot();
-  const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-  const subpaths = Object.entries(pkg.exports ?? {})
-    .filter(([, v]) => typeof v === 'object' && v !== null && 'types' in (v as object))
-    .map(([k]) => k.replace(/^\.\//, ''));
-
-  const parsed = parseLlms(readFileSync(join(root, 'llms.txt'), 'utf8'));
-  const entries: LlmsEntry[] = parsed.entries.map((e) => ({
-    title: e.title,
-    subpath: e.subpath,
-    section: e.section,
-    lines: entryLines(e),
-  }));
-
-  return {
-    root,
-    version: String(pkg.version ?? '0'),
-    subpaths,
-    preamble: parsed.preamble,
-    sections: parsed.sections,
-    entries,
-  };
+  const { version, modules } = loadModules(root);
+  return { root, version, modules, index: buildIndex(modules) };
 }
 
 const norm = (s: string) =>
@@ -69,45 +38,97 @@ const norm = (s: string) =>
     .replace(/^@zyncat\/ui\//, '')
     .replace(/[^a-z0-9]/g, '');
 
-function resolveSubpath(input: string): string {
-  const d = db();
-  const q = norm(input);
-  if (!q) throw new Error('Pass a component name or subpath, e.g. "Button" or "text-field".');
-  const candidates = new Map<string, string>();
-  for (const sub of d.subpaths) candidates.set(norm(sub), sub);
-  for (const e of d.entries) for (const part of e.title.split('/')) candidates.set(norm(part), e.subpath);
-  const exact = candidates.get(q);
-  if (exact) return exact;
-  const loose = new Set<string>();
-  for (const [name, sub] of candidates) if (name.includes(q) || q.includes(name)) loose.add(sub);
-  if (loose.size === 1) return [...loose][0];
-  const all = d.entries.map((e) => `${e.title} (${e.subpath})`).join(', ');
-  const extras = d.subpaths.filter((s) => !d.entries.some((e) => e.subpath === s)).join(', ');
-  throw new Error(
-    (loose.size ? `"${input}" is ambiguous: ${[...loose].join(', ')}. ` : `No component matches "${input}". `) +
-      `Available: ${all}${extras ? `; types-only modules: ${extras}` : ''}.`,
-  );
+function resolveModules(d: Db, inputs: string[]): UsageModule[] {
+  const bySubpath = new Map(d.modules.map((m) => [m.subpath, m]));
+  const candidates = new Map<string, UsageModule>();
+  for (const m of d.modules) {
+    candidates.set(norm(m.subpath), m);
+    if (m.usage) {
+      for (const part of m.usage.title.split('/')) {
+        const key = norm(part);
+        if (key) candidates.set(key, m);
+      }
+    }
+  }
+  const misses: string[] = [];
+  const found: UsageModule[] = [];
+  for (const input of inputs) {
+    const q = norm(input);
+    if (!q) {
+      misses.push(`"${input}"`);
+      continue;
+    }
+    const exact = candidates.get(q) ?? bySubpath.get(q);
+    if (exact) {
+      found.push(exact);
+      continue;
+    }
+    const loose = new Set<UsageModule>();
+    for (const [name, m] of candidates) if (name.includes(q) || q.includes(name)) loose.add(m);
+    if (loose.size === 1) found.push([...loose][0]);
+    else if (loose.size > 1) misses.push(`"${input}" (ambiguous: ${[...loose].map((m) => m.subpath).join(', ')})`);
+    else misses.push(`"${input}"`);
+  }
+  if (misses.length) {
+    throw new Error(`No component matches ${misses.join(', ')}. The catalog:\n\n${d.index}`);
+  }
+  return [...new Set(found)];
 }
 
-function readTypes(root: string, subpath: string): string {
+const RELATIVE_SPEC_RE = /(?:from\s+['"]|import\(['"])(\.[^'"]+)['"]/g;
+
+function readTypes(root: string, typesPath: string): string {
   const out: string[] = [];
   const seen = new Set<string>();
-  const walk = (base: string) => {
-    if (seen.has(base)) return;
-    seen.add(base);
-    const p = join(root, 'dist', `${base}.d.ts`);
-    if (!existsSync(p)) return;
-    const text = readFileSync(p, 'utf8');
-    out.push(`--- dist/${base}.d.ts ---\n${text.trimEnd()}`);
-    for (const m of text.matchAll(/from\s+['"]\.\/([\w.-]+)\.js['"]/g)) walk(m[1]);
+  const walk = (path: string) => {
+    const full = resolve(root, path);
+    if (seen.has(full) || !existsSync(full)) return;
+    seen.add(full);
+    const text = readFileSync(full, 'utf8');
+    out.push(`--- ${relative(root, full)} ---\n${text.trimEnd()}`);
+    for (const m of text.matchAll(RELATIVE_SPEC_RE)) {
+      const base = join(dirname(full), m[1].replace(/\.js$/, ''));
+      for (const candidate of [`${base}.d.ts`, `${base}.d.mts`, join(base, 'index.d.ts')]) {
+        if (existsSync(candidate)) {
+          walk(relative(root, candidate));
+          break;
+        }
+      }
+    }
   };
-  walk(subpath);
+  walk(typesPath);
   if (!out.length) {
     throw new Error(
-      `dist/${subpath}.d.ts not found - the package is not built. In the zyncat-ui repo run "pnpm build"; in a consumer, reinstall the package.`,
+      `${typesPath} not found in the installed package - reinstall @zyncat/ui; in the zyncat-ui repo, run "pnpm build" first.`,
     );
   }
   return out.join('\n\n');
+}
+
+function renderModule(d: Db, m: UsageModule): string {
+  const out: string[] = [];
+  if (m.usage) {
+    out.push(`# ${m.usage.title} - @zyncat/ui/${m.subpath}`, '');
+    if (m.usage.docs) out.push(`Live docs page (see it rendered): ${m.usage.docs}`, '');
+    out.push(m.usage.summary, '');
+    const note = GROUPS.find((g) => g.id === m.usage!.group)?.note;
+    if (note) out.push(`Applies to the whole ${m.usage.group} group: ${note}`, '');
+    const prose = m.usage.prose.map((l) => l.text);
+    if (prose.length) out.push(...prose, '');
+    for (const example of m.usage.examples) out.push('## Example', '', '```' + example.lang, example.code, '```', '');
+  } else {
+    out.push(`# @zyncat/ui/${m.subpath}`, '', 'No usage doc - this module is documented by its types below.', '');
+  }
+  out.push('## Complete prop types (entry .d.ts + the shared chunks it imports)', '', readTypes(d.root, m.typesPath));
+  return out.join('\n');
+}
+
+function getComponent(raw: unknown): string {
+  const inputs = (Array.isArray(raw) ? raw : [raw]).filter((v): v is string => typeof v === 'string');
+  if (!inputs.length) throw new Error('Pass one or more component names, e.g. ["select", "text-field"].');
+  const d = db();
+  const modules = resolveModules(d, inputs);
+  return modules.map((m) => renderModule(d, m)).join('\n\n');
 }
 
 const tokenFiles = (root: string): string[] =>
@@ -117,113 +138,85 @@ const tokenFiles = (root: string): string[] =>
         .sort()
     : [];
 
-const CODE_LINE_RE = /^(?:[<{]|import\s|const\s|let\s|function\s)/;
-
-function entryTeaser(e: LlmsEntry): string {
-  const parts: string[] = [];
-  for (let i = 1; i < e.lines.length; i++) {
-    const line = e.lines[i].trim();
-    if (!line) break;
-    if (i > 1 && CODE_LINE_RE.test(line)) break;
-    parts.push(line);
-  }
-  return parts.join(' ');
+interface Hit {
+  module: UsageModule;
+  score: number;
+  matched: Set<string>;
+  lines: string[];
 }
 
-function listComponents(): string {
-  const d = db();
-  const out: string[] = [...d.preamble, ''];
-  for (const s of d.sections) {
-    const inSection = d.entries.filter((e) => e.section === s.title);
-    if (!inSection.length && !s.body.length) continue;
-    out.push(`== ${s.title} ==`);
-    out.push(...s.body);
-    for (const e of inSection) {
-      const first = entryTeaser(e);
-      out.push(`${e.title} - @zyncat/ui/${e.subpath}${first ? ` - ${first}` : ''}`);
-    }
-    out.push('');
+function corpusFor(d: Db, m: UsageModule): { label: string; text: string }[] {
+  const parts: { label: string; text: string }[] = [];
+  if (m.usagePath && existsSync(join(d.root, m.usagePath))) {
+    parts.push({ label: 'usage', text: readFileSync(join(d.root, m.usagePath), 'utf8') });
   }
-  const extras = d.subpaths.filter((sub) => !d.entries.some((e) => e.subpath === sub));
-  if (extras.length) {
-    out.push('== SUPPORTING MODULES (no llms.txt entry - full docs live in their types) ==');
-    for (const sub of extras) out.push(`@zyncat/ui/${sub} - call get_component("${sub}")`);
-  }
-  return out.join('\n').trim();
-}
-
-function getComponent(input: string): string {
-  const d = db();
-  const sub = resolveSubpath(input);
-  const entry = d.entries.find((e) => e.subpath === sub);
-
-  const out: string[] = [`# ${entry ? entry.title : sub} - @zyncat/ui/${sub}`, ''];
-  if (entry) {
-    const note = d.sections.find((s) => s.title === entry.section)?.body ?? [];
-    if (note.length) out.push(`Applies to every ${entry.section} component:`, ...note, '');
-    out.push('## Usage (llms.txt)', ...entry.lines.filter((line) => !PROP_COUNT_RE.test(line)), '');
-  } else {
-    out.push('No llms.txt entry - this module is documented by its types below.', '');
-  }
-  out.push('## Types (entry .d.ts + the shared chunks it imports)', readTypes(d.root, sub));
-  return out.join('\n');
+  try {
+    parts.push({ label: 'types', text: readTypes(d.root, m.typesPath) });
+  } catch {}
+  return parts;
 }
 
 function searchApi(query: string): string {
-  const d = db();
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) throw new Error('Pass one or more keywords, e.g. "searchable" or "drag dismiss".');
-  const hits = new Map<string, string[]>();
-  const scan = (label: string, text: string, lineLabel?: (line: string, i: number) => string) => {
-    text.split('\n').forEach((line, i) => {
-      const l = line.toLowerCase();
-      if (!words.every((w) => l.includes(w))) return;
-      const key = lineLabel ? lineLabel(line, i) : label;
-      if (!hits.has(key)) hits.set(key, []);
-      hits.get(key)!.push(`  L${i + 1}: ${line.trim()}`);
-    });
-  };
+  const d = db();
 
-  {
-    const raw = readFileSync(join(d.root, 'llms.txt'), 'utf8');
-    const parsed = parseLlms(raw);
-    const marks = new Map<number, string>();
-    for (const s of parsed.sections) marks.set(s.line, `llms.txt » ${s.title}`);
-    for (const e of parsed.entries) marks.set(e.line, `llms.txt » ${e.title}`);
-    const labels: string[] = [];
-    let current = 'llms.txt';
-    raw.split('\n').forEach((_line, i) => {
-      current = marks.get(i + 1) ?? current;
-      labels.push(current);
-    });
-    scan('llms.txt', raw, (_line, i) => labels[i]);
+  const hits: Hit[] = [];
+  for (const m of d.modules) {
+    const hit: Hit = { module: m, score: 0, matched: new Set(), lines: [] };
+    const head = `${m.usage?.title ?? ''} ${m.subpath} ${m.usage?.summary ?? ''}`.toLowerCase();
+    for (const w of words) {
+      if (head.includes(w)) {
+        hit.score += 4;
+        hit.matched.add(w);
+      }
+    }
+    for (const { label, text } of corpusFor(d, m)) {
+      for (const line of text.split('\n')) {
+        const lower = line.toLowerCase();
+        const inLine = words.filter((w) => lower.includes(w));
+        if (!inLine.length) continue;
+        for (const w of inLine) hit.matched.add(w);
+        hit.score += inLine.length * (label === 'usage' ? 2 : 1);
+        const shown = line.trim();
+        if (
+          hit.lines.length < 4 &&
+          shown &&
+          !line.startsWith('---') &&
+          shown !== m.usage?.summary &&
+          !shown.startsWith('# ')
+        )
+          hit.lines.push(shown);
+      }
+    }
+    if (hit.matched.size) hits.push(hit);
   }
-  const distDir = join(d.root, 'dist');
-  const dts = existsSync(distDir)
-    ? readdirSync(distDir)
-        .filter((f) => f.endsWith('.d.ts'))
-        .sort()
-    : [];
-  for (const f of dts) scan(`dist/${f}`, readFileSync(join(distDir, f), 'utf8'));
-  for (const f of tokenFiles(d.root)) scan(`src/tokens/${f}`, readFileSync(join(d.root, 'src/tokens', f), 'utf8'));
 
-  const out: string[] = [];
-  let shown = 0;
-  let total = 0;
-  for (const [, lines] of hits) total += lines.length;
-  for (const [label, lines] of hits) {
-    if (shown >= 60) break;
-    out.push(`## ${label}`);
-    for (const l of lines) {
-      if (shown >= 60) break;
-      out.push(l);
-      shown++;
+  const full = hits.filter((h) => h.matched.size === words.length);
+  const ranked = (full.length ? full : hits).sort((a, b) => b.score - a.score).slice(0, 8);
+
+  const tokenHits: string[] = [];
+  for (const f of tokenFiles(d.root)) {
+    for (const line of readFileSync(join(d.root, 'src/tokens', f), 'utf8').split('\n')) {
+      const lower = line.toLowerCase();
+      if (words.some((w) => lower.includes(w)) && tokenHits.length < 12) tokenHits.push(`${f}: ${line.trim()}`);
     }
   }
-  if (!total) return `No matches for "${query}". Try a shorter keyword, or list_components for the full index.`;
-  if (total > shown) out.push(`... +${total - shown} more matching lines - narrow the query.`);
-  if (!dts.length) out.push('(note: dist/ is not built, so type definitions were not searched)');
-  out.push('', 'Follow up with get_component(<name>) for the full picture.');
+
+  if (!ranked.length && !tokenHits.length) {
+    return `No matches for "${query}". The catalog:\n\n${d.index}`;
+  }
+
+  const out: string[] = [];
+  if (!full.length && ranked.length) out.push(`No component matches every word of "${query}"; closest by keyword:`, '');
+  for (const h of ranked) {
+    out.push(`## ${h.module.usage?.title ?? h.module.subpath} - @zyncat/ui/${h.module.subpath}`);
+    if (h.module.usage) out.push(h.module.usage.summary);
+    for (const line of h.lines) out.push(`  ${line}`);
+    out.push('');
+  }
+  if (tokenHits.length) out.push('## Design tokens', ...tokenHits.map((l) => `  ${l}`), '');
+  out.push(`Follow up with get_component([...names]) for complete APIs.`);
   return out.join('\n');
 }
 
@@ -247,8 +240,9 @@ function getTokens(group?: string): string {
   const out = picked.map(
     (f) => `/* ==== src/tokens/${f} ==== */\n${readFileSync(join(d.root, 'src/tokens', f), 'utf8').trimEnd()}`,
   );
-  const theming = d.sections.find((s) => s.title.includes('THEMING'));
-  if (theming?.body.length) out.push(['/* ==== theming ==== */', ...theming.body].join('\n'));
+  const theming = join(d.root, 'skills/zyncat-ui/references/theming.md');
+  if (!group && existsSync(theming))
+    out.push(`/* ==== theming & overrides ==== */\n${readFileSync(theming, 'utf8').trimEnd()}`);
   return out.join('\n\n');
 }
 
@@ -261,7 +255,7 @@ function contributorRoot(tool: string): string {
   if (!inRepo(root)) {
     throw new Error(
       `${tool} is a contributor tool and is only available inside the zyncat-ui repository. ` +
-        'In a consumer install use list_components / get_component / search_api / get_tokens.',
+        'In a consumer install use get_component / search_api / get_tokens.',
     );
   }
   return root;
@@ -311,31 +305,33 @@ function guide(tool: string, file: string, topic?: string): string {
 
 const CONSUMER_TOOLS = [
   {
-    name: 'list_components',
-    description:
-      'Every Zyncat UI component: name, import subpath and one-line purpose, grouped by category, plus package setup and usage conventions. Start here instead of exploring node_modules.',
-    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
-  },
-  {
     name: 'get_component',
     description:
-      "Full API for one component: the maintainers' usage notes and example plus the complete TypeScript prop types with doc comments (shared type chunks inlined). Cheaper and more accurate than reading node_modules/@zyncat/ui yourself.",
+      'Full current API for one or more components: the maintainers’ usage doc (purpose, when to pick it over ' +
+      'its neighbours, example, live docs page URL) plus the complete TypeScript prop types with doc comments, ' +
+      'shared type chunks inlined. Accepts a list - pass every component the change touches in ONE call. This is ' +
+      'the only reliable source for props: call it before writing any Zyncat UI JSX. An unknown name returns the ' +
+      'full component catalog, so a wrong guess still orients you.',
     inputSchema: {
       type: 'object',
       properties: {
-        component: {
-          type: 'string',
-          description: 'Component name or subpath - "Button", "TextField", "text-field", "@zyncat/ui/select".',
+        components: {
+          description:
+            'Component names or subpaths - ["select", "text-field", "dialog"], "Button", "@zyncat/ui/sheet".',
+          anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' }, minItems: 1 }],
         },
       },
-      required: ['component'],
+      required: ['components'],
       additionalProperties: false,
     },
   },
   {
     name: 'search_api',
     description:
-      'Keyword search across all component docs, type definitions and design-token CSS. Finds which component owns a prop, type, token or behavior (e.g. "searchable", "DurationToken", "drag dismiss", "--accent"). Every word must match a line; follow up with get_component.',
+      'Ranked keyword search across every component’s usage doc, prop types and the design-token CSS. Finds ' +
+      'which component owns a prop, behavior or token (e.g. "drag dismiss", "searchable", "DurationToken", ' +
+      '"--accent"). Zero matches returns the whole catalog instead, so a miss still orients you. Follow up with ' +
+      'get_component.',
     inputSchema: {
       type: 'object',
       properties: { query: { type: 'string', description: 'One or more keywords.' } },
@@ -346,7 +342,9 @@ const CONSUMER_TOOLS = [
   {
     name: 'get_tokens',
     description:
-      'The design-token vocabulary as CSS custom properties with their real values - color, semantic, spacing, typography, radius, elevation, motion, icons, layers, glass, avatar, fonts. Optionally pass one group name; omit for all. Use for theming/overrides and for reading exact values.',
+      'The design-token vocabulary as CSS custom properties with their real values - color, semantic, spacing, ' +
+      'typography, radius, elevation, motion, icons, layers, glass, avatar, fonts - plus the theming/override ' +
+      'levels. Optionally pass one group name; omit for all. Use for theming and for reading exact values.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -391,7 +389,7 @@ const CONTRIBUTOR_TOOLS = [
   {
     name: 'authoring_checklist',
     description:
-      'The complete checklist to add a component to this repo: file placement and tsup auto-discovery, the exports-map entry that fails silently when skipped, the per-component stylesheet and CSS-graph rule, the llms.txt entry, which tests to write, and the checks to run.',
+      'The complete checklist to add a component to this repo: file placement and tsup auto-discovery, the exports-map entry that fails silently when skipped, the per-component stylesheet and CSS-graph rule, the usage doc, which tests to write, and the checks to run.',
     inputSchema: { type: 'object', properties: {}, additionalProperties: false },
   },
 ];
@@ -405,11 +403,12 @@ function tools() {
 }
 
 const CONSUMER_INSTRUCTIONS =
-  'Zyncat UI design-system API. Before writing Zyncat UI code, use these tools instead of reading ' +
-  'node_modules or guessing props: list_components (what exists + setup and conventions), get_component ' +
-  '(one component: usage docs + complete prop types), search_api (find the component/prop/token for a ' +
-  'keyword), get_tokens (CSS custom-property vocabulary with real values, for theming). Imports are ' +
-  'per-subpath (@zyncat/ui/button - no barrel); link @zyncat/ui/styles.css once at the root.';
+  'Zyncat UI design-system API - the live truth for the installed version. Before writing any JSX that renders a ' +
+  'Zyncat UI component, call get_component with every component the change touches (it accepts a list); prop lists ' +
+  'remembered from training, a skill index or old code are not the API. search_api finds which component owns a ' +
+  'keyword or behavior; get_tokens prints the token vocabulary with real values plus the theming levels. Imports ' +
+  'are per-subpath (@zyncat/ui/button - no barrel); link @zyncat/ui/styles.css once at the root. The zyncat-ui ' +
+  'skill (installed by `npx zyncat-ui init`) carries the component map, the recipes and the conventions.';
 
 const CONTRIBUTOR_INSTRUCTIONS =
   ' You are inside the zyncat-ui repository, so the contributor tools are also available and you are ' +
@@ -428,13 +427,8 @@ function instructions(): string {
 function callTool(name: string, args: Record<string, unknown>): string {
   const str = (k: string) => (typeof args[k] === 'string' ? (args[k] as string) : undefined);
   switch (name) {
-    case 'list_components':
-      return listComponents();
-    case 'get_component': {
-      const component = str('component');
-      if (!component) throw new Error('Missing required argument "component".');
-      return getComponent(component);
-    }
+    case 'get_component':
+      return getComponent(args.components ?? args.component);
     case 'search_api': {
       const query = str('query');
       if (!query) throw new Error('Missing required argument "query".');

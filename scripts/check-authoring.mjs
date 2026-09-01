@@ -34,13 +34,12 @@ function walk(dir, exts) {
 const failures = [];
 const fail = (doc, message) => failures.push(`${doc}: ${message}`);
 
-const TOP_LEVEL_DIRS = ['src', 'scripts', 'docs', 'apps', 'dist'];
+const TOP_LEVEL_DIRS = ['src', 'scripts', 'docs', 'apps', 'skills', 'dist'];
 const ROOT_FILES = [
   'package.json',
   'tsup.config.ts',
   'turbo.json',
   'lefthook.yml',
-  'llms.txt',
   'README.md',
   'CLAUDE.md',
   '.mcp.json',
@@ -51,6 +50,7 @@ const NOT_EXPECTED_TO_RESOLVE = new Set([
   'dist/thing.js',
   'use-thing.ts',
   'Thing.tsx',
+  'Thing.usage.md',
   '@zyncat/ui/thing',
   '@zyncat/ui/text-field',
   'Thing',

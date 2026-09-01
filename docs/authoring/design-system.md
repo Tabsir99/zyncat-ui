@@ -60,7 +60,7 @@
 - Every motion is interruptible. One writer owns a property (motion.md).
 - Keep perceived settle inside the `--duration-*` bands.
 - Zero runtime dependencies.
-- Every component ships its own subpath, stylesheet, props JSDoc and `llms.txt` row.
+- Every component ships its own subpath, stylesheet, props JSDoc and usage doc.
 
 ## Tokens
 

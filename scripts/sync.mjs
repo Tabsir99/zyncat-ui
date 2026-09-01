@@ -8,7 +8,7 @@ const results = await lane([
   tool('build:js', 'tsup'),
   tool('build:types', 'tsc', '-p', 'tsconfig.build.json', '--emitDeclarationOnly'),
   script('docs:props', 'gen-props.mjs'),
-  script('sync:llms', 'check-llms.mjs', '--write'),
+  script('sync:skill', 'gen-skill.mjs'),
 ]);
 
 const failures = report(results, (Date.now() - startedAt) / 1000);

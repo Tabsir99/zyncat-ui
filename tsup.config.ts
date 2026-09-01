@@ -94,11 +94,11 @@ const library: Options = {
   },
 };
 
-// The MCP server is a node CLI, not a library module: node platform, shebang for the
-// package bin, no d.ts (it has no importable API), and clean:false so it never races
-// the library build's dist wipe.
+// The MCP server and the init CLI are node executables, not library modules: node
+// platform, shebang for the package bins, no d.ts (no importable API), and clean:false
+// so they never race the library build's dist wipe.
 const mcpServer: Options = {
-  entry: { mcp: 'src/mcp/server.ts' },
+  entry: { mcp: 'src/mcp/server.ts', cli: 'src/cli.ts' },
   format: ['esm'],
   platform: 'node',
   target: 'node18',

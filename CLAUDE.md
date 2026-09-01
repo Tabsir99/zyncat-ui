@@ -19,7 +19,7 @@
 - Motion code: `motion_guide(topic?)` or `docs/authoring/motion.md`.
 - Tokens, contracts, overrides, tiers: `design_rules(topic?)` or `docs/authoring/design-system.md`.
 - Adding a component: `authoring_checklist()` or `docs/authoring/authoring.md`.
-- Using components: `list_components`, `get_component`, `search_api`, `get_tokens`, or `llms.txt`.
+- Using components: `get_component` (batch), `search_api`, `get_tokens`, or the shipped skill in `skills/`.
 - `pnpm check:authoring` verifies the guidance against the code.
 
 ## Non-negotiables
@@ -51,6 +51,8 @@ src/
     internal/    shared machinery, never exported
     dev/         MotionDevtools
   mcp/           the bundled MCP server
+  cli.ts         `zyncat-ui init` - installs the skill + .mcp.json into a consumer project
+skills/          the consumer agent skill, shipped in the npm package
 docs/authoring/  the guidance the MCP tools serve
 scripts/         the generators and the lints
   lib/entries.mjs  the one scanner deriving the public entry list from the tree
@@ -62,7 +64,7 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 ## Delegate the satellite work
 
 - You: the component, its CSS, its prop JSDoc, its demo page.
-- The `zyncat-docs` agent: `llms.txt`, the registry row, the canonical example.
+- The `zyncat-docs` agent: the usage doc, the registry row, the canonical example.
 - `pnpm sync`: exports map, docs paths, prop tables, repo docs.
 - Never hand-write a prop table. `pnpm docs:props` generates it from `dist/*.d.ts`.
 
@@ -70,4 +72,4 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 
 - `pnpm sync`: regenerate every manifest and generated doc.
 - `pnpm verify`: the whole gate, in order.
-- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:props`, `build && check:llms`.
+- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:skill`, `check:props`, `build && check:usage`.

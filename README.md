@@ -89,7 +89,8 @@ bundler and every non-bundled setup. Subpaths make it structural instead.
 | Motion & dev        | Glide / GlidePill, MotionDevtools                                                             |
 
 Each is a named export from its own subpath (`@zyncat/ui/<kebab-name>`). Props are documented
-inline in the types; see [`llms.txt`](./llms.txt) for per-component examples.
+inline in the types; each component also ships a usage doc (`*.usage.md` beside its source) with
+a maintainer-written example.
 
 The **Replicas** row is the exception to the token rule: those four reproduce a real platform
 surface, so their metrics are pinned constants and your theme deliberately cannot move them.
@@ -97,19 +98,30 @@ Everything else answers to the token vocabulary.
 
 ## For AI coding agents
 
-**MCP server (preferred).** The package bundles a zero-dependency MCP server (stdio) so agents
-query the API surface instead of grepping `node_modules`: `list_components` (index + conventions),
-`get_component` (usage docs + complete prop types, shared type chunks inlined), `search_api`
-(which component owns a prop/type/token), `get_tokens` (the token vocabulary with real values).
-Register it in the consuming project - for Claude Code, `.mcp.json` at the project root:
+**One command wires everything:**
+
+```bash
+npx zyncat-ui init
+```
+
+It installs the `zyncat-ui` agent skill into `./.claude/skills/` (the component map, picker
+tables, recipes, theming guide - the knowledge that should sit in the agent's context) and
+registers the bundled MCP server in `./.mcp.json` (the live truth). Re-run it after upgrading
+the package so the skill matches the installed version.
+
+**The MCP server** is zero-dependency (stdio), also exposed as the `zyncat-ui-mcp` bin, and works
+with any MCP client:
 
 ```json
 { "mcpServers": { "zyncat-ui": { "command": "node", "args": ["./node_modules/@zyncat/ui/dist/mcp.js"] } } }
 ```
 
-Any MCP client works (also exposed as the `zyncat-ui-mcp` bin). The server reads the installed
-package's `llms.txt`, `dist/*.d.ts` and `src/tokens/*.css` at call time, so answers always match
-the installed version.
+Three tools: `get_component` (batch - the full current API for every component a change touches:
+maintainer usage doc, live docs URL, complete prop types with the shared type chunks inlined;
+an unknown name returns the whole catalog), `search_api` (ranked keyword search across usage
+docs, prop types and tokens), `get_tokens` (the token vocabulary with real values plus the
+theming levels). The server reads the installed package's usage docs, `dist/types/` declarations
+and `src/tokens/*.css` at call time, so answers always match the installed version.
 
 Without MCP, the same contract is readable directly:
 
@@ -117,8 +129,8 @@ Without MCP, the same contract is readable directly:
   inline TSDoc, and this is the machine-readable source of truth. Each subpath's `types` entry in
   `package.json` points straight at its file: `./button` resolves to
   `dist/types/components/primitives/button/Button.d.ts`, which fully describes `ButtonProps`.
-- **`llms.txt`** (package root) - a compact, per-component index: purpose - import - a minimal
-  example. Cheaper to scan than every `.d.ts`.
+- **Usage docs** - `node_modules/@zyncat/ui/src/**/*.usage.md`, one per component: purpose, when
+  to pick it, a verified example, the live docs URL.
 - This README.
 
 ## Copy-paste instead
@@ -146,6 +158,7 @@ src/                source (also shipped, for reading)
 -- motion/          the React motion layer: Presence, Motion, presets
 -- components/      primitives/ composites/ compound/ expressive/ internal/ - each Tsx imports its own CSS
 -- mcp/             the bundled MCP server
+skills/             the agent skill `npx zyncat-ui init` installs into a consumer project
 dist/               compiled ESM + .d.ts - what you import
 ```
 
@@ -160,7 +173,8 @@ dist/               compiled ESM + .d.ts - what you import
   the system; the motion engine reads the same values, so animation retimes with the CSS.
   **2** - retune one expressive or compound component through its `--<component>-*` properties.
   **3** - `className` and `style` per instance (`htmlProps` for an overlay's panel).
-  The THEMING section of [`llms.txt`](./llms.txt) has the full vocabulary.
+  [`skills/zyncat-ui/references/theming.md`](./skills/zyncat-ui/references/theming.md) has the
+  full vocabulary, and `get_tokens` prints it with live values.
 - **Reduced motion is handled at the token layer.** Every `--duration-*` collapses to 1ms under
   `prefers-reduced-motion`, so components need no per-component media query - but that collapse
   targets `:root`, so repoint durations there and not on a nested scope.
@@ -173,7 +187,7 @@ pnpm build            # tsup - dist/ (ESM + .d.ts)
 pnpm typecheck        # tsc --noEmit
 pnpm format           # prettier --write
 pnpm check:css        # every rendered class is reachable from its own module
-pnpm check:llms       # llms.txt covers every subpath, and its examples typecheck
+pnpm check:usage      # every subpath has a usage doc, and its example props are real
 pnpm check:authoring  # docs/authoring + CLAUDE.md still match the code
 pnpm verify           # every gate above, in order
 ```
