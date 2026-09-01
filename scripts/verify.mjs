@@ -11,6 +11,7 @@ const independent = [
   lane([script('check:authoring', 'check-authoring.mjs')]),
   lane([script('check:contracts', 'check-contracts.mjs')]),
   lane([script('check:skill', 'gen-skill.mjs', '--check')]),
+  lane([script('check:theme', 'gen-theme.mjs', '--check')]),
   lane([tool('build:js', 'tsup'), tool('build:types', 'tsc', '-p', 'tsconfig.build.json', '--emitDeclarationOnly')]),
 ];
 

@@ -24,6 +24,7 @@ export const EXPLICIT_ENTRIES = {
   'motion-tokens': 'src/tokens/motion-tokens.ts',
   'motion-devtools': 'src/components/dev/MotionDevtools.tsx',
   glide: 'src/motion/glide.tsx',
+  theme: 'src/tokens/theme.tsx',
 };
 
 export function toKebab(name) {

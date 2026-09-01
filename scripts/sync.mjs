@@ -3,6 +3,7 @@ import { lane, report, script, tool } from './lib/run.mjs';
 const startedAt = Date.now();
 
 const results = await lane([
+  script('sync:theme', 'gen-theme.mjs'),
   script('sync:exports', 'sync-exports.mjs', '--write'),
   script('sync:tsconfig', 'sync-tsconfig.mjs'),
   tool('build:js', 'tsup'),

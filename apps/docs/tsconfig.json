@@ -72,7 +72,8 @@
       "@zyncat/ui/toast-store": ["../../src/components/composites/toast/toast-store.ts"],
       "@zyncat/ui/motion-tokens": ["../../src/tokens/motion-tokens.ts"],
       "@zyncat/ui/motion-devtools": ["../../src/components/dev/MotionDevtools.tsx"],
-      "@zyncat/ui/glide": ["../../src/motion/glide.tsx"]
+      "@zyncat/ui/glide": ["../../src/motion/glide.tsx"],
+      "@zyncat/ui/theme": ["../../src/tokens/theme.tsx"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts", ".next-dev/types/**/*.ts"],

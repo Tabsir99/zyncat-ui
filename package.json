@@ -298,6 +298,11 @@
       "types": "./dist/types/components/expressive/youtube/YouTube.d.ts",
       "import": "./dist/youtube.js"
     },
+    "./theme": {
+      "source": "./src/tokens/theme.tsx",
+      "types": "./dist/types/tokens/theme.d.ts",
+      "import": "./dist/theme.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",
@@ -326,10 +331,12 @@
     "check:exports": "node scripts/sync-exports.mjs",
     "check:props": "node scripts/gen-props.mjs --check",
     "check:tsconfig": "node scripts/sync-tsconfig.mjs --check",
+    "check:theme": "node scripts/gen-theme.mjs --check",
     "docs:props": "node scripts/gen-props.mjs",
     "sync:exports": "node scripts/sync-exports.mjs --write",
     "sync:tsconfig": "node scripts/sync-tsconfig.mjs",
     "sync:skill": "node scripts/gen-skill.mjs",
+    "sync:theme": "node scripts/gen-theme.mjs",
     "sync": "node scripts/sync.mjs",
     "verify": "node scripts/verify.mjs",
     "format": "prettier --write --cache .",
