@@ -10,6 +10,12 @@ export interface Box {
 
 const MOVE_EPSILON = 0.5;
 const SCALE_EPSILON = 0.01;
+const TOP_LEFT = { x: 0, y: 0 };
+
+function transformOrigin(el: HTMLElement): { x: number; y: number } {
+  const [x, y] = getComputedStyle(el).transformOrigin.split(' ');
+  return { x: parseFloat(x), y: parseFloat(y) };
+}
 
 export function measure(el: HTMLElement): Box {
   const rect = el.getBoundingClientRect();
@@ -41,18 +47,21 @@ export function flip(el: HTMLElement, from: Box, options: FlipOptions = {}): Pla
   if (!to.width || !to.height) return null;
 
   const size = options.size ?? 'scale';
-  const dx = from.left - to.left;
-  const dy = from.top - to.top;
   const sx = from.width / to.width;
   const sy = from.height / to.height;
 
-  const moved = Math.abs(dx) > MOVE_EPSILON || Math.abs(dy) > MOVE_EPSILON;
+  const moved = Math.abs(from.left - to.left) > MOVE_EPSILON || Math.abs(from.top - to.top) > MOVE_EPSILON;
   const resized = size !== 'none' && (Math.abs(sx - 1) > SCALE_EPSILON || Math.abs(sy - 1) > SCALE_EPSILON);
   if (!moved && !resized) return null;
 
+  const scaling = resized && size === 'scale';
+  const pivot = scaling ? transformOrigin(el) : TOP_LEFT;
+  const dx = from.left - to.left + pivot.x * (sx - 1);
+  const dy = from.top - to.top + pivot.y * (sy - 1);
+
   const timing = { ...options.timing, fill: 'none' as const };
   const layers: Layer[] = [{ x: [dx, 0], y: [dy, 0], timing, composite: 'add' }];
-  if (resized && size === 'scale')
+  if (scaling)
     layers.push({
       scale: [
         [sx, sy],
