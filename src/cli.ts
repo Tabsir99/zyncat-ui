@@ -19,6 +19,19 @@ function findPackageRoot(): string {
 
 const MCP_SERVER_ENTRY = { command: 'node', args: ['./node_modules/@zyncat/ui/dist/mcp.js'] };
 
+const THEME_FILE = 'zyncat.theme.ts';
+
+const THEME_STARTER = `import { defineTheme } from '@zyncat/ui/theme';
+
+export const base = defineTheme({
+  color: { accent: 'oklch(0.63 0.118 198)' },
+});
+
+export const dark = defineTheme({
+  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+});
+`;
+
 function init(): void {
   const packageRoot = findPackageRoot();
   const version = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8')).version;
@@ -62,11 +75,20 @@ function init(): void {
   config.mcpServers = { ...config.mcpServers, 'zyncat-ui': MCP_SERVER_ENTRY };
   writeFileSync(mcpPath, `${JSON.stringify(config, null, 2)}\n`);
 
+  const themePath = join(target, THEME_FILE);
+  const themeExisted = existsSync(themePath);
+  if (!themeExisted) writeFileSync(themePath, THEME_STARTER);
+
   console.log(`zyncat-ui init (v${version})`);
   console.log(
     `  skill${installed.length === 1 ? '' : 's'} installed: ${installed.map((s) => `.claude/skills/${s}`).join(', ')}`,
   );
   console.log('  MCP server registered: .mcp.json -> zyncat-ui');
+  console.log(
+    themeExisted
+      ? `  Theme kept: ${THEME_FILE} already exists`
+      : `  Theme scaffolded: ${THEME_FILE} - render <ZyncatTheme theme={{ base, dark }} /> at your app root`,
+  );
   console.log('  Restart your agent session so it picks both up. Re-run after upgrading @zyncat/ui.');
 }
 
@@ -74,8 +96,7 @@ const command = process.argv[2];
 if (command === 'init') init();
 else {
   console.log('Usage: zyncat-ui init');
-  console.log(
-    '  Installs the zyncat-ui agent skill into ./.claude/skills and registers the MCP server in ./.mcp.json.',
-  );
+  console.log('  Installs the zyncat-ui agent skill into ./.claude/skills, registers the MCP server in ./.mcp.json,');
+  console.log(`  and scaffolds ./${THEME_FILE} if it is not there yet.`);
   process.exit(command ? 1 : 0);
 }
