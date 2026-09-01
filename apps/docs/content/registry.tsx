@@ -111,7 +111,7 @@ export const GROUPS: DocGroup[] = [
         toc: [
           { id: 'overview', title: 'Overview', level: 2 },
           { id: 'what-is-mcp', title: 'What is MCP?', level: 2 },
-          { id: 'ide-configuration', title: 'IDE Configuration', level: 2 },
+          { id: 'ide-configuration', title: 'Setup', level: 2 },
           { id: 'tools-reference', title: 'Tools Reference', level: 2 },
           { id: 'sample-prompts', title: 'Sample AI Prompts', level: 2 },
         ],

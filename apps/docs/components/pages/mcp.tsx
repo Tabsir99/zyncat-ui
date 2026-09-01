@@ -3,29 +3,22 @@
 import { Callout, CodeBlock, Step, Steps, TabGroup } from '../kit';
 
 export function McpDoc() {
-  const cursorConfig = `{
-  "mcpServers": {
-    "zyncat-ui": {
-      "command": "npx",
-      "args": ["-y", "@zyncat/ui-mcp@latest"]
-    }
-  }
-}`;
+  const initCommand = `npx zyncat-ui init`;
 
-  const claudeConfig = `{
-  "mcpServers": {
-    "zyncat-ui": {
-      "command": "npx",
-      "args": ["-y", "@zyncat/ui-mcp@latest"]
-    }
-  }
-}`;
-
-  const localWorkspaceConfig = `{
+  const manualConfig = `{
   "mcpServers": {
     "zyncat-ui": {
       "command": "node",
       "args": ["./node_modules/@zyncat/ui/dist/mcp.js"]
+    }
+  }
+}`;
+
+  const globalConfig = `{
+  "mcpServers": {
+    "zyncat-ui": {
+      "command": "npx",
+      "args": ["-y", "--package=@zyncat/ui@latest", "zyncat-ui-mcp"]
     }
   }
 }`;
@@ -35,17 +28,21 @@ export function McpDoc() {
       <section className="guide-section" id="overview">
         <h2 className="guide-section__title">Overview</h2>
         <p className="guide-section__p">
-          Zyncat UI ships with an official, built-in <strong>Model Context Protocol (MCP) server</strong>.
+          Zyncat UI ships two halves of one agent setup: an <strong>agent skill</strong> (the component map, picker
+          tables, recipes and theming guide that belong in the model&apos;s context) and a built-in{' '}
+          <strong>Model Context Protocol (MCP) server</strong> (the live component APIs, read from the installed package
+          at call time).
         </p>
         <p className="guide-section__p">
-          When connected to your AI-assisted IDE or autonomous agent (Cursor, Claude Desktop, Windsurf, Antigravity,
-          Cline, Roo Code), your AI assistant receives real-time access to the exact component signatures, prop types,
-          CSS token vocabulary, and WAAPI motion guidelines—drastically reducing hallucinated props and invalid styling.
+          Connected to an AI-assisted IDE or autonomous agent (Claude Code, Cursor, Windsurf, Cline, Roo Code), the
+          assistant learns the catalog from the skill and pulls exact prop types from the server before writing
+          JSX—which is what eliminates hallucinated props and invalid styling.
         </p>
 
         <Callout tone="tip" title="Included in the Package">
-          The MCP server is bundled directly inside <code className="doc-inline-code">@zyncat/ui</code> under the{' '}
-          <code className="doc-inline-code">zyncat-ui-mcp</code> executable. No separate global installation is needed.
+          Both ship inside <code className="doc-inline-code">@zyncat/ui</code>—the server as the{' '}
+          <code className="doc-inline-code">zyncat-ui-mcp</code> executable, the skill under{' '}
+          <code className="doc-inline-code">skills/</code>. No separate installation.
         </Callout>
       </section>
 
@@ -60,61 +57,69 @@ export function McpDoc() {
           workspace data and execute structured tools.
         </p>
         <p className="guide-section__p">
-          Rather than stuffing entire documentation files into your chat context window, the AI dynamically queries the
-          Zyncat UI MCP server on-demand when you ask questions or ask it to generate code.
+          Rather than stuffing entire documentation files into the chat context window, the AI queries the Zyncat UI MCP
+          server on demand—and because the server reads the installed package, its answers always match the version your
+          project actually runs.
         </p>
       </section>
 
       <section className="guide-section" id="ide-configuration">
-        <h2 className="guide-section__title">IDE Configuration</h2>
+        <h2 className="guide-section__title">Setup</h2>
+        <p className="guide-section__p">One command, run in your project root, wires both halves:</p>
+        <CodeBlock code={initCommand} language="bash" />
         <p className="guide-section__p">
-          Choose your development environment below and add the configuration to your MCP config file:
+          It copies the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
+          <code className="doc-inline-code">.claude/skills/</code> and registers the MCP server in{' '}
+          <code className="doc-inline-code">.mcp.json</code>. Restart the agent session afterwards, and re-run the
+          command after upgrading <code className="doc-inline-code">@zyncat/ui</code> so the skill matches the installed
+          version.
         </p>
 
         <TabGroup
           tabs={[
+            {
+              id: 'claude-code',
+              label: 'Claude Code',
+              content: (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <p className="guide-section__p">
+                    <code className="doc-inline-code">npx zyncat-ui init</code> is the whole setup—Claude Code reads{' '}
+                    <code className="doc-inline-code">.mcp.json</code> and{' '}
+                    <code className="doc-inline-code">.claude/skills/</code> natively. The equivalent manual server
+                    entry:
+                  </p>
+                  <CodeBlock code={manualConfig} language="json" />
+                </div>
+              ),
+            },
             {
               id: 'cursor',
               label: 'Cursor',
               content: (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <p className="guide-section__p">
-                    Add the following to your project&apos;s <code className="doc-inline-code">.cursor/mcp.json</code>{' '}
-                    or global Cursor MCP settings:
+                    Add the server entry to your project&apos;s{' '}
+                    <code className="doc-inline-code">.cursor/mcp.json</code>, then restart Cursor or reload MCP
+                    servers:
                   </p>
-                  <CodeBlock code={cursorConfig} language="json" />
-                  <p className="guide-section__p">Then restart Cursor or reload MCP servers.</p>
+                  <CodeBlock code={manualConfig} language="json" />
                 </div>
               ),
             },
             {
-              id: 'claude',
-              label: 'Claude Desktop',
+              id: 'global',
+              label: 'Global / no install',
               content: (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <p className="guide-section__p">
-                    Add to your Claude Desktop config (
-                    <code className="doc-inline-code">
-                      ~/Library/Application Support/Claude/claude_desktop_config.json
-                    </code>{' '}
-                    on macOS or <code className="doc-inline-code">%APPDATA%\Claude\claude_desktop_config.json</code> on
-                    Windows):
+                    For a client configured outside a project (e.g. Claude Desktop), run the server straight off the
+                    registry:
                   </p>
-                  <CodeBlock code={claudeConfig} language="json" />
-                  <p className="guide-section__p">Restart Claude Desktop.</p>
-                </div>
-              ),
-            },
-            {
-              id: 'local',
-              label: 'Local Workspace',
-              content: (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <CodeBlock code={globalConfig} language="json" />
                   <p className="guide-section__p">
-                    If <code className="doc-inline-code">@zyncat/ui</code> is already installed in your repository, you
-                    can run the bundled MCP executable directly:
+                    Prefer the per-project form when the package is installed—it guarantees the answers match your
+                    installed version.
                   </p>
-                  <CodeBlock code={localWorkspaceConfig} language="json" />
                 </div>
               ),
             },
@@ -124,38 +129,19 @@ export function McpDoc() {
 
       <section className="guide-section" id="tools-reference">
         <h2 className="guide-section__title">Tools Reference</h2>
-        <p className="guide-section__p">
-          The Zyncat UI MCP server exposes the following tools to connected AI assistants:
-        </p>
+        <p className="guide-section__p">The Zyncat UI MCP server exposes three tools to connected AI assistants:</p>
 
         <div className="examples-list">
           <div className="example-block">
             <h3 className="example-block__title">
-              <code className="doc-inline-code">list_components</code>
+              <code className="doc-inline-code">get_component(components)</code>
             </h3>
             <p className="example-block__desc">
-              Lists all available primitives, form controls, data displays, and overlays with their category, status,
-              and import paths.
-            </p>
-          </div>
-
-          <div className="example-block">
-            <h3 className="example-block__title">
-              <code className="doc-inline-code">get_component(name)</code>
-            </h3>
-            <p className="example-block__desc">
-              Returns the full TypeScript prop interface, JSDoc descriptions, default values, and usage examples for a
-              specific component.
-            </p>
-          </div>
-
-          <div className="example-block">
-            <h3 className="example-block__title">
-              <code className="doc-inline-code">get_tokens(category?)</code>
-            </h3>
-            <p className="example-block__desc">
-              Retrieves the closed CSS token vocabulary, including surface colors, text contrast steps, radii,
-              elevations, and spacing steps.
+              The workhorse. Accepts one name or a list—
+              <code className="doc-inline-code">[&quot;select&quot;, &quot;text-field&quot;, &quot;dialog&quot;]</code>
+              —and returns, per component: the maintainers&apos; usage doc, the live docs page URL, a verified example,
+              and the complete TypeScript prop interface with JSDoc and defaults, shared type chunks inlined. An unknown
+              name returns the full catalog, so a wrong guess self-corrects.
             </p>
           </div>
 
@@ -164,25 +150,34 @@ export function McpDoc() {
               <code className="doc-inline-code">search_api(query)</code>
             </h3>
             <p className="example-block__desc">
-              Performs a search across all documentation, prop types, and architectural guidance.
+              Ranked keyword search across every usage doc, prop type and design token—finds which component owns a
+              prop, behavior or token. Zero matches returns the whole catalog instead of a dead end.
             </p>
           </div>
 
           <div className="example-block">
             <h3 className="example-block__title">
-              <code className="doc-inline-code">motion_guide(topic?)</code>
+              <code className="doc-inline-code">get_tokens(group?)</code>
             </h3>
             <p className="example-block__desc">
-              Provides the WAAPI motion engine guidelines, spring physics parameters, and animation rules.
+              The closed CSS token vocabulary with real values—surfaces, text contrast steps, radii, elevations,
+              spacing, motion—plus the four theming override levels.
             </p>
           </div>
         </div>
+
+        <Callout tone="note" title="Contributor tools">
+          Inside the zyncat-ui repository itself the server additionally exposes{' '}
+          <code className="doc-inline-code">motion_guide</code>, <code className="doc-inline-code">design_rules</code>{' '}
+          and <code className="doc-inline-code">authoring_checklist</code>—the library-authoring guidance. Consumer
+          installs see only the three tools above.
+        </Callout>
       </section>
 
       <section className="guide-section" id="sample-prompts">
         <h2 className="guide-section__title">Sample AI Prompts</h2>
         <p className="guide-section__p">
-          Once the MCP server is enabled in your IDE, you can prompt your AI assistant naturally:
+          Once the skill and server are wired, you can prompt your AI assistant naturally:
         </p>
 
         <ul className="guide-section__list">
