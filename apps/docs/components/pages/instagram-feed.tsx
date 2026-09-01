@@ -3,22 +3,18 @@
 import { useState, type CSSProperties } from 'react';
 
 import { Button } from '@zyncat/ui/button';
-import { InstagramFeed, type InstagramFeedAction } from '@zyncat/ui/instagram-feed';
+import { InstagramFeed, type InstagramFeedAction, type InstagramFeedProps } from '@zyncat/ui/instagram-feed';
+
+import { KnobSegment, KnobSwitch, Playground } from '../playground';
 
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
-const DECK: CSSProperties = { display: 'flex', gap: 'var(--space-6)', alignItems: 'flex-start', flexWrap: 'wrap' };
 const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
 const LOG: CSSProperties = { font: 'var(--type-mono)', color: 'var(--text-subtle)', minHeight: 'var(--space-5)' };
 
 const PHOTO: CSSProperties = {
   background:
     'radial-gradient(120% 90% at 22% 12%, rgba(255, 236, 196, 0.95) 0%, rgba(255, 236, 196, 0) 55%), linear-gradient(168deg, #1f3b33 0%, #3f6d58 38%, #96b184 66%, #e2d3ac 100%)',
-};
-
-const SQUARE_PHOTO: CSSProperties = {
-  background:
-    'conic-gradient(from 210deg at 62% 38%, #f2b271 0deg, #d8577d 110deg, #6c5ce7 210deg, #2f8f9d 300deg, #f2b271 360deg)',
 };
 
 const REEL: CSSProperties = {
@@ -38,164 +34,64 @@ const LONG_CAPTION =
 const SHORT_CAPTION = 'Munnar vibe #kerala #travel #dubai';
 
 const PHOTO_ART = <div style={PHOTO} />;
-const SQUARE_ART = <div style={SQUARE_PHOTO} />;
 const REEL_ART = <div style={REEL} />;
 const FACE_ART = <div style={FACE} />;
 
-export function InstagramFeedHero() {
-  return (
-    <div style={DECK}>
-      <InstagramFeed
-        width="mobile"
-        handle="northfieldsupply"
-        caption={SHORT_CAPTION}
-        stamp="1d"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
-        likes={760400}
-        comments={2600}
-        reposts={3100}
-      />
-      <InstagramFeed
-        width="web"
-        handle="northfieldsupply"
-        caption={SHORT_CAPTION}
-        stamp="1d"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
-        likes={760400}
-        comments={2600}
-        reposts={3100}
-      />
-    </div>
-  );
-}
+type IgType = NonNullable<InstagramFeedProps['type']>;
+type IgWidth = NonNullable<InstagramFeedProps['width']>;
+type IgRatio = NonNullable<InstagramFeedProps['ratio']>;
+type IgCaption = 'short' | 'long';
 
-export function InstagramFeedTypes() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        An image post keeps the white header strip. A video post runs the black frame from the top of the card and puts
-        the header on it in white, Follow loses its pill, and the audio credit takes a second line.
-      </span>
-      <div style={DECK}>
-        <InstagramFeed
-          type="image"
-          handle="northfieldsupply"
-          caption={SHORT_CAPTION}
-          stamp="1d"
-          media={PHOTO_ART}
-          avatar={FACE_ART}
-          likes={760400}
-          comments={2600}
-          reposts={3100}
-        />
-        <InstagramFeed
-          type="video"
-          handle="northfieldsupply"
-          caption={SHORT_CAPTION}
-          stamp="1d"
-          audio="northfieldsupply · Original audio"
-          media={REEL_ART}
-          avatar={FACE_ART}
-          likes={128000}
-          comments={940}
-          reposts={412}
-        />
-      </div>
-    </div>
-  );
-}
+export function InstagramPlayground() {
+  const [type, setType] = useState<IgType>('image');
+  const [width, setWidth] = useState<IgWidth>('web');
+  const [ratio, setRatio] = useState<IgRatio>('4:5');
+  const [caption, setCaption] = useState<IgCaption>('short');
+  const [media, setMedia] = useState(true);
 
-export function InstagramFeedWidths() {
-  const [width, setWidth] = useState<'mobile' | 'web'>('web');
+  const code = `<InstagramFeed
+  type="${type}"
+  width="${width}"
+  ratio="${ratio}"
+  handle="northfieldsupply"
+  caption="${caption === 'short' ? SHORT_CAPTION : LONG_CAPTION.slice(0, 44) + '...'}"
+  stamp="1d"${type === 'video' ? '\n  audio="northfieldsupply · Original audio"' : ''}${media ? '\n  media={photo}\n  avatar={face}' : ''}
+  likes={760400}
+  comments={2600}
+  reposts={3100}
+/>`;
+
   return (
-    <div style={COLUMN}>
-      <div style={ROW}>
-        <Button size="sm" variant={width === 'mobile' ? 'primary' : 'secondary'} onClick={() => setWidth('mobile')}>
-          mobile 390
-        </Button>
-        <Button size="sm" variant={width === 'web' ? 'primary' : 'secondary'} onClick={() => setWidth('web')}>
-          web 470
-        </Button>
-      </div>
-      <span style={CAPTION}>The web column adds Follow to the header and rounds the card. Mobile does neither.</span>
+    <Playground
+      code={code}
+      layout="under"
+      expandTitle={`Instagram - ${width} feed post`}
+      note="Double-tap the media to like it; the heart, bookmark and mute chip are real buttons, reachable by Tab."
+      rail={
+        <>
+          <KnobSegment label="type" value={type} onChange={setType} options={['image', 'video']} />
+          <KnobSegment label="width" value={width} onChange={setWidth} options={['mobile', 'web']} />
+          <KnobSegment label="ratio" value={ratio} onChange={setRatio} options={['4:5', '1:1']} />
+          <KnobSegment label="caption" value={caption} onChange={setCaption} options={['short', 'long']} />
+          <KnobSwitch label="media" checked={media} onChange={setMedia} />
+        </>
+      }
+    >
       <InstagramFeed
+        type={type}
         width={width}
+        ratio={ratio}
         handle="northfieldsupply"
-        caption={SHORT_CAPTION}
+        caption={caption === 'short' ? SHORT_CAPTION : LONG_CAPTION}
         stamp="1d"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
+        audio={type === 'video' ? 'northfieldsupply · Original audio' : undefined}
+        media={media ? (type === 'video' ? REEL_ART : PHOTO_ART) : undefined}
+        avatar={media ? FACE_ART : undefined}
         likes={760400}
         comments={2600}
         reposts={3100}
       />
-    </div>
-  );
-}
-
-export function InstagramFeedRatios() {
-  return (
-    <div style={DECK}>
-      <InstagramFeed
-        ratio="4:5"
-        handle="northfieldsupply"
-        caption="Portrait, the default frame"
-        stamp="4h"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
-        likes={12400}
-        comments={188}
-        reposts={31}
-      />
-      <InstagramFeed
-        ratio="1:1"
-        handle="northfieldsupply"
-        caption="Square, the other frame"
-        stamp="4h"
-        media={SQUARE_ART}
-        avatar={FACE_ART}
-        likes={12400}
-        comments={188}
-        reposts={31}
-      />
-    </div>
-  );
-}
-
-export function InstagramFeedCaption() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        The caption clips at 125 characters on a word boundary and ends in a grey &quot;... more&quot;. Hashtags and
-        mentions take the platform link blue.
-      </span>
-      <InstagramFeed
-        handle="northfieldsupply"
-        caption={LONG_CAPTION}
-        stamp="2d"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
-        likes={4200}
-        comments={96}
-        reposts={12}
-      />
-    </div>
-  );
-}
-
-export function InstagramFeedPlaceholder() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        With no media and no avatar the card falls back to the platform&apos;s flat fills. Nothing is fetched.
-      </span>
-      <div style={DECK}>
-        <InstagramFeed handle="northfieldsupply" caption="No media supplied" stamp="1h" />
-        <InstagramFeed type="video" handle="northfieldsupply" caption="No media supplied" stamp="1h" />
-      </div>
-    </div>
+    </Playground>
   );
 }
 
@@ -242,30 +138,6 @@ export function InstagramFeedControlled() {
         </Button>
       </div>
       <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
-    </div>
-  );
-}
-
-export function InstagramFeedReducedMotion() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Under prefers-reduced-motion the heart and bookmark pops resolve to their settled scale with no travel, the
-        hover dim and the fill change collapse to 1ms with every other transition in the system, and the double-tap
-        burst never mounts - the like still registers and the count still moves.
-      </span>
-      <InstagramFeed
-        handle="northfieldsupply"
-        caption={SHORT_CAPTION}
-        stamp="1d"
-        media={PHOTO_ART}
-        avatar={FACE_ART}
-        likes={760400}
-        comments={2600}
-        reposts={3100}
-        defaultLiked
-        defaultSaved
-      />
     </div>
   );
 }

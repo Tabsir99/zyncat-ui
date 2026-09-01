@@ -6,15 +6,13 @@ import { Avatar } from '@zyncat/ui/avatar';
 import { AvatarGroup } from '@zyncat/ui/avatar-group';
 import { Badge } from '@zyncat/ui/badge';
 import { Pagination } from '@zyncat/ui/pagination';
-import { Table, type TableColumn } from '@zyncat/ui/table';
+import { Table, type TableColumn, type TableProps } from '@zyncat/ui/table';
 import { Tag, TagGroup } from '@zyncat/ui/tag';
 import { ToggleTag } from '@zyncat/ui/toggle-tag';
 
 import { Icon } from '../icon';
+import { KnobSegment, KnobSwitch, Playground } from '../playground';
 
-/* ==========================================================================
-   Avatar
-   ========================================================================== */
 export function AvatarHero() {
   return (
     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -61,9 +59,6 @@ export function AvatarGroupDemo() {
   );
 }
 
-/* ==========================================================================
-   Tag
-   ========================================================================== */
 const INITIAL_LABELS = [
   { id: 'a', name: 'design', icon: <Icon name="hash" /> },
   { id: 'b', name: 'frontend', icon: <Icon name="hash" /> },
@@ -102,9 +97,6 @@ export function TagToggleGroupDemo() {
   );
 }
 
-/* ==========================================================================
-   Table
-   ========================================================================== */
 interface PostRow {
   id: string;
   title: string;
@@ -118,6 +110,8 @@ const ROWS: PostRow[] = [
   { id: '2', title: 'Design Tokens Architecture', channel: 'LinkedIn', status: 'Published', engagement: 1890 },
   { id: '3', title: 'WAAPI Motion Deep Dive', channel: 'Twitter', status: 'Scheduled', engagement: 0 },
   { id: '4', title: 'Q3 Product Roadmap Preview', channel: 'Newsletter', status: 'Draft', engagement: 0 },
+  { id: '5', title: 'Closed Token Vocabulary, Explained', channel: 'LinkedIn', status: 'Published', engagement: 3110 },
+  { id: '6', title: 'Shipping the Emoji Picker', channel: 'Twitter', status: 'Scheduled', engagement: 0 },
 ];
 
 const COLUMNS: TableColumn<PostRow>[] = [
@@ -141,17 +135,42 @@ const COLUMNS: TableColumn<PostRow>[] = [
   },
 ];
 
-export function TableHero() {
+type TableDensity = NonNullable<TableProps<PostRow>['density']>;
+
+export function TablePlayground() {
+  const [selectable, setSelectable] = useState(true);
+  const [density, setDensity] = useState<TableDensity>('cozy');
+  const [loading, setLoading] = useState(false);
+
+  const code = `<Table
+  rows={rows}
+  columns={columns}
+  rowKey="id"
+  selectable={${selectable}}
+  density="${density}"
+  loading={${loading}}
+/>`;
+
   return (
-    <div style={{ width: '100%', overflowX: 'auto' }}>
-      <Table rows={ROWS} columns={COLUMNS} rowKey="id" selectable />
-    </div>
+    <Playground
+      code={code}
+      stage="fill"
+      note="Sort by Post Title or Impressions - the header carets are real buttons."
+      rail={
+        <>
+          <KnobSegment label="density" value={density} onChange={setDensity} options={['cozy', 'compact']} />
+          <KnobSwitch label="selectable" checked={selectable} onChange={setSelectable} />
+          <KnobSwitch label="loading" checked={loading} onChange={setLoading} />
+        </>
+      }
+    >
+      <div style={{ width: '100%', overflowX: 'auto' }}>
+        <Table rows={ROWS} columns={COLUMNS} rowKey="id" selectable={selectable} density={density} loading={loading} />
+      </div>
+    </Playground>
   );
 }
 
-/* ==========================================================================
-   Pagination
-   ========================================================================== */
 export function PaginationHero() {
   const [offset, setOffset] = useState(0);
   const pageSize = 10;

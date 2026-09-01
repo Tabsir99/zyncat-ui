@@ -8,12 +8,13 @@ import { NumberField } from '@zyncat/ui/number-field';
 import { OtpField } from '@zyncat/ui/otp-field';
 import { RadioGroup, type RadioOption } from '@zyncat/ui/radio-group';
 import { Select } from '@zyncat/ui/select';
-import { TextField } from '@zyncat/ui/text-field';
+import { TextField, type TextFieldProps } from '@zyncat/ui/text-field';
 import { Textarea } from '@zyncat/ui/textarea';
 import { toast } from '@zyncat/ui/toast';
 import { Toggle } from '@zyncat/ui/toggle';
 
 import { Icon } from '../icon';
+import { KnobSegment, KnobSwitch, Playground } from '../playground';
 
 const W = 320;
 
@@ -47,39 +48,66 @@ const CHANNELS: Option[] = [
   { value: 'tt', label: 'TikTok' },
 ];
 
-/* ==========================================================================
-   TextField
-   ========================================================================== */
-export function TextFieldHero() {
-  const [val, setVal] = useState('Quarterly review');
-  return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <TextField
-        id="hero-search"
-        label="Search projects"
-        leadingIcon={<Icon name="magnifying-glass" />}
-        clearable
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
-      />
-    </div>
-  );
-}
+type FieldSize = NonNullable<TextFieldProps['size']>;
+type FieldState = 'idle' | 'error' | 'warning' | 'success';
 
-export function TextFieldLabelDemo() {
-  const [name, setName] = useState('');
+export function TextFieldPlayground() {
+  const [size, setSize] = useState<FieldSize>('md');
+  const [state, setState] = useState<FieldState>('idle');
+  const [clearable, setClearable] = useState(true);
+  const [leadingIcon, setLeadingIcon] = useState(true);
+  const [value, setValue] = useState('Quarterly review');
+
+  const stateProps = {
+    error: state === 'error' ? 'That name is already taken.' : undefined,
+    warning: state === 'warning' ? 'Renaming breaks existing share links.' : undefined,
+    success: state === 'success' ? 'Name is available.' : undefined,
+  };
+
+  const stateCode =
+    state === 'idle' ? '' : `\n  ${state}="${stateProps.error ?? stateProps.warning ?? stateProps.success}"`;
+  const code = `<TextField
+  label="Project name"
+  size="${size}"
+  clearable={${clearable}}${leadingIcon ? '\n  leadingIcon={<SearchIcon />}' : ''}${stateCode}
+  value={value}
+  onChange={(e) => setValue(e.target.value)}
+/>`;
+
   return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <TextField
-        id="ws"
-        label="Workspace name"
-        required
-        placeholder="e.g. Acme Studio"
-        helper="Visible to everyone on your team."
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-    </div>
+    <Playground
+      code={code}
+      note="State messages disclose through Collapse - they ease in, never jump the layout."
+      rail={
+        <>
+          <KnobSegment label="size" value={size} onChange={setSize} options={['sm', 'md', 'lg']} />
+          <KnobSegment
+            label="state"
+            value={state}
+            onChange={setState}
+            options={['idle', 'error', 'warning', 'success']}
+          />
+          <KnobSwitch label="clearable" checked={clearable} onChange={setClearable} />
+          <KnobSwitch label="leading icon" checked={leadingIcon} onChange={setLeadingIcon} />
+        </>
+      }
+    >
+      <div style={{ width: '100%', maxWidth: W }}>
+        <TextField
+          id="tf-playground"
+          label="Project name"
+          size={size}
+          clearable={clearable}
+          leadingIcon={leadingIcon ? <Icon name="magnifying-glass" /> : undefined}
+          helper={state === 'idle' ? 'Visible to everyone on your team.' : undefined}
+          error={stateProps.error}
+          warning={stateProps.warning}
+          success={stateProps.success}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </div>
+    </Playground>
   );
 }
 
@@ -99,19 +127,6 @@ export function TextFieldValidationDemo() {
   );
 }
 
-export function TextFieldSizesDemo() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: W }}>
-      <TextField id="sm" size="sm" placeholder="Small (28px)" />
-      <TextField id="md" size="md" placeholder="Medium (36px)" />
-      <TextField id="lg" size="lg" placeholder="Large (40px)" />
-    </div>
-  );
-}
-
-/* ==========================================================================
-   NumberField
-   ========================================================================== */
 export function NumberFieldHero() {
   const [seats, setSeats] = useState(5);
   return (
@@ -140,9 +155,6 @@ export function NumberFieldUnitDemo() {
   );
 }
 
-/* ==========================================================================
-   OtpField
-   ========================================================================== */
 export function OtpFieldHero() {
   const [code, setCode] = useState('492');
   return <OtpField length={6} group={3} value={code} onChange={setCode} />;
@@ -158,9 +170,6 @@ export function OtpFieldSizesDemo() {
   );
 }
 
-/* ==========================================================================
-   Textarea
-   ========================================================================== */
 export function TextareaHero() {
   const [body, setBody] = useState('Launching our new React 19 design system today!');
   return (
@@ -197,9 +206,6 @@ export function TextareaAutoGrowDemo() {
   );
 }
 
-/* ==========================================================================
-   Checkbox
-   ========================================================================== */
 export function CheckboxHero() {
   const [checked, setChecked] = useState(true);
   return (
@@ -222,9 +228,6 @@ export function CheckboxStatesDemo() {
   );
 }
 
-/* ==========================================================================
-   Toggle
-   ========================================================================== */
 export function ToggleHero() {
   const [toggled, setToggled] = useState(true);
   return (
@@ -252,9 +255,6 @@ export function ToggleControlledDemo() {
   );
 }
 
-/* ==========================================================================
-   RadioGroup
-   ========================================================================== */
 export function RadioGroupHero() {
   const [plan, setPlan] = useState('pro');
   return (
@@ -273,43 +273,58 @@ export function RadioGroupRowsDemo() {
   );
 }
 
-/* ==========================================================================
-   Select
-   ========================================================================== */
-export function SelectHero() {
-  const [tz, setTz] = useState('nyc');
+export function SelectPlayground() {
+  const [size, setSize] = useState<FieldSize>('md');
+  const [searchable, setSearchable] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [invalid, setInvalid] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [tz, setTz] = useState<string | null>('nyc');
+
+  const code = `<Select
+  ariaLabel="Timezone"
+  options={TIMEZONES}
+  value={tz}
+  onChange={setTz}
+  size="${size}"
+  searchable={${searchable}}
+  loading={${loading}}
+  invalid={${invalid}}
+  disabled={${disabled}}
+/>`;
+
   return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <Select
-        ariaLabel="Timezone"
-        placeholder="Choose timezone"
-        value={tz}
-        onChange={setTz}
-        options={TIMEZONES}
-        searchable
-      />
-    </div>
+    <Playground
+      code={code}
+      note="Committing an option closes the menu and returns focus to the trigger."
+      rail={
+        <>
+          <KnobSegment label="size" value={size} onChange={setSize} options={['sm', 'md', 'lg']} />
+          <KnobSwitch label="searchable" checked={searchable} onChange={setSearchable} />
+          <KnobSwitch label="loading" checked={loading} onChange={setLoading} />
+          <KnobSwitch label="invalid" checked={invalid} onChange={setInvalid} />
+          <KnobSwitch label="disabled" checked={disabled} onChange={setDisabled} />
+        </>
+      }
+    >
+      <div style={{ width: '100%', maxWidth: W }}>
+        <Select
+          ariaLabel="Timezone"
+          placeholder="Choose timezone"
+          value={tz}
+          onChange={(v) => setTz(v)}
+          options={TIMEZONES}
+          size={size}
+          searchable={searchable}
+          loading={loading}
+          invalid={invalid}
+          disabled={disabled}
+        />
+      </div>
+    </Playground>
   );
 }
 
-export function SelectOptionsDemo() {
-  const [val, setVal] = useState('');
-  return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <Select
-        ariaLabel="Publishing channel"
-        placeholder="Select destination"
-        value={val}
-        onChange={setVal}
-        options={CHANNELS}
-      />
-    </div>
-  );
-}
-
-/* ==========================================================================
-   MultiSelect
-   ========================================================================== */
 export function MultiSelectHero() {
   const [channels, setChannels] = useState(['tw', 'li']);
   return (

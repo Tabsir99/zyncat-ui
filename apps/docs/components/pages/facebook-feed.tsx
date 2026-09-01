@@ -2,40 +2,16 @@
 
 import { useState, type CSSProperties } from 'react';
 
-import { Button } from '@zyncat/ui/button';
-import { FacebookFeed, type FacebookFeedAction } from '@zyncat/ui/facebook-feed';
+import {
+  FacebookFeed,
+  type FacebookMediaType,
+  type FacebookPostWidth,
+  type FacebookRatio,
+  type FacebookReelStage,
+  type FacebookSurface,
+} from '@zyncat/ui/facebook-feed';
 
-const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-5)', flexDirection: 'column' };
-const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-5)', alignItems: 'flex-start', flexWrap: 'wrap' };
-const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
-const LABELLED: CSSProperties = { display: 'grid', gap: 'var(--space-2)', justifyItems: 'start' };
-const LOG: CSSProperties = { font: 'var(--type-mono)', color: 'var(--text-subtle)', minHeight: 'var(--space-5)' };
-
-const CANVAS: CSSProperties = {
-  padding: 'var(--space-5)',
-  background: 'var(--bg-app)',
-  borderRadius: 'var(--radius-lg)',
-};
-
-const NARROW_REEL_SCALE = 0.4;
-const WIDE_REEL_SCALE = 0.34;
-const STORY_SCALE = 0.44;
-
-const NARROW_REEL_BOX: CSSProperties = {
-  width: 557 * NARROW_REEL_SCALE,
-  height: 878 * NARROW_REEL_SCALE,
-  overflow: 'hidden',
-};
-const WIDE_REEL_BOX: CSSProperties = {
-  width: 1601 * WIDE_REEL_SCALE,
-  height: 886 * WIDE_REEL_SCALE,
-  overflow: 'hidden',
-};
-const STORY_BOX: CSSProperties = { width: 486 * STORY_SCALE, height: 864 * STORY_SCALE, overflow: 'hidden' };
-
-const NARROW_REEL_FIT: CSSProperties = { transform: `scale(${NARROW_REEL_SCALE})`, transformOrigin: 'top left' };
-const WIDE_REEL_FIT: CSSProperties = { transform: `scale(${WIDE_REEL_SCALE})`, transformOrigin: 'top left' };
-const STORY_FIT: CSSProperties = { transform: `scale(${STORY_SCALE})`, transformOrigin: 'top left' };
+import { FitStage, KnobSegment, KnobSwitch, Playground } from '../playground';
 
 const RIDGE: CSSProperties = {
   background:
@@ -54,247 +30,113 @@ const LONG_CAPTION =
   'the last of the cloud burned off. Bring more film than you think you need, and do not trust the forecast ' +
   'past midday. #switzerland #alps #filmphotography and a few more words so the cut actually lands.';
 
-export function FacebookPostSurfaces() {
+const POST_RATIOS: readonly FacebookRatio[] = ['4:5', '1:1', '16:9'];
+
+const STAGE_WIDTH = { 'post-mobile': 390, 'post-web': 680, 'reel-narrow': 557, 'reel-wide': 1601, story: 486 } as const;
+
+const NOTES: Record<FacebookSurface, string> = {
+  post: 'The caption sits above the media - the opposite of Instagram. A still is echoed into the blurred letterbox; a clip letterboxes to flat black.',
+  reel: 'Reels letterbox to flat black and their Follow is white, not blue. The wide stage is 1601px - open it at full size to read it.',
+  story: 'A 9:16 stage - the space behind the card is a blurred, darkened copy of the same source.',
+};
+
+const TITLES: Record<FacebookSurface, string> = {
+  post: 'Facebook - feed post',
+  reel: 'Facebook - reel',
+  story: 'Facebook - story',
+};
+
+export function FacebookPlayground() {
+  const [surface, setSurface] = useState<FacebookSurface>('post');
+  const [width, setWidth] = useState<FacebookPostWidth>('web');
+  const [stage, setStage] = useState<FacebookReelStage>('narrow');
+  const [type, setType] = useState<FacebookMediaType>('image');
+  const [ratio, setRatio] = useState<FacebookRatio>('4:5');
+  const [media, setMedia] = useState(true);
+
+  const fitWidth =
+    surface === 'post'
+      ? STAGE_WIDTH[`post-${width}`]
+      : surface === 'reel'
+        ? STAGE_WIDTH[`reel-${stage}`]
+        : STAGE_WIDTH.story;
+
+  const code = `<FacebookFeed
+  surface="${surface}"${surface === 'post' ? `\n  width="${width}"\n  type="${type}"\n  ratio="${ratio}"` : ''}${surface === 'reel' ? `\n  stage="${stage}"\n  type="video"` : ''}${surface === 'story' ? `\n  ratio="${ratio === '16:9' ? '1:1' : ratio}"` : ''}
+  name="Alpenglow Daily"
+  caption="Three days above the fog line #alps"${media ? '\n  media={photo}\n  avatar={portrait}' : ''}
+  likes={12400}
+  comments={873}
+  shares={1240}
+/>`;
+
   return (
-    <div style={COLUMN}>
-      <div style={LABELLED}>
-        <span style={CAPTION}>web 680px, no media - the CSS-only placeholder, no request is ever made</span>
-        <div style={CANVAS}>
-          <FacebookFeed surface="post" />
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>mobile 390px, square corners, node media echoed into the blurred letterbox</span>
-        <div style={CANVAS}>
-          <FacebookFeed surface="post" width="mobile" media={<div style={RIDGE} />} name="Alpenglow Daily" />
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>
-          ratio=&quot;16:9&quot;, type=&quot;video&quot; - a clip is never echoed, so the frame letterboxes to flat
-          black
-        </span>
-        <div style={CANVAS}>
-          <FacebookFeed surface="post" ratio="16:9" type="video" media={<div style={DUSK} />} stamp="2h" />
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>
-          caption over 250 characters - cut at a word boundary with See more; #tags and @mentions in link blue
-        </span>
-        <div style={CANVAS}>
+    <Playground
+      code={code}
+      stage="plate"
+      layout="under"
+      expandTitle={TITLES[surface]}
+      note={NOTES[surface]}
+      rail={
+        <>
+          <KnobSegment label="surface" value={surface} onChange={setSurface} options={['post', 'reel', 'story']} />
+          {surface === 'post' ? (
+            <>
+              <KnobSegment label="width" value={width} onChange={setWidth} options={['mobile', 'web']} />
+              <KnobSegment label="type" value={type} onChange={setType} options={['image', 'video']} />
+              <KnobSegment label="ratio" value={ratio} onChange={setRatio} options={POST_RATIOS} />
+            </>
+          ) : null}
+          {surface === 'reel' ? (
+            <KnobSegment label="stage" value={stage} onChange={setStage} options={['narrow', 'wide']} />
+          ) : null}
+          <KnobSwitch label="media" checked={media} onChange={setMedia} />
+        </>
+      }
+    >
+      <FitStage width={fitWidth}>
+        {surface === 'post' ? (
           <FacebookFeed
             surface="post"
+            width={width}
+            type={type}
+            ratio={ratio}
+            name="Alpenglow Daily"
             caption={LONG_CAPTION}
-            ratio="1:1"
+            media={media ? <div style={type === 'video' ? DUSK : RIDGE} /> : undefined}
+            avatar={media ? <div style={PORTRAIT} /> : undefined}
             likes={12400}
             comments={873}
             shares={1240}
-            media={<div style={RIDGE} />}
-            avatar={<div style={PORTRAIT} />}
           />
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>follow=false, ring=false - no blue ring, no · Follow, counts exact under 1,000</span>
-        <div style={CANVAS}>
-          <FacebookFeed surface="post" follow={false} ring={false} likes={999} comments={0} shares={4} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function FacebookReelSurfaces() {
-  return (
-    <div style={COLUMN}>
-      <div style={LABELLED}>
-        <span style={CAPTION}>narrow stage 557x878 around a 9:16 video, scaled to fit this page</span>
-        <div style={CANVAS}>
-          <div style={NARROW_REEL_BOX}>
-            <div style={NARROW_REEL_FIT}>
-              <FacebookFeed
-                surface="reel"
-                stage="narrow"
-                type="video"
-                media={<div style={DUSK} />}
-                avatar={<div style={PORTRAIT} />}
-                caption={LONG_CAPTION}
-                audio="Nils Frahm · Says"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>wide stage 1601x886 around a 16:9 video - adds the magnifier, drops the audio line</span>
-        <div style={CANVAS}>
-          <div style={WIDE_REEL_BOX}>
-            <div style={WIDE_REEL_FIT}>
-              <FacebookFeed
-                surface="reel"
-                stage="wide"
-                type="video"
-                media={<div style={RIDGE} />}
-                avatar={<div style={PORTRAIT} />}
-                caption={LONG_CAPTION}
-                verified={false}
-                likes={1400000}
-                comments={48500}
-                shares={1000}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function FacebookStorySurface() {
-  return (
-    <div style={ROW}>
-      <div style={LABELLED}>
-        <span style={CAPTION}>486x864 stage, 1:1 card, stage behind it blurred and darkened</span>
-        <div style={CANVAS}>
-          <div style={STORY_BOX}>
-            <div style={STORY_FIT}>
-              <FacebookFeed
-                surface="story"
-                ratio="1:1"
-                media={<div style={RIDGE} />}
-                avatar={<div style={PORTRAIT} />}
-                audio="Nils Frahm · Says"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style={LABELLED}>
-        <span style={CAPTION}>five segments, third one current - every earlier segment fills</span>
-        <div style={CANVAS}>
-          <div style={STORY_BOX}>
-            <div style={STORY_FIT}>
-              <FacebookFeed
-                surface="story"
-                ratio="4:5"
-                segments={5}
-                segment={2}
-                media={<div style={DUSK} />}
-                name="Alpenglow Daily"
-                stamp="4h"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function FacebookMuteControl() {
-  const [muted, setMuted] = useState(true);
-
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        The sound button is the one real control: a toggle button with aria-pressed. It owns no video - you wire it to
-        yours.
-      </span>
-      <div style={ROW}>
-        <div style={CANVAS}>
-          <div style={NARROW_REEL_BOX}>
-            <div style={NARROW_REEL_FIT}>
-              <FacebookFeed
-                surface="reel"
-                type="video"
-                muted={muted}
-                onMutedChange={setMuted}
-                media={<div style={DUSK} />}
-                avatar={<div style={PORTRAIT} />}
-              />
-            </div>
-          </div>
-        </div>
-        <div style={CANVAS}>
-          <div style={STORY_BOX}>
-            <div style={STORY_FIT}>
-              <FacebookFeed
-                surface="story"
-                ratio="1:1"
-                muted={muted}
-                onMutedChange={setMuted}
-                media={<div style={RIDGE} />}
-                avatar={<div style={PORTRAIT} />}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style={LOG}>muted: {String(muted)}</div>
-    </div>
-  );
-}
-
-export function FacebookControlled() {
-  const [liked, setLiked] = useState(false);
-  const [last, setLast] = useState<FacebookFeedAction | null>(null);
-
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Every glyph on the action bar is a real button, reachable by Tab and ringed on focus. Like is the only one that
-        carries state - the count picks it up. The rest report through onAction so you decide what they mean.
-      </span>
-      <div style={CANVAS}>
-        <FacebookFeed
-          surface="post"
-          width="mobile"
-          caption="Three days above the fog line #alps"
-          media={<div style={RIDGE} />}
-          avatar={<div style={PORTRAIT} />}
-          likes={267}
-          liked={liked}
-          onLikedChange={setLiked}
-          onAction={setLast}
-        />
-      </div>
-      <div style={ROW}>
-        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
-          liked
-        </Button>
-      </div>
-      <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
-    </div>
-  );
-}
-
-export function FacebookReducedMotion() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Nothing here animates on its own. The only transitions are the sound button&apos;s hover wash, written on
-        var(--duration-fast), which the global reduced-motion rule collapses to 1ms. Turn the OS setting on and the
-        three surfaces are pixel-identical.
-      </span>
-      <div style={ROW}>
-        <div style={CANVAS}>
-          <FacebookFeed surface="post" width="mobile" media={<div style={RIDGE} />} />
-        </div>
-        <div style={CANVAS}>
-          <div style={STORY_BOX}>
-            <div style={STORY_FIT}>
-              <FacebookFeed surface="story" ratio="1:1" media={<div style={DUSK} />} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        ) : surface === 'reel' ? (
+          <FacebookFeed
+            surface="reel"
+            stage={stage}
+            type="video"
+            name="Alpenglow Daily"
+            caption={LONG_CAPTION}
+            audio="Nils Frahm · Says"
+            media={media ? <div style={stage === 'wide' ? RIDGE : DUSK} /> : undefined}
+            avatar={media ? <div style={PORTRAIT} /> : undefined}
+            likes={1400000}
+            comments={48500}
+            shares={1000}
+          />
+        ) : (
+          <FacebookFeed
+            surface="story"
+            ratio={ratio === '16:9' ? '1:1' : ratio}
+            segments={5}
+            segment={2}
+            name="Alpenglow Daily"
+            stamp="4h"
+            audio="Nils Frahm · Says"
+            media={media ? <div style={RIDGE} /> : undefined}
+            avatar={media ? <div style={PORTRAIT} /> : undefined}
+          />
+        )}
+      </FitStage>
+    </Playground>
   );
 }

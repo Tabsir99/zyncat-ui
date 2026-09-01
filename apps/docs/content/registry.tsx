@@ -41,6 +41,7 @@ export interface Doc {
   headline?: string;
   blurb: string;
   HeroComponent?: ComponentType;
+  Playground?: ComponentType;
   heroCode?: string;
   examples?: ExampleItem[];
   props?: PropRow[];
@@ -269,25 +270,9 @@ export const GROUPS: DocGroup[] = [
         slug: 'odometer',
         label: 'Odometer',
         blurb: 'Rolling figures at display size; every digit column carries its own spring.',
-        HeroComponent: E.OdometerHero,
+        Playground: E.OdometerPlayground,
         heroCode: `import { Odometer } from '@zyncat/ui/odometer';\n\n<Odometer value={count} format={(v) => v.toLocaleString('en-US')} />`,
         examples: [
-          {
-            id: 'formatting',
-            title: 'Formatting',
-            description:
-              'format renders the value to a string - digits roll, everything else stays put as a separator.',
-            Component: E.OdometerFormatDemo,
-            code: `<Odometer value={v} />\n<Odometer value={v} format={(n) => n.toLocaleString('en-US')} />\n<Odometer value={v} format={(n) => String(n).padStart(8, '0')} />`,
-          },
-          {
-            id: 'speed',
-            title: 'Speed',
-            description:
-              'speed is sampled live on every frame, so it can track a prop while the columns are still moving.',
-            Component: E.OdometerSpeedDemo,
-            code: `<Odometer value={v} speed={0.4} />\n<Odometer value={v} />\n<Odometer value={v} speed={2} />`,
-          },
           {
             id: 'retuning',
             title: 'Retuning',
@@ -301,23 +286,9 @@ export const GROUPS: DocGroup[] = [
         slug: 'typing-lines',
         label: 'TypingLines',
         blurb: 'A line types itself, holds, deletes, and moves to the next one.',
-        HeroComponent: E.TypingLinesHero,
+        Playground: E.TypingLinesPlayground,
         heroCode: `import { TypingLines } from '@zyncat/ui/typing-lines';\n\n<TypingLines lines={['Design every state.', 'Make every motion interruptible.']} />`,
         examples: [
-          {
-            id: 'carets',
-            title: 'Carets',
-            description: 'Every caret holds solid while characters land and blinks only once the line is idle.',
-            Component: E.TypingLinesCaretsDemo,
-            code: `<TypingLines lines={lines} caret="line" />\n<TypingLines lines={lines} caret="block" />\n<TypingLines lines={lines} caret="underscore" />`,
-          },
-          {
-            id: 'word-reveal',
-            title: 'Word reveal',
-            description: 'unit="word" arrives a whole word at a time; the caret drops because nothing is pending.',
-            Component: E.TypingLinesWordDemo,
-            code: `<TypingLines unit="word" caret="none" lines={['Words arrive whole, one at a time.']} />`,
-          },
           {
             id: 'retuning',
             title: 'Retuning',
@@ -331,50 +302,16 @@ export const GROUPS: DocGroup[] = [
         slug: 'lens',
         label: 'Lens',
         blurb: 'An optical loupe over live DOM - magnified type is re-rasterised, never upscaled.',
-        HeroComponent: E.LensHero,
+        Playground: E.LensPlayground,
         heroCode: `import { Lens } from '@zyncat/ui/lens';\n\n<Lens magnification={2.6} radius={132}>\n  <TypeSpecimen />\n</Lens>`,
-        examples: [
-          {
-            id: 'optics',
-            title: 'Optics',
-            description:
-              'magnification is clamped to 1.2-6 and radius to 60-260. Two concentric copies are drawn, the outer one scaled harder, so the image crowds toward the edge the way thick glass does.',
-            Component: E.LensOpticsDemo,
-            code: `<Lens magnification={3.8} radius={172}>\n  <TypeSpecimen />\n</Lens>`,
-          },
-          {
-            id: 'chromatic',
-            title: 'Chromatic fringing',
-            description:
-              'Colour separation at the rim that strengthens with travel speed. Turn it off for a clean edge.',
-            Component: E.LensChromaticDemo,
-            code: `<Lens chromatic={false} magnification={3.4}>\n  <TypeSpecimen />\n</Lens>`,
-          },
-        ],
       },
       {
         slug: 'weight-field',
         label: 'WeightField',
         blurb: 'A display headline whose glyphs gain weight as the cursor approaches, and overshoot on the way back.',
-        HeroComponent: E.WeightFieldHero,
+        Playground: E.WeightFieldPlayground,
         heroCode: `import { WeightField } from '@zyncat/ui/weight-field';\n\n<WeightField text="Kinetic" />`,
         examples: [
-          {
-            id: 'speed',
-            title: 'Speed',
-            description:
-              'speed is sampled live on every frame, so it can change while the glyphs are still travelling.',
-            Component: E.WeightFieldSpeedDemo,
-            code: `<WeightField text="Damped" speed={0.4} />\n<WeightField text="Damped" speed={1} />\n<WeightField text="Damped" speed={2} />`,
-          },
-          {
-            id: 'splitting',
-            title: 'Splitting',
-            description:
-              'Up to 48 animated units every glyph springs on its own; past that the split falls back to one spring per word, so the node count stays bounded and no text is dropped.',
-            Component: E.WeightFieldSplitDemo,
-            code: `<WeightField text="Kinetic type" />\n<WeightField text="A headline long enough that per glyph springs would outnumber the animated unit cap" />`,
-          },
           {
             id: 'retuning',
             title: 'Retuning',
@@ -388,25 +325,9 @@ export const GROUPS: DocGroup[] = [
         slug: 'morphing-text',
         label: 'MorphingText',
         blurb: 'A word list that morphs word into word through one alpha threshold, so letterforms pool like liquid.',
-        HeroComponent: E.MorphingTextHero,
+        Playground: E.MorphingTextPlayground,
         heroCode: `import { MorphingText } from '@zyncat/ui/morphing-text';\n\n<MorphingText words={['Weight', 'Timing', 'Ease', 'Rest']} />`,
         examples: [
-          {
-            id: 'pacing',
-            title: 'Pacing',
-            description:
-              'hold is the resting time between morphs and speed scales the whole clock - both are sampled live, so pressing either mid-morph retimes the morph already in flight.',
-            Component: E.MorphingTextPacingDemo,
-            code: `<MorphingText words={words} hold={hold} speed={speed} />`,
-          },
-          {
-            id: 'phrases',
-            title: 'Phrases',
-            description:
-              'Each letter runs its own window, so the pooling has a direction; spaces stay as text nodes and never smear.',
-            Component: E.MorphingTextPhrasesDemo,
-            code: `<MorphingText words={['Design every state', 'Interrupt every motion', 'Ship the polish']} hold={2200} />`,
-          },
           {
             id: 'retuning',
             title: 'Retuning',
@@ -421,67 +342,15 @@ export const GROUPS: DocGroup[] = [
         slug: 'flow-field',
         label: 'FlowField',
         blurb: 'A canvas needle field that breathes on a noise loop and swings away from the pointer.',
-        HeroComponent: E.FlowFieldHero,
+        Playground: E.FlowFieldPlayground,
         heroCode: `import { FlowField } from '@zyncat/ui/flow-field';\n\n<FlowField spacing={26} radius={210}>\n  <Hero />\n</FlowField>`,
-        examples: [
-          {
-            id: 'density',
-            title: 'Density',
-            description:
-              'spacing is the gap between needles, clamped to 12-72 px. On a large surface the gap widens on its own so the field never draws more than 1600 needles - a 1920x1080 panel settles at a 36 px gap and 1590 needles.',
-            Component: E.FlowFieldDensityDemo,
-            code: `<FlowField spacing={14} />`,
-          },
-          {
-            id: 'reach',
-            title: 'Reach and rate',
-            description:
-              'radius is how far the pointer steers, clamped to 40-640 px; speed multiplies the simulation and is sampled live every frame. The grip takes hold in 83 ms and lets go over 400 ms, so the field never snaps back.',
-            Component: E.FlowFieldReachDemo,
-            code: `<FlowField radius={420} speed={1.8} />`,
-          },
-          {
-            id: 'palette',
-            title: 'Needle palette',
-            description:
-              'The needles are drawn from a twelve-stop ramp mixed in oklab between --flow-field-ink and --flow-field-accent; a needle picks its stop from how hard the pointer is steering it. Override a single --flow-field-ramp-N to bend the ramp.',
-            Component: E.FlowFieldPaletteDemo,
-            code: `<FlowField style={{ '--flow-field-ink': 'var(--border-strong)', '--flow-field-accent': 'var(--text-strong)' }} />`,
-          },
-        ],
       },
       {
         slug: 'confetti',
         label: 'Confetti',
         blurb: 'A canvas burst you fire yourself - paper, curls, ribbons and foil on real drag, lift and tumble.',
-        HeroComponent: E.ConfettiHero,
-        heroCode: `import { Confetti, type ConfettiHandle } from '@zyncat/ui/confetti';\n\nconst confetti = useRef<ConfettiHandle>(null);\n\n<div style={{ position: 'relative' }}>\n  <Confetti ref={confetti} />\n  <Button onClick={() => confetti.current?.fire()}>Celebrate</Button>\n</div>`,
-        examples: [
-          {
-            id: 'emitters',
-            title: 'Emitters',
-            description:
-              'sides fires two cannons in from the edges, top drops a full-width fall, corners fires up from the floor. fire() takes a per-burst override, so one instance covers all three without re-rendering.',
-            Component: E.ConfettiEmitterDemo,
-            code: `<Confetti ref={confetti} emitter="top" />\n\nconfetti.current?.fire({ emitter: 'corners' });`,
-          },
-          {
-            id: 'window',
-            title: 'Burst and taper',
-            description:
-              'duration is the seconds the emitter stays open, clamped to 0-10. Pieces leave front-loaded inside it - 69% are out by the halfway mark - so 0 reads as one shove and 2.5 as a burst that thins into a fall. Bursts coexist: firing again mid-flight adds to the field instead of restarting it.',
-            Component: E.ConfettiWindowDemo,
-            code: `confetti.current?.fire({ duration: 0, count: 220 });\nconfetti.current?.fire({ duration: 2.5, count: 300 });`,
-          },
-          {
-            id: 'papers',
-            title: 'Paper stock',
-            description:
-              'Five paper slots, each with a reverse side mixed toward --confetti-ink and a specular mixed toward --confetti-light, so every piece flashes as it turns edge-on. --confetti-weights sets how often each slot is cut.',
-            Component: E.ConfettiPaletteDemo,
-            code: `<Confetti\n  ref={confetti}\n  style={{\n    '--confetti-paper-1': 'oklch(0.82 0.13 88)',\n    '--confetti-weights': '1 0.8 0.9 1 0.3',\n    '--confetti-gloss': '78%',\n  } as CSSProperties}\n/>`,
-          },
-        ],
+        Playground: E.ConfettiPlayground,
+        heroCode: `import { Confetti, type ConfettiHandle } from '@zyncat/ui/confetti';\n\nconst confetti = useRef<ConfettiHandle>(null);\n\n<Confetti ref={confetti} field="viewport" />\n<Button onClick={() => confetti.current?.fire()}>Celebrate</Button>`,
       },
     ],
   },
@@ -494,41 +363,9 @@ export const GROUPS: DocGroup[] = [
         label: 'SupportFan',
         blurb:
           'Expressive contract. A trigger that fans its actions onto an arc, with one pointer-tracked field the whole row glides along.',
-        HeroComponent: C.SupportFanHero,
+        Playground: C.SupportFanPlayground,
         heroCode: `import { SupportFan } from '@zyncat/ui/support-fan';\n\n<SupportFan actions={actions} caption="Studio open · GMT+1" onSelect={route} />`,
         examples: [
-          {
-            id: 'layouts',
-            title: 'Layouts',
-            description:
-              'arc puts every chip the same distance from the trigger centre; dock stacks them straight and shows their meta; icon-dock runs icon-only chips sideways. The radius is derived from the chip box and the count, so the vertical pitch stays constant.',
-            Component: C.SupportFanLayoutDemo,
-            code: `<SupportFan actions={actions} layout="arc" />\n<SupportFan actions={actions} layout="dock" />\n<SupportFan actions={actions} layout="icon-dock" />`,
-          },
-          {
-            id: 'count',
-            title: 'Any number of actions',
-            description:
-              'The deck pinned five chips and five angles. Here the arc solves its own radius from the measured chip height, so two actions and seven actions both keep an even pitch. Past about seven, dock is the layout that still fits.',
-            Component: C.SupportFanCountDemo,
-            code: `<SupportFan actions={actions.slice(0, 2)} />\n<SupportFan actions={actions.slice(0, 7)} />`,
-          },
-          {
-            id: 'glide',
-            title: 'Glide',
-            description:
-              'The row is one deformable surface driven by a continuous fractional focus index, not by per-chip hover. Displacement is tanh, monotonic in the index, so the spacing only ever grows - chips cannot collide or tear a hole. glide 0 freezes the row without disabling anything else.',
-            Component: C.SupportFanGlideDemo,
-            code: `<SupportFan actions={actions} glide={0} magnify={0} />\n<SupportFan actions={actions} glide={1} />\n<SupportFan actions={actions} glide={1.8} />`,
-          },
-          {
-            id: 'bow',
-            title: 'Bow and spread',
-            description:
-              'bow lifts the focused chip off the row along the row normal; spread is the width of that gaussian. 0.6 pops a single chip out of line, 3 sweeps the whole row into a curve.',
-            Component: C.SupportFanBowDemo,
-            code: `<SupportFan actions={actions} bow={1.6} spread={0.6} />\n<SupportFan actions={actions} bow={1.6} spread={1.45} />\n<SupportFan actions={actions} bow={1.6} spread={3} />`,
-          },
           {
             id: 'keyboard',
             title: 'Keyboard',
@@ -546,28 +383,12 @@ export const GROUPS: DocGroup[] = [
             code: `<SupportFan actions={actions} open={open} onOpenChange={setOpen} onSelect={handleSelect} />`,
           },
           {
-            id: 'trigger',
-            title: 'Trigger',
-            description:
-              'live shows the availability dot while the fan is closed. triggerIcon replaces the plus glyph and still turns 135 degrees on open; label names both the trigger and the deployed menu.',
-            Component: C.SupportFanTriggerDemo,
-            code: `<SupportFan actions={actions} />\n<SupportFan actions={actions} live={false} label="Get help" triggerIcon={<Lifebuoy />} />`,
-          },
-          {
             id: 'retuning',
             title: 'Retuning',
             description:
               'Level 2 override - the scoped --support-fan-* properties are the theming contract. Surfaces, ink, accent, trigger size, caption tracking and every duration are knobs; none of them is a prop.',
             Component: C.SupportFanThemeDemo,
             code: `<SupportFan actions={actions} style={{ '--support-fan-surface': 'var(--gray-900)', '--support-fan-ink': 'var(--text-inverse)' } as CSSProperties} />\n<SupportFan actions={actions} style={{ '--support-fan-open-duration': 'var(--duration-base)' } as CSSProperties} />`,
-          },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description:
-              'The engine loop calls snap() once and never starts, so the pointer field settles instead of running; the slot transitions collapse with the global duration tokens. Every chip stays at its resting place and the caption still names what the pointer or the keyboard is on.',
-            Component: C.SupportFanReducedMotionDemo,
-            code: `<SupportFan actions={actions} caption="Studio open · GMT+1" />`,
           },
         ],
       },
@@ -576,56 +397,9 @@ export const GROUPS: DocGroup[] = [
         label: 'SupportRail',
         blurb:
           'Expressive contract. An edge tab that grows a support panel out of its own measured box, and folds back into it.',
-        HeroComponent: C.SupportRailHero,
+        Playground: C.SupportRailPlayground,
         heroCode: `import { SupportRail } from '@zyncat/ui/support-rail';\n\n<SupportRail actions={actions} status="Open · closes 20:00" live onSelect={route} />`,
         examples: [
-          {
-            id: 'sides',
-            title: 'Either edge',
-            description:
-              'side flips the needle radius, the collapse origin, the panel border, the grabber edge, the row hover nudge, the vertical label and the drag direction. It is a real axis, not a mirrored stylesheet.',
-            Component: C.SupportRailSidesDemo,
-            code: `<SupportRail actions={actions} side="right" />\n<SupportRail actions={actions} side="left" needleLabel="Aide" />`,
-          },
-          {
-            id: 'content',
-            title: 'Rows, children and footer',
-            description:
-              'actions renders the rows. Selecting one fires onSelect and leaves the rail open - what happens next is the app’s, and it renders through children. footer pins a strip to the bottom. Rows with no icon, meta or description still line up.',
-            Component: C.SupportRailSelectDemo,
-            code: `<SupportRail actions={actions} onSelect={route} footer={<Shift />}>\n  {picked ? <Thread id={picked} /> : null}\n</SupportRail>`,
-          },
-          {
-            id: 'minimal',
-            title: 'Minimal',
-            description: 'No status, no footer, no children, and actions carrying nothing but a label.',
-            Component: C.SupportRailMinimalDemo,
-            code: `<SupportRail actions={[{ id: 'chat', label: 'Live chat' }]} title="Need a hand?" needleLabel="Help" />`,
-          },
-          {
-            id: 'collapse',
-            title: 'Measured collapse',
-            description:
-              'The panel folds into the needle’s real box, not into pinned ratios: both boxes are measured and re-measured on resize, so the fold lands exactly on the tab at any container height.',
-            Component: C.SupportRailResizeDemo,
-            code: `<SupportRail actions={actions} status="Measured collapse" defaultOpen />`,
-          },
-          {
-            id: 'drag',
-            title: 'Drag to dismiss',
-            description:
-              'Drag the grabber outward past 88px, or flick it shorter than that above 500px/s. Dragging the wrong way rubber-bands at a sixth of the travel. The drag writes a custom property and CSS composes it into translate, so the release spring is the same writer.',
-            Component: C.SupportRailDragDemo,
-            code: `<SupportRail actions={actions} defaultOpen onOpenChange={setOpen} />`,
-          },
-          {
-            id: 'controlled',
-            title: 'Controlled',
-            description:
-              'Hit the outside toggle while the panel is still collapsing and the shell reverses from wherever it is. The shell stays mounted through the whole close so the collapse always plays; only the faded-out content unmounts, chained to the exit animation rather than to a timer.',
-            Component: C.SupportRailControlledDemo,
-            code: `<SupportRail actions={actions} open={open} onOpenChange={setOpen} />`,
-          },
           {
             id: 'retuning',
             title: 'Retuning',
@@ -633,14 +407,6 @@ export const GROUPS: DocGroup[] = [
               'Level 2 override - the scoped --support-rail-* properties are the theming contract. Row padding is one of them, which is why there is no density prop: the knob reaches any value, an enum reached two.',
             Component: C.SupportRailThemeDemo,
             code: `<SupportRail actions={actions} style={{ '--support-rail-width': '272px', '--support-rail-row-pad-block': 'var(--space-2)' } as CSSProperties} />`,
-          },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description:
-              'Every duration knob is a calc() of a --duration-* token, so the whole choreography collapses under one frame. The live halo opts out on its own: a 2.6x expansion repeating forever is the class of motion the setting exists to stop, so it becomes a static ring and the status survives in colour and shape.',
-            Component: C.SupportRailReducedMotionDemo,
-            code: `<SupportRail actions={actions} live style={{ '--support-rail-open-duration': '0ms' } as CSSProperties} />`,
           },
         ],
       },
@@ -655,49 +421,9 @@ export const GROUPS: DocGroup[] = [
         label: 'InstagramFeed',
         blurb:
           'Replica. An Instagram post, image or video, at both column widths. Fidelity is the contract - no theming knobs.',
-        HeroComponent: IG.InstagramFeedHero,
+        Playground: IG.InstagramPlayground,
         heroCode: `import { InstagramFeed } from '@zyncat/ui/instagram-feed';\n\n<InstagramFeed handle="studio.zyncat" caption="Shot on the roof." media={<img src={photo} alt="" />} likes={2600} />`,
         examples: [
-          {
-            id: 'types',
-            title: 'The two post types are structurally different',
-            description:
-              'An image post has a white header strip above the photo with dark text and Follow as a grey pill. A video post runs the black frame full-bleed from the top of the card and puts the header on it in white, and Follow loses its pill. One data-type attribute flips it: the header goes absolute and sets color, and every descendant reads inherit or currentColor - including the menu pips - so one property carries the whole switch.',
-            Component: IG.InstagramFeedTypes,
-            code: `<InstagramFeed type="image" handle="studio.zyncat" media={photo} />\n<InstagramFeed type="video" handle="studio.zyncat" audio="Nils Frahm · Says" media={clip} />`,
-          },
-          {
-            id: 'widths',
-            title: 'Mobile and web',
-            description:
-              'A real behavioural axis, not a max-width: the web column adds the Follow action in the header and mobile does not.',
-            Component: IG.InstagramFeedWidths,
-            code: `<InstagramFeed width="mobile" handle="studio.zyncat" />\n<InstagramFeed width="web" handle="studio.zyncat" />`,
-          },
-          {
-            id: 'ratios',
-            title: 'Media ratios',
-            description:
-              '4:5 is the platform default; 1:1 is the square crop. Video letterboxes to black inside either.',
-            Component: IG.InstagramFeedRatios,
-            code: `<InstagramFeed ratio="4:5" media={photo} />\n<InstagramFeed ratio="1:1" media={photo} />`,
-          },
-          {
-            id: 'caption',
-            title: 'Caption, hashtags and mentions',
-            description:
-              'Hashtags and mentions render in link blue. The caption clips to one line with a "more" affordance, and counts sit inline beside each glyph - there is no separate likes line and no "View all N comments" line.',
-            Component: IG.InstagramFeedCaption,
-            code: `<InstagramFeed caption="Golden hour on the roof #goldenhour with @mara" likes={760400} comments={1280} />`,
-          },
-          {
-            id: 'placeholder',
-            title: 'No media supplied',
-            description:
-              'The replica reproduces the chrome; the content is yours. With no media prop it renders a CSS-only placeholder and makes no network request - the component never fetches anything.',
-            Component: IG.InstagramFeedPlaceholder,
-            code: `<InstagramFeed handle="studio.zyncat" />`,
-          },
           {
             id: 'controlled',
             title: 'Controlled interaction',
@@ -706,140 +432,29 @@ export const GROUPS: DocGroup[] = [
             Component: IG.InstagramFeedControlled,
             code: `<InstagramFeed liked={liked} onLikedChange={setLiked} saved={saved} onSavedChange={setSaved} onAction={track} />`,
           },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description:
-              'The only motion is a token-timed press transition, so it collapses to 1ms globally and the surface is otherwise pixel-identical.',
-            Component: IG.InstagramFeedReducedMotion,
-            code: `<InstagramFeed handle="studio.zyncat" media={photo} />`,
-          },
         ],
       },
       {
         slug: 'facebook-feed',
         label: 'FacebookFeed',
         blurb: 'Replica. Three Facebook surfaces - feed post, reel and story - behind one surface prop.',
-        HeroComponent: FB.FacebookPostSurfaces,
+        Playground: FB.FacebookPlayground,
         heroCode: `import { FacebookFeed } from '@zyncat/ui/facebook-feed';\n\n<FacebookFeed surface="post" name="Zyncat Studio" caption="New build is live." media={photo} likes={1240} />`,
-        examples: [
-          {
-            id: 'post',
-            title: 'Feed post',
-            description:
-              'Mobile 390px and web 680px cards. The caption sits above the media - the opposite of Instagram. The action row is 42px with no divider above it, counts inline 9px from their 20px glyph, and the reaction pills right-aligned with a 1.5px white ring and a -5px overlap. Counts stay exact below 1,000.',
-            Component: FB.FacebookPostSurfaces,
-            code: `<FacebookFeed surface="post" width="mobile" name="Zyncat Studio" media={photo} />\n<FacebookFeed surface="post" width="web" name="Zyncat Studio" media={photo} />`,
-          },
-          {
-            id: 'reel',
-            title: 'Reels',
-            description:
-              'Narrow 557x878 with a 9:16 video and wide 1601x886 with a 16:9 one, sharing one bottom-anchored rail on a 65px pitch. Reels letterbox to flat black - no blurred backdrop - and their Follow is white, not blue.',
-            Component: FB.FacebookReelSurfaces,
-            code: `<FacebookFeed surface="reel" stage="narrow" name="Zyncat Studio" audio="Nils Frahm · Says" media={clip} />\n<FacebookFeed surface="reel" stage="wide" name="Zyncat Studio" media={clip} />`,
-          },
-          {
-            id: 'story',
-            title: 'Story',
-            description:
-              'A 486x864 9:16 stage. Two 4px segments at the top, the header at (14,28), and the whole stage behind the card filled with a blurred, heavily darkened copy of the same source.',
-            Component: FB.FacebookStorySurface,
-            code: `<FacebookFeed surface="story" name="Zyncat Studio" audio="Nils Frahm · Says" media={photo} />`,
-          },
-          {
-            id: 'letterbox',
-            title: 'Three letterbox treatments',
-            description:
-              'The feed fills the bars with a blurred, saturated copy of the same frame; reels go flat black; the story blurs and darkens the whole stage. They are three different treatments, not one with a knob - the blurred backdrop is suppressed only for node video, where duplicating it would mean a second network request.',
-            Component: FB.FacebookMuteControl,
-            code: `<FacebookFeed surface="post" ratio="16:9" media={photo} />\n<FacebookFeed surface="reel" media={clip} />`,
-          },
-          {
-            id: 'controlled',
-            title: 'Controlled interaction',
-            description:
-              'Every action glyph is a real button with a focus ring and a keyboard path, matching InstagramFeed. liked is a controlled triple and the reaction count adds it; comment, share, follow, menu, dismiss, more, search and play carry no state and report through onAction.',
-            Component: FB.FacebookControlled,
-            code: `<FacebookFeed surface="post" liked={liked} onLikedChange={setLiked} onAction={track} />`,
-          },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description:
-              'Motion is two CSS hover transitions on --duration-fast, which the global token collapses to 1ms. A reduced-motion user sees pixel-identical surfaces.',
-            Component: FB.FacebookReducedMotion,
-            code: `<FacebookFeed surface="post" name="Zyncat Studio" media={photo} />`,
-          },
-        ],
       },
       {
         slug: 'tiktok',
         label: 'TikTok',
         blurb: 'Replica. The TikTok post surface, desktop and mobile, with the photo carousel.',
-        HeroComponent: TT.TikTokDesktopHero,
+        Playground: TT.TikTokPlayground,
         heroCode: `import { TikTok } from '@zyncat/ui/tiktok';\n\n<TikTok surface="desktop" name="zyncat.studio" caption="Build log 04" media={clip} likes={187000} />`,
         examples: [
-          {
-            id: 'desktop',
-            title: 'Desktop',
-            description:
-              'The rail runs on a 78px pitch - 48px puck, 6px gap, 14px count, 10px - and sits flush to the stage floor, because the rail height and the video height sum to it exactly. Ratios from 3:2 through 9:16 reflow the stage.',
-            Component: TT.TikTokDesktopRatioDemo,
-            code: `<TikTok surface="desktop" ratio="16:9" media={clip} />\n<TikTok surface="desktop" ratio="9:16" media={clip} />`,
-          },
-          {
-            id: 'carousel',
-            title: 'Photo carousel',
-            description:
-              'slides pages a photo strip. Paging has a destination, so it runs through the engine, never the loop primitive - JS is the sole writer of translate on the track and the stylesheet has no transition at all. Arrows page it, and the strip carries a real role and an accessible name.',
-            Component: TT.TikTokCarouselDemo,
-            code: `<TikTok surface="desktop" slides={photos} slide={index} onSlideChange={setIndex} />`,
-          },
-          {
-            id: 'single',
-            title: 'A single slide',
-            description: 'With one slide the chevrons and the counter drop out rather than rendering as dead controls.',
-            Component: TT.TikTokSingleSlideDemo,
-            code: `<TikTok surface="desktop" slides={[photo]} />`,
-          },
-          {
-            id: 'mobile',
-            title: 'Mobile',
-            description:
-              'A different rail on a 65px pitch, a 44px avatar, and the sound line under the caption. Measured off the reference captures, not off the deck, which was wrong in nine places.',
-            Component: TT.TikTokMobileRatioDemo,
-            code: `<TikTok surface="mobile" name="zyncat.studio" music="original sound" media={clip} />`,
-          },
-          {
-            id: 'mute',
-            title: 'Sound',
-            description:
-              'The mute control is a real button with a keyboard path; it is one of the few glyphs that can act.',
-            Component: TT.TikTokMuteDemo,
-            code: `<TikTok surface="desktop" muted={muted} onMutedChange={setMuted} media={clip} />`,
-          },
           {
             id: 'controlled',
             title: 'Controlled interaction',
             description:
-              'The rail is real buttons, not decorated spans. liked, saved and followed are controlled triples and the counts add yours; comment, share, menu and search carry no state and report through onAction.',
+              'The rail is real buttons, not decorated spans. liked, saved and followed are controlled triples and the counts add yours; comment, share, menu and search carry no state and report through onAction. Tap the heart or the bookmark on the rail.',
             Component: TT.TikTokControlledDemo,
             code: `<TikTok surface="desktop" liked={liked} onLikedChange={setLiked} saved={saved} onSavedChange={setSaved} onAction={track} />`,
-          },
-          {
-            id: 'placeholder',
-            title: 'No media supplied',
-            description: 'A CSS-only placeholder. The component never makes a network request.',
-            Component: TT.TikTokPlaceholderDemo,
-            code: `<TikTok surface="desktop" name="zyncat.studio" />`,
-          },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description: 'The carousel still pages to the right slide; it just arrives there without travelling.',
-            Component: TT.TikTokReducedMotionDemo,
-            code: `<TikTok surface="desktop" slides={photos} />`,
           },
         ],
       },
@@ -847,71 +462,8 @@ export const GROUPS: DocGroup[] = [
         slug: 'youtube',
         label: 'YouTube',
         blurb: 'Replica. Three YouTube surfaces - feed card, Short and community post - behind one surface prop.',
-        HeroComponent: YT.YouTubeVideoHero,
+        Playground: YT.YouTubePlayground,
         heroCode: `import { YouTube } from '@zyncat/ui/youtube';\n\n<YouTube surface="video" title="Building a design system from zero" channel="Zyncat" views="184K views" age="3 weeks ago" duration="14:22" media={photo} />`,
-        examples: [
-          {
-            id: 'video',
-            title: 'Feed card',
-            description:
-              'The duration badge scrim is rgba(0,0,0,.6), measured off the capture rather than taken from the deck: white thumbnail pixels under the badge read exactly (102,102,102). Thumbnail radius is 8px, and the gutter is 12px.',
-            Component: YT.YouTubeVideoPlaceholderDemo,
-            code: `<YouTube surface="video" title="Building a design system" channel="Zyncat" views="184K views" age="3 weeks ago" duration="14:22" verified />`,
-          },
-          {
-            id: 'short',
-            title: 'Shorts',
-            description:
-              'progress and paused are props, so the bar position is consumer state, not something animated on a timer. The bar is a CSS width transition off a channel property; under reduced motion it still shows the right position, it just does not travel there.',
-            Component: YT.YouTubeShortDemo,
-            code: `<YouTube surface="short" channel="@zyncat" title="One token, nine surfaces" progress={64} paused />`,
-          },
-          {
-            id: 'short-uncontrolled',
-            title: 'Shorts, uncontrolled',
-            description: 'Leave progress and paused off and the surface manages its own pair.',
-            Component: YT.YouTubeShortUncontrolledDemo,
-            code: `<YouTube surface="short" channel="@zyncat" title="One token, nine surfaces" media={clip} />`,
-          },
-          {
-            id: 'controlled',
-            title: 'Controlled interaction',
-            description:
-              'The Shorts rail and the community post share one pair of controlled triples, liked and disliked, and the like count adds yours. Comment, share, remix, menu and expand carry no state and report through onAction.',
-            Component: YT.YouTubeControlledDemo,
-            code: `<YouTube surface="short" liked={liked} onLikedChange={setLiked} disliked={disliked} onDislikedChange={setDisliked} onAction={track} />`,
-          },
-          {
-            id: 'post-carousel',
-            title: 'Community post',
-            description:
-              'carousel takes an array rather than the deck’s boolean - a boolean carousel has nothing to page, and the boolean is subsumed by length > 1. Paging is a CSS translate off a page channel, with startDrag writing a separate drag channel while data-dragging suspends the transition. One writer per property.',
-            Component: YT.YouTubePostCarouselDemo,
-            code: `<YouTube surface="post" channel="Zyncat" age="9 days ago" text="Three surfaces, one component." carousel={photos} page={page} onPageChange={setPage} />`,
-          },
-          {
-            id: 'post-single',
-            title: 'Community post, one image',
-            description: 'With one entry the pager drops out.',
-            Component: YT.YouTubePostSingleDemo,
-            code: `<YouTube surface="post" channel="Zyncat" age="9 days ago" text="A single frame post." media={photo} />`,
-          },
-          {
-            id: 'counts',
-            title: 'Counts',
-            description:
-              'Counts abbreviate the way the platform does, and the accessible name carries the un-abbreviated number.',
-            Component: YT.YouTubeCountsDemo,
-            code: `<YouTube surface="short" likes={187000} comments={1280} remixes={412} />`,
-          },
-          {
-            id: 'reduced-motion',
-            title: 'Reduced motion',
-            description: 'Both channels collapse to 1ms and still land on the correct position.',
-            Component: YT.YouTubeReducedMotionDemo,
-            code: `<YouTube surface="post" carousel={photos} />`,
-          },
-        ],
       },
     ],
   },
@@ -923,29 +475,16 @@ export const GROUPS: DocGroup[] = [
         slug: 'text-field',
         label: 'TextField',
         blurb: 'The base text input - states disclose via Collapse, never jump.',
-        HeroComponent: F.TextFieldHero,
+        Playground: F.TextFieldPlayground,
         heroCode: `import { TextField } from '@zyncat/ui/text-field';\n\n<TextField label="Search projects" leadingIcon={<SearchIcon />} clearable />`,
         examples: [
           {
-            id: 'label-and-helper',
-            title: 'Label & Helper',
-            description: 'Label, placeholder, required indicator, and helper text.',
-            Component: F.TextFieldLabelDemo,
-            code: `<TextField label="Workspace name" required helper="Visible to team." />`,
-          },
-          {
             id: 'validation-states',
             title: 'Validation States',
-            description: 'Error, warning, and success messages animate into view via Collapse.',
+            description:
+              'Type in the username field - the error appears and clears via Collapse, never jumping the layout.',
             Component: F.TextFieldValidationDemo,
             code: `<TextField label="Username" error="Must be at least 4 characters." />\n<TextField label="Handle" success="Available." />`,
-          },
-          {
-            id: 'sizes',
-            title: 'Sizes',
-            description: 'Standard input sizes: sm (28px), md (36px), lg (40px).',
-            Component: F.TextFieldSizesDemo,
-            code: `<TextField size="sm" placeholder="Small" />\n<TextField size="md" placeholder="Medium" />\n<TextField size="lg" placeholder="Large" />`,
           },
         ],
       },
@@ -1049,17 +588,8 @@ export const GROUPS: DocGroup[] = [
         slug: 'select',
         label: 'Select',
         blurb: 'Custom single-select listbox - committing closes and returns focus.',
-        HeroComponent: F.SelectHero,
+        Playground: F.SelectPlayground,
         heroCode: `import { Select } from '@zyncat/ui/select';\n\n<Select ariaLabel="Timezone" value={tz} onChange={setTz} options={TIMEZONES} searchable />`,
-        examples: [
-          {
-            id: 'options-and-channels',
-            title: 'Channel Selection',
-            description: 'Listbox with icons and smooth keyboard active descendant.',
-            Component: F.SelectOptionsDemo,
-            code: `<Select ariaLabel="Destination" options={CHANNELS} />`,
-          },
-        ],
       },
       {
         slug: 'multi-select',
@@ -1125,9 +655,8 @@ export const GROUPS: DocGroup[] = [
         slug: 'table',
         label: 'Table',
         blurb: 'Declare columns + rows; it owns sort, selection, stickiness, overflow.',
-        HeroComponent: D.TableHero,
-        heroCode: `import { Table } from '@zyncat/ui/table';\n\n<Table data={rows} columns={columns} keyField="id" selectable />`,
-        examples: [],
+        Playground: D.TablePlayground,
+        heroCode: `import { Table } from '@zyncat/ui/table';\n\n<Table rows={rows} columns={columns} rowKey="id" selectable />`,
       },
       {
         slug: 'pagination',
@@ -1163,9 +692,8 @@ export const GROUPS: DocGroup[] = [
         slug: 'datetime-field',
         label: 'DateTimeField',
         blurb: "Calendar plus the segmented HH:MM machine; value is 'YYYY-MM-DDTHH:mm'.",
-        HeroComponent: T.DateTimeFieldHero,
+        Playground: T.DateTimeFieldPlayground,
         heroCode: `import { DateTimeField } from '@zyncat/ui/datetime-field';\n\n<DateTimeField label="Publish timestamp" value={datetime} onChange={setDatetime} />`,
-        examples: [],
       },
       {
         slug: 'date-range',
@@ -1225,25 +753,22 @@ export const GROUPS: DocGroup[] = [
         slug: 'tooltip',
         label: 'Tooltip',
         blurb: 'Transient hint on hover/focus. One bubble travels between triggers.',
-        HeroComponent: O.TooltipHero,
+        Playground: O.TooltipPlayground,
         heroCode: `import { Tooltip } from '@zyncat/ui/tooltip';\n\n<Tooltip content="Schedule post to queue" shortcut="⌘S">\n  <Button variant="secondary">Schedule</Button>\n</Tooltip>`,
-        examples: [],
       },
       {
         slug: 'dialog',
         label: 'Dialog',
         blurb: 'Styled modal over the headless overlay - scrim, focus trap, scroll lock.',
-        HeroComponent: O.DialogHero,
+        Playground: O.DialogPlayground,
         heroCode: `import { Dialog } from '@zyncat/ui/dialog';\n\n<Dialog trigger={<Button variant="danger">Delete project</Button>} title="Delete project permanently?" tone="danger">\n  This action cannot be undone.\n</Dialog>`,
-        examples: [],
       },
       {
         slug: 'popover',
         label: 'Popover',
         blurb: 'Headless anchored panel, non-modal - flips and clamps to the viewport. The render-prop gets { close }.',
-        HeroComponent: O.PopoverHero,
+        Playground: O.PopoverPlayground,
         heroCode: `import { Popover } from '@zyncat/ui/popover';\n\n<Popover trigger={<Button variant="secondary">More actions</Button>} side="bottom" align="start">\n  <menu>...</menu>\n</Popover>`,
-        examples: [],
       },
       {
         slug: 'dropdown',
@@ -1257,9 +782,8 @@ export const GROUPS: DocGroup[] = [
         slug: 'sheet',
         label: 'Sheet',
         blurb: 'Modal panel docked to an edge - drag-to-dismiss, coupled scrim, scroll handoff.',
-        HeroComponent: O.SheetHero,
+        Playground: O.SheetPlayground,
         heroCode: `import { Sheet } from '@zyncat/ui/sheet';\n\n<Sheet side="right" open={open} onOpenChange={setOpen}>\n  <div>Panel content</div>\n</Sheet>`,
-        examples: [],
       },
       {
         slug: 'emoji-picker',

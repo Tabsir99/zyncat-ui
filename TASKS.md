@@ -83,7 +83,7 @@ make it comfortable.
 
 - [ ] Done & reviewed
 
-## Task 5 — Examples reimagined (big one)
+## Task 5 — Examples reimagined (big one) (IN PROGRESS)
 
 Brief: some components are not properly exampled — little thought went into their effect.
 Confetti renders in a tiny space where it looks bad and makes no sense (confetti is page-wide
@@ -94,8 +94,47 @@ no reason. Make the actual props editable via inputs so the user sees the full b
 interacting; keep things short otherwise. Small components like Button just render directly.
 Be sensible about what makes a good reading UX per page.
 
-- [ ] Audit every component page: which need page-scale demos, which need prop playgrounds, which render directly
-- [ ] Page-scale / full-page demo surface for the components that need room (Confetti, Lens, …)
-- [ ] Editable props via inputs on the pages where interaction shows the behavior
-- [ ] Cut the pointless long scrolls
+- [x] Audit every component page. Three classes: page-scale demos (Confetti, Lens, FlowField,
+      the four replicas, the two compounds), prop playgrounds (those plus the overlays, Select,
+      TextField, Table, DateTimeField), direct renders kept as-is (Button, Icon, Badge tier,
+      Collapse, the small form fields, Avatar, Tag, Pagination, Toast, Dropdown, EmojiPicker)
+- [x] Playground kit (`apps/docs/components/playground.tsx`): stage + knob rail built from the
+      library's own Select/Toggle/TextField, live-generated Code tab, replay; `FitStage` scales
+      the oversized replicas (TikTok 1584px at 0.44) into the column with no horizontal scroll
+- [x] Page-scale surfaces: Confetti playground defaults to `field="viewport"` — the burst rains
+      over the whole docs page; Lens magnifies a full-width broadsheet specimen (9px small print,
+      engraving); FlowField runs a 26rem hero band; fan/rail keep their 26rem frames
+- [x] Confetti `field="viewport"` was broken under any transformed ancestor (the canvas stayed
+      stage-sized — measured 746x411 instead of the window): viewport mode now portals the canvas
+      to the body like every other viewport surface in the system
+- [x] Editable props via inputs on 21 pages; knobs drive the real component live and the Code tab
+      reflects the current values
+- [x] Long scrolls cut: support-fan 9 examples → playground + 3, support-rail 8 → playground + 1,
+      tiktok 8 → playground + 1, youtube 8 → playground only, facebook 6 → playground only,
+      instagram 7 → playground + 1; expressive pages keep only the Retuning examples
+- [x] Verified in Chrome over CDP: all 21 playground pages mount clean (no console errors, no
+      horizontal overflow, ToC leads with Playground), dialog opens from its knobs, the fan
+      re-targets on a live layout switch, viewport confetti canvas measures 1440x900 on body
+
+Review round 2 - "desktop replicas look so small" + Facebook alignment:
+
+- [x] Full-size view: the playground's stage and knob rail open in a viewport-filling `Modal`
+      (Esc, focus trap, scroll lock, inert all come from the library). Measured at 1440x900:
+      TikTok desktop 0.44 -> 0.76, Facebook reel-wide 0.44 -> 0.78, YouTube short 0.63 -> 0.82.
+      On a 1920 monitor the wide surfaces land at 1:1
+- [x] `FitStage` fits height as well as width inside that view, centres its inner box at every
+      scale, and skips the re-render when the measurement is unchanged
+- [x] YouTube joins FitStage: the 1106px Shorts watch page was overflowing the 746px column and
+      being cropped by the card's `overflow: clip` - left title and right rail both cut off
+- [x] The stage note moved out of the stage: a caption strip under it carries the note on the
+      left and the Full size control on the right. It was painting over the replica's own
+      bottom edge on the bare stages
+- [x] Full size on the four replicas plus Lens (the broadsheet at full width) and FlowField
+      (the field fills the viewport); the in-flow stage holds its height and says where it went
+- [x] Facebook icon/metric alignment: `.facebook-feed-button` had no display, so an inline SVG
+      picked up the line box's descender - the glyph sat 2.5px above its count in the post
+      action bar, the dismiss X 3px above the kebab, the story close 2.5px above the mute chip,
+      and the reel rail's declared 4px icon-to-count gap rendered as 10px. The button is now
+      `inline-flex` centred, so the box hugs the glyph. Measured level in Chrome after
+- [x] Surveyed TikTok, YouTube and Instagram for the same strut defect - none of them have it
 - [ ] Done & reviewed

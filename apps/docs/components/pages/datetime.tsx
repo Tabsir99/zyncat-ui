@@ -4,15 +4,14 @@ import { useState } from 'react';
 
 import { DateField } from '@zyncat/ui/date-field';
 import { DateRangeField } from '@zyncat/ui/date-range-field';
-import { DateTimeField } from '@zyncat/ui/datetime-field';
-import { Tabs } from '@zyncat/ui/tabs';
+import { DateTimeField, type DateTimeFieldProps } from '@zyncat/ui/datetime-field';
+import { TabPanel, Tabs } from '@zyncat/ui/tabs';
 import { TimeField } from '@zyncat/ui/time-field';
+
+import { KnobSegment, Playground } from '../playground';
 
 const W = 320;
 
-/* ==========================================================================
-   DateField
-   ========================================================================== */
 export function DateFieldHero() {
   const [val, setVal] = useState<string | null>('2026-08-21');
   return (
@@ -38,21 +37,46 @@ export function DateFieldBoundsDemo() {
   );
 }
 
-/* ==========================================================================
-   DateTimeField
-   ========================================================================== */
-export function DateTimeFieldHero() {
+type TimeFormat = NonNullable<DateTimeFieldProps['format']>;
+type MinuteStep = '1' | '5' | '15';
+
+export function DateTimeFieldPlayground() {
   const [val, setVal] = useState<string | null>('2026-08-21T14:30');
+  const [format, setFormat] = useState<TimeFormat>('24h');
+  const [minuteStep, setMinuteStep] = useState<MinuteStep>('5');
+
+  const code = `<DateTimeField
+  label="Publish timestamp"
+  format="${format}"
+  minuteStep={${minuteStep}}
+  value={value}
+  onChange={setValue}
+/>`;
+
   return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <DateTimeField label="Publish timestamp" value={val} onChange={setVal} />
-    </div>
+    <Playground
+      code={code}
+      note="Type into the segments or spin them with the arrow keys - the calendar and the clock commit live."
+      rail={
+        <>
+          <KnobSegment label="format" value={format} onChange={setFormat} options={['24h', '12h']} />
+          <KnobSegment label="minute step" value={minuteStep} onChange={setMinuteStep} options={['1', '5', '15']} />
+        </>
+      }
+    >
+      <div style={{ width: '100%', maxWidth: W }}>
+        <DateTimeField
+          label="Publish timestamp"
+          format={format}
+          minuteStep={Number(minuteStep)}
+          value={val}
+          onChange={setVal}
+        />
+      </div>
+    </Playground>
   );
 }
 
-/* ==========================================================================
-   DateRangeField
-   ========================================================================== */
 export function DateRangeFieldHero() {
   const [range, setRange] = useState<{ start: string; end: string } | null>({ start: '2026-08-10', end: '2026-08-24' });
   return (
@@ -62,9 +86,6 @@ export function DateRangeFieldHero() {
   );
 }
 
-/* ==========================================================================
-   TimeField
-   ========================================================================== */
 export function TimeFieldHero() {
   const [time, setTime] = useState<string | null>('09:00');
   return (
@@ -74,20 +95,39 @@ export function TimeFieldHero() {
   );
 }
 
-/* ==========================================================================
-   Tabs
-   ========================================================================== */
 const TAB_ITEMS = [
   { value: 'overview', label: 'Overview' },
   { value: 'activity', label: 'Activity' },
   { value: 'settings', label: 'Settings' },
 ];
 
+const TAB_COPY: Record<string, string> = {
+  overview:
+    'Panels enter from the side you moved toward - go Overview to Settings and back, and watch the direction flip.',
+  activity: '14 posts published this week across 3 channels; engagement is up 12% on the last cycle.',
+  settings: 'Workspace defaults: UTC schedule display, auto-retry on failed publishes, weekly digest on.',
+};
+
 export function TabsHero() {
   const [active, setActive] = useState('overview');
+  const [dir, setDir] = useState<1 | -1 | 0>(0);
   return (
-    <div style={{ width: '100%', maxWidth: 440 }}>
-      <Tabs items={TAB_ITEMS} value={active} onChange={setActive} />
+    <div style={{ width: '100%', maxWidth: 440, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      <Tabs
+        items={TAB_ITEMS}
+        value={active}
+        onChange={(v, d) => {
+          setActive(v);
+          setDir(d);
+        }}
+        name="tabs-hero"
+        ariaLabel="Workspace sections"
+      />
+      <TabPanel name="tabs-hero" tab={active} dir={dir}>
+        <p style={{ margin: 0, font: 'var(--type-body)', color: 'var(--text-muted)', minHeight: 'var(--space-8)' }}>
+          {TAB_COPY[active]}
+        </p>
+      </TabPanel>
     </div>
   );
 }

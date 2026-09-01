@@ -2,31 +2,9 @@
 
 import { useState, type CSSProperties } from 'react';
 
-import { Button } from '@zyncat/ui/button';
-import { YouTube, type YouTubeAction } from '@zyncat/ui/youtube';
+import { YouTube, type YouTubeSurface } from '@zyncat/ui/youtube';
 
-const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
-const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
-const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
-
-const CANVAS: CSSProperties = {
-  display: 'flex',
-  justifyContent: 'center',
-  padding: 'var(--space-5)',
-  borderRadius: 'var(--radius-lg)',
-  border: 'var(--border-hairline) solid var(--border-default)',
-  background: '#ffffff',
-  overflowX: 'auto',
-};
-
-const WIDE_CANVAS: CSSProperties = { ...CANVAS, justifyContent: 'flex-start' };
-
-const REDUCED: CSSProperties = {
-  '--duration-fast': '1ms',
-  '--duration-base': '1ms',
-  '--duration-slow': '1ms',
-  '--duration-slower': '1ms',
-} as CSSProperties;
+import { FitStage, KnobRange, KnobSegment, KnobSwitch, Playground } from '../playground';
 
 const FILL: CSSProperties = { width: '100%', height: '100%' };
 
@@ -81,229 +59,137 @@ const SHORT_TITLE = 'Which AI do I trust the most?? (Top 5 List) #carterpcs #ai'
 const POST_TEXT =
   'Unc is on a little side quest in Sardinia. More livestreams and videos coming soon. I need that robodog asap';
 
-export function YouTubeVideoHero() {
-  return (
-    <div style={CANVAS}>
-      <YouTube
-        surface="video"
-        title={VIDEO_TITLE}
-        channel="Shark Tank Global"
-        views="2m views"
-        age="1 year ago"
-        duration="34:46"
-        verified
-        media={THUMB}
-        avatar={AVATAR}
-      />
-    </div>
-  );
-}
+const WHITE_MAT: CSSProperties = { background: '#ffffff' };
 
-export function YouTubeVideoPlaceholderDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>No media, no avatar, no duration, no tick - every empty state is CSS only</span>
-      <div style={CANVAS}>
-        <YouTube
-          surface="video"
-          title="A short title"
-          channel="Unverified Channel"
-          views="812 views"
-          age="2 days ago"
-        />
-      </div>
-    </div>
-  );
-}
+const SURFACE_WIDTH: Record<YouTubeSurface, number> = { video: 533, short: 1106, post: 638 };
 
-export function YouTubeShortDemo() {
+const NOTES: Record<YouTubeSurface, string> = {
+  video: 'The feed grid card - thumbnail badge, verified tick, meta line.',
+  short:
+    'The 1106px watch page, scaled to fit this column - open it at full size for the real metrics. progress and paused are consumer state, never a timer.',
+  post: 'Drag the strip, press the arrows, or focus it and use the arrow keys.',
+};
+
+const TITLES: Record<YouTubeSurface, string> = {
+  video: 'YouTube - feed card',
+  short: 'YouTube - Shorts watch page',
+  post: 'YouTube - community post',
+};
+
+export function YouTubePlayground() {
+  const [surface, setSurface] = useState<YouTubeSurface>('video');
+  const [media, setMedia] = useState(true);
+  const [verified, setVerified] = useState(true);
   const [paused, setPaused] = useState(true);
-  const [progress, setProgress] = useState(7);
-  return (
-    <div style={COLUMN}>
-      <div style={WIDE_CANVAS}>
-        <YouTube
-          surface="short"
-          title={SHORT_TITLE}
-          channel="@actuallycarterpcs"
-          likes={187000}
-          comments={3539}
-          remixes={3}
-          paused={paused}
-          onPausedChange={setPaused}
-          progress={progress}
-          media={SHORT_MEDIA}
-          avatar={AVATAR}
-        />
-      </div>
-      <div style={ROW}>
-        <Button size="sm" variant="secondary" onClick={() => setPaused(!paused)}>
-          {paused ? 'paused' : 'playing'}
-        </Button>
-        <Button size="sm" variant="secondary" onClick={() => setProgress(0)}>
-          0%
-        </Button>
-        <Button size="sm" variant="secondary" onClick={() => setProgress(42)}>
-          42%
-        </Button>
-        <Button size="sm" variant="secondary" onClick={() => setProgress(100)}>
-          100%
-        </Button>
-        <span style={CAPTION}>progress is a prop - the bar transitions to it, it never runs on a timer</span>
-      </div>
-    </div>
-  );
-}
-
-export function YouTubeControlledDemo() {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [last, setLast] = useState<YouTubeAction | null>(null);
-
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Like and dislike are controlled triples shared by the Shorts rail and the community post - the like count picks
-        yours up. Comment, share, remix, menu and expand carry no state, so they report through onAction.
-      </span>
-      <div style={ROW}>
-        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
-          liked
-        </Button>
-        <Button size="sm" variant={disliked ? 'primary' : 'secondary'} onClick={() => setDisliked(!disliked)}>
-          disliked
-        </Button>
-        <span style={CAPTION}>last stateless action: {last ?? 'none yet'}</span>
-      </div>
-      <div style={WIDE_CANVAS}>
-        <YouTube
-          surface="short"
-          title={SHORT_TITLE}
-          channel="@actuallycarterpcs"
-          likes={187000}
-          comments={3539}
-          remixes={3}
-          media={SHORT_MEDIA}
-          avatar={AVATAR}
-          liked={liked}
-          onLikedChange={setLiked}
-          disliked={disliked}
-          onDislikedChange={setDisliked}
-          onAction={setLast}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function YouTubeShortUncontrolledDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>Uncontrolled: the play control owns its own state, the bar sits where progress says</span>
-      <div style={WIDE_CANVAS}>
-        <YouTube
-          surface="short"
-          title="No media supplied - the stage falls back to a CSS placeholder"
-          channel="@zyncat"
-          likes={2400000}
-          comments={128}
-          remixes={0}
-          progress={64}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function YouTubePostCarouselDemo() {
+  const [progress, setProgress] = useState(42);
+  const [carousel, setCarousel] = useState(true);
   const [page, setPage] = useState(0);
-  return (
-    <div style={COLUMN}>
-      <div style={CANVAS}>
-        <YouTube
-          surface="post"
-          channel="HappyCairek"
-          age="9 days ago"
-          text={POST_TEXT}
-          likes={2000}
-          comments={207}
-          carousel={SLIDES}
-          page={page}
-          onPageChange={setPage}
-          avatar={POST_AVATAR}
-        />
-      </div>
-      <div style={ROW}>
-        <span style={CAPTION}>
-          page {page + 1} of {SLIDES.length} - drag the strip, press the arrows, or focus it and use the arrow keys
-        </span>
-      </div>
-    </div>
-  );
-}
 
-export function YouTubePostSingleDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>One image: no arrows, no stack badge, no carousel role</span>
-      <div style={CANVAS}>
-        <YouTube
-          surface="post"
-          channel="HappyCairek"
-          age="9 days ago"
-          text="A single frame post."
-          likes={2000}
-          comments={207}
-          media={POST_IMAGE}
-          avatar={POST_AVATAR}
-        />
-      </div>
-    </div>
-  );
-}
+  const surfaceCode: Record<YouTubeSurface, string> = {
+    video: `<YouTube
+  surface="video"
+  title="${VIDEO_TITLE.slice(0, 42)}..."
+  channel="Shark Tank Global"
+  views="2m views"
+  age="1 year ago"
+  duration="34:46"
+  verified={${verified}}${media ? '\n  media={thumb}\n  avatar={avatar}' : ''}
+/>`,
+    short: `<YouTube
+  surface="short"
+  title="${SHORT_TITLE}"
+  channel="@actuallycarterpcs"
+  likes={187000}
+  comments={3539}
+  paused={${paused}}
+  onPausedChange={setPaused}
+  progress={${progress}}${media ? '\n  media={clip}\n  avatar={avatar}' : ''}
+/>`,
+    post: `<YouTube
+  surface="post"
+  channel="HappyCairek"
+  age="9 days ago"
+  text="${POST_TEXT.slice(0, 40)}..."
+  likes={2000}
+  comments={207}
+  ${carousel ? 'carousel={slides}\n  page={page}\n  onPageChange={setPage}' : 'media={image}'}${media ? '\n  avatar={avatar}' : ''}
+/>`,
+  };
 
-export function YouTubeCountsDemo() {
   return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>187000 renders 187k, 3539 stays 3,539, 2000 renders 2k, 207 stays 207</span>
-      <div style={WIDE_CANVAS}>
-        <YouTube
-          surface="short"
-          title={SHORT_TITLE}
-          channel="@actuallycarterpcs"
-          likes={187000}
-          comments={3539}
-          remixes={3}
-          progress={7}
-          media={SHORT_MEDIA}
-          avatar={AVATAR}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function YouTubeReducedMotionDemo() {
-  const [page, setPage] = useState(0);
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Duration tokens pinned to 1ms - the carousel and the progress bar land on the right frame with no travel
-      </span>
-      <div style={{ ...CANVAS, ...REDUCED }}>
-        <YouTube
-          surface="post"
-          channel="HappyCairek"
-          age="9 days ago"
-          text={POST_TEXT}
-          likes={2000}
-          comments={207}
-          carousel={SLIDES}
-          page={page}
-          onPageChange={setPage}
-          avatar={POST_AVATAR}
-        />
-      </div>
-    </div>
+    <Playground
+      code={surfaceCode[surface]}
+      stage="plate"
+      layout="under"
+      stageStyle={WHITE_MAT}
+      expandTitle={TITLES[surface]}
+      note={NOTES[surface]}
+      rail={
+        <>
+          <KnobSegment label="surface" value={surface} onChange={setSurface} options={['video', 'short', 'post']} />
+          {surface === 'video' ? <KnobSwitch label="verified" checked={verified} onChange={setVerified} /> : null}
+          {surface === 'short' ? (
+            <>
+              <KnobSwitch label="paused" checked={paused} onChange={setPaused} />
+              <KnobRange
+                label="progress"
+                value={progress}
+                onChange={setProgress}
+                min={0}
+                max={100}
+                step={1}
+                format={(v) => `${v}%`}
+              />
+            </>
+          ) : null}
+          {surface === 'post' ? <KnobSwitch label="carousel" checked={carousel} onChange={setCarousel} /> : null}
+          <KnobSwitch label="media" checked={media} onChange={setMedia} />
+        </>
+      }
+    >
+      <FitStage width={SURFACE_WIDTH[surface]}>
+        {surface === 'video' ? (
+          <YouTube
+            surface="video"
+            title={VIDEO_TITLE}
+            channel="Shark Tank Global"
+            views="2m views"
+            age="1 year ago"
+            duration="34:46"
+            verified={verified}
+            media={media ? THUMB : undefined}
+            avatar={media ? AVATAR : undefined}
+          />
+        ) : surface === 'short' ? (
+          <YouTube
+            surface="short"
+            title={SHORT_TITLE}
+            channel="@actuallycarterpcs"
+            likes={187000}
+            comments={3539}
+            remixes={3}
+            paused={paused}
+            onPausedChange={setPaused}
+            progress={progress}
+            media={media ? SHORT_MEDIA : undefined}
+            avatar={media ? AVATAR : undefined}
+          />
+        ) : (
+          <YouTube
+            surface="post"
+            channel="HappyCairek"
+            age="9 days ago"
+            text={POST_TEXT}
+            likes={2000}
+            comments={207}
+            carousel={carousel ? SLIDES : undefined}
+            media={carousel ? undefined : POST_IMAGE}
+            page={carousel ? page : undefined}
+            onPageChange={carousel ? setPage : undefined}
+            avatar={media ? POST_AVATAR : undefined}
+          />
+        )}
+      </FitStage>
+    </Playground>
   );
 }

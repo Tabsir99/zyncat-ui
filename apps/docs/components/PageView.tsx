@@ -16,7 +16,7 @@ import { PropsTable } from './PropsTable';
 import { TableOfContents } from './TableOfContents';
 
 export function PageView({ doc }: { doc: Doc }) {
-  const { slug, label, headline, blurb, HeroComponent, heroCode, examples, props, types } = doc;
+  const { slug, label, headline, blurb, HeroComponent, Playground, heroCode, examples, props, types } = doc;
 
   const [heroTab, setHeroTab] = useState('preview');
   const [heroDir, setHeroDir] = useState<1 | -1 | 0>(0);
@@ -104,6 +104,12 @@ export function PageView({ doc }: { doc: Doc }) {
           <div className="doc-guide-content">
             <doc.Content />
           </div>
+        ) : null}
+
+        {Playground ? (
+          <section className="playground-section" id="playground">
+            <Playground />
+          </section>
         ) : null}
 
         {HeroComponent ? (

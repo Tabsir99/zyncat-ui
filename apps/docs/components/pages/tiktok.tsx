@@ -2,22 +2,9 @@
 
 import { useState, type CSSProperties, type ReactNode } from 'react';
 
-import { Button } from '@zyncat/ui/button';
-import { TikTok, type TikTokAction, type TikTokRatio } from '@zyncat/ui/tiktok';
+import { TikTok, type TikTokRatio, type TikTokSurface } from '@zyncat/ui/tiktok';
 
-const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
-const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
-const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
-const LOG: CSSProperties = { font: 'var(--type-mono)', color: 'var(--text-subtle)', minHeight: 'var(--space-5)' };
-
-const SCROLLER: CSSProperties = {
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  borderRadius: 'var(--radius-lg)',
-  border: 'var(--border-hairline) solid var(--border-subtle)',
-};
-
-const PHONES: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'flex-start' };
+import { FitStage, KnobSegment, KnobSwitch, Playground } from '../playground';
 
 const SHOT_ONE: CSSProperties = {
   width: '100%',
@@ -33,11 +20,6 @@ const SHOT_THREE: CSSProperties = {
   width: '100%',
   height: '100%',
   background: 'linear-gradient(28deg, #ffd1e8 0%, #a45cd8 46%, #2b1b56 100%)',
-};
-const PORTRAIT: CSSProperties = {
-  width: '100%',
-  height: '100%',
-  background: 'linear-gradient(180deg, #dfe7ef 0%, #8fa3bd 38%, #35405e 100%)',
 };
 const FACE: CSSProperties = {
   width: '100%',
@@ -55,7 +37,6 @@ const SHOT_B: ReactNode = <div style={SHOT_TWO} />;
 const SHOT_C: ReactNode = <div style={SHOT_THREE} />;
 const AVATAR: ReactNode = <div style={FACE} />;
 const DISC: ReactNode = <div style={DISC_ART} />;
-const VERTICAL: ReactNode = <div style={PORTRAIT} />;
 
 const CAROUSEL_MEDIA: ReactNode = [SHOT_A, SHOT_B, SHOT_C];
 
@@ -68,341 +49,121 @@ const MOBILE_STORY = 'Tell me where I know you from,,, #ppppppppppppppppp';
 const MUSIC = 'lahfuj';
 const SOUND = 'original sound - Ahssan Mahfuj';
 
-const DESKTOP_RATIOS: TikTokRatio[] = ['3:2', '4:3', '1:1', '16:9', '9:16'];
-const MOBILE_RATIOS: TikTokRatio[] = ['4:3', '3:2', '1:1', '16:9', '3:4', '9:16'];
+const RATIOS: Record<TikTokSurface, readonly TikTokRatio[]> = {
+  desktop: ['3:2', '4:3', '1:1', '16:9', '9:16'],
+  mobile: ['4:3', '3:2', '1:1', '16:9', '3:4', '9:16'],
+};
 
-export function TikTokDesktopHero() {
-  return (
-    <div style={SCROLLER}>
-      <TikTok
-        surface="desktop"
-        ratio="3:2"
-        name={NAME}
-        location={PLACE}
-        caption={STORY}
-        media={CAROUSEL_MEDIA}
-        avatar={AVATAR}
-        sticker={DISC}
-        likes={3149}
-        comments={201}
-        saves={480}
-        shares={789}
-      />
-    </div>
-  );
-}
+const SURFACE_WIDTH: Record<TikTokSurface, number> = { desktop: 1584, mobile: 452 };
 
-export function TikTokDesktopRatioDemo() {
+export function TikTokPlayground() {
+  const [surface, setSurface] = useState<TikTokSurface>('desktop');
   const [ratio, setRatio] = useState<TikTokRatio>('3:2');
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        The frame is a fixed 959x824 platform metric. The media keeps its own ratio inside it and the letterbox is
-        filled by a blurred, saturated copy of the same slide - the platform fills the bars with the post&apos;s own
-        artwork rather than black.
-      </span>
-      <div style={ROW}>
-        {DESKTOP_RATIOS.map((option) => (
-          <Button
-            key={option}
-            size="sm"
-            variant={option === ratio ? 'primary' : 'ghost'}
-            onClick={() => setRatio(option)}
-          >
-            {option}
-          </Button>
-        ))}
-      </div>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          ratio={ratio}
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={SHOT_A}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={3149}
-          comments={201}
-          saves={480}
-          shares={789}
-        />
-      </div>
-    </div>
-  );
-}
+  const [carousel, setCarousel] = useState(true);
+  const [media, setMedia] = useState(true);
 
-export function TikTokCarouselDemo() {
-  const [slide, setSlide] = useState(1);
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Paging is a transition, not a simulation: the engine animates the track to its destination on the slow duration
-        band. Drag the strip, use the chevrons, or focus it and press the arrow keys.
-      </span>
-      <div style={ROW}>
-        <Button size="sm" onClick={() => setSlide(1)}>
-          Slide 1
-        </Button>
-        <Button size="sm" onClick={() => setSlide(2)}>
-          Slide 2
-        </Button>
-        <Button size="sm" onClick={() => setSlide(3)}>
-          Slide 3
-        </Button>
-      </div>
-      <span style={LOG}>slide {slide}</span>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          slide={slide}
-          onSlideChange={setSlide}
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={CAROUSEL_MEDIA}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={3149}
-          comments={201}
-          saves={480}
-          shares={789}
-        />
-      </div>
-    </div>
-  );
-}
+  const pickSurface = (next: TikTokSurface) => {
+    setSurface(next);
+    if (!RATIOS[next].includes(ratio)) setRatio(RATIOS[next][0]);
+  };
 
-export function TikTokSingleSlideDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        One slide removes the whole carousel: no chevrons, no dot pill, no drag surface and no tab stop. Counts print
-        exactly below ten thousand and abbreviate above it, the way the platform does.
-      </span>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={SHOT_B}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={1240000}
-          comments={9999}
-          saves={10400}
-          shares={789}
-        />
-      </div>
-    </div>
-  );
-}
+  const mediaCode = !media
+    ? ''
+    : carousel && surface === 'desktop'
+      ? '\n  media={[shotA, shotB, shotC]}'
+      : '\n  media={shot}';
+  const code = `<TikTok
+  surface="${surface}"
+  ratio="${ratio}"${mediaCode}
+  name="${surface === 'desktop' ? NAME : HANDLE}"
+  ${surface === 'desktop' ? `location="${PLACE}"` : `music="${MUSIC}"\n  sound="${SOUND}"`}
+  caption="..."
+  likes={3149}
+  comments={201}
+  shares={789}
+/>`;
 
-export function TikTokMuteDemo() {
-  const [muted, setMuted] = useState(true);
   return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        The mute control is chrome with a real toggle contract - it reports aria-pressed and fires onMutedChange. The
-        component never calls play() or pause(): wire this to whatever player you pass as media.
-      </span>
-      <span style={LOG}>{muted ? 'muted' : 'audible'}</span>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          muted={muted}
-          onMutedChange={setMuted}
-          translation={false}
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={SHOT_C}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={3149}
-          comments={201}
-          saves={480}
-          shares={789}
-        />
-      </div>
-    </div>
+    <Playground
+      code={code}
+      stage="plate"
+      layout="under"
+      expandTitle={surface === 'desktop' ? 'TikTok - 1584px web player' : 'TikTok - 452px mobile web'}
+      note={
+        surface === 'desktop'
+          ? 'The 1584px web player, scaled down to fit this column - open it at full size for the real metrics. Drag the carousel, page with the chevrons or the arrow keys.'
+          : 'The 452x822 mobile-web viewport at native size.'
+      }
+      rail={
+        <>
+          <KnobSegment label="surface" value={surface} onChange={pickSurface} options={['desktop', 'mobile']} />
+          <KnobSegment label="ratio" value={ratio} onChange={setRatio} options={RATIOS[surface]} />
+          {surface === 'desktop' ? <KnobSwitch label="carousel" checked={carousel} onChange={setCarousel} /> : null}
+          <KnobSwitch label="media" checked={media} onChange={setMedia} />
+        </>
+      }
+    >
+      <FitStage width={SURFACE_WIDTH[surface]}>
+        {surface === 'desktop' ? (
+          <TikTok
+            surface="desktop"
+            ratio={ratio}
+            name={NAME}
+            location={PLACE}
+            caption={STORY}
+            media={media ? (carousel ? CAROUSEL_MEDIA : SHOT_A) : undefined}
+            avatar={media ? AVATAR : undefined}
+            sticker={media ? DISC : undefined}
+            likes={3149}
+            comments={201}
+            saves={480}
+            shares={789}
+          />
+        ) : (
+          <TikTok
+            surface="mobile"
+            ratio={ratio}
+            name={HANDLE}
+            caption={MOBILE_STORY}
+            music={MUSIC}
+            sound={SOUND}
+            media={media ? SHOT_B : undefined}
+            avatar={media ? AVATAR : undefined}
+            sticker={media ? DISC : undefined}
+            likes={619}
+            comments={11}
+            shares={18}
+          />
+        )}
+      </FitStage>
+    </Playground>
   );
 }
 
 export function TikTokControlledDemo() {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [followed, setFollowed] = useState(false);
-  const [last, setLast] = useState<TikTokAction | null>(null);
 
   return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Like, save and follow are controlled triples - the rail counts add your like and save as you toggle them.
-        Comment, share, menu and search carry no state of their own, so they report through onAction instead.
-      </span>
-      <div style={ROW}>
-        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
-          liked
-        </Button>
-        <Button size="sm" variant={saved ? 'primary' : 'secondary'} onClick={() => setSaved(!saved)}>
-          saved
-        </Button>
-        <Button size="sm" variant={followed ? 'primary' : 'secondary'} onClick={() => setFollowed(!followed)}>
-          followed
-        </Button>
-      </div>
-      <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          translation={false}
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={SHOT_C}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={3149}
-          comments={201}
-          saves={480}
-          shares={789}
-          liked={liked}
-          onLikedChange={setLiked}
-          saved={saved}
-          onSavedChange={setSaved}
-          followed={followed}
-          onFollowedChange={setFollowed}
-          onAction={setLast}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function TikTokMobileHero() {
-  return (
-    <div style={PHONES}>
+    <FitStage width={SURFACE_WIDTH.desktop}>
       <TikTok
-        surface="mobile"
-        ratio="4:3"
-        name={HANDLE}
-        caption={MOBILE_STORY}
-        music={MUSIC}
-        sound={SOUND}
-        media={SHOT_A}
+        surface="desktop"
+        translation={false}
+        name={NAME}
+        location={PLACE}
+        caption={STORY}
+        media={SHOT_C}
         avatar={AVATAR}
         sticker={DISC}
-        likes={619}
-        comments={11}
-        shares={18}
+        likes={3149}
+        comments={201}
+        saves={480}
+        shares={789}
+        liked={liked}
+        onLikedChange={setLiked}
+        saved={saved}
+        onSavedChange={setSaved}
       />
-      <TikTok
-        surface="mobile"
-        ratio="9:16"
-        name={HANDLE}
-        caption={MOBILE_STORY}
-        music={MUSIC}
-        sound={SOUND}
-        media={VERTICAL}
-        avatar={AVATAR}
-        sticker={DISC}
-        likes={619}
-        comments={11}
-        shares={18}
-      />
-    </div>
-  );
-}
-
-export function TikTokMobileRatioDemo() {
-  const [ratio, setRatio] = useState<TikTokRatio>('4:3');
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Mobile overlays anchor to the viewport, not to the media, so a short post shows the blurred backdrop above and
-        below while a 9:16 post very nearly fills the 452x822 frame. The rail drops the save action and the glyphs lose
-        their pucks.
-      </span>
-      <div style={ROW}>
-        {MOBILE_RATIOS.map((option) => (
-          <Button
-            key={option}
-            size="sm"
-            variant={option === ratio ? 'primary' : 'ghost'}
-            onClick={() => setRatio(option)}
-          >
-            {option}
-          </Button>
-        ))}
-      </div>
-      <TikTok
-        surface="mobile"
-        ratio={ratio}
-        name={HANDLE}
-        caption={MOBILE_STORY}
-        music={MUSIC}
-        sound={SOUND}
-        media={SHOT_B}
-        avatar={AVATAR}
-        sticker={DISC}
-        likes={619}
-        comments={11}
-        shares={18}
-      />
-    </div>
-  );
-}
-
-export function TikTokPlaceholderDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        With no media, avatar or sticker the component draws a neutral CSS placeholder. It never makes a network request
-        - the chrome is what is being reproduced, the content is yours.
-      </span>
-      <div style={PHONES}>
-        <TikTok
-          surface="mobile"
-          name={HANDLE}
-          caption={MOBILE_STORY}
-          music={MUSIC}
-          sound={SOUND}
-          likes={619}
-          comments={11}
-          shares={18}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function TikTokReducedMotionDemo() {
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Under prefers-reduced-motion every --duration-* collapses to 1ms, so the carousel jumps to the destination slide
-        instead of sliding. Nothing loops and nothing pulses here, so there is nothing else to snap: the drag still
-        tracks the pointer, because that is input, not animation.
-      </span>
-      <div style={SCROLLER}>
-        <TikTok
-          surface="desktop"
-          defaultSlide={2}
-          name={NAME}
-          location={PLACE}
-          caption={STORY}
-          media={CAROUSEL_MEDIA}
-          avatar={AVATAR}
-          sticker={DISC}
-          likes={3149}
-          comments={201}
-          saves={480}
-          shares={789}
-        />
-      </div>
-    </div>
+    </FitStage>
   );
 }
