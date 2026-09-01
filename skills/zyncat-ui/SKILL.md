@@ -29,6 +29,8 @@ No Tailwind, no CSS-in-JS, no animation library - a built-in WAAPI motion engine
 
 - `import '@zyncat/ui/styles.css'` once at the root - fonts + tokens; each component lazy-loads its
   own CSS.
+- Theming: `defineTheme` + `<ZyncatTheme theme={{ base, dark }} />` from `@zyncat/ui/theme`, once at
+  the root. Typed, server-rendered, no build config. See references/theming.md before writing one.
 - One subpath per component: `import { Button } from '@zyncat/ui/button'`. There is no barrel.
 - Peers: react and react-dom 19. Ships built ESM with `'use client'` intact - no bundler or
   transpile config, works as-is in the Next.js App Router.

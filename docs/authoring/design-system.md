@@ -112,6 +112,9 @@
 
 - Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
 - Level 1: retheme by overriding tokens on `:root`. JS follows via the DOM readers.
+- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, the consumer default.
+- `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
+- Token names are derived, never tabulated: the generator fails if a name stops round-tripping.
 - Level 2: retune one component through its scoped custom properties.
 - Level 3: restyle with `className` and `style` - direct props on primitives and fields, `htmlProps` on an overlay's panel.
 - Replicas answer to none of these, by design.

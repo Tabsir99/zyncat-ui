@@ -69,10 +69,11 @@ export function McpDoc() {
         <CodeBlock code={initCommand} language="bash" />
         <p className="guide-section__p">
           It copies the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
-          <code className="doc-inline-code">.claude/skills/</code> and registers the MCP server in{' '}
-          <code className="doc-inline-code">.mcp.json</code>. Restart the agent session afterwards, and re-run the
-          command after upgrading <code className="doc-inline-code">@zyncat/ui</code> so the skill matches the installed
-          version.
+          <code className="doc-inline-code">.claude/skills/</code>, registers the MCP server in{' '}
+          <code className="doc-inline-code">.mcp.json</code>, and scaffolds{' '}
+          <code className="doc-inline-code">zyncat.theme.ts</code> if the project has none. Restart the agent session
+          afterwards, and re-run the command after upgrading <code className="doc-inline-code">@zyncat/ui</code> so the
+          skill matches the installed version; an existing theme file is left alone.
         </p>
 
         <TabGroup

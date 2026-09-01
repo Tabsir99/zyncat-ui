@@ -8,8 +8,10 @@ import { Odometer } from '@zyncat/ui/odometer';
 import { StatusBadge } from '@zyncat/ui/status-badge';
 import { Table, type TableColumn } from '@zyncat/ui/table';
 import { TextField } from '@zyncat/ui/text-field';
+import { defineTheme, ZyncatTheme, type ThemeTokens } from '@zyncat/ui/theme';
 
-import { Callout, CodeBlock, TabGroup } from '../kit';
+import { Callout, CodeBlock, FeatureCard, FeatureGrid, TabGroup } from '../kit';
+import { KnobRange, KnobSegment, Playground } from '../playground';
 
 interface OverrideLevelRow {
   level: string;
@@ -36,7 +38,8 @@ const OVERRIDE_LEVEL_ROWS: OverrideLevelRow[] = [
     level: '1',
     mechanism: (
       <>
-        Tokens on <code className="doc-inline-code">:root</code>
+        <code className="doc-inline-code">defineTheme</code>, or tokens on{' '}
+        <code className="doc-inline-code">:root</code>
       </>
     ),
     reaches: 'The whole system',
@@ -46,7 +49,8 @@ const OVERRIDE_LEVEL_ROWS: OverrideLevelRow[] = [
     level: '2',
     mechanism: (
       <>
-        Scoped <code className="doc-inline-code">--component-*</code> properties
+        The <code className="doc-inline-code">components</code> group, or scoped{' '}
+        <code className="doc-inline-code">--component-*</code> properties
       </>
     ),
     reaches: 'One component',
@@ -163,9 +167,13 @@ const LEVEL_1_DARK_CODE = `[data-theme='dark'] {
   --border-default: var(--gray-700);
 }`;
 
-const LEVEL_2_CODE = `<Odometer value={total} style={{ '--odometer-size': 'var(--size-display-lg)', '--odometer-accent': 'var(--danger)' }} />
+const LEVEL_2_CODE = `{/* one instance */}
+<Odometer value={total} style={{ '--odometer-size': 'var(--size-display-lg)', '--odometer-accent': 'var(--danger)' }} />
 
-/* or from any ancestor, for every instance underneath */
+{/* every instance in the app - the typed theme */}
+defineTheme({ components: { odometer: { size: 'var(--size-display-lg)', accent: 'var(--danger)' } } });
+
+/* or every instance underneath one element, from CSS */
 .metrics-panel {
   --odometer-size: var(--size-display-lg);
   --odometer-gap: 0.12em;
@@ -196,6 +204,170 @@ const LEVEL_3_OVERLAY = `{/* Overlays have no className prop - the panel is not 
   title="Delete workspace"
   htmlProps={{ className: 'danger-dialog', 'data-testid': 'delete-dialog' }}
 />`;
+
+type Corner = 'sharp' | 'default' | 'round';
+type Mode = 'base' | 'dark';
+type OdometerInk = 'accent' | 'warning';
+
+const PREVIEW = 'zyncat-preview';
+const PREVIEW_DARK = 'zyncat-preview-dark';
+
+const CORNERS: Record<Corner, ThemeTokens['radius']> = {
+  sharp: { radiusSm: '0', radiusMd: '0', radiusLg: '0' },
+  default: { radiusSm: '0.25rem', radiusMd: '0.375rem', radiusLg: '0.5rem' },
+  round: { radiusSm: '0.5rem', radiusMd: '0.75rem', radiusLg: '1rem' },
+};
+
+const DARK_SURFACES: ThemeTokens['color'] = {
+  bgApp: 'oklch(0.19 0.008 198)',
+  bgSurface: 'oklch(0.225 0.008 198)',
+  bgSurfaceRaised: 'oklch(0.265 0.008 198)',
+  bgSubtle: 'oklch(0.245 0.008 198)',
+  bgMuted: 'oklch(0.28 0.008 198)',
+  bgInset: 'oklch(0.235 0.008 198)',
+  textStrong: 'oklch(0.97 0.003 198)',
+  textBody: 'oklch(0.92 0.004 198)',
+  textSecondary: 'oklch(0.84 0.005 198)',
+  textMuted: 'oklch(0.72 0.008 198)',
+  textSubtle: 'oklch(0.64 0.01 198)',
+  borderSubtle: 'oklch(0.3 0.008 198)',
+  borderDefault: 'oklch(0.36 0.009 198)',
+  borderStrong: 'oklch(0.44 0.01 198)',
+};
+
+const accentRamp = (hue: number): ThemeTokens['color'] => ({
+  accent: `oklch(0.63 0.118 ${hue})`,
+  accentHover: `oklch(0.56 0.114 ${hue})`,
+  accentActive: `oklch(0.478 0.1 ${hue})`,
+  accentSubtle: `oklch(0.972 0.02 ${hue})`,
+  accentBorder: `oklch(0.88 0.066 ${hue})`,
+  accentLift: `oklch(0.705 0.112 ${hue})`,
+  textAccent: `oklch(0.478 0.1 ${hue})`,
+});
+
+const playgroundCode = (
+  hue: number,
+  corner: Corner,
+  ink: OdometerInk,
+) => `import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
+
+const base = defineTheme({
+  color: {
+    accent: 'oklch(0.63 0.118 ${hue})',
+    accentHover: 'oklch(0.56 0.114 ${hue})',
+    accentActive: 'oklch(0.478 0.1 ${hue})',
+    accentSubtle: 'oklch(0.972 0.02 ${hue})',
+    accentBorder: 'oklch(0.88 0.066 ${hue})',
+    textAccent: 'oklch(0.478 0.1 ${hue})',
+  },
+  radius: { radiusSm: '${CORNERS[corner].radiusSm}', radiusMd: '${CORNERS[corner].radiusMd}', radiusLg: '${CORNERS[corner].radiusLg}' },
+  components: { odometer: { accent: 'var(--${ink})' } },
+});
+
+const dark = defineTheme({
+  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)', borderDefault: 'oklch(0.36 0.009 198)' },
+});
+
+// once, at the app root - beside your import of '@zyncat/ui/styles.css'
+<ZyncatTheme theme={{ base, dark }} />;`;
+
+export function ThemingPlayground() {
+  const [hue, setHue] = useState(292);
+  const [corner, setCorner] = useState<Corner>('round');
+  const [mode, setMode] = useState<Mode>('base');
+  const [ink, setInk] = useState<OdometerInk>('accent');
+  const [total, setTotal] = useState(4820);
+
+  const base = defineTheme({
+    color: accentRamp(hue),
+    radius: CORNERS[corner],
+    components: { odometer: { accent: `var(--${ink})` } },
+  });
+  const dark = defineTheme({ ...base, color: { ...base.color, ...DARK_SURFACES } });
+
+  return (
+    <Playground
+      code={playgroundCode(hue, corner, ink)}
+      note="Every control writes one typed token. The preview scopes the same theme to this panel with a named theme, so the rest of the page keeps its own."
+      rail={
+        <>
+          <KnobRange label="accent hue" value={hue} onChange={setHue} min={0} max={360} format={(v) => `${v}°`} />
+          <KnobSegment label="radius" value={corner} onChange={setCorner} options={['sharp', 'default', 'round']} />
+          <KnobSegment label="theme" value={mode} onChange={setMode} options={['base', 'dark']} />
+          <KnobSegment label="odometer.accent" value={ink} onChange={setInk} options={['accent', 'warning']} />
+        </>
+      }
+      stage="fill"
+    >
+      <ZyncatTheme theme={{ [PREVIEW]: base, [PREVIEW_DARK]: dark }} />
+      <div className="theming-stage" data-theme={mode === 'dark' ? PREVIEW_DARK : PREVIEW}>
+        <div className="theming-cell__row">
+          <Button variant="primary">Publish</Button>
+          <Button variant="secondary">Save draft</Button>
+          <Button variant="ghost" onClick={() => setTotal((v) => v + 137)}>
+            Add 137
+          </Button>
+        </div>
+        <div className="theming-cell__row">
+          <Badge tone="info">Draft</Badge>
+          <StatusBadge status="published" />
+          <Odometer value={total} style={{ '--odometer-size': 'var(--size-title-lg)' }} />
+        </div>
+        <TextField label="Workspace" placeholder="Acme Marketing" />
+      </div>
+    </Playground>
+  );
+}
+
+const THEME_FILE_CODE = `// zyncat.theme.ts
+import { defineTheme } from '@zyncat/ui/theme';
+
+export const base = defineTheme({
+  color: { accent: 'oklch(0.58 0.19 292)', accentHover: 'oklch(0.5 0.19 292)' },
+  radius: { radiusMd: '0.5rem' },
+  type: { fontSans: "'Inter', system-ui, sans-serif" },
+  motion: { durationBase: '180ms' },
+  components: { odometer: { accent: 'var(--warning)' }, supportFan: { inset: 'var(--space-6)' } },
+});
+
+export const dark = defineTheme({
+  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+});`;
+
+const THEME_MOUNT_CODE = `// app/layout.tsx
+import '@zyncat/ui/styles.css';
+
+import { ZyncatTheme } from '@zyncat/ui/theme';
+import { base, dark, ocean } from '../zyncat.theme';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <ZyncatTheme theme={{ base, dark, ocean }} />
+        {children}
+      </body>
+    </html>
+  );
+}`;
+
+const THEME_SWITCH_CODE = `// base is always on. Any other key is a [data-theme='<key>'] block,
+// so switching a whole theme is one attribute - no re-render, no reload.
+document.documentElement.dataset.theme = 'dark';
+
+{/* or scope one to a subtree */}
+<section data-theme="ocean">
+  <Button variant="primary">Ocean accent in here only</Button>
+</section>`;
+
+const TYPED_STYLE_CODE = `{/* the component's own knobs are typed on its style prop */}
+<Odometer value={total} style={{ '--odometer-size': '3rem', '--odometer-accent': 'var(--danger)' }} />
+
+{/* not this component's surface -> compile error */}
+<Odometer value={total} style={{ '--lens-ink': 'red' }} />
+
+{/* per-frame state the component writes to itself -> compile error */}
+<Odometer value={total} style={{ '--odometer-velocity': '1' }} />`;
 
 const REDUCED_MOTION_CODE = `/* WRONG - a reduced-motion user gets 90ms animations in here.
    The reduced-motion collapse only targets :root, so this
@@ -324,7 +496,67 @@ export function ThemingDoc() {
         <p className="guide-section__p">
           The full vocabulary — colour, spacing, type, radius, elevation, motion, icons, layers, glass, avatar — is
           printed with real values by the MCP server&rsquo;s <code className="doc-inline-code">get_tokens</code> tool.
+          Writing that vocabulary by hand means writing custom-property names by hand, which is what the next section
+          removes.
         </p>
+      </section>
+
+      <section className="guide-section" id="typed-theme">
+        <h2 className="guide-section__title">The typed theme</h2>
+        <p className="guide-section__p">
+          <code className="doc-inline-code">@zyncat/ui/theme</code> is the same level 1 retheme with a type behind it.
+          Every token is a key on a grouped object, so the editor completes the names, hovering one shows what it does
+          and what it currently is, and a typo is a compile error instead of a property that silently does nothing.
+        </p>
+
+        <ThemingPlayground />
+
+        <p className="guide-section__p">
+          Keep the themes in one file. It holds only your decisions — everything you leave out keeps its shipped value,
+          so upgrading the package picks up new tokens instead of drifting from them.
+        </p>
+
+        <CodeBlock code={THEME_FILE_CODE} language="tsx" />
+
+        <p className="guide-section__p">
+          Render <code className="doc-inline-code">ZyncatTheme</code> once at the root. It is a plain component that
+          renders a <code className="doc-inline-code">&lt;style&gt;</code> element on the server, so the themed values
+          are in the first HTML the browser sees — no flash, no client hook, and nothing to configure in your bundler.
+        </p>
+
+        <CodeBlock code={THEME_MOUNT_CODE} language="tsx" />
+
+        <p className="guide-section__p">
+          <code className="doc-inline-code">base</code> lands on <code className="doc-inline-code">:root</code>. Every
+          other key becomes a <code className="doc-inline-code">[data-theme=&apos;&lt;key&gt;&apos;]</code> block, which
+          is why there is one prop rather than a light one, a dark one and a list.
+        </p>
+
+        <CodeBlock code={THEME_SWITCH_CODE} language="tsx" />
+
+        <Callout tone="note" title="Reduced motion travels with your durations">
+          A duration you repoint here gets the same collapse the shipped tokens get: the rendered stylesheet carries a{' '}
+          <code className="doc-inline-code">prefers-reduced-motion</code> block for every duration token you touched, in
+          every theme you defined. The trap in the previous section is one you cannot fall into through this API.
+        </Callout>
+
+        <FeatureGrid>
+          <FeatureCard
+            icon="sparkle"
+            title="Grouped, not a flat list"
+            description="color, type, space, radius, elevation, motion, glass, icon, layer, avatar — plus components for the scoped knobs, and custom for anything else."
+          />
+          <FeatureCard
+            icon="shield-check"
+            title="Generated from the CSS"
+            description="The types are built from the token stylesheets themselves, and a lint fails the build if the two ever disagree."
+          />
+          <FeatureCard
+            icon="lightning"
+            title="About a kilobyte"
+            description="Names are derived rather than tabulated, so the whole module is ~1.1KB gzipped and stays a zero-dependency component."
+          />
+        </FeatureGrid>
       </section>
 
       <section className="guide-section" id="level-2">
@@ -334,6 +566,20 @@ export function ThemingDoc() {
           <code className="doc-inline-code">--&lt;component&gt;-&lt;name&gt;</code> custom properties as their public
           contract. Set them inline, or on any ancestor to reach every instance underneath. System primitives and
           composites publish none by design: they answer to the token vocabulary alone, so retheme those at level 1.
+        </p>
+        <p className="guide-section__p">
+          These are typed twice over. In a theme they are the <code className="doc-inline-code">components</code> group,
+          with the prefix dropped — <code className="doc-inline-code">components.odometer.accent</code> is{' '}
+          <code className="doc-inline-code">--odometer-accent</code>. On one instance they are the component&rsquo;s own{' '}
+          <code className="doc-inline-code">style</code> prop, which accepts the design tokens and that
+          component&rsquo;s knobs, and nothing from any other component.
+        </p>
+
+        <CodeBlock code={TYPED_STYLE_CODE} language="tsx" />
+
+        <p className="guide-section__p">
+          That is also where the distinction below stops being something to remember: the per-frame properties are not
+          on the type, so setting one is a compile error rather than a line that quietly does nothing.
         </p>
 
         <div className="theming-pair">
@@ -345,13 +591,11 @@ export function ThemingDoc() {
             <span className="theming-cell__label">Three properties set</span>
             <Odometer
               value={count}
-              style={
-                {
-                  '--odometer-size': 'var(--size-display-lg)',
-                  '--odometer-accent': 'var(--danger)',
-                  '--odometer-gap': '0.12em',
-                } as CSSProperties
-              }
+              style={{
+                '--odometer-size': 'var(--size-display-lg)',
+                '--odometer-accent': 'var(--danger)',
+                '--odometer-gap': '0.12em',
+              }}
             />
           </div>
         </div>

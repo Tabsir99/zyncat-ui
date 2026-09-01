@@ -42,7 +42,7 @@
 src/
   engine/        the WAAPI engine: animate, set, flip, measure, startDrag, loop
   motion/        the React layer: Presence, Motion, useMotion, presets, glide
-  tokens/        *.css token vocabulary + the TypeScript readers
+  tokens/        *.css token vocabulary + the TypeScript readers + the typed theme API
   components/
     primitives/  one control or one visual atom            (system contract)
     composites/  several primitives plus behaviour         (system contract)
@@ -72,4 +72,4 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 
 - `pnpm sync`: regenerate every manifest and generated doc.
 - `pnpm verify`: the whole gate, in order.
-- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:skill`, `check:props`, `build && check:usage`.
+- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:skill`, `check:theme`, `check:props`, `build && check:usage`.

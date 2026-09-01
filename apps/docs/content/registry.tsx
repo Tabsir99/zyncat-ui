@@ -92,12 +92,15 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'theming',
         label: 'Theming & Overrides',
-        blurb: 'The four ways to override Zyncat UI: cascade layers, tokens, scoped custom properties, and props.',
+        blurb:
+          'The four ways to override Zyncat UI: cascade layers, tokens, scoped custom properties, and props - ' +
+          'with a typed theme file behind the token layer.',
         Content: ThemingDoc,
         toc: [
           { id: 'override-levels', title: 'The four override levels', level: 2 },
           { id: 'level-0', title: 'Level 0 — Cascade layers', level: 2 },
           { id: 'level-1', title: 'Level 1 — Tokens', level: 2 },
+          { id: 'typed-theme', title: 'The typed theme', level: 2 },
           { id: 'level-2', title: 'Level 2 — Scoped properties', level: 2 },
           { id: 'level-3', title: 'Level 3 — Instance props', level: 2 },
           { id: 'replicas', title: 'Replicas', level: 2 },

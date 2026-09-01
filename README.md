@@ -62,6 +62,32 @@ bundler code-splits and lazy-loads it with the component. Import `@zyncat/ui/dia
 only `dialog.css` ships (plus the `overlay`/`icon` styles it reuses, deduped) - not every
 other component's CSS.
 
+## Theme it
+
+```tsx
+import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
+
+const base = defineTheme({
+  color: { accent: 'oklch(0.58 0.19 292)', accentHover: 'oklch(0.5 0.19 292)' },
+  radius: { radiusMd: '0.5rem' },
+  components: { odometer: { accent: 'var(--warning)' } },
+});
+const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
+
+// once, at the app root
+<ZyncatTheme theme={{ base, dark }} />;
+```
+
+Every token is a typed key, grouped by what it does: hover shows the default, a typo is a
+compile error, and values take any CSS. `base` lands on `:root` and every other key becomes a
+`[data-theme='<key>']` block, so switching themes - globally or for one subtree - is setting
+that attribute. The types are generated from the token stylesheets, so upgrading the package
+surfaces new tokens rather than drifting from them.
+
+`ZyncatTheme` is a plain component that renders a `<style>` element: it server-renders (no
+flash, no client hook), needs no PostCSS plugin, bundler plugin or build step, and adds about
+a kilobyte. Durations you repoint keep their `prefers-reduced-motion` collapse automatically.
+
 ### One subpath per component
 
 ```tsx
@@ -105,9 +131,10 @@ npx zyncat-ui init
 ```
 
 It installs the `zyncat-ui` agent skill into `./.claude/skills/` (the component map, picker
-tables, recipes, theming guide - the knowledge that should sit in the agent's context) and
-registers the bundled MCP server in `./.mcp.json` (the live truth). Re-run it after upgrading
-the package so the skill matches the installed version.
+tables, recipes, theming guide - the knowledge that should sit in the agent's context),
+registers the bundled MCP server in `./.mcp.json` (the live truth), and scaffolds
+`./zyncat.theme.ts` if you do not have one. Re-run it after upgrading the package so the skill
+matches the installed version; an existing theme file is never overwritten.
 
 **The MCP server** is zero-dependency (stdio), also exposed as the `zyncat-ui-mcp` bin, and works
 with any MCP client:
@@ -169,8 +196,9 @@ dist/               compiled ESM + .d.ts - what you import
 - **Four ways to override, and you never fork the source.** Load your stylesheet after
   `@zyncat/ui/styles.css`, then take the lowest level that works. **0** - every shipped rule
   sits in `@layer zyncat.components`, and unlayered CSS beats every layer at any specificity,
-  so `.btn { border-radius: 0 }` just lands. **1** - repoint the tokens on `:root` to retheme
-  the system; the motion engine reads the same values, so animation retimes with the CSS.
+  so `.btn { border-radius: 0 }` just lands. **1** - repoint the tokens to retheme the system,
+  in TypeScript with `defineTheme` (below) or on `:root` in your own CSS; the motion engine
+  reads the same values, so animation retimes with them.
   **2** - retune one expressive or compound component through its `--<component>-*` properties.
   **3** - `className` and `style` per instance (`htmlProps` for an overlay's panel).
   [`skills/zyncat-ui/references/theming.md`](./skills/zyncat-ui/references/theming.md) has the
