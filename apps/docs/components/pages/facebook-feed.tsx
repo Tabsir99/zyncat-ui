@@ -31,6 +31,7 @@ const LONG_CAPTION =
   'past midday. #switzerland #alps #filmphotography and a few more words so the cut actually lands.';
 
 const POST_RATIOS: readonly FacebookRatio[] = ['4:5', '1:1', '16:9'];
+const STORY_RATIOS: readonly FacebookRatio[] = ['4:5', '1:1'];
 
 const STAGE_WIDTH = { 'post-mobile': 390, 'post-web': 680, 'reel-narrow': 557, 'reel-wide': 1601, story: 486 } as const;
 
@@ -54,6 +55,8 @@ export function FacebookPlayground() {
   const [ratio, setRatio] = useState<FacebookRatio>('4:5');
   const [media, setMedia] = useState(true);
 
+  const storyRatio: FacebookRatio = ratio === '16:9' ? '1:1' : ratio;
+
   const fitWidth =
     surface === 'post'
       ? STAGE_WIDTH[`post-${width}`]
@@ -62,7 +65,7 @@ export function FacebookPlayground() {
         : STAGE_WIDTH.story;
 
   const code = `<FacebookFeed
-  surface="${surface}"${surface === 'post' ? `\n  width="${width}"\n  type="${type}"\n  ratio="${ratio}"` : ''}${surface === 'reel' ? `\n  stage="${stage}"\n  type="video"` : ''}${surface === 'story' ? `\n  ratio="${ratio === '16:9' ? '1:1' : ratio}"` : ''}
+  surface="${surface}"${surface === 'post' ? `\n  width="${width}"\n  type="${type}"\n  ratio="${ratio}"` : ''}${surface === 'reel' ? `\n  stage="${stage}"\n  type="video"` : ''}${surface === 'story' ? `\n  ratio="${storyRatio}"` : ''}
   name="Alpenglow Daily"
   caption="Three days above the fog line #alps"${media ? '\n  media={photo}\n  avatar={portrait}' : ''}
   likes={12400}
@@ -89,6 +92,9 @@ export function FacebookPlayground() {
           ) : null}
           {surface === 'reel' ? (
             <KnobSegment label="stage" value={stage} onChange={setStage} options={['narrow', 'wide']} />
+          ) : null}
+          {surface === 'story' ? (
+            <KnobSegment label="ratio" value={storyRatio} onChange={setRatio} options={STORY_RATIOS} />
           ) : null}
           <KnobSwitch label="media" checked={media} onChange={setMedia} />
         </>
@@ -126,7 +132,7 @@ export function FacebookPlayground() {
         ) : (
           <FacebookFeed
             surface="story"
-            ratio={ratio === '16:9' ? '1:1' : ratio}
+            ratio={storyRatio}
             segments={5}
             segment={2}
             name="Alpenglow Daily"

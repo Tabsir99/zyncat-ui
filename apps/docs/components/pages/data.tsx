@@ -2,24 +2,58 @@
 
 import { useState } from 'react';
 
-import { Avatar } from '@zyncat/ui/avatar';
+import { Avatar, type AvatarShape, type AvatarSize, type AvatarStatus } from '@zyncat/ui/avatar';
 import { AvatarGroup } from '@zyncat/ui/avatar-group';
 import { Badge } from '@zyncat/ui/badge';
 import { Pagination } from '@zyncat/ui/pagination';
 import { Table, type TableColumn, type TableProps } from '@zyncat/ui/table';
-import { Tag, TagGroup } from '@zyncat/ui/tag';
+import { Tag, TagGroup, type TagProps } from '@zyncat/ui/tag';
 import { ToggleTag } from '@zyncat/ui/toggle-tag';
 
 import { Icon } from '../icon';
 import { KnobSegment, KnobSwitch, Playground } from '../playground';
 
-export function AvatarHero() {
+type TagSize = NonNullable<TagProps['size']>;
+type AvatarStatusKnob = AvatarStatus | 'none';
+
+const AVATAR_SHAPES: readonly AvatarShape[] = ['circle', 'square'];
+const AVATAR_SIZES: readonly AvatarSize[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+const AVATAR_STATUSES: readonly AvatarStatusKnob[] = ['none', 'online', 'away', 'busy', 'offline'];
+const TAG_SIZES: readonly TagSize[] = ['md', 'sm'];
+
+export function AvatarPlayground() {
+  const [shape, setShape] = useState<AvatarShape>('circle');
+  const [size, setSize] = useState<AvatarSize>('lg');
+  const [status, setStatus] = useState<AvatarStatusKnob>('online');
+
+  const dot = status === 'none' ? null : status;
+
+  const code = `<Avatar
+  src={photo}
+  name="Ana Ng"
+  shape="${shape}"
+  size="${size}"
+  status=${dot ? `"${dot}"` : '{null}'}
+/>`;
+
   return (
-    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-      <Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" status="online" size="lg" />
-      <Avatar name="Bo Park" paletteIndex={5} status="busy" size="lg" />
-      <Avatar name="Dee Okafor" paletteIndex={2} size="lg" />
-    </div>
+    <Playground
+      code={code}
+      note="square is the channel / brand-page mark; circle is for people."
+      rail={
+        <>
+          <KnobSegment label="shape" value={shape} onChange={setShape} options={AVATAR_SHAPES} />
+          <KnobSegment label="size" value={size} onChange={setSize} options={AVATAR_SIZES} />
+          <KnobSegment label="status" value={status} onChange={setStatus} options={AVATAR_STATUSES} />
+        </>
+      }
+    >
+      <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+        <Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" shape={shape} size={size} status={dot} />
+        <Avatar name="Bo Park" paletteIndex={5} shape={shape} size={size} status={dot} />
+        <Avatar name="Dee Okafor" paletteIndex={2} shape={shape} size={size} status={dot} />
+      </div>
+    </Playground>
   );
 }
 
@@ -65,16 +99,37 @@ const INITIAL_LABELS = [
   { id: 'c', name: 'urgent', icon: <Icon name="hash" /> },
 ];
 
-export function TagHero() {
+export function TagPlayground() {
+  const [size, setSize] = useState<TagSize>('md');
   const [labels, setLabels] = useState(INITIAL_LABELS);
+
+  const code = `<TagGroup ariaLabel="Labels">
+  {labels.map((l) => (
+    <Tag key={l.id} icon={l.icon} size="${size}" onRemove={() => remove(l.id)}>
+      {l.name}
+    </Tag>
+  ))}
+</TagGroup>`;
+
   return (
-    <TagGroup ariaLabel="Labels">
-      {labels.map((l) => (
-        <Tag key={l.id} icon={l.icon} onRemove={() => setLabels((arr) => arr.filter((x) => x.id !== l.id))}>
-          {l.name}
-        </Tag>
-      ))}
-    </TagGroup>
+    <Playground
+      code={code}
+      note="sm is the dense row height - 24px against the default 28px."
+      rail={<KnobSegment label="size" value={size} onChange={setSize} options={TAG_SIZES} />}
+    >
+      <TagGroup ariaLabel="Labels">
+        {labels.map((l) => (
+          <Tag
+            key={l.id}
+            icon={l.icon}
+            size={size}
+            onRemove={() => setLabels((arr) => arr.filter((x) => x.id !== l.id))}
+          >
+            {l.name}
+          </Tag>
+        ))}
+      </TagGroup>
+    </Playground>
   );
 }
 

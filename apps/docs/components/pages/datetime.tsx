@@ -86,12 +86,22 @@ export function DateRangeFieldHero() {
   );
 }
 
-export function TimeFieldHero() {
+export function TimeFieldPlayground() {
+  const [format, setFormat] = useState<TimeFormat>('24h');
   const [time, setTime] = useState<string | null>('09:00');
+
+  const code = `<TimeField label="Broadcast time" format="${format}" value={time} onChange={setTime} />`;
+
   return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <TimeField label="Broadcast time" value={time} onChange={setTime} />
-    </div>
+    <Playground
+      code={code}
+      note="Display only - the committed value stays canonical 24h 'HH:mm' either way."
+      rail={<KnobSegment label="format" value={format} onChange={setFormat} options={['24h', '12h']} />}
+    >
+      <div style={{ width: '100%', maxWidth: W }}>
+        <TimeField label="Broadcast time" format={format} value={time} onChange={setTime} />
+      </div>
+    </Playground>
   );
 }
 

@@ -126,7 +126,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'button',
         label: 'Button',
         blurb: 'One control for every click action. Exactly one primary per view.',
-        HeroComponent: P.ButtonHero,
+        Playground: P.ButtonPlayground,
         heroCode: `import { Button } from '@zyncat/ui/button';\n\n<Button variant="primary" onClick={schedulePost}>Schedule post</Button>`,
         examples: [
           {
@@ -156,7 +156,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'icon',
         label: 'Icon',
         blurb: 'Any Phosphor glyph by name or semantic alias; fill marks active.',
-        HeroComponent: P.IconHero,
+        Playground: P.IconPlayground,
         heroCode: `import { Icon } from './icon';\n\n<Icon name="lightning" size="lg" />`,
         examples: [
           {
@@ -186,7 +186,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'collapse',
         label: 'Collapse',
         blurb: 'Layout-transition primitive - grid-fr open/close, never touches auto.',
-        HeroComponent: P.CollapseHero,
+        Playground: P.CollapsePlayground,
         heroCode: `import { Collapse } from '@zyncat/ui/collapse';\n\n<Collapse open={open}>\n  <div>Collapsing region content.</div>\n</Collapse>`,
         examples: [
           {
@@ -209,7 +209,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'badge',
         label: 'Badge',
         blurb: 'Glass or outline. Status hues reserved for genuine status.',
-        HeroComponent: P.BadgeHero,
+        Playground: P.BadgePlayground,
         heroCode: `import { Badge } from '@zyncat/ui/badge';\n\n<Badge tone="info" pill>New Release</Badge>`,
         examples: [
           {
@@ -232,7 +232,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'status-badge',
         label: 'StatusBadge',
         blurb: 'Canonical status - tone + one-word label; morph animates in place.',
-        HeroComponent: P.StatusBadgeHero,
+        Playground: P.StatusBadgePlayground,
         heroCode: `import { StatusBadge } from '@zyncat/ui/status-badge';\n\n<StatusBadge status="scheduled" morph />`,
         examples: [
           {
@@ -248,7 +248,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'count-badge',
         label: 'CountBadge',
         blurb: 'Mono, tabular counts; roll animates digits like an odometer.',
-        HeroComponent: P.CountBadgeHero,
+        Playground: P.CountBadgePlayground,
         heroCode: `import { CountBadge } from '@zyncat/ui/count-badge';\n\n<CountBadge value={count} roll tone="info" />`,
         examples: [
           {
@@ -492,7 +492,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'number-field',
         label: 'NumberField',
         blurb: 'Tabular figures, caret steppers, unit suffix, clamp to bounds.',
-        HeroComponent: F.NumberFieldHero,
+        Playground: F.NumberFieldPlayground,
         heroCode: `import { NumberField } from '@zyncat/ui/number-field';\n\n<NumberField label="Seats" unit="users" min={1} max={50} value={seats} onChange={setSeats} />`,
         examples: [
           {
@@ -508,7 +508,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'otp-field',
         label: 'OtpField',
         blurb: 'Segmented one-time-code - auto-advance, paste-to-fill.',
-        HeroComponent: F.OtpFieldHero,
+        Playground: F.OtpFieldPlayground,
         heroCode: `import { OtpField } from '@zyncat/ui/otp-field';\n\n<OtpField length={6} group={3} value={code} onChange={setCode} />`,
         examples: [
           {
@@ -524,7 +524,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'textarea',
         label: 'Textarea',
         blurb: 'Auto-grow, character meter, over-limit highlight, ⌘/Ctrl+↵ submit.',
-        HeroComponent: F.TextareaHero,
+        Playground: F.TextareaPlayground,
         heroCode: `import { Textarea } from '@zyncat/ui/textarea';\n\n<Textarea label="Announcement" max={280} minRows={3} onSubmit={handleSubmit} hint="Cmd+Enter to submit" />`,
         examples: [
           {
@@ -540,7 +540,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'checkbox',
         label: 'Checkbox',
         blurb: 'Stages a choice you submit later - fill springs in, then the tick draws on.',
-        HeroComponent: F.CheckboxHero,
+        Playground: F.CheckboxPlayground,
         heroCode: `import { Checkbox } from '@zyncat/ui/checkbox';\n\n<Checkbox label="Pin post to queue" description="Published before any other scheduled items." />`,
         examples: [
           {
@@ -556,7 +556,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'toggle',
         label: 'Toggle',
         blurb: 'Actuates a setting on the spot - the thumb travels on a real spring.',
-        HeroComponent: F.ToggleHero,
+        Playground: F.TogglePlayground,
         heroCode: `import { Toggle } from '@zyncat/ui/toggle';\n\n<Toggle label="Auto-save drafts" description="Changes sync automatically as you type." checked={toggled} onChange={setToggled} />`,
         examples: [
           {
@@ -572,7 +572,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'radio-group',
         label: 'RadioGroup',
         blurb: 'Pick exactly one - quiet rows or selectable cards; the marker glides.',
-        HeroComponent: F.RadioGroupHero,
+        Playground: F.RadioGroupPlayground,
         heroCode: `import { RadioGroup } from '@zyncat/ui/radio-group';\n\n<RadioGroup name="plan" label="Select a plan" value={plan} onChange={setPlan} options={PLAN_OPTIONS} />`,
         examples: [
           {
@@ -595,7 +595,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'multi-select',
         label: 'MultiSelect',
         blurb: 'Many-of listbox - toggling keeps the menu open; trigger summarises as first +N.',
-        HeroComponent: F.MultiSelectHero,
+        Playground: F.MultiSelectPlayground,
         heroCode: `import { MultiSelect } from '@zyncat/ui/multi-select';\n\n<MultiSelect ariaLabel="Channels" value={channels} onChange={setChannels} options={CHANNELS} searchable />`,
         examples: [],
       },
@@ -609,7 +609,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'avatar',
         label: 'Avatar',
         blurb: 'Identity mark - image, initials, or silhouette, with presence.',
-        HeroComponent: D.AvatarHero,
+        Playground: D.AvatarPlayground,
         heroCode: `import { Avatar } from '@zyncat/ui/avatar';\n\n<Avatar src="https://i.pravatar.cc/96?img=47" name="Ana Ng" status="online" size="lg" />`,
         examples: [
           {
@@ -639,7 +639,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'tag',
         label: 'Tag',
         blurb: 'User-owned label - removable entries, applied filters. A control, not a status.',
-        HeroComponent: D.TagHero,
+        Playground: D.TagPlayground,
         heroCode: `import { Tag, TagGroup } from '@zyncat/ui/tag';\n\n<TagGroup ariaLabel="Labels">\n  <Tag icon={<HashIcon />} onRemove={handleRemove}>design</Tag>\n</TagGroup>`,
         examples: [
           {
@@ -707,7 +707,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'time-field',
         label: 'TimeField',
         blurb: "The standalone segmented time machine; value is 'HH:mm', bounds saturate.",
-        HeroComponent: T.TimeFieldHero,
+        Playground: T.TimeFieldPlayground,
         heroCode: `import { TimeField } from '@zyncat/ui/time-field';\n\n<TimeField label="Broadcast time" value={time} onChange={setTime} />`,
         examples: [],
       },
@@ -729,7 +729,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'alert',
         label: 'Alert',
         blurb: 'Persistent, in-flow status. Existence is the only motion - dismissal eases shut.',
-        HeroComponent: O.AlertHero,
+        Playground: O.AlertPlayground,
         heroCode: `import { Alert } from '@zyncat/ui/alert';\n\n<Alert tone="warning" title="Subscription renewal" action={{ label: 'Manage plan', onClick: handlePlan }}>\n  Your workspace trial will expire in 3 days.\n</Alert>`,
         examples: [
           {
@@ -745,7 +745,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'toast',
         label: 'Toast',
         blurb: 'Imperative toast() API. Mount <Toaster /> once at the root, then fire one from anywhere.',
-        HeroComponent: O.ToastHero,
+        Playground: O.ToastPlayground,
         heroCode: `import { toast, Toaster } from '@zyncat/ui/toast';\n\ntoast.success('Changes saved', { description: 'Updated across all workspaces.' });`,
         examples: [],
       },
@@ -774,7 +774,7 @@ export const GROUPS: DocGroup[] = [
         slug: 'dropdown',
         label: 'Dropdown',
         blurb: 'Menu button for actions - grouped rows, shortcuts, and submenus that nest as deep as you like.',
-        HeroComponent: O.DropdownHero,
+        Playground: O.DropdownPlayground,
         heroCode: `import { Dropdown } from '@zyncat/ui/dropdown';\n\n<Dropdown ariaLabel="Post options" trigger={<Button>Options</Button>} items={items} />`,
         examples: [],
       },

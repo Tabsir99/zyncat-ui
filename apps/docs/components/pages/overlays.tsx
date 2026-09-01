@@ -2,10 +2,10 @@
 
 import { useEffect, useState, type CSSProperties } from 'react';
 
-import { Alert } from '@zyncat/ui/alert';
+import { Alert, type AlertTone } from '@zyncat/ui/alert';
 import { Button } from '@zyncat/ui/button';
 import { Dialog, type DialogProps } from '@zyncat/ui/dialog';
-import { Dropdown } from '@zyncat/ui/dropdown';
+import { Dropdown, type DropdownProps } from '@zyncat/ui/dropdown';
 import { EmojiPickerPanel, getEmojiUrl, loadEmojiData } from '@zyncat/ui/emoji-picker';
 import { Popover, type PopoverProps } from '@zyncat/ui/popover';
 import { Sheet, type SheetProps } from '@zyncat/ui/sheet';
@@ -15,25 +15,59 @@ import { Tooltip, type TooltipProps } from '@zyncat/ui/tooltip';
 import { KnobSegment, KnobSwitch, Playground } from '../playground';
 
 type DialogTone = NonNullable<DialogProps['tone']>;
+type DialogSize = NonNullable<DialogProps['size']>;
 type PopoverSide = NonNullable<PopoverProps['side']>;
 type PopoverAlign = NonNullable<PopoverProps['align']>;
+type DropdownSide = NonNullable<DropdownProps['side']>;
+type DropdownAlign = NonNullable<DropdownProps['align']>;
 type SheetSide = NonNullable<SheetProps['side']>;
 type TooltipPlacement = NonNullable<TooltipProps['placement']>;
+type ToastTone = 'default' | 'success' | 'info' | 'warning' | 'error' | 'loading';
+
+const ALERT_TONES: readonly AlertTone[] = ['info', 'success', 'warning', 'danger'];
+const DIALOG_SIZES: readonly DialogSize[] = ['sm', 'md', 'lg'];
+const SIDES: readonly DropdownSide[] = ['top', 'bottom', 'left', 'right'];
+const ALIGNS: readonly DropdownAlign[] = ['start', 'center', 'end'];
+const TOAST_TONES: readonly ToastTone[] = ['default', 'success', 'info', 'warning', 'error', 'loading'];
+
+const ALERT_COPY: Record<AlertTone, { title: string; body: string }> = {
+  info: { title: 'System update available', body: 'A new version of Zyncat UI is ready to download.' },
+  success: { title: 'Draft published', body: 'All 8 queued items have been sent successfully.' },
+  warning: { title: 'Subscription renewal', body: 'Your workspace trial will expire in 3 days.' },
+  danger: { title: 'Payment declined', body: 'Please check your billing details to prevent suspension.' },
+};
 
 const MENU: CSSProperties = { padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 160 };
 const MENU_BTN: CSSProperties = { justifyContent: 'flex-start' };
 
-export function AlertHero() {
+export function AlertPlayground() {
+  const [tone, setTone] = useState<AlertTone>('warning');
+  const copy = ALERT_COPY[tone];
+
+  const code = `<Alert
+  tone="${tone}"
+  title="${copy.title}"
+  action={{ label: 'Manage plan', onClick: openBilling }}
+>
+  ${copy.body}
+</Alert>`;
+
   return (
-    <div style={{ width: '100%', maxWidth: 500 }}>
-      <Alert
-        tone="warning"
-        title="Subscription renewal"
-        action={{ label: 'Manage plan', onClick: () => toast.info('Navigating to billing...') }}
-      >
-        Your workspace trial will expire in 3 days.
-      </Alert>
-    </div>
+    <Playground
+      code={code}
+      note="info and success announce politely; warning and danger announce assertively."
+      rail={<KnobSegment label="tone" value={tone} onChange={setTone} options={ALERT_TONES} />}
+    >
+      <div style={{ width: '100%', maxWidth: 500 }}>
+        <Alert
+          tone={tone}
+          title={copy.title}
+          action={{ label: 'Manage plan', onClick: () => toast.info('Navigating to billing...') }}
+        >
+          {copy.body}
+        </Alert>
+      </div>
+    </Playground>
   );
 }
 
@@ -53,37 +87,52 @@ export function AlertTonesDemo() {
   );
 }
 
-export function ToastHero() {
+const TOAST_COPY: Record<ToastTone, { message: string; description?: string }> = {
+  default: { message: 'Draft saved locally' },
+  success: { message: 'Changes saved', description: 'Updated across all workspaces.' },
+  info: { message: 'New message received' },
+  warning: { message: 'Queue is nearly full', description: '92 of 100 slots used this cycle.' },
+  error: { message: 'Connection lost', description: 'Retrying in 5 seconds...' },
+  loading: { message: 'Publishing 8 queued posts...' },
+};
+
+export function ToastPlayground() {
+  const [tone, setTone] = useState<ToastTone>('success');
+  const copy = TOAST_COPY[tone];
+
+  const call = tone === 'default' ? 'toast' : `toast.${tone}`;
+  const code = `${call}('${copy.message}'${copy.description ? `, { description: '${copy.description}' }` : ''});`;
+
+  const fire = () => {
+    const opts = copy.description ? { description: copy.description } : undefined;
+    if (tone === 'default') toast(copy.message, opts);
+    else toast[tone](copy.message, opts);
+  };
+
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-      <Button
-        variant="secondary"
-        onClick={() => toast.success('Changes saved', { description: 'Updated across all workspaces.' })}
-      >
-        Success toast
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => toast.error('Connection lost', { description: 'Retrying in 5 seconds...' })}
-      >
-        Error toast
-      </Button>
-      <Button variant="secondary" onClick={() => toast.info('New message received')}>
-        Info toast
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() =>
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 2200)), {
-            loading: 'Publishing 8 queued posts...',
-            success: 'Queue published',
-            error: 'Queue failed',
-          })
-        }
-      >
-        Promise toast
-      </Button>
-    </div>
+    <Playground
+      code={code}
+      note="loading never expires on its own - toast.promise settles it into success or danger."
+      rail={<KnobSegment label="tone" value={tone} onChange={setTone} options={TOAST_TONES} />}
+    >
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        <Button variant="secondary" onClick={fire}>
+          Fire {tone} toast
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() =>
+            toast.promise(new Promise((resolve) => setTimeout(resolve, 2200)), {
+              loading: 'Publishing 8 queued posts...',
+              success: 'Queue published',
+              error: 'Queue failed',
+            })
+          }
+        >
+          Promise toast
+        </Button>
+      </div>
+    </Playground>
   );
 }
 
@@ -125,6 +174,7 @@ export function TooltipPlayground() {
 
 export function DialogPlayground() {
   const [tone, setTone] = useState<DialogTone>('danger');
+  const [size, setSize] = useState<DialogSize>('md');
   const [dismissible, setDismissible] = useState(true);
   const [open, setOpen] = useState(false);
 
@@ -132,6 +182,7 @@ export function DialogPlayground() {
   open={open}
   onOpenChange={setOpen}
   tone="${tone}"
+  size="${size}"
   dismissible={${dismissible}}
   title="${tone === 'danger' ? 'Delete project permanently?' : 'Rename this project?'}"
   footer={(close) => (
@@ -157,6 +208,7 @@ export function DialogPlayground() {
       rail={
         <>
           <KnobSegment label="tone" value={tone} onChange={setTone} options={['default', 'danger']} />
+          <KnobSegment label="size" value={size} onChange={setSize} options={DIALOG_SIZES} />
           <KnobSwitch label="dismissible" checked={dismissible} onChange={setDismissible} />
         </>
       }
@@ -168,6 +220,7 @@ export function DialogPlayground() {
         open={open}
         onOpenChange={setOpen}
         tone={tone}
+        size={size}
         dismissible={dismissible}
         title={tone === 'danger' ? 'Delete project permanently?' : 'Rename this project?'}
         footer={(close) => (
@@ -249,32 +302,60 @@ export function PopoverPlayground() {
   );
 }
 
-export function DropdownHero() {
+export function DropdownPlayground() {
+  const [side, setSide] = useState<DropdownSide>('bottom');
+  const [align, setAlign] = useState<DropdownAlign>('start');
+
+  const code = `<Dropdown
+  ariaLabel="Post options"
+  trigger={<Button variant="secondary">Options</Button>}
+  side="${side}"
+  align="${align}"
+  onSelect={route}
+  items={items}
+/>`;
+
   return (
-    <Dropdown
-      ariaLabel="Post options"
-      trigger={<Button variant="secondary">Options</Button>}
-      onSelect={(id) => toast.info(`Action: ${id}`)}
-      items={[
-        {
-          label: 'Post Management',
-          items: [
-            { id: 'edit', label: 'Edit post', shortcut: 'E' },
-            { id: 'duplicate', label: 'Duplicate', shortcut: 'D' },
+    <Playground
+      code={code}
+      note="Submenus always align to their own row - side and align place the top-level menu only."
+      rail={
+        <>
+          <KnobSegment label="side" value={side} onChange={setSide} options={SIDES} />
+          <KnobSegment label="align" value={align} onChange={setAlign} options={ALIGNS} />
+        </>
+      }
+    >
+      <div style={{ padding: 'var(--space-9) 0' }}>
+        <Dropdown
+          key={`${side}-${align}`}
+          ariaLabel="Post options"
+          trigger={<Button variant="secondary">Options</Button>}
+          side={side}
+          align={align}
+          onSelect={(id) => toast.info(`Action: ${id}`)}
+          items={[
             {
-              id: 'share',
-              label: 'Share to',
+              label: 'Post Management',
               items: [
-                { id: 'share-x', label: 'Twitter / X' },
-                { id: 'share-li', label: 'LinkedIn' },
-                { id: 'share-ig', label: 'Instagram' },
+                { id: 'edit', label: 'Edit post', shortcut: 'E' },
+                { id: 'duplicate', label: 'Duplicate', shortcut: 'D' },
+                {
+                  id: 'share',
+                  label: 'Share to',
+                  items: [
+                    { id: 'share-x', label: 'Twitter / X' },
+                    { id: 'share-li', label: 'LinkedIn' },
+                    { id: 'share-ig', label: 'Instagram' },
+                  ],
+                },
               ],
             },
-          ],
-        },
-        { items: [{ id: 'delete', label: 'Delete permanently', danger: true }] },
-      ]}
-    />
+            { items: [{ id: 'delete', label: 'Delete permanently', danger: true }] },
+          ]}
+        />
+      </div>
+    </Playground>
   );
 }
 
