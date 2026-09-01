@@ -45,6 +45,7 @@
 
   .rg__options {
     position: relative; /* anchors the rows' shared glide pill */
+    isolation: isolate;
     display: grid;
     gap: var(--space-1);
   }
@@ -241,29 +242,22 @@
 
     /* negative inset covers the card's hairline so the accent edge replaces it */
     inset: calc(-1 * var(--border-hairline));
-    z-index: 0;
+    z-index: 1;
     border: var(--border-hairline) solid var(--accent);
     border-radius: var(--radius-lg);
     background: var(--accent-subtle);
     pointer-events: none;
   }
 
-  /* hover highlight - a neutral bordered fill that glides between cards (layoutId, non-selected
-   only), mirroring the selected fill muted. Replaces the old per-card border/shadow swap. */
-  .rg__card-hover {
-    position: absolute;
-    inset: calc(-1 * var(--border-hairline));
-    z-index: 0;
-    border: var(--border-hairline) solid var(--border-strong);
-    border-radius: var(--radius-lg);
+  .rg--cards .rg-opt:hover:not(.is-disabled):not(.is-selected) {
+    border-color: var(--border-strong);
     background: var(--neutral-wash);
-    pointer-events: none;
   }
   .rg--cards .rg-opt > .rg-opt__icon,
   .rg--cards .rg-opt > .rg-opt__control,
   .rg--cards .rg-opt > .rg-opt__body {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
   .rg--cards .rg-opt.is-selected .rg-opt__icon {
     color: var(--text-accent);
