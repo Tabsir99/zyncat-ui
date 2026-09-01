@@ -2,10 +2,11 @@
 
 import './morphing-text.css';
 
-import { useEffect, useId, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import { useEffect, useId, useRef, type HTMLAttributes } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop } from '../../../engine';
+import type { MorphingTextStyle } from '../../../tokens/component-styles.generated';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { cx } from '../../internal/utils/cx';
 
@@ -176,7 +177,7 @@ export interface MorphingTextOwnProps {
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
-  style?: CSSProperties;
+  style?: MorphingTextStyle;
 }
 
 export interface MorphingTextProps extends MorphingTextOwnProps {

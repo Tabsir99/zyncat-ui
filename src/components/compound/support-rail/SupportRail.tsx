@@ -18,6 +18,7 @@ import { startDrag, type Layer, type PanInfo } from '../../../engine';
 import { Motion } from '../../../motion/element';
 import { Presence } from '../../../motion/presence';
 import { usePresence } from '../../../motion/presence-context';
+import type { SupportRailStyle } from '../../../tokens/component-styles.generated';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { useReturnFocus } from '../../internal/overlay/focus';
@@ -207,7 +208,7 @@ export interface SupportRailOwnProps {
   /** Extra class(es) merged onto the rail root. */
   className?: string;
   /** Inline styles merged onto the rail root - the place to retune the `--support-rail-*` properties. */
-  style?: CSSProperties;
+  style?: SupportRailStyle;
 }
 
 export interface SupportRailProps extends SupportRailOwnProps {

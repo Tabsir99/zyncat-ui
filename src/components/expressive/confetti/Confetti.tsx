@@ -2,19 +2,12 @@
 
 import './confetti.css';
 
-import {
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useSyncExternalStore,
-  type CSSProperties,
-  type HTMLAttributes,
-  type Ref,
-} from 'react';
+import { useEffect, useImperativeHandle, useRef, useSyncExternalStore, type HTMLAttributes, type Ref } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop, type Playback } from '../../../engine';
+import type { ConfettiStyle } from '../../../tokens/component-styles.generated';
 import { cx } from '../../internal/utils/cx';
 
 const TAU = Math.PI * 2;
@@ -608,7 +601,7 @@ export interface ConfettiOwnProps {
   /** Extra class(es) merged onto the canvas. */
   className?: string;
   /** Inline styles merged onto the canvas. */
-  style?: CSSProperties;
+  style?: ConfettiStyle;
 }
 
 export interface ConfettiProps extends ConfettiOwnProps {

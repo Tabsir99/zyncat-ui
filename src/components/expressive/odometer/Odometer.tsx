@@ -2,10 +2,11 @@
 
 import './odometer.css';
 
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from 'react';
+import { useEffect, useRef, type HTMLAttributes } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop } from '../../../engine';
+import type { OdometerStyle } from '../../../tokens/component-styles.generated';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { cx } from '../../internal/utils/cx';
 
@@ -87,7 +88,7 @@ export interface OdometerOwnProps {
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
-  style?: CSSProperties;
+  style?: OdometerStyle;
 }
 
 export interface OdometerProps extends OdometerOwnProps {

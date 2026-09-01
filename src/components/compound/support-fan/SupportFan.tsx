@@ -19,6 +19,7 @@ import {
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop, type Playback } from '../../../engine';
+import type { SupportFanStyle } from '../../../tokens/component-styles.generated';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
@@ -328,7 +329,7 @@ export interface SupportFanProps {
   /** Extra class(es) merged onto the root. Override `position` here to pin the fan to the viewport. */
   className?: string;
   /** Inline styles merged onto the root - the place to retune the `--support-fan-*` properties. */
-  style?: CSSProperties;
+  style?: SupportFanStyle;
   /** Standard <div> attributes (aria-*, data-*, title, ...) forwarded to the root. */
   htmlProps?: HTMLAttributes<HTMLDivElement> & DataAttributes;
 }

@@ -196,7 +196,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Multiplies the simulation rate; sampled live on every frame.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+    { name: 'style', type: 'OdometerStyle', description: 'Inline styles merged onto the root.' },
   ],
   'typing-lines': [
     {
@@ -229,7 +229,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Multiplies the typing rate; sampled live on every frame.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+    { name: 'style', type: 'TypingLinesStyle', description: 'Inline styles merged onto the root.' },
   ],
   lens: [
     {
@@ -258,7 +258,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Chromatic fringing at the rim, which strengthens with travel speed.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the stage.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the stage.' },
+    { name: 'style', type: 'LensStyle', description: 'Inline styles merged onto the stage.' },
   ],
   'weight-field': [
     {
@@ -280,7 +280,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Multiplies the simulation rate; sampled live on every frame.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+    { name: 'style', type: 'WeightFieldStyle', description: 'Inline styles merged onto the root.' },
   ],
   'morphing-text': [
     {
@@ -308,7 +308,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Multiplies the simulation rate; sampled live on every frame.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+    { name: 'style', type: 'MorphingTextStyle', description: 'Inline styles merged onto the root.' },
   ],
   'flow-field': [
     {
@@ -342,7 +342,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: "Radius in pixels of the pointer's steering influence, clamped to 40-640.",
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
+    { name: 'style', type: 'FlowFieldStyle', description: 'Inline styles merged onto the root.' },
   ],
   confetti: [
     {
@@ -389,7 +389,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Imperative handle - call `fire()` on it to send a burst, `clear()` to empty the field.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the canvas.' },
-    { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the canvas.' },
+    { name: 'style', type: 'ConfettiStyle', description: 'Inline styles merged onto the canvas.' },
   ],
   'support-fan': [
     {
@@ -472,7 +472,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     },
     {
       name: 'style',
-      type: 'CSSProperties',
+      type: 'SupportFanStyle',
       description: 'Inline styles merged onto the root - the place to retune the `--support-fan-*` properties.',
     },
     {
@@ -551,7 +551,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the rail root.' },
     {
       name: 'style',
-      type: 'CSSProperties',
+      type: 'SupportRailStyle',
       description: 'Inline styles merged onto the rail root - the place to retune the `--support-rail-*` properties.',
     },
   ],
@@ -2352,6 +2352,346 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
 };
 
 export const GENERATED_TYPES: Record<string, NestedType[]> = {
+  odometer: [
+    {
+      name: 'OdometerStyle',
+      rows: [
+        { name: '--odometer-cell', type: 'string | number', description: '`--odometer-cell`. Default: `1em`.' },
+        { name: '--odometer-digit', type: 'string | number', description: '`--odometer-digit`. Default: `1ch`.' },
+        { name: '--odometer-gap', type: 'string | number', description: '`--odometer-gap`. Default: `0.02em`.' },
+        {
+          name: '--odometer-ink',
+          type: 'string | number',
+          description: '`--odometer-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--odometer-accent',
+          type: 'string | number',
+          description: '`--odometer-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--odometer-separator-ink',
+          type: 'string | number',
+          description: '`--odometer-separator-ink`. Default: `var(--text-muted)`.',
+        },
+        {
+          name: '--odometer-size',
+          type: 'string | number',
+          description: '`--odometer-size`. Default: `var(--size-display)`.',
+        },
+        {
+          name: '--odometer-weight',
+          type: 'string | number',
+          description: '`--odometer-weight`. Default: `var(--weight-medium)`.',
+        },
+      ],
+    },
+  ],
+  'typing-lines': [
+    {
+      name: 'TypingLinesStyle',
+      rows: [
+        {
+          name: '--typing-lines-ink',
+          type: 'string | number',
+          description: '`--typing-lines-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--typing-lines-caret-ink',
+          type: 'string | number',
+          description: '`--typing-lines-caret-ink`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--typing-lines-size',
+          type: 'string | number',
+          description: '`--typing-lines-size`. Default: `var(--size-title)`.',
+        },
+        {
+          name: '--typing-lines-weight',
+          type: 'string | number',
+          description: '`--typing-lines-weight`. Default: `var(--weight-regular)`.',
+        },
+        {
+          name: '--typing-lines-leading',
+          type: 'string | number',
+          description: '`--typing-lines-leading`. Default: `1.4`.',
+        },
+        {
+          name: '--typing-lines-blink',
+          type: 'string | number',
+          description: '`--typing-lines-blink`. Default: `1080ms`.',
+        },
+        {
+          name: '--typing-lines-caret-gap',
+          type: 'string | number',
+          description: '`--typing-lines-caret-gap`. Default: `0.12em`.',
+        },
+      ],
+    },
+  ],
+  lens: [
+    {
+      name: 'LensStyle',
+      rows: [
+        { name: '--lens-ink', type: 'string | number', description: '`--lens-ink`. Default: `var(--text-strong)`.' },
+        {
+          name: '--lens-surface',
+          type: 'string | number',
+          description: '`--lens-surface`. Default: `var(--bg-surface)`.',
+        },
+        {
+          name: '--lens-edge',
+          type: 'string | number',
+          description: '`--lens-edge`. Default: `color-mix(in oklab, var(--lens-ink) 16%, transparent)`.',
+        },
+        {
+          name: '--lens-highlight',
+          type: 'string | number',
+          description: '`--lens-highlight`. Default: `color-mix(in oklab, var(--bg-surface) 90%, transparent)`.',
+        },
+        { name: '--lens-vignette-mid', type: 'string | number', description: '`--lens-vignette-mid`. Default: `5%`.' },
+        {
+          name: '--lens-vignette-edge',
+          type: 'string | number',
+          description: '`--lens-vignette-edge`. Default: `15%`.',
+        },
+        {
+          name: '--lens-fringe-warm',
+          type: 'string | number',
+          description: '`--lens-fringe-warm`. Default: `oklch(0.72 0.16 12 / 0.3)`.',
+        },
+        {
+          name: '--lens-fringe-cool',
+          type: 'string | number',
+          description: '`--lens-fringe-cool`. Default: `oklch(0.7 0.15 265 / 0.34)`.',
+        },
+        { name: '--lens-rim-start', type: 'string | number', description: '`--lens-rim-start`. Default: `79%`.' },
+        { name: '--lens-rim-end', type: 'string | number', description: '`--lens-rim-end`. Default: `87%`.' },
+      ],
+    },
+  ],
+  'weight-field': [
+    {
+      name: 'WeightFieldStyle',
+      rows: [
+        {
+          name: '--weight-field-ink',
+          type: 'string | number',
+          description: '`--weight-field-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--weight-field-accent',
+          type: 'string | number',
+          description: '`--weight-field-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--weight-field-size',
+          type: 'string | number',
+          description: '`--weight-field-size`. Default: `clamp(3.5rem, 11vw, 8.75rem)`.',
+        },
+        {
+          name: '--weight-field-leading',
+          type: 'string | number',
+          description: '`--weight-field-leading`. Default: `1`.',
+        },
+        {
+          name: '--weight-field-align',
+          type: 'string | number',
+          description: '`--weight-field-align`. Default: `center`.',
+        },
+        {
+          name: '--weight-field-pad',
+          type: 'string | number',
+          description: '`--weight-field-pad`. Default: `var(--space-6) var(--space-4)`.',
+        },
+        {
+          name: '--weight-field-reach',
+          type: 'string | number',
+          description: '`--weight-field-reach`. Default: `2.6`.',
+        },
+        {
+          name: '--weight-field-rest-weight',
+          type: 'string | number',
+          description: '`--weight-field-rest-weight`. Default: `300`.',
+        },
+        {
+          name: '--weight-field-peak-weight',
+          type: 'string | number',
+          description: '`--weight-field-peak-weight`. Default: `700`.',
+        },
+        {
+          name: '--weight-field-lift',
+          type: 'string | number',
+          description: '`--weight-field-lift`. Default: `0.08em`.',
+        },
+        {
+          name: '--weight-field-tracking',
+          type: 'string | number',
+          description: '`--weight-field-tracking`. Default: `0.012em`.',
+        },
+        { name: '--weight-field-tint', type: 'string | number', description: '`--weight-field-tint`. Default: `0.9`.' },
+      ],
+    },
+  ],
+  'morphing-text': [
+    {
+      name: 'MorphingTextStyle',
+      rows: [
+        {
+          name: '--morphing-text-ink',
+          type: 'string | number',
+          description: '`--morphing-text-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--morphing-text-size',
+          type: 'string | number',
+          description: '`--morphing-text-size`. Default: `var(--size-display-lg)`.',
+        },
+        {
+          name: '--morphing-text-weight',
+          type: 'string | number',
+          description: '`--morphing-text-weight`. Default: `var(--weight-medium)`.',
+        },
+        {
+          name: '--morphing-text-leading',
+          type: 'string | number',
+          description: '`--morphing-text-leading`. Default: `1.2`.',
+        },
+        {
+          name: '--morphing-text-tracking',
+          type: 'string | number',
+          description: '`--morphing-text-tracking`. Default: `var(--tracking-display)`.',
+        },
+        {
+          name: '--morphing-text-smear',
+          type: 'string | number',
+          description: '`--morphing-text-smear`. Default: `1`.',
+        },
+        {
+          name: '--morphing-text-rule-ink',
+          type: 'string | number',
+          description: '`--morphing-text-rule-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--morphing-text-rule-accent',
+          type: 'string | number',
+          description: '`--morphing-text-rule-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--morphing-text-rule-height',
+          type: 'string | number',
+          description: '`--morphing-text-rule-height`. Default: `1px`.',
+        },
+        {
+          name: '--morphing-text-rule-gap',
+          type: 'string | number',
+          description: '`--morphing-text-rule-gap`. Default: `var(--space-3)`.',
+        },
+        {
+          name: '--morphing-text-rule-rest',
+          type: 'string | number',
+          description: '`--morphing-text-rule-rest`. Default: `0.1`.',
+        },
+        {
+          name: '--morphing-text-rule-lift',
+          type: 'string | number',
+          description: '`--morphing-text-rule-lift`. Default: `0.3`.',
+        },
+      ],
+    },
+  ],
+  'flow-field': [
+    {
+      name: 'FlowFieldStyle',
+      rows: [
+        {
+          name: '--flow-field-ink',
+          type: 'string | number',
+          description: '`--flow-field-ink`. Default: `var(--text-subtle)`.',
+        },
+        {
+          name: '--flow-field-accent',
+          type: 'string | number',
+          description: '`--flow-field-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--flow-field-min-height',
+          type: 'string | number',
+          description: '`--flow-field-min-height`. Default: `var(--space-10)`.',
+        },
+        {
+          name: '--flow-field-ramp-0',
+          type: 'string | number',
+          description: '`--flow-field-ramp-0`. Default: `var(--flow-field-ink)`.',
+        },
+        {
+          name: '--flow-field-ramp-1',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-1`. Default: `color-mix(in oklab, var(--flow-field-accent) 9%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-2',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-2`. Default: `color-mix(in oklab, var(--flow-field-accent) 18%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-3',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-3`. Default: `color-mix(in oklab, var(--flow-field-accent) 27%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-4',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-4`. Default: `color-mix(in oklab, var(--flow-field-accent) 36%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-5',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-5`. Default: `color-mix(in oklab, var(--flow-field-accent) 45%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-6',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-6`. Default: `color-mix(in oklab, var(--flow-field-accent) 55%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-7',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-7`. Default: `color-mix(in oklab, var(--flow-field-accent) 64%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-8',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-8`. Default: `color-mix(in oklab, var(--flow-field-accent) 73%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-9',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-9`. Default: `color-mix(in oklab, var(--flow-field-accent) 82%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-10',
+          type: 'string | number',
+          description:
+            '`--flow-field-ramp-10`. Default: `color-mix(in oklab, var(--flow-field-accent) 91%, var(--flow-field-ink))`.',
+        },
+        {
+          name: '--flow-field-ramp-11',
+          type: 'string | number',
+          description: '`--flow-field-ramp-11`. Default: `var(--flow-field-accent)`.',
+        },
+      ],
+    },
+  ],
   confetti: [
     {
       name: 'ConfettiFireOptions',
@@ -2388,6 +2728,118 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           type: '() => void',
           required: true,
           description: 'Empties the field and stops the simulation immediately.',
+        },
+      ],
+    },
+    {
+      name: 'ConfettiStyle',
+      rows: [
+        {
+          name: '--confetti-paper-1',
+          type: 'string | number',
+          description: '`--confetti-paper-1`. Default: `oklch(0.53 0.2 288)`.',
+        },
+        {
+          name: '--confetti-paper-2',
+          type: 'string | number',
+          description: '`--confetti-paper-2`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--confetti-paper-3',
+          type: 'string | number',
+          description: '`--confetti-paper-3`. Default: `oklch(0.78 0.115 62)`.',
+        },
+        {
+          name: '--confetti-paper-4',
+          type: 'string | number',
+          description: '`--confetti-paper-4`. Default: `oklch(0.67 0.18 12)`.',
+        },
+        {
+          name: '--confetti-paper-5',
+          type: 'string | number',
+          description: '`--confetti-paper-5`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--confetti-weights',
+          type: 'string | number',
+          description: '`--confetti-weights`. Default: `1 1 1 1 0.45`.',
+        },
+        {
+          name: '--confetti-ink',
+          type: 'string | number',
+          description: '`--confetti-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--confetti-light',
+          type: 'string | number',
+          description: '`--confetti-light`. Default: `var(--bg-surface)`.',
+        },
+        { name: '--confetti-shade', type: 'string | number', description: '`--confetti-shade`. Default: `42%`.' },
+        { name: '--confetti-gloss', type: 'string | number', description: '`--confetti-gloss`. Default: `66%`.' },
+        {
+          name: '--confetti-layer',
+          type: 'string | number',
+          description: '`--confetti-layer`. Default: `var(--layer-toast)`.',
+        },
+        {
+          name: '--confetti-reverse-1',
+          type: 'string | number',
+          description:
+            '`--confetti-reverse-1`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-1))`.',
+        },
+        {
+          name: '--confetti-reverse-2',
+          type: 'string | number',
+          description:
+            '`--confetti-reverse-2`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-2))`.',
+        },
+        {
+          name: '--confetti-reverse-3',
+          type: 'string | number',
+          description:
+            '`--confetti-reverse-3`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-3))`.',
+        },
+        {
+          name: '--confetti-reverse-4',
+          type: 'string | number',
+          description:
+            '`--confetti-reverse-4`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-4))`.',
+        },
+        {
+          name: '--confetti-reverse-5',
+          type: 'string | number',
+          description:
+            '`--confetti-reverse-5`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-5))`.',
+        },
+        {
+          name: '--confetti-sheen-1',
+          type: 'string | number',
+          description:
+            '`--confetti-sheen-1`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-1))`.',
+        },
+        {
+          name: '--confetti-sheen-2',
+          type: 'string | number',
+          description:
+            '`--confetti-sheen-2`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-2))`.',
+        },
+        {
+          name: '--confetti-sheen-3',
+          type: 'string | number',
+          description:
+            '`--confetti-sheen-3`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-3))`.',
+        },
+        {
+          name: '--confetti-sheen-4',
+          type: 'string | number',
+          description:
+            '`--confetti-sheen-4`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-4))`.',
+        },
+        {
+          name: '--confetti-sheen-5',
+          type: 'string | number',
+          description:
+            '`--confetti-sheen-5`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-5))`.',
         },
       ],
     },
@@ -2430,6 +2882,141 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         },
       ],
     },
+    {
+      name: 'SupportFanStyle',
+      rows: [
+        {
+          name: '--support-fan-inset',
+          type: 'string | number',
+          description: '`--support-fan-inset`. Default: `var(--space-5)`.',
+        },
+        {
+          name: '--support-fan-trigger-size',
+          type: 'string | number',
+          description: '`--support-fan-trigger-size`. Default: `3.5rem`.',
+        },
+        {
+          name: '--support-fan-surface',
+          type: 'string | number',
+          description: '`--support-fan-surface`. Default: `var(--bg-subtle)`.',
+        },
+        {
+          name: '--support-fan-surface-lifted',
+          type: 'string | number',
+          description: '`--support-fan-surface-lifted`. Default: `var(--bg-surface)`.',
+        },
+        {
+          name: '--support-fan-ink',
+          type: 'string | number',
+          description: '`--support-fan-ink`. Default: `var(--text-strong)`.',
+        },
+        {
+          name: '--support-fan-ink-soft',
+          type: 'string | number',
+          description: '`--support-fan-ink-soft`. Default: `var(--text-secondary)`.',
+        },
+        {
+          name: '--support-fan-ink-faint',
+          type: 'string | number',
+          description: '`--support-fan-ink-faint`. Default: `var(--text-subtle)`.',
+        },
+        {
+          name: '--support-fan-accent',
+          type: 'string | number',
+          description: '`--support-fan-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--support-fan-accent-wash',
+          type: 'string | number',
+          description: '`--support-fan-accent-wash`. Default: `var(--accent-wash)`.',
+        },
+        {
+          name: '--support-fan-live-color',
+          type: 'string | number',
+          description: '`--support-fan-live-color`. Default: `var(--success)`.',
+        },
+        {
+          name: '--support-fan-line',
+          type: 'string | number',
+          description: '`--support-fan-line`. Default: `var(--border-default)`.',
+        },
+        {
+          name: '--support-fan-shadow',
+          type: 'string | number',
+          description: '`--support-fan-shadow`. Default: `var(--shadow-md)`.',
+        },
+        {
+          name: '--support-fan-shadow-lifted',
+          type: 'string | number',
+          description: '`--support-fan-shadow-lifted`. Default: `var(--shadow-lg)`.',
+        },
+        {
+          name: '--support-fan-chip-padding',
+          type: 'string | number',
+          description: '`--support-fan-chip-padding`. Default: `var(--space-1) var(--space-3)`.',
+        },
+        {
+          name: '--support-fan-chip-gap',
+          type: 'string | number',
+          description: '`--support-fan-chip-gap`. Default: `var(--space-2)`.',
+        },
+        {
+          name: '--support-fan-icon-chip-padding',
+          type: 'string | number',
+          description: '`--support-fan-icon-chip-padding`. Default: `var(--space-2)`.',
+        },
+        {
+          name: '--support-fan-caption-tracking',
+          type: 'string | number',
+          description: '`--support-fan-caption-tracking`. Default: `0.16em`.',
+        },
+        {
+          name: '--support-fan-ring-inset',
+          type: 'string | number',
+          description: '`--support-fan-ring-inset`. Default: `0.3125rem`.',
+        },
+        {
+          name: '--support-fan-live-offset',
+          type: 'string | number',
+          description: '`--support-fan-live-offset`. Default: `0.375rem`.',
+        },
+        {
+          name: '--support-fan-live-size',
+          type: 'string | number',
+          description: '`--support-fan-live-size`. Default: `0.4375rem`.',
+        },
+        {
+          name: '--support-fan-glyph-turn',
+          type: 'string | number',
+          description: '`--support-fan-glyph-turn`. Default: `135deg`.',
+        },
+        {
+          name: '--support-fan-collapse-x',
+          type: 'string | number',
+          description: '`--support-fan-collapse-x`. Default: `0.875rem`.',
+        },
+        {
+          name: '--support-fan-collapse-scale',
+          type: 'string | number',
+          description: '`--support-fan-collapse-scale`. Default: `0.3`.',
+        },
+        {
+          name: '--support-fan-stagger',
+          type: 'string | number',
+          description: '`--support-fan-stagger`. Default: `calc(var(--duration-fast) * 0.3)`.',
+        },
+        {
+          name: '--support-fan-open-duration',
+          type: 'string | number',
+          description: '`--support-fan-open-duration`. Default: `var(--duration-slower)`.',
+        },
+        {
+          name: '--support-fan-close-duration',
+          type: 'string | number',
+          description: '`--support-fan-close-duration`. Default: `var(--duration-slow)`.',
+        },
+      ],
+    },
   ],
   'support-rail': [
     {
@@ -2466,6 +3053,141 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           name: 'onSelect',
           type: '() => void',
           description: "Fires when this action commits, before the widget's own `onSelect`.",
+        },
+      ],
+    },
+    {
+      name: 'SupportRailStyle',
+      rows: [
+        {
+          name: '--support-rail-width',
+          type: 'string | number',
+          description: '`--support-rail-width`. Default: `318px`.',
+        },
+        {
+          name: '--support-rail-needle-width',
+          type: 'string | number',
+          description: '`--support-rail-needle-width`. Default: `42px`.',
+        },
+        {
+          name: '--support-rail-needle-height',
+          type: 'string | number',
+          description: '`--support-rail-needle-height`. Default: `150px`.',
+        },
+        {
+          name: '--support-rail-needle-duck',
+          type: 'string | number',
+          description: '`--support-rail-needle-duck`. Default: `0.55`.',
+        },
+        {
+          name: '--support-rail-needle-tracking',
+          type: 'string | number',
+          description: '`--support-rail-needle-tracking`. Default: `0.22em`.',
+        },
+        {
+          name: '--support-rail-caps-tracking',
+          type: 'string | number',
+          description: '`--support-rail-caps-tracking`. Default: `0.13em`.',
+        },
+        {
+          name: '--support-rail-grabber-width',
+          type: 'string | number',
+          description: '`--support-rail-grabber-width`. Default: `13px`.',
+        },
+        {
+          name: '--support-rail-grabber-pill',
+          type: 'string | number',
+          description: '`--support-rail-grabber-pill`. Default: `34px`.',
+        },
+        {
+          name: '--support-rail-live-size',
+          type: 'string | number',
+          description: '`--support-rail-live-size`. Default: `6px`.',
+        },
+        {
+          name: '--support-rail-live-reach',
+          type: 'string | number',
+          description: '`--support-rail-live-reach`. Default: `2.6`.',
+        },
+        {
+          name: '--support-rail-rule-width',
+          type: 'string | number',
+          description: '`--support-rail-rule-width`. Default: `1.5px`.',
+        },
+        {
+          name: '--support-rail-rule-height',
+          type: 'string | number',
+          description: '`--support-rail-rule-height`. Default: `20px`.',
+        },
+        {
+          name: '--support-rail-row-pad-block',
+          type: 'string | number',
+          description: '`--support-rail-row-pad-block`. Default: `var(--space-4)`.',
+        },
+        {
+          name: '--support-rail-row-pad-inline',
+          type: 'string | number',
+          description: '`--support-rail-row-pad-inline`. Default: `var(--space-4)`.',
+        },
+        {
+          name: '--support-rail-row-nudge',
+          type: 'string | number',
+          description: '`--support-rail-row-nudge`. Default: `5px`.',
+        },
+        {
+          name: '--support-rail-surface',
+          type: 'string | number',
+          description: '`--support-rail-surface`. Default: `var(--bg-subtle)`.',
+        },
+        {
+          name: '--support-rail-surface-raised',
+          type: 'string | number',
+          description: '`--support-rail-surface-raised`. Default: `var(--bg-surface)`.',
+        },
+        {
+          name: '--support-rail-line',
+          type: 'string | number',
+          description: '`--support-rail-line`. Default: `var(--border-default)`.',
+        },
+        {
+          name: '--support-rail-line-soft',
+          type: 'string | number',
+          description: '`--support-rail-line-soft`. Default: `var(--border-subtle)`.',
+        },
+        {
+          name: '--support-rail-accent',
+          type: 'string | number',
+          description: '`--support-rail-accent`. Default: `var(--accent)`.',
+        },
+        {
+          name: '--support-rail-live-color',
+          type: 'string | number',
+          description: '`--support-rail-live-color`. Default: `var(--success)`.',
+        },
+        {
+          name: '--support-rail-radius',
+          type: 'string | number',
+          description: '`--support-rail-radius`. Default: `var(--radius-2xl)`.',
+        },
+        {
+          name: '--support-rail-open-duration',
+          type: 'string | number',
+          description: '`--support-rail-open-duration`. Default: `calc(var(--duration-slower) * 1.4)`.',
+        },
+        {
+          name: '--support-rail-close-duration',
+          type: 'string | number',
+          description: '`--support-rail-close-duration`. Default: `var(--duration-slower)`.',
+        },
+        {
+          name: '--support-rail-needle-delay',
+          type: 'string | number',
+          description: '`--support-rail-needle-delay`. Default: `calc(var(--duration-slow) * 0.5)`.',
+        },
+        {
+          name: '--support-rail-stagger',
+          type: 'string | number',
+          description: '`--support-rail-stagger`. Default: `calc(var(--duration-fast) * 0.3)`.',
         },
       ],
     },

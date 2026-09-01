@@ -2,10 +2,11 @@
 
 import './flow-field.css';
 
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop } from '../../../engine';
+import type { FlowFieldStyle } from '../../../tokens/component-styles.generated';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { cx } from '../../internal/utils/cx';
 
@@ -205,7 +206,7 @@ export interface FlowFieldOwnProps {
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
-  style?: CSSProperties;
+  style?: FlowFieldStyle;
 }
 
 export interface FlowFieldProps extends FlowFieldOwnProps {

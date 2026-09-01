@@ -2,10 +2,11 @@
 
 import './lens.css';
 
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useRef, type HTMLAttributes, type ReactNode } from 'react';
 
 import type { DataAttributes } from '../../../dom-props';
 import { loop } from '../../../engine';
+import type { LensStyle } from '../../../tokens/component-styles.generated';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { cx } from '../../internal/utils/cx';
 
@@ -157,7 +158,7 @@ export interface LensOwnProps {
   /** Extra class(es) merged onto the stage. */
   className?: string;
   /** Inline styles merged onto the stage. */
-  style?: CSSProperties;
+  style?: LensStyle;
 }
 
 export interface LensProps extends LensOwnProps {
