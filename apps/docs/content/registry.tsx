@@ -363,7 +363,7 @@ export const GROUPS: DocGroup[] = [
         label: 'Pagination',
         blurb: 'Honest cursor strip - a mono range readout and a prev/next pair.',
         HeroComponent: D.PaginationHero,
-        heroCode: `import { Pagination } from '@zyncat/ui/pagination';\n\n<Pagination page={page} pageSize={10} totalCount={94} onPageChange={setPage} />`,
+        heroCode: `import { Pagination } from '@zyncat/ui/pagination';\n\n<Pagination\n  range={[offset + 1, Math.min(offset + pageSize, total)]}\n  total={total}\n  hasPrev={offset > 0}\n  hasNext={offset + pageSize < total}\n  onPrev={() => setOffset(offset - pageSize)}\n  onNext={() => setOffset(offset + pageSize)}\n/>`,
       },
     ],
   },
@@ -390,7 +390,7 @@ export const GROUPS: DocGroup[] = [
         label: 'DateRangeField',
         blurb: 'Two-tap auto-ordering window; commits only when both ends exist.',
         HeroComponent: T.DateRangeFieldHero,
-        heroCode: `import { DateRangeField } from '@zyncat/ui/date-range-field';\n\n<DateRangeField label="Campaign duration" startDate={start} endDate={end} onRangeChange={setRange} />`,
+        heroCode: `import { DateRangeField } from '@zyncat/ui/date-range-field';\n\n<DateRangeField label="Campaign duration" value={range} onChange={setRange} />`,
       },
       {
         slug: 'time-field',
@@ -404,7 +404,7 @@ export const GROUPS: DocGroup[] = [
         label: 'Tabs',
         blurb: 'Line tabs - the ink reaches then releases; panels enter from the side you moved toward.',
         HeroComponent: T.TabsHero,
-        heroCode: `import { Tabs } from '@zyncat/ui/tabs';\n\n<Tabs items={tabItems} activeId={active} onChange={setActive} />`,
+        heroCode: `import { Tabs, TabPanel } from '@zyncat/ui/tabs';\n\n<Tabs\n  items={items}\n  value={active}\n  onChange={(next, d) => { setActive(next); setDir(d); }}\n  name="views"\n  ariaLabel="Workspace sections"\n/>\n<TabPanel name="views" tab={active} dir={dir}>\n  {panels[active]}\n</TabPanel>`,
       },
     ],
   },
@@ -443,7 +443,8 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'popover',
         label: 'Popover',
-        blurb: 'Headless anchored panel, non-modal - flips and clamps to the viewport. The render-prop gets { close }.',
+        blurb:
+          'Headless anchored panel, non-modal - flips and clamps to the viewport. You own the surface; drive dismissal with open/onOpenChange.',
         Playground: O.PopoverPlayground,
         heroCode: `import { Popover } from '@zyncat/ui/popover';\n\n<Popover trigger={<Button variant="secondary">More actions</Button>} side="bottom" align="start">\n  <menu>...</menu>\n</Popover>`,
       },

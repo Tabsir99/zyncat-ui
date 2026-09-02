@@ -78,7 +78,7 @@ const rows: Post[] = [
 const [cursor, setCursor] = useState({ from: 1, to: 25, hasPrev: false, hasNext: true });
 
 <Pagination
-  label="Posts"
+  ariaLabel="Posts"
   range={[cursor.from, cursor.to]}
   total={312}
   hasPrev={cursor.hasPrev}
