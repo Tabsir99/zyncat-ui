@@ -12,7 +12,7 @@ export type DurationToken = 'fast' | 'base' | 'slow' | 'slower' | 'slowest';
  *  - `entrance` cubic-bezier(0.16, 1, 0.3, 1) - hard deceleration; content arriving on screen.
  *  - `exit` cubic-bezier(0.4, 0, 1, 1) - accelerates away; content leaving (pair with a faster duration).
  *  - `spring` cubic-bezier(0.34, 1.4, 0.5, 1) - overshoots then settles; playful confirmations.
- *  - `glide` cubic-bezier(0.32, 0.72, 0, 1) - fast out, soft landing; a persistent element moving to a
+ *  - `glide` cubic-bezier(0.32, 0.55, 0, 1) - fast out, soft landing; a persistent element moving to a
  *    new target, never enter/exit. */
 export type EaseToken = 'standard' | 'entrance' | 'exit' | 'spring' | 'glide';
 

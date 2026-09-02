@@ -19,7 +19,7 @@
     --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
     --ease-glide: cubic-bezier(
       0.32,
-      0.72,
+      0.55,
       0,
       1
     ); /* fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit */
