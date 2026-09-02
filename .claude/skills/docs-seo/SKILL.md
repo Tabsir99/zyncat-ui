@@ -83,20 +83,21 @@ Contract: `apps/docs/content/seo/types.ts`.
 - **title** - <=45 chars, primary first, no suffix. Bare head terms lose to
   homographs (`odometer` is car mileage): keep the page's own name only if it
   earns its place, never bare, never first.
-- **description** - 140-158 chars: primary in the first clause, one secondary,
-  one differentiator.
+- **description** - 140-158 chars: primary first clause, one secondary, one
+  differentiator.
 - **keywords** - 10-15, ranked by proven traffic, every one past the >=20 gate.
   Google ignores this tag; it feeds the JSON-LD for answer engines, so tight
   beats long.
-- **lede** - one or two sentences under the H1, replacing the blurb; omit if the
-  blurb reads better.
+- **lede** - the line under the H1, replacing the blurb. **At most 115 chars**,
+  two lines at its 58ch measure: what the component is, then when to reach for
+  it. Natural words only - React, component, the subject noun, a real use case.
+  Never a mined phrase forced into a sentence.
 - **faq** - 4 to 6, preferring verbatim `generator` question rows, filled from
   angles E and F. Each answer 1-3 sentences, self-contained, naming a prop or a
   code shape, true to Step 1. It renders as an accordion, so each stands alone.
 
 Coverage beats density: every surviving angle appears somewhere in prose. Prove
-it with `pnpm --filter zyncat-ui-docs typecheck` and `prettier --write`, then
-report:
+it with `pnpm --filter zyncat-ui-docs typecheck` and `prettier --write`, then:
 
 ```
 slug: confetti

@@ -36,7 +36,15 @@ it: round 1 on three widgets was 18 failures in 283 mints with 5 rebuilds,
 round 2 on five was 9 in 293 with none. Budget a widget or two per agent.
 
 Give each agent one slug and its research directory. Update this file when a
-round lands: the mark, the primary keyword, and the kept count.
+round lands: the mark, the primary keyword, and the shipped keyword count.
+
+**Check for collisions before wiring a round in.** Agents in the same round run
+in parallel, so none of them can read a sibling that has not written yet - the
+skill's "keywords already in a sibling's array are taken" rule only catches
+already-shipped pages. Round 5 produced two: `introduction` and `installation`
+both claimed `tailwind alternatives` and `alternatives to tailwind css`. Diff
+every new keyword array against every shipped one, and give a contested cluster
+to the page that cannot rank without it.
 
 ## Order
 
@@ -49,83 +57,83 @@ domain authority, so those pages compete on the long tail and the FAQ instead.
 
 Differentiated subjects, real volume, winnable. Do these first.
 
-| #   | Slug           | Page          | Status | Primary keyword           | Kept |
-| --- | -------------- | ------------- | ------ | ------------------------- | ---- |
-| R1  | confetti       | Confetti      | ✔      | confetti animation        | 172  |
-| R1  | morphing-text  | MorphingText  | ✔      | morphing text animation   | 135  |
-| R1  | odometer       | Odometer      | ✔      | number counter animation  | 170  |
-| R2  | typing-lines   | TypingLines   | ✔      | typing animation          | 143  |
-| R2  | lens           | Lens          | ✔      | image zoom                | 156  |
-| R2  | flow-field     | FlowField     | ✔      | react animated background | 131  |
-| R3  | weight-field   | WeightField   | ✔      | variable font animation   | 162  |
-| R3  | instagram-feed | InstagramFeed | ✔      | instagram ui              | 165  |
-| R3  | facebook-feed  | FacebookFeed  | ✔      | facebook ui               | 136  |
-| R4  | tiktok         | TikTok        | ☐      |                           |      |
-| R4  | youtube        | YouTube       | ☐      |                           |      |
+| #   | Slug           | Page          | Status | Primary keyword           | Kws |
+| --- | -------------- | ------------- | ------ | ------------------------- | --- |
+| R1  | confetti       | Confetti      | ✔      | confetti animation        | 15  |
+| R1  | morphing-text  | MorphingText  | ✔      | morphing text animation   | 10  |
+| R1  | odometer       | Odometer      | ✔      | number counter animation  | 15  |
+| R2  | typing-lines   | TypingLines   | ✔      | typing animation          | 15  |
+| R2  | lens           | Lens          | ✔      | image zoom                | 9   |
+| R2  | flow-field     | FlowField     | ✔      | react animated background | 15  |
+| R3  | weight-field   | WeightField   | ✔      | variable font animation   | 15  |
+| R3  | instagram-feed | InstagramFeed | ✔      | instagram ui              | 10  |
+| R3  | facebook-feed  | FacebookFeed  | ✔      | facebook ui               | 5   |
+| R4  | tiktok         | TikTok        | ✔      | tiktok ui                 | 14  |
+| R4  | youtube        | YouTube       | ✔      | youtube clone             | 13  |
 
 ### Tier B — getting started
 
 Brand and high-intent install queries. Guide pages: seeds are tasks, not names.
 
-| #   | Slug         | Page                | Status | Primary keyword | Kept |
-| --- | ------------ | ------------------- | ------ | --------------- | ---- |
-| R5  | introduction | Introduction        | ☐      |                 |      |
-| R5  | installation | Installation        | ☐      |                 |      |
-| R5  | theming      | Theming & Overrides | ☐      |                 |      |
-| R5  | mcp          | MCP Server          | ☐      |                 |      |
+| #   | Slug         | Page                | Status | Primary keyword      | Kws |
+| --- | ------------ | ------------------- | ------ | -------------------- | --- |
+| R5  | introduction | Introduction        | ✔      | react ui components  | 13  |
+| R5  | installation | Installation        | ✔      | tailwind alternative | 15  |
+| R5  | theming      | Theming & Overrides | ✔      | theming              | 15  |
+| R5  | mcp          | MCP Server          | ☐      |                      |     |
 
 ### Tier C — high-volume controls
 
 Competitive head terms, but the React 19 / zero-dependency angle is a real
 differentiator here. Expect to win on the long tail first.
 
-| #   | Slug           | Page           | Status | Primary keyword | Kept |
-| --- | -------------- | -------------- | ------ | --------------- | ---- |
-| R6  | select         | Select         | ☐      |                 |      |
-| R6  | multi-select   | MultiSelect    | ☐      |                 |      |
-| R6  | otp-field      | OtpField       | ☐      |                 |      |
-| R7  | date-field     | DateField      | ☐      |                 |      |
-| R7  | datetime-field | DateTimeField  | ☐      |                 |      |
-| R7  | date-range     | DateRangeField | ☐      |                 |      |
-| R8  | time-field     | TimeField      | ☐      |                 |      |
-| R8  | emoji-picker   | EmojiPicker    | ☐      |                 |      |
-| R8  | table          | Table          | ☐      |                 |      |
-| R8  | pagination     | Pagination     | ☐      |                 |      |
+| #   | Slug           | Page           | Status | Primary keyword | Kws |
+| --- | -------------- | -------------- | ------ | --------------- | --- |
+| R6  | select         | Select         | ☐      |                 |     |
+| R6  | multi-select   | MultiSelect    | ☐      |                 |     |
+| R6  | otp-field      | OtpField       | ☐      |                 |     |
+| R7  | date-field     | DateField      | ☐      |                 |     |
+| R7  | datetime-field | DateTimeField  | ☐      |                 |     |
+| R7  | date-range     | DateRangeField | ☐      |                 |     |
+| R8  | time-field     | TimeField      | ☐      |                 |     |
+| R8  | emoji-picker   | EmojiPicker    | ☐      |                 |     |
+| R8  | table          | Table          | ☐      |                 |     |
+| R8  | pagination     | Pagination     | ☐      |                 |     |
 
 ### Tier D — the rest
 
-| #   | Slug         | Page        | Status | Primary keyword | Kept |
-| --- | ------------ | ----------- | ------ | --------------- | ---- |
-| R9  | button       | Button      | ☐      |                 |      |
-| R9  | icon         | Icon        | ☐      |                 |      |
-| R9  | collapse     | Collapse    | ☐      |                 |      |
-| R10 | badge        | Badge       | ☐      |                 |      |
-| R10 | status-badge | StatusBadge | ☐      |                 |      |
-| R10 | count-badge  | CountBadge  | ☐      |                 |      |
-| R11 | text-field   | TextField   | ☐      |                 |      |
-| R11 | number-field | NumberField | ☐      |                 |      |
-| R11 | textarea     | Textarea    | ☐      |                 |      |
-| R12 | checkbox     | Checkbox    | ☐      |                 |      |
-| R12 | toggle       | Toggle      | ☐      |                 |      |
-| R12 | radio-group  | RadioGroup  | ☐      |                 |      |
-| R13 | avatar       | Avatar      | ☐      |                 |      |
-| R13 | tag          | Tag         | ☐      |                 |      |
-| R13 | tabs         | Tabs        | ☐      |                 |      |
-| R14 | alert        | Alert       | ☐      |                 |      |
-| R14 | toast        | Toast       | ☐      |                 |      |
-| R14 | tooltip      | Tooltip     | ☐      |                 |      |
-| R15 | dialog       | Dialog      | ☐      |                 |      |
-| R15 | popover      | Popover     | ☐      |                 |      |
-| R15 | dropdown     | Dropdown    | ☐      |                 |      |
-| R16 | sheet        | Sheet       | ☐      |                 |      |
-| R16 | support-rail | SupportRail | ☐      |                 |      |
+| #   | Slug         | Page        | Status | Primary keyword | Kws |
+| --- | ------------ | ----------- | ------ | --------------- | --- |
+| R9  | button       | Button      | ☐      |                 |     |
+| R9  | icon         | Icon        | ☐      |                 |     |
+| R9  | collapse     | Collapse    | ☐      |                 |     |
+| R10 | badge        | Badge       | ☐      |                 |     |
+| R10 | status-badge | StatusBadge | ☐      |                 |     |
+| R10 | count-badge  | CountBadge  | ☐      |                 |     |
+| R11 | text-field   | TextField   | ☐      |                 |     |
+| R11 | number-field | NumberField | ☐      |                 |     |
+| R11 | textarea     | Textarea    | ☐      |                 |     |
+| R12 | checkbox     | Checkbox    | ☐      |                 |     |
+| R12 | toggle       | Toggle      | ☐      |                 |     |
+| R12 | radio-group  | RadioGroup  | ☐      |                 |     |
+| R13 | avatar       | Avatar      | ☐      |                 |     |
+| R13 | tag          | Tag         | ☐      |                 |     |
+| R13 | tabs         | Tabs        | ☐      |                 |     |
+| R14 | alert        | Alert       | ☐      |                 |     |
+| R14 | toast        | Toast       | ☐      |                 |     |
+| R14 | tooltip      | Tooltip     | ☐      |                 |     |
+| R15 | dialog       | Dialog      | ☐      |                 |     |
+| R15 | popover      | Popover     | ☐      |                 |     |
+| R15 | dropdown     | Dropdown    | ☐      |                 |     |
+| R16 | sheet        | Sheet       | ☐      |                 |     |
+| R16 | support-rail | SupportRail | ☐      |                 |     |
 
 ## Tally
 
 | Tier           | Pages | ☑   | ✔   |
 | -------------- | ----- | --- | --- |
-| A — expressive | 11    | 9   | 9   |
-| B — guides     | 4     | 0   | 0   |
+| A — expressive | 11    | 11  | 11  |
+| B — guides     | 4     | 3   | 3   |
 | C — controls   | 10    | 0   | 0   |
 | D — the rest   | 23    | 0   | 0   |
-| **Total**      | 48    | 9   | 9   |
+| **Total**      | 48    | 14  | 14  |
