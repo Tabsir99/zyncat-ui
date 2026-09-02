@@ -628,6 +628,7 @@ body {
 }
 
 .code-block {
+  margin: 0;
   border: var(--docs-card-border);
   border-radius: var(--radius-lg);
   background: var(--bg-subtle);
@@ -1306,6 +1307,8 @@ body {
   flex-direction: column;
   gap: var(--space-7);
   margin: var(--space-2) 0;
+  padding-inline-start: 0;
+  list-style: none;
   position: relative;
 }
 
@@ -1361,6 +1364,8 @@ body {
 
 .feature-grid {
   display: grid;
+  padding-inline-start: 0;
+  list-style: none;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: var(--border-hairline);
   background: var(--border-default);
@@ -2350,4 +2355,52 @@ body {
     font-size: 11.5px;
     padding: 14px;
   }
+}
+
+.doc-faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.doc-faq__item {
+  padding-left: var(--space-5);
+  border-left: var(--border-hairline) solid var(--border-default);
+}
+
+.doc-faq__q {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  margin: 0 0 var(--space-2);
+}
+
+.doc-faq__a {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: 100;
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-app);
+  border: var(--docs-card-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  color: var(--text-strong);
+  font-size: 0.875rem;
+  font-weight: 550;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }

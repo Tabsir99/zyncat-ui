@@ -54,6 +54,10 @@ export function DocsShell({ children }: { children: ReactNode }) {
       <Toaster />
       <CommandMenu open={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
+
       <header className="navbar">
         <div className="navbar__inner">
           <div className="navbar__left">
@@ -76,7 +80,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
           <span className="navbar__motto">A catalogue of working parts — rev 0.11</span>
 
           <div className="navbar__right">
-            <nav className="navbar__nav">
+            <nav className="navbar__nav" aria-label="Site">
               <Link
                 href="/introduction"
                 className={`navbar__nav-link ${
@@ -131,7 +135,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
       <div className="docs-container">
         <aside className={`sidebar ${isMobileNavOpen ? 'sidebar--open' : ''}`}>
           <div className="sidebar__inner">
-            <nav className="sidebar__nav">
+            <nav className="sidebar__nav" aria-label="Documentation">
               {GROUPS.map((g) => {
                 const isOpen = !closedGroups.has(g.id);
                 return (
@@ -157,6 +161,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
                               key={d.slug}
                               href={`/${d.slug}`}
                               className={`nav__link${isActive ? ' nav__link--active' : ''}`}
+                              aria-current={isActive ? 'page' : undefined}
                             >
                               <span className="nav__link-label">{d.label}</span>
                               {isNew ? (
@@ -180,7 +185,9 @@ export function DocsShell({ children }: { children: ReactNode }) {
           <div className="sidebar-backdrop" onClick={() => setIsMobileNavOpen(false)} aria-hidden />
         ) : null}
 
-        <main className="main-content">{children}</main>
+        <main className="main-content" id="main-content">
+          {children}
+        </main>
       </div>
     </div>
   );

@@ -10,12 +10,14 @@ import { toast } from '@zyncat/ui/toast-store';
 import { Tooltip } from '@zyncat/ui/tooltip';
 
 import { DOCS, GROUPS, NEW_SLUGS, type Doc } from '../content/registry';
+import type { PageSeo } from '../content/seo/types';
+import { Faq } from './Faq';
 import { Icon } from './icon';
 import { CodeBlock, InstallationBox } from './kit';
 import { PropsTable } from './PropsTable';
 import { TableOfContents } from './TableOfContents';
 
-export function PageView({ doc }: { doc: Doc }) {
+export function PageView({ doc, seo }: { doc: Doc; seo?: PageSeo }) {
   const { slug, label, headline, blurb, HeroComponent, Playground, heroCode, props, types } = doc;
 
   const [heroTab, setHeroTab] = useState('preview');
@@ -97,7 +99,7 @@ export function PageView({ doc }: { doc: Doc }) {
               </div>
             )}
           </div>
-          <p className="page__blurb">{blurb}</p>
+          <p className="page__blurb">{seo?.lede ?? blurb}</p>
         </header>
 
         {doc.Content ? (
@@ -107,13 +109,19 @@ export function PageView({ doc }: { doc: Doc }) {
         ) : null}
 
         {Playground ? (
-          <section className="playground-section" id="playground">
+          <section className="playground-section" id="playground" aria-labelledby="playground-heading">
+            <h2 id="playground-heading" className="visually-hidden">
+              {label} playground
+            </h2>
             <Playground />
           </section>
         ) : null}
 
         {HeroComponent ? (
-          <section className="hero-preview" id="preview">
+          <section className="hero-preview" id="preview" aria-labelledby="preview-heading">
+            <h2 id="preview-heading" className="visually-hidden">
+              {label} preview
+            </h2>
             <div className="hero-preview__tabs-bar">
               <Tabs
                 items={heroItems}
@@ -164,9 +172,11 @@ export function PageView({ doc }: { doc: Doc }) {
         {!doc.Content ? <InstallationBox slug={slug} /> : null}
 
         {!doc.Content && heroCode ? (
-          <section className="doc-section" id="usage">
+          <section className="doc-section" id="usage" aria-labelledby="usage-heading">
             <div className="section-head">
-              <h2 className="section-head__title">Usage</h2>
+              <h2 id="usage-heading" className="section-head__title">
+                Usage
+              </h2>
             </div>
             <CodeBlock code={heroCode} language="tsx" />
             <p className="section-note">
@@ -177,9 +187,11 @@ export function PageView({ doc }: { doc: Doc }) {
         ) : null}
 
         {props && props.length > 0 ? (
-          <section className="doc-section" id="props">
+          <section className="doc-section" id="props" aria-labelledby="props-heading">
             <div className="section-head">
-              <h2 className="section-head__title">Props</h2>
+              <h2 id="props-heading" className="section-head__title">
+                {label} props
+              </h2>
             </div>
             <PropsTable rows={props} title={label} />
             {types?.map((type) => (
@@ -187,6 +199,8 @@ export function PageView({ doc }: { doc: Doc }) {
             ))}
           </section>
         ) : null}
+
+        {seo?.faq?.length ? <Faq items={seo.faq} /> : null}
 
         <nav className="page-pagination" aria-label="Component navigation">
           {prevDoc ? (
@@ -227,7 +241,7 @@ export function PageView({ doc }: { doc: Doc }) {
         </footer>
       </article>
 
-      <TableOfContents doc={doc} />
+      <TableOfContents doc={doc} seo={seo} />
     </div>
   );
 }

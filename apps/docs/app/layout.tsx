@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Newsreader } from 'next/font/google';
 
+import { SiteJsonLd } from '@/components/JsonLd';
+
 import '@/styles/docs.css';
 import '@zyncat/ui/styles.css';
 
@@ -19,6 +21,17 @@ export const metadata: Metadata = {
   title: { template: '%s - Zyncat UI', default: 'Zyncat UI — the $400 design system, minus the $400' },
   description:
     'Open-source, motion-first React 19 design system for dashboards and data-heavy apps. 30+ polished components on a small token vocabulary — no Tailwind, no CSS-in-JS. MIT.',
+  applicationName: 'Zyncat UI',
+  authors: [{ name: 'Tabsir Ahammed', url: 'https://github.com/Tabsir99' }],
+  creator: 'Tabsir Ahammed',
+  publisher: 'Zyncat UI',
+  category: 'technology',
+  alternates: { canonical: '/' },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
+  },
   icons: { icon: '/favicon.svg' },
   openGraph: {
     title: 'Zyncat UI — the $400 design system, minus the $400',
@@ -43,7 +56,10 @@ export const viewport: Viewport = { themeColor: '#0b0b0c' };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${newsreader.variable} ${geist.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SiteJsonLd />
+        {children}
+      </body>
     </html>
   );
 }

@@ -85,8 +85,10 @@ export function PropsTable({ rows, title = 'Props' }: { rows: PropRow[]; title?:
   }));
 
   return (
-    <section className="props-section" aria-label={title} id={id}>
-      <h3 className="props-title">{title}</h3>
+    <section className="props-section" aria-labelledby={`${id}-heading`} id={id}>
+      <h3 className="props-title" id={`${id}-heading`}>
+        {title}
+      </h3>
       <Table columns={COLUMNS} rows={displayRows} rowKey="name" ariaLabel={`${title} props`} density="compact" />
     </section>
   );

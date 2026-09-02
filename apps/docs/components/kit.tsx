@@ -85,14 +85,24 @@ export function Demo({
         .replace(/(^-|-$)/g, '')
     : undefined;
 
-  return (
-    <div className="example-block" id={id ? `example-${id}` : undefined}>
-      {label ? <h3 className="example-block__title">{label}</h3> : null}
+  const body = (
+    <>
       {description ? <p className="example-block__desc">{description}</p> : null}
       <ExampleCard code={code} fill={fill}>
         {children}
       </ExampleCard>
-    </div>
+    </>
+  );
+
+  if (!label || !id) return <div className="example-block">{body}</div>;
+
+  return (
+    <section className="example-block" id={`example-${id}`} aria-labelledby={`example-${id}-heading`}>
+      <h3 className="example-block__title" id={`example-${id}-heading`}>
+        {label}
+      </h3>
+      {body}
+    </section>
   );
 }
 
@@ -194,8 +204,8 @@ export function CodeBlock({
   const lines = code.trim().split('\n');
 
   return (
-    <div className="code-block">
-      <div className="code-block__header">
+    <figure className="code-block">
+      <figcaption className="code-block__header">
         <span className="code-block__lang">{language}</span>
         <Button
           variant="ghost"
@@ -206,18 +216,22 @@ export function CodeBlock({
           <Icon name={copied ? 'check' : 'copy'} size="sm" />
           {copied ? 'Copied' : 'Copy'}
         </Button>
-      </div>
+      </figcaption>
       <pre className="code-block__pre">
         <code className="code-block__code">
           {lines.map((line, i) => (
             <div key={i} className="code-block__line">
-              {showLineNumbers ? <span className="code-block__number">{i + 1}</span> : null}
+              {showLineNumbers ? (
+                <span className="code-block__number" aria-hidden>
+                  {i + 1}
+                </span>
+              ) : null}
               <span className="code-block__content">{tokenizeLine(line)}</span>
             </div>
           ))}
         </code>
       </pre>
-    </div>
+    </figure>
   );
 }
 
@@ -245,9 +259,11 @@ export function InstallationBox({ slug }: { slug: string }) {
     slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
   return (
-    <section className="installation-box" id="installation">
+    <section className="installation-box" id="installation" aria-labelledby="installation-heading">
       <div className="section-head">
-        <h2 className="section-head__title">Installation</h2>
+        <h2 id="installation-heading" className="section-head__title">
+          Install {exportName}
+        </h2>
       </div>
 
       <div className="installation-manual">
@@ -309,27 +325,29 @@ export function Callout({
   children: ReactNode;
 }) {
   return (
-    <div className="doc-callout">
+    <aside className="doc-callout" aria-label={title ?? CALLOUT_TITLES[tone]}>
       <Alert tone={CALLOUT_TONES[tone]} title={title ?? CALLOUT_TITLES[tone]}>
         {children}
       </Alert>
-    </div>
+    </aside>
   );
 }
 
 export function Steps({ children }: { children: ReactNode }) {
-  return <div className="doc-steps">{children}</div>;
+  return <ol className="doc-steps">{children}</ol>;
 }
 
 export function Step({ number, title, children }: { number: number; title: string; children: ReactNode }) {
   return (
-    <div className="doc-step">
-      <div className="doc-step__marker">{number}</div>
+    <li className="doc-step">
+      <span className="doc-step__marker" aria-hidden>
+        {number}
+      </span>
       <div className="doc-step__content">
         <h3 className="doc-step__title">{title}</h3>
         {children}
       </div>
-    </div>
+    </li>
   );
 }
 
@@ -359,7 +377,7 @@ export function TabGroup({ tabs }: { tabs: { id: string; label: string; content:
 }
 
 export function FeatureGrid({ children }: { children: ReactNode }) {
-  return <div className="feature-grid">{children}</div>;
+  return <ul className="feature-grid">{children}</ul>;
 }
 
 export function FeatureCard({
@@ -373,12 +391,12 @@ export function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="feature-card">
-      <div className="feature-card__icon">
+    <li className="feature-card">
+      <span className="feature-card__icon" aria-hidden>
         <Icon name={icon} size="md" />
-      </div>
-      <h4 className="feature-card__title">{title}</h4>
+      </span>
+      <h3 className="feature-card__title">{title}</h3>
       <p className="feature-card__desc">{description}</p>
-    </div>
+    </li>
   );
 }

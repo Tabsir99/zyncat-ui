@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import type { Doc } from '../content/registry';
+import type { PageSeo } from '../content/seo/types';
 import { Icon } from './icon';
 
 interface TocItem {
@@ -13,9 +14,11 @@ interface TocItem {
 
 const ACTIVE_LINE = 108;
 
-function buildItems(doc: Doc): TocItem[] {
+function buildItems(doc: Doc, seo?: PageSeo): TocItem[] {
+  const faqItem: TocItem[] = seo?.faq?.length ? [{ id: 'faq', title: 'FAQ', level: 2 }] : [];
+
   if (doc.toc && doc.toc.length > 0) {
-    return doc.toc;
+    return [...doc.toc, ...faqItem];
   }
 
   const items: TocItem[] = [];
@@ -43,11 +46,11 @@ function buildItems(doc: Doc): TocItem[] {
     }
   }
 
-  return items;
+  return [...items, ...faqItem];
 }
 
-export function TableOfContents({ doc }: { doc: Doc }) {
-  const items = buildItems(doc);
+export function TableOfContents({ doc, seo }: { doc: Doc; seo?: PageSeo }) {
+  const items = buildItems(doc, seo);
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? '');
   const [marker, setMarker] = useState<{ top: number; height: number } | null>(null);
   const linkRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -55,7 +58,7 @@ export function TableOfContents({ doc }: { doc: Doc }) {
 
   useEffect(() => {
     clickLockRef.current = null;
-    const ids = buildItems(doc).map((i) => i.id);
+    const ids = buildItems(doc, seo).map((i) => i.id);
     if (ids.length === 0) return;
 
     const readActive = () => {
@@ -102,7 +105,7 @@ export function TableOfContents({ doc }: { doc: Doc }) {
       window.removeEventListener('pointerdown', releaseLock);
       window.removeEventListener('keydown', releaseLock);
     };
-  }, [doc]);
+  }, [doc, seo]);
 
   useEffect(() => {
     const el = linkRefs.current[activeId];
