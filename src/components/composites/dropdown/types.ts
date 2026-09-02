@@ -20,8 +20,14 @@ export interface DropdownItem {
   danger?: boolean;
   /** Not selectable - skipped by arrow keys and typeahead, and marked `aria-disabled`. @default false */
   disabled?: boolean;
+  /** Marks the row as the current value of a single-choice group: accent ink with a check at rest, and
+   *  `menuitemradio` semantics. Leave undefined for plain action rows. */
+  selected?: boolean;
   /** Nested menu. The row opens it instead of committing, and can nest again without limit. */
   items?: DropdownItem[] | DropdownGroup[];
+  /** Your own panel body, opened from this row in place of a submenu. Nothing inside it commits the menu -
+   *  drive dismissal with `open`/`onOpenChange`. */
+  content?: ReactNode;
   /** Text used for typeahead. Required when `label` is not a string. */
   searchText?: string;
   /** Fires when this row commits, before the menu's own `onSelect`. */
@@ -50,12 +56,24 @@ export const itemText = (item: DropdownItem): string =>
 export const submenuOf = (item: DropdownItem): DropdownItems | null =>
   item.items && item.items.length > 0 ? item.items : null;
 
+export const hasContent = (item: DropdownItem): boolean => item.content != null;
+
+export type LevelPopup = 'menu' | 'dialog';
+
+export const popupOf = (item: DropdownItem): LevelPopup | null =>
+  hasContent(item) ? 'dialog' : submenuOf(item) ? 'menu' : null;
+
+export const opensLevel = (item: DropdownItem): boolean => popupOf(item) != null;
+
 export const ROOT_LEVEL = 'root';
 export const levelKey = (depth: number, ownerId: string) => depth + ':' + ownerId;
+
+const NO_ROWS: DropdownItem[] = [];
 
 export interface Level {
   key: string;
   items: DropdownItems;
+  content?: ReactNode;
   owner: DropdownItem | null;
   ownerIdx: number;
 }
@@ -66,9 +84,13 @@ export function resolveLevels(items: DropdownItems, path: string[]): Level[] {
   for (const id of path) {
     const { flat } = normalize(levels[levels.length - 1].items);
     const ownerIdx = flat.findIndex((item) => item.id === id);
-    const sub = ownerIdx >= 0 && submenuOf(flat[ownerIdx]);
-    if (!sub) break;
-    levels.push({ key: levelKey(levels.length, id), items: sub, owner: flat[ownerIdx], ownerIdx });
+    if (ownerIdx < 0) break;
+    const owner = flat[ownerIdx];
+    const sub = submenuOf(owner);
+    const key = levelKey(levels.length, id);
+    if (hasContent(owner)) levels.push({ key, items: NO_ROWS, content: owner.content, owner, ownerIdx });
+    else if (sub) levels.push({ key, items: sub, owner, ownerIdx });
+    else break;
   }
   return levels;
 }

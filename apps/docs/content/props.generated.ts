@@ -2131,6 +2131,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Fires when a row commits - gets its `id` and the full item. Committing closes every level.',
     },
     {
+      name: 'returnFocus',
+      type: 'boolean',
+      default: 'true',
+      description:
+        'Move focus back to the trigger when a row commits or the keyboard dismisses the menu. Turn off when rows place focus themselves - an editor command that refocuses its document.',
+    },
+    {
       name: 'side',
       type: "'top' | 'bottom' | 'left' | 'right'",
       default: "'bottom'",
@@ -3255,9 +3262,21 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           description: 'Not selectable - skipped by arrow keys and typeahead, and marked `aria-disabled`.',
         },
         {
+          name: 'selected',
+          type: 'boolean',
+          description:
+            'Marks the row as the current value of a single-choice group: accent ink with a check at rest, and `menuitemradio` semantics. Leave undefined for plain action rows.',
+        },
+        {
           name: 'items',
           type: 'DropdownItem[] | DropdownGroup[]',
           description: 'Nested menu. The row opens it instead of committing, and can nest again without limit.',
+        },
+        {
+          name: 'content',
+          type: 'ReactNode',
+          description:
+            'Your own panel body, opened from this row in place of a submenu. Nothing inside it commits the menu - drive dismissal with `open`/`onOpenChange`.',
         },
         {
           name: 'searchText',

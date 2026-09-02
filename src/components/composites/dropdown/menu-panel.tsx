@@ -16,13 +16,17 @@ import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
 import { useAnchorPosition } from '../../internal/overlay/position';
 import { activationProps } from '../../internal/utils/activation';
 import { cx } from '../../internal/utils/cx';
-import { itemText, levelKey, normalize, submenuOf, type DropdownItem, type MenuChain } from './types';
+import { itemText, levelKey, normalize, opensLevel, popupOf, type DropdownItem, type MenuChain } from './types';
 
 const SUBMENU_OPEN_DELAY = 90;
 const SUBMENU_TRAVEL_GRACE = 500;
 const MENU_KEYS = new Set('ArrowDown ArrowUp ArrowLeft ArrowRight Home End Enter Escape Tab'.split(' ').concat(' '));
+const CONTENT_KEYS = new Set(['Escape', 'ArrowLeft', 'Tab']);
+const TEXT_FIELD = 'input, textarea, [contenteditable]';
 
 type Point = { x: number; y: number };
+
+const inTextField = (target: EventTarget | null) => target instanceof Element && target.closest(TEXT_FIELD) != null;
 
 /* Is the pointer inside the wedge from `from` to the submenu's near edge - travelling toward it
    diagonally - rather than simply leaving the row? */
@@ -40,6 +44,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
   const { levels, hoverDepth, refFor } = chain;
   const [level, next, parent] = [levels[depth], levels[depth + 1], levels[depth - 1]];
   const nested = Boolean(parent);
+  const contentLevel = level.content != null;
 
   const panelId = (d: number) =>
     d === 0 ? chain.menuId : chain.menuId + '-' + d + '-' + encodeURIComponent(levels[d].owner!.id);
@@ -81,7 +86,9 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
   }, [activeIdx]);
 
   useLayoutEffect(() => {
-    if (seed !== 'none') setActiveIdx(edgeEnabled(flat, seed === 'last'));
+    if (seed === 'none') return;
+    if (contentLevel) panelRef.current?.focus();
+    else setActiveIdx(edgeEnabled(flat, seed === 'last'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed]);
 
@@ -96,7 +103,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
   function armOpen(i: number) {
     clearTimeout(timers.current.open);
     const item = flat[i];
-    if (!item || item.disabled || item.id === openSubId || !submenuOf(item)) return;
+    if (!item || item.disabled || item.id === openSubId || !opensLevel(item)) return;
     timers.current.open = setTimeout(() => chain.openSub(depth, item, 'none'), SUBMENU_OPEN_DELAY);
   }
 
@@ -124,7 +131,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
 
   function commit(item: DropdownItem | undefined) {
     if (!item || item.disabled) return;
-    if (submenuOf(item)) chain.openSub(depth, item, 'first');
+    if (opensLevel(item)) chain.openSub(depth, item, 'first');
     else chain.select(item);
   }
 
@@ -156,7 +163,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
     }
     e.preventDefault();
     const back = () => (openSubId != null ? closeSub() : cancel());
-    const opens = activeItem && !activeItem.disabled && submenuOf(activeItem);
+    const opens = activeItem && !activeItem.disabled && opensLevel(activeItem);
     switch (e.key) {
       case 'ArrowDown':
         return moveTo(stepEnabled(flat, activeIdx, 1));
@@ -179,24 +186,36 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
     }
   }
 
+  function onContentKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (!CONTENT_KEYS.has(e.key) || e.defaultPrevented) return;
+    if (e.key === 'ArrowLeft' && inTextField(e.target)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.key === 'Tab') chain.dismiss(true);
+    else cancel();
+  }
+
   function renderRow(item: DropdownItem) {
     const i = indexOf.get(item.id) ?? -1;
-    const sub = submenuOf(item);
-    const subOpen = sub != null && openSubId === item.id;
+    const popup = popupOf(item);
+    const subOpen = popup != null && openSubId === item.id;
+    const radio = typeof item.selected === 'boolean';
     return (
       <MenuRow
         key={item.id}
         ref={rowFor(i)}
         id={menuId + '-item-' + i}
         className="dropdown__item"
-        role="menuitem"
+        role={radio ? 'menuitemradio' : 'menuitem'}
         tabIndex={i === activeIdx ? 0 : -1}
+        aria-checked={radio ? item.selected : undefined}
         aria-disabled={item.disabled || undefined}
-        aria-haspopup={sub ? 'menu' : undefined}
-        aria-expanded={sub ? subOpen : undefined}
+        aria-haspopup={popup ?? undefined}
+        aria-expanded={popup ? subOpen : undefined}
         aria-controls={subOpen ? panelId(depth + 1) : undefined}
         aria-keyshortcuts={item.shortcut}
         data-active={i === activeIdx ? 'true' : undefined}
+        data-selected={item.selected ? 'true' : undefined}
         data-disabled={item.disabled ? 'true' : undefined}
         data-danger={item.danger ? 'true' : undefined}
         onPointerEnter={(e) => onRowEnter({ x: e.clientX, y: e.clientY }, i)}
@@ -210,15 +229,32 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
         description={item.description}
         trailing={
           <>
+            {item.selected && <Icon name="check" size="sm" weight="bold" className="dropdown__item-check" />}
             {item.shortcut && (
               <span className="dropdown__item-shortcut" aria-hidden="true">
                 {item.shortcut}
               </span>
             )}
-            {sub && <Icon name="caret-right" size="sm" className="dropdown__item-caret" />}
+            {popup && <Icon name="caret-right" size="sm" className="dropdown__item-caret" />}
           </>
         }
       />
+    );
+  }
+
+  function renderRows() {
+    return (
+      <>
+        <GlidePill className="menu-glide" glide={glide} />
+        {groups.length > 1 || groups[0]?.label
+          ? groups.map((group, gi) => (
+              <div className="dropdown__group" role="group" aria-label={group.label || undefined} key={gi}>
+                {group.label && <div className="menu-group-label">{group.label}</div>}
+                {group.items.map(renderRow)}
+              </div>
+            ))
+          : flat.map(renderRow)}
+      </>
     );
   }
 
@@ -229,13 +265,14 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
       ref={panelRef as unknown as RefObject<HTMLDivElement>}
       id={menuId}
       className={cx('menu-surface menu-scroller dropdown__menu', !nested && chain.htmlProps?.className)}
-      role="menu"
+      role={contentLevel ? 'dialog' : 'menu'}
       tabIndex={-1}
       aria-label={nested ? undefined : chain.ariaLabel}
       aria-labelledby={nested ? panelId(depth - 1) + '-item-' + level.ownerIdx : undefined}
       data-nested={nested ? 'true' : undefined}
+      data-content={contentLevel ? 'true' : undefined}
       data-danger-active={activeItem && activeItem.danger ? 'true' : undefined}
-      onKeyDown={onKeyDown}
+      onKeyDown={contentLevel ? onContentKeyDown : onKeyDown}
       onPointerEnter={() => {
         if (hoverDepth.current > depth) travel.current.from = null;
         hoverDepth.current = depth;
@@ -243,15 +280,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
       }}
       onPointerMove={(e) => travel.current.active && !heading({ x: e.clientX, y: e.clientY }) && abortTravel()}
     >
-      <GlidePill className="menu-glide" glide={glide} />
-      {groups.length > 1 || groups[0]?.label
-        ? groups.map((group, gi) => (
-            <div className="dropdown__group" role="group" aria-label={group.label || undefined} key={gi}>
-              {group.label && <div className="menu-group-label">{group.label}</div>}
-              {group.items.map(renderRow)}
-            </div>
-          ))
-        : flat.map(renderRow)}
+      {contentLevel ? level.content : renderRows()}
     </div>
   );
 }

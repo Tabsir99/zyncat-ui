@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
 
 import { Alert, type AlertTone } from '@zyncat/ui/alert';
 import { Button } from '@zyncat/ui/button';
@@ -41,6 +41,62 @@ const ALERT_COPY: Record<AlertTone, { title: string; body: string }> = {
 
 const MENU: CSSProperties = { padding: '8px', display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 160 };
 const MENU_BTN: CSSProperties = { justifyContent: 'flex-start' };
+
+const SWATCH_TOKENS = ['accent', 'success', 'warning', 'danger', 'info', 'text-strong', 'bg-muted', 'bg-inset'];
+const SWATCH_COLUMNS = 4;
+const SWATCH_STEP: Record<string, number> = {
+  ArrowRight: 1,
+  ArrowLeft: -1,
+  ArrowDown: SWATCH_COLUMNS,
+  ArrowUp: -SWATCH_COLUMNS,
+};
+const SWATCH_GRID: CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: `repeat(${SWATCH_COLUMNS}, var(--space-6))`,
+  gap: 'var(--space-2)',
+  padding: 'var(--space-2)',
+};
+const SWATCH: CSSProperties = {
+  width: 'var(--space-6)',
+  height: 'var(--space-6)',
+  padding: 0,
+  border: 'var(--border-hairline) solid var(--border-default)',
+  borderRadius: 'var(--radius-md)',
+  cursor: 'pointer',
+};
+
+function SwatchGrid({ onPick }: { onPick: (token: string) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const swatches = () => Array.from(ref.current?.querySelectorAll('button') ?? []);
+
+  useEffect(() => {
+    if (ref.current?.parentElement === document.activeElement) swatches()[0]?.focus();
+  }, []);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const all = swatches();
+    const from = all.indexOf(e.target as HTMLButtonElement);
+    const next = from >= 0 && SWATCH_STEP[e.key] ? all[from + SWATCH_STEP[e.key]] : undefined;
+    if (!next) return;
+    e.preventDefault();
+    e.stopPropagation();
+    next.focus();
+  };
+
+  return (
+    <div ref={ref} role="group" aria-label="Label colour" style={SWATCH_GRID} onKeyDown={onKeyDown}>
+      {SWATCH_TOKENS.map((token) => (
+        <button
+          key={token}
+          type="button"
+          aria-label={token}
+          style={{ ...SWATCH, background: `var(--${token})` }}
+          onClick={() => onPick(token)}
+        />
+      ))}
+    </div>
+  );
+}
 
 export function AlertPlayground() {
   const [tone, setTone] = useState<AlertTone>('warning');
@@ -293,6 +349,8 @@ export function DropdownPlayground() {
   const [align, setAlign] = useState<DropdownAlign>('start');
   const [highlight, setHighlight] = useState<DropdownHighlight>('neutral');
   const [rail, setRail] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [visibility, setVisibility] = useState('public');
 
   const code = `<Dropdown
   ariaLabel="Post options"
@@ -304,6 +362,11 @@ export function DropdownPlayground() {
   onSelect={route}
   items={items}
 />`;
+
+  const pickColour = (token: string) => {
+    toast.info(`Label colour: ${token}`);
+    setOpen(false);
+  };
 
   return (
     <Playground
@@ -323,6 +386,8 @@ export function DropdownPlayground() {
           key={`${side}-${align}`}
           ariaLabel="Post options"
           trigger={<Button variant="secondary">Options</Button>}
+          open={open}
+          onOpenChange={setOpen}
           side={side}
           align={align}
           highlight={highlight}
@@ -342,6 +407,24 @@ export function DropdownPlayground() {
                     { id: 'share-li', label: 'LinkedIn' },
                     { id: 'share-ig', label: 'Instagram' },
                   ],
+                },
+                { id: 'colour', label: 'Label colour', content: <SwatchGrid onPick={pickColour} /> },
+              ],
+            },
+            {
+              label: 'Visibility',
+              items: [
+                {
+                  id: 'public',
+                  label: 'Public',
+                  selected: visibility === 'public',
+                  onSelect: () => setVisibility('public'),
+                },
+                {
+                  id: 'private',
+                  label: 'Private',
+                  selected: visibility === 'private',
+                  onSelect: () => setVisibility('private'),
                 },
               ],
             },

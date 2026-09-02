@@ -57,6 +57,9 @@ export interface DropdownProps {
   onOpenChange?: (open: boolean) => void;
   /** Fires when a row commits - gets its `id` and the full item. Committing closes every level. */
   onSelect?: (id: string, item: DropdownItem) => void;
+  /** Move focus back to the trigger when a row commits or the keyboard dismisses the menu. Turn off when
+   *  rows place focus themselves - an editor command that refocuses its document. @default true */
+  returnFocus?: boolean;
 
   /** Preferred side of the trigger; flips to the opposite side when cramped. @default 'bottom' */
   side?: 'top' | 'bottom' | 'left' | 'right';
@@ -86,6 +89,7 @@ export function Dropdown({
   defaultOpen = false,
   onOpenChange,
   onSelect,
+  returnFocus = true,
   side = 'bottom',
   align = 'start',
   highlight = 'neutral',
@@ -112,11 +116,11 @@ export function Dropdown({
   };
   const triggerRef = refFor('trigger');
 
-  const dismiss = (returnFocus: boolean) => {
+  const dismiss = (refocus: boolean) => {
     setPath([]);
     hoverDepth.current = -1;
     setOpen(false);
-    if (returnFocus && triggerRef.current) triggerRef.current.focus();
+    if (refocus && returnFocus && triggerRef.current) triggerRef.current.focus();
   };
 
   const show = (focus: SeedFocus) => {
