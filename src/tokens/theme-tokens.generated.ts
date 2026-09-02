@@ -535,34 +535,6 @@ export interface ConfettiTokens {
   sheen5?: string | number;
 }
 
-/** The scoped properties Dock publishes as its theming contract. */
-export interface DockTokens {
-  /** `--dock-gap`. Default: `var(--space-2)`. */
-  gap?: string | number;
-  /** `--dock-pad`. Default: `var(--space-2)`. */
-  pad?: string | number;
-  /** `--dock-rail-size`. Default: `calc(var(--dock-size) + var(--dock-pad) * 2 + var(--border-hairline) * 2)`. */
-  railSize?: string | number;
-  /** `--dock-surface`. Default: `color-mix(in oklab, var(--bg-surface) 70%, transparent)`. */
-  surface?: string | number;
-  /** `--dock-line`. Default: `var(--border-default)`. */
-  line?: string | number;
-  /** `--dock-radius`. Default: `var(--radius-2xl)`. */
-  radius?: string | number;
-  /** `--dock-shadow`. Default: `var(--shadow-md)`. */
-  shadow?: string | number;
-  /** `--dock-backdrop`. Default: `blur(var(--glass-blur))`. */
-  backdrop?: string | number;
-  /** `--dock-item-radius`. Default: `var(--radius-full)`. */
-  itemRadius?: string | number;
-  /** `--dock-item-pad-min`. Default: `0.375rem`. */
-  itemPadMin?: string | number;
-  /** `--dock-item-pad-ratio`. Default: `0.2`. */
-  itemPadRatio?: string | number;
-  /** `--dock-item-pad`. Default: `max(var(--dock-item-pad-min), calc(var(--dock-size) * var(--dock-item-pad-ratio)))`. */
-  itemPad?: string | number;
-}
-
 /** The scoped properties FlowField publishes as its theming contract. */
 export interface FlowFieldTokens {
   /** `--flow-field-ink`. Default: `var(--text-subtle)`. */
@@ -723,66 +695,6 @@ export interface WeightFieldTokens {
   ramp?: string | number;
 }
 
-/** The scoped properties SupportFan publishes as its theming contract. */
-export interface SupportFanTokens {
-  /** `--support-fan-inset`. Default: `var(--space-5)`. */
-  inset?: string | number;
-  /** `--support-fan-trigger-size`. Default: `3.5rem`. */
-  triggerSize?: string | number;
-  /** `--support-fan-surface`. Default: `var(--bg-subtle)`. */
-  surface?: string | number;
-  /** `--support-fan-surface-lifted`. Default: `var(--bg-surface)`. */
-  surfaceLifted?: string | number;
-  /** `--support-fan-ink`. Default: `var(--text-strong)`. */
-  ink?: string | number;
-  /** `--support-fan-ink-soft`. Default: `var(--text-secondary)`. */
-  inkSoft?: string | number;
-  /** `--support-fan-ink-faint`. Default: `var(--text-subtle)`. */
-  inkFaint?: string | number;
-  /** `--support-fan-accent`. Default: `var(--accent)`. */
-  accent?: string | number;
-  /** `--support-fan-accent-wash`. Default: `var(--accent-wash)`. */
-  accentWash?: string | number;
-  /** `--support-fan-live-color`. Default: `var(--success)`. */
-  liveColor?: string | number;
-  /** `--support-fan-line`. Default: `var(--border-default)`. */
-  line?: string | number;
-  /** `--support-fan-shadow`. Default: `var(--shadow-md)`. */
-  shadow?: string | number;
-  /** `--support-fan-shadow-lifted`. Default: `var(--shadow-lg)`. */
-  shadowLifted?: string | number;
-  /** `--support-fan-chip-padding`. Default: `var(--space-1) var(--space-3)`. */
-  chipPadding?: string | number;
-  /** `--support-fan-chip-gap`. Default: `var(--space-2)`. */
-  chipGap?: string | number;
-  /** `--support-fan-icon-chip-padding`. Default: `var(--space-2)`. */
-  iconChipPadding?: string | number;
-  /** `--support-fan-caption-tracking`. Default: `0.16em`. */
-  captionTracking?: string | number;
-  /** `--support-fan-caption-gap`. Default: `var(--space-2)`. */
-  captionGap?: string | number;
-  /** `--support-fan-rail-gap`. Default: `var(--space-3)`. */
-  railGap?: string | number;
-  /** `--support-fan-ring-inset`. Default: `0.3125rem`. */
-  ringInset?: string | number;
-  /** `--support-fan-live-offset`. Default: `0.375rem`. */
-  liveOffset?: string | number;
-  /** `--support-fan-live-size`. Default: `0.4375rem`. */
-  liveSize?: string | number;
-  /** `--support-fan-glyph-turn`. Default: `135deg`. */
-  glyphTurn?: string | number;
-  /** `--support-fan-collapse-x`. Default: `0.875rem`. */
-  collapseX?: string | number;
-  /** `--support-fan-collapse-scale`. Default: `0.3`. */
-  collapseScale?: string | number;
-  /** `--support-fan-stagger`. Default: `calc(var(--duration-fast) * 0.3)`. */
-  stagger?: string | number;
-  /** `--support-fan-open-duration`. Default: `var(--duration-slower)`. */
-  openDuration?: string | number;
-  /** `--support-fan-close-duration`. Default: `var(--duration-slow)`. */
-  closeDuration?: string | number;
-}
-
 /** The scoped properties SupportRail publishes as its theming contract. */
 export interface SupportRailTokens {
   /** `--support-rail-width`. Default: `318px`. */
@@ -843,8 +755,6 @@ export interface SupportRailTokens {
 export interface ComponentTokens {
   /** Confetti - its `--confetti-*` properties. */
   confetti?: ConfettiTokens;
-  /** Dock - its `--dock-*` properties. */
-  dock?: DockTokens;
   /** FlowField - its `--flow-field-*` properties. */
   flowField?: FlowFieldTokens;
   /** Lens - its `--lens-*` properties. */
@@ -857,8 +767,6 @@ export interface ComponentTokens {
   typingLines?: TypingLinesTokens;
   /** WeightField - its `--weight-field-*` properties. */
   weightField?: WeightFieldTokens;
-  /** SupportFan - its `--support-fan-*` properties. */
-  supportFan?: SupportFanTokens;
   /** SupportRail - its `--support-rail-*` properties. */
   supportRail?: SupportRailTokens;
 }

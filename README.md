@@ -120,7 +120,7 @@ bundler and every non-bundled setup. Subpaths make it structural instead.
 | Date, time & tabs   | DateField, DateTimeField, DateRangeField, TimeField, Tabs                                     |
 | Overlays & feedback | Alert, Toast, Tooltip, Dialog, Popover, Sheet, Dropdown, EmojiPickerPanel                     |
 | Expressive          | Odometer, TypingLines, Lens, MorphingText, WeightField, FlowField, Confetti                   |
-| Compound            | SupportFan, SupportRail                                                                       |
+| Compound            | SupportRail                                                                                   |
 | Replicas            | FacebookFeed, InstagramFeed, TikTok, YouTube                                                  |
 | Motion & dev        | Glide / GlidePill, MotionDevtools                                                             |
 

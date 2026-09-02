@@ -53,34 +53,6 @@ export interface ConfettiStyle extends CSSProperties {
   '--confetti-sheen-5'?: string | number;
 }
 
-/** Inline styles for Dock, including its `--dock-*` knobs. */
-export interface DockStyle extends CSSProperties {
-  /** `--dock-gap`. Default: `var(--space-2)`. */
-  '--dock-gap'?: string | number;
-  /** `--dock-pad`. Default: `var(--space-2)`. */
-  '--dock-pad'?: string | number;
-  /** `--dock-rail-size`. Default: `calc(var(--dock-size) + var(--dock-pad) * 2 + var(--border-hairline) * 2)`. */
-  '--dock-rail-size'?: string | number;
-  /** `--dock-surface`. Default: `color-mix(in oklab, var(--bg-surface) 70%, transparent)`. */
-  '--dock-surface'?: string | number;
-  /** `--dock-line`. Default: `var(--border-default)`. */
-  '--dock-line'?: string | number;
-  /** `--dock-radius`. Default: `var(--radius-2xl)`. */
-  '--dock-radius'?: string | number;
-  /** `--dock-shadow`. Default: `var(--shadow-md)`. */
-  '--dock-shadow'?: string | number;
-  /** `--dock-backdrop`. Default: `blur(var(--glass-blur))`. */
-  '--dock-backdrop'?: string | number;
-  /** `--dock-item-radius`. Default: `var(--radius-full)`. */
-  '--dock-item-radius'?: string | number;
-  /** `--dock-item-pad-min`. Default: `0.375rem`. */
-  '--dock-item-pad-min'?: string | number;
-  /** `--dock-item-pad-ratio`. Default: `0.2`. */
-  '--dock-item-pad-ratio'?: string | number;
-  /** `--dock-item-pad`. Default: `max(var(--dock-item-pad-min), calc(var(--dock-size) * var(--dock-item-pad-ratio)))`. */
-  '--dock-item-pad'?: string | number;
-}
-
 /** Inline styles for FlowField, including its `--flow-field-*` knobs. */
 export interface FlowFieldStyle extends CSSProperties {
   /** `--flow-field-ink`. Default: `var(--text-subtle)`. */
@@ -239,66 +211,6 @@ export interface WeightFieldStyle extends CSSProperties {
   '--weight-field-ease'?: string | number;
   /** `--weight-field-ramp`. Default: `calc(var(--weight-field-duration) / var(--weight-field-speed))`. */
   '--weight-field-ramp'?: string | number;
-}
-
-/** Inline styles for SupportFan, including its `--support-fan-*` knobs. */
-export interface SupportFanStyle extends CSSProperties {
-  /** `--support-fan-inset`. Default: `var(--space-5)`. */
-  '--support-fan-inset'?: string | number;
-  /** `--support-fan-trigger-size`. Default: `3.5rem`. */
-  '--support-fan-trigger-size'?: string | number;
-  /** `--support-fan-surface`. Default: `var(--bg-subtle)`. */
-  '--support-fan-surface'?: string | number;
-  /** `--support-fan-surface-lifted`. Default: `var(--bg-surface)`. */
-  '--support-fan-surface-lifted'?: string | number;
-  /** `--support-fan-ink`. Default: `var(--text-strong)`. */
-  '--support-fan-ink'?: string | number;
-  /** `--support-fan-ink-soft`. Default: `var(--text-secondary)`. */
-  '--support-fan-ink-soft'?: string | number;
-  /** `--support-fan-ink-faint`. Default: `var(--text-subtle)`. */
-  '--support-fan-ink-faint'?: string | number;
-  /** `--support-fan-accent`. Default: `var(--accent)`. */
-  '--support-fan-accent'?: string | number;
-  /** `--support-fan-accent-wash`. Default: `var(--accent-wash)`. */
-  '--support-fan-accent-wash'?: string | number;
-  /** `--support-fan-live-color`. Default: `var(--success)`. */
-  '--support-fan-live-color'?: string | number;
-  /** `--support-fan-line`. Default: `var(--border-default)`. */
-  '--support-fan-line'?: string | number;
-  /** `--support-fan-shadow`. Default: `var(--shadow-md)`. */
-  '--support-fan-shadow'?: string | number;
-  /** `--support-fan-shadow-lifted`. Default: `var(--shadow-lg)`. */
-  '--support-fan-shadow-lifted'?: string | number;
-  /** `--support-fan-chip-padding`. Default: `var(--space-1) var(--space-3)`. */
-  '--support-fan-chip-padding'?: string | number;
-  /** `--support-fan-chip-gap`. Default: `var(--space-2)`. */
-  '--support-fan-chip-gap'?: string | number;
-  /** `--support-fan-icon-chip-padding`. Default: `var(--space-2)`. */
-  '--support-fan-icon-chip-padding'?: string | number;
-  /** `--support-fan-caption-tracking`. Default: `0.16em`. */
-  '--support-fan-caption-tracking'?: string | number;
-  /** `--support-fan-caption-gap`. Default: `var(--space-2)`. */
-  '--support-fan-caption-gap'?: string | number;
-  /** `--support-fan-rail-gap`. Default: `var(--space-3)`. */
-  '--support-fan-rail-gap'?: string | number;
-  /** `--support-fan-ring-inset`. Default: `0.3125rem`. */
-  '--support-fan-ring-inset'?: string | number;
-  /** `--support-fan-live-offset`. Default: `0.375rem`. */
-  '--support-fan-live-offset'?: string | number;
-  /** `--support-fan-live-size`. Default: `0.4375rem`. */
-  '--support-fan-live-size'?: string | number;
-  /** `--support-fan-glyph-turn`. Default: `135deg`. */
-  '--support-fan-glyph-turn'?: string | number;
-  /** `--support-fan-collapse-x`. Default: `0.875rem`. */
-  '--support-fan-collapse-x'?: string | number;
-  /** `--support-fan-collapse-scale`. Default: `0.3`. */
-  '--support-fan-collapse-scale'?: string | number;
-  /** `--support-fan-stagger`. Default: `calc(var(--duration-fast) * 0.3)`. */
-  '--support-fan-stagger'?: string | number;
-  /** `--support-fan-open-duration`. Default: `var(--duration-slower)`. */
-  '--support-fan-open-duration'?: string | number;
-  /** `--support-fan-close-duration`. Default: `var(--duration-slow)`. */
-  '--support-fan-close-duration'?: string | number;
 }
 
 /** Inline styles for SupportRail, including its `--support-rail-*` knobs. */

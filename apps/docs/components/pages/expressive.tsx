@@ -1,11 +1,9 @@
 'use client';
 
 import { useRef, useState, type CSSProperties } from 'react';
-import { CalendarBlank, Envelope, GearSix, House, MagnifyingGlass, MusicNotes } from '@phosphor-icons/react';
 
 import { Button } from '@zyncat/ui/button';
 import { Confetti, type ConfettiEmitter, type ConfettiField, type ConfettiHandle } from '@zyncat/ui/confetti';
-import { Dock, DockItem, type DockOrientation } from '@zyncat/ui/dock';
 import { FlowField } from '@zyncat/ui/flow-field';
 import { Lens } from '@zyncat/ui/lens';
 import { MorphingText } from '@zyncat/ui/morphing-text';
@@ -23,7 +21,6 @@ const RULE: CSSProperties = { height: 'var(--border-hairline)', background: 'var
 const grouped = (v: number) => v.toLocaleString('en-US');
 const padded = (v: number) => String(v).padStart(8, '0');
 const times = (v: number) => `${v}×`;
-const pixels = (v: number) => `${v}px`;
 
 type OdometerFormat = 'plain' | 'grouped' | 'padded';
 
@@ -252,112 +249,6 @@ export function LensPlayground() {
       <Lens magnification={magnification} radius={radius} chromatic={chromatic}>
         <Broadsheet />
       </Lens>
-    </Playground>
-  );
-}
-
-const DOCK_APPS = [
-  { id: 'home', label: 'Home', Icon: House },
-  { id: 'search', label: 'Search', Icon: MagnifyingGlass },
-  { id: 'mail', label: 'Mail', Icon: Envelope },
-  { id: 'calendar', label: 'Calendar', Icon: CalendarBlank },
-  { id: 'music', label: 'Music', Icon: MusicNotes },
-  { id: 'settings', label: 'Settings', Icon: GearSix },
-];
-
-const DOCK_GLYPH_TILE: CSSProperties = {
-  display: 'grid',
-  placeItems: 'center',
-  padding: 0,
-  border: 0,
-  background: 'none',
-  color: 'var(--text-secondary)',
-  cursor: 'pointer',
-};
-
-const DOCK_GLYPH = 24;
-
-function DockRail({
-  orientation,
-  size,
-  magnification,
-  distance,
-}: {
-  orientation: DockOrientation;
-  size: number;
-  magnification: number;
-  distance: number;
-}) {
-  return (
-    <Dock
-      orientation={orientation}
-      size={size}
-      magnification={magnification}
-      distance={distance}
-      htmlProps={{ role: 'toolbar', 'aria-label': 'Apps' }}
-    >
-      {DOCK_APPS.map(({ id, label, Icon }) => (
-        <DockItem key={id}>
-          <button type="button" style={DOCK_GLYPH_TILE} aria-label={label}>
-            <Icon size={DOCK_GLYPH} weight="duotone" />
-          </button>
-        </DockItem>
-      ))}
-    </Dock>
-  );
-}
-
-export function DockPlayground() {
-  const [orientation, setOrientation] = useState<DockOrientation>('horizontal');
-  const [size, setSize] = useState(40);
-  const [magnification, setMagnification] = useState(60);
-  const [distance, setDistance] = useState(140);
-
-  const code = [
-    `<Dock orientation="${orientation}" size={${size}} magnification={${magnification}} distance={${distance}}>`,
-    '  {apps.map((app) => (',
-    '    <DockItem key={app.id}>',
-    '      <AppButton {...app} />',
-    '    </DockItem>',
-    '  ))}',
-    '</Dock>',
-  ].join('\n');
-
-  return (
-    <Playground
-      code={code}
-      note="The rail holds its height whatever you do. The tile boxes swell inside it and the row opens; these glyphs are a fixed 24px, so they hold their size and only the spacing answers - size one 100% instead and it swells with its box. distance is the reach along the axis: drop it to 60 and the bulge becomes a spotlight, push it to 300 and the whole row leans in."
-      rail={
-        <>
-          <KnobSegment
-            label="orientation"
-            value={orientation}
-            onChange={setOrientation}
-            options={['horizontal', 'vertical']}
-          />
-          <KnobRange label="size" value={size} onChange={setSize} min={28} max={64} step={2} format={pixels} />
-          <KnobRange
-            label="magnification"
-            value={magnification}
-            onChange={setMagnification}
-            min={size}
-            max={112}
-            step={2}
-            format={pixels}
-          />
-          <KnobRange
-            label="distance"
-            value={distance}
-            onChange={setDistance}
-            min={40}
-            max={320}
-            step={10}
-            format={pixels}
-          />
-        </>
-      }
-    >
-      <DockRail orientation={orientation} size={size} magnification={magnification} distance={distance} />
     </Playground>
   );
 }

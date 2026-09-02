@@ -108,7 +108,6 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
     count: 16,
     sample: '--weight-field-peak-weight, --weight-field-hover-padding',
   },
-  { component: 'Dock', subpath: 'dock', count: 12, sample: '--dock-surface, --dock-rail-size, --dock-item-pad' },
   {
     component: 'FlowField',
     subpath: 'flow-field',
@@ -116,12 +115,6 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
     sample: '--flow-field-ramp-0 … -11, --flow-field-accent',
   },
   { component: 'Confetti', subpath: 'confetti', count: 21, sample: '--confetti-paper-1 … -5, --confetti-weights' },
-  {
-    component: 'SupportFan',
-    subpath: 'support-fan',
-    count: 26,
-    sample: '--support-fan-surface, --support-fan-stagger',
-  },
   {
     component: 'SupportRail',
     subpath: 'support-rail',
@@ -625,8 +618,6 @@ export function ThemingDoc() {
           <code className="doc-inline-code">--odometer-velocity</code>,{' '}
           <code className="doc-inline-code">--lens-lift</code>,{' '}
           <code className="doc-inline-code">--morphing-text-heat</code>,{' '}
-          <code className="doc-inline-code">--weight-field-wght</code>,{' '}
-          <code className="doc-inline-code">--support-fan-x</code>,{' '}
           <code className="doc-inline-code">--support-rail-drag</code>,{' '}
           <code className="doc-inline-code">--youtube-progress</code>. Setting those from CSS does nothing; the next
           frame overwrites them.

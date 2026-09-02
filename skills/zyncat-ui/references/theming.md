@@ -51,7 +51,7 @@ nested scope or the collapse cannot reach them.
 Expressive and compound components publish scoped `--<component>-<name>` properties as their public
 contract: `--odometer-size/-accent/-gap`, `--typing-lines-caret-ink/-blink`,
 `--lens-surface/-fringe-warm`, `--morphing-text-size/-smear`, `--weight-field-peak-weight/-hover-padding`,
-`--flow-field-ramp-0..11`, `--confetti-paper-1..5`, `--support-fan-*`, `--support-rail-*`. Set them
+`--flow-field-ramp-0..11`, `--confetti-paper-1..5`, `--support-rail-*`. Set them
 on any ancestor or inline via `style`. The canvas simulations sample theirs at their next measure -
 FlowField on resize and on a theme attribute change, Confetti on the next `fire()`.
 
@@ -62,7 +62,7 @@ component - `<Odometer style={{ '--odometer-size': '3rem' }} />`.
 
 A few are per-frame state the component writes to itself, not knobs -
 `--odometer-velocity/-blur`, `--lens-lift/-blur/-shadow-alpha`, `--morphing-text-heat/-letter-blur`,
-`--weight-field-pull/-wght`, `--support-fan-x/-y`, `--support-rail-drag`, `--youtube-progress`.
+`--support-rail-drag`, `--youtube-progress`.
 Setting those does nothing, and they are absent from the types, so trying is a compile error.
 
 System primitives and composites publish none by design - retheme those at level 1.

@@ -62,7 +62,7 @@ overlays & feedback, expressive, compound, replicas, dev tools. The full index i
 | Ambient status chip                              | **Badge** / **StatusBadge** (canonical post status)                                                |
 | User-owned removable label                       | **Tag**                                                                                            |
 | Rolling number                                   | **CountBadge roll** (inline) / **Odometer** (display size)                                         |
-| Persistent support entry point                   | **SupportFan** (corner arc) / **SupportRail** (edge tab)                                           |
+| Persistent support entry point                   | **SupportRail** (edge tab)                                                                         |
 | Social post mock                                 | **InstagramFeed / FacebookFeed / TikTok / YouTube** - pixel-pinned replicas, unthemeable by design |
 
 ## Conventions the system assumes

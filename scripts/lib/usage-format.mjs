@@ -28,8 +28,8 @@ export const GROUPS = [
     id: 'compound',
     title: 'Compound',
     note:
-      'Whole assembled patterns on the expressive contract - scoped --support-fan-* and --support-rail-* properties, ' +
-      'no tone/corner/density enums. Both take the same SupportAction[]: id, label, icon, meta, description, onSelect.',
+      'Whole assembled patterns on the expressive contract - scoped --support-rail-* properties, ' +
+      'no tone/corner/density enums. Actions are a SupportAction[]: id, label, icon, meta, description, onSelect.',
   },
   {
     id: 'replicas',

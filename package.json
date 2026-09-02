@@ -268,11 +268,6 @@
       "types": "./dist/types/components/expressive/weight-field/WeightField.d.ts",
       "import": "./dist/weight-field.js"
     },
-    "./support-fan": {
-      "source": "./src/components/compound/support-fan/SupportFan.tsx",
-      "types": "./dist/types/components/compound/support-fan/SupportFan.d.ts",
-      "import": "./dist/support-fan.js"
-    },
     "./support-rail": {
       "source": "./src/components/compound/support-rail/SupportRail.tsx",
       "types": "./dist/types/components/compound/support-rail/SupportRail.d.ts",
@@ -302,11 +297,6 @@
       "source": "./src/tokens/theme.tsx",
       "types": "./dist/types/tokens/theme.d.ts",
       "import": "./dist/theme.js"
-    },
-    "./dock": {
-      "source": "./src/components/expressive/dock/Dock.tsx",
-      "types": "./dist/types/components/expressive/dock/Dock.d.ts",
-      "import": "./dist/dock.js"
     },
     "./styles.css": "./src/styles.css",
     "./next": {

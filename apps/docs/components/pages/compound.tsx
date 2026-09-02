@@ -1,29 +1,11 @@
 'use client';
 
 import { useState, type CSSProperties } from 'react';
-import { ChatCircle, Clock, Envelope, Lifebuoy, Monitor, WhatsappLogo } from '@phosphor-icons/react';
+import { ChatCircle, Clock, Envelope, Monitor, WhatsappLogo } from '@phosphor-icons/react';
 
-import { SupportFan, type SupportAction, type SupportFanLayout } from '@zyncat/ui/support-fan';
-import { SupportRail, type SupportRailProps } from '@zyncat/ui/support-rail';
+import { SupportRail, type SupportAction, type SupportRailProps } from '@zyncat/ui/support-rail';
 
-import { KnobRange, KnobSegment, KnobSwitch, KnobText, Playground } from '../playground';
-
-const STAGE: CSSProperties = {
-  position: 'relative',
-  overflow: 'hidden',
-  minHeight: 'calc(var(--space-10) * 3.4)',
-  borderRadius: 'var(--radius-lg)',
-  border: 'var(--border-hairline) solid var(--border-default)',
-  background: 'var(--bg-subtle)',
-};
-
-const STAGE_NOTE: CSSProperties = {
-  position: 'absolute',
-  left: 'var(--space-4)',
-  top: 'var(--space-4)',
-  font: 'var(--type-caption)',
-  color: 'var(--text-muted)',
-};
+import { KnobSegment, KnobSwitch, KnobText, Playground } from '../playground';
 
 const FRAME: CSSProperties = {
   position: 'relative',
@@ -82,11 +64,6 @@ const ACTIONS: SupportAction[] = [
   { id: 'share', label: 'Screen share', meta: 'on ask', icon: <Monitor />, description: 'You approve every frame' },
 ];
 
-const LONG_ACTIONS: SupportAction[] = ACTIONS.concat([
-  { id: 'docs', label: 'Read the docs', meta: 'always', icon: <Lifebuoy />, description: 'Self serve' },
-  { id: 'status', label: 'Status page', meta: 'live', icon: <Monitor />, description: 'Every incident, public' },
-]);
-
 function Page() {
   return (
     <div style={PAGE}>
@@ -106,58 +83,6 @@ function Shift() {
       </span>
       <span>Mara, Idris &amp; 3 more on shift</span>
     </>
-  );
-}
-
-export function SupportFanPlayground() {
-  const [layout, setLayout] = useState<SupportFanLayout>('arc');
-  const [count, setCount] = useState(5);
-  const [glide, setGlide] = useState(1);
-  const [bow, setBow] = useState(1);
-  const [spread, setSpread] = useState(1.45);
-  const [live, setLive] = useState(true);
-
-  const code = `<SupportFan
-  actions={actions.slice(0, ${count})}
-  layout="${layout}"
-  glide={${glide}}
-  bow={${bow}}
-  spread={${spread}}
-  live={${live}}
-  caption="Studio open · GMT+1"
-  onSelect={route}
-/>`;
-
-  return (
-    <Playground
-      code={code}
-      stage="bare"
-      note="Switch the layout while the row is still deploying - the slots retarget from wherever they are."
-      rail={
-        <>
-          <KnobSegment label="layout" value={layout} onChange={setLayout} options={['arc', 'dock', 'icon-dock']} />
-          <KnobRange label="actions" value={count} onChange={setCount} min={2} max={7} />
-          <KnobRange label="glide" value={glide} onChange={setGlide} min={0} max={2} step={0.1} />
-          <KnobRange label="bow" value={bow} onChange={setBow} min={0} max={2} step={0.1} />
-          <KnobRange label="spread" value={spread} onChange={setSpread} min={0.6} max={3} step={0.05} />
-          <KnobSwitch label="live" checked={live} onChange={setLive} />
-        </>
-      }
-    >
-      <div style={{ ...STAGE, border: 'none', borderRadius: 0, background: 'transparent' }}>
-        <span style={STAGE_NOTE}>Point at the row - it glides under the cursor</span>
-        <SupportFan
-          actions={LONG_ACTIONS.slice(0, count)}
-          layout={layout}
-          glide={glide}
-          bow={bow}
-          spread={spread}
-          live={live}
-          caption="Studio open · GMT+1"
-          defaultOpen
-        />
-      </div>
-    </Playground>
   );
 }
 

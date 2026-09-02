@@ -186,14 +186,6 @@ export const GROUPS: DocGroup[] = [
         heroCode: `import { Lens } from '@zyncat/ui/lens';\n\n<Lens magnification={2.6} radius={132}>\n  <TypeSpecimen />\n</Lens>`,
       },
       {
-        slug: 'dock',
-        label: 'Dock',
-        blurb:
-          'A magnifying rail - the tile under the pointer springs out of a rail that holds its height, and pushes its neighbours along the axis.',
-        Playground: E.DockPlayground,
-        heroCode: `import { Dock, DockItem } from '@zyncat/ui/dock';\n\n<Dock>\n  <DockItem>\n    <HomeIcon />\n  </DockItem>\n</Dock>`,
-      },
-      {
         slug: 'weight-field',
         label: 'WeightField',
         blurb:
@@ -228,14 +220,6 @@ export const GROUPS: DocGroup[] = [
     id: 'compound',
     title: 'Compound',
     docs: [
-      {
-        slug: 'support-fan',
-        label: 'SupportFan',
-        blurb:
-          'Expressive contract. A trigger that fans its actions onto an arc, or onto a Dock rail that magnifies under the pointer.',
-        Playground: C.SupportFanPlayground,
-        heroCode: `import { SupportFan } from '@zyncat/ui/support-fan';\n\n<SupportFan actions={actions} caption="Studio open · GMT+1" onSelect={route} />`,
-      },
       {
         slug: 'support-rail',
         label: 'SupportRail',
