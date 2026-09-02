@@ -14,7 +14,7 @@ import { CategoryBar } from './react/category-bar';
 import { useEmojiPicker, type EmojiPickerStore } from './react/useEmojiPicker';
 import type { GetEmojiUrl } from './types';
 
-export { loadEmojiData, onEmojiDataLoaded, type EmojiData, type Emoji } from './data';
+export { getEmojiArray, getEmojiData, loadEmojiData, onEmojiDataLoaded, type EmojiData, type Emoji } from './data';
 export { getEmojiUrl } from './getEmojiUrl';
 export type { GetEmojiUrl, EmojiUrlSource } from './types';
 
