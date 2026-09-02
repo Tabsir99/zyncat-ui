@@ -31,7 +31,7 @@
 - Move, scale or fade a mounted element you render: `<Motion animate={…}>`.
 - Same, but you do not render the node: `animate(el, layer)` or `useMotion(ref, specs)`.
 - The box changed because layout changed: `<Motion layout>` or `<Motion layoutId="…">`.
-- An indicator following the hovered or active child: `useGlide(containerRef)` + `<GlidePill>`.
+- An indicator following the hovered or active child: `useGlide(containerRef)` + `<GlidePill>`. The pill travels on `t.glide`.
 - Height from zero to content: `<Collapse>`, or `height: [0, 'auto']`.
 - Input-coupled or endless motion: the engine `loop` primitive.
 - Nothing fits: the answer is still one of these.
@@ -68,7 +68,7 @@
 - `Timing` fields: `duration`, `ease`, `delay`, `times`, `type`, `fill`, `release`.
 - Springs: `type: 'spring'` with `visualDuration` and `bounce`.
 - `fill` defaults to `'both'`. `release` defaults to `false`.
-- Prefer `UIMotion.t`: `t.enter`, `t.exit`, `t.layout`, `t.settle`.
+- Prefer `UIMotion.t`: `t.enter`, `t.exit`, `t.layout`, `t.settle`, `t.glide`.
 - A component with an `animation` prop never reads `UIMotion` directly.
 - Declare defaults and resolve them: `resolveMotionTiming(animation, defaults)`.
 

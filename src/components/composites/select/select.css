@@ -200,10 +200,10 @@
   }
 
   .select__option[data-active='true'] {
-    color: var(--text-strong);
+    color: var(--menu-active-ink, var(--text-strong));
   }
   .select__option[data-active='true'] .menu-row__icon {
-    color: var(--text-body);
+    color: var(--menu-active-icon, var(--text-body));
   }
   .select__option[data-selected='true'] .menu-row__label {
     color: var(--text-accent);

@@ -58,7 +58,7 @@
      -strong is the press step of the gray wash (hover 6% < press 10%). */
     --gray-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
     --gray-wash-strong: color-mix(in oklab, var(--gray-700) 10%, transparent);
-    --teal-wash: oklch(0.63 0.118 198 / 0.05);
+    --teal-wash: oklch(0.63 0.118 198 / 0.1);
     --green-wash: oklch(0.62 0.13 152 / 0.1);
     --amber-wash: oklch(0.76 0.14 75 / 0.12);
     --red-wash: oklch(0.602 0.196 27 / 0.1);

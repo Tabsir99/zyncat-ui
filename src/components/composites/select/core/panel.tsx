@@ -7,13 +7,14 @@ import { Fragment, useMemo, type ReactNode } from 'react';
 import { GlidePill } from '../../../../motion/glide';
 import type { DisableableAnimation } from '../../../../motion/timing';
 import { Icon } from '../../../internal/icon/Icon';
+import type { MenuHighlightProps } from '../../../internal/menu/highlight';
 import { MenuRow } from '../../../internal/menu/menu-row';
 import { activationProps, type ActivateOn } from '../../../internal/utils/activation';
 import { Collapse } from '../../../primitives/collapse/Collapse';
 import { SelectMenu } from './menu';
 import type { ListboxState } from './use-listbox';
 
-export interface ListboxPanelProps {
+export interface ListboxPanelProps extends MenuHighlightProps {
   lb: ListboxState;
   loading: boolean;
   searchable: boolean;
@@ -52,6 +53,8 @@ export function ListboxPanel({
   searchPlaceholder,
   ariaLabel,
   multiple,
+  highlight,
+  rail,
   activateOn,
   animation,
   check = defaultCheck,
@@ -64,6 +67,8 @@ export function ListboxPanel({
       requestClose={lb.requestClose}
       triggerRef={lb.triggerRef}
       multiple={multiple}
+      highlight={highlight}
+      rail={rail}
       animation={animation}
     >
       {searchable && !loading && (

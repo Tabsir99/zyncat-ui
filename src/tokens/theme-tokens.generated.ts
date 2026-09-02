@@ -86,7 +86,7 @@ export interface ColorTokens {
   grayWash?: string | number;
   /** `--gray-wash-strong`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
   grayWashStrong?: string | number;
-  /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.05)`. */
+  /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.1)`. */
   tealWash?: string | number;
   /** `--green-wash`. Default: `oklch(0.62 0.13 152 / 0.1)`. */
   greenWash?: string | number;
@@ -393,7 +393,7 @@ export interface MotionTokens {
   easeExit?: string | number;
   /** `--ease-spring`. Default: `cubic-bezier(0.34, 1.4, 0.5, 1)`. */
   easeSpring?: string | number;
-  /** `--ease-glide` - in-out travel - persistent element gliding between siblings; not for enter/exit. Default: `cubic-bezier( 0.55, 0, 0.15, 1 )`. */
+  /** `--ease-glide` - fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit. Default: `cubic-bezier( 0.32, 0.72, 0, 1 )`. */
   easeGlide?: string | number;
   /** `--distance-sm` - 8px - settling into place; the surface is already where it belongs. Default: `0.5rem`. */
   distanceSm?: string | number;
@@ -900,7 +900,7 @@ declare module 'react' {
     '--gray-wash'?: string | number;
     /** `--gray-wash-strong`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
     '--gray-wash-strong'?: string | number;
-    /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.05)`. */
+    /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.1)`. */
     '--teal-wash'?: string | number;
     /** `--green-wash`. Default: `oklch(0.62 0.13 152 / 0.1)`. */
     '--green-wash'?: string | number;
@@ -1192,7 +1192,7 @@ declare module 'react' {
     '--ease-exit'?: string | number;
     /** `--ease-spring`. Default: `cubic-bezier(0.34, 1.4, 0.5, 1)`. */
     '--ease-spring'?: string | number;
-    /** `--ease-glide` - in-out travel - persistent element gliding between siblings; not for enter/exit. Default: `cubic-bezier( 0.55, 0, 0.15, 1 )`. */
+    /** `--ease-glide` - fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit. Default: `cubic-bezier( 0.32, 0.72, 0, 1 )`. */
     '--ease-glide'?: string | number;
     /** `--distance-sm` - 8px - settling into place; the surface is already where it belongs. Default: `0.5rem`. */
     '--distance-sm'?: string | number;

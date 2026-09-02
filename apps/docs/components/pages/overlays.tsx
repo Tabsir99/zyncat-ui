@@ -20,6 +20,7 @@ type PopoverSide = NonNullable<PopoverProps['side']>;
 type PopoverAlign = NonNullable<PopoverProps['align']>;
 type DropdownSide = NonNullable<DropdownProps['side']>;
 type DropdownAlign = NonNullable<DropdownProps['align']>;
+type DropdownHighlight = NonNullable<DropdownProps['highlight']>;
 type SheetSide = NonNullable<SheetProps['side']>;
 type TooltipPlacement = NonNullable<TooltipProps['placement']>;
 type ToastTone = 'default' | 'success' | 'info' | 'warning' | 'error' | 'loading';
@@ -28,6 +29,7 @@ const ALERT_TONES: readonly AlertTone[] = ['info', 'success', 'warning', 'danger
 const DIALOG_SIZES: readonly DialogSize[] = ['sm', 'md', 'lg'];
 const SIDES: readonly DropdownSide[] = ['top', 'bottom', 'left', 'right'];
 const ALIGNS: readonly DropdownAlign[] = ['start', 'center', 'end'];
+const HIGHLIGHTS: readonly DropdownHighlight[] = ['neutral', 'accent'];
 const TOAST_TONES: readonly ToastTone[] = ['default', 'success', 'info', 'warning', 'error', 'loading'];
 
 const ALERT_COPY: Record<AlertTone, { title: string; body: string }> = {
@@ -289,12 +291,16 @@ export function PopoverPlayground() {
 export function DropdownPlayground() {
   const [side, setSide] = useState<DropdownSide>('bottom');
   const [align, setAlign] = useState<DropdownAlign>('start');
+  const [highlight, setHighlight] = useState<DropdownHighlight>('neutral');
+  const [rail, setRail] = useState(false);
 
   const code = `<Dropdown
   ariaLabel="Post options"
   trigger={<Button variant="secondary">Options</Button>}
   side="${side}"
   align="${align}"
+  highlight="${highlight}"
+  rail={${rail}}
   onSelect={route}
   items={items}
 />`;
@@ -307,6 +313,8 @@ export function DropdownPlayground() {
         <>
           <KnobSegment label="side" value={side} onChange={setSide} options={SIDES} />
           <KnobSegment label="align" value={align} onChange={setAlign} options={ALIGNS} />
+          <KnobSegment label="highlight" value={highlight} onChange={setHighlight} options={HIGHLIGHTS} />
+          <KnobSwitch label="rail" checked={rail} onChange={setRail} />
         </>
       }
     >
@@ -317,6 +325,8 @@ export function DropdownPlayground() {
           trigger={<Button variant="secondary">Options</Button>}
           side={side}
           align={align}
+          highlight={highlight}
+          rail={rail}
           onSelect={(id) => toast.info(`Action: ${id}`)}
           items={[
             {

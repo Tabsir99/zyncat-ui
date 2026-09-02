@@ -12,6 +12,7 @@
 
   .dropdown__menu[data-danger-active='true'] {
     --menu-glide-fill: var(--danger-wash);
+    --menu-glide-rail: var(--danger);
   }
 
   .dropdown__group + .dropdown__group {
@@ -24,7 +25,7 @@
     transition: color var(--duration-fast) var(--ease-standard);
   }
   .dropdown__item[data-active='true'] {
-    color: var(--text-strong);
+    color: var(--menu-active-ink, var(--text-strong));
   }
 
   .dropdown__item[data-danger='true'],
@@ -52,7 +53,7 @@
   }
   .dropdown__item[data-active='true'] .menu-row__icon,
   .dropdown__item[data-active='true'] .dropdown__item-caret {
-    color: var(--text-body);
+    color: var(--menu-active-icon, var(--text-body));
   }
 
   .dropdown__item-shortcut {

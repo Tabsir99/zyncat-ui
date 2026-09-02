@@ -62,6 +62,11 @@ export interface DropdownProps {
   side?: 'top' | 'bottom' | 'left' | 'right';
   /** Cross-axis alignment against the trigger. Submenus always align to their row. @default 'start' */
   align?: 'start' | 'center' | 'end';
+  /** Hue of the highlight that travels between rows: the neutral wash, or the accent wash with accent
+   *  ink on the active row. @default 'neutral' */
+  highlight?: 'neutral' | 'accent';
+  /** Short accent bar on the leading edge of the highlight, marking the active row. @default false */
+  rail?: boolean;
 
   /** Base id for the menu and its rows; drives the trigger's `aria-controls`. Auto-generated when omitted. */
   id?: string;
@@ -83,6 +88,8 @@ export function Dropdown({
   onSelect,
   side = 'bottom',
   align = 'start',
+  highlight = 'neutral',
+  rail = false,
   id,
   ariaLabel,
   htmlProps,
@@ -124,6 +131,8 @@ export function Dropdown({
     activateOn,
     side,
     align,
+    highlight,
+    rail,
     ariaLabel,
     htmlProps,
     seed,

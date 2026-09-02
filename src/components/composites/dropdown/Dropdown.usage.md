@@ -9,6 +9,8 @@ NOT a Select: it runs a command instead of holding a value, so there is no selec
 form value. items takes DropdownItem[] or DropdownGroup[] (labelled sections); a row with its own
 items opens a submenu, nesting as deep as you like. Keyboard is the APG menu button: arrows move,
 Right/Left open and close a submenu, Enter/Space commit, typeahead, Esc one level, Tab the lot.
+highlight neutral|accent picks the hue of the highlight travelling between rows; rail adds a short
+accent bar on its leading edge.
 
 ```tsx
 <Dropdown trigger={<Button variant="secondary">Actions</Button>} onSelect={(id) => run(id)} items={[

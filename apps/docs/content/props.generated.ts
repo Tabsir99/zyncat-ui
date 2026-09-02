@@ -1262,6 +1262,19 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Placeholder for the `searchable` filter input.',
     },
     {
+      name: 'highlight',
+      type: "'neutral' | 'accent'",
+      default: "'neutral'",
+      description:
+        'Hue of the highlight that travels between options: the neutral wash, or the accent wash with accent ink on the active option.',
+    },
+    {
+      name: 'rail',
+      type: 'boolean',
+      default: 'false',
+      description: 'Short accent bar on the leading edge of the highlight, marking the active option.',
+    },
+    {
       name: 'leadingIcon',
       type: 'ReactNode',
       description: "Your own icon node pinned before the trigger label; else the selected option's icon.",
@@ -1352,6 +1365,19 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'string',
       default: "'Filter options'",
       description: 'Placeholder for the `searchable` filter input.',
+    },
+    {
+      name: 'highlight',
+      type: "'neutral' | 'accent'",
+      default: "'neutral'",
+      description:
+        'Hue of the highlight that travels between options: the neutral wash, or the accent wash with accent ink on the active option.',
+    },
+    {
+      name: 'rail',
+      type: 'boolean',
+      default: 'false',
+      description: 'Short accent bar on the leading edge of the highlight, marking the active option.',
     },
     {
       name: 'leadingIcon',
@@ -2115,6 +2141,19 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: "'start' | 'center' | 'end'",
       default: "'start'",
       description: 'Cross-axis alignment against the trigger. Submenus always align to their row.',
+    },
+    {
+      name: 'highlight',
+      type: "'neutral' | 'accent'",
+      default: "'neutral'",
+      description:
+        'Hue of the highlight that travels between rows: the neutral wash, or the accent wash with accent ink on the active row.',
+    },
+    {
+      name: 'rail',
+      type: 'boolean',
+      default: 'false',
+      description: 'Short accent bar on the leading edge of the highlight, marking the active row.',
     },
     {
       name: 'id',

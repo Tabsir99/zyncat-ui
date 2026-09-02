@@ -43,6 +43,11 @@ export interface SelectProps {
   searchable?: boolean;
   /** Placeholder for the `searchable` filter input. @default 'Filter options' */
   searchPlaceholder?: string;
+  /** Hue of the highlight that travels between options: the neutral wash, or the accent wash with
+   *  accent ink on the active option. @default 'neutral' */
+  highlight?: 'neutral' | 'accent';
+  /** Short accent bar on the leading edge of the highlight, marking the active option. @default false */
+  rail?: boolean;
   /** Your own icon node pinned before the trigger label; else the selected option's icon. */
   leadingIcon?: ReactNode;
   /** Base id for the trigger/menu/list ids and a11y wiring; auto-generated if omitted. */
@@ -76,6 +81,8 @@ export function Select({
   loading = false,
   searchable = false,
   searchPlaceholder = 'Filter options',
+  highlight = 'neutral',
+  rail = false,
   leadingIcon = null,
   id,
   ariaLabel,
@@ -129,6 +136,8 @@ export function Select({
         searchable={searchable}
         searchPlaceholder={searchPlaceholder}
         ariaLabel={ariaLabel}
+        highlight={highlight}
+        rail={rail}
         activateOn={activateOn}
         animation={animation}
         {...(!showCheck && { check: () => null })}

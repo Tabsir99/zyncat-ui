@@ -28,7 +28,7 @@ export function useGlide<T extends HTMLElement>(containerRef: RefObject<T | null
     animate(pill, { opacity: [1], timing: { duration: SM.dur.fast, ease: SM.ease.standard } });
     const glided = visible.current && !SM.reduced && was.width > 0 && was.height > 0;
     visible.current = true;
-    if (glided) flip(pill, was, { size: 'morph', timing: SM.t.settle });
+    if (glided) flip(pill, was, { size: 'morph', timing: SM.t.glide });
   }
 
   function leave() {

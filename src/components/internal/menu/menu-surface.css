@@ -22,6 +22,15 @@
     box-shadow: var(--shadow-lg);
     outline: none;
     font-family: var(--font-sans);
+    --menu-rail-width: 2px;
+    --menu-rail-length: var(--icon-sm);
+  }
+
+  .menu-surface:where([data-highlight='accent']) {
+    --menu-glide-fill: var(--accent-wash);
+    --menu-glide-rail: var(--accent);
+    --menu-active-ink: var(--text-accent);
+    --menu-active-icon: var(--text-accent);
   }
 
   /* data-side/data-align are written by useAnchorPosition after any flip - grow from the anchored edge. */
@@ -122,6 +131,19 @@
     border-radius: var(--radius-sm);
     background: var(--menu-glide-fill, var(--neutral-wash));
     pointer-events: none;
+    transition: background-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .menu-surface[data-rail='true'] .menu-glide::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: var(--menu-rail-width);
+    height: var(--menu-rail-length);
+    translate: 0 -50%;
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+    background: var(--menu-glide-rail, var(--accent));
     transition: background-color var(--duration-fast) var(--ease-standard);
   }
 }

@@ -32,7 +32,13 @@ export interface MotionTokens {
   dist: Record<DistanceToken, number>;
   scale: Record<ScaleToken, number>;
   /** ready-made Motion transitions */
-  t: { enter: MotionTransition; exit: MotionTransition; layout: MotionTransition; settle: MotionTransition };
+  t: {
+    enter: MotionTransition;
+    exit: MotionTransition;
+    layout: MotionTransition;
+    settle: MotionTransition;
+    glide: MotionTransition;
+  };
   reduced: boolean;
 }
 
@@ -44,7 +50,7 @@ const DEFAULT_EASE: MotionTokens['ease'] = {
   entrance: [0.25, 1, 0.4, 1],
   exit: [0.4, 0, 1, 1],
   spring: [0.34, 1.4, 0.5, 1],
-  glide: [0.55, 0, 0.15, 1],
+  glide: [0.32, 0.72, 0, 1],
 };
 const DEFAULT_DIST: MotionTokens['dist'] = { sm: 8, md: 16, lg: 24 };
 const DEFAULT_SCALE: MotionTokens['scale'] = { panel: 0.98, floating: 0.95, chip: 0.9 };
@@ -60,6 +66,7 @@ function build(scales: MotionScales): MotionTokens {
       exit: { duration: dur.fast, ease: ease.exit },
       layout: { duration: dur.slow, ease: ease.entrance },
       settle: reduced ? { duration: 0 } : { type: 'spring', visualDuration: dur.fast, bounce: 0.25 },
+      glide: { duration: dur.base, ease: ease.glide },
     },
   };
 }

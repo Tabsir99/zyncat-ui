@@ -18,11 +18,11 @@
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
     --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
     --ease-glide: cubic-bezier(
-      0.55,
+      0.32,
+      0.72,
       0,
-      0.15,
       1
-    ); /* in-out travel - persistent element gliding between siblings; not for enter/exit */
+    ); /* fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit */
 
     /* Travel - how far a surface moves on the way in or out. A magnitude scale, snapped to the 4px
      spacing spine; pick by how far the surface has conceptually come, not by how big it is. */

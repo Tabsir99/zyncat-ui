@@ -7,7 +7,7 @@ import { MultiSelect, type MultiSelectProps } from '@zyncat/ui/multi-select';
 import { NumberField, type NumberFieldProps } from '@zyncat/ui/number-field';
 import { OtpField } from '@zyncat/ui/otp-field';
 import { RadioGroup, type RadioGroupProps, type RadioOption } from '@zyncat/ui/radio-group';
-import { Select } from '@zyncat/ui/select';
+import { Select, type SelectProps } from '@zyncat/ui/select';
 import { TextField, type TextFieldProps } from '@zyncat/ui/text-field';
 import { Textarea, type TextareaProps } from '@zyncat/ui/textarea';
 import { toast } from '@zyncat/ui/toast';
@@ -24,10 +24,12 @@ type RadioSize = NonNullable<RadioGroupProps['size']>;
 type NumberSize = NonNullable<NumberFieldProps['size']>;
 type TextareaSize = NonNullable<TextareaProps['size']>;
 type MultiSelectSize = NonNullable<MultiSelectProps['size']>;
+type SelectHighlight = NonNullable<SelectProps['highlight']>;
 type OtpSize = 'default' | 'sm';
 type TextFieldType = NonNullable<TextFieldProps['type']>;
 
 const FIELD_SIZES: readonly FieldSize[] = ['sm', 'md', 'lg'];
+const HIGHLIGHTS: readonly SelectHighlight[] = ['neutral', 'accent'];
 const BOX_SIZES: readonly BoxSize[] = ['sm', 'md'];
 const TEXT_FIELD_TYPES: readonly TextFieldType[] = ['text', 'search', 'email', 'url', 'password'];
 
@@ -310,6 +312,8 @@ export function SelectPlayground() {
   const [loading, setLoading] = useState(false);
   const [invalid, setInvalid] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [highlight, setHighlight] = useState<SelectHighlight>('neutral');
+  const [rail, setRail] = useState(false);
   const [tz, setTz] = useState<string | null>('nyc');
 
   const code = `<Select
@@ -322,6 +326,8 @@ export function SelectPlayground() {
   loading={${loading}}
   invalid={${invalid}}
   disabled={${disabled}}
+  highlight="${highlight}"
+  rail={${rail}}
 />`;
 
   return (
@@ -335,6 +341,8 @@ export function SelectPlayground() {
           <KnobSwitch label="loading" checked={loading} onChange={setLoading} />
           <KnobSwitch label="invalid" checked={invalid} onChange={setInvalid} />
           <KnobSwitch label="disabled" checked={disabled} onChange={setDisabled} />
+          <KnobSegment label="highlight" value={highlight} onChange={setHighlight} options={HIGHLIGHTS} />
+          <KnobSwitch label="rail" checked={rail} onChange={setRail} />
         </>
       }
     >
@@ -350,6 +358,8 @@ export function SelectPlayground() {
           loading={loading}
           invalid={invalid}
           disabled={disabled}
+          highlight={highlight}
+          rail={rail}
         />
       </div>
     </Playground>
@@ -358,6 +368,8 @@ export function SelectPlayground() {
 
 export function MultiSelectPlayground() {
   const [size, setSize] = useState<MultiSelectSize>('md');
+  const [highlight, setHighlight] = useState<SelectHighlight>('neutral');
+  const [rail, setRail] = useState(false);
   const [channels, setChannels] = useState(['tw', 'li']);
 
   const code = `<MultiSelect
@@ -367,11 +379,22 @@ export function MultiSelectPlayground() {
   value={channels}
   onChange={setChannels}
   options={CHANNELS}
+  highlight="${highlight}"
+  rail={${rail}}
   searchable
 />`;
 
   return (
-    <Playground code={code} rail={<KnobSegment label="size" value={size} onChange={setSize} options={FIELD_SIZES} />}>
+    <Playground
+      code={code}
+      rail={
+        <>
+          <KnobSegment label="size" value={size} onChange={setSize} options={FIELD_SIZES} />
+          <KnobSegment label="highlight" value={highlight} onChange={setHighlight} options={HIGHLIGHTS} />
+          <KnobSwitch label="rail" checked={rail} onChange={setRail} />
+        </>
+      }
+    >
       <div style={{ width: '100%', maxWidth: W }}>
         <MultiSelect
           ariaLabel="Connected channels"
@@ -380,6 +403,8 @@ export function MultiSelectPlayground() {
           value={channels}
           onChange={setChannels}
           options={CHANNELS}
+          highlight={highlight}
+          rail={rail}
           searchable
         />
       </div>

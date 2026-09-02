@@ -8,6 +8,7 @@ import { Presence } from '../../../../motion/presence';
 import type { DisableableAnimation } from '../../../../motion/timing';
 import { useMotion, type MotionSpecs } from '../../../../motion/use-motion';
 import { UIMotion, type MotionTransition } from '../../../../tokens/motion-tokens';
+import { menuHighlightAttrs, type MenuHighlightProps } from '../../../internal/menu/highlight';
 import { OverlayPortal, useOutsidePress, useOverlayEntry } from '../../../internal/overlay/layer';
 import { useAnchorPosition } from '../../../internal/overlay/position';
 
@@ -31,7 +32,7 @@ function selectMenuLayers(animation: DisableableAnimation | undefined, dir: 'ope
       ];
 }
 
-export interface SelectMenuProps {
+export interface SelectMenuProps extends MenuHighlightProps {
   open: boolean;
   menuId: string;
   requestClose: () => void;
@@ -47,6 +48,8 @@ function MenuSurface({
   requestClose,
   triggerRef,
   multiple,
+  highlight,
+  rail,
   animate,
   exit,
   children,
@@ -73,13 +76,24 @@ function MenuSurface({
       id={menuId}
       role="presentation"
       data-multiple={multiple ? 'true' : undefined}
+      {...menuHighlightAttrs({ highlight, rail })}
     >
       {children}
     </div>
   );
 }
 
-export function SelectMenu({ open, menuId, requestClose, triggerRef, multiple, animation, children }: SelectMenuProps) {
+export function SelectMenu({
+  open,
+  menuId,
+  requestClose,
+  triggerRef,
+  multiple,
+  highlight,
+  rail,
+  animation,
+  children,
+}: SelectMenuProps) {
   return (
     <OverlayPortal>
       <Presence>
@@ -92,6 +106,8 @@ export function SelectMenu({ open, menuId, requestClose, triggerRef, multiple, a
             requestClose={requestClose}
             triggerRef={triggerRef}
             multiple={multiple}
+            highlight={highlight}
+            rail={rail}
           >
             {children}
           </MenuSurface>
