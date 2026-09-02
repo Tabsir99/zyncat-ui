@@ -116,35 +116,41 @@ differentiator here. Expect to win on the long tail first.
 | R7  | time-field     | TimeField      | ✔      | timepicker            | 15  |
 | R7  | emoji-picker   | EmojiPicker    | ✔      | emoji picker          | 6   |
 | R7  | table          | Table          | ✔      | react data table      | 15  |
-| R8  | pagination     | Pagination     | ☐      |                       |     |
+| R8  | pagination     | Pagination     | ✔      | react pagination      | 12  |
 
 ### Tier D — the rest
 
+Two modes here. The five R9 pages get a full research run; everything else is
+hand-written from source - a sensible title, the obvious keywords, and four FAQs
+still verified against the props. A mining run on a commodity control buys
+nothing: the head term is a homograph or an npm package, and the long tail is
+thin. The FAQ verification is never skipped either way.
+
 | #   | Slug         | Page        | Status | Primary keyword | Kws |
 | --- | ------------ | ----------- | ------ | --------------- | --- |
-| R9  | button       | Button      | ☐      |                 |     |
-| R9  | icon         | Icon        | ☐      |                 |     |
-| R9  | collapse     | Collapse    | ☐      |                 |     |
-| R10 | badge        | Badge       | ☐      |                 |     |
-| R10 | status-badge | StatusBadge | ☐      |                 |     |
-| R10 | count-badge  | CountBadge  | ☐      |                 |     |
-| R11 | text-field   | TextField   | ☐      |                 |     |
-| R11 | number-field | NumberField | ☐      |                 |     |
-| R11 | textarea     | Textarea    | ☐      |                 |     |
-| R12 | checkbox     | Checkbox    | ☐      |                 |     |
-| R12 | toggle       | Toggle      | ☐      |                 |     |
-| R12 | radio-group  | RadioGroup  | ☐      |                 |     |
-| R13 | avatar       | Avatar      | ☐      |                 |     |
-| R13 | tag          | Tag         | ☐      |                 |     |
-| R13 | tabs         | Tabs        | ☐      |                 |     |
-| R14 | alert        | Alert       | ☐      |                 |     |
-| R14 | toast        | Toast       | ☐      |                 |     |
-| R14 | tooltip      | Tooltip     | ☐      |                 |     |
-| R15 | dialog       | Dialog      | ☐      |                 |     |
-| R15 | popover      | Popover     | ☐      |                 |     |
-| R15 | dropdown     | Dropdown    | ☐      |                 |     |
-| R16 | sheet        | Sheet       | ☐      |                 |     |
-| R16 | support-rail | SupportRail | ☐      |                 |     |
+| R8  | button       | Button      | ✔      | button          | 8   |
+| R8  | icon         | Icon        | ✔      | react icon      | 7   |
+| R8  | collapse     | Collapse    | ✔      | accordion       | 8   |
+| R8  | badge        | Badge       | ✔      | badge           | 7   |
+| R8  | status-badge | StatusBadge | ✔      | status badge    | 7   |
+| R8  | count-badge  | CountBadge  | ✔      | count badge     | 7   |
+| R8  | text-field   | TextField   | ✔      | text field      | 7   |
+| R8  | number-field | NumberField | ✔      | number field    | 7   |
+| R8  | textarea     | Textarea    | ✔      | textarea        | 8   |
+| R8  | checkbox     | Checkbox    | ✔      | checkbox        | 7   |
+| R8  | toggle       | Toggle      | ✔      | toggle switch   | 7   |
+| R8  | radio-group  | RadioGroup  | ✔      | radio group     | 7   |
+| R8  | avatar       | Avatar      | ✔      | avatar          | 8   |
+| R8  | tag          | Tag         | ✔      | tag component   | 7   |
+| R8  | alert        | Alert       | ✔      | alert           | 7   |
+| R8  | popover      | Popover     | ✔      | popover         | 7   |
+| R8  | sheet        | Sheet       | ✔      | sheet           | 8   |
+| R8  | support-rail | SupportRail | ✔      | support rail    | 6   |
+| R9  | dialog       | Dialog      | ☐      |                 |     |
+| R9  | toast        | Toast       | ☐      |                 |     |
+| R9  | tooltip      | Tooltip     | ☐      |                 |     |
+| R9  | dropdown     | Dropdown    | ☐      |                 |     |
+| R9  | tabs         | Tabs        | ☐      |                 |     |
 
 ## Tally
 
@@ -152,6 +158,6 @@ differentiator here. Expect to win on the long tail first.
 | -------------- | ----- | --- | --- |
 | A — expressive | 11    | 11  | 11  |
 | B — guides     | 4     | 4   | 4   |
-| C — controls   | 10    | 9   | 9   |
-| D — the rest   | 23    | 0   | 0   |
-| **Total**      | 48    | 24  | 24  |
+| C — controls   | 10    | 10  | 10  |
+| D — the rest   | 23    | 18  | 18  |
+| **Total**      | 48    | 43  | 43  |
