@@ -98,7 +98,7 @@ async function planInstall(cwd: string, targetPkg: PackageJson, flags: InitFlags
   const hasPackage = PACKAGE in deps;
   const onDisk = installedVersion(cwd, PACKAGE);
   const outdated = onDisk !== null && isOlder(onDisk, version);
-  if (!hasPackage || outdated) specs.push(outdated ? `${PACKAGE}@^${version}` : PACKAGE);
+  if (!hasPackage || outdated) specs.push(`${PACKAGE}@^${version}`);
 
   if (!('react' in deps)) {
     specs.push('react', 'react-dom');
@@ -214,7 +214,7 @@ async function alignVersion(pm: PackageManager, cwd: string, version: string): P
   const onDisk = installedVersion(cwd, PACKAGE);
   if (!onDisk || !isOlder(onDisk, version)) return;
   log.warn(
-    `${PACKAGE} ${onDisk} resolved from this project's range, older than the CLI (${version}) - upgrading so the skill and MCP server match.`,
+    `${PACKAGE} ${onDisk} landed, older than the CLI (${version}) - upgrading so the skill and MCP server match.`,
   );
   const upgraded = await installPhase(pm, { specs: [`${PACKAGE}@^${version}`], restore: false, reactNote: null }, cwd);
   if (upgraded) log.message(upgraded.line, { symbol: check });
