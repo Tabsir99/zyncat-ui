@@ -13,7 +13,7 @@ interface ButtonOwnProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'link' | 'unstyled';
   /** Forwarded to the underlying <button> (React 19 ref-as-prop). */
   ref?: Ref<HTMLButtonElement>;
-  /** Control height. sm 28px - md 36px (default) - lg 40px. @default 'md' */
+  /** Control height. sm 28px - md 32px (default) - lg 37px. @default 'md' */
   size?: 'sm' | 'md' | 'lg' | 'icon';
   /** `submit` / `reset` / `button`. @default 'button' */
   type?: 'button' | 'submit' | 'reset';

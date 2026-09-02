@@ -31,7 +31,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'size',
       type: "'sm' | 'md' | 'lg' | 'icon'",
       default: "'md'",
-      description: 'Control height. sm 28px - md 36px (default) - lg 40px.',
+      description: 'Control height. sm 28px - md 32px (default) - lg 37px.',
     },
     {
       name: 'type',
@@ -916,7 +916,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       description: 'Leading icon - your own icon node (sized to the control). Decorative.',
     },
     { name: 'clearable', type: 'boolean', description: "Show a clear button when there's a value." },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", description: 'Control height: sm 28 - md 36 (default) - lg 40.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", description: 'Control height: sm 28px - md 32px (default) - lg 37px.' },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the field root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the field root.' },
     {
