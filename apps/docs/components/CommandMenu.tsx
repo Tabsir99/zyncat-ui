@@ -115,10 +115,7 @@ export function CommandMenu({ open, onClose }: CommandMenuProps) {
                 <Icon name="code" size="sm" />
               </div>
               <div className="cmd-item__text">
-                <div className="cmd-item__top">
-                  <span className="cmd-item__label">{item.label}</span>
-                  <span className="cmd-item__group">{item.groupTitle}</span>
-                </div>
+                <span className="cmd-item__label">{item.label}</span>
                 <span className="cmd-item__blurb">{item.blurb}</span>
               </div>
               <Icon name="arrow-right" size="sm" />
