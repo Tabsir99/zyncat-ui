@@ -88,11 +88,6 @@ export function TerminalDemo({ pm, command }: { pm: string; command: string }) {
         </p>
         <p className="termo__line termo__wire">
           <span className="termo__check">✓</span>
-          <span className="termo__label">Typed theme</span>
-          <span className="termo__dim">zyncat.theme.ts · created</span>
-        </p>
-        <p className="termo__line termo__wire">
-          <span className="termo__check">✓</span>
           <span className="termo__label">Stylesheet</span>
           <span className="termo__dim">app/layout.tsx · import added</span>
         </p>
@@ -114,7 +109,7 @@ export function TerminalDemo({ pm, command }: { pm: string; command: string }) {
       </div>
       <figcaption className="visually-hidden">
         Demo of the zyncat-ui init terminal output: the package installs with a progress bar, then the agent skill, MCP
-        server, typed theme and stylesheet are wired up.
+        server and stylesheet are wired up.
       </figcaption>
     </figure>
   );

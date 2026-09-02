@@ -23,7 +23,7 @@ function help(version: string): string {
     `  ${wordmark(version)}`,
     '',
     `  ${dim('Sets up @zyncat/ui in a React project: installs the package,')}`,
-    `  ${dim('the agent skill, the MCP server, a typed theme and the stylesheet.')}`,
+    `  ${dim('the agent skill, the MCP server and the stylesheet.')}`,
     '',
     `  ${bold('Usage')}`,
     `    zyncat-ui init ${dim('[flags]')}`,

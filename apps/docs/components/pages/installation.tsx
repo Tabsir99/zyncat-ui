@@ -83,22 +83,22 @@ export default withZyncat({
 
         <p className="guide-section__p">
           That is the whole setup. The CLI installs <code className="doc-inline-code">@zyncat/ui</code> (and React 19,
-          if the project does not have it yet), imports the base stylesheet at your app root, installs the agent skill,
-          registers the MCP server and scaffolds a typed theme file - then tells you exactly what it wrote.
+          if the project does not have it yet), imports the base stylesheet at your app root, installs the agent skill
+          and registers the MCP server - then tells you exactly what it wrote.
         </p>
 
         <Callout tone="info" title="Why the CLI is the install path">
-          The package never travels alone: the agent skill, the MCP registration, the generated theme types and the
-          stylesheet import all have to match the installed version. <code className="doc-inline-code">init</code> moves
-          them together, and re-running it after an upgrade refreshes all of them at once. Every step is idempotent -
-          files you already have are kept, not overwritten.
+          The package never travels alone: the agent skill, the MCP registration and the stylesheet import all have to
+          match the installed version. <code className="doc-inline-code">init</code> moves them together, and re-running
+          it after an upgrade refreshes all of them at once. Every step is idempotent - files you already have are kept,
+          not overwritten.
         </Callout>
       </section>
 
       <section className="guide-section" id="what-it-does">
         <h2 className="guide-section__title">What init does</h2>
         <p className="guide-section__p">
-          Five steps, each printed as it lands. Nothing is hidden and nothing else is touched.
+          Four steps, each printed as it lands. Nothing is hidden and nothing else is touched.
         </p>
 
         <Steps>
@@ -137,16 +137,6 @@ export default withZyncat({
               <code className="doc-inline-code">.mcp.json</code>, pointing at the server bundled with the installed
               package - so an agent&apos;s answers about props and tokens always match the version your project runs.
               Existing servers in the file are preserved.
-            </p>
-          </Step>
-
-          <Step number={5} title="Scaffolds the typed theme">
-            <p className="guide-section__p">
-              Creates <code className="doc-inline-code">zyncat.theme.ts</code> (or{' '}
-              <code className="doc-inline-code">.js</code> in a JavaScript project) with a starter{' '}
-              <code className="doc-inline-code">defineTheme</code> - every token a typed key, ready to render through{' '}
-              <code className="doc-inline-code">&lt;ZyncatTheme /&gt;</code>. An existing theme file is never
-              overwritten.
             </p>
           </Step>
         </Steps>

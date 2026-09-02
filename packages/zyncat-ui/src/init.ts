@@ -7,6 +7,7 @@ import {
   findAppEntry,
   findOwnRoot,
   installedVersion,
+  isOlder,
   majorOf,
   PACKAGE_MANAGERS,
   pmVersion,
@@ -41,23 +42,16 @@ const MCP_SERVER_ENTRY = { command: 'node', args: ['./node_modules/@zyncat/ui/di
 const STYLES_IMPORT = "import '@zyncat/ui/styles.css';";
 const DOCS_URL = 'https://ui.zyncat.app';
 
-const THEME_STARTER = `import { defineTheme } from '@zyncat/ui/theme';
-
-export const base = defineTheme({
-  color: { accent: 'oklch(0.63 0.118 198)' },
-});
-
-export const dark = defineTheme({
-  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
-});
-`;
-
 const interactive = () => Boolean(process.stdout.isTTY && process.stdin.isTTY);
+
+let installTouchedProject = false;
 
 function bail(message: string, hint?: string): never {
   log.error(message);
   if (hint) log.message(dim(hint), { spacing: 0 });
-  outro(red('Nothing was changed.'));
+  outro(
+    red(installTouchedProject ? 'Stopped here - the install ran, nothing else was wired.' : 'Nothing was changed.'),
+  );
   process.exit(1);
 }
 
@@ -77,20 +71,34 @@ async function pickPm(cwd: string, targetPkg: PackageJson, flags: InitFlags): Pr
   return choice;
 }
 
+const ADD_COMMAND: Record<PackageManager, string> = {
+  pnpm: 'pnpm add',
+  npm: 'npm install',
+  yarn: 'yarn add',
+  bun: 'bun add',
+};
+
 interface Plan {
   specs: string[];
   restore: boolean;
   reactNote: string | null;
 }
 
-async function planInstall(cwd: string, targetPkg: PackageJson, flags: InitFlags): Promise<Plan> {
+interface Wired {
+  line: string;
+  done: boolean;
+  hint?: string;
+}
+
+async function planInstall(cwd: string, targetPkg: PackageJson, flags: InitFlags, version: string): Promise<Plan> {
   const deps = { ...targetPkg.dependencies, ...targetPkg.devDependencies };
   const specs: string[] = [];
   let reactNote: string | null = null;
 
   const hasPackage = PACKAGE in deps;
-  const packageOnDisk = installedVersion(cwd, PACKAGE) !== null;
-  if (!hasPackage) specs.push(PACKAGE);
+  const onDisk = installedVersion(cwd, PACKAGE);
+  const outdated = onDisk !== null && isOlder(onDisk, version);
+  if (!hasPackage || outdated) specs.push(outdated ? `${PACKAGE}@^${version}` : PACKAGE);
 
   if (!('react' in deps)) {
     specs.push('react', 'react-dom');
@@ -113,7 +121,7 @@ async function planInstall(cwd: string, targetPkg: PackageJson, flags: InitFlags
     }
   }
 
-  return { specs, restore: hasPackage && !packageOnDisk, reactNote };
+  return { specs, restore: hasPackage && onDisk === null, reactNote };
 }
 
 function renderProgress(pm: PackageManager, progress: InstallProgress | null, tick: number): string {
@@ -202,24 +210,41 @@ async function installPhase(pm: PackageManager, plan: Plan, cwd: string): Promis
   }
 }
 
+async function alignVersion(pm: PackageManager, cwd: string, version: string): Promise<void> {
+  const onDisk = installedVersion(cwd, PACKAGE);
+  if (!onDisk || !isOlder(onDisk, version)) return;
+  log.warn(
+    `${PACKAGE} ${onDisk} resolved from this project's range, older than the CLI (${version}) - upgrading so the skill and MCP server match.`,
+  );
+  const upgraded = await installPhase(pm, { specs: [`${PACKAGE}@^${version}`], restore: false, reactNote: null }, cwd);
+  if (upgraded) log.message(upgraded.line, { symbol: check });
+}
+
 function sourceRoot(cwd: string, ownRoot: string): string {
   const installed = join(cwd, 'node_modules', PACKAGE);
   if (existsSync(join(installed, 'skills'))) return installed;
   return ownRoot;
 }
 
-function wireSkill(cwd: string, packageRoot: string): string {
+function wireSkill(cwd: string, packageRoot: string, pm: PackageManager): Wired {
   const source = join(packageRoot, 'skills');
-  if (!existsSync(source)) bail(`No skills/ directory found in the installed ${PACKAGE} - reinstall the package.`);
+  if (!existsSync(source)) {
+    const onDisk = installedVersion(cwd, PACKAGE);
+    return {
+      line: row('Agent skill', `skipped · ${PACKAGE}${onDisk ? ` ${onDisk}` : ''} ships no skills/`),
+      done: false,
+      hint: `Upgrade it with ${ADD_COMMAND[pm]} ${PACKAGE}@latest, then re-run init.`,
+    };
+  }
   const dest = join(cwd, '.claude/skills');
   const existed = existsSync(join(dest, 'zyncat-ui'));
   mkdirSync(dest, { recursive: true });
   for (const name of readdirSync(source))
     cpSync(join(source, name), join(dest, name), { recursive: true, force: true });
-  return row('Agent skill', `.claude/skills/zyncat-ui · ${existed ? 'refreshed' : 'installed'}`);
+  return { line: row('Agent skill', `.claude/skills/zyncat-ui · ${existed ? 'refreshed' : 'installed'}`), done: true };
 }
 
-function wireMcp(cwd: string): string {
+function wireMcp(cwd: string): Wired {
   const path = join(cwd, '.mcp.json');
   let config: { mcpServers?: Record<string, unknown> } = {};
   if (existsSync(path)) {
@@ -230,31 +255,28 @@ function wireMcp(cwd: string): string {
   const existed = JSON.stringify(config.mcpServers?.['zyncat-ui']) === JSON.stringify(MCP_SERVER_ENTRY);
   config.mcpServers = { ...config.mcpServers, 'zyncat-ui': MCP_SERVER_ENTRY };
   writeFileSync(path, `${JSON.stringify(config, null, 2)}\n`);
-  return row('MCP server', existed ? '.mcp.json · kept' : `.mcp.json ${arrow} zyncat-ui`);
+  return { line: row('MCP server', existed ? '.mcp.json · kept' : `.mcp.json ${arrow} zyncat-ui`), done: true };
 }
 
-function wireTheme(cwd: string): string {
-  const file = existsSync(join(cwd, 'tsconfig.json')) ? 'zyncat.theme.ts' : 'zyncat.theme.js';
-  const path = join(cwd, file);
-  if (existsSync(path)) return row('Typed theme', `${file} · kept`);
-  writeFileSync(path, THEME_STARTER);
-  return row('Typed theme', `${file} · created`);
-}
-
-function wireStyles(cwd: string): { line: string; manual: boolean } {
+function wireStyles(cwd: string): Wired {
   const entry = findAppEntry(cwd);
-  if (!entry) return { line: `${row('Stylesheet', 'no app entry found · add the import yourself')}`, manual: true };
+  if (!entry)
+    return {
+      line: row('Stylesheet', 'no app entry found · add the import yourself'),
+      done: false,
+      hint: `Put ${STYLES_IMPORT} at your app root, above your own stylesheets.`,
+    };
   const path = join(cwd, entry);
   const text = readFileSync(path, 'utf8');
   if (text.includes('@zyncat/ui/styles.css'))
-    return { line: row('Stylesheet', `${entry} · already imported`), manual: false };
+    return { line: row('Stylesheet', `${entry} · already imported`), done: true };
   const eol = text.includes('\r\n') ? '\r\n' : '\n';
   const lines = text.split(eol);
   let at = 0;
   while (at < lines.length && (lines[at].trim() === '' || /^(['"])use [\w-]+\1;?$/.test(lines[at].trim()))) at++;
   lines.splice(at, 0, STYLES_IMPORT);
   writeFileSync(path, lines.join(eol));
-  return { line: row('Stylesheet', `${entry} · import added`), manual: false };
+  return { line: row('Stylesheet', `${entry} · import added`), done: true };
 }
 
 export async function init(flags: InitFlags): Promise<void> {
@@ -281,23 +303,24 @@ export async function init(flags: InitFlags): Promise<void> {
   const project = targetPkg.name ?? 'unnamed project';
   log.message(dim(`${project} · ${pm}${pmVer ? ` ${pmVer}` : ''}`));
 
-  const plan = await planInstall(cwd, targetPkg, flags);
+  const plan = await planInstall(cwd, targetPkg, flags, version);
   const installed = await installPhase(pm, plan, cwd);
+  installTouchedProject = true;
   if (installed) log.message(installed.line, { symbol: check });
   if (plan.reactNote) log.warn(plan.reactNote);
+  await alignVersion(pm, cwd, version);
 
   const packageRoot = sourceRoot(cwd, ownRoot);
-  const lines = [wireSkill(cwd, packageRoot), wireMcp(cwd), wireTheme(cwd)];
-  const styles = wireStyles(cwd);
-  lines.push(styles.line);
-  for (const [index, line] of lines.entries())
-    log.message(line, {
-      symbol: styles.manual && index === lines.length - 1 ? skip : check,
-      spacing: index === 0 ? 1 : 0,
-    });
-  if (styles.manual)
-    log.message(dim(`Put ${STYLES_IMPORT} at your app root, above your own stylesheets.`), { spacing: 0 });
+  const rows: Wired[] = [wireSkill(cwd, packageRoot, pm), wireMcp(cwd), wireStyles(cwd)];
+  for (const [index, entry] of rows.entries()) {
+    log.message(entry.line, { symbol: entry.done ? check : skip, spacing: index === 0 ? 1 : 0 });
+    if (entry.hint) log.message(dim(entry.hint), { spacing: 0 });
+  }
 
   log.message(`${dim('Docs')} ${arrow} ${accentDeep(DOCS_URL)}`);
-  outro(`${bold(`Ready in ${seconds(performance.now() - startedAt)}.`)} Restart your agent session to load the skill.`);
+  const skipped = rows.filter((entry) => !entry.done).length;
+  const closing = skipped
+    ? `${bold(`Done in ${seconds(performance.now() - startedAt)}.`)} ${skipped} step${skipped === 1 ? '' : 's'} left for you, above.`
+    : `${bold(`Ready in ${seconds(performance.now() - startedAt)}.`)} Restart your agent session to load the skill.`;
+  outro(closing);
 }

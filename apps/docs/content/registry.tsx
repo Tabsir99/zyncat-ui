@@ -70,8 +70,7 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'installation',
         label: 'Installation',
-        blurb:
-          'One command sets up everything: the package, the stylesheet, the agent skill, the MCP server and a typed theme.',
+        blurb: 'One command sets up everything: the package, the stylesheet, the agent skill and the MCP server.',
         Content: InstallationDoc,
         toc: [
           { id: 'quick-start', title: 'One command', level: 2 },

@@ -38,8 +38,8 @@ pnpm dlx zyncat-ui init
 
 It installs `@zyncat/ui` with your package manager (and React 19, if the project needs it), imports
 the base stylesheet at your app root, installs the agent skill into `.claude/skills/`, registers the
-bundled MCP server in `.mcp.json`, and scaffolds a typed `zyncat.theme.ts`. Every step is idempotent
-and printed as it lands - re-run the command after upgrading to refresh the skill and theme types.
+bundled MCP server in `.mcp.json`. Every step is idempotent and printed as it lands - re-run the
+command after upgrading to refresh the skill.
 Non-interactive shells get plain logs and no prompts; pass `--yes` to accept every default and
 `--pm <pnpm|npm|yarn|bun>` to pin the package manager.
 

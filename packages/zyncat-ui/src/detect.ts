@@ -76,6 +76,14 @@ export function majorOf(range: string | undefined): number | null {
   return match ? Number(match[0]) : null;
 }
 
+const release = (version: string): number[] => (version.match(/\d+\.\d+\.\d+/)?.[0] ?? '0.0.0').split('.').map(Number);
+
+export function isOlder(version: string, than: string): boolean {
+  const [a, b] = [release(version), release(than)];
+  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] < b[i];
+  return false;
+}
+
 export function installedVersion(cwd: string, name: string): string | null {
   return readJson(join(cwd, 'node_modules', name, 'package.json'))?.version ?? null;
 }
