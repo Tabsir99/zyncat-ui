@@ -1,13 +1,15 @@
-import { lane, report, script, tool } from './lib/run.mjs';
+import { lane, pkg, report, script, tool } from './lib/run.mjs';
 
 const startedAt = Date.now();
 
 const results = await lane([
   script('sync:theme', 'gen-theme.mjs'),
+  script('sync:shim', 'gen-shim.mjs'),
   script('sync:exports', 'sync-exports.mjs', '--write'),
   script('sync:tsconfig', 'sync-tsconfig.mjs'),
   tool('build:js', 'tsup'),
   tool('build:types', 'tsc', '-p', 'tsconfig.build.json', '--emitDeclarationOnly'),
+  pkg('build:cli', 'zyncat-ui', 'build'),
   script('docs:props', 'gen-props.mjs'),
   script('sync:skill', 'gen-skill.mjs'),
 ]);

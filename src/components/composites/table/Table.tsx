@@ -205,6 +205,7 @@ export function Table<Row = any>({
         else w.removeAttribute(attr);
       };
       set('data-scrolled', el.scrollTop > 0);
+      set('data-y-scroll', el.scrollHeight > el.clientHeight);
       set('data-x-back', edges.left);
       set('data-x-more', edges.right);
     },

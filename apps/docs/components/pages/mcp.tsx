@@ -65,15 +65,18 @@ export function McpDoc() {
 
       <section className="guide-section" id="ide-configuration">
         <h2 className="guide-section__title">Setup</h2>
-        <p className="guide-section__p">One command, run in your project root, wires both halves:</p>
+        <p className="guide-section__p">
+          The same command that installs Zyncat UI wires both halves - run it in your project root:
+        </p>
         <CodeBlock code={initCommand} language="bash" />
         <p className="guide-section__p">
-          It copies the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
+          It installs <code className="doc-inline-code">@zyncat/ui</code> if the project does not have it yet, copies
+          the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
           <code className="doc-inline-code">.claude/skills/</code>, registers the MCP server in{' '}
-          <code className="doc-inline-code">.mcp.json</code>, and scaffolds{' '}
+          <code className="doc-inline-code">.mcp.json</code>, imports the stylesheet and scaffolds{' '}
           <code className="doc-inline-code">zyncat.theme.ts</code> if the project has none. Restart the agent session
           afterwards, and re-run the command after upgrading <code className="doc-inline-code">@zyncat/ui</code> so the
-          skill matches the installed version; an existing theme file is left alone.
+          skill matches the installed version; existing files are left alone.
         </p>
 
         <TabGroup

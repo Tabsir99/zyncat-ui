@@ -34,7 +34,7 @@ function walk(dir, exts) {
 const failures = [];
 const fail = (doc, message) => failures.push(`${doc}: ${message}`);
 
-const TOP_LEVEL_DIRS = ['src', 'scripts', 'docs', 'apps', 'skills', 'dist'];
+const TOP_LEVEL_DIRS = ['src', 'scripts', 'docs', 'apps', 'skills', 'dist', 'packages'];
 const ROOT_FILES = [
   'package.json',
   'tsup.config.ts',

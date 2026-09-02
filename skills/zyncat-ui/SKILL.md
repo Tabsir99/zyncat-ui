@@ -23,9 +23,13 @@ No Tailwind, no CSS-in-JS, no animation library - a built-in WAAPI motion engine
    stamped with the version it came from. If `node_modules/@zyncat/ui/package.json` shows a
    different version, trust `get_component` over the file and re-run `npx zyncat-ui init`.
 5. If the MCP tools are missing, register the server and reinstall this skill: `npx zyncat-ui init`
-   (writes `.mcp.json` and `.claude/skills/`).
+   (one command: installs the package if absent, imports the stylesheet, writes `.mcp.json`,
+   `.claude/skills/` and the theme scaffold).
 
 ## Setup (once per app)
+
+Everything here is what `npx zyncat-ui init` wires up - when a piece is missing, prefer re-running
+init over hand-wiring it.
 
 - `import '@zyncat/ui/styles.css'` once at the root - fonts + tokens; each component lazy-loads its
   own CSS.

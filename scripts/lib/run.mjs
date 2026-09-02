@@ -31,6 +31,8 @@ export const tool =
   () =>
     run(label, bin(name), args);
 
+export const pkg = (label, name, task) => () => run(label, 'pnpm', ['--filter', name, task]);
+
 export async function lane(steps) {
   const results = [];
   for (const step of steps) {

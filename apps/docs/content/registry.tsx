@@ -79,14 +79,14 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'installation',
         label: 'Installation',
-        blurb: 'How to install dependencies, configure CSS tokens, and structure your React 19 or Next.js app.',
+        blurb:
+          'One command sets up everything: the package, the stylesheet, the agent skill, the MCP server and a typed theme.',
         Content: InstallationDoc,
         toc: [
-          { id: 'prerequisites', title: 'Prerequisites', level: 2 },
-          { id: 'package-install', title: 'Package Installation', level: 2 },
-          { id: 'styles-setup', title: 'Styles & CSS Tokens', level: 2 },
-          { id: 'framework-setup', title: 'Framework Setup', level: 2 },
-          { id: 'first-component', title: 'First Component', level: 2 },
+          { id: 'quick-start', title: 'One command', level: 2 },
+          { id: 'what-it-does', title: 'What init does', level: 2 },
+          { id: 'after-init', title: 'After init', level: 2 },
+          { id: 'requirements', title: 'Requirements & CI', level: 2 },
         ],
       },
       {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useState, type ComponentType, type ReactNode } from 'react';
+import Link from 'next/link';
 
 import { Alert, type AlertTone } from '@zyncat/ui/alert';
 import { Button } from '@zyncat/ui/button';
@@ -220,20 +221,28 @@ export function CodeBlock({
   );
 }
 
+const INIT_COMMANDS: Record<string, string> = {
+  pnpm: 'pnpm dlx zyncat-ui init',
+  npm: 'npx zyncat-ui init',
+  yarn: 'yarn dlx zyncat-ui init',
+  bun: 'bunx zyncat-ui init',
+};
+
+const EXPORT_NAME_OVERRIDES: Record<string, string> = {
+  'datetime-field': 'DateTimeField',
+  'emoji-picker': 'EmojiPickerPanel',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+};
+
 export function InstallationBox({ slug }: { slug: string }) {
-  const name = useId();
   const pmName = useId();
-  const [tab, setTab] = useState('cli');
-  const [dir, setDir] = useState<1 | -1 | 0>(0);
   const [pkgManager, setPkgManager] = useState('pnpm');
   const [pmDir, setPmDir] = useState<1 | -1 | 0>(0);
 
-  const cliCommands: Record<string, string> = {
-    pnpm: 'pnpm add @zyncat/ui',
-    npm: 'npm install @zyncat/ui',
-    yarn: 'yarn add @zyncat/ui',
-    bun: 'bun add @zyncat/ui',
-  };
+  const exportName =
+    EXPORT_NAME_OVERRIDES[slug] ??
+    slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 
   return (
     <section className="installation-box" id="installation">
@@ -241,52 +250,37 @@ export function InstallationBox({ slug }: { slug: string }) {
         <h2 className="section-head__title">Installation</h2>
       </div>
 
-      <Tabs
-        items={[
-          { value: 'cli', label: 'CLI' },
-          { value: 'manual', label: 'Manual' },
-        ]}
-        value={tab}
-        onChange={(v, d) => {
-          setTab(v);
-          setDir(d);
-        }}
-        name={name}
-        ariaLabel="Installation method"
-        className="installation-box__tabs"
-      />
-
-      <TabPanel name={name} tab={tab} dir={dir}>
-        {tab === 'cli' ? (
-          <div className="installation-cli">
-            <Tabs
-              items={['pnpm', 'npm', 'yarn', 'bun'].map((pm) => ({ value: pm, label: pm }))}
-              value={pkgManager}
-              onChange={(v, d) => {
-                setPkgManager(v);
-                setPmDir(d);
-              }}
-              name={pmName}
-              ariaLabel="Package manager"
-              className="installation-cli__pms"
-            />
-            <TabPanel name={pmName} tab={pkgManager} dir={pmDir}>
-              <CodeBlock code={cliCommands[pkgManager]} language="bash" showLineNumbers={false} />
-            </TabPanel>
-          </div>
-        ) : (
-          <div className="installation-manual">
-            <p className="installation-manual__step">1. Install package dependencies:</p>
-            <CodeBlock code="pnpm add @zyncat/ui" language="bash" showLineNumbers={false} />
-            <p className="installation-manual__step">2. Import component and styles:</p>
-            <CodeBlock
-              code={`import { ${slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase())} } from '@zyncat/ui/${slug}';\nimport '@zyncat/ui/${slug}.css';`}
-              language="tsx"
-              showLineNumbers={false}
-            />
-          </div>
-        )}
-      </TabPanel>
+      <div className="installation-manual">
+        <p className="installation-manual__step">
+          1. New project? One command installs the package and wires everything - see{' '}
+          <Link href="/installation" className="doc-link">
+            Installation
+          </Link>
+          :
+        </p>
+        <div className="installation-cli">
+          <Tabs
+            items={['pnpm', 'npm', 'yarn', 'bun'].map((pm) => ({ value: pm, label: pm }))}
+            value={pkgManager}
+            onChange={(v, d) => {
+              setPkgManager(v);
+              setPmDir(d);
+            }}
+            name={pmName}
+            ariaLabel="Package manager"
+            className="installation-cli__pms"
+          />
+          <TabPanel name={pmName} tab={pkgManager} dir={pmDir}>
+            <CodeBlock code={INIT_COMMANDS[pkgManager]} language="bash" showLineNumbers={false} />
+          </TabPanel>
+        </div>
+        <p className="installation-manual__step">2. Import the component - it loads its own stylesheet:</p>
+        <CodeBlock
+          code={`import { ${exportName} } from '@zyncat/ui/${slug}';`}
+          language="tsx"
+          showLineNumbers={false}
+        />
+      </div>
     </section>
   );
 }

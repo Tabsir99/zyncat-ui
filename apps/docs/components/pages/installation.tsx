@@ -1,38 +1,40 @@
 'use client';
 
 import { useId, useState } from 'react';
+import Link from 'next/link';
 
 import { TabPanel, Tabs } from '@zyncat/ui/tabs';
 
 import { Callout, CodeBlock, Step, Steps, TabGroup } from '../kit';
+import { TerminalDemo } from '../terminal-demo';
+
+const INIT_COMMANDS: Record<string, string> = {
+  pnpm: 'pnpm dlx zyncat-ui init',
+  npm: 'npx zyncat-ui init',
+  yarn: 'yarn dlx zyncat-ui init',
+  bun: 'bunx zyncat-ui init',
+};
 
 export function InstallationDoc() {
   const pmName = useId();
   const [pkgManager, setPkgManager] = useState('pnpm');
   const [pmDir, setPmDir] = useState<1 | -1 | 0>(0);
 
-  const installCommands: Record<string, string> = {
-    pnpm: 'pnpm add @zyncat/ui @phosphor-icons/react',
-    npm: 'npm install @zyncat/ui @phosphor-icons/react',
-    yarn: 'yarn add @zyncat/ui @phosphor-icons/react',
-    bun: 'bun add @zyncat/ui @phosphor-icons/react',
-  };
+  const verifyCode = `import { Button } from '@zyncat/ui/button';
+import { toast } from '@zyncat/ui/toast-store';
 
-  const nextAppCode = `// app/layout.tsx
-import type { Metadata } from 'next';
-import '@zyncat/ui/styles.css';
+export function Hello() {
+  return (
+    <Button variant="primary" onClick={() => toast.success('Wired', { description: 'Zyncat UI is ready.' })}>
+      Say hello
+    </Button>
+  );
+}`;
+
+  const toasterCode = `// app/layout.tsx - already imports the stylesheet after init
 import { Toaster } from '@zyncat/ui/toast';
 
-export const metadata: Metadata = {
-  title: 'My Zyncat UI App',
-  description: 'Built with React 19 and Zyncat UI',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
@@ -43,101 +45,21 @@ export default function RootLayout({
   );
 }`;
 
-  const nextConfigCode = `// next.config.mjs
+  const nextConfigCode = `// next.config.mjs (optional)
 import { withZyncat } from '@zyncat/ui/next';
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+export default withZyncat({
   reactStrictMode: true,
-};
+});`;
 
-export default withZyncat(nextConfig);`;
-
-  const viteAppCode = `// src/main.tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import '@zyncat/ui/styles.css';
-import { Toaster } from '@zyncat/ui/toast';
-import App from './App';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-    <Toaster />
-  </React.StrictMode>
-);`;
-
-  const firstComponentCode = `import { useState } from 'react';
-import { Button } from '@zyncat/ui/button';
-import { TextField } from '@zyncat/ui/text-field';
-import { StatusBadge } from '@zyncat/ui/status-badge';
-import { toast } from '@zyncat/ui/toast';
-
-export function WorkspaceCreator() {
-  const [name, setName] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleCreate = async () => {
-    if (!name.trim()) {
-      toast.error('Name required', { description: 'Please enter a workspace name.' });
-      return;
-    }
-    setLoading(true);
-    // Simulate async creation
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    toast.success('Workspace created', { description: \`\${name} is ready for collaboration.\` });
-    setName('');
-  };
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '400px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h3>New Workspace</h3>
-        <StatusBadge status="scheduled" />
-      </div>
-      
-      <TextField
-        label="Workspace name"
-        placeholder="e.g. Acme Marketing"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-
-      <Button variant="primary" loading={loading} onClick={handleCreate}>
-        Create workspace
-      </Button>
-    </div>
-  );
-}`;
+  const ciCode = `npx zyncat-ui init --yes --pm pnpm`;
 
   return (
     <>
-      <section className="guide-section" id="prerequisites">
-        <h2 className="guide-section__title">Prerequisites</h2>
-        <p className="guide-section__p">Zyncat UI requires modern JavaScript runtime environments and React 19:</p>
-
-        <ul className="guide-section__list">
-          <li>
-            <strong>React 19+:</strong> <code className="doc-inline-code">react</code> and{' '}
-            <code className="doc-inline-code">react-dom</code> version <code className="doc-inline-code">^19.0.0</code>
-          </li>
-          <li>
-            <strong>Node.js:</strong> Version <code className="doc-inline-code">&gt;= 18.0.0</code>
-          </li>
-          <li>
-            <strong>Modern Browsers:</strong> Chrome 105+, Safari 16.4+, Firefox 121+, Edge 105+ (supporting modern CSS
-            nesting, subgrid, and WAAPI).
-          </li>
-        </ul>
-      </section>
-
-      <section className="guide-section" id="package-install">
-        <h2 className="guide-section__title">Package Installation</h2>
+      <section className="guide-section" id="quick-start">
+        <h2 className="guide-section__title">One command</h2>
         <p className="guide-section__p">
-          Install the <code className="doc-inline-code">@zyncat/ui</code> package along with the Phosphor icon library
-          using your preferred package manager:
+          Zyncat UI installs through its CLI, not a bare package install. Run this in the root of a React project:
         </p>
 
         <div className="installation-cli">
@@ -153,96 +75,172 @@ export function WorkspaceCreator() {
             className="installation-cli__pms"
           />
           <TabPanel name={pmName} tab={pkgManager} dir={pmDir}>
-            <CodeBlock code={installCommands[pkgManager]} language="bash" showLineNumbers={false} />
+            <CodeBlock code={INIT_COMMANDS[pkgManager]} language="bash" showLineNumbers={false} />
           </TabPanel>
         </div>
 
-        <Callout tone="info" title="Peer Dependencies">
-          Zyncat UI components take icons as React nodes (bring-your-own icon). We recommend{' '}
-          <code className="doc-inline-code">@phosphor-icons/react</code>, but any SVG/icon library can be used.
+        <TerminalDemo pm={pkgManager} command={INIT_COMMANDS[pkgManager]} />
+
+        <p className="guide-section__p">
+          That is the whole setup. The CLI installs <code className="doc-inline-code">@zyncat/ui</code> (and React 19,
+          if the project does not have it yet), imports the base stylesheet at your app root, installs the agent skill,
+          registers the MCP server and scaffolds a typed theme file - then tells you exactly what it wrote.
+        </p>
+
+        <Callout tone="info" title="Why the CLI is the install path">
+          The package never travels alone: the agent skill, the MCP registration, the generated theme types and the
+          stylesheet import all have to match the installed version. <code className="doc-inline-code">init</code> moves
+          them together, and re-running it after an upgrade refreshes all of them at once. Every step is idempotent -
+          files you already have are kept, not overwritten.
         </Callout>
       </section>
 
-      <section className="guide-section" id="styles-setup">
-        <h2 className="guide-section__title">Styles &amp; CSS Tokens</h2>
+      <section className="guide-section" id="what-it-does">
+        <h2 className="guide-section__title">What init does</h2>
         <p className="guide-section__p">
-          Zyncat UI uses pure CSS custom properties for all themes, elevations, colors, and typography. You have two
-          options for including styles in your build:
+          Five steps, each printed as it lands. Nothing is hidden and nothing else is touched.
         </p>
 
         <Steps>
-          <Step number={1} title="Option A: Global Stylesheet (Recommended)">
+          <Step number={1} title="Installs the package">
             <p className="guide-section__p">
-              Import the complete, pre-bundled stylesheet once in your application entry file:
+              Adds <code className="doc-inline-code">@zyncat/ui</code> with your package manager - detected from the
+              lockfile, the <code className="doc-inline-code">packageManager</code> field or the runner you invoked it
+              with. If <code className="doc-inline-code">react</code> is missing it installs React 19 alongside; if
+              React 18 is installed it asks before upgrading. Under pnpm the progress bar tracks the real download -
+              resolved and fetched packages, with live byte counts on the tarballs.
             </p>
-            <CodeBlock code="import '@zyncat/ui/styles.css';" language="tsx" showLineNumbers={false} />
           </Step>
 
-          <Step number={2} title="Option B: Granular Per-Component Styles">
+          <Step number={2} title="Imports the stylesheet">
             <p className="guide-section__p">
-              If you prefer strict tree-shaking of CSS, import only the stylesheets for the components you consume:
+              Finds your app entry (<code className="doc-inline-code">app/layout.tsx</code>,{' '}
+              <code className="doc-inline-code">src/main.tsx</code>,{' '}
+              <code className="doc-inline-code">app/root.tsx</code>, ...) and adds{' '}
+              <code className="doc-inline-code">import &apos;@zyncat/ui/styles.css&apos;;</code> as the first import, so
+              stylesheets you load later keep winning the cascade. If the import already exists, the file is untouched;
+              if no entry is found, it prints the one line to add yourself.
             </p>
-            <CodeBlock
-              code={`import { Button } from '@zyncat/ui/button';\nimport '@zyncat/ui/button.css';\n\nimport { Dialog } from '@zyncat/ui/dialog';\nimport '@zyncat/ui/dialog.css';`}
-              language="tsx"
-              showLineNumbers={false}
-            />
+          </Step>
+
+          <Step number={3} title="Installs the agent skill">
+            <p className="guide-section__p">
+              Copies the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
+              <code className="doc-inline-code">.claude/skills/</code> - the component map, picker tables, recipes and
+              theming guide an AI coding agent should hold in context while writing your UI.
+            </p>
+          </Step>
+
+          <Step number={4} title="Registers the MCP server">
+            <p className="guide-section__p">
+              Merges the <code className="doc-inline-code">zyncat-ui</code> entry into{' '}
+              <code className="doc-inline-code">.mcp.json</code>, pointing at the server bundled with the installed
+              package - so an agent&apos;s answers about props and tokens always match the version your project runs.
+              Existing servers in the file are preserved.
+            </p>
+          </Step>
+
+          <Step number={5} title="Scaffolds the typed theme">
+            <p className="guide-section__p">
+              Creates <code className="doc-inline-code">zyncat.theme.ts</code> (or{' '}
+              <code className="doc-inline-code">.js</code> in a JavaScript project) with a starter{' '}
+              <code className="doc-inline-code">defineTheme</code> - every token a typed key, ready to render through{' '}
+              <code className="doc-inline-code">&lt;ZyncatTheme /&gt;</code>. An existing theme file is never
+              overwritten.
+            </p>
           </Step>
         </Steps>
       </section>
 
-      <section className="guide-section" id="framework-setup">
-        <h2 className="guide-section__title">Framework Setup</h2>
+      <section className="guide-section" id="after-init">
+        <h2 className="guide-section__title">After init</h2>
         <p className="guide-section__p">
-          Zyncat UI works out of the box with any modern React 19 bundler or meta-framework.
+          Restart your agent session so it picks up the skill and the MCP server, then prove the wiring with any
+          component:
         </p>
+
+        <CodeBlock code={verifyCode} language="tsx" />
+
+        <p className="guide-section__p">Two things stay in your hands, because they are places in your JSX:</p>
 
         <TabGroup
           tabs={[
             {
-              id: 'nextjs',
-              label: 'Next.js (App Router)',
+              id: 'toaster',
+              label: 'Toasts',
               content: (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <p className="guide-section__p">
-                    1. Add the global styles and root <code className="doc-inline-code">&lt;Toaster /&gt;</code> to your{' '}
-                    <code className="doc-inline-code">app/layout.tsx</code>:
+                    Render one <code className="doc-inline-code">&lt;Toaster /&gt;</code> at the root if you use toasts:
                   </p>
-                  <CodeBlock code={nextAppCode} language="tsx" />
+                  <CodeBlock code={toasterCode} language="tsx" />
+                </div>
+              ),
+            },
+            {
+              id: 'next-config',
+              label: 'Next.js config',
+              content: (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <p className="guide-section__p">
-                    2. (Optional) Wrap your configuration with <code className="doc-inline-code">withZyncat</code> in{' '}
-                    <code className="doc-inline-code">next.config.mjs</code>:
+                    Optional: wrap your Next.js config with <code className="doc-inline-code">withZyncat</code>:
                   </p>
                   <CodeBlock code={nextConfigCode} language="javascript" />
                 </div>
               ),
             },
-            {
-              id: 'vite',
-              label: 'Vite / SPA',
-              content: (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <p className="guide-section__p">
-                    Import <code className="doc-inline-code">@zyncat/ui/styles.css</code> in{' '}
-                    <code className="doc-inline-code">src/main.tsx</code>:
-                  </p>
-                  <CodeBlock code={viteAppCode} language="tsx" />
-                </div>
-              ),
-            },
           ]}
         />
+
+        <p className="guide-section__p">
+          From here: retheme through the scaffolded theme file on the{' '}
+          <Link href="/theming" className="doc-link">
+            Theming &amp; Overrides
+          </Link>{' '}
+          page, or see what the agent tooling can answer on the{' '}
+          <Link href="/mcp" className="doc-link">
+            MCP Server
+          </Link>{' '}
+          page.
+        </p>
       </section>
 
-      <section className="guide-section" id="first-component">
-        <h2 className="guide-section__title">Your First Component</h2>
+      <section className="guide-section" id="requirements">
+        <h2 className="guide-section__title">Requirements &amp; CI</h2>
+
+        <ul className="guide-section__list">
+          <li>
+            <strong>React 19</strong> - <code className="doc-inline-code">react</code> and{' '}
+            <code className="doc-inline-code">react-dom</code> <code className="doc-inline-code">^19</code>. The CLI
+            installs or offers the upgrade itself.
+          </li>
+          <li>
+            <strong>Node.js 18+</strong> for the CLI and the MCP server.
+          </li>
+          <li>
+            <strong>Modern browsers</strong> - Chrome 105+, Safari 16.4+, Firefox 121+, Edge 105+ (modern CSS nesting
+            and WAAPI).
+          </li>
+          <li>
+            <strong>Icons are bundled.</strong> There is no icon peer to install - components render their own glyphs,
+            and any prop that takes an icon accepts your own <code className="doc-inline-code">ReactNode</code>.
+          </li>
+        </ul>
+
         <p className="guide-section__p">
-          Here is an example building an interactive card composing <code className="doc-inline-code">Button</code>,{' '}
-          <code className="doc-inline-code">TextField</code>, <code className="doc-inline-code">StatusBadge</code>, and{' '}
-          <code className="doc-inline-code">toast</code>:
+          In CI or any non-interactive shell the CLI prints plain sequential logs and never prompts. Pass{' '}
+          <code className="doc-inline-code">--yes</code> to accept every default and{' '}
+          <code className="doc-inline-code">--pm</code> to pin the package manager:
         </p>
 
-        <CodeBlock code={firstComponentCode} language="tsx" />
+        <CodeBlock code={ciCode} language="bash" showLineNumbers={false} />
+
+        <p className="guide-section__p">
+          Re-run init any time - after upgrading <code className="doc-inline-code">@zyncat/ui</code> it refreshes the
+          skill and theme types to match the new version. Once the package is installed,{' '}
+          <code className="doc-inline-code">pnpm exec zyncat-ui init</code> (or plain{' '}
+          <code className="doc-inline-code">npx zyncat-ui init</code>) runs the local, version-matched copy.
+        </p>
       </section>
     </>
   );

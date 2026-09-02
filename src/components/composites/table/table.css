@@ -43,7 +43,10 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow: auto;
-    overscroll-behavior: contain;
+    overscroll-behavior-x: contain;
+  }
+  .tbl[data-y-scroll] .tbl__scroll {
+    overscroll-behavior-y: contain;
   }
 
   .tbl__table {
@@ -283,6 +286,9 @@
     opacity: 0;
     transition: var(--transition-opacity);
     pointer-events: none;
+  }
+  .tbl--pin tbody tr:last-child .tbl__cell--pinEdge::after {
+    bottom: 0;
   }
   .tbl[data-x-back] .tbl__cell--pinEdge::after {
     opacity: 1;

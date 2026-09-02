@@ -94,11 +94,12 @@ const library: Options = {
   },
 };
 
-// The MCP server and the init CLI are node executables, not library modules: node
-// platform, shebang for the package bins, no d.ts (no importable API), and clean:false
-// so they never race the library build's dist wipe.
+// The MCP server is a node executable, not a library module: node platform, shebang for
+// the package bin, no d.ts (no importable API), and clean:false so it never races the
+// library build's dist wipe. The init CLI is its own package - packages/zyncat-ui builds
+// it and mirrors the bundle into this dist for the `zyncat-ui` bin.
 const mcpServer: Options = {
-  entry: { mcp: 'src/mcp/server.ts', cli: 'src/cli.ts' },
+  entry: { mcp: 'src/mcp/server.ts' },
   format: ['esm'],
   platform: 'node',
   target: 'node18',

@@ -28,11 +28,20 @@ it with those expectations, and pin a version.
 
 ## Install
 
+One command, run inside your React project - installing the package is part of it, so there is no
+separate `pnpm add` step:
+
 ```bash
-pnpm add @zyncat/ui
-# peers (you likely already have them):
-pnpm add react react-dom
+pnpm dlx zyncat-ui init
+# or: npx zyncat-ui init · yarn dlx zyncat-ui init · bunx zyncat-ui init
 ```
+
+It installs `@zyncat/ui` with your package manager (and React 19, if the project needs it), imports
+the base stylesheet at your app root, installs the agent skill into `.claude/skills/`, registers the
+bundled MCP server in `.mcp.json`, and scaffolds a typed `zyncat.theme.ts`. Every step is idempotent
+and printed as it lands - re-run the command after upgrading to refresh the skill and theme types.
+Non-interactive shells get plain logs and no prompts; pass `--yes` to accept every default and
+`--pm <pnpm|npm|yarn|bun>` to pin the package manager.
 
 | Peer                  | Range | Used for                                                             |
 | --------------------- | ----- | -------------------------------------------------------------------- |
@@ -51,11 +60,12 @@ directives intact, so Next.js App Router boundaries just work.
 import { Button } from '@zyncat/ui/button';
 import { toast } from '@zyncat/ui/toast-store';
 
-import '@zyncat/ui/styles.css'; // base layer - link once, at the app root
+import '@zyncat/ui/styles.css'; // base layer - init adds this at the app root for you
 ```
 
 `styles.css` is the **base layer only** - fonts, design tokens (the `:root` custom
-properties) and the shared `glass` utility. Link it exactly once at the app root.
+properties) and the shared `glass` utility. It is linked exactly once at the app root -
+`init` inserts the import above your own stylesheets so yours keep winning the cascade.
 
 You never import per-component CSS: every component imports its own stylesheet, so your
 bundler code-splits and lazy-loads it with the component. Import `@zyncat/ui/dialog` and
@@ -124,17 +134,11 @@ Everything else answers to the token vocabulary.
 
 ## For AI coding agents
 
-**One command wires everything:**
-
-```bash
-npx zyncat-ui init
-```
-
-It installs the `zyncat-ui` agent skill into `./.claude/skills/` (the component map, picker
-tables, recipes, theming guide - the knowledge that should sit in the agent's context),
-registers the bundled MCP server in `./.mcp.json` (the live truth), and scaffolds
-`./zyncat.theme.ts` if you do not have one. Re-run it after upgrading the package so the skill
-matches the installed version; an existing theme file is never overwritten.
+The same `init` from [Install](#install) is the whole agent setup: it installs the `zyncat-ui`
+agent skill into `./.claude/skills/` (the component map, picker tables, recipes, theming guide -
+the knowledge that should sit in the agent's context) and registers the bundled MCP server in
+`./.mcp.json` (the live truth). Re-run it after upgrading the package so the skill matches the
+installed version.
 
 **The MCP server** is zero-dependency (stdio), also exposed as the `zyncat-ui-mcp` bin, and works
 with any MCP client:

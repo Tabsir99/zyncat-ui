@@ -51,8 +51,15 @@ src/
     internal/    shared machinery, never exported
     dev/         MotionDevtools
   mcp/           the bundled MCP server
-  cli.ts         `zyncat-ui init` - installs the skill + .mcp.json into a consumer project
 skills/          the consumer agent skill, shipped in the npm package
+packages/zyncat-ui/  the second published package: the `zyncat-ui init` CLI, and the claim on
+                 the unscoped name so `npx zyncat-ui init` runs before @zyncat/ui exists in
+                 the project. Owns its own src/, tsup.config.ts, tsconfig.json and the
+                 terminal-UI devDeps (@clack/prompts + picocolors), bundled at build time so
+                 both published packages keep zero runtime dependencies. Its build mirrors
+                 dist/cli.js into the library dist for @zyncat/ui's own `zyncat-ui` bin;
+                 gen-shim.mjs keeps the two versions in lockstep.
+                 Publish both, or `npx zyncat-ui init` 404s for new users.
 docs/authoring/  the guidance the MCP tools serve
 scripts/         the generators and the lints
   lib/entries.mjs  the one scanner deriving the public entry list from the tree
@@ -72,4 +79,4 @@ temp/            imported source material (dc.html decks, magicui reference) - n
 
 - `pnpm sync`: regenerate every manifest and generated doc.
 - `pnpm verify`: the whole gate, in order.
-- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:skill`, `check:theme`, `check:props`, `build && check:usage`.
+- Pieces run alone: `typecheck`, `check:css`, `check:contracts`, `check:authoring`, `check:exports`, `check:tsconfig`, `check:skill`, `check:theme`, `check:shim`, `check:props`, `build && check:usage`.
