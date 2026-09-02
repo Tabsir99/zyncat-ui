@@ -24,13 +24,6 @@ function buildItems(doc: Doc): TocItem[] {
     items.push({ id: 'playground', title: 'Playground', level: 2 });
   }
 
-  if (doc.examples && doc.examples.length > 0) {
-    items.push({ id: 'examples', title: 'Examples', level: 2 });
-    for (const ex of doc.examples) {
-      items.push({ id: `example-${ex.id}`, title: ex.title, level: 3 });
-    }
-  }
-
   if (!doc.Content) {
     items.push({ id: 'installation', title: 'Installation', level: 2 });
   }

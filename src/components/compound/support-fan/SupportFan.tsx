@@ -20,6 +20,7 @@ import {
 import type { DataAttributes } from '../../../dom-props';
 import { loop, type Playback } from '../../../engine';
 import type { SupportFanStyle } from '../../../tokens/component-styles.generated';
+import { Dock, DockItem } from '../../expressive/dock/Dock';
 import { useControllable } from '../../internal/hooks/use-controllable';
 import { IconSlot } from '../../internal/icon/IconSlot';
 import { useOutsidePress, useOverlayEntry } from '../../internal/overlay/layer';
@@ -38,12 +39,17 @@ const CHIP_GAP = 8;
 const ARC_TOP_SINE = 0.83;
 const ARC_RADIUS_MIN = 120;
 const ARC_PUSH = 22;
-const AXIS_PUSH = 20;
 const BOW_AMPLITUDE = 12;
 const PUSH_SOFTNESS = 1.05;
 const MAGNIFY_VARIANCE = 2.1;
 const MAGNIFY_GAIN = 0.13;
 const SPREAD_MIN = 0.35;
+const SPREAD_BASE = 1.45;
+const DOCK_ICON_SIZE = 44;
+const DOCK_ICON_PEAK = 64;
+const DOCK_CHIP_SIZE = 32;
+const DOCK_CHIP_PEAK = 46;
+const DOCK_REACH = 140;
 const LIFT_STEPS = 8;
 const HIT_PAD = 24;
 const CAPTION_LIFT = 20;
@@ -71,15 +77,11 @@ interface FanMetrics {
 
 interface FanFrame {
   count: number;
-  polar: boolean;
   radius: number;
   swing: number;
   angles: number[];
   rest: number[][];
   fibre: number[];
-  vertical: boolean;
-  along: number[];
-  normal: number[];
   push: number;
   hit: number[];
   caption: number[];
@@ -101,15 +103,11 @@ interface FanTuning {
 
 const EMPTY_FRAME: FanFrame = {
   count: 0,
-  polar: false,
   radius: 0,
   swing: 1,
   angles: [],
   rest: [],
   fibre: [],
-  vertical: true,
-  along: [0, 0],
-  normal: [0, 0],
   push: 0,
   hit: [0, 0, 0, 0],
   caption: [0, 0],
@@ -155,52 +153,11 @@ function captionSeat(rest: number[][], metrics: FanMetrics): number[] {
   return [right + CAPTION_NUDGE, top - CAPTION_LIFT];
 }
 
-function buildFrame(layout: SupportFanLayout, count: number, metrics: FanMetrics): FanFrame {
+function buildArc(count: number, metrics: FanMetrics): FanFrame {
   if (count < 1) return EMPTY_FRAME;
   const reach = metrics.triggerHalf + TRIGGER_GAP;
   const lift = reach + metrics.chipHeight / 2;
   const pitch = metrics.chipHeight + CHIP_GAP;
-  const shell = { count };
-
-  if (layout === 'icon-dock') {
-    const stride = metrics.chipWidth + CHIP_GAP;
-    const rest = Array.from({ length: count }, (_, i) => [-(reach + i * stride), 0]);
-    return {
-      ...shell,
-      polar: false,
-      radius: 0,
-      swing: 1,
-      angles: [],
-      rest,
-      fibre: rest.map(([x]) => x - metrics.chipWidth / 2),
-      vertical: false,
-      along: [-1, 0],
-      normal: [0, -1],
-      push: AXIS_PUSH,
-      hit: envelope(rest, metrics),
-      caption: captionSeat(rest, metrics),
-    };
-  }
-
-  if (layout === 'dock') {
-    const rest = Array.from({ length: count }, (_, i) => [metrics.triggerHalf, -(lift + i * pitch)]);
-    return {
-      ...shell,
-      polar: false,
-      radius: 0,
-      swing: 1,
-      angles: [],
-      rest,
-      fibre: rest.map(([, y]) => y),
-      vertical: true,
-      along: [0, -1],
-      normal: [-1, 0],
-      push: AXIS_PUSH,
-      hit: envelope(rest, metrics),
-      caption: captionSeat(rest, metrics),
-    };
-  }
-
   const span = lift + pitch * (count - 1);
   const radius = Math.max(ARC_RADIUS_MIN, span / ARC_TOP_SINE);
   const angles = Array.from({ length: count }, (_, i) => {
@@ -209,16 +166,12 @@ function buildFrame(layout: SupportFanLayout, count: number, metrics: FanMetrics
   });
   const rest = angles.map((angle) => [radius * Math.cos(angle), -radius * Math.sin(angle)]);
   return {
-    ...shell,
-    polar: true,
+    count,
     radius,
     swing: angles[count - 1] >= angles[0] ? 1 : -1,
     angles,
     rest,
     fibre: rest.map(([, y]) => y),
-    vertical: true,
-    along: [0, 0],
-    normal: [0, 0],
     push: ARC_PUSH,
     hit: envelope(rest, metrics),
     caption: captionSeat(rest, metrics),
@@ -226,13 +179,9 @@ function buildFrame(layout: SupportFanLayout, count: number, metrics: FanMetrics
 }
 
 function place(frame: FanFrame, index: number, push: number, out: number): number[] {
-  if (frame.polar) {
-    const angle = frame.angles[index] + (frame.swing * push) / frame.radius;
-    const radius = frame.radius + out;
-    return [radius * Math.cos(angle), -radius * Math.sin(angle)];
-  }
-  const [x, y] = frame.rest[index];
-  return [x + frame.along[0] * push + frame.normal[0] * out, y + frame.along[1] * push + frame.normal[1] * out];
+  const angle = frame.angles[index] + (frame.swing * push) / frame.radius;
+  const radius = frame.radius + out;
+  return [radius * Math.cos(angle), -radius * Math.sin(angle)];
 }
 
 function invIndex(table: number[], value: number): number {
@@ -246,8 +195,8 @@ function invIndex(table: number[], value: number): number {
   return last + (probe - at(last)) / (at(last) - at(last - 1));
 }
 
-function focusFor(frame: FanFrame, x: number, y: number): number {
-  const raw = invIndex(frame.fibre, frame.vertical ? y : x);
+function focusFor(frame: FanFrame, y: number): number {
+  const raw = invIndex(frame.fibre, y);
   return clamp(raw, -FOCUS_OVERREACH, frame.count - 1 + FOCUS_OVERREACH);
 }
 
@@ -299,7 +248,8 @@ export interface SupportFanProps {
   /** The chips the fan deploys, in order from the trigger outwards. */
   actions: SupportAction[];
   /** `arc` fans the chips onto a circle centred on the trigger, `dock` stacks them straight
-   *  with their metadata, `icon-dock` runs a row of icon-only chips sideways. @default 'arc' */
+   *  with their metadata, `icon-dock` runs a row of icon-only chips sideways. Both dock
+   *  layouts are a real Dock rail. @default 'arc' */
   layout?: SupportFanLayout;
   /** Controlled open state. Omit to stay uncontrolled. */
   open?: boolean;
@@ -312,13 +262,16 @@ export interface SupportFanProps {
   /** The resting line above the row. Pointing at or focusing a chip replaces it with the
    *  action's label and its `meta` (or `description`). */
   caption?: string;
-  /** How far the row slides away from the pointer, as a multiple of the layout's own step. @default 1 */
+  /** How far the arc slides away from the pointer, as a multiple of its own step. Arc only -
+   *  on a dock rail the swell is the slide. @default 1 */
   glide?: number;
-  /** How much the chip under the pointer swells. Deliberately small - the glide carries it. @default 1 */
+  /** How much the chip under the pointer swells - on the arc a scale, on a dock rail the
+   *  magnified box. @default 1 */
   magnify?: number;
-  /** How far the focused chip bows off the row, along the row's normal. @default 1 */
+  /** How far the focused chip bows off the arc, along the arc's normal. Arc only. @default 1 */
   bow?: number;
-  /** Width of the bow's gaussian - 0.6 pops one chip out of line, 3 sweeps the whole row. @default 1.45 */
+  /** How many neighbours answer the pointer - 0.6 pops one chip out of line, 3 sweeps the
+   *  whole row. @default 1.45 */
   spread?: number;
   /** Accessible name for the trigger and for the deployed menu. @default 'Support' */
   label?: string;
@@ -345,7 +298,7 @@ export function SupportFan({
   glide = 1,
   magnify = 1,
   bow = 1,
-  spread = 1.45,
+  spread = SPREAD_BASE,
   label = 'Support',
   triggerIcon,
   live = true,
@@ -380,9 +333,13 @@ export function SupportFan({
   const autoId = useId();
   const fieldId = 'support-fan-' + autoId;
   const count = actions.length;
+  const railed = layout !== 'arc';
+  const upright = layout === 'dock';
   const showLabel = layout !== 'icon-dock';
   const showMeta = layout === 'dock';
   const iconSize = layout === 'icon-dock' ? 'md' : 'sm';
+  const railRest = upright ? DOCK_CHIP_SIZE : DOCK_ICON_SIZE;
+  const railPeak = upright ? DOCK_CHIP_PEAK : DOCK_ICON_PEAK;
 
   const render = () => paint(frameRef.current, fieldStateRef.current, tuningRef.current, glideRefs.current);
 
@@ -394,7 +351,7 @@ export function SupportFan({
   };
 
   const ensureRunning = () => {
-    if (playbackRef.current) return;
+    if (playbackRef.current || frameRef.current.count < 1) return;
     playbackRef.current = loop(
       (_step, dt) => {
         const field = fieldStateRef.current;
@@ -420,7 +377,7 @@ export function SupportFan({
   };
 
   const relayout = () => {
-    const frame = buildFrame(layout, count, readMetrics(triggerRef.current, chipRefs.current, count));
+    const frame = railed ? EMPTY_FRAME : buildArc(count, readMetrics(triggerRef.current, chipRefs.current, count));
     frameRef.current = frame;
     const hit = hitRef.current;
     if (hit) {
@@ -468,7 +425,7 @@ export function SupportFan({
     if (!open || frame.count < 1 || !stage) return;
     const box = stage.getBoundingClientRect();
     const field = fieldStateRef.current;
-    const focus = focusFor(frame, event.clientX - box.left, event.clientY - box.top);
+    const focus = focusFor(frame, event.clientY - box.top);
     field.focusTarget = focus;
     field.strengthTarget = 1;
     const nearest = Math.round(focus);
@@ -549,7 +506,7 @@ export function SupportFan({
   useLayoutEffect(relayout, [layout, count]);
 
   useEffect(() => {
-    if (typeof ResizeObserver === 'undefined') return undefined;
+    if (railed || typeof ResizeObserver === 'undefined') return undefined;
     const watcher = new ResizeObserver(relayout);
     if (triggerRef.current) watcher.observe(triggerRef.current);
     for (let i = 0; i < count; i++) {
@@ -586,6 +543,33 @@ export function SupportFan({
     ? [namedAction.label, namedAction.meta || namedAction.description].filter(Boolean).join(CAPTION_SEPARATOR)
     : caption || '';
 
+  const chip = (action: SupportAction, i: number) => (
+    <button
+      ref={(node) => {
+        chipRefs.current[i] = node;
+      }}
+      type="button"
+      role="menuitem"
+      className="support-fan__chip"
+      tabIndex={open && (active < 0 ? i === 0 : active === i) ? 0 : -1}
+      aria-label={showLabel ? undefined : action.label}
+      onClick={() => commit(i)}
+      onFocus={() => focusChip(i)}
+      onPointerEnter={() => setNamed(i)}
+    >
+      {action.icon ? (
+        <span className="support-fan__icon">
+          <IconSlot size={iconSize}>{action.icon}</IconSlot>
+        </span>
+      ) : null}
+      {showLabel ? <span className="support-fan__label">{action.label}</span> : null}
+      {showMeta && action.meta ? <span className="support-fan__meta">{action.meta}</span> : null}
+    </button>
+  );
+
+  const slotStyle = (i: number) =>
+    ({ '--support-fan-index': String(i), '--support-fan-index-out': String(count - 1 - i) }) as CSSProperties;
+
   return (
     <div
       ref={rootRef}
@@ -604,66 +588,81 @@ export function SupportFan({
         onPointerLeave={leave}
         onBlur={onStageBlur}
       >
-        <div ref={hitRef} className="support-fan__hit" aria-hidden="true" />
-        <div
-          ref={fieldRef}
-          id={fieldId}
-          className="support-fan__field"
-          role="menu"
-          aria-label={label}
-          aria-orientation={layout === 'icon-dock' ? 'horizontal' : 'vertical'}
-          onKeyDown={onFieldKeyDown}
-        >
-          {actions.map((action, i) => (
-            <div
-              key={action.id}
-              ref={(node) => {
-                slotRefs.current[i] = node;
-              }}
-              className="support-fan__slot"
-              role="presentation"
-              style={
-                { '--support-fan-index': String(i), '--support-fan-index-out': String(count - 1 - i) } as CSSProperties
-              }
-            >
-              <div
-                ref={(node) => {
-                  glideRefs.current[i] = node;
-                }}
-                className="support-fan__glide"
-                role="presentation"
-              >
-                <button
-                  ref={(node) => {
-                    chipRefs.current[i] = node;
-                  }}
-                  type="button"
-                  role="menuitem"
-                  className="support-fan__chip"
-                  tabIndex={open && (active < 0 ? i === 0 : active === i) ? 0 : -1}
-                  aria-label={showLabel ? undefined : action.label}
-                  onClick={() => commit(i)}
-                  onFocus={() => focusChip(i)}
-                >
-                  {action.icon ? (
-                    <span className="support-fan__icon">
-                      <IconSlot size={iconSize}>{action.icon}</IconSlot>
-                    </span>
-                  ) : null}
-                  {showLabel ? <span className="support-fan__label">{action.label}</span> : null}
-                  {showMeta && action.meta ? <span className="support-fan__meta">{action.meta}</span> : null}
-                </button>
-              </div>
+        {railed ? (
+          <div ref={fieldRef} className="support-fan__rail">
+            <div ref={captionRef} className="support-fan__caption support-fan__caption--rail">
+              {captionText}
             </div>
-          ))}
-        </div>
-        <div
-          ref={captionRef}
-          className="support-fan__slot support-fan__caption"
-          style={{ '--support-fan-index': String(count), '--support-fan-index-out': '0' } as CSSProperties}
-        >
-          {captionText}
-        </div>
+            <Dock
+              className="support-fan__dock"
+              orientation={upright ? 'vertical' : 'horizontal'}
+              align={upright ? 'end' : 'center'}
+              size={railRest}
+              magnification={railRest + (railPeak - railRest) * magnify}
+              distance={(DOCK_REACH * spread) / SPREAD_BASE}
+              htmlProps={{
+                id: fieldId,
+                role: 'menu',
+                'aria-label': label,
+                'aria-orientation': upright ? 'vertical' : 'horizontal',
+                onKeyDown: onFieldKeyDown,
+              }}
+            >
+              {actions.map((action, i) => (
+                <DockItem
+                  key={action.id}
+                  className="support-fan__slot"
+                  style={slotStyle(i)}
+                  htmlProps={{ role: 'presentation' }}
+                >
+                  {chip(action, i)}
+                </DockItem>
+              ))}
+            </Dock>
+          </div>
+        ) : (
+          <>
+            <div ref={hitRef} className="support-fan__hit" aria-hidden="true" />
+            <div
+              ref={fieldRef}
+              id={fieldId}
+              className="support-fan__field"
+              role="menu"
+              aria-label={label}
+              aria-orientation="vertical"
+              onKeyDown={onFieldKeyDown}
+            >
+              {actions.map((action, i) => (
+                <div
+                  key={action.id}
+                  ref={(node) => {
+                    slotRefs.current[i] = node;
+                  }}
+                  className="support-fan__slot"
+                  role="presentation"
+                  style={slotStyle(i)}
+                >
+                  <div
+                    ref={(node) => {
+                      glideRefs.current[i] = node;
+                    }}
+                    className="support-fan__glide"
+                    role="presentation"
+                  >
+                    {chip(action, i)}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div
+              ref={captionRef}
+              className="support-fan__slot support-fan__caption"
+              style={{ '--support-fan-index': String(count), '--support-fan-index-out': '0' } as CSSProperties}
+            >
+              {captionText}
+            </div>
+          </>
+        )}
       </div>
       <button
         ref={triggerRef}

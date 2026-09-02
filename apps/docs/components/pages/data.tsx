@@ -3,12 +3,10 @@
 import { useState } from 'react';
 
 import { Avatar, type AvatarShape, type AvatarSize, type AvatarStatus } from '@zyncat/ui/avatar';
-import { AvatarGroup } from '@zyncat/ui/avatar-group';
 import { Badge } from '@zyncat/ui/badge';
 import { Pagination } from '@zyncat/ui/pagination';
 import { Table, type TableColumn, type TableProps } from '@zyncat/ui/table';
 import { Tag, TagGroup, type TagProps } from '@zyncat/ui/tag';
-import { ToggleTag } from '@zyncat/ui/toggle-tag';
 
 import { Icon } from '../icon';
 import { KnobSegment, KnobSwitch, Playground } from '../playground';
@@ -57,42 +55,6 @@ export function AvatarPlayground() {
   );
 }
 
-export function AvatarSizesDemo() {
-  return (
-    <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
-      <Avatar name="Ana Ng" size="xs" />
-      <Avatar name="Ana Ng" size="sm" />
-      <Avatar name="Ana Ng" size="md" />
-      <Avatar name="Ana Ng" size="lg" />
-      <Avatar name="Ana Ng" size="xl" />
-    </div>
-  );
-}
-
-export function AvatarStatusDemo() {
-  return (
-    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-      <Avatar name="Bo Park" status="online" />
-      <Avatar name="Cira Diaz" status="away" />
-      <Avatar name="Dee Okafor" status="busy" />
-      <Avatar name="Eli Stone" status="offline" />
-    </div>
-  );
-}
-
-export function AvatarGroupDemo() {
-  return (
-    <AvatarGroup max={4} size="md">
-      <Avatar name="Ana Ng" src="https://i.pravatar.cc/96?img=47" />
-      <Avatar name="Bo Park" />
-      <Avatar name="Cira Diaz" />
-      <Avatar name="Dee Okafor" />
-      <Avatar name="Eli Stone" />
-      <Avatar name="Fang Wu" />
-    </AvatarGroup>
-  );
-}
-
 const INITIAL_LABELS = [
   { id: 'a', name: 'design', icon: <Icon name="hash" /> },
   { id: 'b', name: 'frontend', icon: <Icon name="hash" /> },
@@ -130,25 +92,6 @@ export function TagPlayground() {
         ))}
       </TagGroup>
     </Playground>
-  );
-}
-
-export function TagToggleGroupDemo() {
-  const [selected, setSelected] = useState<string[]>(['Open', 'Merged']);
-  const filters = ['Open', 'In review', 'Merged', 'Closed'];
-
-  const toggle = (f: string) => {
-    setSelected((prev) => (prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]));
-  };
-
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-      {filters.map((f) => (
-        <ToggleTag key={f} selected={selected.includes(f)} onChange={() => toggle(f)}>
-          {f}
-        </ToggleTag>
-      ))}
-    </div>
   );
 }
 

@@ -71,22 +71,6 @@ export function AlertPlayground() {
   );
 }
 
-export function AlertTonesDemo() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: 500 }}>
-      <Alert tone="info" title="System update available">
-        A new version of Zyncat UI is ready to download.
-      </Alert>
-      <Alert tone="success" title="Draft published">
-        All 8 queued items have been sent successfully.
-      </Alert>
-      <Alert tone="danger" title="Payment declined">
-        Please check your billing details to prevent suspension.
-      </Alert>
-    </div>
-  );
-}
-
 const TOAST_COPY: Record<ToastTone, { message: string; description?: string }> = {
   default: { message: 'Draft saved locally' },
   success: { message: 'Changes saved', description: 'Updated across all workspaces.' },

@@ -59,6 +59,7 @@
       "@zyncat/ui/support-fan": ["../../src/components/compound/support-fan/SupportFan.tsx"],
       "@zyncat/ui/support-rail": ["../../src/components/compound/support-rail/SupportRail.tsx"],
       "@zyncat/ui/confetti": ["../../src/components/expressive/confetti/Confetti.tsx"],
+      "@zyncat/ui/dock": ["../../src/components/expressive/dock/Dock.tsx"],
       "@zyncat/ui/facebook-feed": ["../../src/components/expressive/facebook-feed/FacebookFeed.tsx"],
       "@zyncat/ui/flow-field": ["../../src/components/expressive/flow-field/FlowField.tsx"],
       "@zyncat/ui/instagram-feed": ["../../src/components/expressive/instagram-feed/InstagramFeed.tsx"],

@@ -3,16 +3,18 @@
 Group: expressive
 Docs: https://ui.zyncat.app/weight-field
 
-A display headline where cursor proximity drives each glyph's variable-font wght axis through a damped spring - letters swell toward the pointer and overshoot back to rest.
+A display headline where hovering one letter ramps its variable-font wght to the peak and its two neighbours either side part-way, so weight spills outward from the cursor.
 
-The weight is real font-variation-settings, carried by a lift, optical tracking and an accent tint,
-so the field still reads when the resolved face turns out not to be variable. text is the headline;
-speed is sampled live every frame. Under 48 glyphs each glyph springs on its own; past that the
-split falls back to one spring per word. Retune through --weight-field-* on the root: ink, accent,
-size, leading, align, pad, reach, rest-weight, peak-weight, lift, tracking, tint. The headline is
-exposed to screen readers, the glyph layer is aria-hidden; reduced motion renders it at rest weight
-and wires no pointer.
+Every character is its own hover unit, spaces included, and the ramp reads purely from CSS sibling
+state - no pointer listener, no per-frame work. The hovered letter takes the peak weight, a doubled text
+stroke and a sliver of padding either side; its immediate neighbours take the near weight and the same
+padding; the two beyond them take the far weight only. text is the headline; speed multiplies the ramp
+rate. Retune through --weight-field-* on the root: ink, size, leading, align, pad, tracking, rest-weight,
+far-weight, near-weight, peak-weight, hover-padding, stroke, stroke-peak, duration, ease. Flatten
+near-weight and far-weight onto rest-weight and only the hovered letter answers. Needs a variable face to
+glide rather than step. The headline is exposed to screen readers, every glyph is aria-hidden; reduced
+motion collapses the ramp to a cut.
 
 ```tsx
-<WeightField text="Kinetic" speed={1.2} />
+<WeightField text="Nostalgia" speed={1.2} />
 ```

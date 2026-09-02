@@ -35,12 +35,6 @@ const W = 320;
 
 type Option = { value: string; label: string; description?: string; icon?: string; disabled?: boolean };
 
-const ROLES: RadioOption[] = [
-  { value: 'owner', label: 'Owner', description: 'Full access, including billing.' },
-  { value: 'admin', label: 'Admin', description: 'Manage members and settings.' },
-  { value: 'member', label: 'Member', description: 'Read and write content.', disabled: true },
-];
-
 const PLAN: RadioOption[] = [
   { value: 'starter', label: 'Starter', description: 'For individuals' },
   { value: 'pro', label: 'Pro', description: 'For small teams' },
@@ -130,22 +124,6 @@ export function TextFieldPlayground() {
   );
 }
 
-export function TextFieldValidationDemo() {
-  const [handle, setHandle] = useState('ab');
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', maxWidth: W }}>
-      <TextField
-        id="handle"
-        label="Username"
-        error={handle.length < 4 ? 'Must be at least 4 characters.' : undefined}
-        value={handle}
-        onChange={(e) => setHandle(e.target.value)}
-      />
-      <TextField id="ok" label="Workspace handle" success="Handle is available." value="acme-hq" readOnly />
-    </div>
-  );
-}
-
 export function NumberFieldPlayground() {
   const [size, setSize] = useState<NumberSize>('md');
   const [seats, setSeats] = useState(5);
@@ -170,25 +148,6 @@ export function NumberFieldPlayground() {
   );
 }
 
-export function NumberFieldUnitDemo() {
-  const [posts, setPosts] = useState(3);
-  return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <NumberField
-        id="posts-per-day"
-        label="Posts per day"
-        unit="posts"
-        min={1}
-        max={20}
-        step={1}
-        value={posts}
-        onChange={setPosts}
-        helper="Maximum cadence allowed by your subscription."
-      />
-    </div>
-  );
-}
-
 export function OtpFieldPlayground() {
   const [size, setSize] = useState<OtpSize>('default');
   const [value, setValue] = useState('492');
@@ -203,16 +162,6 @@ export function OtpFieldPlayground() {
     >
       <OtpField length={6} group={3} size={size === 'sm' ? 'sm' : undefined} value={value} onChange={setValue} />
     </Playground>
-  );
-}
-
-export function OtpFieldSizesDemo() {
-  const [code, setCode] = useState('');
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <OtpField length={4} value={code} onChange={setCode} />
-      <OtpField length={6} group={3} value={code} onChange={setCode} />
-    </div>
   );
 }
 
@@ -255,23 +204,6 @@ export function TextareaPlayground() {
   );
 }
 
-export function TextareaAutoGrowDemo() {
-  const [text, setText] = useState('');
-  return (
-    <div style={{ width: '100%', maxWidth: 440 }}>
-      <Textarea
-        id="autogrow-ta"
-        label="Notes"
-        placeholder="Type multiple lines to test auto-growth..."
-        minRows={2}
-        maxRows={6}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-    </div>
-  );
-}
-
 export function CheckboxPlayground() {
   const [size, setSize] = useState<BoxSize>('md');
   const [checked, setChecked] = useState(true);
@@ -297,16 +229,6 @@ export function CheckboxPlayground() {
   );
 }
 
-export function CheckboxStatesDemo() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <Checkbox label="Default uncontrolled" defaultChecked />
-      <Checkbox label="Indeterminate batch" indeterminate />
-      <Checkbox label="Disabled option" disabled defaultChecked />
-    </div>
-  );
-}
-
 export function TogglePlayground() {
   const [size, setSize] = useState<SwitchSize>('md');
   const [toggled, setToggled] = useState(true);
@@ -329,21 +251,6 @@ export function TogglePlayground() {
         onChange={(e) => setToggled(e.target.checked)}
       />
     </Playground>
-  );
-}
-
-export function ToggleControlledDemo() {
-  const [twoFa, setTwoFa] = useState(false);
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-      <Toggle
-        label="Two-factor authentication"
-        description="Requires an authenticator app code on login."
-        checked={twoFa}
-        onChange={(e) => setTwoFa(e.target.checked)}
-      />
-      <Toggle label="Locked security policy" description="Managed by workspace admin." disabled defaultChecked />
-    </div>
   );
 }
 
@@ -394,15 +301,6 @@ export function RadioGroupPlayground() {
         />
       </div>
     </Playground>
-  );
-}
-
-export function RadioGroupRowsDemo() {
-  const [role, setRole] = useState('admin');
-  return (
-    <div style={{ width: '100%', maxWidth: 400 }}>
-      <RadioGroup name="role-demo" label="Member permission" value={role} onChange={setRole} options={ROLES} />
-    </div>
   );
 }
 

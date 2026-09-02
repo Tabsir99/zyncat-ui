@@ -1,9 +1,11 @@
 'use client';
 
 import { useRef, useState, type CSSProperties } from 'react';
+import { CalendarBlank, Envelope, GearSix, House, MagnifyingGlass, MusicNotes } from '@phosphor-icons/react';
 
 import { Button } from '@zyncat/ui/button';
 import { Confetti, type ConfettiEmitter, type ConfettiField, type ConfettiHandle } from '@zyncat/ui/confetti';
+import { Dock, DockItem, type DockOrientation } from '@zyncat/ui/dock';
 import { FlowField } from '@zyncat/ui/flow-field';
 import { Lens } from '@zyncat/ui/lens';
 import { MorphingText } from '@zyncat/ui/morphing-text';
@@ -16,12 +18,12 @@ import { KnobRange, KnobSegment, KnobSwitch, KnobText, Playground, useExpandedSt
 const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-5)', alignItems: 'center', flexWrap: 'wrap' };
 const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
 const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
-const LABELLED: CSSProperties = { display: 'grid', gap: 'var(--space-1)' };
 const RULE: CSSProperties = { height: 'var(--border-hairline)', background: 'var(--border-default)' };
 
 const grouped = (v: number) => v.toLocaleString('en-US');
 const padded = (v: number) => String(v).padStart(8, '0');
 const times = (v: number) => `${v}×`;
+const pixels = (v: number) => `${v}px`;
 
 type OdometerFormat = 'plain' | 'grouped' | 'padded';
 
@@ -77,29 +79,6 @@ export function OdometerPlayground() {
   );
 }
 
-export function OdometerThemeDemo() {
-  const [value, setValue] = useState(78210);
-  const compact: CSSProperties = {
-    '--odometer-size': 'var(--size-title)',
-    '--odometer-weight': '600',
-  } as CSSProperties;
-  const loud: CSSProperties = {
-    '--odometer-accent': 'var(--accent-active)',
-    '--odometer-gap': '0.14em',
-  } as CSSProperties;
-  return (
-    <div style={COLUMN}>
-      <div style={ROW}>
-        <Odometer value={value} format={grouped} style={compact} />
-        <Odometer value={value} format={grouped} style={loud} />
-      </div>
-      <Button size="sm" variant="secondary" onClick={() => setValue((v) => v + 5309)}>
-        Roll
-      </Button>
-    </div>
-  );
-}
-
 const TYPING_LINES = ['Design every state.', 'Make every motion interruptible.', 'Ship the polish.'];
 
 export function TypingLinesPlayground() {
@@ -133,20 +112,6 @@ export function TypingLinesPlayground() {
     >
       <TypingLines lines={TYPING_LINES} caret={caret} unit={unit} speed={speed} />
     </Playground>
-  );
-}
-
-export function TypingLinesThemeDemo() {
-  const loud: CSSProperties = {
-    '--typing-lines-size': 'var(--size-display)',
-    '--typing-lines-weight': 'var(--weight-semibold)',
-    '--typing-lines-caret-ink': 'var(--accent-active)',
-  } as CSSProperties;
-  return (
-    <div style={COLUMN}>
-      <TypingLines lines={['Retuned through scoped properties.']} style={loud} />
-      <TypingLines lines={['The default, for comparison.']} />
-    </div>
   );
 }
 
@@ -291,13 +256,116 @@ export function LensPlayground() {
   );
 }
 
-const WEIGHT_LOUD: CSSProperties = {
-  '--weight-field-size': 'var(--size-display-lg)',
-  '--weight-field-pad': 'var(--space-6) var(--space-5)',
-} as CSSProperties;
+const DOCK_APPS = [
+  { id: 'home', label: 'Home', Icon: House },
+  { id: 'search', label: 'Search', Icon: MagnifyingGlass },
+  { id: 'mail', label: 'Mail', Icon: Envelope },
+  { id: 'calendar', label: 'Calendar', Icon: CalendarBlank },
+  { id: 'music', label: 'Music', Icon: MusicNotes },
+  { id: 'settings', label: 'Settings', Icon: GearSix },
+];
+
+const DOCK_GLYPH_TILE: CSSProperties = {
+  display: 'grid',
+  placeItems: 'center',
+  padding: 0,
+  border: 0,
+  background: 'none',
+  color: 'var(--text-secondary)',
+  cursor: 'pointer',
+};
+
+const DOCK_GLYPH = 24;
+
+function DockRail({
+  orientation,
+  size,
+  magnification,
+  distance,
+}: {
+  orientation: DockOrientation;
+  size: number;
+  magnification: number;
+  distance: number;
+}) {
+  return (
+    <Dock
+      orientation={orientation}
+      size={size}
+      magnification={magnification}
+      distance={distance}
+      htmlProps={{ role: 'toolbar', 'aria-label': 'Apps' }}
+    >
+      {DOCK_APPS.map(({ id, label, Icon }) => (
+        <DockItem key={id}>
+          <button type="button" style={DOCK_GLYPH_TILE} aria-label={label}>
+            <Icon size={DOCK_GLYPH} weight="duotone" />
+          </button>
+        </DockItem>
+      ))}
+    </Dock>
+  );
+}
+
+export function DockPlayground() {
+  const [orientation, setOrientation] = useState<DockOrientation>('horizontal');
+  const [size, setSize] = useState(40);
+  const [magnification, setMagnification] = useState(60);
+  const [distance, setDistance] = useState(140);
+
+  const code = [
+    `<Dock orientation="${orientation}" size={${size}} magnification={${magnification}} distance={${distance}}>`,
+    '  {apps.map((app) => (',
+    '    <DockItem key={app.id}>',
+    '      <AppButton {...app} />',
+    '    </DockItem>',
+    '  ))}',
+    '</Dock>',
+  ].join('\n');
+
+  return (
+    <Playground
+      code={code}
+      note="The rail holds its height whatever you do. The tile boxes swell inside it and the row opens; these glyphs are a fixed 24px, so they hold their size and only the spacing answers - size one 100% instead and it swells with its box. distance is the reach along the axis: drop it to 60 and the bulge becomes a spotlight, push it to 300 and the whole row leans in."
+      rail={
+        <>
+          <KnobSegment
+            label="orientation"
+            value={orientation}
+            onChange={setOrientation}
+            options={['horizontal', 'vertical']}
+          />
+          <KnobRange label="size" value={size} onChange={setSize} min={28} max={64} step={2} format={pixels} />
+          <KnobRange
+            label="magnification"
+            value={magnification}
+            onChange={setMagnification}
+            min={size}
+            max={112}
+            step={2}
+            format={pixels}
+          />
+          <KnobRange
+            label="distance"
+            value={distance}
+            onChange={setDistance}
+            min={40}
+            max={320}
+            step={10}
+            format={pixels}
+          />
+        </>
+      }
+    >
+      <DockRail orientation={orientation} size={size} magnification={magnification} distance={distance} />
+    </Playground>
+  );
+}
+
+const WEIGHT_STAGE: CSSProperties = { '--weight-field-pad': 'var(--space-6) 0' } as CSSProperties;
 
 export function WeightFieldPlayground() {
-  const [text, setText] = useState('Kinetic type');
+  const [text, setText] = useState('Nostalgia');
   const [speed, setSpeed] = useState(1);
 
   const code = `<WeightField text="${text}" speed={${speed}} />`;
@@ -305,7 +373,7 @@ export function WeightFieldPlayground() {
   return (
     <Playground
       code={code}
-      note="Under 48 glyphs each one springs on its own; type a longer headline and the split falls back to one spring per word."
+      note="Point at one letter: it takes the peak weight, a doubled stroke and a sliver of padding either side. Its immediate neighbours take 600 and the same padding, the two beyond them 400, and everything else holds at 300."
       rail={
         <>
           <KnobText label="text" value={text} onChange={setText} placeholder="Type a headline" />
@@ -313,40 +381,8 @@ export function WeightFieldPlayground() {
         </>
       }
     >
-      <WeightField text={text || 'Kinetic type'} speed={speed} style={WEIGHT_LOUD} />
+      <WeightField text={text || 'Nostalgia'} speed={speed} style={WEIGHT_STAGE} />
     </Playground>
-  );
-}
-
-export function WeightFieldThemeDemo() {
-  const restrained: CSSProperties = {
-    '--weight-field-size': 'var(--size-display-lg)',
-    '--weight-field-pad': 'var(--space-4)',
-    '--weight-field-rest-weight': '400',
-    '--weight-field-peak-weight': '600',
-    '--weight-field-lift': '0em',
-    '--weight-field-tint': '0',
-  } as CSSProperties;
-  const exaggerated: CSSProperties = {
-    '--weight-field-size': 'var(--size-display-lg)',
-    '--weight-field-pad': 'var(--space-4)',
-    '--weight-field-accent': 'var(--accent-active)',
-    '--weight-field-reach': '4',
-    '--weight-field-lift': '0.16em',
-    '--weight-field-tracking': '0.04em',
-  } as CSSProperties;
-  return (
-    <div style={COLUMN}>
-      <div style={LABELLED}>
-        <span style={CAPTION}>Weight only — no lift, no tint, 400→600</span>
-        <WeightField text="Restrained" style={restrained} />
-      </div>
-      <div style={RULE} />
-      <div style={LABELLED}>
-        <span style={CAPTION}>Wider reach, deeper lift, louder accent</span>
-        <WeightField text="Exaggerated" style={exaggerated} />
-      </div>
-    </div>
   );
 }
 
@@ -397,26 +433,6 @@ export function MorphingTextPlayground() {
         style={set === 'phrases' ? MORPH_PHRASE_SIZE : undefined}
       />
     </Playground>
-  );
-}
-
-export function MorphingTextThemeDemo() {
-  const molten: CSSProperties = {
-    '--morphing-text-size': 'var(--size-display)',
-    '--morphing-text-smear': '1.6',
-    '--morphing-text-rule-accent': 'var(--accent-active)',
-    '--morphing-text-rule-height': '2px',
-  } as CSSProperties;
-  const bare: CSSProperties = {
-    '--morphing-text-size': 'var(--size-display)',
-    '--morphing-text-smear': '0.5',
-    '--morphing-text-rule-height': '0',
-  } as CSSProperties;
-  return (
-    <div style={{ ...COLUMN, gap: 'var(--space-6)', width: '100%' }}>
-      <MorphingText words={[...MORPH_SETS.words]} style={molten} />
-      <MorphingText words={[...MORPH_SETS.words]} style={bare} />
-    </div>
   );
 }
 

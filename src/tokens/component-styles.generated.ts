@@ -53,6 +53,34 @@ export interface ConfettiStyle extends CSSProperties {
   '--confetti-sheen-5'?: string | number;
 }
 
+/** Inline styles for Dock, including its `--dock-*` knobs. */
+export interface DockStyle extends CSSProperties {
+  /** `--dock-gap`. Default: `var(--space-2)`. */
+  '--dock-gap'?: string | number;
+  /** `--dock-pad`. Default: `var(--space-2)`. */
+  '--dock-pad'?: string | number;
+  /** `--dock-rail-size`. Default: `calc(var(--dock-size) + var(--dock-pad) * 2 + var(--border-hairline) * 2)`. */
+  '--dock-rail-size'?: string | number;
+  /** `--dock-surface`. Default: `color-mix(in oklab, var(--bg-surface) 70%, transparent)`. */
+  '--dock-surface'?: string | number;
+  /** `--dock-line`. Default: `var(--border-default)`. */
+  '--dock-line'?: string | number;
+  /** `--dock-radius`. Default: `var(--radius-2xl)`. */
+  '--dock-radius'?: string | number;
+  /** `--dock-shadow`. Default: `var(--shadow-md)`. */
+  '--dock-shadow'?: string | number;
+  /** `--dock-backdrop`. Default: `blur(var(--glass-blur))`. */
+  '--dock-backdrop'?: string | number;
+  /** `--dock-item-radius`. Default: `var(--radius-full)`. */
+  '--dock-item-radius'?: string | number;
+  /** `--dock-item-pad-min`. Default: `0.375rem`. */
+  '--dock-item-pad-min'?: string | number;
+  /** `--dock-item-pad-ratio`. Default: `0.2`. */
+  '--dock-item-pad-ratio'?: string | number;
+  /** `--dock-item-pad`. Default: `max(var(--dock-item-pad-min), calc(var(--dock-size) * var(--dock-item-pad-ratio)))`. */
+  '--dock-item-pad'?: string | number;
+}
+
 /** Inline styles for FlowField, including its `--flow-field-*` knobs. */
 export interface FlowFieldStyle extends CSSProperties {
   /** `--flow-field-ink`. Default: `var(--text-subtle)`. */
@@ -181,9 +209,7 @@ export interface TypingLinesStyle extends CSSProperties {
 export interface WeightFieldStyle extends CSSProperties {
   /** `--weight-field-ink`. Default: `var(--text-strong)`. */
   '--weight-field-ink'?: string | number;
-  /** `--weight-field-accent`. Default: `var(--accent)`. */
-  '--weight-field-accent'?: string | number;
-  /** `--weight-field-size`. Default: `clamp(3.5rem, 11vw, 8.75rem)`. */
+  /** `--weight-field-size`. Default: `6rem`. */
   '--weight-field-size'?: string | number;
   /** `--weight-field-leading`. Default: `1`. */
   '--weight-field-leading'?: string | number;
@@ -191,18 +217,28 @@ export interface WeightFieldStyle extends CSSProperties {
   '--weight-field-align'?: string | number;
   /** `--weight-field-pad`. Default: `var(--space-6) var(--space-4)`. */
   '--weight-field-pad'?: string | number;
-  /** `--weight-field-reach`. Default: `2.6`. */
-  '--weight-field-reach'?: string | number;
+  /** `--weight-field-tracking`. Default: `-0.05em`. */
+  '--weight-field-tracking'?: string | number;
   /** `--weight-field-rest-weight`. Default: `300`. */
   '--weight-field-rest-weight'?: string | number;
-  /** `--weight-field-peak-weight`. Default: `700`. */
+  /** `--weight-field-far-weight`. Default: `400`. */
+  '--weight-field-far-weight'?: string | number;
+  /** `--weight-field-near-weight`. Default: `600`. */
+  '--weight-field-near-weight'?: string | number;
+  /** `--weight-field-peak-weight`. Default: `900`. */
   '--weight-field-peak-weight'?: string | number;
-  /** `--weight-field-lift`. Default: `0.08em`. */
-  '--weight-field-lift'?: string | number;
-  /** `--weight-field-tracking`. Default: `0.012em`. */
-  '--weight-field-tracking'?: string | number;
-  /** `--weight-field-tint`. Default: `0.9`. */
-  '--weight-field-tint'?: string | number;
+  /** `--weight-field-hover-padding`. Default: `calc(1em / 12)`. */
+  '--weight-field-hover-padding'?: string | number;
+  /** `--weight-field-stroke`. Default: `calc(1em * 125 / 6000)`. */
+  '--weight-field-stroke'?: string | number;
+  /** `--weight-field-stroke-peak`. Default: `calc(var(--weight-field-stroke) * 2)`. */
+  '--weight-field-stroke-peak'?: string | number;
+  /** `--weight-field-duration`. Default: `400ms`. */
+  '--weight-field-duration'?: string | number;
+  /** `--weight-field-ease`. Default: `ease`. */
+  '--weight-field-ease'?: string | number;
+  /** `--weight-field-ramp`. Default: `calc(var(--weight-field-duration) / var(--weight-field-speed))`. */
+  '--weight-field-ramp'?: string | number;
 }
 
 /** Inline styles for SupportFan, including its `--support-fan-*` knobs. */
@@ -241,6 +277,10 @@ export interface SupportFanStyle extends CSSProperties {
   '--support-fan-icon-chip-padding'?: string | number;
   /** `--support-fan-caption-tracking`. Default: `0.16em`. */
   '--support-fan-caption-tracking'?: string | number;
+  /** `--support-fan-caption-gap`. Default: `var(--space-2)`. */
+  '--support-fan-caption-gap'?: string | number;
+  /** `--support-fan-rail-gap`. Default: `var(--space-3)`. */
+  '--support-fan-rail-gap'?: string | number;
   /** `--support-fan-ring-inset`. Default: `0.3125rem`. */
   '--support-fan-ring-inset'?: string | number;
   /** `--support-fan-live-offset`. Default: `0.375rem`. */

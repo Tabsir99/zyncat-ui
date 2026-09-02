@@ -260,6 +260,51 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the stage.' },
     { name: 'style', type: 'LensStyle', description: 'Inline styles merged onto the stage.' },
   ],
+  dock: [
+    {
+      name: 'htmlProps',
+      type: 'Omit<HTMLAttributes<HTMLDivElement>, keyof DockOwnProps> & DataAttributes',
+      description: 'Standard <div> attributes (role, aria-*, data-*, onKeyDown, ...) forwarded to the root.',
+    },
+    {
+      name: 'children',
+      type: 'ReactNode',
+      description: '`DockItem` children. Anything else renders untouched and never magnifies.',
+    },
+    {
+      name: 'orientation',
+      type: 'DockOrientation',
+      default: "'horizontal'",
+      description: 'Axis the rail runs along, and the pointer axis the magnification reads.',
+    },
+    {
+      name: 'align',
+      type: 'DockAlign',
+      default: "'center'",
+      description: 'Cross-axis alignment of the items inside the rail.',
+    },
+    { name: 'size', type: 'number', default: '40', description: 'Resting box of one item, in pixels.' },
+    {
+      name: 'magnification',
+      type: 'number',
+      default: '60',
+      description: 'Box of the item directly under the pointer, in pixels.',
+    },
+    {
+      name: 'distance',
+      type: 'number',
+      default: '140',
+      description: 'How far along the axis the swell reaches, in pixels. Nothing past it moves.',
+    },
+    {
+      name: 'disableMagnification',
+      type: 'boolean',
+      default: 'false',
+      description: 'Holds every item at `size`, keeping the rail and its hover states without the swell.',
+    },
+    { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
+    { name: 'style', type: 'DockStyle', description: 'Inline styles merged onto the root.' },
+  ],
   'weight-field': [
     {
       name: 'htmlProps',
@@ -270,14 +315,13 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'text',
       type: 'string',
       required: true,
-      description:
-        'The headline the field is built from. Under the animated-unit cap every glyph gets its own spring; past it the split falls back to one spring per word.',
+      description: 'The headline the field is built from. Every character becomes its own hover unit, spaces included.',
     },
     {
       name: 'speed',
       type: 'number',
       default: '1',
-      description: 'Multiplies the simulation rate; sampled live on every frame.',
+      description: 'Multiplies the ramp rate - 2 halves the settle, 0.5 doubles it.',
     },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'WeightFieldStyle', description: 'Inline styles merged onto the root.' },
@@ -403,7 +447,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'SupportFanLayout',
       default: "'arc'",
       description:
-        '`arc` fans the chips onto a circle centred on the trigger, `dock` stacks them straight with their metadata, `icon-dock` runs a row of icon-only chips sideways.',
+        '`arc` fans the chips onto a circle centred on the trigger, `dock` stacks them straight with their metadata, `icon-dock` runs a row of icon-only chips sideways. Both dock layouts are a real Dock rail.',
     },
     { name: 'open', type: 'boolean', description: 'Controlled open state. Omit to stay uncontrolled.' },
     { name: 'defaultOpen', type: 'boolean', default: 'false', description: 'Initial state when uncontrolled.' },
@@ -427,25 +471,26 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'glide',
       type: 'number',
       default: '1',
-      description: "How far the row slides away from the pointer, as a multiple of the layout's own step.",
+      description:
+        'How far the arc slides away from the pointer, as a multiple of its own step. Arc only - on a dock rail the swell is the slide.',
     },
     {
       name: 'magnify',
       type: 'number',
       default: '1',
-      description: 'How much the chip under the pointer swells. Deliberately small - the glide carries it.',
+      description: 'How much the chip under the pointer swells - on the arc a scale, on a dock rail the magnified box.',
     },
     {
       name: 'bow',
       type: 'number',
       default: '1',
-      description: "How far the focused chip bows off the row, along the row's normal.",
+      description: "How far the focused chip bows off the arc, along the arc's normal. Arc only.",
     },
     {
       name: 'spread',
       type: 'number',
       default: '1.45',
-      description: "Width of the bow's gaussian - 0.6 pops one chip out of line, 3 sweeps the whole row.",
+      description: 'How many neighbours answer the pointer - 0.6 pops one chip out of line, 3 sweeps the whole row.',
     },
     {
       name: 'label',
@@ -2470,6 +2515,67 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
       ],
     },
   ],
+  dock: [
+    {
+      name: 'DockStyle',
+      rows: [
+        { name: '--dock-gap', type: 'string | number', description: '`--dock-gap`. Default: `var(--space-2)`.' },
+        { name: '--dock-pad', type: 'string | number', description: '`--dock-pad`. Default: `var(--space-2)`.' },
+        {
+          name: '--dock-rail-size',
+          type: 'string | number',
+          description:
+            '`--dock-rail-size`. Default: `calc(var(--dock-size) + var(--dock-pad) * 2 + var(--border-hairline) * 2)`.',
+        },
+        {
+          name: '--dock-surface',
+          type: 'string | number',
+          description: '`--dock-surface`. Default: `color-mix(in oklab, var(--bg-surface) 70%, transparent)`.',
+        },
+        {
+          name: '--dock-line',
+          type: 'string | number',
+          description: '`--dock-line`. Default: `var(--border-default)`.',
+        },
+        {
+          name: '--dock-radius',
+          type: 'string | number',
+          description: '`--dock-radius`. Default: `var(--radius-2xl)`.',
+        },
+        {
+          name: '--dock-shadow',
+          type: 'string | number',
+          description: '`--dock-shadow`. Default: `var(--shadow-md)`.',
+        },
+        {
+          name: '--dock-backdrop',
+          type: 'string | number',
+          description: '`--dock-backdrop`. Default: `blur(var(--glass-blur))`.',
+        },
+        {
+          name: '--dock-item-radius',
+          type: 'string | number',
+          description: '`--dock-item-radius`. Default: `var(--radius-full)`.',
+        },
+        {
+          name: '--dock-item-pad-min',
+          type: 'string | number',
+          description: '`--dock-item-pad-min`. Default: `0.375rem`.',
+        },
+        {
+          name: '--dock-item-pad-ratio',
+          type: 'string | number',
+          description: '`--dock-item-pad-ratio`. Default: `0.2`.',
+        },
+        {
+          name: '--dock-item-pad',
+          type: 'string | number',
+          description:
+            '`--dock-item-pad`. Default: `max(var(--dock-item-pad-min), calc(var(--dock-size) * var(--dock-item-pad-ratio)))`.',
+        },
+      ],
+    },
+  ],
   'weight-field': [
     {
       name: 'WeightFieldStyle',
@@ -2480,14 +2586,9 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           description: '`--weight-field-ink`. Default: `var(--text-strong)`.',
         },
         {
-          name: '--weight-field-accent',
-          type: 'string | number',
-          description: '`--weight-field-accent`. Default: `var(--accent)`.',
-        },
-        {
           name: '--weight-field-size',
           type: 'string | number',
-          description: '`--weight-field-size`. Default: `clamp(3.5rem, 11vw, 8.75rem)`.',
+          description: '`--weight-field-size`. Default: `6rem`.',
         },
         {
           name: '--weight-field-leading',
@@ -2505,9 +2606,9 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           description: '`--weight-field-pad`. Default: `var(--space-6) var(--space-4)`.',
         },
         {
-          name: '--weight-field-reach',
+          name: '--weight-field-tracking',
           type: 'string | number',
-          description: '`--weight-field-reach`. Default: `2.6`.',
+          description: '`--weight-field-tracking`. Default: `-0.05em`.',
         },
         {
           name: '--weight-field-rest-weight',
@@ -2515,21 +2616,51 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           description: '`--weight-field-rest-weight`. Default: `300`.',
         },
         {
+          name: '--weight-field-far-weight',
+          type: 'string | number',
+          description: '`--weight-field-far-weight`. Default: `400`.',
+        },
+        {
+          name: '--weight-field-near-weight',
+          type: 'string | number',
+          description: '`--weight-field-near-weight`. Default: `600`.',
+        },
+        {
           name: '--weight-field-peak-weight',
           type: 'string | number',
-          description: '`--weight-field-peak-weight`. Default: `700`.',
+          description: '`--weight-field-peak-weight`. Default: `900`.',
         },
         {
-          name: '--weight-field-lift',
+          name: '--weight-field-hover-padding',
           type: 'string | number',
-          description: '`--weight-field-lift`. Default: `0.08em`.',
+          description: '`--weight-field-hover-padding`. Default: `calc(1em / 12)`.',
         },
         {
-          name: '--weight-field-tracking',
+          name: '--weight-field-stroke',
           type: 'string | number',
-          description: '`--weight-field-tracking`. Default: `0.012em`.',
+          description: '`--weight-field-stroke`. Default: `calc(1em * 125 / 6000)`.',
         },
-        { name: '--weight-field-tint', type: 'string | number', description: '`--weight-field-tint`. Default: `0.9`.' },
+        {
+          name: '--weight-field-stroke-peak',
+          type: 'string | number',
+          description: '`--weight-field-stroke-peak`. Default: `calc(var(--weight-field-stroke) * 2)`.',
+        },
+        {
+          name: '--weight-field-duration',
+          type: 'string | number',
+          description: '`--weight-field-duration`. Default: `400ms`.',
+        },
+        {
+          name: '--weight-field-ease',
+          type: 'string | number',
+          description: '`--weight-field-ease`. Default: `ease`.',
+        },
+        {
+          name: '--weight-field-ramp',
+          type: 'string | number',
+          description:
+            '`--weight-field-ramp`. Default: `calc(var(--weight-field-duration) / var(--weight-field-speed))`.',
+        },
       ],
     },
   ],
@@ -2969,6 +3100,16 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
           name: '--support-fan-caption-tracking',
           type: 'string | number',
           description: '`--support-fan-caption-tracking`. Default: `0.16em`.',
+        },
+        {
+          name: '--support-fan-caption-gap',
+          type: 'string | number',
+          description: '`--support-fan-caption-gap`. Default: `var(--space-2)`.',
+        },
+        {
+          name: '--support-fan-rail-gap',
+          type: 'string | number',
+          description: '`--support-fan-rail-gap`. Default: `var(--space-3)`.',
         },
         {
           name: '--support-fan-ring-inset',

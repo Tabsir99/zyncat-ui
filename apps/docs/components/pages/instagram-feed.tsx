@@ -2,15 +2,9 @@
 
 import { useState, type CSSProperties } from 'react';
 
-import { Button } from '@zyncat/ui/button';
-import { InstagramFeed, type InstagramFeedAction, type InstagramFeedProps } from '@zyncat/ui/instagram-feed';
+import { InstagramFeed, type InstagramFeedProps } from '@zyncat/ui/instagram-feed';
 
 import { KnobSegment, KnobSwitch, Playground } from '../playground';
-
-const COLUMN: CSSProperties = { display: 'flex', gap: 'var(--space-4)', flexDirection: 'column' };
-const ROW: CSSProperties = { display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' };
-const CAPTION: CSSProperties = { font: 'var(--type-caption)', color: 'var(--text-muted)' };
-const LOG: CSSProperties = { font: 'var(--type-mono)', color: 'var(--text-subtle)', minHeight: 'var(--space-5)' };
 
 const PHOTO: CSSProperties = {
   background:
@@ -92,52 +86,5 @@ export function InstagramPlayground() {
         reposts={3100}
       />
     </Playground>
-  );
-}
-
-export function InstagramFeedControlled() {
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [muted, setMuted] = useState(true);
-  const [last, setLast] = useState<InstagramFeedAction | null>(null);
-
-  return (
-    <div style={COLUMN}>
-      <span style={CAPTION}>
-        Double-tap the frame to like it: the toolbar heart pops, the count picks up your like, and a white heart bursts
-        over the media. Every glyph is a real button, reachable by Tab.
-      </span>
-      <InstagramFeed
-        type="video"
-        handle="northfieldsupply"
-        caption="Tap the heart, the bookmark, or the mute chip @northfieldcrew"
-        stamp="9h"
-        audio="northfieldsupply · Original audio"
-        media={REEL_ART}
-        avatar={FACE_ART}
-        likes={128000}
-        comments={940}
-        reposts={412}
-        liked={liked}
-        onLikedChange={setLiked}
-        saved={saved}
-        onSavedChange={setSaved}
-        muted={muted}
-        onMutedChange={setMuted}
-        onAction={setLast}
-      />
-      <div style={ROW}>
-        <Button size="sm" variant={liked ? 'primary' : 'secondary'} onClick={() => setLiked(!liked)}>
-          liked
-        </Button>
-        <Button size="sm" variant={saved ? 'primary' : 'secondary'} onClick={() => setSaved(!saved)}>
-          saved
-        </Button>
-        <Button size="sm" variant={muted ? 'primary' : 'secondary'} onClick={() => setMuted(!muted)}>
-          muted
-        </Button>
-      </div>
-      <span style={LOG}>last stateless action: {last ?? 'none yet'}</span>
-    </div>
   );
 }

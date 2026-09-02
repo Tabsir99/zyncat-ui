@@ -11,12 +11,12 @@ import { Tooltip } from '@zyncat/ui/tooltip';
 
 import { DOCS, GROUPS, NEW_SLUGS, type Doc } from '../content/registry';
 import { Icon } from './icon';
-import { CodeBlock, ExampleCard, InstallationBox } from './kit';
+import { CodeBlock, InstallationBox } from './kit';
 import { PropsTable } from './PropsTable';
 import { TableOfContents } from './TableOfContents';
 
 export function PageView({ doc }: { doc: Doc }) {
-  const { slug, label, headline, blurb, HeroComponent, Playground, heroCode, examples, props, types } = doc;
+  const { slug, label, headline, blurb, HeroComponent, Playground, heroCode, props, types } = doc;
 
   const [heroTab, setHeroTab] = useState('preview');
   const [heroDir, setHeroDir] = useState<1 | -1 | 0>(0);
@@ -158,23 +158,6 @@ export function PageView({ doc }: { doc: Doc }) {
                 </div>
               ) : null}
             </TabPanel>
-          </section>
-        ) : null}
-
-        {examples && examples.length > 0 ? (
-          <section className="doc-section" id="examples">
-            <div className="section-head">
-              <h2 className="section-head__title">Examples</h2>
-            </div>
-            <div className="examples-list">
-              {examples.map((ex) => (
-                <div key={ex.id} className="example-block" id={`example-${ex.id}`}>
-                  <h3 className="example-block__title">{ex.title}</h3>
-                  {ex.description ? <p className="example-block__desc">{ex.description}</p> : null}
-                  <ExampleCard Component={ex.Component} code={ex.code} />
-                </div>
-              ))}
-            </div>
           </section>
         ) : null}
 

@@ -21,6 +21,8 @@
     --support-fan-chip-gap: var(--space-2);
     --support-fan-icon-chip-padding: var(--space-2);
     --support-fan-caption-tracking: 0.16em;
+    --support-fan-caption-gap: var(--space-2);
+    --support-fan-rail-gap: var(--space-3);
 
     --support-fan-ring-inset: 0.3125rem;
     --support-fan-live-offset: 0.375rem;
@@ -79,11 +81,7 @@
   }
 
   .support-fan__slot {
-    position: absolute;
-    left: 0;
-    top: 0;
     transform-origin: 100% 50%;
-    translate: calc(-100% + var(--support-fan-x)) calc(-50% + var(--support-fan-y));
     scale: 1;
     opacity: 1;
     will-change: translate, scale;
@@ -95,8 +93,14 @@
       opacity var(--duration-base) linear calc(var(--support-fan-index) * var(--support-fan-stagger));
   }
 
+  .support-fan[data-layout='arc'] .support-fan__slot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    translate: calc(-100% + var(--support-fan-x)) calc(-50% + var(--support-fan-y));
+  }
+
   .support-fan[data-open='false'] .support-fan__slot {
-    translate: calc(-100% + var(--support-fan-collapse-x)) -50%;
     scale: var(--support-fan-collapse-scale);
     opacity: 0;
     transition:
@@ -105,6 +109,47 @@
       scale var(--support-fan-close-duration) var(--ease-exit)
         calc(var(--support-fan-index-out) * var(--support-fan-stagger)),
       opacity var(--duration-fast) linear calc(var(--support-fan-index-out) * var(--support-fan-stagger));
+  }
+
+  .support-fan[data-open='false'][data-layout='arc'] .support-fan__slot {
+    translate: calc(-100% + var(--support-fan-collapse-x)) -50%;
+  }
+
+  .support-fan[data-open='false'][data-layout='icon-dock'] .support-fan__slot {
+    translate: var(--support-fan-collapse-x) 0;
+  }
+
+  .support-fan[data-open='false'][data-layout='dock'] .support-fan__slot {
+    translate: 0 var(--support-fan-collapse-x);
+  }
+
+  .support-fan__rail {
+    position: absolute;
+  }
+
+  .support-fan[data-layout='icon-dock'] .support-fan__rail {
+    top: 0;
+    right: calc(var(--support-fan-trigger-size) / 2 + var(--support-fan-rail-gap));
+    translate: 0 -50%;
+  }
+
+  .support-fan[data-layout='dock'] .support-fan__rail {
+    bottom: calc(var(--support-fan-trigger-size) / 2 + var(--support-fan-rail-gap));
+    right: calc(var(--support-fan-trigger-size) / -2);
+  }
+
+  .support-fan .support-fan__dock {
+    --dock-surface: transparent;
+    --dock-line: transparent;
+    --dock-shadow: none;
+    --dock-backdrop: none;
+    --dock-pad: 0px;
+    --dock-gap: var(--support-fan-chip-gap);
+    --dock-item-pad: 0px;
+  }
+
+  .support-fan[data-layout='dock'] .support-fan__dock {
+    --dock-rail-size: auto;
   }
 
   .support-fan__glide {
@@ -171,7 +216,21 @@
   }
 
   .support-fan[data-layout='icon-dock'] .support-fan__chip {
+    inline-size: 100%;
+    block-size: 100%;
+    min-height: 0;
     padding: var(--support-fan-icon-chip-padding);
+    justify-content: center;
+  }
+
+  .support-fan[data-layout='dock'] .support-fan__slot {
+    inline-size: auto;
+  }
+
+  .support-fan[data-layout='dock'] .support-fan__chip {
+    inline-size: 100%;
+    block-size: 100%;
+    min-height: 0;
   }
 
   .support-fan__caption {
@@ -183,6 +242,20 @@
     color: var(--support-fan-ink-soft);
     white-space: nowrap;
     pointer-events: none;
+  }
+
+  .support-fan__caption--rail {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: var(--support-fan-caption-gap);
+    opacity: 1;
+    transition: opacity var(--duration-base) linear;
+  }
+
+  .support-fan[data-open='false'] .support-fan__caption--rail {
+    opacity: 0;
+    transition: opacity var(--duration-fast) linear;
   }
 
   .support-fan__trigger {

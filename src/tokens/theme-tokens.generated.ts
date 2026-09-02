@@ -535,6 +535,34 @@ export interface ConfettiTokens {
   sheen5?: string | number;
 }
 
+/** The scoped properties Dock publishes as its theming contract. */
+export interface DockTokens {
+  /** `--dock-gap`. Default: `var(--space-2)`. */
+  gap?: string | number;
+  /** `--dock-pad`. Default: `var(--space-2)`. */
+  pad?: string | number;
+  /** `--dock-rail-size`. Default: `calc(var(--dock-size) + var(--dock-pad) * 2 + var(--border-hairline) * 2)`. */
+  railSize?: string | number;
+  /** `--dock-surface`. Default: `color-mix(in oklab, var(--bg-surface) 70%, transparent)`. */
+  surface?: string | number;
+  /** `--dock-line`. Default: `var(--border-default)`. */
+  line?: string | number;
+  /** `--dock-radius`. Default: `var(--radius-2xl)`. */
+  radius?: string | number;
+  /** `--dock-shadow`. Default: `var(--shadow-md)`. */
+  shadow?: string | number;
+  /** `--dock-backdrop`. Default: `blur(var(--glass-blur))`. */
+  backdrop?: string | number;
+  /** `--dock-item-radius`. Default: `var(--radius-full)`. */
+  itemRadius?: string | number;
+  /** `--dock-item-pad-min`. Default: `0.375rem`. */
+  itemPadMin?: string | number;
+  /** `--dock-item-pad-ratio`. Default: `0.2`. */
+  itemPadRatio?: string | number;
+  /** `--dock-item-pad`. Default: `max(var(--dock-item-pad-min), calc(var(--dock-size) * var(--dock-item-pad-ratio)))`. */
+  itemPad?: string | number;
+}
+
 /** The scoped properties FlowField publishes as its theming contract. */
 export interface FlowFieldTokens {
   /** `--flow-field-ink`. Default: `var(--text-subtle)`. */
@@ -663,9 +691,7 @@ export interface TypingLinesTokens {
 export interface WeightFieldTokens {
   /** `--weight-field-ink`. Default: `var(--text-strong)`. */
   ink?: string | number;
-  /** `--weight-field-accent`. Default: `var(--accent)`. */
-  accent?: string | number;
-  /** `--weight-field-size`. Default: `clamp(3.5rem, 11vw, 8.75rem)`. */
+  /** `--weight-field-size`. Default: `6rem`. */
   size?: string | number;
   /** `--weight-field-leading`. Default: `1`. */
   leading?: string | number;
@@ -673,18 +699,28 @@ export interface WeightFieldTokens {
   align?: string | number;
   /** `--weight-field-pad`. Default: `var(--space-6) var(--space-4)`. */
   pad?: string | number;
-  /** `--weight-field-reach`. Default: `2.6`. */
-  reach?: string | number;
+  /** `--weight-field-tracking`. Default: `-0.05em`. */
+  tracking?: string | number;
   /** `--weight-field-rest-weight`. Default: `300`. */
   restWeight?: string | number;
-  /** `--weight-field-peak-weight`. Default: `700`. */
+  /** `--weight-field-far-weight`. Default: `400`. */
+  farWeight?: string | number;
+  /** `--weight-field-near-weight`. Default: `600`. */
+  nearWeight?: string | number;
+  /** `--weight-field-peak-weight`. Default: `900`. */
   peakWeight?: string | number;
-  /** `--weight-field-lift`. Default: `0.08em`. */
-  lift?: string | number;
-  /** `--weight-field-tracking`. Default: `0.012em`. */
-  tracking?: string | number;
-  /** `--weight-field-tint`. Default: `0.9`. */
-  tint?: string | number;
+  /** `--weight-field-hover-padding`. Default: `calc(1em / 12)`. */
+  hoverPadding?: string | number;
+  /** `--weight-field-stroke`. Default: `calc(1em * 125 / 6000)`. */
+  stroke?: string | number;
+  /** `--weight-field-stroke-peak`. Default: `calc(var(--weight-field-stroke) * 2)`. */
+  strokePeak?: string | number;
+  /** `--weight-field-duration`. Default: `400ms`. */
+  duration?: string | number;
+  /** `--weight-field-ease`. Default: `ease`. */
+  ease?: string | number;
+  /** `--weight-field-ramp`. Default: `calc(var(--weight-field-duration) / var(--weight-field-speed))`. */
+  ramp?: string | number;
 }
 
 /** The scoped properties SupportFan publishes as its theming contract. */
@@ -723,6 +759,10 @@ export interface SupportFanTokens {
   iconChipPadding?: string | number;
   /** `--support-fan-caption-tracking`. Default: `0.16em`. */
   captionTracking?: string | number;
+  /** `--support-fan-caption-gap`. Default: `var(--space-2)`. */
+  captionGap?: string | number;
+  /** `--support-fan-rail-gap`. Default: `var(--space-3)`. */
+  railGap?: string | number;
   /** `--support-fan-ring-inset`. Default: `0.3125rem`. */
   ringInset?: string | number;
   /** `--support-fan-live-offset`. Default: `0.375rem`. */
@@ -803,6 +843,8 @@ export interface SupportRailTokens {
 export interface ComponentTokens {
   /** Confetti - its `--confetti-*` properties. */
   confetti?: ConfettiTokens;
+  /** Dock - its `--dock-*` properties. */
+  dock?: DockTokens;
   /** FlowField - its `--flow-field-*` properties. */
   flowField?: FlowFieldTokens;
   /** Lens - its `--lens-*` properties. */

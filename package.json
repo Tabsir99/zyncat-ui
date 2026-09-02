@@ -303,6 +303,11 @@
       "types": "./dist/types/tokens/theme.d.ts",
       "import": "./dist/theme.js"
     },
+    "./dock": {
+      "source": "./src/components/expressive/dock/Dock.tsx",
+      "types": "./dist/types/components/expressive/dock/Dock.d.ts",
+      "import": "./dist/dock.js"
+    },
     "./styles.css": "./src/styles.css",
     "./next": {
       "types": "./next.d.mts",

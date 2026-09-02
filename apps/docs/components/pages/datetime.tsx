@@ -21,22 +21,6 @@ export function DateFieldHero() {
   );
 }
 
-export function DateFieldBoundsDemo() {
-  const [val, setVal] = useState<string | null>('2026-08-25');
-  return (
-    <div style={{ width: '100%', maxWidth: W }}>
-      <DateField
-        label="Schedule window"
-        min="2026-08-01"
-        max="2026-08-31"
-        message="Restricted to current month."
-        value={val}
-        onChange={setVal}
-      />
-    </div>
-  );
-}
-
 type TimeFormat = NonNullable<DateTimeFieldProps['format']>;
 type MinuteStep = '1' | '5' | '15';
 

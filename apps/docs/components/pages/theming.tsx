@@ -105,9 +105,10 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
   {
     component: 'WeightField',
     subpath: 'weight-field',
-    count: 12,
-    sample: '--weight-field-reach, --weight-field-peak-weight',
+    count: 16,
+    sample: '--weight-field-peak-weight, --weight-field-hover-padding',
   },
+  { component: 'Dock', subpath: 'dock', count: 12, sample: '--dock-surface, --dock-rail-size, --dock-item-pad' },
   {
     component: 'FlowField',
     subpath: 'flow-field',

@@ -63,11 +63,12 @@ Lens - @zyncat/ui/lens - An optical loupe that magnifies whatever you wrap.
 Confetti - @zyncat/ui/confetti - A canvas particle burst you fire yourself: paper flakes, curls, ribbons and foil sequins tumbling on real drag, lift and flip, across three depth layers.
 FlowField - @zyncat/ui/flow-field - A canvas field of needles that breathe on a noise loop, then swing away from the pointer with per-cell lag - a decorative backdrop for a hero or a card.
 MorphingText - @zyncat/ui/morphing-text - A headline that cycles a word list, morphing each word into the next.
-WeightField - @zyncat/ui/weight-field - A display headline where cursor proximity drives each glyph's variable-font wght axis through a damped spring - letters swell toward the pointer and overshoot back to rest.
+WeightField - @zyncat/ui/weight-field - A display headline where hovering one letter ramps its variable-font wght to the peak and its two neighbours either side part-way, so weight spills outward from the cursor.
+Dock - @zyncat/ui/dock - A macOS-style magnifying rail: the tile nearest the pointer springs open and pushes its neighbours along the axis.
 
 == Compound ==
 Whole assembled patterns on the expressive contract - scoped --support-fan-* and --support-rail-* properties, no tone/corner/density enums. Both take the same SupportAction[]: id, label, icon, meta, description, onSelect.
-SupportFan - @zyncat/ui/support-fan - A corner trigger that fans its actions onto an arc, with one pointer-tracked field the whole row glides along.
+SupportFan - @zyncat/ui/support-fan - A corner trigger that fans its actions onto an arc, or onto a magnifying Dock rail, with one pointer-tracked field the row answers.
 SupportRail - @zyncat/ui/support-rail - An edge tab that grows a support panel out of its own measured box.
 
 == Replicas ==

@@ -50,11 +50,10 @@ nested scope or the collapse cannot reach them.
 
 Expressive and compound components publish scoped `--<component>-<name>` properties as their public
 contract: `--odometer-size/-accent/-gap`, `--typing-lines-caret-ink/-blink`,
-`--lens-surface/-fringe-warm`, `--morphing-text-size/-smear`, `--weight-field-reach/-peak-weight`,
+`--lens-surface/-fringe-warm`, `--morphing-text-size/-smear`, `--weight-field-peak-weight/-hover-padding`,
 `--flow-field-ramp-0..11`, `--confetti-paper-1..5`, `--support-fan-*`, `--support-rail-*`. Set them
 on any ancestor or inline via `style`. The canvas simulations sample theirs at their next measure -
-WeightField and FlowField on resize, FlowField also on a theme attribute change, Confetti on the
-next `fire()`.
+FlowField on resize and on a theme attribute change, Confetti on the next `fire()`.
 
 Both reaches are typed. In a theme they are the `components` group with the prefix dropped:
 `components.odometer.accent` is `--odometer-accent`. On one instance they are the component's own

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Newsreader } from 'next/font/google';
+import { Geist, Newsreader } from 'next/font/google';
 
 import '@/styles/docs.css';
 import '@zyncat/ui/styles.css';
@@ -11,6 +11,8 @@ const newsreader = Newsreader({
   variable: '--font-newsreader',
   display: 'swap',
 });
+
+const geist = Geist({ subsets: ['latin'], weight: 'variable', variable: '--font-geist', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ui.zyncat.app'),
@@ -40,7 +42,7 @@ export const viewport: Viewport = { themeColor: '#0b0b0c' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={newsreader.variable}>
+    <html lang="en" suppressHydrationWarning className={`${newsreader.variable} ${geist.variable}`}>
       <body>{children}</body>
     </html>
   );

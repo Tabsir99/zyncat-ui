@@ -139,31 +139,3 @@ export function TikTokPlayground() {
     </Playground>
   );
 }
-
-export function TikTokControlledDemo() {
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  return (
-    <FitStage width={SURFACE_WIDTH.desktop}>
-      <TikTok
-        surface="desktop"
-        translation={false}
-        name={NAME}
-        location={PLACE}
-        caption={STORY}
-        media={SHOT_C}
-        avatar={AVATAR}
-        sticker={DISC}
-        likes={3149}
-        comments={201}
-        saves={480}
-        shares={789}
-        liked={liked}
-        onLikedChange={setLiked}
-        saved={saved}
-        onSavedChange={setSaved}
-      />
-    </FitStage>
-  );
-}
