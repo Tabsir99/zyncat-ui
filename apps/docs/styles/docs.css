@@ -2360,27 +2360,118 @@ body {
 .doc-faq__list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-2);
 }
 
 .doc-faq__item {
+  --faq-accent: var(--border-default);
+
+  position: relative;
   padding-left: var(--space-5);
-  border-left: var(--border-hairline) solid var(--border-default);
+  border-left: var(--border-hairline) solid var(--faq-accent);
+  transition: border-color var(--duration-base) var(--ease-standard);
+}
+
+.doc-faq__item[data-open='true'] {
+  --faq-accent: var(--text-strong);
 }
 
 .doc-faq__q {
+  margin: 0;
   font-size: 1rem;
-  font-weight: 600;
+}
+
+.doc-faq__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-3) 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 500;
   letter-spacing: -0.01em;
+  text-align: left;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-standard);
+}
+
+.doc-faq__trigger:hover,
+.doc-faq__item[data-open='true'] .doc-faq__trigger {
   color: var(--text-strong);
-  margin: 0 0 var(--space-2);
+}
+
+.doc-faq__trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+.doc-faq__label {
+  flex: 1;
+}
+
+.doc-faq__item:has(.doc-faq__trigger:hover) {
+  --faq-accent: var(--text-muted);
+}
+
+.doc-faq__chevron {
+  position: relative;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  color: var(--text-muted);
+  rotate: 0deg;
+  transition:
+    rotate var(--duration-slow) var(--ease-entrance),
+    color var(--duration-base) var(--ease-standard);
+}
+
+.doc-faq__chevron::before,
+.doc-faq__chevron::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: var(--border-hairline);
+  background: currentColor;
+  border-radius: 1px;
+  translate: -50% -50%;
+  transition: rotate var(--duration-slow) var(--ease-entrance);
+}
+
+.doc-faq__chevron::after {
+  rotate: 90deg;
+}
+
+.doc-faq__item[data-open='true'] .doc-faq__chevron {
+  color: var(--text-strong);
+  rotate: 90deg;
+}
+
+.doc-faq__item[data-open='true'] .doc-faq__chevron::after {
+  rotate: 0deg;
 }
 
 .doc-faq__a {
   font-size: 0.9375rem;
   line-height: 1.7;
   color: var(--text-secondary);
-  margin: 0;
+  margin: 0 0 var(--space-4);
+  max-width: 68ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-faq__item,
+  .doc-faq__trigger,
+  .doc-faq__chevron,
+  .doc-faq__chevron::before,
+  .doc-faq__chevron::after {
+    transition-duration: 1ms;
+  }
 }
 
 .skip-link {
