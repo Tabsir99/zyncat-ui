@@ -46,6 +46,24 @@ both claimed `tailwind alternatives` and `alternatives to tailwind css`. Diff
 every new keyword array against every shipped one, and give a contested cluster
 to the page that cannot rank without it.
 
+**Assign contested ground in the brief, not after.** Where sibling pages share a
+keyword space, the split goes in every agent's prompt before the round starts,
+including the pages not yet running - an agent that knows a term is spoken for
+spends its budget elsewhere instead of mining a cluster it has to give back.
+Standing assignments:
+
+| Cluster       | Owner          | Off limits to                          |
+| ------------- | -------------- | -------------------------------------- |
+| `mcp server`  | mcp            | introduction, which ceded it           |
+| single select | select         | multi-select, dropdown                 |
+| multi select  | multi-select   | select                                 |
+| dropdown menu | dropdown       | select, multi-select                   |
+| date only     | date-field     | datetime-field, date-range, time-field |
+| datetime      | datetime-field | date-field                             |
+| date range    | date-range     | date-field                             |
+| time only     | time-field     | date-field, datetime-field             |
+| generic input | text-field     | otp-field, number-field                |
+
 ## Order
 
 Rounds run in descending order of what the page can realistically win. Tier A is
@@ -80,25 +98,25 @@ Brand and high-intent install queries. Guide pages: seeds are tasks, not names.
 | R5  | introduction | Introduction        | ✔      | react ui components  | 13  |
 | R5  | installation | Installation        | ✔      | tailwind alternative | 15  |
 | R5  | theming      | Theming & Overrides | ✔      | theming              | 15  |
-| R5  | mcp          | MCP Server          | ☐      |                      |     |
+| R6  | mcp          | MCP Server          | ✔      | mcp server           | 15  |
 
 ### Tier C — high-volume controls
 
 Competitive head terms, but the React 19 / zero-dependency angle is a real
 differentiator here. Expect to win on the long tail first.
 
-| #   | Slug           | Page           | Status | Primary keyword | Kws |
-| --- | -------------- | -------------- | ------ | --------------- | --- |
-| R6  | select         | Select         | ☐      |                 |     |
-| R6  | multi-select   | MultiSelect    | ☐      |                 |     |
-| R6  | otp-field      | OtpField       | ☐      |                 |     |
-| R7  | date-field     | DateField      | ☐      |                 |     |
-| R7  | datetime-field | DateTimeField  | ☐      |                 |     |
-| R7  | date-range     | DateRangeField | ☐      |                 |     |
-| R8  | time-field     | TimeField      | ☐      |                 |     |
-| R8  | emoji-picker   | EmojiPicker    | ☐      |                 |     |
-| R8  | table          | Table          | ☐      |                 |     |
-| R8  | pagination     | Pagination     | ☐      |                 |     |
+| #   | Slug           | Page           | Status | Primary keyword       | Kws |
+| --- | -------------- | -------------- | ------ | --------------------- | --- |
+| R6  | select         | Select         | ✔      | react select dropdown | 15  |
+| R6  | multi-select   | MultiSelect    | ✔      | multiselect dropdown  | 15  |
+| R6  | otp-field      | OtpField       | ✔      | otp screen            | 15  |
+| R6  | date-field     | DateField      | ✔      | react date picker     | 15  |
+| R7  | datetime-field | DateTimeField  | ✔      | react datetime picker | 11  |
+| R7  | date-range     | DateRangeField | ✔      | date range picker     | 12  |
+| R7  | time-field     | TimeField      | ✔      | timepicker            | 15  |
+| R7  | emoji-picker   | EmojiPicker    | ✔      | emoji picker          | 6   |
+| R7  | table          | Table          | ✔      | react data table      | 15  |
+| R8  | pagination     | Pagination     | ☐      |                       |     |
 
 ### Tier D — the rest
 
@@ -133,7 +151,7 @@ differentiator here. Expect to win on the long tail first.
 | Tier           | Pages | ☑   | ✔   |
 | -------------- | ----- | --- | --- |
 | A — expressive | 11    | 11  | 11  |
-| B — guides     | 4     | 3   | 3   |
-| C — controls   | 10    | 0   | 0   |
+| B — guides     | 4     | 4   | 4   |
+| C — controls   | 10    | 9   | 9   |
 | D — the rest   | 23    | 0   | 0   |
-| **Total**      | 48    | 14  | 14  |
+| **Total**      | 48    | 24  | 24  |
