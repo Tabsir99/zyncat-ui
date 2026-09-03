@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { cancel, confirm, intro, isCancel, log, outro, select, spinner } from '@clack/prompts';
 
 import {
@@ -40,6 +40,9 @@ export interface InitFlags {
 const PACKAGE = '@zyncat/ui';
 const MCP_SERVER_ENTRY = { command: 'node', args: ['./node_modules/@zyncat/ui/dist/mcp.js'] };
 const STYLES_IMPORT = "import '@zyncat/ui/styles.css';";
+const THEME_FILE = 'zyncat.theme.css';
+const THEME_IMPORT = `import './${THEME_FILE}';`;
+const THEME_SOURCE = 'src/tokens/decisions.css';
 const DOCS_URL = 'https://ui.zyncat.app';
 
 const interactive = () => Boolean(process.stdout.isTTY && process.stdin.isTTY);
@@ -258,25 +261,79 @@ function wireMcp(cwd: string): Wired {
   return { line: row('MCP server', existed ? '.mcp.json · kept' : `.mcp.json ${arrow} zyncat-ui`), done: true };
 }
 
-function wireStyles(cwd: string): Wired {
-  const entry = findAppEntry(cwd);
+function themeFileText(packageRoot: string): string | null {
+  const source = join(packageRoot, THEME_SOURCE);
+  if (!existsSync(source)) return null;
+  const css = readFileSync(source, 'utf8');
+  const rule = /^\s*:root\s*\{/m.exec(css);
+  if (!rule) return null;
+  const open = rule.index + rule[0].length - 1;
+  const close = css.indexOf('}', open);
+  if (close === -1) return null;
+  const lines = css
+    .slice(open + 1, close)
+    .split('\n')
+    .filter((line) => line.trim());
+  const indent = Math.min(...lines.map((line) => line.length - line.trimStart().length));
+  const body = lines.map((line) => `  ${line.slice(indent)}`).join('\n');
+  return [
+    `/* ${THEME_FILE} - the decisions every other token derives from, written by zyncat-ui init.`,
+    '   Loaded after @zyncat/ui/styles.css, so a value here wins. Change what you want and delete the',
+    '   rest: whatever is not here keeps the shipped default. Docs: https://ui.zyncat.app/theming */',
+    ':root {',
+    body,
+    '}',
+    '',
+  ].join('\n');
+}
+
+function wireTheme(cwd: string, packageRoot: string, pm: PackageManager, entry: string | null): Wired {
+  const dir = entry ? dirname(entry) : '.';
+  const rel = dir === '.' ? THEME_FILE : `${dir}/${THEME_FILE}`;
+  const path = join(cwd, rel);
+  if (existsSync(path)) return { line: row('Theme file', `${rel} · kept`), done: true };
+  const text = themeFileText(packageRoot);
+  if (!text)
+    return {
+      line: row('Theme file', `skipped · ${PACKAGE} ships no ${THEME_SOURCE}`),
+      done: false,
+      hint: `Upgrade it with ${ADD_COMMAND[pm]} ${PACKAGE}@latest, then re-run init.`,
+    };
+  writeFileSync(path, text);
+  return { line: row('Theme file', `${rel} · written`), done: true };
+}
+
+function wireStyles(cwd: string, entry: string | null): Wired {
   if (!entry)
     return {
-      line: row('Stylesheet', 'no app entry found · add the import yourself'),
+      line: row('Stylesheet', 'no app entry found · add the imports yourself'),
       done: false,
-      hint: `Put ${STYLES_IMPORT} at your app root, above your own stylesheets.`,
+      hint: `Put ${STYLES_IMPORT} then ${THEME_IMPORT} at your app root, above your own stylesheets.`,
     };
   const path = join(cwd, entry);
   const text = readFileSync(path, 'utf8');
-  if (text.includes('@zyncat/ui/styles.css'))
-    return { line: row('Stylesheet', `${entry} · already imported`), done: true };
   const eol = text.includes('\r\n') ? '\r\n' : '\n';
   const lines = text.split(eol);
-  let at = 0;
-  while (at < lines.length && (lines[at].trim() === '' || /^(['"])use [\w-]+\1;?$/.test(lines[at].trim()))) at++;
-  lines.splice(at, 0, STYLES_IMPORT);
+  const added: string[] = [];
+  let stylesAt = lines.findIndex((line) => line.includes('@zyncat/ui/styles.css'));
+  if (stylesAt === -1) {
+    stylesAt = 0;
+    while (
+      stylesAt < lines.length &&
+      (lines[stylesAt].trim() === '' || /^(['"])use [\w-]+\1;?$/.test(lines[stylesAt].trim()))
+    )
+      stylesAt++;
+    lines.splice(stylesAt, 0, STYLES_IMPORT);
+    added.push('styles');
+  }
+  if (existsSync(join(cwd, dirname(entry), THEME_FILE)) && !text.includes(THEME_FILE)) {
+    lines.splice(stylesAt + 1, 0, THEME_IMPORT);
+    added.push('theme');
+  }
+  if (!added.length) return { line: row('Stylesheet', `${entry} · already imported`), done: true };
   writeFileSync(path, lines.join(eol));
-  return { line: row('Stylesheet', `${entry} · import added`), done: true };
+  const what = added.length === 2 ? 'imports added' : added[0] === 'theme' ? 'theme import added' : 'import added';
+  return { line: row('Stylesheet', `${entry} · ${what}`), done: true };
 }
 
 export async function init(flags: InitFlags): Promise<void> {
@@ -311,7 +368,13 @@ export async function init(flags: InitFlags): Promise<void> {
   await alignVersion(pm, cwd, version);
 
   const packageRoot = sourceRoot(cwd, ownRoot);
-  const rows: Wired[] = [wireSkill(cwd, packageRoot, pm), wireMcp(cwd), wireStyles(cwd)];
+  const entry = findAppEntry(cwd);
+  const rows: Wired[] = [
+    wireSkill(cwd, packageRoot, pm),
+    wireMcp(cwd),
+    wireTheme(cwd, packageRoot, pm, entry),
+    wireStyles(cwd, entry),
+  ];
   for (const [index, entry] of rows.entries()) {
     log.message(entry.line, { symbol: entry.done ? check : skip, spacing: index === 0 ? 1 : 0 });
     if (entry.hint) log.message(dim(entry.hint), { spacing: 0 });
