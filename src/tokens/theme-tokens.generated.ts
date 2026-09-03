@@ -10,49 +10,49 @@
  */
 /** Surfaces - the canvas, cards, fills and the overlay scrim. */
 export interface ColorBgTokens {
-  /** `--bg-app` - The canvas is pure white; cards and floating panels share it and separate with hairlines and shadow, the way print separates with rules rather than tint. The tinted trio steps for real: subtle (hover wash) < muted (passive fill) < inset (a recessed well - code, terminals), each one ramp stop apart. Default: `var(--gray-0)`. */
+  /** `--bg-app` - The canvas is pure white and cards and panels share it, separated by hairlines and shadow the way print separates with rules rather than tint; subtle < muted < inset step one ramp stop apart. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.165 0.006 h)`. */
   app?: string | number;
-  /** `--bg-surface`. Default: `var(--gray-0)`. */
+  /** `--bg-surface`. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.195 0.007 h)`. */
   surface?: string | number;
-  /** `--bg-surface-raised`. Default: `var(--gray-0)`. */
+  /** `--bg-surface-raised`. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.24 0.008 h)`. */
   surfaceRaised?: string | number;
-  /** `--bg-subtle`. Default: `var(--gray-50)`. */
+  /** `--bg-subtle`. Default: `var(--gray-50)`. Dark: `oklch(from var(--neutral) 0.222 0.007 h)`. */
   subtle?: string | number;
-  /** `--bg-muted`. Default: `var(--gray-100)`. */
+  /** `--bg-muted`. Default: `var(--gray-100)`. Dark: `oklch(from var(--neutral) 0.255 0.008 h)`. */
   muted?: string | number;
-  /** `--bg-inset`. Default: `var(--gray-150)`. */
+  /** `--bg-inset`. Default: `var(--gray-150)`. Dark: `oklch(from var(--neutral) 0.13 0.006 h)`. */
   inset?: string | number;
-  /** `--bg-overlay`. Default: `color-mix(in oklab, var(--gray-900) 44%, transparent)`. */
+  /** `--bg-overlay`. Default: `color-mix(in oklab, var(--gray-900) 44%, transparent)`. Dark: `oklch(from var(--neutral) 0.06 0.004 h / 0.64)`. */
   overlay?: string | number;
 }
 
 /** Ink, from strong to disabled, and the faces on a fill. */
 export interface ColorTextTokens {
-  /** `--text-strong`. Default: `var(--gray-950)`. */
-  strong?: string | number;
-  /** `--text-body`. Default: `var(--gray-800)`. */
-  body?: string | number;
-  /** `--text-secondary`. Default: `var(--gray-700)`. */
-  secondary?: string | number;
-  /** `--text-muted`. Default: `var(--gray-600)`. */
-  muted?: string | number;
-  /** `--text-subtle`. Default: `var(--gray-500)`. */
-  subtle?: string | number;
-  /** `--text-disabled`. Default: `var(--gray-400)`. */
-  disabled?: string | number;
-  /** `--text-on-accent`. Default: `var(--gray-0)`. */
+  /** `--text-on-accent` - The ink on a hue fill - white in either polarity, since the fills stay mid-lightness on dark. Default: `var(--gray-0)`. */
   onAccent?: string | number;
-  /** `--text-inverse`. Default: `var(--gray-0)`. */
+  /** `--text-strong`. Default: `var(--gray-950)`. Dark: `oklch(from var(--neutral) 0.975 0.003 h)`. */
+  strong?: string | number;
+  /** `--text-body`. Default: `var(--gray-800)`. Dark: `oklch(from var(--neutral) 0.91 0.005 h)`. */
+  body?: string | number;
+  /** `--text-secondary`. Default: `var(--gray-700)`. Dark: `oklch(from var(--neutral) 0.82 0.007 h)`. */
+  secondary?: string | number;
+  /** `--text-muted`. Default: `var(--gray-600)`. Dark: `oklch(from var(--neutral) 0.72 0.01 h)`. */
+  muted?: string | number;
+  /** `--text-subtle`. Default: `var(--gray-500)`. Dark: `oklch(from var(--neutral) 0.62 0.012 h)`. */
+  subtle?: string | number;
+  /** `--text-disabled`. Default: `var(--gray-400)`. Dark: `oklch(from var(--neutral) 0.49 0.012 h)`. */
+  disabled?: string | number;
+  /** `--text-inverse` - The ink on a strong-ink fill - the canvas colour in either polarity. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.165 0.006 h)`. */
   inverse?: string | number;
 }
 
 /** Hairlines, from subtle to strong. */
 export interface ColorBorderTokens {
-  /** `--border-subtle`. Default: `var(--gray-150)`. */
+  /** `--border-subtle`. Default: `var(--gray-150)`. Dark: `oklch(from var(--neutral) 0.265 0.008 h)`. */
   subtle?: string | number;
-  /** `--border-default`. Default: `var(--gray-200)`. */
+  /** `--border-default`. Default: `var(--gray-200)`. Dark: `oklch(from var(--neutral) 0.315 0.009 h)`. */
   default?: string | number;
-  /** `--border-strong`. Default: `var(--gray-300)`. */
+  /** `--border-strong`. Default: `var(--gray-300)`. Dark: `oklch(from var(--neutral) 0.4 0.011 h)`. */
   strong?: string | number;
 }
 
@@ -453,7 +453,7 @@ export interface TokenProperties {
   '--gray-900'?: string | number;
   /** `--gray-950`. Default: `oklch(from var(--neutral) 0.165 0.007 h)`. */
   '--gray-950'?: string | number;
-  /** `--shadow-rgb` - Cool near-black shadow ink - matches the cool neutral ramp on the white canvas. Default: `15 22 25`. */
+  /** `--shadow-rgb` - Cool near-black shadow ink on the white canvas; the dark theme casts pure black. Default: `15 22 25`. Dark: `0 0 0`. */
   '--shadow-rgb'?: string | number;
   /** `--weight-regular`. Default: `400`. */
   '--weight-regular'?: string | number;
@@ -575,19 +575,25 @@ export interface TokenProperties {
   '--radius-xl'?: string | number;
   /** `--radius-2xl`. Default: `calc(var(--radius) * 2)`. Re-derived on every theme root. */
   '--radius-2xl'?: string | number;
-  /** `--border-hairline` - Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. Default: `1px`. */
+  /** `--border-hairline` - Border widths - weight comes from the colour, not the thickness. Default: `1px`. */
   '--border-hairline'?: string | number;
   /** `--border-emphasis`. Default: `1.5px`. */
   '--border-emphasis'?: string | number;
-  /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+  /** `--shadow-strength` - Multiplies every shadow alpha - 1 on the white canvas; black on dark needs 3-4x to read. Default: `1`. Dark: `3.5`. */
+  '--shadow-strength'?: string | number;
+  /** `--sheen-strength` - Multiplies every white top-light highlight - 1 on the white canvas, a fifth on dark. Default: `1`. Dark: `0.2`. */
+  '--sheen-strength'?: string | number;
+  /** `--glow-strength` - Multiplies the light a lifted hue fill casts around it - off on the white canvas, on in dark. Default: `0`. Dark: `1`. */
+  '--glow-strength'?: string | number;
+  /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-xs'?: string | number;
-  /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+  /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / calc(0.05 * var(--shadow-strength))), 0 1px 1px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-sm'?: string | number;
-  /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07)`. Re-derived on every theme root. */
+  /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength))), 0 6px 12px rgb(var(--shadow-rgb) / calc(0.07 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-md'?: string | number;
-  /** `--shadow-lg`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
+  /** `--shadow-lg` - The floating steps are three layers: a tight contact shadow, a mid layer for form, a wide ambient one. Without the contact layer the panel reads soft and unanchored. Default: `0 1px 2px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 4px 8px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength))), 0 12px 28px rgb(var(--shadow-rgb) / calc(0.1 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-lg'?: string | number;
-  /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. Re-derived on every theme root. */
+  /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 8px 16px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-rgb) / calc(0.14 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-xl'?: string | number;
   /** `--ring-accent` - Focus & selection rings - box-shadows (not outlines) so they follow border-radius. Each tracks its role's hue; danger rings on its fill tone, the lighter face the destructive button rests on. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
   '--ring-accent'?: string | number;
@@ -597,6 +603,10 @@ export interface TokenProperties {
   '--ring-warning'?: string | number;
   /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. Re-derived on every theme root. */
   '--ring-success'?: string | number;
+  /** `--glow-accent` - Cast light - the hover of the primary and destructive buttons; each tracks its ring's hue. Default: `0 4px 16px oklch(from var(--accent) l c h / calc(0.4 * var(--glow-strength)))`. Re-derived on every theme root. */
+  '--glow-accent'?: string | number;
+  /** `--glow-danger`. Default: `0 4px 16px oklch(from var(--danger) 0.602 0.196 h / calc(0.4 * var(--glow-strength)))`. Re-derived on every theme root. */
+  '--glow-danger'?: string | number;
   /** `--duration-fast`. Default: `140ms`. Collapses to `1ms` under reduced motion. */
   '--duration-fast'?: string | number;
   /** `--duration-base`. Default: `200ms`. Collapses to `1ms` under reduced motion. */
@@ -645,17 +655,17 @@ export interface TokenProperties {
   '--glass-blur-strong'?: string | number;
   /** `--glass-saturate`. Default: `1.5`. */
   '--glass-saturate'?: string | number;
-  /** `--glass-sheen`. Default: `linear-gradient( 145deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.1) 24%, rgb(255 255 255 / 0) 46% )`. */
-  '--glass-sheen'?: string | number;
   /** `--glass-sheen-rest`. Default: `0.8`. */
   '--glass-sheen-rest'?: string | number;
   /** `--glass-sheen-hover`. Default: `1`. */
   '--glass-sheen-hover'?: string | number;
-  /** `--glass-highlight`. Default: `inset 0 1px 0 0 rgb(255 255 255 / 0.55)`. */
+  /** `--glass-sheen`. Default: `linear-gradient( 145deg, rgb(255 255 255 / calc(0.55 * var(--sheen-strength))) 0%, rgb(255 255 255 / calc(0.1 * var(--sheen-strength))) 24%, rgb(255 255 255 / 0) 46% )`. Re-derived on every theme root. */
+  '--glass-sheen'?: string | number;
+  /** `--glass-highlight`. Default: `inset 0 1px 0 0 rgb(255 255 255 / calc(0.55 * var(--sheen-strength)))`. Re-derived on every theme root. */
   '--glass-highlight'?: string | number;
-  /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05)`. Re-derived on every theme root. */
+  /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / calc(0.05 * var(--shadow-strength))), 0 2px 5px rgb(var(--shadow-rgb) / calc(0.05 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--glass-shadow'?: string | number;
-  /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 8px 18px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
+  /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 8px 18px rgb(var(--shadow-rgb) / calc(0.1 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--glass-shadow-hover'?: string | number;
   /** `--icon-sm`. Default: `17px`. */
   '--icon-sm'?: string | number;
@@ -669,125 +679,127 @@ export interface TokenProperties {
   '--layer-toast'?: string | number;
   /** `--layer-tooltip`. Default: `1100`. */
   '--layer-tooltip'?: string | number;
-  /** `--avatar-1-bg`. Default: `oklch(0.945 0.04 250)`. */
-  '--avatar-1-bg'?: string | number;
-  /** `--avatar-1-fg`. Default: `oklch(0.45 0.08 250)`. */
-  '--avatar-1-fg'?: string | number;
-  /** `--avatar-2-bg`. Default: `oklch(0.945 0.04 292)`. */
-  '--avatar-2-bg'?: string | number;
-  /** `--avatar-2-fg`. Default: `oklch(0.45 0.08 292)`. */
-  '--avatar-2-fg'?: string | number;
-  /** `--avatar-3-bg`. Default: `oklch(0.945 0.04 334)`. */
-  '--avatar-3-bg'?: string | number;
-  /** `--avatar-3-fg`. Default: `oklch(0.45 0.08 334)`. */
-  '--avatar-3-fg'?: string | number;
-  /** `--avatar-4-bg`. Default: `oklch(0.945 0.04 5)`. */
-  '--avatar-4-bg'?: string | number;
-  /** `--avatar-4-fg`. Default: `oklch(0.45 0.08 5)`. */
-  '--avatar-4-fg'?: string | number;
-  /** `--avatar-5-bg`. Default: `oklch(0.945 0.04 55)`. */
-  '--avatar-5-bg'?: string | number;
-  /** `--avatar-5-fg`. Default: `oklch(0.45 0.08 55)`. */
-  '--avatar-5-fg'?: string | number;
-  /** `--avatar-6-bg`. Default: `oklch(0.945 0.04 125)`. */
-  '--avatar-6-bg'?: string | number;
-  /** `--avatar-6-fg`. Default: `oklch(0.45 0.08 125)`. */
-  '--avatar-6-fg'?: string | number;
-  /** `--avatar-sheen` - Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). Default: `oklch(1 0 0 / 0.35)`. */
-  '--avatar-sheen'?: string | number;
-  /** `--avatar-shade`. Default: `oklch(0.225 0.012 264 / 0.05)`. */
+  /** `--avatar-shade` - The face's bottom shade - a cool near-black, never pure black. Default: `oklch(0.225 0.012 264 / 0.05)`. */
   '--avatar-shade'?: string | number;
-  /** `--bg-app` - The canvas is pure white; cards and floating panels share it and separate with hairlines and shadow, the way print separates with rules rather than tint. The tinted trio steps for real: subtle (hover wash) < muted (passive fill) < inset (a recessed well - code, terminals), each one ramp stop apart. Default: `var(--gray-0)`. */
-  '--bg-app'?: string | number;
-  /** `--bg-surface`. Default: `var(--gray-0)`. */
-  '--bg-surface'?: string | number;
-  /** `--bg-surface-raised`. Default: `var(--gray-0)`. */
-  '--bg-surface-raised'?: string | number;
-  /** `--bg-subtle`. Default: `var(--gray-50)`. */
-  '--bg-subtle'?: string | number;
-  /** `--bg-muted`. Default: `var(--gray-100)`. */
-  '--bg-muted'?: string | number;
-  /** `--bg-inset`. Default: `var(--gray-150)`. */
-  '--bg-inset'?: string | number;
-  /** `--bg-overlay`. Default: `color-mix(in oklab, var(--gray-900) 44%, transparent)`. */
-  '--bg-overlay'?: string | number;
-  /** `--text-strong`. Default: `var(--gray-950)`. */
-  '--text-strong'?: string | number;
-  /** `--text-body`. Default: `var(--gray-800)`. */
-  '--text-body'?: string | number;
-  /** `--text-secondary`. Default: `var(--gray-700)`. */
-  '--text-secondary'?: string | number;
-  /** `--text-muted`. Default: `var(--gray-600)`. */
-  '--text-muted'?: string | number;
-  /** `--text-subtle`. Default: `var(--gray-500)`. */
-  '--text-subtle'?: string | number;
-  /** `--text-disabled`. Default: `var(--gray-400)`. */
-  '--text-disabled'?: string | number;
-  /** `--text-on-accent`. Default: `var(--gray-0)`. */
+  /** `--avatar-1-bg`. Default: `oklch(0.945 0.04 250)`. Dark: `oklch(0.31 0.055 250)`. */
+  '--avatar-1-bg'?: string | number;
+  /** `--avatar-1-fg`. Default: `oklch(0.45 0.08 250)`. Dark: `oklch(0.87 0.07 250)`. */
+  '--avatar-1-fg'?: string | number;
+  /** `--avatar-2-bg`. Default: `oklch(0.945 0.04 292)`. Dark: `oklch(0.31 0.055 292)`. */
+  '--avatar-2-bg'?: string | number;
+  /** `--avatar-2-fg`. Default: `oklch(0.45 0.08 292)`. Dark: `oklch(0.87 0.07 292)`. */
+  '--avatar-2-fg'?: string | number;
+  /** `--avatar-3-bg`. Default: `oklch(0.945 0.04 334)`. Dark: `oklch(0.31 0.055 334)`. */
+  '--avatar-3-bg'?: string | number;
+  /** `--avatar-3-fg`. Default: `oklch(0.45 0.08 334)`. Dark: `oklch(0.87 0.07 334)`. */
+  '--avatar-3-fg'?: string | number;
+  /** `--avatar-4-bg`. Default: `oklch(0.945 0.04 5)`. Dark: `oklch(0.31 0.055 5)`. */
+  '--avatar-4-bg'?: string | number;
+  /** `--avatar-4-fg`. Default: `oklch(0.45 0.08 5)`. Dark: `oklch(0.87 0.07 5)`. */
+  '--avatar-4-fg'?: string | number;
+  /** `--avatar-5-bg`. Default: `oklch(0.945 0.04 55)`. Dark: `oklch(0.31 0.055 55)`. */
+  '--avatar-5-bg'?: string | number;
+  /** `--avatar-5-fg`. Default: `oklch(0.45 0.08 55)`. Dark: `oklch(0.87 0.07 55)`. */
+  '--avatar-5-fg'?: string | number;
+  /** `--avatar-6-bg`. Default: `oklch(0.945 0.04 125)`. Dark: `oklch(0.31 0.055 125)`. */
+  '--avatar-6-bg'?: string | number;
+  /** `--avatar-6-fg`. Default: `oklch(0.45 0.08 125)`. Dark: `oklch(0.87 0.07 125)`. */
+  '--avatar-6-fg'?: string | number;
+  /** `--avatar-sheen` - White sheen from the top of the face. Default: `oklch(1 0 0 / calc(0.35 * var(--sheen-strength)))`. Re-derived on every theme root. */
+  '--avatar-sheen'?: string | number;
+  /** `--text-on-accent` - The ink on a hue fill - white in either polarity, since the fills stay mid-lightness on dark. Default: `var(--gray-0)`. */
   '--text-on-accent'?: string | number;
-  /** `--text-inverse`. Default: `var(--gray-0)`. */
+  /** `--bg-app` - The canvas is pure white and cards and panels share it, separated by hairlines and shadow the way print separates with rules rather than tint; subtle < muted < inset step one ramp stop apart. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.165 0.006 h)`. */
+  '--bg-app'?: string | number;
+  /** `--bg-surface`. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.195 0.007 h)`. */
+  '--bg-surface'?: string | number;
+  /** `--bg-surface-raised`. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.24 0.008 h)`. */
+  '--bg-surface-raised'?: string | number;
+  /** `--bg-subtle`. Default: `var(--gray-50)`. Dark: `oklch(from var(--neutral) 0.222 0.007 h)`. */
+  '--bg-subtle'?: string | number;
+  /** `--bg-muted`. Default: `var(--gray-100)`. Dark: `oklch(from var(--neutral) 0.255 0.008 h)`. */
+  '--bg-muted'?: string | number;
+  /** `--bg-inset`. Default: `var(--gray-150)`. Dark: `oklch(from var(--neutral) 0.13 0.006 h)`. */
+  '--bg-inset'?: string | number;
+  /** `--bg-overlay`. Default: `color-mix(in oklab, var(--gray-900) 44%, transparent)`. Dark: `oklch(from var(--neutral) 0.06 0.004 h / 0.64)`. */
+  '--bg-overlay'?: string | number;
+  /** `--text-strong`. Default: `var(--gray-950)`. Dark: `oklch(from var(--neutral) 0.975 0.003 h)`. */
+  '--text-strong'?: string | number;
+  /** `--text-body`. Default: `var(--gray-800)`. Dark: `oklch(from var(--neutral) 0.91 0.005 h)`. */
+  '--text-body'?: string | number;
+  /** `--text-secondary`. Default: `var(--gray-700)`. Dark: `oklch(from var(--neutral) 0.82 0.007 h)`. */
+  '--text-secondary'?: string | number;
+  /** `--text-muted`. Default: `var(--gray-600)`. Dark: `oklch(from var(--neutral) 0.72 0.01 h)`. */
+  '--text-muted'?: string | number;
+  /** `--text-subtle`. Default: `var(--gray-500)`. Dark: `oklch(from var(--neutral) 0.62 0.012 h)`. */
+  '--text-subtle'?: string | number;
+  /** `--text-disabled`. Default: `var(--gray-400)`. Dark: `oklch(from var(--neutral) 0.49 0.012 h)`. */
+  '--text-disabled'?: string | number;
+  /** `--text-inverse` - The ink on a strong-ink fill - the canvas colour in either polarity. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.165 0.006 h)`. */
   '--text-inverse'?: string | number;
-  /** `--border-subtle`. Default: `var(--gray-150)`. */
+  /** `--border-subtle`. Default: `var(--gray-150)`. Dark: `oklch(from var(--neutral) 0.265 0.008 h)`. */
   '--border-subtle'?: string | number;
-  /** `--border-default`. Default: `var(--gray-200)`. */
+  /** `--border-default`. Default: `var(--gray-200)`. Dark: `oklch(from var(--neutral) 0.315 0.009 h)`. */
   '--border-default'?: string | number;
-  /** `--border-strong`. Default: `var(--gray-300)`. */
+  /** `--border-strong`. Default: `var(--gray-300)`. Dark: `oklch(from var(--neutral) 0.4 0.011 h)`. */
   '--border-strong'?: string | number;
-  /** `--accent-lift` - Accent family. Hover, active and lift step lightness relative to the accent so a dark or pale accent keeps its own contrast ladder; subtle, border and disabled pin lightness and chroma and take only the hue, so they stay tints on the white canvas whatever the accent. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
+  /** `--accent-fill` - Accent family. Fill is the resting face of a filled control, a step down on dark where it reads as a light source; hover, active and lift step lightness from the accent, the tints take only its hue. Default: `var(--accent)`. Dark: `oklch(from var(--accent) calc(l - 0.06) calc(c - 0.01) h)`. Re-derived on every theme root. */
+  '--accent-fill'?: string | number;
+  /** `--accent-lift`. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
   '--accent-lift'?: string | number;
   /** `--accent-hover`. Default: `oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h)`. Re-derived on every theme root. */
   '--accent-hover'?: string | number;
   /** `--accent-active`. Default: `oklch(from var(--accent) calc(l - 0.152) calc(c - 0.018) h)`. Re-derived on every theme root. */
   '--accent-active'?: string | number;
-  /** `--accent-subtle`. Default: `oklch(from var(--accent) 0.972 0.02 h)`. Re-derived on every theme root. */
+  /** `--accent-subtle`. Default: `oklch(from var(--accent) 0.972 0.02 h)`. Dark: `oklch(from var(--accent) 0.27 0.045 h)`. Re-derived on every theme root. */
   '--accent-subtle'?: string | number;
-  /** `--accent-border`. Default: `oklch(from var(--accent) 0.88 0.066 h)`. Re-derived on every theme root. */
+  /** `--accent-border`. Default: `oklch(from var(--accent) 0.88 0.066 h)`. Dark: `oklch(from var(--accent) 0.45 0.09 h)`. Re-derived on every theme root. */
   '--accent-border'?: string | number;
-  /** `--accent-disabled`. Default: `oklch(from var(--accent) 0.795 0.092 h)`. Re-derived on every theme root. */
+  /** `--accent-disabled`. Default: `oklch(from var(--accent) 0.795 0.092 h)`. Dark: `oklch(from var(--accent) 0.42 0.06 h)`. Re-derived on every theme root. */
   '--accent-disabled'?: string | number;
-  /** `--accent-wash`. Default: `oklch(from var(--accent) l c h / 0.08)`. Re-derived on every theme root. */
+  /** `--accent-wash`. Default: `oklch(from var(--accent) l c h / 0.08)`. Dark: `oklch(from var(--accent) l c h / 0.14)`. Re-derived on every theme root. */
   '--accent-wash'?: string | number;
-  /** `--text-accent`. Default: `var(--accent-active)`. Re-derived on every theme root. */
+  /** `--text-accent`. Default: `var(--accent-active)`. Dark: `oklch(from var(--accent) calc(l + 0.14) calc(c - 0.012) h)`. Re-derived on every theme root. */
   '--text-accent'?: string | number;
-  /** `--neutral-wash` - State layer: interactive hover/press fills are translucent washes of the ink, never opaque near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces - so a dark theme's light ink washes light without setting them. Press > hover. Default: `color-mix(in oklab, var(--text-secondary) 6%, transparent)`. Re-derived on every theme root. */
+  /** `--neutral-wash` - Hover and press fills are translucent washes of the ink, never opaque near-whites: an opaque patch vanishes on a tinted surface, and a dark theme's light ink washes light by itself. Default: `color-mix(in oklab, var(--text-secondary) 6%, transparent)`. Re-derived on every theme root. */
   '--neutral-wash'?: string | number;
   /** `--neutral-wash-press`. Default: `color-mix(in oklab, var(--text-secondary) 10%, transparent)`. Re-derived on every theme root. */
   '--neutral-wash-press'?: string | number;
   /** `--info` - Info reads as the accent's own hue one step down; repoint --info to give it a hue of its own. Default: `var(--accent-hover)`. Re-derived on every theme root. */
   '--info'?: string | number;
-  /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Re-derived on every theme root. */
+  /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Dark: `oklch(from var(--info) 0.265 0.045 h)`. Re-derived on every theme root. */
   '--info-subtle'?: string | number;
-  /** `--info-text`. Default: `oklch(from var(--info) calc(l - 0.082) calc(c - 0.014) h)`. Re-derived on every theme root. */
+  /** `--info-text`. Default: `oklch(from var(--info) calc(l - 0.082) calc(c - 0.014) h)`. Dark: `oklch(from var(--info) calc(l + 0.22) calc(c - 0.014) h)`. Re-derived on every theme root. */
   '--info-text'?: string | number;
-  /** `--info-wash`. Default: `oklch(from var(--info) 0.63 0.118 h / 0.08)`. Re-derived on every theme root. */
+  /** `--info-wash`. Default: `oklch(from var(--info) 0.63 0.118 h / 0.08)`. Dark: `oklch(from var(--info) 0.63 0.118 h / 0.14)`. Re-derived on every theme root. */
   '--info-wash'?: string | number;
-  /** `--success-subtle`. Default: `oklch(from var(--success) 0.965 0.028 h)`. Re-derived on every theme root. */
+  /** `--success-subtle`. Default: `oklch(from var(--success) 0.965 0.028 h)`. Dark: `oklch(from var(--success) 0.265 0.05 h)`. Re-derived on every theme root. */
   '--success-subtle'?: string | number;
-  /** `--success-text`. Default: `oklch(from var(--success) calc(l - 0.086) calc(c - 0.022) h)`. Re-derived on every theme root. */
+  /** `--success-text`. Default: `oklch(from var(--success) calc(l - 0.086) calc(c - 0.022) h)`. Dark: `oklch(from var(--success) calc(l + 0.23) calc(c - 0.02) h)`. Re-derived on every theme root. */
   '--success-text'?: string | number;
-  /** `--success-wash`. Default: `oklch(from var(--success) 0.62 0.13 h / 0.1)`. Re-derived on every theme root. */
+  /** `--success-wash`. Default: `oklch(from var(--success) 0.62 0.13 h / 0.1)`. Dark: `oklch(from var(--success) 0.62 0.13 h / 0.16)`. Re-derived on every theme root. */
   '--success-wash'?: string | number;
-  /** `--warning-subtle`. Default: `oklch(from var(--warning) 0.972 0.034 h)`. Re-derived on every theme root. */
+  /** `--warning-subtle`. Default: `oklch(from var(--warning) 0.972 0.034 h)`. Dark: `oklch(from var(--warning) 0.27 0.05 h)`. Re-derived on every theme root. */
   '--warning-subtle'?: string | number;
-  /** `--warning-text`. Default: `oklch(from var(--warning) calc(l - 0.14) calc(c - 0.024) h)`. Re-derived on every theme root. */
+  /** `--warning-text`. Default: `oklch(from var(--warning) calc(l - 0.14) calc(c - 0.024) h)`. Dark: `oklch(from var(--warning) calc(l + 0.13) calc(c - 0.02) h)`. Re-derived on every theme root. */
   '--warning-text'?: string | number;
-  /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Re-derived on every theme root. */
+  /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Dark: `oklch(from var(--warning) 0.76 0.14 h / 0.18)`. Re-derived on every theme root. */
   '--warning-wash'?: string | number;
   /** `--danger-lift` - Danger carries the destructive button's ladder too: fill is the resting face, one step lighter than the --danger ink so white text sits on it; lift is the hover face above that. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
   '--danger-lift'?: string | number;
-  /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Re-derived on every theme root. */
+  /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Dark: `oklch(from var(--danger) 0.555 0.185 h)`. Re-derived on every theme root. */
   '--danger-fill'?: string | number;
   /** `--danger-active`. Default: `oklch(from var(--danger) calc(l - 0.067) calc(c - 0.024) h)`. Re-derived on every theme root. */
   '--danger-active'?: string | number;
-  /** `--danger-subtle`. Default: `oklch(from var(--danger) 0.968 0.02 h)`. Re-derived on every theme root. */
+  /** `--danger-subtle`. Default: `oklch(from var(--danger) 0.968 0.02 h)`. Dark: `oklch(from var(--danger) 0.265 0.05 h)`. Re-derived on every theme root. */
   '--danger-subtle'?: string | number;
-  /** `--danger-text`. Default: `var(--danger-active)`. Re-derived on every theme root. */
+  /** `--danger-text`. Default: `var(--danger-active)`. Dark: `oklch(from var(--danger) calc(l + 0.2) calc(c - 0.03) h)`. Re-derived on every theme root. */
   '--danger-text'?: string | number;
-  /** `--danger-disabled`. Default: `oklch(from var(--danger) 0.8 0.09 h)`. Re-derived on every theme root. */
+  /** `--danger-disabled`. Default: `oklch(from var(--danger) 0.8 0.09 h)`. Dark: `oklch(from var(--danger) 0.42 0.08 h)`. Re-derived on every theme root. */
   '--danger-disabled'?: string | number;
-  /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Re-derived on every theme root. */
+  /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Dark: `oklch(from var(--danger) 0.602 0.196 h / 0.16)`. Re-derived on every theme root. */
   '--danger-wash'?: string | number;
-  /** `--glass-tint-neutral` - Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. Default: `color-mix(in oklab, var(--text-muted) 13%, transparent)`. Re-derived on every theme root. */
+  /** `--glass-tint-neutral` - Per-tone glass tints - alpha kept low so the frost reads through. Default: `color-mix(in oklab, var(--text-muted) 13%, transparent)`. Re-derived on every theme root. */
   '--glass-tint-neutral'?: string | number;
   /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
   '--glass-tint-info'?: string | number;
@@ -826,10 +838,16 @@ export interface ThemeTokens {
 /**
  * The themes an app ships. `base` lands on `:root`; every other key becomes a
  * `[data-theme='<key>']` block, activated by setting that attribute on any element.
+ * The package ships `light` and `dark` under those attributes already, so a `dark` key
+ * here extends the shipped dark theme rather than starting one.
  */
 export interface ThemeSet {
-  /** The always-applied foundation - light, dark, or whatever the app defaults to. */
+  /** The always-applied foundation - whatever the app defaults to, light or dark. */
   base?: ThemeTokens;
+  /** Extends the shipped dark theme - the values that differ under `data-theme="dark"`. */
+  dark?: ThemeTokens;
+  /** Extends the shipped light theme, where a light island sits inside a dark page. */
+  light?: ThemeTokens;
   [name: string]: ThemeTokens | undefined;
 }
 

@@ -14,6 +14,8 @@ const fail = (message) => {
 };
 
 const DECISIONS_FILE = 'decisions.css';
+const DARK_FILE = 'dark.css';
+const DARK_SELECTOR = "[data-theme='dark']";
 
 const THEME_TREE = [
   {
@@ -94,7 +96,12 @@ const blockInner = (text, selectorIndex) => {
   return text.slice(open + 1, close);
 };
 
-const ROOT_SELECTOR_RE = /(:root(?:\s*,\s*\[data-theme\])?)\s*\{/g;
+const ROOT_SELECTOR_RE = /(:root(?:\s*,\s*\[data-theme(?:='light')?\])?)\s*\{/g;
+
+const blockKind = (selector) => {
+  if (selector.includes("='light'")) return 'light';
+  return selector.includes('[data-theme]') ? 'themed' : 'root';
+};
 
 const tokenBlocks = (css) => {
   const mediaIndex = css.indexOf('@media (prefers-reduced-motion: reduce)');
@@ -102,9 +109,15 @@ const tokenBlocks = (css) => {
   const blocks = [];
   for (const match of css.matchAll(ROOT_SELECTOR_RE)) {
     if (mediaIndex !== -1 && match.index > mediaIndex && match.index < mediaEnd) continue;
-    blocks.push({ inner: blockInner(css, match.index), themed: match[1].includes('[data-theme]') });
+    blocks.push({ inner: blockInner(css, match.index), kind: blockKind(match[1]) });
   }
   return blocks;
+};
+
+const darkBlock = (css) => {
+  const index = css.indexOf(DARK_SELECTOR);
+  if (index === -1) fail(`${DARK_FILE} declares no ${DARK_SELECTOR} block.`);
+  return blockInner(css, index);
 };
 
 const firstRuleInner = (css) => {
@@ -125,6 +138,7 @@ const importedTokenFiles = () =>
 const files = importedTokenFiles();
 if (!files.length) fail('src/styles.css imports no token files - the generator has nothing to read.');
 if (!files.includes(DECISIONS_FILE)) fail(`src/styles.css does not import ${DECISIONS_FILE} - the top of every theme.`);
+if (!files.includes(DARK_FILE)) fail(`src/styles.css does not import ${DARK_FILE} - the shipped dark theme.`);
 for (const category of THEME_TREE)
   for (const group of category.groups)
     if (!files.includes(group.file))
@@ -134,22 +148,32 @@ for (const category of THEME_TREE)
 
 const tokens = [];
 const reduced = {};
+const dark = {};
 const byCssName = new Map();
 
 for (const file of files) {
   const css = readFileSync(join(ROOT, 'src/tokens', file), 'utf8');
 
+  if (file === DARK_FILE) {
+    for (const match of darkBlock(css).matchAll(DECL_RE)) {
+      const { cssName, value } = declOf(match);
+      if (dark[cssName]) fail(`${cssName} is declared twice in ${DARK_FILE}.`);
+      dark[cssName] = oneLine(value);
+    }
+    continue;
+  }
+
   for (const block of tokenBlocks(css)) {
     for (const match of block.inner.matchAll(DECL_RE)) {
       const { cssName, value, comment } = declOf(match);
       if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
-      if (block.themed && !value.includes('var('))
+      if (block.kind === 'themed' && !value.includes('var('))
         fail(
           `${cssName} in ${file} sits on the theme-root block with a literal value - a literal there resets the consumer's :root decision inside every [data-theme] subtree. Only tokens that derive from another token belong on ":root, [data-theme]".`,
         );
-      if (file === DECISIONS_FILE && block.themed)
+      if (file === DECISIONS_FILE && block.kind !== 'root')
         fail(
-          `${cssName} is a decision and sits on the theme-root block - decisions are set, never derived, so they live on :root alone.`,
+          `${cssName} is a decision and sits on the ${block.kind} block - decisions are set, never derived, and are polarity-free, so they live on :root alone.`,
         );
       const key = camelize(cssName.slice(2));
       if (`--${kebabize(key)}` !== cssName)
@@ -160,7 +184,7 @@ for (const file of files) {
         value: oneLine(value),
         doc: comment ? oneLine(comment) : '',
         file,
-        themed: block.themed,
+        kind: block.kind,
       };
       byCssName.set(cssName, token);
       tokens.push(token);
@@ -181,6 +205,24 @@ for (const file of files) {
 for (const cssName of Object.keys(reduced))
   if (!byCssName.has(cssName)) fail(`the reduced-motion block overrides ${cssName}, which no :root block declares.`);
 
+for (const [cssName, value] of Object.entries(dark)) {
+  const token = byCssName.get(cssName);
+  if (!token) fail(`${DARK_FILE} sets ${cssName}, which no token file declares.`);
+  if (token.kind === 'root')
+    fail(
+      `${DARK_FILE} sets ${cssName}, which ${token.file} declares on :root alone - a value the dark theme changes is a polarity, so declare its light value on ":root, [data-theme='light']" or derive it on ":root, [data-theme]".`,
+    );
+  if (token.kind === 'themed' && !value.includes('var('))
+    fail(
+      `${cssName} in ${DARK_FILE} overrides a derived token with a literal - it follows a decision on the light side, so it derives from the same decision on the dark side.`,
+    );
+}
+for (const token of tokens)
+  if (token.kind === 'light' && !dark[token.cssName])
+    fail(
+      `${token.cssName} sits on the light block of ${token.file} but ${DARK_FILE} never sets it - every polarity has both values.`,
+    );
+
 const decisions = tokens.filter((token) => token.file === DECISIONS_FILE);
 if (!decisions.length) fail(`${DECISIONS_FILE} declares no tokens.`);
 
@@ -199,7 +241,7 @@ const categories = THEME_TREE.map((category) => {
   const groups = category.groups.map((group) => {
     const prefix = `--${group.key}-`;
     const members = tokens
-      .filter((token) => token.file === group.file && !token.themed && token.cssName.startsWith(prefix))
+      .filter((token) => token.file === group.file && token.kind !== 'themed' && token.cssName.startsWith(prefix))
       .map((token) => ({ ...token, key: camelize(token.cssName.slice(prefix.length)) }));
     if (!members.length)
       fail(`\`${category.key}.${group.key}\` in the theme tree matches no :root-only token in ${group.file}.`);
@@ -219,9 +261,9 @@ for (const token of decisions)
 const roleFiles = new Set(THEME_TREE.flatMap((category) => category.groups.map((group) => group.file)));
 roleFiles.delete(DECISIONS_FILE);
 for (const token of tokens)
-  if (roleFiles.has(token.file) && !token.themed && !placed.has(token.cssName))
+  if (roleFiles.has(token.file) && token.kind !== 'themed' && !placed.has(token.cssName))
     fail(
-      `${token.cssName} sits on the :root block of ${token.file}, the block a theme sets, but has no place in the theme tree - derive it on the theme-root block, or give its prefix a group in the tree.`,
+      `${token.cssName} sits on the ${token.kind} block of ${token.file}, a block a theme sets, but has no place in the theme tree - derive it on the theme-root block, or give its prefix a group in the tree.`,
     );
 
 const writtenNames = (dirPath, dirFiles) => {
@@ -325,8 +367,9 @@ for (const tier of KNOB_TIERS) {
 const docFor = (token, origin = '') => {
   const description = token.doc ? ` - ${token.doc.replace(/\.\s*$/, '')}` : '';
   const collapse = reduced[token.cssName] ? ` Collapses to \`${reduced[token.cssName]}\` under reduced motion.` : '';
-  const themed = token.themed ? ' Re-derived on every theme root.' : '';
-  return `/** \`${token.cssName}\`${origin}${description}. Default: \`${token.value}\`.${collapse}${themed} */`;
+  const inDark = dark[token.cssName] ? ` Dark: \`${dark[token.cssName]}\`.` : '';
+  const themed = token.kind === 'themed' ? ' Re-derived on every theme root.' : '';
+  return `/** \`${token.cssName}\`${origin}${description}. Default: \`${token.value}\`.${inDark}${collapse}${themed} */`;
 };
 
 const members = (tokens, origin) =>
@@ -439,10 +482,16 @@ tokensLines.push('');
 tokensLines.push('/**');
 tokensLines.push(' * The themes an app ships. `base` lands on `:root`; every other key becomes a');
 tokensLines.push(" * `[data-theme='<key>']` block, activated by setting that attribute on any element.");
+tokensLines.push(' * The package ships `light` and `dark` under those attributes already, so a `dark` key');
+tokensLines.push(' * here extends the shipped dark theme rather than starting one.');
 tokensLines.push(' */');
 tokensLines.push('export interface ThemeSet {');
-tokensLines.push('  /** The always-applied foundation - light, dark, or whatever the app defaults to. */');
+tokensLines.push('  /** The always-applied foundation - whatever the app defaults to, light or dark. */');
 tokensLines.push('  base?: ThemeTokens;');
+tokensLines.push('  /** Extends the shipped dark theme - the values that differ under `data-theme="dark"`. */');
+tokensLines.push('  dark?: ThemeTokens;');
+tokensLines.push('  /** Extends the shipped light theme, where a light island sits inside a dark page. */');
+tokensLines.push('  light?: ThemeTokens;');
 tokensLines.push('  [name: string]: ThemeTokens | undefined;');
 tokensLines.push('}');
 tokensLines.push('');
@@ -484,10 +533,11 @@ for (const [index, component] of components.entries()) {
 const knobCount = components.reduce((total, component) => total + component.knobs.length, 0);
 const roleCount = placed.size - decisions.length;
 const plumbingCount = tokens.length - decisions.length - roleCount;
-const themedCount = tokens.filter((token) => token.themed).length;
+const themedCount = tokens.filter((token) => token.kind === 'themed').length;
 const summary =
   `${decisions.length} decisions and ${roleCount} roles in ${categories.length} categories, ` +
   `${plumbingCount} plumbing tokens by name (${themedCount} on every theme root), ` +
+  `${Object.keys(dark).length} values on the dark theme, ` +
   `${knobCount} knobs across ${components.length} components, ` +
   `${Object.keys(reduced).length} reduced-motion overrides`;
 

@@ -1,13 +1,6 @@
-/* The neutral ramp and the shadow ink.
-   The four hue decisions live in decisions.css and every other colour derives from them
-   (semantic.css), so repointing --accent moves the whole accent family: hover, active, lift,
-   subtle, border, disabled, wash, the focus ring and info.
-   The neutral ramp is a cool ink gray: --neutral's hue at whisper chroma throughout, arced to peak
-   at the mid steps (500-700) and fall away at both ends - chrome, fills and text share one temperature
-   with the accent instead of fighting it. The canvas is pure white, so the ramp reads as ink on paper
-   rather than a tinted wash; the light fills (100-150) sit airy so a recessed well never turns into a
-   heavy slab. Lightness is the contrast spine - retune chroma freely, move an L step and every
-   text-on-surface pair moves with it. */
+/* The neutral ramp and the shadow ink. The ramp is --neutral's hue at whisper chroma, peaking at
+   the mid steps, so chrome, fills and text share the accent's temperature, and lightness is the
+   contrast spine. The ramp is a material: the dark theme derives its roles from --neutral. */
 
 @layer zyncat.tokens, zyncat.components;
 
@@ -26,8 +19,11 @@
     --gray-800: oklch(from var(--neutral) 0.305 0.01 h);
     --gray-900: oklch(from var(--neutral) 0.225 0.008 h);
     --gray-950: oklch(from var(--neutral) 0.165 0.007 h);
+  }
 
-    /* Cool near-black shadow ink - matches the cool neutral ramp on the white canvas. */
+  :root,
+  [data-theme='light'] {
+    /* Cool near-black shadow ink on the white canvas; the dark theme casts pure black. */
     --shadow-rgb: 15 22 25;
   }
 }

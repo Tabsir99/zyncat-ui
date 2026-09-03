@@ -37,7 +37,7 @@ const seo: PageSeo = {
     },
     {
       q: 'How do I add a dark mode toggle?',
-      a: "Define a second theme - <ZyncatTheme theme={{ base, dark }} /> - and every key other than base renders as a [data-theme='<key>'] block. Toggling is then one attribute: document.documentElement.dataset.theme = 'dark', with no re-render and no reload. Put data-theme on any element instead of <html> to scope a theme to one subtree.",
+      a: "Dark ships in the package. Toggling is one attribute - document.documentElement.dataset.theme = 'dark' - and the page, the body included, turns with no re-render and no reload; put data-theme on any element instead of <html> to turn one subtree, and data-theme=\"light\" inside it makes a light island. Extend it under the same attribute: a [data-theme='dark'] block in zyncat.theme.css, or a dark key in <ZyncatTheme theme={{ base, dark }} />.",
     },
     {
       q: 'Do I need a ThemeProvider?',

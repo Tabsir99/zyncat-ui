@@ -1,14 +1,13 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Tag / chip - interactive label (button-family chrome): base .tag + .tag--toggle sibling. */
-
   .tag {
     --tag-check-delay: 60ms;
 
     --tag-h: var(--control-height-sm);
-    /* button-family DNA: lit from above + a contact shadow (.btn--secondary) */
-    --tag-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.6), 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+    --tag-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.6 * var(--sheen-strength))),
+      0 1px 2px 0 rgb(var(--shadow-rgb) / calc(0.05 * var(--shadow-strength)));
 
     display: inline-flex;
     align-items: center;
@@ -32,7 +31,6 @@
     -webkit-user-select: none;
     box-shadow: var(--tag-shadow);
 
-    /* no transform transition here - Motion writes transforms on grouped tags (section C) */
     transition: var(--transition-control);
   }
 
@@ -130,13 +128,11 @@
     background: var(--bg-muted);
     --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
   }
-  /* composed ring - never erases the resting shadow (.btn pattern) */
   .tag--toggle:focus-visible {
     outline: none;
     box-shadow: var(--tag-shadow), var(--focus-ring);
   }
 
-  /* Selected = accent wash, never a solid fill; the top sheen comes off (matte), the contact shadow stays. */
   .tag--toggle[aria-pressed='true'] {
     color: var(--text-accent);
     border-color: var(--accent-border);
@@ -155,8 +151,8 @@
     color: inherit;
   }
 
-  /* Tick slot (Collapse width mechanism); the negative margin cancels the flex gap while collapsed, the inner margin restores it when open. */
   .tag__check {
+    /* cancels the flex gap while the slot is collapsed; the inner margin restores it */
     margin-right: calc(var(--space-1) * -1);
   }
   .tag__check svg {

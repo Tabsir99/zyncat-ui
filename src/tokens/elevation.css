@@ -1,30 +1,45 @@
-/* Elevation - layered shadows, focus/selection rings, border widths.
-   The floating steps (lg, xl) are three layers: a tight contact shadow that pins the panel to
-   what it sits on, a mid layer for form, and a wide ambient one. Drop the contact layer and the
-   panel reads soft and unanchored no matter how large the ambient blur is.
-   Shadows and rings derive from --shadow-rgb and the hue decisions, so they sit on every theme
-   root (semantic.css explains why). */
+/* Elevation - shadows, top-light highlights, rings and border widths, on every theme root.
+   Three strengths scale the lighting per polarity: every shadow, white highlight and cast-light
+   alpha is a multiple of --shadow-strength, --sheen-strength or --glow-strength. */
 
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
-    /* Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. */
+    /* Border widths - weight comes from the colour, not the thickness. */
     --border-hairline: 1px;
     --border-emphasis: 1.5px;
   }
 
   :root,
+  [data-theme='light'] {
+    /* Multiplies every shadow alpha - 1 on the white canvas; black on dark needs 3-4x to read. */
+    --shadow-strength: 1;
+    /* Multiplies every white top-light highlight - 1 on the white canvas, a fifth on dark. */
+    --sheen-strength: 1;
+    /* Multiplies the light a lifted hue fill casts around it - off on the white canvas, on in dark. */
+    --glow-strength: 0;
+  }
+
+  :root,
   [data-theme] {
-    --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
-    --shadow-sm: 0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04);
-    --shadow-md: 0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07);
+    --shadow-xs: 0 1px 1px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength)));
+    --shadow-sm:
+      0 1px 2px rgb(var(--shadow-rgb) / calc(0.05 * var(--shadow-strength))),
+      0 1px 1px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength)));
+    --shadow-md:
+      0 2px 4px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength))),
+      0 6px 12px rgb(var(--shadow-rgb) / calc(0.07 * var(--shadow-strength)));
+    /* The floating steps are three layers: a tight contact shadow, a mid layer for form, a wide
+     ambient one. Without the contact layer the panel reads soft and unanchored. */
     --shadow-lg:
-      0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04),
-      0 12px 28px rgb(var(--shadow-rgb) / 0.1);
+      0 1px 2px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))),
+      0 4px 8px rgb(var(--shadow-rgb) / calc(0.04 * var(--shadow-strength))),
+      0 12px 28px rgb(var(--shadow-rgb) / calc(0.1 * var(--shadow-strength)));
     --shadow-xl:
-      0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06),
-      0 24px 48px rgb(var(--shadow-rgb) / 0.14);
+      0 1px 2px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))),
+      0 8px 16px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))),
+      0 24px 48px rgb(var(--shadow-rgb) / calc(0.14 * var(--shadow-strength)));
 
     /* Focus & selection rings - box-shadows (not outlines) so they follow border-radius.
      Each tracks its role's hue; danger rings on its fill tone, the lighter face the destructive button rests on. */
@@ -32,5 +47,9 @@
     --ring-danger: 0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3);
     --ring-warning: 0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent);
     --ring-success: 0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent);
+
+    /* Cast light - the hover of the primary and destructive buttons; each tracks its ring's hue. */
+    --glow-accent: 0 4px 16px oklch(from var(--accent) l c h / calc(0.4 * var(--glow-strength)));
+    --glow-danger: 0 4px 16px oklch(from var(--danger) 0.602 0.196 h / calc(0.4 * var(--glow-strength)));
   }
 }

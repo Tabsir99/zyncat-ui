@@ -1,0 +1,15 @@
+/* The base layer paints the page - app surface, body ink, body type - so `data-theme` on <html>
+   turns the whole page, not only the components. Its own cascade layer, after the components, so
+   a consumer's unlayered body rule still wins; antialiasing keeps light ink from bloating. */
+
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.base {
+  body {
+    background: var(--bg-app);
+    color: var(--text-body);
+    font: var(--type-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

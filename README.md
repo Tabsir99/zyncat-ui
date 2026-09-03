@@ -87,6 +87,18 @@ a retheme is editing a value there:
 }
 ```
 
+Dark ships. `data-theme="dark"` on `<html>` turns the page - the package paints the body in the
+app surface - and on any element it turns that subtree, where `data-theme="light"` makes a light
+island. The decisions cascade in, so the accent you set is the dark theme's accent too; extend it in
+the same block:
+
+```css
+[data-theme='dark'] {
+  --accent: oklch(0.72 0.14 292); /* a lighter accent for dark surfaces */
+  --shadow-strength: 2.5; /* the lighting model is three numbers: shadows, top-light highlights, cast light */
+}
+```
+
 For a theme that is data - several named themes, values computed at build time - the same level
 has a type on it:
 
@@ -98,10 +110,7 @@ const base = defineTheme({
   shape: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
-const dark = defineTheme({
-  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
-  custom: { '--shadow-rgb': '0 0 0' },
-});
+const dark = defineTheme({ color: { accent: 'oklch(0.72 0.14 292)' }, custom: { '--shadow-strength': 2.5 } });
 
 // once, at the app root
 <ZyncatTheme theme={{ base, dark }} />;

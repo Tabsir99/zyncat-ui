@@ -8,7 +8,7 @@ import { Odometer } from '@zyncat/ui/odometer';
 import { StatusBadge } from '@zyncat/ui/status-badge';
 import { Table, type TableColumn } from '@zyncat/ui/table';
 import { TextField } from '@zyncat/ui/text-field';
-import { defineTheme, ZyncatTheme, type ThemeTokens } from '@zyncat/ui/theme';
+import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 import { Callout, CodeBlock, FeatureCard, FeatureGrid, TabGroup } from '../kit';
 import { KnobRange, KnobSegment, Playground } from '../playground';
@@ -174,8 +174,8 @@ const VOCABULARY_ROWS: VocabularyRow[] = [
   },
   {
     family: 'Elevation',
-    tokens: '--shadow-xs, --shadow-sm, --shadow-md, --shadow-lg, --shadow-xl, --focus-ring',
-    pick: 'Lift, and the one focus treatment every control shares.',
+    tokens: '--shadow-xs … --shadow-xl, --focus-ring, --shadow-strength, --sheen-strength, --glow-strength',
+    pick: 'Lift, the one focus treatment every control shares, and the three numbers a theme scales the lighting with.',
   },
   {
     family: 'Motion',
@@ -206,18 +206,23 @@ const LEVEL_1_CODE = `/* zyncat.theme.css - written by init beside your app entr
   --radius: var(--radius-full);
 }`;
 
-const LEVEL_1_DARK_CODE = `[data-theme='dark'] {
-  --bg-app: var(--gray-950);
-  --bg-surface: var(--gray-900);
-  --bg-surface-raised: var(--gray-800);
-  --bg-subtle: var(--gray-900);
+const LEVEL_1_DARK_CODE = `{/* dark ships in the package - one attribute, on <html> or on any subtree root */}
+<html lang="en" data-theme="dark">
 
-  --text-strong: var(--gray-50);
-  --text-body: var(--gray-200);
-  --text-muted: var(--gray-400);
+{/* and a light island inside it */}
+<section data-theme="light">
+  <Button variant="primary">Light in here</Button>
+</section>`;
 
-  --border-subtle: var(--gray-800);
-  --border-default: var(--gray-700);
+const LEVEL_1_DARK_EXTEND_CODE = `/* zyncat.theme.css - extend the shipped dark theme in the same block */
+[data-theme='dark'] {
+  /* a lighter accent for dark surfaces; hover, wash, ring and info follow */
+  --accent: oklch(0.72 0.14 292);
+
+  /* the lighting model is three numbers: shadow alpha, top-light highlight alpha, cast light */
+  --shadow-strength: 2.5;
+  --sheen-strength: 0.3;
+  --glow-strength: 0.6;
 }`;
 
 const LEVEL_2_CODE = `{/* one instance */}
@@ -259,37 +264,18 @@ const LEVEL_3_OVERLAY = `{/* Overlays have no className prop - the panel is not 
 />`;
 
 type Corner = 'sharp' | 'default' | 'round';
-type Mode = 'base' | 'dark';
+type Polarity = 'light' | 'dark';
 type OdometerInk = 'accent' | 'warning';
 
 const PREVIEW = 'zyncat-preview';
-const PREVIEW_DARK = 'zyncat-preview-dark';
 
 const CORNERS: Record<Corner, string> = { sharp: '0', default: '0.5rem', round: '1rem' };
-
-const DARK_SURFACES: ThemeTokens['color'] = {
-  bg: {
-    app: 'oklch(0.19 0.008 198)',
-    surface: 'oklch(0.225 0.008 198)',
-    surfaceRaised: 'oklch(0.265 0.008 198)',
-    subtle: 'oklch(0.245 0.008 198)',
-    muted: 'oklch(0.28 0.008 198)',
-    inset: 'oklch(0.235 0.008 198)',
-  },
-  text: {
-    strong: 'oklch(0.97 0.003 198)',
-    body: 'oklch(0.92 0.004 198)',
-    secondary: 'oklch(0.84 0.005 198)',
-    muted: 'oklch(0.72 0.008 198)',
-    subtle: 'oklch(0.64 0.01 198)',
-  },
-  border: { subtle: 'oklch(0.3 0.008 198)', default: 'oklch(0.36 0.009 198)', strong: 'oklch(0.44 0.01 198)' },
-};
 
 const playgroundCode = (
   hue: number,
   corner: Corner,
   ink: OdometerInk,
+  polarity: Polarity,
 ) => `import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
@@ -298,23 +284,16 @@ const base = defineTheme({
   components: { odometer: { accent: 'var(--${ink})' } },
 });
 
-const dark = defineTheme({
-  ...base,
-  color: {
-    ...base.color,
-    bg: { app: 'oklch(0.19 0.008 198)' },
-    text: { body: 'oklch(0.92 0.004 198)' },
-    border: { default: 'oklch(0.36 0.009 198)' },
-  },
-});
-
 // once, at the app root - beside your import of '@zyncat/ui/styles.css'
-<ZyncatTheme theme={{ base, dark }} />;`;
+<ZyncatTheme theme={{ base }} />;
+
+// dark ships in the package: the same decisions, on dark surfaces
+<html lang="en"${polarity === 'dark' ? ' data-theme="dark"' : ''}>`;
 
 export function ThemingPlayground() {
   const [hue, setHue] = useState(292);
   const [corner, setCorner] = useState<Corner>('round');
-  const [mode, setMode] = useState<Mode>('base');
+  const [polarity, setPolarity] = useState<Polarity>('light');
   const [ink, setInk] = useState<OdometerInk>('accent');
   const [total, setTotal] = useState(4820);
 
@@ -323,37 +302,38 @@ export function ThemingPlayground() {
     shape: { radius: CORNERS[corner] },
     components: { odometer: { accent: `var(--${ink})` } },
   });
-  const dark = defineTheme({ ...base, color: { ...base.color, ...DARK_SURFACES } });
 
   return (
     <Playground
-      code={playgroundCode(hue, corner, ink)}
-      note="Every control writes one typed key at the top of the theme; the accent's hover, active, wash and focus ring, and every corner step, derive from it. The preview scopes the theme to this panel with a named theme, so the rest of the page keeps its own."
+      code={playgroundCode(hue, corner, ink, polarity)}
+      note="Every control writes one typed key at the top of the theme; the accent's hover, active, wash and focus ring, and every corner step, derive from it. The preview scopes the theme to this panel with a named theme, so the rest of the page keeps its own, and the theme switch is the shipped dark on the panel's root - the attribute you would put on <html>."
       rail={
         <>
           <KnobRange label="accent hue" value={hue} onChange={setHue} min={0} max={360} format={(v) => `${v}°`} />
           <KnobSegment label="radius" value={corner} onChange={setCorner} options={['sharp', 'default', 'round']} />
-          <KnobSegment label="theme" value={mode} onChange={setMode} options={['base', 'dark']} />
+          <KnobSegment label="theme" value={polarity} onChange={setPolarity} options={['light', 'dark']} />
           <KnobSegment label="odometer.accent" value={ink} onChange={setInk} options={['accent', 'warning']} />
         </>
       }
       stage="fill"
     >
-      <ZyncatTheme theme={{ [PREVIEW]: base, [PREVIEW_DARK]: dark }} />
-      <div className="theming-stage" data-theme={mode === 'dark' ? PREVIEW_DARK : PREVIEW}>
-        <div className="theming-cell__row">
-          <Button variant="primary">Publish</Button>
-          <Button variant="secondary">Save draft</Button>
-          <Button variant="ghost" onClick={() => setTotal((v) => v + 137)}>
-            Add 137
-          </Button>
+      <ZyncatTheme theme={{ [PREVIEW]: base }} />
+      <div data-theme={PREVIEW}>
+        <div className="theming-stage" data-theme={polarity}>
+          <div className="theming-cell__row">
+            <Button variant="primary">Publish</Button>
+            <Button variant="secondary">Save draft</Button>
+            <Button variant="ghost" onClick={() => setTotal((v) => v + 137)}>
+              Add 137
+            </Button>
+          </div>
+          <div className="theming-cell__row">
+            <Badge tone="info">Draft</Badge>
+            <StatusBadge status="published" />
+            <Odometer value={total} style={{ '--odometer-size': 'var(--size-title-lg)' }} />
+          </div>
+          <TextField label="Workspace" placeholder="Acme Marketing" />
         </div>
-        <div className="theming-cell__row">
-          <Badge tone="info">Draft</Badge>
-          <StatusBadge status="published" />
-          <Odometer value={total} style={{ '--odometer-size': 'var(--size-title-lg)' }} />
-        </div>
-        <TextField label="Workspace" placeholder="Acme Marketing" />
       </div>
     </Playground>
   );
@@ -370,9 +350,10 @@ export const base = defineTheme({
   components: { odometer: { accent: 'var(--warning)' }, supportRail: { width: '22rem' } },
 });
 
+// extends the shipped dark theme - only what differs on dark surfaces
 export const dark = defineTheme({
-  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
-  custom: { '--shadow-rgb': '0 0 0' },
+  color: { accent: 'oklch(0.72 0.14 292)' },
+  custom: { '--shadow-strength': 2.5 },
 });`;
 
 const THEME_MOUNT_CODE = `// app/layout.tsx
@@ -528,14 +509,26 @@ export function ThemingDoc() {
 
         <p className="guide-section__p">
           Components read the tokens live, and the WAAPI motion engine reads the same DOM values, so animation retimes
-          with the CSS rather than drifting out of sync with it. The same mechanism gives you themes. A dark theme sets
-          the neutral roles — surfaces, ink, borders — directly, in a block scoped to an attribute you toggle on{' '}
-          <code className="doc-inline-code">&lt;html&gt;</code> or any subtree root. The derived tokens are declared on
-          every theme root, so a subtree that repoints only the accent re-derives its whole family, while the neutral
-          roles cascade through untouched.
+          with the CSS rather than drifting out of sync with it. Dark ships the same way.{' '}
+          <code className="doc-inline-code">data-theme=&quot;dark&quot;</code> on{' '}
+          <code className="doc-inline-code">&lt;html&gt;</code> turns the page — the package paints the body in the app
+          surface and the body ink, so there is no wrapper to add — and on any other element it turns that subtree,
+          where <code className="doc-inline-code">data-theme=&quot;light&quot;</code> makes a light island inside it.
+          The dark theme sets the neutral roles, the shadow ink and three strengths — how much shadow the surfaces cast,
+          how bright the top-light highlights render, how much light a hovered fill casts around it — drops the filled
+          faces a step, and re-derives the hue steps whose light values pin a lightness near white. The decisions
+          cascade in, so the accent you set is the dark theme&rsquo;s accent too, and the derived tokens are declared on
+          every theme root, so a subtree that repoints only the accent re-derives its whole family.
         </p>
 
-        <CodeBlock code={LEVEL_1_DARK_CODE} language="css" />
+        <CodeBlock code={LEVEL_1_DARK_CODE} language="tsx" />
+
+        <p className="guide-section__p">
+          Extend it in the same block. Whatever you leave out keeps the shipped dark value, the way the light side keeps
+          its defaults.
+        </p>
+
+        <CodeBlock code={LEVEL_1_DARK_EXTEND_CODE} language="css" />
 
         <Callout tone="warning" title="Duration tokens belong on :root">
           Reduced motion is handled for you — every <code className="doc-inline-code">--duration-*</code> collapses to
@@ -610,7 +603,8 @@ export function ThemingDoc() {
         <p className="guide-section__p">
           <code className="doc-inline-code">base</code> lands on <code className="doc-inline-code">:root</code>. Every
           other key becomes a <code className="doc-inline-code">[data-theme=&apos;&lt;key&gt;&apos;]</code> block, which
-          is why there is one prop rather than a light one, a dark one and a list.
+          is why there is one prop rather than a light one, a dark one and a list — and why{' '}
+          <code className="doc-inline-code">dark</code> here extends the shipped dark theme rather than starting one.
         </p>
 
         <CodeBlock code={THEME_SWITCH_CODE} language="tsx" />

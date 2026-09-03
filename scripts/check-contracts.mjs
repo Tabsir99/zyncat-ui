@@ -179,11 +179,11 @@ for (const file of cssFiles) {
       `line ${lineOf(stripped, match.index)}: @import with layer() - webpack css-loader rewrites it into a dead @media block; the imported file wraps its own rules in the layer instead`,
     );
 
-  if (inTokens && stripped.includes(':root')) {
-    if (!stripped.trimStart().startsWith(ORDER_STATEMENT) || !/@layer zyncat\.tokens\s*\{/.test(stripped))
+  if (inTokens && stripped.includes('{')) {
+    if (!stripped.trimStart().startsWith(ORDER_STATEMENT) || !/@layer zyncat\.(?:tokens|base)\s*\{/.test(stripped))
       fail(
         file,
-        `token declarations sit outside the tokens layer - start with "${ORDER_STATEMENT}" and wrap the rules in @layer zyncat.tokens`,
+        `token declarations sit outside the zyncat layers - start with "${ORDER_STATEMENT}" and wrap the rules in @layer zyncat.tokens (or @layer zyncat.base for the page defaults)`,
       );
   }
 

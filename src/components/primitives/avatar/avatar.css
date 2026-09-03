@@ -1,14 +1,11 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Avatar (image - initials - icon) + AvatarGroup - face/status structure, token sizes, 6 identity slots. */
-
   .avatar {
     --avatar-size: 2rem;
     --avatar-bg: var(--bg-muted);
     --avatar-fg: var(--text-muted);
-    --avatar-edge: oklch(1 0 0 / 0.5);
-    /* --avatar-ring: injected by .avatar-group, cascades to .avatar__face */
+    --avatar-edge: oklch(1 0 0 / calc(0.5 * var(--sheen-strength)));
 
     position: relative;
     display: inline-flex;
@@ -31,17 +28,14 @@
     background: var(--avatar-bg);
     color: var(--avatar-fg);
 
-    /* sheen from top, shade from bottom over the slot tint; an image child paints over both (section B3 gradient exception) */
     background:
       linear-gradient(to bottom, var(--avatar-sheen), transparent 55%),
       linear-gradient(to top, var(--avatar-shade), transparent 45%), var(--avatar-bg);
 
-    /* Crisp 1px edge-catch + optional group separator ring via cascade */
     box-shadow:
       inset 0 1px 0 0 var(--avatar-edge),
       var(--avatar-ring, none);
 
-    /* keyline keyed to the slot's own hue (fg at low alpha), not uniform black; outline paints above children so it rings photos too */
     outline: var(--border-hairline) solid color-mix(in oklch, var(--avatar-fg) 18%, transparent);
     outline-offset: -1px;
 
@@ -55,7 +49,6 @@
     object-fit: cover;
   }
 
-  /* lettermark, ratio-sized (section A7 exception); text-box trim = true optical centering; negative margin returns the trailing --tracking-caps so the pair stays centered */
   .avatar__initials {
     font-family: var(--font-body);
     font-weight: var(--weight-semibold);
@@ -63,7 +56,7 @@
     line-height: 1;
     text-box: trim-both cap alphabetic;
     letter-spacing: var(--tracking-caps);
-    margin-right: calc(-1 * var(--tracking-caps));
+    margin-right: calc(-1 * var(--tracking-caps)); /* returns the trailing letter-space so the pair centers */
     text-transform: uppercase;
     user-select: none;
     -webkit-user-select: none;
@@ -96,7 +89,6 @@
     --avatar-size: 3rem;
   }
 
-  /* square - radius scales with size (concentric nesting) */
   .avatar--square .avatar__face {
     border-radius: var(--radius-md);
   }
@@ -105,8 +97,6 @@
   .avatar--square.avatar--xl .avatar__face {
     border-radius: var(--radius-lg);
   }
-
-  /* data-palette 1-6: identity slots (tokens/avatar.css); no attr = neutral; identity colouring, never status */
 
   .avatar[data-palette='1'] {
     --avatar-bg: var(--avatar-1-bg);
@@ -132,8 +122,6 @@
     --avatar-bg: var(--avatar-6-bg);
     --avatar-fg: var(--avatar-6-fg);
   }
-
-  /* status dot lives outside .avatar__face (which clips) so it's never cut; ~27% of size, min 6px */
 
   .avatar__status {
     position: absolute;
@@ -168,7 +156,6 @@
     align-items: center;
   }
 
-  /* inject --avatar-ring on group children - cascades to .avatar__face */
   .avatar-group > .avatar {
     --avatar-ring: 0 0 0 2px var(--bg-surface);
   }
@@ -182,7 +169,6 @@
     margin-left: var(--space-1);
   }
 
-  /* "+N" chip - mono numerals, tracking off (mono is already spaced), smaller ratio to fit "+12" */
   .avatar--overflow .avatar__initials {
     font-family: var(--font-code);
     font-variant-numeric: tabular-nums;

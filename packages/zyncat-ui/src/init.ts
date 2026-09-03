@@ -278,8 +278,8 @@ function themeFileText(packageRoot: string): string | null {
   const body = lines.map((line) => `  ${line.slice(indent)}`).join('\n');
   return [
     `/* ${THEME_FILE} - the decisions every other token derives from, written by zyncat-ui init.`,
-    '   Loaded after @zyncat/ui/styles.css, so a value here wins. Change what you want and delete the',
-    '   rest: whatever is not here keeps the shipped default. Docs: https://ui.zyncat.app/theming */',
+    '   Loaded after @zyncat/ui/styles.css, so a value here wins; whatever you delete keeps the default.',
+    "   A [data-theme='dark'] block here extends the shipped dark theme. Docs: https://ui.zyncat.app/theming */",
     ':root {',
     body,
     '}',

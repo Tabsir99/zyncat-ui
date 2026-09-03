@@ -1,9 +1,13 @@
-/* Avatar tokens - reserved identity palette + lit-from-above face finish. */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
+    /* The face's bottom shade - a cool near-black, never pure black. */
+    --avatar-shade: oklch(0.225 0.012 264 / 0.05);
+  }
+
+  :root,
+  [data-theme='light'] {
     --avatar-1-bg: oklch(0.945 0.04 250);
     --avatar-1-fg: oklch(0.45 0.08 250);
     --avatar-2-bg: oklch(0.945 0.04 292);
@@ -16,9 +20,11 @@
     --avatar-5-fg: oklch(0.45 0.08 55);
     --avatar-6-bg: oklch(0.945 0.04 125);
     --avatar-6-fg: oklch(0.45 0.08 125);
+  }
 
-    /* Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). */
-    --avatar-sheen: oklch(1 0 0 / 0.35);
-    --avatar-shade: oklch(0.225 0.012 264 / 0.05);
+  :root,
+  [data-theme] {
+    /* White sheen from the top of the face. */
+    --avatar-sheen: oklch(1 0 0 / calc(0.35 * var(--sheen-strength)));
   }
 }

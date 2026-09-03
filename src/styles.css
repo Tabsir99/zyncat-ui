@@ -1,13 +1,6 @@
-/* Zyncat UI base layer - import ONCE at your app root:  import '@zyncat/ui/styles.css';
-   Fonts, design tokens (:root variables) and the shared `glass` utility.
-
-   Everything the library ships sits in the `zyncat` cascade layers, so any unlayered
-   rule in your own stylesheets beats the library without specificity games.
-
-   Per-component CSS is NOT here on purpose: every component imports its own
-   stylesheet, so the consumer's bundler code-splits and lazy-loads it with the
-   component. This file is only the always-needed global layer.
-   Order matters: decisions - fonts - primitives - semantics - shared utilities. */
+/* Zyncat UI global layer - import ONCE at your app root: import '@zyncat/ui/styles.css'.
+   Fonts, tokens, the dark theme, the body defaults and the shared glass utility, in the `zyncat`
+   layers so an unlayered rule of yours wins. Component CSS ships per component. Order matters. */
 
 @layer zyncat.tokens, zyncat.components;
 
@@ -26,7 +19,8 @@
 @import './tokens/avatar.css';
 
 @import './tokens/semantic.css';
+@import './tokens/dark.css';
+@import './tokens/base.css';
 
-/* Cross-cutting frosted-surface utility shared by several unrelated components
-   (badge, toast, select, icon); kept global instead of duplicated per component. */
+/* The glass utility serves badge, toast, select and icon, so it ships here rather than per component. */
 @import './components/internal/glass/glass.css';

@@ -1,14 +1,11 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Badge / status pill - shape, tones, dot, status morph. */
-
   .badge {
-    /* wire the tone vars into the glass surface hooks */
     --glass-fg: var(--badge-fg);
     --glass-tint: var(--badge-tint);
-    --badge-sheen: rgb(255 255 255 / 0.5);
-    --badge-sheen-hover: rgb(255 255 255 / 0.6);
+    --badge-sheen: rgb(255 255 255 / calc(0.5 * var(--sheen-strength)));
+    --badge-sheen-hover: rgb(255 255 255 / calc(0.6 * var(--sheen-strength)));
 
     display: inline-flex;
     align-items: center;
@@ -46,7 +43,6 @@
     flex: none;
     border-radius: var(--radius-full);
     background: var(--badge-dot, var(--badge-fg));
-    /* hue cross-fades as the status morphs */
     transition: background-color var(--duration-base) var(--ease-standard);
   }
   .badge__dot--live::after {
@@ -111,7 +107,6 @@
     --badge-dot: var(--danger);
   }
 
-  /* Outline variant - deliberately NOT glass: a flat, engraved hairline chip. */
   .badge--outline {
     position: relative;
     isolation: isolate;
@@ -136,7 +131,6 @@
       var(--shadow-sm);
   }
 
-  /* Status morph - a clipped one-cell grid stack: the ghost measures the next width, the box eases, words roll; shrink mirrors grow. */
   .badge__morph {
     position: relative;
     display: inline-grid;

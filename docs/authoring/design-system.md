@@ -73,14 +73,29 @@
   A new colour token derives; it never pins a hue. `--radius-full` is a shape, not a step, and stays literal.
 - A decision sits on `:root` alone, never on the theme-root block; `gen-theme` fails on one there. `init`
   copies the `:root` block of `decisions.css` into the consumer's `zyncat.theme.css`.
-- Two blocks per file. Literal values and the neutral roles a theme sets directly sit on `:root`.
-  Tokens that derive from another token sit on `:root, [data-theme]`, so an element carrying a theme
-  attribute re-derives them from its own decisions. A custom property is substituted where it is
-  declared, so a derived token on `:root` alone inherits already resolved to the root's decision.
+- Three blocks per file, by how a theme reaches a token. Literal, polarity-free values sit on `:root`.
+  A polarity - a value the dark theme changes: the neutral roles, the shadow ink, the three strengths,
+  the avatar palette - sits on `:root, [data-theme='light']`, and `dark.css` sets the same name on
+  `[data-theme='dark']`, so either attribute works on `<html>` or on any subtree root. Tokens that
+  derive from another token sit on `:root, [data-theme]`, so an element carrying a theme attribute
+  re-derives them from its own decisions. A custom property is substituted where it is declared, so a
+  derived token on `:root` alone inherits already resolved to the root's decision.
+- `gen-theme` holds the two sides together: every light-block token has a dark value, and `dark.css`
+  sets only polarities and derived tokens - a `:root`-only token it changes is a polarity and moves.
+- The dark theme is the same decisions on dark surfaces: it never sets a decision, and a hue step it
+  re-derives still follows its decision. Surfaces step lighter as they rise, ink steps down from
+  near-white, and the lighting model scales by number - `--shadow-strength` up, `--sheen-strength`
+  down, `--glow-strength` on - so no shadow, highlight or glow is restated.
+- A filled face is its own role - `--accent-fill`, `--danger-fill` - never the decision: the dark
+  theme drops it a step, since the light face reads as a light source on a dark canvas, and leaves
+  `--accent-lift` where it is, so a hover on dark travels further. A control that paints a hue face
+  reads the fill; a hairline or a marker reads the decision.
 - Never put a literal on the theme-root block: it resets the consumer's `:root` decision inside every
   themed subtree. `gen-theme` fails the build on one.
 - Never `@import` with `layer()`. Bundler css-loaders rewrite it into a dead `@media`. Files wrap their own rules.
 - `decisions.css`: the eight decisions. `color.css`: the neutral ramp, the shadow ink. `semantic.css`: the roles, derived.
+- `dark.css`: the dark polarity. `base.css`: the `zyncat.base` layer that paints `body` in the app
+  surface, the body ink and the body type - after the other layers, under any unlayered body rule.
 - `spacing.css`: one 4px base, a short scale.
 - `typography.css`, `fonts.css`: the type scale and the font faces.
 - `radius.css`, `elevation.css`: radii and shadows.
@@ -124,6 +139,7 @@
 
 - Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
 - Level 1: retheme in `zyncat.theme.css`, the decisions `init` writes into the project; any token on `:root` works. JS follows via the DOM readers.
+- Level 1, dark: `data-theme="dark"` on `<html>` or a subtree root, `data-theme="light"` for a light island inside it. Extend the shipped dark in a `[data-theme='dark']` block of the same file.
 - Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Four categories - `color`, `type`, `shape`, `motion` - each grouped by what it holds, then `components` and every other token by CSS name under `custom`; the path is the CSS name.
 - `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
 - Token names are derived, never tabulated: the generator fails if a name stops round-tripping.

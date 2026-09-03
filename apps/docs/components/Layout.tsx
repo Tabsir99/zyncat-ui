@@ -13,6 +13,7 @@ import { Toaster } from '@zyncat/ui/toast';
 import { GROUPS, NEW_SLUGS } from '../content/registry';
 import { CommandMenu } from './CommandMenu';
 import { Icon } from './icon';
+import { ThemeToggle } from './ThemeToggle';
 
 export function DocsShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -117,6 +118,8 @@ export function DocsShell({ children }: { children: ReactNode }) {
                 GitHub
               </a>
             </nav>
+
+            <ThemeToggle />
 
             <button
               type="button"

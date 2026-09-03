@@ -1,0 +1,76 @@
+/* The dark theme - `data-theme="dark"` on <html> or any subtree root, `data-theme="light"` for a
+   light island inside it. Every value here is a polarity with a light twin, and gen-theme holds
+   the two sides together. Surfaces step lighter as they rise; ink steps down from near-white. */
+
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.tokens {
+  [data-theme='dark'] {
+    color-scheme: dark;
+
+    --bg-app: oklch(from var(--neutral) 0.165 0.006 h);
+    --bg-surface: oklch(from var(--neutral) 0.195 0.007 h);
+    --bg-surface-raised: oklch(from var(--neutral) 0.24 0.008 h);
+    --bg-subtle: oklch(from var(--neutral) 0.222 0.007 h);
+    --bg-muted: oklch(from var(--neutral) 0.255 0.008 h);
+    --bg-inset: oklch(from var(--neutral) 0.13 0.006 h);
+    --bg-overlay: oklch(from var(--neutral) 0.06 0.004 h / 0.64);
+
+    --text-strong: oklch(from var(--neutral) 0.975 0.003 h);
+    --text-body: oklch(from var(--neutral) 0.91 0.005 h);
+    --text-secondary: oklch(from var(--neutral) 0.82 0.007 h);
+    --text-muted: oklch(from var(--neutral) 0.72 0.01 h);
+    --text-subtle: oklch(from var(--neutral) 0.62 0.012 h);
+    --text-disabled: oklch(from var(--neutral) 0.49 0.012 h);
+    --text-inverse: oklch(from var(--neutral) 0.165 0.006 h);
+
+    --border-subtle: oklch(from var(--neutral) 0.265 0.008 h);
+    --border-default: oklch(from var(--neutral) 0.315 0.009 h);
+    --border-strong: oklch(from var(--neutral) 0.4 0.011 h);
+
+    --shadow-rgb: 0 0 0;
+    --shadow-strength: 3.5;
+    --sheen-strength: 0.2;
+    --glow-strength: 1;
+
+    /* The fills drop a step, since a light face reads as a light source on dark, and the lift they
+     rise to stays put. The steps the light side pins near white re-derive from their decision. */
+    --accent-fill: oklch(from var(--accent) calc(l - 0.06) calc(c - 0.01) h);
+    --accent-subtle: oklch(from var(--accent) 0.27 0.045 h);
+    --accent-border: oklch(from var(--accent) 0.45 0.09 h);
+    --accent-disabled: oklch(from var(--accent) 0.42 0.06 h);
+    --accent-wash: oklch(from var(--accent) l c h / 0.14);
+    --text-accent: oklch(from var(--accent) calc(l + 0.14) calc(c - 0.012) h);
+
+    --info-subtle: oklch(from var(--info) 0.265 0.045 h);
+    --info-text: oklch(from var(--info) calc(l + 0.22) calc(c - 0.014) h);
+    --info-wash: oklch(from var(--info) 0.63 0.118 h / 0.14);
+
+    --success-subtle: oklch(from var(--success) 0.265 0.05 h);
+    --success-text: oklch(from var(--success) calc(l + 0.23) calc(c - 0.02) h);
+    --success-wash: oklch(from var(--success) 0.62 0.13 h / 0.16);
+
+    --warning-subtle: oklch(from var(--warning) 0.27 0.05 h);
+    --warning-text: oklch(from var(--warning) calc(l + 0.13) calc(c - 0.02) h);
+    --warning-wash: oklch(from var(--warning) 0.76 0.14 h / 0.18);
+
+    --danger-fill: oklch(from var(--danger) 0.555 0.185 h);
+    --danger-subtle: oklch(from var(--danger) 0.265 0.05 h);
+    --danger-text: oklch(from var(--danger) calc(l + 0.2) calc(c - 0.03) h);
+    --danger-disabled: oklch(from var(--danger) 0.42 0.08 h);
+    --danger-wash: oklch(from var(--danger) 0.602 0.196 h / 0.16);
+
+    --avatar-1-bg: oklch(0.31 0.055 250);
+    --avatar-1-fg: oklch(0.87 0.07 250);
+    --avatar-2-bg: oklch(0.31 0.055 292);
+    --avatar-2-fg: oklch(0.87 0.07 292);
+    --avatar-3-bg: oklch(0.31 0.055 334);
+    --avatar-3-fg: oklch(0.87 0.07 334);
+    --avatar-4-bg: oklch(0.31 0.055 5);
+    --avatar-4-fg: oklch(0.87 0.07 5);
+    --avatar-5-bg: oklch(0.31 0.055 55);
+    --avatar-5-fg: oklch(0.87 0.07 55);
+    --avatar-6-bg: oklch(0.31 0.055 125);
+    --avatar-6-fg: oklch(0.87 0.07 125);
+  }
+}

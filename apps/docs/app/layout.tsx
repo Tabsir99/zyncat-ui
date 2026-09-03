@@ -53,10 +53,13 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#0b0b0c' };
 
+const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('zyncat-docs-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark'}catch(e){}})()`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${newsreader.variable} ${geist.variable}`}>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <SiteJsonLd />
         {children}
       </body>

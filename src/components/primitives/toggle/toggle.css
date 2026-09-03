@@ -1,21 +1,16 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Toggle (switch) - immediate on/off; native input hidden, track + thumb painted, thumb travels on a CSS spring. */
-
   .sw {
-    --sw-on-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
+    --sw-on-fill: linear-gradient(180deg, var(--accent-fill), var(--accent-hover));
     --sw-off-fill: var(--bg-muted);
-    --sw-on-border: var(--accent);
+    --sw-on-border: var(--accent-fill);
     --sw-off-border: var(--border-strong);
     --sw-ring: var(--ring-accent);
-    /* track size is the only input; thumb + travel derive from it */
     --sw-w: var(--control-height);
     --sw-h: var(--control-switch);
     --sw-inset: calc(2 * var(--space-px));
-    /* inner track height minus both borders and the gap each side, so the inset is uniform on all edges */
     --sw-thumb: calc(var(--sw-h) - 2 * var(--border-hairline) - 2 * var(--sw-inset));
-    /* colors read this flag; the thumb is moved by transform, not by it */
     --sw-checked: 0;
 
     display: inline-flex;
@@ -86,7 +81,6 @@
       transition: opacity var(--duration-base) var(--ease-standard);
     }
   }
-  /* --sw-tx (travel) + --sw-sx (press-stretch) compose one transform, so press and travel never fight over it */
   .sw__thumb {
     --sw-tx: 0px;
     --sw-sx: 1;
@@ -101,7 +95,7 @@
     transform: translateX(var(--sw-tx)) scaleX(var(--sw-sx));
     transition: transform var(--duration-base) var(--ease-spring);
   }
-  /* React-set [data-on] drives travel - no :has() twin to move the thumb out from under the spring and snap it */
+  /* React-set, not :has(:checked): a :has() twin would move the thumb out from under the spring and snap it. */
   .sw__track[data-on='true'] .sw__thumb {
     --sw-tx: calc(var(--sw-w) - var(--sw-h));
   }
@@ -138,7 +132,6 @@
     }
   }
 
-  /* disabled leaves the flag untouched, so the thumb keeps its correct position */
   .sw--disabled {
     cursor: not-allowed;
     --sw-on-fill: var(--accent-disabled);

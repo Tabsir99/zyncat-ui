@@ -26,11 +26,20 @@ own `-subtle`, `-text` and `-wash`; the `--radius-*` steps are fixed ratios of `
 `--radius: 0` squares every corner (`--radius-full` is a shape and stays put); the `--type-*` bundles
 follow the faces. Set a derived token only to break it away from its decision.
 
-A dark theme sets the neutral roles directly - `--bg-*`, `--text-*`, `--border-*` - in a
-`[data-theme='dark']` block, and switching is setting that attribute on `<html>` or a subtree root.
-The derived tokens are declared on every theme root (`:root` and any element with `data-theme`), so a
-subtree theme that repoints `--accent` re-derives all of them; the neutral roles cascade like any
-property, so a subtree that sets `--bg-app` and `--text-body` keeps them without restating the rest.
+Dark ships in the package. `data-theme="dark"` on `<html>` turns the page - the base layer paints
+`body` in `--bg-app`, `--text-body` and `--type-body`, so there is no wrapper to add - and on any
+element it turns that subtree, where `data-theme="light"` makes a light island. The dark theme sets
+the neutral roles (`--bg-*`, `--text-*`, `--border-*`), the shadow ink, `--shadow-strength` (how much
+shadow the surfaces cast), `--sheen-strength` (how bright the white top-light highlights render) and
+`--glow-strength` (how much light a hovered hue fill casts on the canvas around it), drops the filled
+faces (`--accent-fill`, `--danger-fill`) a step, and re-derives the hue steps whose light values pin a
+lightness near white; the decisions cascade in, so the accent a project sets is the dark theme's
+accent too. Extend it in the same block -
+`[data-theme='dark'] { --accent: oklch(0.72 0.14 292); --shadow-strength: 2.5; }` - and whatever is
+left out keeps the shipped dark value. The derived tokens are declared on every theme root (`:root`
+and any element with `data-theme`), so a subtree theme that repoints `--accent` re-derives all of
+them; the neutral roles cascade like any property, so a theme of your own that sets `--bg-app` and
+`--text-body` keeps them without restating the rest.
 Components read the tokens live and the WAAPI engine reads the same DOM values, so motion retimes
 with the CSS. Reduced motion is handled here - every `--duration-*` collapses to 1ms under
 `prefers-reduced-motion`, so derive your own delays from a duration token, and repoint durations on
@@ -56,16 +65,14 @@ const base = defineTheme({
   shape: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
-const dark = defineTheme({
-  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
-  custom: { '--shadow-rgb': '0 0 0' },
-});
+const dark = defineTheme({ color: { accent: 'oklch(0.72 0.14 292)' }, custom: { '--shadow-strength': 2.5 } });
 
 <ZyncatTheme theme={{ base, dark }} />;
 ```
 
-`base` lands on `:root`; every other key is a `[data-theme='<key>']` block. Durations you repoint
-keep their reduced-motion collapse automatically.
+`base` lands on `:root`; every other key is a `[data-theme='<key>']` block, so `dark` and `light`
+extend the shipped polarities rather than starting them. Durations you repoint keep their
+reduced-motion collapse automatically.
 
 The vocabulary a page reads is the roles, never the plumbing:
 `--bg-app/-surface/-surface-raised/-subtle/-muted/-inset/-overlay`,

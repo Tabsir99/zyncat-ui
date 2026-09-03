@@ -1,19 +1,21 @@
 /* Semantic layer - the intent-named roles components consume.
-   Two blocks, by how a theme reaches them. The neutral roles - surfaces, ink, borders - are what a
-   light or dark theme sets directly, so they sit on :root alone and cascade like any property. The
-   hue roles derive from the decisions in decisions.css, the neutral state layer from the ink, and all
-   of those are declared on every theme root - :root and any element carrying data-theme - because a
-   custom property is substituted where it is declared: without the second selector a subtree that
-   repoints --accent would inherit hover, wash and focus ring already resolved to the root accent. */
+   Neutral roles are a polarity: light values on `:root, [data-theme='light']`, dark ones in dark.css.
+   Derived roles sit on every theme root, so a subtree that repoints a decision re-derives them. */
 
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
-    /* The canvas is pure white; cards and floating panels share it and separate with
-     hairlines and shadow, the way print separates with rules rather than tint.
-     The tinted trio steps for real: subtle (hover wash) < muted (passive fill)
-     < inset (a recessed well - code, terminals), each one ramp stop apart. */
+    /* The ink on a hue fill - white in either polarity, since the fills stay mid-lightness on dark. */
+    --text-on-accent: var(--gray-0);
+  }
+
+  :root,
+  [data-theme='light'] {
+    color-scheme: light;
+
+    /* The canvas is pure white and cards and panels share it, separated by hairlines and shadow the
+     way print separates with rules rather than tint; subtle < muted < inset step one ramp stop apart. */
     --bg-app: var(--gray-0);
     --bg-surface: var(--gray-0);
     --bg-surface-raised: var(--gray-0);
@@ -28,7 +30,7 @@
     --text-muted: var(--gray-600);
     --text-subtle: var(--gray-500);
     --text-disabled: var(--gray-400);
-    --text-on-accent: var(--gray-0);
+    /* The ink on a strong-ink fill - the canvas colour in either polarity. */
     --text-inverse: var(--gray-0);
 
     --border-subtle: var(--gray-150);
@@ -38,9 +40,9 @@
 
   :root,
   [data-theme] {
-    /* Accent family. Hover, active and lift step lightness relative to the accent so a dark or
-     pale accent keeps its own contrast ladder; subtle, border and disabled pin lightness and
-     chroma and take only the hue, so they stay tints on the white canvas whatever the accent. */
+    /* Accent family. Fill is the resting face of a filled control, a step down on dark where it reads
+     as a light source; hover, active and lift step lightness from the accent, the tints take only its hue. */
+    --accent-fill: var(--accent);
     --accent-lift: oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h);
     --accent-hover: oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h);
     --accent-active: oklch(from var(--accent) calc(l - 0.152) calc(c - 0.018) h);
@@ -50,9 +52,8 @@
     --accent-wash: oklch(from var(--accent) l c h / 0.08);
     --text-accent: var(--accent-active);
 
-    /* State layer: interactive hover/press fills are translucent washes of the ink, never opaque
-     near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces - so a dark theme's light
-     ink washes light without setting them. Press > hover. */
+    /* Hover and press fills are translucent washes of the ink, never opaque near-whites: an opaque
+     patch vanishes on a tinted surface, and a dark theme's light ink washes light by itself. */
     --neutral-wash: color-mix(in oklab, var(--text-secondary) 6%, transparent);
     --neutral-wash-press: color-mix(in oklab, var(--text-secondary) 10%, transparent);
 
@@ -80,7 +81,7 @@
     --danger-disabled: oklch(from var(--danger) 0.8 0.09 h);
     --danger-wash: oklch(from var(--danger) 0.602 0.196 h / 0.1);
 
-    /* Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. */
+    /* Per-tone glass tints - alpha kept low so the frost reads through. */
     --glass-tint-neutral: color-mix(in oklab, var(--text-muted) 13%, transparent);
     --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
     --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);

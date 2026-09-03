@@ -1,16 +1,14 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Checkbox - on/off + indeterminate; native input hidden, box painted from :has()-set flags read via calc(). */
-
   .cbx {
-    --cbx-fill: linear-gradient(180deg, var(--accent), var(--accent-hover));
-    --cbx-on: var(--accent);
+    --cbx-fill: linear-gradient(180deg, var(--accent-fill), var(--accent-hover));
+    --cbx-on: var(--accent-fill);
     --cbx-off: var(--border-strong);
     --cbx-ring: var(--ring-accent);
     --cbx-size: var(--control-box);
     --cbx-radius: var(--radius-sm);
-    --cbx-tick-len: 14px; /* needs a unit so the calc() dashoffset is a valid <length>; ~ the polyline path length */
+    --cbx-tick-len: 14px; /* the tick path's length, with a unit so the calc() dashoffset is a <length> */
     --cbx-checked: 0;
     --cbx-tick: 0;
     --cbx-dash: 0;
@@ -25,7 +23,6 @@
     -webkit-tap-highlight-color: transparent;
     transition: background-color var(--duration-base) var(--ease-standard);
 
-    /* later rule wins, so indeterminate beats checked */
     &:has(:checked) {
       --cbx-checked: 1;
       --cbx-tick: 1;
@@ -39,7 +36,6 @@
     &:not(.cbx--disabled):hover {
       background: var(--neutral-wash);
     }
-    /* accent the empty box on hover */
     &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
       --cbx-off: var(--cbx-on);
     }
@@ -88,7 +84,6 @@
       position: absolute;
       inset: 0;
 
-      /* inner corner = outer radius - border, so the fill reaches the corners (no --bg-inset showing) */
       border-radius: calc(var(--cbx-radius) - var(--border-hairline));
       background: var(--cbx-fill);
       opacity: var(--cbx-checked);
@@ -99,7 +94,6 @@
     }
   }
 
-  /* stagger lives in the delay: draw-on waits a beat (calc - --cbx-tick), retract fires immediately */
   .cbx__mark {
     position: relative;
     display: block;
@@ -165,7 +159,6 @@
     --cbx-ring: var(--ring-danger);
   }
 
-  /* disabled leaves the state flags untouched, so the mark still matches checked state */
   .cbx--disabled {
     cursor: not-allowed;
     --cbx-fill: var(--border-strong);

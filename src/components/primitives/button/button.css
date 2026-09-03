@@ -22,11 +22,6 @@
 }
 
 @layer zyncat.components {
-  /* Button - variants, sizes, states; lit gradient, tactile press, composed focus ring. */
-
-  /* Gradient stops as typed properties: background-image can't transition, but registered
-   <color> values can - gradient variants set the stops once and states swap them. */
-
   .btn {
     --btn-shadow: none;
     --btn-ring: var(--ring-accent);
@@ -43,6 +38,7 @@
     padding: 0 var(--space-4);
     border: var(--border-hairline) solid transparent;
     border-radius: var(--radius-md);
+    background-origin: border-box;
 
     font-family: var(--font-body);
     font-size: var(--size-body);
@@ -68,7 +64,6 @@
       transform var(--duration-fast) var(--ease-standard);
   }
 
-  /* Composed focus ring: keep the resting shadow, add the ring on top. */
   .btn:focus-visible {
     outline: none;
     box-shadow: var(--btn-shadow), var(--btn-ring);
@@ -113,7 +108,6 @@
     width: 100%;
     height: 100%;
   }
-  /* optical: pull icons slightly toward the label */
   .btn__icon:first-child {
     margin-left: calc(var(--space-1) * -1);
   }
@@ -123,45 +117,48 @@
 
   .btn--primary {
     color: var(--text-on-accent);
-    --btn-grad-a: var(--accent);
+    --btn-grad-a: var(--accent-fill);
     --btn-grad-b: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
-    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
+    background-image: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
     --btn-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.28 * var(--sheen-strength))),
+      inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
   }
   .btn--primary:hover:not(:disabled):not(.is-loading) {
     --btn-grad-a: var(--accent-lift);
     --btn-grad-b: var(--accent-hover);
     --btn-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.36 * var(--sheen-strength))),
+      inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md), var(--glow-accent);
   }
   .btn--primary:active:not(:disabled):not(.is-loading) {
     --btn-grad-a: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
-    --btn-grad-b: var(--accent);
+    --btn-grad-b: var(--accent-fill);
     transform: translateY(var(--space-px));
     --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
   }
 
   .btn--secondary {
     color: var(--text-body);
-    --btn-grad-a: color-mix(in oklab, var(--bg-surface) 90%, var(--bg-muted));
-    --btn-grad-b: color-mix(in oklab, var(--bg-surface) 52%, var(--bg-muted));
-    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 45%, var(--btn-grad-b) 100%);
+    --btn-face-lit: color-mix(in oklab, rgb(255 255 255) 2%, var(--bg-surface));
+    --btn-face-shade: color-mix(in oklab, rgb(var(--shadow-rgb)) 1.5%, var(--bg-surface));
+    --btn-grad-a: var(--btn-face-lit);
+    --btn-grad-b: var(--btn-face-shade);
+    background-image: linear-gradient(180deg, var(--btn-grad-a), var(--btn-grad-b));
     border-color: var(--border-default);
     --btn-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.045),
-      0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.2 * var(--sheen-strength))),
+      inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.015);
   }
   .btn--secondary:hover:not(:disabled):not(.is-loading) {
     color: var(--text-strong);
-    --btn-grad-a: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
-    --btn-grad-b: color-mix(in oklab, var(--bg-surface) 20%, var(--bg-muted));
-    border-color: var(--border-strong);
+    --btn-grad-a: color-mix(in oklab, var(--text-secondary) 3%, var(--btn-face-lit));
+    --btn-grad-b: color-mix(in oklab, var(--text-secondary) 3%, var(--btn-face-shade));
   }
   .btn--secondary:active:not(:disabled):not(.is-loading) {
-    --btn-grad-a: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
-    --btn-grad-b: color-mix(in oklab, var(--bg-surface) 20%, var(--bg-muted));
-    transform: translateY(var(--space-px)) scale(0.985);
+    --btn-grad-a: color-mix(in oklab, var(--text-secondary) 5%, var(--btn-face-lit));
+    --btn-grad-b: color-mix(in oklab, var(--text-secondary) 5%, var(--btn-face-shade));
+    transform: translateY(var(--space-px));
     --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.06);
   }
 
@@ -169,13 +166,11 @@
     color: var(--text-body);
     background: transparent;
   }
-  /* hover wash grows from the center rather than flat-filling: a ::before scales up under the
-   label (.btn is isolated, so z-index:-1 stays inside the button, behind .btn__label). */
   .btn--ghost::before {
     content: '';
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: -1; /* .btn isolates, so this stays inside the button, under the label */
     border-radius: inherit;
     background: var(--neutral-wash);
     opacity: 0;
@@ -204,16 +199,18 @@
     color: var(--text-on-accent);
     --btn-grad-a: var(--danger-fill);
     --btn-grad-b: color-mix(in oklab, var(--danger) 70%, var(--danger-active));
-    background: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
+    background-image: linear-gradient(180deg, var(--btn-grad-a) 0%, var(--btn-grad-a) 38%, var(--btn-grad-b) 100%);
     --btn-ring: var(--ring-danger);
     --btn-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.28 * var(--sheen-strength))),
+      inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
   }
   .btn--danger:hover:not(:disabled):not(.is-loading) {
     --btn-grad-a: var(--danger-lift);
     --btn-grad-b: var(--danger);
     --btn-shadow:
-      inset 0 1px 0 0 rgb(255 255 255 / 0.36), inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md);
+      inset 0 1px 0 0 rgb(255 255 255 / calc(0.36 * var(--sheen-strength))),
+      inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md), var(--glow-danger);
   }
   .btn--danger:active:not(:disabled):not(.is-loading) {
     --btn-grad-a: color-mix(in oklab, var(--danger) 70%, var(--danger-active));
@@ -244,7 +241,6 @@
     box-shadow: var(--btn-ring);
   }
 
-  /* Disabled - explicit per variant, never a blanket fade. */
   .btn:disabled,
   .btn.is-loading {
     cursor: default;
@@ -277,7 +273,6 @@
     text-decoration: none;
   }
 
-  /* Loading - content holds its width, spinner overlays. */
   .btn.is-loading .btn__label,
   .btn.is-loading .btn__icon {
     opacity: 0;
