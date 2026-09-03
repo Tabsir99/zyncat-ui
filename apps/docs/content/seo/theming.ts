@@ -47,6 +47,10 @@ const seo: PageSeo = {
       q: 'How do I restyle just one component?',
       a: "Expressive and compound components publish scoped --<component>-<name> custom properties as their public contract: <Odometer value={total} style={{ '--odometer-size': '3rem', '--odometer-accent': 'var(--danger)' }} />. Each component's style prop is typed to its own knobs, so another component's property is a compile error. Set the same properties on any ancestor to reach every instance underneath.",
     },
+    {
+      q: 'Does it work with Tailwind CSS?',
+      a: "Yes, on Tailwind v4. Import @zyncat/ui/tailwind.css above tailwindcss in the stylesheet Tailwind compiles - init writes the line - and the token vocabulary becomes utilities that Tailwind IntelliSense completes: bg-surface, text-muted, border-subtle, text-caption, rounded-md, shadow-md, duration-fast, ease-standard. Each utility reads the design token itself, so a themed subtree and the dark theme reach it, dark: follows data-theme, and Tailwind's own rounded-md and shadow-md read the same tokens the components do.",
+    },
   ],
 };
 

@@ -98,7 +98,7 @@ export default withZyncat({
       <section className="guide-section" id="what-it-does">
         <h2 className="guide-section__title">What init does</h2>
         <p className="guide-section__p">
-          Five steps, each printed as it lands. Nothing is hidden and nothing else is touched.
+          Five steps, six under Tailwind v4, each printed as it lands. Nothing is hidden and nothing else is touched.
         </p>
 
         <Steps>
@@ -146,6 +146,22 @@ export default withZyncat({
               <code className="doc-inline-code">.mcp.json</code>, pointing at the server bundled with the installed
               package - so an agent&apos;s answers about props and tokens always match the version your project runs.
               Existing servers in the file are preserved.
+            </p>
+          </Step>
+
+          <Step number={6} title="Bridges Tailwind, when it is there">
+            <p className="guide-section__p">
+              With Tailwind v4 installed, finds the stylesheet that imports{' '}
+              <code className="doc-inline-code">tailwindcss</code> and puts{' '}
+              <code className="doc-inline-code">@import &apos;@zyncat/ui/tailwind.css&apos;;</code> on the line above
+              it. From then on the token vocabulary is a set of utilities -{' '}
+              <code className="doc-inline-code">bg-surface</code>, <code className="doc-inline-code">text-muted</code>,{' '}
+              <code className="doc-inline-code">rounded-md</code>,{' '}
+              <code className="doc-inline-code">ease-standard</code> - that Tailwind IntelliSense completes. The{' '}
+              <a className="doc-link" href="/theming#tailwind">
+                theming guide
+              </a>{' '}
+              has the full map.
             </p>
           </Step>
         </Steps>

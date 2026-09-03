@@ -148,7 +148,14 @@
 - Level 1: retheme in `zyncat.theme.css`, the decisions `init` writes into the project; any token on `:root` works. JS follows via the DOM readers.
 - Level 1, dark: `data-theme="dark"` on `<html>` or a subtree root, `data-theme="light"` for a light island inside it. Extend the shipped dark in a `[data-theme='dark']` block of the same file.
 - Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Four categories - `color`, `type`, `shape`, `motion` - each grouped by what it holds, then `components` and every other token by CSS name under `custom`; the path is the CSS name.
-- `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
+- Level 1, Tailwind: `tailwind.css` at the package root is the vocabulary as Tailwind v4 utilities, one per
+  role, named after the token. Every entry is `inline reference`: `inline` so a utility reads the token
+  itself and a themed subtree re-derives it, `reference` so Tailwind writes nothing onto `:root`, where
+  its own `--radius-*`, `--shadow-*` and `--tracking-*` would overwrite the tokens the components read.
+  The file opens with the layer statement that puts Tailwind's utilities above the component rules, so
+  it goes above `tailwindcss` in the stylesheet Tailwind compiles; `init` writes that line.
+- `scripts/gen-theme.mjs` generates the token types, the per-component `style` types and the Tailwind
+  bridge from the CSS.
 - Token names are derived, never tabulated: the generator fails if a name stops round-tripping.
 - Level 2: retune one component through its scoped custom properties.
 - Level 3: restyle with `className` and `style` - direct props on primitives and fields, `htmlProps` on an overlay's panel.

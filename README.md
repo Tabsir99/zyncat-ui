@@ -129,6 +129,33 @@ so upgrading the package surfaces new tokens rather than drifting from them.
 flash, no client hook), needs no PostCSS plugin, bundler plugin or build step, and adds about
 a kilobyte. Durations you repoint keep their `prefers-reduced-motion` collapse automatically.
 
+### With Tailwind
+
+On Tailwind v4 the vocabulary is a set of utilities with IntelliSense. `init` puts one line above
+`tailwindcss` in the stylesheet Tailwind compiles; the base stylesheet stays on its JS import:
+
+```css
+@import '@zyncat/ui/tailwind.css';
+@import 'tailwindcss';
+```
+
+Every role is a utility named after its token, reading the token itself so themes and `dark:` reach
+it - `dark:` follows `data-theme`:
+
+```tsx
+<article className="bg-surface border border-subtle rounded-lg shadow-sm p-4 max-w-prose">
+  <h3 className="text-heading text-strong">Weekly digest</h3>
+  <p className="text-caption text-muted">Sent every Monday at 9:00.</p>
+</article>
+```
+
+Surfaces `bg-*`, ink `text-*` (the body ink is `text-default`), hairlines `border-*`, the hues on
+every colour utility with `/opacity`, the type roles as `text-<role>` with their leading and weight,
+`rounded-*`, `shadow-*`, `shadow-focus`, `duration-*`, `ease-*`, `max-w-prose`. The names Tailwind
+also ships, `rounded-md`, `shadow-md`, `tracking-tight`, read the zyncat token of the same name, so
+`--radius` in your theme file moves your utilities and the components together. Spacing stays
+Tailwind's own scale.
+
 ### One subpath per component
 
 ```tsx

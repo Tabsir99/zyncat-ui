@@ -118,3 +118,28 @@ FacebookFeed, InstagramFeed, TikTok and YouTube pin platform metrics as constant
 `--font-body`, `--focus-ring` and the duration tokens reach them, and there are no scoped
 properties to set. Fidelity is the contract. If you want a card that follows your theme, build one
 from primitives instead.
+
+## With Tailwind v4 - the vocabulary as utilities
+
+`@zyncat/ui/tailwind.css` is the token vocabulary as Tailwind v4 utilities, generated from the token
+CSS, and Tailwind IntelliSense completes them. It goes on the first line of the stylesheet Tailwind
+compiles, above `@import 'tailwindcss'`; `init` writes it there. The base stylesheet stays on its JS
+import at the app root - only the bridge goes through Tailwind.
+
+Every role is a utility named after its token: surfaces `bg-app`, `bg-surface`, `bg-surface-raised`,
+`bg-subtle`, `bg-muted`, `bg-inset`, `bg-overlay`; ink `text-strong`, `text-default` (the body ink -
+`text-body` is the type role), `text-secondary`, `text-muted`, `text-subtle`, `text-disabled`,
+`text-accent`, `text-on-accent`, `text-inverse`, and the legible hue inks `text-success`,
+`text-warning`, `text-danger`, `text-info`; hairlines `border-subtle`, `border-default`,
+`border-strong`; the hues on every colour utility with `/opacity` - `bg-accent`, `bg-accent-fill`,
+`hover:bg-accent-hover`, `bg-accent-wash`, `ring-accent`, `bg-danger/10`; the type roles
+`text-micro` … `text-display-lg`, `text-label`, `text-code` (size and leading - add `font-code` for
+the face), with `font-body`, `leading-<role>`, `tracking-caps`, `tracking-display`; `rounded-sm` …
+`rounded-2xl`, `shadow-xs` … `shadow-xl`, `shadow-focus`, `shadow-ring-<hue>`, `shadow-glow-<hue>`;
+`duration-fast` … `duration-slowest`, `ease-standard`, `ease-entrance`, `ease-exit`, `ease-spring`,
+`ease-glide`; `max-w-prose`, `max-w-floating`. Each utility reads the token itself, so a themed
+subtree and the dark theme reach it, and `dark:` follows `data-theme` rather than the OS. The names
+Tailwind also ships - `rounded-md`, `shadow-md`, `tracking-tight` - read the zyncat token of the same
+name, so `--radius` in the theme file moves utilities and components together. Spacing stays
+Tailwind's own scale; both sit on the 4px grid. Reach for a role utility before an arbitrary value:
+`bg-surface`, not `bg-[var(--bg-surface)]`.

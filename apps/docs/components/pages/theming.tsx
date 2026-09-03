@@ -20,6 +20,74 @@ interface OverrideLevelRow {
   when: string;
 }
 
+interface TailwindRow {
+  family: string;
+  utilities: string;
+  tokens: string;
+}
+
+const TAILWIND_COLUMNS: TableColumn<TailwindRow>[] = [
+  { key: 'family', label: 'Family', strong: true },
+  {
+    key: 'utilities',
+    label: 'Utilities',
+    render: (r) => <code className="doc-inline-code">{r.utilities}</code>,
+    grow: true,
+  },
+  { key: 'tokens', label: 'Reads', render: (r) => <code className="doc-inline-code">{r.tokens}</code> },
+];
+
+const TAILWIND_ROWS: TailwindRow[] = [
+  {
+    family: 'Surfaces',
+    utilities: 'bg-app, bg-surface, bg-surface-raised, bg-subtle, bg-muted, bg-inset, bg-overlay',
+    tokens: '--bg-*',
+  },
+  {
+    family: 'Ink',
+    utilities:
+      'text-strong, text-default, text-secondary, text-muted, text-subtle, text-disabled, text-accent, text-on-accent, text-inverse; text-success, text-warning, text-danger, text-info',
+    tokens: '--text-*, --<hue>-text',
+  },
+  { family: 'Hairlines', utilities: 'border-subtle, border-default, border-strong', tokens: '--border-*' },
+  {
+    family: 'Hues',
+    utilities:
+      'bg-accent, bg-accent-fill, hover:bg-accent-hover, bg-accent-wash, border-accent-border, ring-accent, bg-danger/10 … on every colour utility',
+    tokens: '--accent*, --success*, --warning*, --danger*, --info*, --neutral-wash*',
+  },
+  {
+    family: 'Type',
+    utilities:
+      'text-micro, text-caption, text-body, text-body-lg, text-label, text-heading, text-title, text-title-lg, text-display, text-display-lg, text-code + font-code; font-body, leading-<role>, tracking-caps, tracking-display',
+    tokens: '--type-*, --font-*, --leading-*, --tracking-*',
+  },
+  {
+    family: 'Corners, elevation',
+    utilities:
+      'rounded-sm … rounded-2xl, rounded-full, shadow-xs … shadow-xl, shadow-focus, shadow-ring-<hue>, shadow-glow-<hue>',
+    tokens: '--radius-*, --shadow-*, --focus-ring, --ring-*, --glow-*',
+  },
+  {
+    family: 'Motion',
+    utilities: 'duration-fast … duration-slowest, ease-standard, ease-entrance, ease-exit, ease-spring, ease-glide',
+    tokens: '--duration-*, --ease-*',
+  },
+  { family: 'Measure', utilities: 'max-w-prose, max-w-floating', tokens: '--measure-*' },
+];
+
+const TAILWIND_IMPORT_CODE = `/* app.css - the stylesheet Tailwind compiles; init writes this line */
+@import '@zyncat/ui/tailwind.css';
+@import 'tailwindcss';`;
+
+const TAILWIND_CARD_CODE = `<article className="bg-surface border border-subtle rounded-lg shadow-sm p-4 max-w-prose">
+  <h3 className="text-heading text-strong">Weekly digest</h3>
+  <p className="text-caption text-muted">Sent every Monday at 9:00.</p>
+  <button className="bg-accent-fill text-on-accent rounded-md px-3 py-2 duration-fast ease-standard hover:bg-accent-hover">
+    Enable
+  </button>
+</article>`;
+
 const OVERRIDE_LEVEL_COLUMNS: TableColumn<OverrideLevelRow>[] = [
   { key: 'level', label: 'Level', mono: true, strong: true },
   { key: 'mechanism', label: 'Mechanism', render: (r) => r.mechanism },
@@ -563,6 +631,51 @@ export function ThemingDoc() {
           component&rsquo;s <code className="doc-inline-code">style</code> prop once{' '}
           <code className="doc-inline-code">@zyncat/ui/theme</code> is imported anywhere in the app.
         </p>
+      </section>
+
+      <section className="guide-section" id="tailwind">
+        <h2 className="guide-section__title">With Tailwind</h2>
+        <p className="guide-section__p">
+          On Tailwind v4 the same vocabulary is a set of utilities, and IntelliSense completes them. One import in the
+          stylesheet Tailwind compiles - <code className="doc-inline-code">init</code> writes it - and every role above
+          has a utility named after its token: <code className="doc-inline-code">bg-surface</code>,{' '}
+          <code className="doc-inline-code">text-muted</code>, <code className="doc-inline-code">border-subtle</code>,{' '}
+          <code className="doc-inline-code">text-caption</code>, <code className="doc-inline-code">rounded-md</code>,{' '}
+          <code className="doc-inline-code">shadow-md</code>, <code className="doc-inline-code">ease-standard</code>.
+          Each one reads the token itself rather than a copy, so a themed subtree and the dark theme reach it, and{' '}
+          <code className="doc-inline-code">dark:</code> follows <code className="doc-inline-code">data-theme</code>{' '}
+          instead of the OS. The base stylesheet stays on its JS import at the app root; only the bridge goes through
+          Tailwind.
+        </p>
+
+        <CodeBlock code={TAILWIND_IMPORT_CODE} language="css" />
+        <CodeBlock code={TAILWIND_CARD_CODE} language="tsx" />
+
+        <Table
+          columns={TAILWIND_COLUMNS}
+          rows={TAILWIND_ROWS}
+          rowKey="family"
+          ariaLabel="The token vocabulary as Tailwind utilities"
+          density="compact"
+        />
+
+        <p className="guide-section__p">
+          The names Tailwind also ships - <code className="doc-inline-code">rounded-md</code>,{' '}
+          <code className="doc-inline-code">shadow-md</code>, <code className="doc-inline-code">tracking-tight</code> -
+          now read the zyncat token of the same name, so a card built from utilities and a shipped component share one
+          radius and one lighting model, and <code className="doc-inline-code">--radius</code> in your theme file moves
+          both. Spacing stays Tailwind&rsquo;s own scale; both sit on the 4px grid.{' '}
+          <code className="doc-inline-code">text-body</code> is the type role, so the body ink is{' '}
+          <code className="doc-inline-code">text-default</code>, and <code className="doc-inline-code">text-code</code>{' '}
+          sets size and leading with <code className="doc-inline-code">font-code</code> beside it for the face.
+        </p>
+
+        <Callout tone="warning" title="First line, above tailwindcss">
+          The bridge declares the cascade layers - Tailwind&rsquo;s utilities above the component rules, so{' '}
+          <code className="doc-inline-code">className=&quot;rounded-full&quot;</code> on a Button lands - and the first
+          layer statement in a stylesheet fixes the order. Below the Tailwind import it still adds the utilities, but
+          they lose to the component rules.
+        </Callout>
       </section>
 
       <section className="guide-section" id="typed-theme">
