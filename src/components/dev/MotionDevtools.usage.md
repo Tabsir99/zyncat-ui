@@ -6,8 +6,8 @@ Dev-only floating panel that slows or freezes EVERY animation at once (CSS and W
 
 Mount once at the app root - no provider, touches no other component. Gate behind a dev check; keep
 it out of production. placement top-left|top-right|bottom-left|bottom-right, offset, presets,
-maxFactor, defaultFactor, scaleTimers, persist, defaultOpen. Also exports motionSlowmo for
-console/hotkey control.
+maxFactor, defaultFactor, scaleTimers, persist, defaultOpen, className (extra class on the panel
+root, e.g. a host token scope). Also exports motionSlowmo for console/hotkey control.
 
 ```tsx
 {

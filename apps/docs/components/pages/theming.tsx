@@ -140,8 +140,8 @@ const LEVEL_1_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
      the focus ring and info all derive from this one decision */
   --accent: oklch(0.58 0.19 292);
 
-  --radius-md: var(--radius-full);
-  --radius-lg: var(--radius-full);
+  /* every --radius-* step derives from this one */
+  --radius: var(--radius-full);
 }`;
 
 const LEVEL_1_DARK_CODE = `[data-theme='dark'] {
@@ -204,9 +204,9 @@ const PREVIEW = 'zyncat-preview';
 const PREVIEW_DARK = 'zyncat-preview-dark';
 
 const CORNERS: Record<Corner, ThemeTokens['radius']> = {
-  sharp: { radiusSm: '0', radiusMd: '0', radiusLg: '0' },
-  default: { radiusSm: '0.25rem', radiusMd: '0.375rem', radiusLg: '0.5rem' },
-  round: { radiusSm: '0.5rem', radiusMd: '0.75rem', radiusLg: '1rem' },
+  sharp: { radius: '0' },
+  default: { radius: '0.5rem' },
+  round: { radius: '1rem' },
 };
 
 const DARK_SURFACES: ThemeTokens['color'] = {
@@ -236,7 +236,7 @@ const playgroundCode = (
 
 const base = defineTheme({
   color: { accent: 'oklch(0.63 0.118 ${hue})' },
-  radius: { radiusSm: '${CORNERS[corner].radiusSm}', radiusMd: '${CORNERS[corner].radiusMd}', radiusLg: '${CORNERS[corner].radiusLg}' },
+  radius: { radius: '${CORNERS[corner].radius}' },
   components: { odometer: { accent: 'var(--${ink})' } },
 });
 
@@ -300,7 +300,7 @@ import { defineTheme } from '@zyncat/ui/theme';
 
 export const base = defineTheme({
   color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radiusMd: '0.5rem' },
+  radius: { radius: '0.75rem' },
   type: { fontSans: "'Inter', system-ui, sans-serif" },
   motion: { durationBase: '180ms' },
   components: { odometer: { accent: 'var(--warning)' }, supportFan: { inset: 'var(--space-6)' } },
@@ -442,8 +442,8 @@ export function ThemingDoc() {
             </div>
             <TextField label="Workspace" placeholder="Acme Marketing" />
           </div>
-          <div className="theming-cell theming-retheme" data-theme="retheme">
-            <span className="theming-cell__label">One token repointed</span>
+          <div className="theming-cell" data-theme="retheme">
+            <span className="theming-cell__label">Two tokens repointed</span>
             <div className="theming-cell__row">
               <Button variant="primary">Publish</Button>
               <Badge tone="info">Draft</Badge>

@@ -79,7 +79,7 @@ import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
   color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radiusMd: '0.5rem' },
+  radius: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });

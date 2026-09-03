@@ -17,7 +17,7 @@ specificity (0,0,0) wins. Class names are BEM off a short base - `.btn`, `.btn--
 Reach for `@zyncat/ui/theme` first: it is this level with types on it. `defineTheme` takes one
 grouped object - `color`, `type`, `space`, `radius`, `elevation`, `motion`, `glass`, `icon`,
 `layer`, `avatar`, plus `components` for scoped knobs and `custom` for anything else. Keys are the
-token in camelCase (`accent`, `radiusMd`, `durationBase`), values are any CSS including `var()`
+token in camelCase (`accent`, `radius`, `durationBase`), values are any CSS including `var()`
 references, and a typo is a compile error. `ZyncatTheme` renders the set once at the app root; it
 is a plain component with no hooks, so it server-renders and needs no build configuration.
 
@@ -26,7 +26,7 @@ import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
   color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radiusMd: '0.5rem' },
+  radius: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
@@ -39,13 +39,15 @@ globally or for one subtree - is setting that attribute. Durations you repoint k
 reduced-motion collapse automatically.
 
 The same tokens are writable as plain CSS: repoint them on `:root` in your own stylesheet -
-`--accent`, `--success`, `--warning`, `--danger`, `--bg-*`, `--text-*`, `--border-*`, `--radius-*`,
+`--accent`, `--success`, `--warning`, `--danger`, `--bg-*`, `--text-*`, `--border-*`, `--radius`,
 `--shadow-*`, `--space-*`, `--size-*`, `--type-*`, `--duration-*`, `--ease-*`, `--focus-ring`.
 Four colours are decisions and every other colour derives from them: setting `--accent` moves
 `--accent-hover/-active/-lift/-subtle/-border/-disabled/-wash`, `--text-accent`, `--ring-accent`,
 `--focus-ring` and `--info` with it; `--success`, `--warning` and `--danger` each carry their own
 `-subtle`, `-text` and `-wash`; the gray ramp takes its hue from `--neutral`, which defaults to the
-accent. Set a derived token only to break it away from its decision. The hue roles are declared on
+accent. Roundness is one decision too: the `--radius-*` steps are fixed ratios of `--radius`, so
+`--radius: 0` squares every corner, and `--radius-full` is a shape that stays put. Set a derived token
+only to break it away from its decision. The hue roles are declared on
 every theme root (`:root` and any element with `data-theme`), so a subtree theme that repoints
 `--accent` re-derives all of them; the neutral roles cascade like any property, so a subtree that
 sets `--bg-app` and `--text-body` keeps them without restating the rest. Components read the tokens

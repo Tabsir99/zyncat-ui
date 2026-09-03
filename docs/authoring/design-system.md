@@ -69,6 +69,8 @@
 - A token file starts with the layer order statement and wraps its rules in `@layer zyncat.tokens`.
 - Four colours are decisions: `--accent`, `--success`, `--warning`, `--danger`. Every other colour derives
   from them with relative colour syntax. A new colour token derives; it never pins a hue.
+- Roundness is one decision: `--radius`. The `--radius-*` steps are fixed ratios of it. `--radius-full`
+  is a shape, not a step, and stays literal.
 - Two blocks per file. Literal values and the neutral roles a theme sets directly sit on `:root`.
   Tokens that derive from another token sit on `:root, [data-theme]`, so an element carrying a theme
   attribute re-derives them from its own decisions. A custom property is substituted where it is

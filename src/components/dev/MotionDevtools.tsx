@@ -31,6 +31,8 @@ export interface MotionDevtoolsProps {
   persist?: boolean;
   /** Start with the full panel open rather than collapsed to its header. @default false */
   defaultOpen?: boolean;
+  /** Extra class on the panel root, e.g. a host token scope. */
+  className?: string;
 }
 
 const STORAGE_KEY = 'zyncat-ui:motion-devtools';
@@ -69,6 +71,7 @@ export function MotionDevtools({
   scaleTimers = true,
   persist = true,
   defaultOpen = false,
+  className,
 }: MotionDevtoolsProps) {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(defaultOpen);
@@ -105,7 +108,7 @@ export function MotionDevtools({
   if (!mounted) return null;
 
   const active = shouldBeActive(snap.factor, snap.paused);
-  const rootClass = cx('mdt', `mdt--${placement}`, active && 'mdt--active', snap.paused && 'mdt--paused');
+  const rootClass = cx('mdt', `mdt--${placement}`, active && 'mdt--active', snap.paused && 'mdt--paused', className);
 
   const setFactor = (factor: number) => motionSlowmo.set({ factor, paused: false });
   const fill = `${((Math.min(snap.factor, maxFactor) - 1) / Math.max(1, maxFactor - 1)) * 100}%`;

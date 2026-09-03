@@ -1,14 +1,22 @@
-/* Corner radii - a restrained set; --radius-md (6px) is the control default. */
+/* Corner radii - one decision, --radius (8px), and steps derived from it at fixed ratios.
+   --radius-md (6px) is the control default. --radius: 0 squares every corner; --radius-full is
+   the pill, a shape rather than a step, so it stays literal. */
 
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
-    --radius-sm: 0.25rem;
-    --radius-md: 0.375rem;
-    --radius-lg: 0.5rem;
-    --radius-xl: 0.75rem;
-    --radius-2xl: 1rem;
+    /* The roundness decision - every --radius-<step> is a fixed ratio of it. */
+    --radius: 0.5rem;
     --radius-full: 624.9375rem;
+  }
+
+  :root,
+  [data-theme] {
+    --radius-sm: calc(var(--radius) * 0.5);
+    --radius-md: calc(var(--radius) * 0.75);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.5);
+    --radius-2xl: calc(var(--radius) * 2);
   }
 }

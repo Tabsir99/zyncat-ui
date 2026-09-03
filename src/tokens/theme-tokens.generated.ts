@@ -267,18 +267,20 @@ export interface SpaceTokens {
 }
 
 export interface RadiusTokens {
-  /** `--radius-sm`. Default: `0.25rem`. */
-  radiusSm?: string | number;
-  /** `--radius-md`. Default: `0.375rem`. */
-  radiusMd?: string | number;
-  /** `--radius-lg`. Default: `0.5rem`. */
-  radiusLg?: string | number;
-  /** `--radius-xl`. Default: `0.75rem`. */
-  radiusXl?: string | number;
-  /** `--radius-2xl`. Default: `1rem`. */
-  radius2xl?: string | number;
+  /** `--radius`. Default: `0.5rem`. */
+  radius?: string | number;
   /** `--radius-full`. Default: `624.9375rem`. */
   radiusFull?: string | number;
+  /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
+  radiusSm?: string | number;
+  /** `--radius-md`. Default: `calc(var(--radius) * 0.75)`. Re-derived on every theme root. */
+  radiusMd?: string | number;
+  /** `--radius-lg`. Default: `var(--radius)`. Re-derived on every theme root. */
+  radiusLg?: string | number;
+  /** `--radius-xl`. Default: `calc(var(--radius) * 1.5)`. Re-derived on every theme root. */
+  radiusXl?: string | number;
+  /** `--radius-2xl`. Default: `calc(var(--radius) * 2)`. Re-derived on every theme root. */
+  radius2xl?: string | number;
 }
 
 export interface ElevationTokens {
@@ -1004,18 +1006,20 @@ declare module 'react' {
     '--control-box'?: string | number;
     /** `--control-switch` - switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4. Default: `1.25rem`. */
     '--control-switch'?: string | number;
-    /** `--radius-sm`. Default: `0.25rem`. */
-    '--radius-sm'?: string | number;
-    /** `--radius-md`. Default: `0.375rem`. */
-    '--radius-md'?: string | number;
-    /** `--radius-lg`. Default: `0.5rem`. */
-    '--radius-lg'?: string | number;
-    /** `--radius-xl`. Default: `0.75rem`. */
-    '--radius-xl'?: string | number;
-    /** `--radius-2xl`. Default: `1rem`. */
-    '--radius-2xl'?: string | number;
+    /** `--radius`. Default: `0.5rem`. */
+    '--radius'?: string | number;
     /** `--radius-full`. Default: `624.9375rem`. */
     '--radius-full'?: string | number;
+    /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
+    '--radius-sm'?: string | number;
+    /** `--radius-md`. Default: `calc(var(--radius) * 0.75)`. Re-derived on every theme root. */
+    '--radius-md'?: string | number;
+    /** `--radius-lg`. Default: `var(--radius)`. Re-derived on every theme root. */
+    '--radius-lg'?: string | number;
+    /** `--radius-xl`. Default: `calc(var(--radius) * 1.5)`. Re-derived on every theme root. */
+    '--radius-xl'?: string | number;
+    /** `--radius-2xl`. Default: `calc(var(--radius) * 2)`. Re-derived on every theme root. */
+    '--radius-2xl'?: string | number;
     /** `--border-hairline`. Default: `1px`. */
     '--border-hairline'?: string | number;
     /** `--border-emphasis`. Default: `1.5px`. */
