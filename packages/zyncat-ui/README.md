@@ -9,9 +9,10 @@ pnpm dlx zyncat-ui init
 ```
 
 Run it inside a React project. One command installs `@zyncat/ui` (and React 19 if the project
-needs it), imports the base stylesheet at your app root, installs the agent skill into
-`.claude/skills/`, and registers the MCP server in `.mcp.json`. Re-run it after upgrading
-`@zyncat/ui` to refresh everything.
+needs it), imports the base stylesheet at your app root, writes the theme file, installs the agent
+skill into `.claude/skills/`, and registers the MCP server in `.mcp.json`. In a Tailwind v4 project
+it also imports `@zyncat/ui/tailwind.css` above `tailwindcss`, so the token vocabulary arrives as
+utilities with IntelliSense. Re-run it after upgrading `@zyncat/ui` to refresh everything.
 
 This package is where the CLI lives, and it holds the unscoped name so the command works before
 `@zyncat/ui` is installed. It ships one bundled file and declares zero runtime dependencies - the

@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export type PackageManager = 'pnpm' | 'npm' | 'yarn' | 'bun';
@@ -104,4 +104,34 @@ const ENTRY_CANDIDATES = [
 export function findAppEntry(cwd: string): string | null {
   for (const candidate of ENTRY_CANDIDATES) if (existsSync(join(cwd, candidate))) return candidate;
   return null;
+}
+
+export const TAILWIND_IMPORT = /^\s*@import\s+(['"])tailwindcss(?:\/[\w./-]+)?\1[^;]*;/m;
+
+const STYLESHEET_SKIP_DIRS = new Set(['node_modules', 'dist', 'build', 'out', 'coverage', 'public']);
+const STYLESHEET_SEARCH_DEPTH = 4;
+
+export function tailwindMajor(cwd: string, pkg: PackageJson | null): number | null {
+  const range = pkg?.dependencies?.tailwindcss ?? pkg?.devDependencies?.tailwindcss;
+  if (!range) return null;
+  return majorOf(installedVersion(cwd, 'tailwindcss') ?? undefined) ?? majorOf(range);
+}
+
+export function findTailwindEntry(cwd: string): string | null {
+  const found: string[] = [];
+  const walk = (dir: string, depth: number) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) {
+        if (depth < STYLESHEET_SEARCH_DEPTH && !STYLESHEET_SKIP_DIRS.has(entry.name) && !entry.name.startsWith('.'))
+          walk(join(dir, entry.name), depth + 1);
+        continue;
+      }
+      if (!entry.name.endsWith('.css')) continue;
+      const path = join(dir, entry.name);
+      if (TAILWIND_IMPORT.test(readFileSync(path, 'utf8'))) found.push(relative(cwd, path).split(sep).join('/'));
+    }
+  };
+  walk(cwd, 0);
+  found.sort((a, b) => a.split('/').length - b.split('/').length || a.localeCompare(b));
+  return found[0] ?? null;
 }

@@ -6,12 +6,15 @@ import {
   detectPm,
   findAppEntry,
   findOwnRoot,
+  findTailwindEntry,
   installedVersion,
   isOlder,
   majorOf,
   PACKAGE_MANAGERS,
   pmVersion,
   readJson,
+  TAILWIND_IMPORT,
+  tailwindMajor,
   type PackageJson,
   type PackageManager,
 } from './detect';
@@ -43,6 +46,7 @@ const STYLES_IMPORT = "import '@zyncat/ui/styles.css';";
 const THEME_FILE = 'zyncat.theme.css';
 const THEME_IMPORT = `import './${THEME_FILE}';`;
 const THEME_SOURCE = 'src/tokens/decisions.css';
+const TAILWIND_BRIDGE = '@zyncat/ui/tailwind.css';
 const DOCS_URL = 'https://ui.zyncat.app';
 
 const interactive = () => Boolean(process.stdout.isTTY && process.stdin.isTTY);
@@ -336,6 +340,34 @@ function wireStyles(cwd: string, entry: string | null): Wired {
   return { line: row('Stylesheet', `${entry} · ${what}`), done: true };
 }
 
+function wireTailwind(cwd: string, targetPkg: PackageJson): Wired | null {
+  const major = tailwindMajor(cwd, targetPkg);
+  if (major === null) return null;
+  if (major < 4)
+    return {
+      line: row('Tailwind', `skipped · Tailwind ${major} has no @theme`),
+      done: false,
+      hint: `The bridge needs Tailwind v4 - ${DOCS_URL}/theming#tailwind.`,
+    };
+  const entry = findTailwindEntry(cwd);
+  if (!entry)
+    return {
+      line: row('Tailwind', 'no stylesheet imports tailwindcss · add the line yourself'),
+      done: false,
+      hint: `Put @import '${TAILWIND_BRIDGE}'; above @import 'tailwindcss'; in the stylesheet Tailwind compiles.`,
+    };
+  const path = join(cwd, entry);
+  const text = readFileSync(path, 'utf8');
+  if (text.includes(TAILWIND_BRIDGE)) return { line: row('Tailwind', `${entry} · already imported`), done: true };
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
+  const lines = text.split(eol);
+  const at = lines.findIndex((line) => TAILWIND_IMPORT.test(line));
+  const quote = lines[at].includes('"') ? '"' : "'";
+  lines.splice(at, 0, `@import ${quote}${TAILWIND_BRIDGE}${quote};`);
+  writeFileSync(path, lines.join(eol));
+  return { line: row('Tailwind', `${entry} · import added`), done: true };
+}
+
 export async function init(flags: InitFlags): Promise<void> {
   const startedAt = performance.now();
   const { root: ownRoot, version } = findOwnRoot();
@@ -369,11 +401,13 @@ export async function init(flags: InitFlags): Promise<void> {
 
   const packageRoot = sourceRoot(cwd, ownRoot);
   const entry = findAppEntry(cwd);
+  const tailwind = wireTailwind(cwd, targetPkg);
   const rows: Wired[] = [
     wireSkill(cwd, packageRoot, pm),
     wireMcp(cwd),
     wireTheme(cwd, packageRoot, pm, entry),
     wireStyles(cwd, entry),
+    ...(tailwind ? [tailwind] : []),
   ];
   for (const [index, entry] of rows.entries()) {
     log.message(entry.line, { symbol: entry.done ? check : skip, spacing: index === 0 ? 1 : 0 });
