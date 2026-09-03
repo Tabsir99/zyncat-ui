@@ -124,7 +124,7 @@
 
 - Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
 - Level 1: retheme in `zyncat.theme.css`, the decisions `init` writes into the project; any token on `:root` works. JS follows via the DOM readers.
-- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Decisions at the top level, `color` and `motion` for the roles a theme sets, `components` for the knobs, every other token by CSS name under `custom`.
+- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Four categories - `color`, `type`, `shape`, `motion` - each grouped by what it holds, then `components` and every other token by CSS name under `custom`; the path is the CSS name.
 - `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
 - Token names are derived, never tabulated: the generator fails if a name stops round-tripping.
 - Level 2: retune one component through its scoped custom properties.

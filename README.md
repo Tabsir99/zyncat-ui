@@ -94,12 +94,12 @@ has a type on it:
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  accent: 'oklch(0.58 0.19 292)',
-  radius: '0.75rem',
+  color: { accent: 'oklch(0.58 0.19 292)' },
+  shape: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({
-  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
   custom: { '--shadow-rgb': '0 0 0' },
 });
 
@@ -107,10 +107,11 @@ const dark = defineTheme({
 <ZyncatTheme theme={{ base, dark }} />;
 ```
 
-The type is the shape of a theme, not a list of every token: the decisions at the top level, the
-neutral roles under `color`, the motion bands under `motion`, the scoped knobs under `components`,
-and any other token by its CSS name under `custom`. Every name completes, hover shows the default,
-a typo is a compile error, and values take any CSS. `base` lands on
+The type is the shape of a theme, not a list of every token: four categories - `color`, `type`,
+`shape`, `motion` - each grouping what it holds (`color.bg.app`, `type.font.body`,
+`motion.duration.base`), then the scoped knobs under `components` and any other token by its CSS
+name under `custom`. Every level completes, hover shows the default, a typo is a compile error, and
+values take any CSS. `base` lands on
 `:root` and every other key becomes a `[data-theme='<key>']` block, so switching themes - globally
 or for one subtree - is setting that attribute. The types are generated from the token stylesheets,
 so upgrading the package surfaces new tokens rather than drifting from them.

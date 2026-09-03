@@ -344,6 +344,8 @@ export interface WeightFieldTokens {
   peakWeight?: string | number;
   /** `--weight-field-hover-padding` - How much a unit widens under the pointer. Default: `calc(1em / 12)`. */
   hoverPadding?: string | number;
+  /** `--weight-field-stroke` - The text stroke every unit carries; the peak letter doubles it. Default: `calc(1em * 125 / 6000)`. */
+  stroke?: string | number;
   /** `--weight-field-duration` - How long a unit takes to settle at a new weight. Default: `400ms`. */
   duration?: string | number;
   /** `--weight-field-ease` - The settle curve. Default: `ease`. */

@@ -86,7 +86,7 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
   {
     component: 'Odometer',
     subpath: 'odometer',
-    count: 8,
+    count: 6,
     sample: '--odometer-size, --odometer-accent, --odometer-gap',
   },
   {
@@ -95,17 +95,17 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
     count: 7,
     sample: '--typing-lines-caret-ink, --typing-lines-blink',
   },
-  { component: 'Lens', subpath: 'lens', count: 10, sample: '--lens-surface, --lens-fringe-warm, --lens-rim-start' },
+  { component: 'Lens', subpath: 'lens', count: 4, sample: '--lens-surface, --lens-fringe-warm, --lens-fringe-cool' },
   {
     component: 'MorphingText',
     subpath: 'morphing-text',
-    count: 12,
+    count: 10,
     sample: '--morphing-text-size, --morphing-text-smear',
   },
   {
     component: 'WeightField',
     subpath: 'weight-field',
-    count: 16,
+    count: 14,
     sample: '--weight-field-peak-weight, --weight-field-hover-padding',
   },
   {
@@ -114,12 +114,12 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
     count: 15,
     sample: '--flow-field-ramp-0 … -11, --flow-field-accent',
   },
-  { component: 'Confetti', subpath: 'confetti', count: 21, sample: '--confetti-paper-1 … -5, --confetti-weights' },
+  { component: 'Confetti', subpath: 'confetti', count: 11, sample: '--confetti-paper-1 … -5, --confetti-weights' },
   {
     component: 'SupportRail',
     subpath: 'support-rail',
-    count: 26,
-    sample: '--support-rail-width, --support-rail-accent',
+    count: 12,
+    sample: '--support-rail-width, --support-rail-accent, --support-rail-row-pad-block',
   },
 ];
 
@@ -293,13 +293,19 @@ const playgroundCode = (
 ) => `import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  accent: 'oklch(0.63 0.118 ${hue})',
-  radius: '${CORNERS[corner]}',
+  color: { accent: 'oklch(0.63 0.118 ${hue})' },
+  shape: { radius: '${CORNERS[corner]}' },
   components: { odometer: { accent: 'var(--${ink})' } },
 });
 
 const dark = defineTheme({
-  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)', borderDefault: 'oklch(0.36 0.009 198)' },
+  ...base,
+  color: {
+    ...base.color,
+    bg: { app: 'oklch(0.19 0.008 198)' },
+    text: { body: 'oklch(0.92 0.004 198)' },
+    border: { default: 'oklch(0.36 0.009 198)' },
+  },
 });
 
 // once, at the app root - beside your import of '@zyncat/ui/styles.css'
@@ -357,15 +363,15 @@ const THEME_FILE_CODE = `// zyncat.theme.ts
 import { defineTheme } from '@zyncat/ui/theme';
 
 export const base = defineTheme({
-  accent: 'oklch(0.58 0.19 292)',
-  radius: '0.75rem',
-  fontSans: "'Inter', system-ui, sans-serif",
-  motion: { durationBase: '180ms' },
+  color: { accent: 'oklch(0.58 0.19 292)' },
+  shape: { radius: '0.75rem' },
+  type: { font: { body: "'Inter', system-ui, sans-serif" } },
+  motion: { duration: { base: '180ms' } },
   components: { odometer: { accent: 'var(--warning)' }, supportRail: { width: '22rem' } },
 });
 
 export const dark = defineTheme({
-  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
   custom: { '--shadow-rgb': '0 0 0' },
 });`;
 
@@ -401,8 +407,8 @@ const TYPED_STYLE_CODE = `{/* the component's own knobs are typed on its style p
 {/* not this component's surface -> compile error */}
 <Odometer value={total} style={{ '--lens-ink': 'red' }} />
 
-{/* per-frame state the component writes to itself -> compile error */}
-<Odometer value={total} style={{ '--odometer-velocity': '1' }} />`;
+{/* private per-frame state -> compile error */}
+<Odometer value={total} style={{ '--_odometer-velocity': '1' }} />`;
 
 const REDUCED_MOTION_CODE = `/* WRONG - a reduced-motion user gets 90ms animations in here.
    The reduced-motion collapse only targets :root, so this
@@ -571,13 +577,16 @@ export function ThemingDoc() {
         <p className="guide-section__p">
           <code className="doc-inline-code">@zyncat/ui/theme</code> is the same level 1 retheme with a type behind it,
           for a theme that is data: several named themes, values computed at build time, a design tool&rsquo;s export.
-          The type is the shape of a theme, not a list of every token: the eight decisions at the top level, the neutral
-          roles under <code className="doc-inline-code">color</code>, the motion bands under{' '}
-          <code className="doc-inline-code">motion</code>, the scoped knobs under{' '}
+          The type is the shape of a theme, not a list of every token: four categories —{' '}
+          <code className="doc-inline-code">color</code>, <code className="doc-inline-code">type</code>,{' '}
+          <code className="doc-inline-code">shape</code>, <code className="doc-inline-code">motion</code> — each
+          grouping what it holds, so <code className="doc-inline-code">color.bg.app</code> is{' '}
+          <code className="doc-inline-code">--bg-app</code> and <code className="doc-inline-code">type.font.body</code>{' '}
+          is <code className="doc-inline-code">--font-body</code>; then the scoped knobs under{' '}
           <code className="doc-inline-code">components</code>. Everything else — ramp stops, the type scale, spacing, a
           derived hover or wash — is reachable by its CSS name under <code className="doc-inline-code">custom</code>.
-          Every name completes wherever it is typed, hovering one shows what it does and what it currently is, and a
-          typo is a compile error instead of a property that silently does nothing.
+          Every level completes, hovering a key shows what it does and what it currently is, and a typo is a compile
+          error instead of a property that silently does nothing.
         </p>
 
         <ThemingPlayground />
@@ -616,7 +625,7 @@ export function ThemingDoc() {
           <FeatureCard
             icon="sparkle"
             title="The shape of a theme, not a list"
-            description="Eight decisions at the top level; color for the neutral roles a dark theme sets, motion for the bands, components for the scoped knobs — and custom, where every other token goes by its CSS name."
+            description="Four categories — color, type, shape, motion — each grouped by what it holds; components for the scoped knobs; and custom, where every other token goes by its CSS name."
           />
           <FeatureCard
             icon="shield-check"
@@ -641,17 +650,20 @@ export function ThemingDoc() {
         </p>
         <p className="guide-section__p">
           These are typed twice over. In a theme they are the <code className="doc-inline-code">components</code> group,
-          with the prefix dropped — <code className="doc-inline-code">components.odometer.accent</code> is{' '}
-          <code className="doc-inline-code">--odometer-accent</code>. On one instance they are the component&rsquo;s own{' '}
-          <code className="doc-inline-code">style</code> prop, which accepts the design tokens and that
-          component&rsquo;s knobs, and nothing from any other component.
+          shaped like the theme — <code className="doc-inline-code">components.odometer.accent</code> is{' '}
+          <code className="doc-inline-code">--odometer-accent</code>,{' '}
+          <code className="doc-inline-code">components.typingLines.caret.ink</code> is{' '}
+          <code className="doc-inline-code">--typing-lines-caret-ink</code>. On one instance they are the
+          component&rsquo;s own <code className="doc-inline-code">style</code> prop, which accepts the design tokens and
+          that component&rsquo;s knobs, and nothing from any other component.
         </p>
 
         <CodeBlock code={TYPED_STYLE_CODE} language="tsx" />
 
         <p className="guide-section__p">
-          That is also where the distinction below stops being something to remember: the per-frame properties are not
-          on the type, so setting one is a compile error rather than a line that quietly does nothing.
+          That is also where the line between a knob and a component&rsquo;s own workings stops being something to
+          remember: private properties are not on the type, so setting one is a compile error rather than a line that
+          quietly does nothing.
         </p>
 
         <div className="theming-pair">
@@ -691,14 +703,13 @@ export function ThemingDoc() {
           density="compact"
         />
 
-        <Callout tone="note" title="A few are state, not knobs">
-          The canvas and drag components write a handful of these to themselves every frame —{' '}
-          <code className="doc-inline-code">--odometer-velocity</code>,{' '}
-          <code className="doc-inline-code">--lens-lift</code>,{' '}
-          <code className="doc-inline-code">--morphing-text-heat</code>,{' '}
-          <code className="doc-inline-code">--support-rail-drag</code>,{' '}
-          <code className="doc-inline-code">--youtube-progress</code>. Setting those from CSS does nothing; the next
-          frame overwrites them.
+        <Callout tone="note" title="The rest is private">
+          Everything else a component declares — its constants, its derivations, the per-frame state the canvas and drag
+          components write to themselves — is a private <code className="doc-inline-code">--_&lt;component&gt;-*</code>{' '}
+          property: <code className="doc-inline-code">--_odometer-velocity</code>,{' '}
+          <code className="doc-inline-code">--_lens-lift</code>,{' '}
+          <code className="doc-inline-code">--_morphing-text-heat</code>,{' '}
+          <code className="doc-inline-code">--_support-rail-drag</code>. Not a contract, and the types leave them out.
         </Callout>
 
         <p className="guide-section__p">

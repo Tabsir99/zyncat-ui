@@ -37,28 +37,27 @@ with the CSS. Reduced motion is handled here - every `--duration-*` collapses to
 `:root` rather than a nested scope or the collapse cannot reach them.
 
 `@zyncat/ui/theme` is the same level with a type on it, for a theme that is data - several named
-themes, or values computed at build time. `defineTheme` takes one object shaped like a theme, not like
-the token list: the eight decisions at the top level (`accent`, `radius`, `fontSans`, ...), `color` for
-the neutral roles a light or dark theme sets directly (`bgApp`, `textBody`, `borderDefault`, ...),
-`motion` for the durations, curves, distances and rest scales, `components` for the scoped knobs, and
-`custom` for any other token by its CSS name - a ramp stop, a size, a spacing step, a derived hover -
-or a property of your own. Keys are the token in camelCase (`accent`, `bgApp`, `durationBase`) or the
-CSS name under `custom` (`'--space-4'`), values are any CSS including `var()` references, every name
-completes with its default on hover, and a typo is a compile error. `ZyncatTheme` renders the set once
-at the app root; it is a plain component with no hooks, so it
-server-renders and needs no build configuration. Keep one writer per decision: a project on
-`defineTheme` drops those lines from `zyncat.theme.css`.
+themes, or values computed at build time. `defineTheme` takes one object shaped like a theme: four
+categories - `color` (the five hues, then `bg`, `text` and `border`), `type.font` (`body`, `code`),
+`shape.radius`, `motion` (`duration`, `ease`, `distance`, `scale`) - then `components` for the scoped
+knobs and `custom` for any other token by its CSS name - a ramp stop, a size, a spacing step, a
+derived hover - or a property of your own. The path is the CSS name: `color.bg.app` is `--bg-app`,
+`type.font.body` is `--font-body`, `motion.duration.base` is `--duration-base`. Values are any CSS
+including `var()` references, every level completes with its default on hover, and a typo is a
+compile error. `ZyncatTheme` renders the set once at the app root; it is a plain component with no
+hooks, so it server-renders and needs no build configuration. Keep one writer per decision: a project
+on `defineTheme` drops those lines from `zyncat.theme.css`.
 
 ```tsx
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  accent: 'oklch(0.58 0.19 292)',
-  radius: '0.75rem',
+  color: { accent: 'oklch(0.58 0.19 292)' },
+  shape: { radius: '0.75rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({
-  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  color: { bg: { app: 'oklch(0.19 0.008 198)' }, text: { body: 'oklch(0.92 0.004 198)' } },
   custom: { '--shadow-rgb': '0 0 0' },
 });
 
@@ -79,21 +78,21 @@ The vocabulary a page reads is the roles, never the plumbing:
 ## Level 2 - retune one component
 
 Expressive and compound components publish scoped `--<component>-<name>` properties as their public
-contract: `--odometer-size/-accent/-gap`, `--typing-lines-caret-ink/-blink`,
+contract, each with a doc line: `--odometer-size/-accent/-gap`, `--typing-lines-caret-ink/-blink`,
 `--lens-surface/-fringe-warm`, `--morphing-text-size/-smear`, `--weight-field-peak-weight/-hover-padding`,
-`--flow-field-ramp-0..11`, `--confetti-paper-1..5`, `--support-rail-*`. Set them
-on any ancestor or inline via `style`. The canvas simulations sample theirs at their next measure -
+`--flow-field-ramp-0..11`, `--confetti-paper-1..5`, `--support-rail-width/-accent/-row-pad-block`. Set
+them on any ancestor or inline via `style`. The canvas simulations sample theirs at their next measure -
 FlowField on resize and on a theme attribute change, Confetti on the next `fire()`.
 
-Both reaches are typed. In a theme they are the `components` group with the prefix dropped:
-`components.odometer.accent` is `--odometer-accent`. On one instance they are the component's own
-`style` prop, which accepts the design tokens plus that component's knobs and nothing from another
-component - `<Odometer style={{ '--odometer-size': '3rem' }} />`.
+Both reaches are typed. In a theme they are `components`, grouped like the theme:
+`components.odometer.accent` is `--odometer-accent`, `components.typingLines.caret.ink` is
+`--typing-lines-caret-ink`, `components.confetti.paper[3]` is `--confetti-paper-3`. On one instance
+they are the component's own `style` prop, which accepts the design tokens plus that component's knobs
+and nothing from another component - `<Odometer style={{ '--odometer-size': '3rem' }} />`.
 
-A few are per-frame state the component writes to itself, not knobs -
-`--odometer-velocity/-blur`, `--lens-lift/-blur/-shadow-alpha`, `--morphing-text-heat/-letter-blur`,
-`--support-rail-drag`, `--youtube-progress`.
-Setting those does nothing, and they are absent from the types, so trying is a compile error.
+Everything else a component declares - its constants, its derivations, the per-frame state it writes
+to itself - is a private `--_<component>-*` property: not a contract, and absent from the types, so
+setting one is a compile error.
 
 System primitives and composites publish none by design - retheme those at level 1.
 

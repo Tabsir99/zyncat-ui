@@ -352,7 +352,7 @@ Every FAQ answer is grounded in `src/components/expressive/odometer/Odometer.tsx
 - "Columns always roll forward" is `while (target < column.position + ARRIVAL_MARGIN)
 target += DIGITS_PER_RUN` - the target is advanced until it is ahead, so a decreasing
   value still rolls forward, exactly like the mechanical instrument.
-- Motion blur and accent tint are `--odometer-blur` and `--odometer-velocity`, written from
+- Motion blur and accent tint are `--_odometer-blur` and `--_odometer-velocity`, written from
   `Math.abs(column.velocity)` each frame.
 - Off-screen and hidden-tab pausing is `loop`'s `IntersectionObserver` plus the
   `visibilitychange` listener; `Odometer` passes `el`, so both apply.

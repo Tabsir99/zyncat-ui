@@ -2478,6 +2478,12 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
             '`--weight-field-hover-padding` - How much a unit widens under the pointer. Default: `calc(1em / 12)`.',
         },
         {
+          name: '--weight-field-stroke',
+          type: 'string | number',
+          description:
+            '`--weight-field-stroke` - The text stroke every unit carries; the peak letter doubles it. Default: `calc(1em * 125 / 6000)`.',
+        },
+        {
           name: '--weight-field-duration',
           type: 'string | number',
           description: '`--weight-field-duration` - How long a unit takes to settle at a new weight. Default: `400ms`.',

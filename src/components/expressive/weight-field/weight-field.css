@@ -24,8 +24,9 @@
     --weight-field-peak-weight: 900;
     /* How much a unit widens under the pointer. */
     --weight-field-hover-padding: calc(1em / 12);
-    --_weight-field-stroke: calc(1em * 125 / 6000);
-    --_weight-field-stroke-peak: calc(var(--_weight-field-stroke) * 2);
+    /* The text stroke every unit carries; the peak letter doubles it. */
+    --weight-field-stroke: calc(1em * 125 / 6000);
+    --_weight-field-stroke-peak: calc(var(--weight-field-stroke) * 2);
     /* How long a unit takes to settle at a new weight. */
     --weight-field-duration: 400ms;
     /* The settle curve. */
@@ -60,7 +61,7 @@
     padding-inline: 0;
     font-weight: var(--weight-field-rest-weight);
     -webkit-text-stroke-color: transparent;
-    -webkit-text-stroke-width: var(--_weight-field-stroke);
+    -webkit-text-stroke-width: var(--weight-field-stroke);
     will-change:
       font-weight,
       -webkit-text-stroke-width,

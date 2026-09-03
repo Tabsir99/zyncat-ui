@@ -29,7 +29,7 @@ const seo: PageSeo = {
     },
     {
       q: 'How do I use CSS variables in React?',
-      a: "Set them on :root in your own stylesheet, or use the typed API: defineTheme({ accent: 'oklch(0.58 0.19 292)' }) and render <ZyncatTheme theme={{ base }} /> once at the app root. The typed route autocompletes every token name and turns a typo into a compile error, and the style prop on every component accepts the design tokens too.",
+      a: "Set them on :root in your own stylesheet, or use the typed API: defineTheme({ color: { accent: 'oklch(0.58 0.19 292)' } }) and render <ZyncatTheme theme={{ base }} /> once at the app root. The typed route autocompletes every token name and turns a typo into a compile error, and the style prop on every component accepts the design tokens too.",
     },
     {
       q: 'How do I override the default CSS of a component?',

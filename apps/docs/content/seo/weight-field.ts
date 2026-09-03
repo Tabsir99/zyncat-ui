@@ -37,7 +37,7 @@ const seo: PageSeo = {
     },
     {
       q: 'How do I slow the hover effect down, or change the weights and the text stroke?',
-      a: 'speed multiplies the ramp rate against a 400ms default - 2 halves the settle, 0.5 doubles it. The four steps are --weight-field-rest-weight (300), --weight-field-far-weight (400), --weight-field-near-weight (600) and --weight-field-peak-weight (900); flatten the near and far values onto rest and only the hovered letter answers. --weight-field-stroke-peak sets the doubled -webkit-text-stroke the peak letter takes, and --weight-field-duration and --weight-field-ease retime the transition itself.',
+      a: 'speed multiplies the ramp rate against a 400ms default - 2 halves the settle, 0.5 doubles it. The four steps are --weight-field-rest-weight (300), --weight-field-far-weight (400), --weight-field-near-weight (600) and --weight-field-peak-weight (900); flatten the near and far values onto rest and only the hovered letter answers. --weight-field-stroke sets the -webkit-text-stroke every unit carries, doubled on the peak letter, and --weight-field-duration and --weight-field-ease retime the transition itself.',
     },
     {
       q: 'Is this a font animation generator like an After Effects or GIF preset?',
