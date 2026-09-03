@@ -73,9 +73,10 @@ export function McpDoc() {
           It installs <code className="doc-inline-code">@zyncat/ui</code> if the project does not have it yet, copies
           the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
           <code className="doc-inline-code">.claude/skills/</code>, registers the MCP server in{' '}
-          <code className="doc-inline-code">.mcp.json</code> and imports the stylesheet. Restart the agent session
-          afterwards, and re-run the command after upgrading <code className="doc-inline-code">@zyncat/ui</code> so the
-          skill matches the installed version; existing files are left alone.
+          <code className="doc-inline-code">.mcp.json</code>, imports the stylesheet and writes the theme file beside
+          it. Restart the agent session afterwards, and re-run the command after upgrading{' '}
+          <code className="doc-inline-code">@zyncat/ui</code> so the skill matches the installed version; existing files
+          are left alone.
         </p>
 
         <TabGroup

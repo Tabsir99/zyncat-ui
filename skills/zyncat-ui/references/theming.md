@@ -14,19 +14,44 @@ specificity (0,0,0) wins. Class names are BEM off a short base - `.btn`, `.btn--
 
 ## Level 1 - retheme the whole system
 
-Reach for `@zyncat/ui/theme` first: it is this level with types on it. `defineTheme` takes one
-grouped object - `color`, `type`, `space`, `radius`, `elevation`, `motion`, `glass`, `icon`,
-`layer`, `avatar`, plus `components` for scoped knobs and `custom` for anything else. Keys are the
-token in camelCase (`accent`, `radius`, `durationBase`), values are any CSS including `var()`
-references, and a typo is a compile error. `ZyncatTheme` renders the set once at the app root; it
-is a plain component with no hooks, so it server-renders and needs no build configuration.
+Eight values are decisions and everything else derives from them: `--accent`, `--success`,
+`--warning`, `--danger`, `--neutral` (the gray ramp's hue, the accent by default, read on `:root` only), `--radius`,
+`--font-sans`, `--font-mono`. `zyncat-ui init` writes them at their defaults into `zyncat.theme.css`
+beside the app entry, imported right after `@zyncat/ui/styles.css`; a retheme is editing a value
+there. VS Code's built-in CSS completion only sees variables declared in the file being edited; a
+workspace-indexing extension such as CSS Variable Autocomplete picks this file up. Setting
+`--accent` moves `--accent-hover/-active/-lift/-subtle/-border/-disabled/-wash`, `--text-accent`,
+`--ring-accent`, `--focus-ring` and `--info`; `--success`, `--warning` and `--danger` each carry their
+own `-subtle`, `-text` and `-wash`; the `--radius-*` steps are fixed ratios of `--radius`, so
+`--radius: 0` squares every corner (`--radius-full` is a shape and stays put); the `--type-*` bundles
+follow the faces. Set a derived token only to break it away from its decision.
+
+A dark theme sets the neutral roles directly - `--bg-*`, `--text-*`, `--border-*` - in a
+`[data-theme='dark']` block, and switching is setting that attribute on `<html>` or a subtree root.
+The derived tokens are declared on every theme root (`:root` and any element with `data-theme`), so a
+subtree theme that repoints `--accent` re-derives all of them; the neutral roles cascade like any
+property, so a subtree that sets `--bg-app` and `--text-body` keeps them without restating the rest.
+Components read the tokens live and the WAAPI engine reads the same DOM values, so motion retimes
+with the CSS. Reduced motion is handled here - every `--duration-*` collapses to 1ms under
+`prefers-reduced-motion`, so derive your own delays from a duration token, and repoint durations on
+`:root` rather than a nested scope or the collapse cannot reach them.
+
+`@zyncat/ui/theme` is the same level with a type on it, for a theme that is data - several named
+themes, or values computed at build time. `defineTheme` takes one object: the eight decisions at the
+top level (`accent`, `radius`, `fontSans`, ...), then the groups the tokens are organised in - `color`,
+`type`, `space`, `radii`, `elevation`, `motion`, `glass`, `icon`, `layer`, `avatar` - plus `components`
+for scoped knobs and `custom` for anything else. Keys are the token in camelCase (`accent`, `bgApp`,
+`durationBase`), values are any CSS including `var()` references, and a typo is a compile error.
+`ZyncatTheme` renders the set once at the app root; it is a plain component with no hooks, so it
+server-renders and needs no build configuration. Keep one writer per decision: a project on
+`defineTheme` drops those lines from `zyncat.theme.css`.
 
 ```tsx
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radius: '0.75rem' },
+  accent: 'oklch(0.58 0.19 292)',
+  radius: '0.75rem',
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
@@ -34,27 +59,16 @@ const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'o
 <ZyncatTheme theme={{ base, dark }} />;
 ```
 
-`base` lands on `:root`; every other key is a `[data-theme='<key>']` block, so switching themes -
-globally or for one subtree - is setting that attribute. Durations you repoint keep their
-reduced-motion collapse automatically.
+`base` lands on `:root`; every other key is a `[data-theme='<key>']` block. Durations you repoint
+keep their reduced-motion collapse automatically.
 
-The same tokens are writable as plain CSS: repoint them on `:root` in your own stylesheet -
-`--accent`, `--success`, `--warning`, `--danger`, `--bg-*`, `--text-*`, `--border-*`, `--radius`,
-`--shadow-*`, `--space-*`, `--size-*`, `--type-*`, `--duration-*`, `--ease-*`, `--focus-ring`.
-Four colours are decisions and every other colour derives from them: setting `--accent` moves
-`--accent-hover/-active/-lift/-subtle/-border/-disabled/-wash`, `--text-accent`, `--ring-accent`,
-`--focus-ring` and `--info` with it; `--success`, `--warning` and `--danger` each carry their own
-`-subtle`, `-text` and `-wash`; the gray ramp takes its hue from `--neutral`, which defaults to the
-accent. Roundness is one decision too: the `--radius-*` steps are fixed ratios of `--radius`, so
-`--radius: 0` squares every corner, and `--radius-full` is a shape that stays put. Set a derived token
-only to break it away from its decision. The hue roles are declared on
-every theme root (`:root` and any element with `data-theme`), so a subtree theme that repoints
-`--accent` re-derives all of them; the neutral roles cascade like any property, so a subtree that
-sets `--bg-app` and `--text-body` keeps them without restating the rest. Components read the tokens
-live and the WAAPI engine reads the same DOM values, so motion retimes with the CSS. Reduced
-motion is handled here - every `--duration-*` collapses to 1ms under `prefers-reduced-motion`, so
-derive your own delays from a duration token, and repoint durations on `:root` rather than a
-nested scope or the collapse cannot reach them.
+The vocabulary a page reads is the roles, never the plumbing:
+`--bg-app/-surface/-surface-raised/-subtle/-muted/-inset/-overlay`,
+`--text-strong/-body/-secondary/-muted/-subtle/-disabled/-accent/-on-accent/-inverse`,
+`--border-subtle/-default/-strong`, the four status hues and `--info` with `-subtle` and `-text`, the
+`--type-*` bundles (one `font:` shorthand per role), `--space-px` and `--space-1..10` (a 4px grid),
+`--radius-sm..2xl/-full`, `--shadow-xs..xl`, `--focus-ring`, `--duration-*`, `--ease-*`,
+`--transition-control/-colors/-opacity`. `get_tokens` prints all of it with real values.
 
 ## Level 2 - retune one component
 

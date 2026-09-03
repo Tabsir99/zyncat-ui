@@ -88,6 +88,11 @@ export function TerminalDemo({ pm, command }: { pm: string; command: string }) {
         </p>
         <p className="termo__line termo__wire">
           <span className="termo__check">✓</span>
+          <span className="termo__label">Theme file</span>
+          <span className="termo__dim">app/zyncat.theme.css · written</span>
+        </p>
+        <p className="termo__line termo__wire">
+          <span className="termo__check">✓</span>
           <span className="termo__label">Stylesheet</span>
           <span className="termo__dim">app/layout.tsx · import added</span>
         </p>

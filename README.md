@@ -37,9 +37,10 @@ pnpm dlx zyncat-ui init
 ```
 
 It installs `@zyncat/ui` with your package manager (and React 19, if the project needs it), imports
-the base stylesheet at your app root, installs the agent skill into `.claude/skills/`, registers the
-bundled MCP server in `.mcp.json`. Every step is idempotent and printed as it lands - re-run the
-command after upgrading to refresh the skill.
+the base stylesheet at your app root, writes `zyncat.theme.css` beside it with the eight decisions the
+whole system derives from, installs the agent skill into `.claude/skills/`, registers the bundled MCP
+server in `.mcp.json`. Every step is idempotent and printed as it lands - re-run the command after
+upgrading to refresh the skill.
 Non-interactive shells get plain logs and no prompts; pass `--yes` to accept every default and
 `--pm <pnpm|npm|yarn|bun>` to pin the package manager.
 
@@ -74,12 +75,27 @@ other component's CSS.
 
 ## Theme it
 
+Eight values are decisions and everything else derives from them: the four hues, the gray ramp's
+hue, the radius, the two faces. `init` writes them into `zyncat.theme.css` beside your app entry, so
+a retheme is editing a value there:
+
+```css
+/* zyncat.theme.css */
+:root {
+  --accent: oklch(0.58 0.19 292); /* hover, active, wash, ring and info follow */
+  --radius: 0.75rem; /* every corner step follows */
+}
+```
+
+For a theme that is data - several named themes, values computed at build time - the same level
+has a type on it:
+
 ```tsx
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radius: '0.75rem' },
+  accent: 'oklch(0.58 0.19 292)',
+  radius: '0.75rem',
   components: { odometer: { accent: 'var(--warning)' } },
 });
 const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
@@ -88,11 +104,11 @@ const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'o
 <ZyncatTheme theme={{ base, dark }} />;
 ```
 
-Every token is a typed key, grouped by what it does: hover shows the default, a typo is a
-compile error, and values take any CSS. `base` lands on `:root` and every other key becomes a
-`[data-theme='<key>']` block, so switching themes - globally or for one subtree - is setting
-that attribute. The types are generated from the token stylesheets, so upgrading the package
-surfaces new tokens rather than drifting from them.
+The decisions are the top-level keys; every other token is a typed key grouped by what it does:
+hover shows the default, a typo is a compile error, and values take any CSS. `base` lands on
+`:root` and every other key becomes a `[data-theme='<key>']` block, so switching themes - globally
+or for one subtree - is setting that attribute. The types are generated from the token stylesheets,
+so upgrading the package surfaces new tokens rather than drifting from them.
 
 `ZyncatTheme` is a plain component that renders a `<style>` element: it server-renders (no
 flash, no client hook), needs no PostCSS plugin, bundler plugin or build step, and adds about

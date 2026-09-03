@@ -38,8 +38,8 @@ const OVERRIDE_LEVEL_ROWS: OverrideLevelRow[] = [
     level: '1',
     mechanism: (
       <>
-        <code className="doc-inline-code">defineTheme</code>, or tokens on{' '}
-        <code className="doc-inline-code">:root</code>
+        <code className="doc-inline-code">zyncat.theme.css</code>, or{' '}
+        <code className="doc-inline-code">defineTheme</code>
       </>
     ),
     reaches: 'The whole system',
@@ -123,6 +123,68 @@ const SCOPED_PROPERTIES: { component: string; subpath: string; count: number; sa
   },
 ];
 
+interface VocabularyRow {
+  family: string;
+  tokens: string;
+  pick: string;
+}
+
+const VOCABULARY_COLUMNS: TableColumn<VocabularyRow>[] = [
+  { key: 'family', label: 'Family', strong: true },
+  { key: 'tokens', label: 'Tokens', render: (r) => <code className="doc-inline-code">{r.tokens}</code> },
+  { key: 'pick', label: 'Pick it for', grow: true },
+];
+
+const VOCABULARY_ROWS: VocabularyRow[] = [
+  {
+    family: 'Surfaces',
+    tokens: '--bg-app, --bg-surface, --bg-surface-raised, --bg-subtle, --bg-muted, --bg-inset, --bg-overlay',
+    pick: 'The page, a card, a raised panel, a quiet fill, a recessed well, the scrim behind an overlay.',
+  },
+  {
+    family: 'Ink',
+    tokens:
+      '--text-strong, --text-body, --text-secondary, --text-muted, --text-subtle, --text-disabled, --text-accent, --text-on-accent, --text-inverse',
+    pick: 'Headings, body copy, supporting copy, hints, placeholders, a link, text on an accent fill.',
+  },
+  {
+    family: 'Borders',
+    tokens: '--border-subtle, --border-default, --border-strong',
+    pick: 'A divider, a control edge, an emphasised edge.',
+  },
+  {
+    family: 'Status',
+    tokens: '--accent, --success, --warning, --danger, --info, each with -subtle and -text',
+    pick: 'A status fill, its quiet background, its readable text. Status hues mark genuine status only.',
+  },
+  {
+    family: 'Type',
+    tokens: '--type-display-lg … --type-micro, --type-mono, --font-sans, --font-mono',
+    pick: 'One font: shorthand per role with size and leading matched; eleven of them.',
+  },
+  {
+    family: 'Space',
+    tokens: '--space-px, --space-1 … --space-10',
+    pick: 'Padding and gaps on the components\u2019 4px grid: 4, 8, 12, 16, 24, 32, 48, 64, 96, 128.',
+  },
+  {
+    family: 'Radius',
+    tokens: '--radius-sm, --radius-md, --radius-lg, --radius-xl, --radius-2xl, --radius-full',
+    pick: 'Controls take md, cards lg, sheets xl, pills full. Every step is a ratio of --radius.',
+  },
+  {
+    family: 'Elevation',
+    tokens: '--shadow-xs, --shadow-sm, --shadow-md, --shadow-lg, --shadow-xl, --focus-ring',
+    pick: 'Lift, and the one focus treatment every control shares.',
+  },
+  {
+    family: 'Motion',
+    tokens:
+      '--duration-fast … --duration-slowest, --ease-standard, --ease-entrance, --ease-exit, --ease-spring, --ease-glide, --transition-control, --transition-colors, --transition-opacity',
+    pick: 'Your own transitions on the system\u2019s bands; reduced motion collapses them for you.',
+  },
+];
+
 const LEVEL_0_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
 
 /* Specificity (0,0,0) and it still wins: every shipped rule
@@ -134,13 +196,13 @@ const LEVEL_0_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
   text-transform: uppercase;
 }`;
 
-const LEVEL_1_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
+const LEVEL_1_CODE = `/* zyncat.theme.css - written by init beside your app entry, loaded after @zyncat/ui/styles.css */
 :root {
   /* hover, active, lift, subtle, border, disabled, wash, text-accent,
-     the focus ring and info all derive from this one decision */
+     the focus ring and info all follow this one decision */
   --accent: oklch(0.58 0.19 292);
 
-  /* every --radius-* step derives from this one */
+  /* every --radius-* step follows this one */
   --radius: var(--radius-full);
 }`;
 
@@ -203,11 +265,7 @@ type OdometerInk = 'accent' | 'warning';
 const PREVIEW = 'zyncat-preview';
 const PREVIEW_DARK = 'zyncat-preview-dark';
 
-const CORNERS: Record<Corner, ThemeTokens['radius']> = {
-  sharp: { radius: '0' },
-  default: { radius: '0.5rem' },
-  round: { radius: '1rem' },
-};
+const CORNERS: Record<Corner, string> = { sharp: '0', default: '0.5rem', round: '1rem' };
 
 const DARK_SURFACES: ThemeTokens['color'] = {
   bgApp: 'oklch(0.19 0.008 198)',
@@ -226,8 +284,6 @@ const DARK_SURFACES: ThemeTokens['color'] = {
   borderStrong: 'oklch(0.44 0.01 198)',
 };
 
-const accentAt = (hue: number): ThemeTokens['color'] => ({ accent: `oklch(0.63 0.118 ${hue})` });
-
 const playgroundCode = (
   hue: number,
   corner: Corner,
@@ -235,8 +291,8 @@ const playgroundCode = (
 ) => `import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: { accent: 'oklch(0.63 0.118 ${hue})' },
-  radius: { radius: '${CORNERS[corner].radius}' },
+  accent: 'oklch(0.63 0.118 ${hue})',
+  radius: '${CORNERS[corner]}',
   components: { odometer: { accent: 'var(--${ink})' } },
 });
 
@@ -255,16 +311,16 @@ export function ThemingPlayground() {
   const [total, setTotal] = useState(4820);
 
   const base = defineTheme({
-    color: accentAt(hue),
+    accent: `oklch(0.63 0.118 ${hue})`,
     radius: CORNERS[corner],
     components: { odometer: { accent: `var(--${ink})` } },
   });
-  const dark = defineTheme({ ...base, color: { ...base.color, ...DARK_SURFACES } });
+  const dark = defineTheme({ ...base, color: DARK_SURFACES });
 
   return (
     <Playground
       code={playgroundCode(hue, corner, ink)}
-      note="Every control writes one typed token; the accent's hover, active, wash and focus ring derive from it. The preview scopes the theme to this panel with a named theme, so the rest of the page keeps its own."
+      note="Every control writes one typed key at the top of the theme; the accent's hover, active, wash and focus ring, and every corner step, derive from it. The preview scopes the theme to this panel with a named theme, so the rest of the page keeps its own."
       rail={
         <>
           <KnobRange label="accent hue" value={hue} onChange={setHue} min={0} max={360} format={(v) => `${v}°`} />
@@ -299,9 +355,9 @@ const THEME_FILE_CODE = `// zyncat.theme.ts
 import { defineTheme } from '@zyncat/ui/theme';
 
 export const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)' },
-  radius: { radius: '0.75rem' },
-  type: { fontSans: "'Inter', system-ui, sans-serif" },
+  accent: 'oklch(0.58 0.19 292)',
+  radius: '0.75rem',
+  fontSans: "'Inter', system-ui, sans-serif",
   motion: { durationBase: '180ms' },
   components: { odometer: { accent: 'var(--warning)' }, supportFan: { inset: 'var(--space-6)' } },
 });
@@ -424,12 +480,18 @@ export function ThemingDoc() {
       <section className="guide-section" id="level-1">
         <h2 className="guide-section__title">Level 1 — retheme with tokens</h2>
         <p className="guide-section__p">
-          Repoint the semantic tokens and the whole system moves at once. Four colours are decisions —{' '}
-          <code className="doc-inline-code">--accent</code>, <code className="doc-inline-code">--success</code>,{' '}
-          <code className="doc-inline-code">--warning</code>, <code className="doc-inline-code">--danger</code> — and
-          every other colour derives from them: the accent&rsquo;s hover, active, subtle, border, wash and focus ring
-          follow one line. Components read them live, and the WAAPI motion engine reads the same DOM values, so
-          animation retimes with the CSS rather than drifting out of sync with it.
+          Eight values are decisions: four hues (<code className="doc-inline-code">--accent</code>,{' '}
+          <code className="doc-inline-code">--success</code>, <code className="doc-inline-code">--warning</code>,{' '}
+          <code className="doc-inline-code">--danger</code>), the gray ramp&rsquo;s hue (
+          <code className="doc-inline-code">--neutral</code>, the accent by default), roundness (
+          <code className="doc-inline-code">--radius</code>) and the two faces. Everything else derives from them: set
+          the accent and its hover, active, subtle, border, wash and focus ring follow; set the radius and every corner
+          step follows. <code className="doc-inline-code">init</code> writes those eight lines, at their defaults, into{' '}
+          <code className="doc-inline-code">zyncat.theme.css</code> beside your app entry — the whole retheme surface,
+          in your project, and a retheme is editing a value there. VS Code&rsquo;s built-in CSS completion only sees
+          variables declared in the file you are editing; the CSS Variable Autocomplete extension indexes the workspace,
+          and this file is in it. The roles you read while building your own pages stay in the package, which is what
+          the vocabulary table below is for.
         </p>
 
         <div className="theming-pair">
@@ -456,9 +518,12 @@ export function ThemingDoc() {
         <CodeBlock code={LEVEL_1_CODE} language="css" />
 
         <p className="guide-section__p">
-          The same mechanism gives you themes. Scope the block to an attribute instead of{' '}
-          <code className="doc-inline-code">:root</code> and toggle it on{' '}
-          <code className="doc-inline-code">&lt;html&gt;</code>:
+          Components read the tokens live, and the WAAPI motion engine reads the same DOM values, so animation retimes
+          with the CSS rather than drifting out of sync with it. The same mechanism gives you themes. A dark theme sets
+          the neutral roles — surfaces, ink, borders — directly, in a block scoped to an attribute you toggle on{' '}
+          <code className="doc-inline-code">&lt;html&gt;</code> or any subtree root. The derived tokens are declared on
+          every theme root, so a subtree that repoints only the accent re-derives its whole family, while the neutral
+          roles cascade through untouched.
         </p>
 
         <CodeBlock code={LEVEL_1_DARK_CODE} language="css" />
@@ -471,27 +536,48 @@ export function ThemingDoc() {
         </Callout>
 
         <CodeBlock code={REDUCED_MOTION_CODE} language="css" />
+      </section>
+
+      <section className="guide-section" id="vocabulary">
+        <h2 className="guide-section__title">The vocabulary you use</h2>
+        <p className="guide-section__p">
+          Your own pages read the same tokens the components do, so a card you build sits on the same surfaces, ink,
+          rhythm and corners as the shipped ones — and follows a retheme. This is the tier to know by name. The
+          decisions above drive it; the plumbing beneath it — ramp stops, the hover and wash derivations, rings, control
+          sizes — is nothing you set.
+        </p>
+
+        <Table
+          columns={VOCABULARY_COLUMNS}
+          rows={VOCABULARY_ROWS}
+          rowKey="family"
+          ariaLabel="The token vocabulary you use"
+          density="compact"
+        />
 
         <p className="guide-section__p">
-          The full vocabulary — colour, spacing, type, radius, elevation, motion, icons, layers, glass, avatar — is
-          printed with real values by the MCP server&rsquo;s <code className="doc-inline-code">get_tokens</code> tool.
-          Writing that vocabulary by hand means writing custom-property names by hand, which is what the next section
-          removes.
+          The full vocabulary, with real values, is what the MCP server&rsquo;s{' '}
+          <code className="doc-inline-code">get_tokens</code> tool prints, and every token is typed on any
+          component&rsquo;s <code className="doc-inline-code">style</code> prop once{' '}
+          <code className="doc-inline-code">@zyncat/ui/theme</code> is imported anywhere in the app.
         </p>
       </section>
 
       <section className="guide-section" id="typed-theme">
         <h2 className="guide-section__title">The typed theme</h2>
         <p className="guide-section__p">
-          <code className="doc-inline-code">@zyncat/ui/theme</code> is the same level 1 retheme with a type behind it.
-          Every token is a key on a grouped object, so the editor completes the names, hovering one shows what it does
-          and what it currently is, and a typo is a compile error instead of a property that silently does nothing.
+          <code className="doc-inline-code">@zyncat/ui/theme</code> is the same level 1 retheme with a type behind it,
+          for a theme that is data: several named themes, values computed at build time, a design tool&rsquo;s export.
+          The eight decisions are the top-level keys; every other token is a key on a group named the way the files are,
+          so the editor completes the names, hovering one shows what it does and what it currently is, and a typo is a
+          compile error instead of a property that silently does nothing.
         </p>
 
         <ThemingPlayground />
 
         <p className="guide-section__p">
-          Keep the themes in one file. It holds only your decisions — everything you leave out keeps its shipped value,
+          Keep the themes in one file, and keep one writer per decision: a project on this route drops those lines from{' '}
+          <code className="doc-inline-code">zyncat.theme.css</code>. Everything you leave out keeps its shipped value,
           so upgrading the package picks up new tokens instead of drifting from them.
         </p>
 
@@ -522,8 +608,8 @@ export function ThemingDoc() {
         <FeatureGrid>
           <FeatureCard
             icon="sparkle"
-            title="Grouped, not a flat list"
-            description="color, type, space, radius, elevation, motion, glass, icon, layer, avatar — plus components for the scoped knobs, and custom for anything else."
+            title="Decisions first, then groups"
+            description="Eight decisions at the top level; under them color, type, space, radii, elevation, motion, glass, icon, layer, avatar — plus components for the scoped knobs, and custom for anything else."
           />
           <FeatureCard
             icon="shield-check"

@@ -90,6 +90,7 @@ export const GROUPS: DocGroup[] = [
           { id: 'override-levels', title: 'The four override levels', level: 2 },
           { id: 'level-0', title: 'Level 0 — Cascade layers', level: 2 },
           { id: 'level-1', title: 'Level 1 — Tokens', level: 2 },
+          { id: 'vocabulary', title: 'The vocabulary you use', level: 2 },
           { id: 'typed-theme', title: 'The typed theme', level: 2 },
           { id: 'level-2', title: 'Level 2 — Scoped properties', level: 2 },
           { id: 'level-3', title: 'Level 3 — Instance props', level: 2 },

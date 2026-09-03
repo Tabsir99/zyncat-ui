@@ -83,8 +83,8 @@ export default withZyncat({
 
         <p className="guide-section__p">
           That is the whole setup. The CLI installs <code className="doc-inline-code">@zyncat/ui</code> (and React 19,
-          if the project does not have it yet), imports the base stylesheet at your app root, installs the agent skill
-          and registers the MCP server - then tells you exactly what it wrote.
+          if the project does not have it yet), imports the base stylesheet at your app root, writes a theme file beside
+          it, installs the agent skill and registers the MCP server - then tells you exactly what it wrote.
         </p>
 
         <Callout tone="info" title="Why the CLI is the install path">
@@ -98,7 +98,7 @@ export default withZyncat({
       <section className="guide-section" id="what-it-does">
         <h2 className="guide-section__title">What init does</h2>
         <p className="guide-section__p">
-          Four steps, each printed as it lands. Nothing is hidden and nothing else is touched.
+          Five steps, each printed as it lands. Nothing is hidden and nothing else is touched.
         </p>
 
         <Steps>
@@ -123,7 +123,16 @@ export default withZyncat({
             </p>
           </Step>
 
-          <Step number={3} title="Installs the agent skill">
+          <Step number={3} title="Writes the theme file">
+            <p className="guide-section__p">
+              Writes <code className="doc-inline-code">zyncat.theme.css</code> beside that entry and imports it right
+              after the stylesheet. It holds the eight decisions the whole system derives from - the four hues, the gray
+              ramp&apos;s hue, the radius, the two faces - at their defaults, so a retheme is editing a value there. A
+              file you already have is kept.
+            </p>
+          </Step>
+
+          <Step number={4} title="Installs the agent skill">
             <p className="guide-section__p">
               Copies the <code className="doc-inline-code">zyncat-ui</code> skill into{' '}
               <code className="doc-inline-code">.claude/skills/</code> - the component map, picker tables, recipes and
@@ -131,7 +140,7 @@ export default withZyncat({
             </p>
           </Step>
 
-          <Step number={4} title="Registers the MCP server">
+          <Step number={5} title="Registers the MCP server">
             <p className="guide-section__p">
               Merges the <code className="doc-inline-code">zyncat-ui</code> entry into{' '}
               <code className="doc-inline-code">.mcp.json</code>, pointing at the server bundled with the installed
