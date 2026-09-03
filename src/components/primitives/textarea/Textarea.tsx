@@ -27,7 +27,6 @@ import {
 
 const RING_C = (2 * Math.PI * 7).toFixed(2);
 
-/** The native <textarea> props Textarea surfaces at the top level (the rest live in `htmlProps`). */
 type TextareaNative = Pick<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   'placeholder' | 'disabled' | 'readOnly' | 'onKeyDown'

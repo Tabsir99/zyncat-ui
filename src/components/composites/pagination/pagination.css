@@ -1,15 +1,12 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Pagination - cursor strip: layout, mono readout, square arrows + directional caret nudge (on Button vocabulary). */
-
   .pgn {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
   }
 
-  /* mono tabular readout; .pgn__range is the node Motion slides - keep it transformable (inline-block) */
   .pgn__readout {
     font: var(--type-code);
     font-variant-numeric: tabular-nums;
@@ -24,7 +21,6 @@
     color: var(--text-body);
   }
 
-  /* arrows kept adjacent (not flanking the readout) so repeated paging needs no mouse travel and a growing readout never shifts them */
   .pgn__nav {
     display: flex;
     gap: var(--space-1);
@@ -34,7 +30,6 @@
     padding: 0;
   }
 
-  /* Caret nudges toward its direction on hover - a 1px optical cue. */
   .pgn__btn .icon {
     transition: transform var(--duration-fast) var(--ease-standard);
   }

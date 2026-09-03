@@ -1,8 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* date-picker domain - geometry + paint for DateField/DateTimeField (.dtp*), DateRangeField (.drp*), TimeField (.tfd*, .tsg*). */
-
   .dtf__trigger {
     display: flex;
     align-items: center;
@@ -22,14 +20,10 @@
     color: var(--text-disabled);
   }
 
-  /* Hover - light fill + stronger border, matching Select's trigger. The border
-   darkens via the shared .fld__input:hover; this adds the fill it omits. Held
-   off while focused or open, where the accent focus look owns the trigger. */
   .dtf__trigger:hover:not(:disabled):not(:focus):not([aria-expanded='true']) {
     background-color: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
   }
 
-  /* open - focus moves into the panel, so the trigger holds the focus look itself while expanded. */
   .dtf__trigger[aria-expanded='true']:not(:disabled) {
     border-color: var(--accent);
     background: var(--bg-surface);
@@ -49,7 +43,6 @@
     padding: var(--space-3) var(--space-3) var(--space-2);
   }
 
-  /* header - month flush-left (semibold sans), year as a quiet mono chip; carets + today-jump grouped right. */
   .dtp__head {
     display: flex;
     align-items: center;
@@ -62,7 +55,7 @@
     margin-bottom: var(--space-3);
   }
   .dtp__month {
-    padding-inline-start: var(--space-2); /* optical: toward the first numeral */
+    padding-inline-start: var(--space-2);
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
@@ -126,18 +119,16 @@
   }
 
   .dtp__days {
-    position: relative; /* containing block + measuring frame for the glide pill */
+    position: relative;
     display: grid;
     grid-template-columns: repeat(7, var(--dtp-cell));
     gap: var(--space-1);
-    isolation: isolate; /* the hover pill's z:-1 must resolve here, above the panel bg, below cell content */
+    isolation: isolate;
   }
-  /* ARIA rows - no boxes; the buttons stay direct grid items */
   .dtp__row {
     display: contents;
   }
 
-  /* day cell - the button must create no stacking context, so the pill (z0) / numeral (z1) resolve at grid level. */
   .dtp__day {
     position: relative;
     width: var(--dtp-cell);
@@ -157,7 +148,7 @@
   }
   .dtp__day:hover:not(:disabled) {
     color: var(--text-strong);
-  } /* background comes from the shared glide pill, not per-cell */
+  }
   .dtp__day:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
@@ -170,7 +161,6 @@
     cursor: default;
   }
 
-  /* gliding hover pill (useGlide) - bg-muted (not -subtle, else ~ invisible on the raised surface); z:-1 under numerals + selection tint. */
   .dtp__hover {
     opacity: 0;
     position: absolute;
@@ -182,7 +172,6 @@
     will-change: transform, opacity;
   }
 
-  /* selection - a quiet tint, not a solid fill (so it never outshouts Done); the layoutId node, so fill + border travel together. */
   .dtp__pill {
     position: absolute;
     inset: 0;
@@ -200,7 +189,6 @@
     font-weight: var(--weight-semibold);
   }
 
-  /* today - accent numeral + a short bar, never a fill (fill means "picked"); reads on the selection tint too. */
   .dtp__day.is-today .dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
@@ -223,7 +211,6 @@
     background: var(--text-disabled);
   }
 
-  /* time row - DateTimeField's slot, between the grid and the footer */
   .dtp__time {
     display: flex;
     align-items: center;
@@ -238,7 +225,6 @@
     margin-right: auto;
   }
 
-  /* keyboard hint - shown only on focus-within; asymmetric easing (eases in, leaves fast). */
   .dtp__timeHint {
     display: inline-flex;
     gap: var(--space-1);
@@ -289,7 +275,7 @@
   }
 
   .drp {
-    --dtp-cell: var(--control-height); /* the day grid reuses .dtp__days/.dtp__dow, which size columns off this var */
+    --dtp-cell: var(--control-height);
     background: var(--bg-surface-raised);
     border: var(--border-hairline) solid var(--border-default);
     border-radius: var(--radius-lg);
@@ -303,14 +289,14 @@
 
   .drp__presets {
     flex: none;
-    width: max-content; /* sized by the longest preset label - no magic width number */
+    width: max-content;
     display: flex;
     flex-direction: column;
     gap: var(--space-px);
     padding: var(--space-3) var(--space-2);
     border-right: var(--border-hairline) solid var(--border-subtle);
     background: var(--bg-subtle);
-    isolation: isolate; /* the glide pill's z:-1 resolves here */
+    isolation: isolate;
   }
   .drp__preset {
     position: relative;
@@ -328,7 +314,7 @@
   }
   .drp__preset:hover {
     color: var(--text-strong);
-  } /* bg comes from the glide pill */
+  }
   .drp__preset:focus-visible {
     outline: none;
     box-shadow: var(--ring-accent);
@@ -338,7 +324,6 @@
     color: var(--text-accent);
     font-weight: var(--weight-medium);
   }
-  /* gliding hover indicator - one pill that glides between presets (see glide-pill); the active tint is separate. */
   .drp__presetGlide {
     position: absolute;
     top: 0;
@@ -350,8 +335,8 @@
   }
 
   .drp__months {
-    position: relative; /* containing block + measuring frame for the glide pill spanning both grids */
-    isolation: isolate; /* contain the pill's z:-1 here, else it paints behind the panel surface */
+    position: relative;
+    isolation: isolate;
     display: flex;
   }
   .drp__months .dtp__cal {
@@ -361,7 +346,8 @@
     border-left: var(--border-hairline) solid var(--border-subtle);
   }
 
-  /* directional month slide - CSS keyframe on the keyed grid remount (can't fight Motion's layoutId caps); gated on reduced-motion. */
+  /* The slide is a CSS keyframe rather than Motion: the layoutId caps FLIP inside this grid on the same remount
+   and cannot share it with a Motion slide. */
   @media (prefers-reduced-motion: no-preference) {
     .drp .dtp__days[data-enter='1'] {
       animation: drp-month-in-l var(--duration-base) var(--ease-entrance);
@@ -391,7 +377,6 @@
     }
   }
 
-  /* month header - prev caret hugs the left edge, next caret the right; the label centers between. */
   .drp__mhead {
     display: flex;
     align-items: center;
@@ -411,15 +396,14 @@
     justify-content: space-between;
   }
 
-  /* range band - extends 1px into the 4px gap toward an in-range neighbour (kills the subpixel seam), rounds where it stops. */
   .drp__band {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: var(
-      --accent-subtle
-    ); /* opaque, so the 1px gap-bridge overlaps don't stack into darker seams between days */
+    background: var(--accent-subtle);
   }
+  /* Overshoots the gap by 1px so neighbouring bands overlap instead of leaving a subpixel seam; the fill is
+   opaque so the overlap does not darken. */
   .drp__band--extL {
     left: calc(-1 * var(--space-1) - 1px);
   }
@@ -435,20 +419,18 @@
     border-bottom-right-radius: var(--radius-md);
   }
 
-  /* endpoint cap - a Motion layoutId node that glides between cells; the ghost variant (outline, no fill) marks the tentative end. */
   .drp__cap {
     position: absolute;
     inset: 0;
     z-index: 1;
     border-radius: var(--radius-md);
-    background: var(--accent-border); /* more opaque than the band - a clear selection marker, not a heavy solid fill */
+    background: var(--accent-border);
   }
   .drp__cap--ghost {
     background: transparent;
     border: var(--border-hairline) solid var(--accent);
   }
 
-  /* numerals ride above caps (z2); selection reads strong accent, in-range a touch quieter. */
   .drp .dtp__num {
     z-index: 2;
   }
@@ -498,11 +480,8 @@
     flex: 1 1 auto;
   }
 
-  /* bottom-sheet skin (mobile) - sheds border/shadow (the sheet supplies elevation), rounds only top corners, one month. */
   .drp--sheet {
     --dtp-cell: var(--control-height-lg);
-  } /* 40px touch targets */
-  .drp--sheet {
     width: 100vw;
     max-width: 100%;
     border: 0;
@@ -548,7 +527,7 @@
     user-select: none;
     transition: var(--transition-colors);
   }
-  /* :focus, not :focus-visible, on purpose - a clicked segment reads selected like keyboard entry. */
+  /* :focus, not :focus-visible: a clicked segment has to read selected, the same as keyboard entry. */
   .tsg__seg:focus {
     background: var(--accent-subtle);
     color: var(--text-accent);
@@ -572,7 +551,8 @@
     cursor: not-allowed;
   }
 
-  /* .tfd__box is a DIV wearing .fld__input chrome, so input's :focus can't reach it - re-stated as :focus-within, scoped under .tfd to win the cascade. */
+  /* The box is a div in .fld__input chrome, so the input focus rules never reach it; these restate them, scoped
+   under .tfd to outrank .fld__input. */
   .tfd__box {
     display: inline-flex;
     align-items: center;

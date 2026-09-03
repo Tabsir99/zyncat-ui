@@ -1,5 +1,3 @@
-/* Motion system - durations, brand curves, travel distances, rest scales, and pre-composed transitions. */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
@@ -21,17 +19,14 @@
       0.55,
       0,
       1
-    ); /* fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit */
+    ); /* fast out, soft landing - a persistent element moving to a new target, never enter/exit */
 
-    /* Travel - how far a surface moves on the way in or out. A magnitude scale, snapped to the 4px
-     spacing spine; pick by how far the surface has conceptually come, not by how big it is. */
     --distance-sm: 0.5rem; /* 8px - settling into place; the surface is already where it belongs */
     --distance-md: 1rem; /* 16px - arriving from an adjacent position - page turns, tab panels, paged ranges */
     --distance-lg: 1.5rem; /* 24px - arriving from outside the surface - a toast joining its stack */
 
-    /* Rest scale - what a surface scales from on the way in, and to on the way out. Picked by surface
-     size, not by taste: the same ratio reads as more movement the wider the surface, so a dialog
-     needs a smaller one than a tag to land at the same perceived distance. */
+    /* Rest scale - picked by surface size: the same ratio reads as more movement the wider the
+     surface, so a dialog takes a smaller one than a tag to land at the same perceived distance. */
     --scale-panel: 0.98; /* full-width surfaces - dialog, modal, sheet */
     --scale-floating: 0.96; /* floating surfaces - popover, tooltip, menu, toast, alert */
     --scale-chip: 0.9; /* small inline elements - tag, badge, count */
@@ -48,7 +43,6 @@
     --transition-opacity: opacity var(--duration-base) var(--ease-standard);
   }
 
-  /* Accessibility: honor reduced-motion globally - every consumer gets it free. */
   @media (prefers-reduced-motion: reduce) {
     :root {
       --duration-fast: 1ms;

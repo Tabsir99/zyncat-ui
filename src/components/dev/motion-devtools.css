@@ -1,20 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* MotionDevtools - a floating dev overlay, styled on-brand with the design system's own
-   surface tokens so the <Button>/<Checkbox>/<Collapse> it dogfoods render natively.
-
-   Collapsed it's a small pill (gauge + current factor); opening morphs it into the full panel.
-   The width eases (CSS transition) in step with the <Collapse>-driven body height, so it grows
-   as one piece and never teleports. Everything that would change size on open lives INSIDE the
-   Collapse, so nothing clips while the pill is still narrow.
-
-   The one non-negotiable trick: it RESETS --duration-* to their canonical values on its own
-   root. The engine scales those tokens globally to slow the app; without this local reset the
-   panel's own controls - and this very expand/collapse - would slow down with everything else.
-   A motion debugger must stay crisp while the app runs in slow-mo. Token fallbacks keep it
-   legible if dropped in without the base layer. */
-
   .mdt {
     /* immune to the global slow-mo the engine applies to --duration-* */
     --duration-fast: 140ms;
@@ -29,7 +15,7 @@
     --mdt-surface: color-mix(in oklab, var(--bg-surface, #fff) 88%, transparent);
 
     position: fixed;
-    z-index: 2147483000; /* above every app layer, including tooltips */
+    z-index: 2147483000;
     display: flex;
     color: var(--text-body, oklch(0.35 0.01 264));
     font-family: var(--font-body, ui-sans-serif, system-ui, sans-serif);
@@ -53,12 +39,8 @@
     right: var(--mdt-offset);
   }
 
-  /* ---------- card (pill when collapsed, panel when open) ---------- */
-
   .mdt__panel {
     box-sizing: border-box;
-    /* Compact pill when collapsed; eases to the full panel width in step with the <Collapse>
-     body height below, so the whole thing morphs open and never teleports. */
     width: 128px;
     padding: 5px;
     border: 1px solid var(--border-subtle, oklch(0.92 0.004 264));
@@ -83,8 +65,6 @@
       transform: translateY(6px) scale(0.985);
     }
   }
-
-  /* ---------- pill / header (the toggle) ---------- */
 
   .mdt__head {
     appearance: none;
@@ -152,14 +132,10 @@
     transform: rotate(180deg);
   }
 
-  /* ---------- body (inside <Collapse>) ---------- */
-
   .mdt__body {
     box-sizing: border-box;
-    /* Hold a stable layout width so controls don't reflow as the card animates open; the
-     collapsed pill is narrower, so this overflows and is clipped by <Collapse>'s overflow. */
     width: 100%;
-    min-width: 208px;
+    min-width: 208px; /* wider than the collapsed pill on purpose: the controls never reflow while it opens */
     display: flex;
     flex-direction: column;
     gap: 0.8125rem;
@@ -235,7 +211,6 @@
     box-shadow: var(--ring-accent, 0 0 0 3px oklch(0.7 0.12 185 / 0.35));
   }
 
-  /* preset chip grid + action row - children are DS <Button>s */
   .mdt__chips {
     display: grid;
     grid-template-columns: repeat(5, 1fr);

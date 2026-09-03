@@ -22,7 +22,6 @@ export interface ListboxPanelProps extends MenuHighlightProps {
   ariaLabel?: string;
   multiple?: boolean;
   activateOn?: ActivateOn;
-  /** Menu open/close timing - motion tokens only, or `null` to disable. */
   animation?: DisableableAnimation;
   check?: (selected: boolean) => ReactNode;
 }

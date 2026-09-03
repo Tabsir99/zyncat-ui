@@ -1,8 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Select family - <Select> (single) + <MultiSelect>, one .select__* vocabulary (no native <select>). */
-
   .select {
     position: relative;
     display: inline-block;
@@ -134,9 +132,6 @@
     white-space: nowrap;
   }
 
-  /* Chrome, origin, scroll box, row skeleton and pill all come from
-   internal/menu/menu-surface.css; JS sets top/left/min-width. Listbox-only states live here. */
-
   .select__search {
     display: flex;
     align-items: center;
@@ -163,8 +158,6 @@
     color: var(--text-disabled);
   }
 
-  /* Row-height motion is the Collapse primitive, not this scroll container.
-   position: relative anchors the glide pill (a single absolute child) to the scrolled content. */
   .select__list {
     position: relative;
     scroll-behavior: smooth;
@@ -222,7 +215,6 @@
     color: var(--text-disabled);
   }
 
-  /* check lands with a spring when a row becomes selected (remounts via React key) */
   .select__option[data-selected='true'] .select__option-check :is(i, svg) {
     animation: select-check-in var(--duration-base) var(--ease-spring);
   }
@@ -237,7 +229,6 @@
     }
   }
 
-  /* Multi-select: the reused Checkbox box IS the indicator; strip the .cbx standalone chrome. */
   .select__menu[data-multiple='true'] .select__option-check {
     opacity: 1;
   }
@@ -250,8 +241,7 @@
     margin-top: 0;
   }
 
-  /* Row owns the press (.cbx is pointer-events:none): dip the box on press - explicit transform,
-   so a checked box (whose resting scale would otherwise dilute --press) still scales from center. */
+  /* .cbx is pointer-events: none, so its own :active never fires; the row dips the box */
   .select__menu[data-multiple='true'] .select__option:active:not([data-disabled='true']) .cbx__box {
     transform: scale(0.86);
   }

@@ -124,7 +124,7 @@ export interface MotionEaseTokens {
   exit?: string | number;
   /** `--ease-spring`. Default: `cubic-bezier(0.34, 1.4, 0.5, 1)`. */
   spring?: string | number;
-  /** `--ease-glide` - fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit. Default: `cubic-bezier( 0.32, 0.55, 0, 1 )`. */
+  /** `--ease-glide` - fast out, soft landing - a persistent element moving to a new target, never enter/exit. Default: `cubic-bezier( 0.32, 0.55, 0, 1 )`. */
   glide?: string | number;
 }
 
@@ -497,7 +497,7 @@ export interface TokenProperties {
   '--leading-display'?: string | number;
   /** `--leading-display-lg`. Default: `2.875rem`. */
   '--leading-display-lg'?: string | number;
-  /** `--measure-floating` - Measure - line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. Default: `36ch`. */
+  /** `--measure-floating` - Line-length cap for floating text - tooltip, toast, popover hints. Default: `36ch`. */
   '--measure-floating'?: string | number;
   /** `--tracking-caps`. Default: `0.04em`. */
   '--tracking-caps'?: string | number;
@@ -507,7 +507,7 @@ export interface TokenProperties {
   '--tracking-tight'?: string | number;
   /** `--tracking-display`. Default: `-0.021em`. */
   '--tracking-display'?: string | number;
-  /** `--type-display-lg` - Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. On every theme root so a subtree that swaps --font-body gets the bundles in that face. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-body)`. Re-derived on every theme root. */
+  /** `--type-display-lg` - Role bundles - size, leading, weight and tracking pre-composed; reach for these first. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-body)`. Re-derived on every theme root. */
   '--type-display-lg'?: string | number;
   /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-body)`. Re-derived on every theme root. */
   '--type-display'?: string | number;
@@ -561,9 +561,9 @@ export interface TokenProperties {
   '--control-height-lg'?: string | number;
   /** `--control-box`. Default: `1.125rem`. */
   '--control-box'?: string | number;
-  /** `--control-switch` - switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4. Default: `1.25rem`. */
+  /** `--control-switch` - the switch track - the one control size off the scale. Default: `1.25rem`. */
   '--control-switch'?: string | number;
-  /** `--radius-full`. Default: `624.9375rem`. */
+  /** `--radius-full` - the pill - a shape, not a step of --radius, so it stays literal. Default: `624.9375rem`. */
   '--radius-full'?: string | number;
   /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
   '--radius-sm'?: string | number;
@@ -629,7 +629,7 @@ export interface TokenProperties {
   '--ease-exit'?: string | number;
   /** `--ease-spring`. Default: `cubic-bezier(0.34, 1.4, 0.5, 1)`. */
   '--ease-spring'?: string | number;
-  /** `--ease-glide` - fast-out travel - a persistent element answering a new target at once, then landing soft; the glide pill's curve, not for enter/exit. Default: `cubic-bezier( 0.32, 0.55, 0, 1 )`. */
+  /** `--ease-glide` - fast out, soft landing - a persistent element moving to a new target, never enter/exit. Default: `cubic-bezier( 0.32, 0.55, 0, 1 )`. */
   '--ease-glide'?: string | number;
   /** `--distance-sm` - 8px - settling into place; the surface is already where it belongs. Default: `0.5rem`. */
   '--distance-sm'?: string | number;
@@ -673,7 +673,7 @@ export interface TokenProperties {
   '--icon-md'?: string | number;
   /** `--icon-lg`. Default: `26px`. */
   '--icon-lg'?: string | number;
-  /** `--layer-overlay`. Default: `1000`. */
+  /** `--layer-overlay` - a band - each overlay adds its stack depth, so a later one paints above an earlier one. Default: `1000`. */
   '--layer-overlay'?: string | number;
   /** `--layer-toast`. Default: `1050`. */
   '--layer-toast'?: string | number;

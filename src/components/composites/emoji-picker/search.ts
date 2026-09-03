@@ -2,12 +2,6 @@ import { getEmojiData, type EmojiData } from './data';
 
 const MAX_RESULTS = 90;
 
-/* Emoji search is word search, not fuzzy search: at ~1800 items a
- * subsequence tier drowns the tail in junk ("cat" ⊂ "certification"), so
- * matching is strictly word-based — every query token must hit a word
- * (exact / prefix / mid-word for longer tokens), and tags count for less
- * than names or shortcodes. */
-
 interface IndexedEmoji {
   id: string;
   shortcodes: string[];
@@ -73,7 +67,6 @@ export const getRankedEmojiIds = (query: string): string[] => {
     if (total) scored.push({ id: e.id, score: total, nameLen: e.nameLen });
   }
 
-  // Equal relevance → the shorter name is the more focal emoji.
   scored.sort((a, b) => b.score - a.score || a.nameLen - b.nameLen);
   return scored.slice(0, MAX_RESULTS).map((s) => s.id);
 };

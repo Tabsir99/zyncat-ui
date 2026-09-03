@@ -1,6 +1,5 @@
-/* The decisions - the eight values the rest of the vocabulary derives from. Set one and its family
-   follows; set a derived role only to break it away from its decision. `zyncat-ui init` copies the
-   :root block below into the project as zyncat.theme.css - the whole retheme surface, in the project. */
+/* The decisions - the values the rest of the vocabulary derives from. zyncat-ui init copies the
+   :root block below, comments included, into the project as zyncat.theme.css. */
 
 @layer zyncat.tokens, zyncat.components;
 

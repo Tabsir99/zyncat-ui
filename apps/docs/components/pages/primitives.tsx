@@ -27,9 +27,6 @@ const BADGE_TONES: readonly BadgeTone[] = ['neutral', 'info', 'success', 'warnin
 const BADGE_VARIANTS: readonly BadgeVariant[] = ['glass', 'outline'];
 const BADGE_SIZES: readonly BadgeSize[] = ['sm', 'md'];
 
-/* ==========================================================================
-   Button
-   ========================================================================== */
 export function ButtonPlayground() {
   const [variant, setVariant] = useState<ButtonVariant>('primary');
   const [size, setSize] = useState<ButtonSize>('md');
@@ -63,9 +60,6 @@ export function ButtonPlayground() {
   );
 }
 
-/* ==========================================================================
-   Icon
-   ========================================================================== */
 export function IconPlayground() {
   const [size, setSize] = useState<IconSize>('lg');
   const [weight, setWeight] = useState<IconWeight>('regular');
@@ -91,9 +85,6 @@ export function IconPlayground() {
   );
 }
 
-/* ==========================================================================
-   Collapse
-   ========================================================================== */
 export function CollapsePlayground() {
   const [axis, setAxis] = useState<CollapseAxis>('height');
   const [open, setOpen] = useState(true);
@@ -141,9 +132,6 @@ export function CollapsePlayground() {
   );
 }
 
-/* ==========================================================================
-   Badge
-   ========================================================================== */
 export function BadgePlayground() {
   const [tone, setTone] = useState<BadgeTone>('info');
   const [variant, setVariant] = useState<BadgeVariant>('glass');
@@ -174,9 +162,6 @@ export function BadgePlayground() {
   );
 }
 
-/* ==========================================================================
-   StatusBadge
-   ========================================================================== */
 const STATUSES: PostStatus[] = ['draft', 'scheduled', 'processing', 'published', 'failed'];
 
 export function StatusBadgePlayground() {
@@ -203,9 +188,6 @@ export function StatusBadgePlayground() {
   );
 }
 
-/* ==========================================================================
-   CountBadge
-   ========================================================================== */
 export function CountBadgePlayground() {
   const [tone, setTone] = useState<BadgeTone>('info');
   const [variant, setVariant] = useState<BadgeVariant>('glass');

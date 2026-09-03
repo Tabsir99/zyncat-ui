@@ -25,7 +25,7 @@ export const bad = (
     <Collapse open animation={{ ease: 'ease-in-out' }} />
     {/* @ts-expect-error - unknown directions must not type-check */}
     <Collapse open animation={{ duration: { enter: 'fast' } }} />
-    {/* @ts-expect-error - raw DOM attributes no longer live at the top level */}
+    {/* @ts-expect-error - raw DOM attributes must not type-check at the top level */}
     <Collapse open onClick={() => {}} />
   </>
 );

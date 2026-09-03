@@ -1,11 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* overlay.css - the modal shell geometry shared by dialog and sheet: a fixed
-   full-viewport layer, the scrim filling it, and the grid cell the panel
-   mounts in (min 0 + max 100% give a scroll constraint chain). Per-component
-   placement lives with each consumer (dialog.css, sheet.css); the popover
-   paints itself entirely from popover.css. */
   .overlay-layer {
     position: fixed;
     inset: 0;

@@ -28,7 +28,7 @@ export interface TimeFieldProps extends DateFieldBaseProps {
 }
 
 export function TimeField({
-  value, // controlled: 'HH:mm' | null
+  value,
   defaultValue = null,
   onChange,
   label,

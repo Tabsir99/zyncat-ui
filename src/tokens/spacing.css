@@ -1,5 +1,3 @@
-/* Spacing spine - one 4px base and a short scale; every gap snaps to a step. */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
@@ -22,6 +20,6 @@
     --control-height: 2rem;
     --control-height-lg: 2.3rem;
     --control-box: 1.125rem;
-    --control-switch: 1.25rem; /* switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4 */
+    --control-switch: 1.25rem; /* the switch track - the one control size off the scale */
   }
 }

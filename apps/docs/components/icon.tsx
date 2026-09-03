@@ -1,10 +1,5 @@
-// Playground-local icon - the DEMO app's OWN icon source.
-// -------------------------------------------------------------------------
-// Zyncat UI ships no consumer icon set: its components take icons as nodes
-// (bring-your-own), so the docs supply their own here. Like a real app should,
-// we import EXACTLY the glyphs the demos use - never the whole Phosphor library.
-// `name` is typed to the registry, so using a new icon in a demo is a compile
-// error until you add its import and one line below.
+// The docs app's own icon source - the library ships no icon set and takes icons as nodes.
+// Import exactly the glyphs the demos use; `name` is typed to this registry.
 import {
   Archive,
   ArrowCounterClockwise,

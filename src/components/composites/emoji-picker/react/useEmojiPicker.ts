@@ -9,9 +9,7 @@ import type { GetEmojiUrl } from '../types';
 export interface UseEmojiPickerOptions {
   onSelect: (shortcode: string, hexId: string) => void;
   getEmojiUrl: GetEmojiUrl;
-  /** Drive the results from outside — a `:` chip in a document, your own input. */
   query?: string;
-  /** Whether picking an emoji fires on `pointerdown` (snappier) or waits for `click`. @default 'click' */
   activateOn?: ActivateOn;
 }
 
@@ -42,15 +40,12 @@ export function createEmojiPickerStore(listboxId: string, handlers: Handlers) {
   };
 
   return {
-    /** Spread onto the field that drives the picker: combobox roles, already pointing at the grid. */
     searchProps: {
       role: 'combobox',
       'aria-expanded': true,
       'aria-autocomplete': 'list',
       'aria-controls': listboxId,
     } as const,
-    /** Callback ref for the element the picker takes over. The grid is built the moment the node
-     *  arrives, which for a popover is a commit or two after the hook first ran. */
     mount: (node: HTMLDivElement | null) => {
       api?.destroy();
       drawn = false;
@@ -73,9 +68,6 @@ export function createEmojiPickerStore(listboxId: string, handlers: Handlers) {
         : null;
       draw();
     },
-    /** Callback ref for the field that keeps focus while the grid is navigated, or anything wrapping it.
-     *  The picker moves `aria-activedescendant` on it directly, so running the marker down 1900 tiles
-     *  never costs a render. */
     searchRef: (node: HTMLElement | null) => {
       focusHost = node?.matches(FOCUSABLE) ? node : (node?.querySelector<HTMLElement>(FOCUSABLE) ?? null);
     },
@@ -129,11 +121,8 @@ export function useEmojiPicker({ onSelect, getEmojiUrl, query, activateOn }: Use
   return store;
 }
 
-/** Category keys the grid currently holds; empty while showing search results. */
 export const useCategories = (store: EmojiPickerStore): string[] =>
   useSyncExternalStore(store.subscribe, store.getCategories, store.getCategories);
 
-/** Whether the scroll position is inside this category. Subscribing per key means a scrollspy
- *  tick re-renders the two rows whose state flipped, not the panel. */
 export const useIsActiveCategory = (store: EmojiPickerStore, key: string): boolean =>
   useSyncExternalStore(store.subscribe, () => store.isActive(key), notActive);

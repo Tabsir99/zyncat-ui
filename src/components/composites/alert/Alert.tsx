@@ -38,8 +38,7 @@ interface AlertOwnProps {
   dismissible?: boolean;
   /** Fires on dismiss. With `open` set, the parent owns hiding the alert. */
   onDismiss?: () => void;
-  /** Controlled visibility; omit for uncontrolled. Exit scales down and fades; the slot it
-   *  occupied is released when it unmounts, so content below moves up then rather than during. */
+  /** Controlled visibility; omit for uncontrolled. The exit fades and scales down, then releases the slot. */
   open?: boolean;
   /** App-level strip: square corners, hairline below only. Paint modifier. */
   banner?: boolean;

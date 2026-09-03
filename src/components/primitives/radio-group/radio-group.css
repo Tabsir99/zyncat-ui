@@ -1,9 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* RadioGroup - single-select in two skins: rows (dot + label) and cards (selectable tiles). */
-
-  /* dot dims (18 / sm 16, inner 8 / sm 7) are bespoke, intentionally off the token ramps - don't "fix" to a token */
+  /* Bespoke px: the dot sizes sit off the token ramp on purpose. */
   .rg {
     --radio-group-dot: 18px;
     --radio-group-dot-inner: 8px;
@@ -44,7 +42,7 @@
   }
 
   .rg__options {
-    position: relative; /* anchors the rows' shared glide pill */
+    position: relative;
     isolation: isolate;
     display: grid;
     gap: var(--space-1);
@@ -71,7 +69,6 @@
     min-width: 12rem;
   }
 
-  /* align-items:flex-start pins the dot to the first text line when a description wraps below */
   .rg-opt {
     position: relative;
     display: flex;
@@ -83,9 +80,6 @@
     transition: var(--transition-colors);
     -webkit-tap-highlight-color: transparent;
   }
-  /* Hover pill - one persistent fill (../motion/glide, first child of .rg__options) that
-   springs between rows; the positioned rows paint above it. Rows only; cards keep their
-   own layoutId hover (their opaque bg + press transform need the fill inside the card). */
   .rg__hover {
     opacity: 0;
     position: absolute;
@@ -112,7 +106,6 @@
     pointer-events: none;
   }
 
-  /* height = the label's line-box, so the dot optically centers on the first line */
   .rg-opt__control {
     flex: none;
     height: var(--leading-body);
@@ -128,15 +121,12 @@
     width: var(--radio-group-dot);
     height: var(--radio-group-dot);
     border-radius: var(--radius-full);
-    /* transparent so the ring-centre gap shows the surface behind (card tint), never a white halo */
     background: transparent;
     border: var(--border-hairline) solid var(--border-strong);
-    /* transform stays in the bundle so the press scale eases instead of snapping */
     transition:
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
   }
-  /* single marker glides between dots via Motion layoutId; centred by inset:0 + margin:auto, so no CSS transition here - Motion owns the move */
   .rg__marker {
     position: absolute;
     inset: 0;
@@ -175,7 +165,7 @@
     transform: scale(0.92);
   }
 
-  /* .is-selected (React) drives selection, not :checked/:has - Chromium doesn't reliably invalidate those on a radio's implicit sibling-uncheck */
+  /* A React class, not :checked - Chromium does not reliably restyle :has() on a radio's implicit sibling uncheck. */
   .rg-opt.is-selected .rg-opt__dot {
     border-color: var(--accent);
   }
@@ -236,11 +226,9 @@
     display: block;
   }
 
-  /* selected fill is a shared layoutId layer that glides between cards - the card paints no selected bg/border of its own */
   .rg__card-fill {
     position: absolute;
 
-    /* negative inset covers the card's hairline so the accent edge replaces it */
     inset: calc(-1 * var(--border-hairline));
     z-index: 1;
     border: var(--border-hairline) solid var(--accent);
@@ -275,7 +263,6 @@
     color: var(--text-disabled);
   }
 
-  /* in a <Collapse>: absent = zero reserved space; the padding-top is the options-message gap, inside the collapsible area */
   .rg__msg {
     font: var(--type-caption);
     color: var(--danger-text);

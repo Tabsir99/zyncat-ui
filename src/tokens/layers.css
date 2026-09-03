@@ -1,10 +1,8 @@
-/* Z-index bands - one stacking contract; --layer-overlay is a BAND (base + stack depth) so a later overlay paints above an earlier one. */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
-    --layer-overlay: 1000;
+    --layer-overlay: 1000; /* a band - each overlay adds its stack depth, so a later one paints above an earlier one */
     --layer-toast: 1050;
     --layer-tooltip: 1100;
   }

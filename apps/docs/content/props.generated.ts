@@ -1849,7 +1849,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'onChange',
       type: '(value: string, dir: 1 | -1) => void',
       description:
-        'Fires on click and on arrow-key travel (automatic activation). `dir` is the direction of travel (+1 right / -1 left) - hand it to TabPanel so content enters from the side the user moved toward.',
+        'Fires on click and on arrow-key travel. `dir` is the direction of travel (+1 right, -1 left); hand it to TabPanel so content enters from that side.',
     },
     {
       name: 'name',
@@ -1903,7 +1903,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       name: 'open',
       type: 'boolean',
       description:
-        'Controlled visibility; omit for uncontrolled. Exit scales down and fades; the slot it occupied is released when it unmounts, so content below moves up then rather than during.',
+        'Controlled visibility; omit for uncontrolled. The exit fades and scales down, then releases the slot.',
     },
     {
       name: 'banner',

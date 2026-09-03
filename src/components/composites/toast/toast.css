@@ -1,8 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* toast.css - the glass notification card, tinted per tone (a draining timer ring). */
-
   .toast-viewport {
     position: fixed;
     width: min(22.5rem, calc(100vw - 2 * var(--toast-offset, var(--space-6))));
@@ -10,10 +8,9 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    pointer-events: none; /* only the cards themselves are live */
+    pointer-events: none;
   }
 
-  /* Anchored by [data-position]; --toast-offset (set by <Toaster offset>) overrides the edge inset. */
   .toast-viewport[data-position^='top'] {
     top: var(--toast-offset, var(--space-6));
   }
@@ -31,9 +28,7 @@
     transform: translateX(-50%);
   }
 
-  /* The card - a glass consumer (.glass is set in JSX). */
   .toast {
-    /* tone hooks - set by [data-tone] below */
     --toast-hue: var(--text-subtle);
     --glass-fg: var(--text-strong);
     --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
@@ -43,17 +38,15 @@
     left: 0;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden; /* custom content stays in the pane   */
+    overflow: hidden;
     pointer-events: auto;
     border-radius: var(--radius-lg);
 
-    /* Motion owns transform - keep only the color/shadow transitions (never smooth Motion's writes) */
     transition:
       background-color var(--duration-base) var(--ease-standard),
       box-shadow var(--duration-base) var(--ease-standard);
   }
 
-  /* Cards pin to the stack's edge; Motion offsets each one away from it (up from bottom, down from top). */
   .toast-viewport[data-position^='bottom'] .toast {
     bottom: 0;
     transform-origin: center bottom;
@@ -63,7 +56,6 @@
     transform-origin: center top;
   }
 
-  /* rich panes for genuine status, diluted to stay glass; neutral otherwise */
   .toast[data-tone='success'] {
     --toast-hue: var(--success);
     --glass-fg: var(--success-text);
@@ -85,7 +77,6 @@
     --glass-tint: color-mix(in oklab, var(--glass-tint-info) 70%, transparent);
   }
 
-  /* receding cards fall quiet: tone drains out, sheen dims, content fades */
   .toast[data-behind] {
     --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
     --glass-sheen-rest: 0.3;
@@ -103,7 +94,6 @@
     transition: var(--transition-opacity);
   }
 
-  /* the dial - glyph centered in the timer ring; one instrument, not two */
   .toast__icon {
     position: relative;
     flex: none;
@@ -118,13 +108,12 @@
     place-items: center;
   }
 
-  /* the ring - a draining arc; linear by design, animation-duration set at runtime to the toast's lifetime */
   .toast__ring {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    transform: rotate(-90deg); /* arc starts at 12 o'clock           */
+    transform: rotate(-90deg);
     pointer-events: none;
   }
   .toast__ring circle {
@@ -137,8 +126,8 @@
   .toast__ring-arc {
     stroke: var(--toast-hue);
     stroke-linecap: round;
-    stroke-dasharray: 1; /* pathLength=1 - offset is a fraction */
-    animation-name: toast-ring;
+    stroke-dasharray: 1; /* the circle sets pathLength=1 */
+    animation-name: toast-ring; /* the duration is inline, set to the toast's lifetime */
     animation-timing-function: linear;
     animation-fill-mode: both;
   }
@@ -171,7 +160,6 @@
     text-wrap: pretty;
   }
 
-  /* coalesce counter - same toast refired becomes a xN counter (mono) */
   .toast__count {
     flex: none;
     font-family: var(--font-code);
@@ -188,7 +176,6 @@
     flex: none;
   }
 
-  /* dismiss - appears only while the card is hovered or holds focus */
   .toast__close {
     flex: none;
     appearance: none;
@@ -225,7 +212,6 @@
     opacity: 1;
   }
 
-  /* Loading spinner - continuous --duration-spin (linear is allowed for loops; reduced motion slows, never freezes) */
   .toast__spinner {
     display: block;
     box-sizing: border-box;
@@ -243,14 +229,13 @@
     }
   }
 
-  /* Custom slot - bare neutral glass; the consumer owns the interior. */
   .toast__custom {
     padding: var(--space-3) var(--space-4);
     transition: var(--transition-opacity);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    /* travel/gestures collapse via the tokens; the ring is data, so it keeps running */
+    /* the ring keeps running: it is a clock, not decoration */
     .toast,
     .toast__close,
     .toast__inner,

@@ -1,7 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* sheet.css - edge-docked placement on the modal shell: sheets dock flush (no layer padding); the panel spans the docked edge. */
   .overlay-layer--sheet-right {
     align-items: stretch;
     justify-items: end;
@@ -20,7 +19,6 @@
     max-height: 100%;
   }
 
-  /* Drag stretch scales the panel away from the edge it is docked to. */
   .overlay-panel--sheet-right {
     transform-origin: 100% 50%;
   }

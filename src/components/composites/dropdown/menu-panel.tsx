@@ -28,8 +28,6 @@ type Point = { x: number; y: number };
 
 const inTextField = (target: EventTarget | null) => target instanceof Element && target.closest(TEXT_FIELD) != null;
 
-/* Is the pointer inside the wedge from `from` to the submenu's near edge - travelling toward it
-   diagonally - rather than simply leaving the row? */
 function headingTo(point: Point, from: Point, panel: HTMLElement): boolean {
   const box = panel.getBoundingClientRect();
   const rightward = from.x <= box.left;

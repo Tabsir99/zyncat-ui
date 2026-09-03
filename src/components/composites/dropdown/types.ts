@@ -78,7 +78,6 @@ export interface Level {
   ownerIdx: number;
 }
 
-/* The open chain, root first: path[d] names the row in level d whose submenu is level d + 1. */
 export function resolveLevels(items: DropdownItems, path: string[]): Level[] {
   const levels: Level[] = [{ key: ROOT_LEVEL, items, owner: null, ownerIdx: -1 }];
   for (const id of path) {
@@ -97,8 +96,6 @@ export function resolveLevels(items: DropdownItems, path: string[]): Level[] {
 
 export type SeedFocus = 'first' | 'last' | 'none';
 
-/* Everything a level needs to render itself and act on the chain. One object, built once by
-   Dropdown, so a panel takes its place in the chain rather than twenty separate props. */
 export interface MenuChain {
   levels: Level[];
   menuId: string;

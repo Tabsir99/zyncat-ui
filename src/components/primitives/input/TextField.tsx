@@ -18,7 +18,6 @@ import {
   type FieldMessagingProps,
 } from './field-chrome';
 
-/** The native <input> props TextField surfaces at the top level (the rest live in `htmlProps`). */
 type TextFieldNative = Pick<
   InputHTMLAttributes<HTMLInputElement>,
   | 'placeholder'

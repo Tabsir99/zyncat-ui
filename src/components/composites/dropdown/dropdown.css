@@ -1,9 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* Dropdown deltas on top of the shared menu surface (internal/menu/menu-surface.css):
-   group dividers and the row states a listbox has no use for. */
-
   .dropdown__menu {
     --menu-max-width: min(20rem, 92vw);
     --menu-max-height: min(26rem, 70vh);

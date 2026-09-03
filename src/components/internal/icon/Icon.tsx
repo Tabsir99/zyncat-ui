@@ -55,7 +55,6 @@ export interface IconProps {
   size?: IconSize;
   weight?: IconWeight;
   label?: string;
-  /** Extra class(es) merged onto the root element. */
   className?: string;
 }
 

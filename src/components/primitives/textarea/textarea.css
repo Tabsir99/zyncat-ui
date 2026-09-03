@@ -1,8 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* textarea.css - Textarea (multiline composer): the .txa box over the .fld shell, auto-grow, char meter, over-limit highlight. */
-
   .txa {
     --txa-pad-y: var(--space-3);
     --txa-pad-x: var(--space-4);
@@ -32,12 +30,11 @@
     background: var(--bg-subtle);
   }
 
-  /* The .txa__stack wrapper owns the height and is the only thing that animates; overflow:clip while growing (a clip box can't scroll to the caret - no jump), flipped to auto by JS only past max-rows. */
   .txa__stack {
     position: relative;
     min-height: calc(var(--txa-min-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));
     max-height: calc(var(--txa-max-rows) * var(--txa-lh) + 2 * var(--txa-pad-y));
-    overflow: clip;
+    overflow: clip; /* clip, not hidden: a hidden box scrolls to the caret and jumps; JS flips it to auto past max rows */
     transition: height var(--duration-base) var(--ease-standard);
   }
   .txa__input,
@@ -76,7 +73,6 @@
     color: var(--text-body);
   }
 
-  /* over-limit highlight: faint tint + a danger underline on the excess chars */
   .txa__mirror {
     position: absolute;
     top: 0;

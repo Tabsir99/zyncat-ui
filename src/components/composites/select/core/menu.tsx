@@ -38,7 +38,6 @@ export interface SelectMenuProps extends MenuHighlightProps {
   requestClose: () => void;
   triggerRef: RefObject<HTMLButtonElement | null>;
   multiple?: boolean;
-  /** Open/close timing - motion tokens only, or `null` to disable. */
   animation?: DisableableAnimation;
   children?: ReactNode;
 }

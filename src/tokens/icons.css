@@ -1,5 +1,3 @@
-/* Icon sizing - sm 16 (inline) - md 20 (default) - lg 24 (emphasis). */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {

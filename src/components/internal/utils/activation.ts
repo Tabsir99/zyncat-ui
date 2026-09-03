@@ -50,13 +50,9 @@ export function clickActivates(e: AnyMouseEvent) {
 }
 
 export interface ActivationOptions<E extends Element> {
-  /** The component supplies its own default; `activateOn` overrides it. @default 'click' */
   on?: ActivateOn;
-  /** For rows inside a panel that places focus itself - the press leaves focus untouched. @default false */
   holdFocus?: boolean;
-  /** Runs before the built-in activation, and can cancel it with `preventDefault()`. */
   onPointerDown?: (e: ReactPointerEvent<E>) => void;
-  /** Runs before the built-in activation on click and on keyboard activation. */
   onClick?: (e: ReactMouseEvent<E>) => void;
 }
 

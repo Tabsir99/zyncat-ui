@@ -1,9 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* dialog.css - the styled dialog surface (the modal shell owns modality + motion). */
-
-  /* Modal placement - the shell layer centers the panel with breathing room. */
   .overlay-layer--dialog {
     place-items: center;
     padding: var(--space-6);
@@ -13,7 +10,6 @@
     max-height: 100%;
   }
 
-  /* The panel - flex column so the body scrolls between a pinned header + footer; padding lives on the parts. */
   .dialog {
     --dialog-w: 32rem;
     position: relative;
@@ -41,7 +37,6 @@
     --dialog-w: 40rem;
   }
 
-  /* Header - icon - heading - close; flex-start keeps a tall heading top-aligned with the badge. */
   .dialog__header {
     flex: 0 0 auto;
     display: flex;
@@ -53,7 +48,6 @@
       box-shadow var(--duration-base) var(--ease-standard);
     border-bottom: var(--border-hairline) solid transparent;
   }
-  /* divider + faint lift appears only once the body is scrolled under it */
   .dialog:has(.dialog__body[data-scroll-top]) .dialog__header {
     border-bottom-color: var(--border-subtle);
     box-shadow: var(--shadow-xs);
@@ -81,7 +75,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    /* nudge text to optical-center against the 36px icon badge when present */
     padding-top: var(--space-px);
   }
   .dialog__title {
@@ -98,7 +91,6 @@
     text-wrap: pretty;
   }
 
-  /* close - a quiet ghost icon button; the hit box is bigger than the glyph */
   .dialog__close {
     flex: 0 0 auto;
     appearance: none;
@@ -129,7 +121,6 @@
     box-shadow: var(--ring-accent);
   }
 
-  /* Body - the scroll region; min-height:0 lets it shrink so header/footer stay pinned. */
   .dialog__body {
     flex: 1 1 auto;
     min-height: 0;
@@ -169,7 +160,6 @@
     background-clip: padding-box;
   }
 
-  /* Footer - right-aligned actions; gains a top divider only when the body scrolls under it. */
   .dialog__footer {
     flex: 0 0 auto;
     display: flex;

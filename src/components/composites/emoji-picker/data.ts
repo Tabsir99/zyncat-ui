@@ -50,10 +50,7 @@ export function onEmojiDataLoaded(cb: () => void): () => void {
   };
 }
 
-/**
- * Load the emoji dataset. Pass a URL to fetch it, or an already-parsed
- * `EmojiData` object to install it directly. Idempotent — the first call wins.
- */
+/** Load the emoji dataset from a URL, or install an already-parsed `EmojiData` object. The first call wins. */
 export async function loadEmojiData(loader: string | EmojiData) {
   if (!_inflight) {
     if (typeof loader !== 'string') {
@@ -73,7 +70,7 @@ export async function loadEmojiData(loader: string | EmojiData) {
   return _inflight;
 }
 
-/** Synchronous access — only valid after loadEmojiData() has resolved */
+/** The loaded dataset, or null until `loadEmojiData` has resolved. */
 export function getEmojiData(): EmojiData | null {
   return _cache;
 }

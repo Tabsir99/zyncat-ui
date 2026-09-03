@@ -1,18 +1,11 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* The floating menu surface shared by Select's listbox and Dropdown's menu: panel chrome,
-   scroll box, row skeleton and the travelling hover pill. Everything that differs between the
-   two is a custom property set by the component, so neither sheet has to restate a rule.
-   Enter/exit are Motion-owned inline styles; transform-origin belongs to the component. */
-
   .menu-surface {
     position: fixed;
     margin: 0;
-    inset: auto; /* JS sets top/left - anchor() needs the top layer, which we don't use */
-    z-index: var(
-      --layer-overlay
-    ); /* base of the overlay band (tokens/layers.css) - a nested menu is pushed one step up */
+    inset: auto;
+    z-index: var(--layer-overlay);
     width: max-content;
     max-width: var(--menu-max-width, min(22rem, 92vw));
     padding: var(--space-1);
@@ -33,7 +26,6 @@
     --menu-active-icon: var(--text-accent);
   }
 
-  /* data-side/data-align are written by useAnchorPosition after any flip - grow from the anchored edge. */
   .menu-surface[data-align='start'] {
     --menu-origin: var(--space-4);
   }
@@ -68,7 +60,6 @@
     display: none;
   }
 
-  /* position: relative keeps the row above the pill, which is a single absolute child. */
   .menu-row {
     position: relative;
     display: flex;
@@ -120,9 +111,6 @@
     color: var(--text-subtle);
   }
 
-  /* One persistent fill (../../../motion/glide) that travels to the active row and animates its
-   real size, so it is never clipped and never scales. GlidePill writes x/y/width/height inline -
-   nothing here may transition those. */
   .menu-glide {
     position: absolute;
     top: 0;

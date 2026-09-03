@@ -1,9 +1,6 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* input.css - inputs: TextField - NumberField - OtpField. */
-
-  /* No row-gap - the label and message each own their adjacent gap, so an absent message reserves zero. */
   .fld {
     display: grid;
   }
@@ -79,7 +76,6 @@
     font-size: var(--size-body);
     flex: none;
   }
-  /* Gap is the message's padding-top (not margin) so it lives inside the Collapse and clips to zero when closed. */
   .fld .fld__msg {
     padding-top: var(--space-2);
   }
@@ -147,7 +143,6 @@
     padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
   }
 
-  /* Per-state hover rule is required - the generic .fld__input:hover would otherwise win on specificity. */
   .fld.is-error .fld__input {
     border-color: var(--danger);
   }
@@ -186,7 +181,6 @@
     color: var(--success-text);
   }
 
-  /* Stepper column width is the single source of truth - every clearance derives from it via calc(), so geometry can't drift. */
   .numf {
     --numf-stepper-w: var(--space-6);
   }
@@ -249,7 +243,7 @@
     border-color: var(--accent);
   }
 
-  /* Intentional exception: slot (44x52 - sm 38x44) and separator (10x2) are bespoke px - the token ramp yields no correctly-proportioned code cell; do not "fix" to a token. */
+  /* Bespoke px: the token ramp has no correctly proportioned code cell. */
   .otp {
     display: inline-flex;
     align-items: center;

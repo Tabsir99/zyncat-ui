@@ -1,17 +1,15 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  /* tooltip.css - the floating tooltip surface (one shared bubble). */
-
   .tooltip {
     position: fixed;
     left: 0;
     top: 0;
     box-sizing: border-box;
-    overflow: hidden; /* clips content while the box morphs  */
+    overflow: hidden;
     z-index: var(--layer-tooltip);
     pointer-events: none;
-    width: max-content; /* the live bubble gets an animated width; this also sizes the measuring clone */
+    width: max-content;
     padding: var(--space-2) var(--space-3);
     background: var(--bg-surface-raised);
     color: var(--text-body);
@@ -22,19 +20,16 @@
     letter-spacing: var(--tracking-normal);
   }
 
-  /* the hidden twin the host measures the NEXT box from (same styles, no motion) */
   .tooltip--measure {
     visibility: hidden;
     left: -9999px;
     top: 0;
   }
 
-  /* default trigger wrapper - display:contents, so it adds no layout; carries the listeners + rect */
   .tooltip-anchor {
     display: contents;
   }
 
-  /* wraps at the measure cap; the live body also gets its measured width inline (locked wrapping during the morph) */
   .tooltip__body {
     display: block;
     width: max-content;
@@ -42,7 +37,6 @@
     text-wrap: pretty;
   }
 
-  /* grow from the trigger's edge (per placement) */
   .tooltip[data-placement='top'] {
     transform-origin: center bottom;
   }
@@ -73,7 +67,6 @@
     white-space: nowrap;
   }
 
-  /* Multi-line content - rich nodes style themselves with these; keep hierarchy minimal. */
   .tooltip strong {
     font-weight: var(--weight-medium);
     color: var(--text-strong);

@@ -45,16 +45,11 @@ interface TabsOwnProps {
   items: TabItem[];
   /** Controlled - the value of the active tab (null/undefined hides the ink). */
   value: string | null | undefined;
-  /**
-   * Fires on click and on arrow-key travel (automatic activation).
-   * `dir` is the direction of travel (+1 right / -1 left) - hand it to
-   * TabPanel so content enters from the side the user moved toward.
-   */
+  /** Fires on click and on arrow-key travel. `dir` is the direction of travel (+1 right, -1 left);
+   *  hand it to TabPanel so content enters from that side. */
   onChange?: (value: string, dir: 1 | -1) => void;
-  /**
-   * Shared id prefix wiring tab and panel aria. Give Tabs and its TabPanel the
-   * same `name`; omit it when the tabs have no managed panel.
-   */
+  /** Shared id prefix wiring tab and panel aria. Give Tabs and its TabPanel the same `name`;
+   *  omit it when the tabs have no managed panel. */
   name?: string;
   /** Accessible name for the tablist (e.g. "Section views"). */
   ariaLabel?: string;

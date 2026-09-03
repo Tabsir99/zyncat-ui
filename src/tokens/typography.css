@@ -1,6 +1,3 @@
-/* Type system - three weights and a 9-step ramp with matched leading + tracking; the two
-   families are decisions (decisions.css). */
-
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
@@ -29,7 +26,7 @@
     --leading-display: 2.375rem;
     --leading-display-lg: 2.875rem;
 
-    /* Measure - line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. */
+    /* Line-length cap for floating text - tooltip, toast, popover hints. */
     --measure-floating: 36ch;
 
     --tracking-caps: 0.04em;
@@ -40,8 +37,7 @@
 
   :root,
   [data-theme] {
-    /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first.
-     On every theme root so a subtree that swaps --font-body gets the bundles in that face. */
+    /* Role bundles - size, leading, weight and tracking pre-composed; reach for these first. */
     --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-body);
     --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-body);
     --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-body);
