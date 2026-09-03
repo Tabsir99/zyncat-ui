@@ -1,21 +1,12 @@
 /**
- * The themeable vocabulary, grouped the way the tokens are organised. Each key is one
- * design token in camelCase - `accent` is `--accent`, `radiusMd` is `--radius-md` - and
- * takes any CSS the property accepts, including `var()` references to other tokens.
+ * The themeable vocabulary. The eight decisions sit at the top level of a theme and every
+ * other token is grouped the way the files are organised. Each key is one design token in
+ * camelCase - `accent` is `--accent`, `radiusMd` is `--radius-md` - and takes any CSS the
+ * property accepts, including `var()` references to other tokens.
  *
  * Generated from the token and component CSS by `scripts/gen-theme.mjs` - `pnpm sync` rebuilds it.
  */
 export interface ColorTokens {
-  /** `--accent`. Default: `oklch(0.63 0.118 198)`. */
-  accent?: string | number;
-  /** `--success`. Default: `oklch(0.548 0.122 152)`. */
-  success?: string | number;
-  /** `--warning`. Default: `oklch(0.7 0.142 75)`. */
-  warning?: string | number;
-  /** `--danger`. Default: `oklch(0.545 0.196 27)`. */
-  danger?: string | number;
-  /** `--neutral`. Default: `var(--accent)`. */
-  neutral?: string | number;
   /** `--gray-0`. Default: `oklch(1 0 0)`. */
   gray0?: string | number;
   /** `--gray-50`. Default: `oklch(from var(--neutral) 0.984 0.003 h)`. */
@@ -42,9 +33,9 @@ export interface ColorTokens {
   gray900?: string | number;
   /** `--gray-950`. Default: `oklch(from var(--neutral) 0.165 0.007 h)`. */
   gray950?: string | number;
-  /** `--shadow-rgb`. Default: `15 22 25`. */
+  /** `--shadow-rgb` - Cool near-black shadow ink - matches the cool neutral ramp on the white canvas. Default: `15 22 25`. */
   shadowRgb?: string | number;
-  /** `--bg-app`. Default: `var(--gray-0)`. */
+  /** `--bg-app` - The canvas is pure white; cards and floating panels share it and separate with hairlines and shadow, the way print separates with rules rather than tint. The tinted trio steps for real: subtle (hover wash) < muted (passive fill) < inset (a recessed well - code, terminals), each one ramp stop apart. Default: `var(--gray-0)`. */
   bgApp?: string | number;
   /** `--bg-surface`. Default: `var(--gray-0)`. */
   bgSurface?: string | number;
@@ -80,13 +71,13 @@ export interface ColorTokens {
   borderDefault?: string | number;
   /** `--border-strong`. Default: `var(--gray-300)`. */
   borderStrong?: string | number;
-  /** `--neutral-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
+  /** `--neutral-wash` - State layer: interactive hover/press fills are translucent washes, never opaque near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
   neutralWash?: string | number;
   /** `--neutral-wash-press`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
   neutralWashPress?: string | number;
   /** `--glass-tint-neutral`. Default: `color-mix(in oklab, var(--gray-600) 13%, transparent)`. */
   glassTintNeutral?: string | number;
-  /** `--accent-lift`. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
+  /** `--accent-lift` - Accent family. Hover, active and lift step lightness relative to the accent so a dark or pale accent keeps its own contrast ladder; subtle, border and disabled pin lightness and chroma and take only the hue, so they stay tints on the white canvas whatever the accent. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
   accentLift?: string | number;
   /** `--accent-hover`. Default: `oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h)`. Re-derived on every theme root. */
   accentHover?: string | number;
@@ -102,7 +93,7 @@ export interface ColorTokens {
   accentWash?: string | number;
   /** `--text-accent`. Default: `var(--accent-active)`. Re-derived on every theme root. */
   textAccent?: string | number;
-  /** `--info`. Default: `var(--accent-hover)`. Re-derived on every theme root. */
+  /** `--info` - Info reads as the accent's own hue one step down; repoint --info to give it a hue of its own. Default: `var(--accent-hover)`. Re-derived on every theme root. */
   info?: string | number;
   /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Re-derived on every theme root. */
   infoSubtle?: string | number;
@@ -122,7 +113,7 @@ export interface ColorTokens {
   warningText?: string | number;
   /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Re-derived on every theme root. */
   warningWash?: string | number;
-  /** `--danger-lift`. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
+  /** `--danger-lift` - Danger carries the destructive button's ladder too: fill is the resting face, one step lighter than the --danger ink so white text sits on it; lift is the hover face above that. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
   dangerLift?: string | number;
   /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Re-derived on every theme root. */
   dangerFill?: string | number;
@@ -136,7 +127,7 @@ export interface ColorTokens {
   dangerDisabled?: string | number;
   /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Re-derived on every theme root. */
   dangerWash?: string | number;
-  /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
+  /** `--glass-tint-info` - Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
   glassTintInfo?: string | number;
   /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. Re-derived on every theme root. */
   glassTintSuccess?: string | number;
@@ -149,10 +140,6 @@ export interface ColorTokens {
 }
 
 export interface TypeTokens {
-  /** `--font-sans`. Default: `'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif`. */
-  fontSans?: string | number;
-  /** `--font-mono`. Default: `'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace`. */
-  fontMono?: string | number;
   /** `--weight-regular`. Default: `400`. */
   weightRegular?: string | number;
   /** `--weight-medium`. Default: `500`. */
@@ -195,7 +182,7 @@ export interface TypeTokens {
   leadingDisplay?: string | number;
   /** `--leading-display-lg`. Default: `2.875rem`. */
   leadingDisplayLg?: string | number;
-  /** `--measure-floating`. Default: `36ch`. */
+  /** `--measure-floating` - Measure - line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. Default: `36ch`. */
   measureFloating?: string | number;
   /** `--tracking-caps`. Default: `0.04em`. */
   trackingCaps?: string | number;
@@ -205,7 +192,7 @@ export interface TypeTokens {
   trackingTight?: string | number;
   /** `--tracking-display`. Default: `-0.021em`. */
   trackingDisplay?: string | number;
-  /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
+  /** `--type-display-lg` - Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. On every theme root so a subtree that swaps --font-sans gets the bundles in that face. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
   typeDisplayLg?: string | number;
   /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. Re-derived on every theme root. */
   typeDisplay?: string | number;
@@ -266,9 +253,7 @@ export interface SpaceTokens {
   controlSwitch?: string | number;
 }
 
-export interface RadiusTokens {
-  /** `--radius`. Default: `0.5rem`. */
-  radius?: string | number;
+export interface RadiiTokens {
   /** `--radius-full`. Default: `624.9375rem`. */
   radiusFull?: string | number;
   /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
@@ -284,7 +269,7 @@ export interface RadiusTokens {
 }
 
 export interface ElevationTokens {
-  /** `--border-hairline`. Default: `1px`. */
+  /** `--border-hairline` - Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. Default: `1px`. */
   borderHairline?: string | number;
   /** `--border-emphasis`. Default: `1.5px`. */
   borderEmphasis?: string | number;
@@ -298,7 +283,7 @@ export interface ElevationTokens {
   shadowLg?: string | number;
   /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. Re-derived on every theme root. */
   shadowXl?: string | number;
-  /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
+  /** `--ring-accent` - Focus & selection rings - box-shadows (not outlines) so they follow border-radius. Each tracks its role's hue; danger rings on its fill tone, the lighter face the destructive button rests on. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
   ringAccent?: string | number;
   /** `--ring-danger`. Default: `0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
   ringDanger?: string | number;
@@ -417,7 +402,7 @@ export interface AvatarTokens {
   avatar6Bg?: string | number;
   /** `--avatar-6-fg`. Default: `oklch(0.45 0.08 125)`. */
   avatar6Fg?: string | number;
-  /** `--avatar-sheen`. Default: `oklch(1 0 0 / 0.35)`. */
+  /** `--avatar-sheen` - Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). Default: `oklch(1 0 0 / 0.35)`. */
   avatarSheen?: string | number;
   /** `--avatar-shade`. Default: `oklch(0.225 0.012 264 / 0.05)`. */
   avatarShade?: string | number;
@@ -705,16 +690,35 @@ export interface ComponentTokens {
   supportRail?: SupportRailTokens;
 }
 
-/** One theme: the tokens it repoints, grouped. Every group is optional. */
+/**
+ * One theme: the tokens it repoints. The decisions come first - set one and every token that
+ * derives from it follows - then the groups. Everything is optional.
+ */
 export interface ThemeTokens {
+  /** `--accent` - The brand hue - hover, active, lift, subtle, border, wash, the focus ring and info follow. Default: `oklch(0.63 0.118 198)`. */
+  accent?: string | number;
+  /** `--success` - Positive status - its subtle, text and wash follow. Default: `oklch(0.548 0.122 152)`. */
+  success?: string | number;
+  /** `--warning` - Caution - its subtle, text and wash follow. Default: `oklch(0.7 0.142 75)`. */
+  warning?: string | number;
+  /** `--danger` - Destructive actions and errors - the danger button ladder, ring, subtle, text and wash follow. Default: `oklch(0.545 0.196 27)`. */
+  danger?: string | number;
+  /** `--neutral` - The gray ramp's hue - the accent by default, so chrome shares its temperature. A fixed colour cuts the grays loose. Read on :root only: a themed subtree inherits the ramp. Default: `var(--accent)`. */
+  neutral?: string | number;
+  /** `--radius` - Roundness - every --radius-<step> is a fixed ratio of it; 0 squares every corner. Default: `0.5rem`. */
+  radius?: string | number;
+  /** `--font-sans` - The body face - every --type-* bundle follows. Default: `'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif`. */
+  fontSans?: string | number;
+  /** `--font-mono` - The code face - --type-mono follows. Default: `'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace`. */
+  fontMono?: string | number;
   /** Color tokens. */
   color?: ColorTokens;
   /** Type tokens. */
   type?: TypeTokens;
   /** Space tokens. */
   space?: SpaceTokens;
-  /** Radius tokens. */
-  radius?: RadiusTokens;
+  /** Radii tokens. */
+  radii?: RadiiTokens;
   /** Elevation tokens. */
   elevation?: ElevationTokens;
   /** Motion tokens. */
@@ -754,16 +758,22 @@ export const reducedMotionTokens: Readonly<Record<string, string>> = {
 
 declare module 'react' {
   export interface CSSProperties {
-    /** `--accent`. Default: `oklch(0.63 0.118 198)`. */
+    /** `--accent` - The brand hue - hover, active, lift, subtle, border, wash, the focus ring and info follow. Default: `oklch(0.63 0.118 198)`. */
     '--accent'?: string | number;
-    /** `--success`. Default: `oklch(0.548 0.122 152)`. */
+    /** `--success` - Positive status - its subtle, text and wash follow. Default: `oklch(0.548 0.122 152)`. */
     '--success'?: string | number;
-    /** `--warning`. Default: `oklch(0.7 0.142 75)`. */
+    /** `--warning` - Caution - its subtle, text and wash follow. Default: `oklch(0.7 0.142 75)`. */
     '--warning'?: string | number;
-    /** `--danger`. Default: `oklch(0.545 0.196 27)`. */
+    /** `--danger` - Destructive actions and errors - the danger button ladder, ring, subtle, text and wash follow. Default: `oklch(0.545 0.196 27)`. */
     '--danger'?: string | number;
-    /** `--neutral`. Default: `var(--accent)`. */
+    /** `--neutral` - The gray ramp's hue - the accent by default, so chrome shares its temperature. A fixed colour cuts the grays loose. Read on :root only: a themed subtree inherits the ramp. Default: `var(--accent)`. */
     '--neutral'?: string | number;
+    /** `--radius` - Roundness - every --radius-<step> is a fixed ratio of it; 0 squares every corner. Default: `0.5rem`. */
+    '--radius'?: string | number;
+    /** `--font-sans` - The body face - every --type-* bundle follows. Default: `'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif`. */
+    '--font-sans'?: string | number;
+    /** `--font-mono` - The code face - --type-mono follows. Default: `'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace`. */
+    '--font-mono'?: string | number;
     /** `--gray-0`. Default: `oklch(1 0 0)`. */
     '--gray-0'?: string | number;
     /** `--gray-50`. Default: `oklch(from var(--neutral) 0.984 0.003 h)`. */
@@ -790,9 +800,9 @@ declare module 'react' {
     '--gray-900'?: string | number;
     /** `--gray-950`. Default: `oklch(from var(--neutral) 0.165 0.007 h)`. */
     '--gray-950'?: string | number;
-    /** `--shadow-rgb`. Default: `15 22 25`. */
+    /** `--shadow-rgb` - Cool near-black shadow ink - matches the cool neutral ramp on the white canvas. Default: `15 22 25`. */
     '--shadow-rgb'?: string | number;
-    /** `--bg-app`. Default: `var(--gray-0)`. */
+    /** `--bg-app` - The canvas is pure white; cards and floating panels share it and separate with hairlines and shadow, the way print separates with rules rather than tint. The tinted trio steps for real: subtle (hover wash) < muted (passive fill) < inset (a recessed well - code, terminals), each one ramp stop apart. Default: `var(--gray-0)`. */
     '--bg-app'?: string | number;
     /** `--bg-surface`. Default: `var(--gray-0)`. */
     '--bg-surface'?: string | number;
@@ -828,13 +838,13 @@ declare module 'react' {
     '--border-default'?: string | number;
     /** `--border-strong`. Default: `var(--gray-300)`. */
     '--border-strong'?: string | number;
-    /** `--neutral-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
+    /** `--neutral-wash` - State layer: interactive hover/press fills are translucent washes, never opaque near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
     '--neutral-wash'?: string | number;
     /** `--neutral-wash-press`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
     '--neutral-wash-press'?: string | number;
     /** `--glass-tint-neutral`. Default: `color-mix(in oklab, var(--gray-600) 13%, transparent)`. */
     '--glass-tint-neutral'?: string | number;
-    /** `--accent-lift`. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
+    /** `--accent-lift` - Accent family. Hover, active and lift step lightness relative to the accent so a dark or pale accent keeps its own contrast ladder; subtle, border and disabled pin lightness and chroma and take only the hue, so they stay tints on the white canvas whatever the accent. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
     '--accent-lift'?: string | number;
     /** `--accent-hover`. Default: `oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h)`. Re-derived on every theme root. */
     '--accent-hover'?: string | number;
@@ -850,7 +860,7 @@ declare module 'react' {
     '--accent-wash'?: string | number;
     /** `--text-accent`. Default: `var(--accent-active)`. Re-derived on every theme root. */
     '--text-accent'?: string | number;
-    /** `--info`. Default: `var(--accent-hover)`. Re-derived on every theme root. */
+    /** `--info` - Info reads as the accent's own hue one step down; repoint --info to give it a hue of its own. Default: `var(--accent-hover)`. Re-derived on every theme root. */
     '--info'?: string | number;
     /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Re-derived on every theme root. */
     '--info-subtle'?: string | number;
@@ -870,7 +880,7 @@ declare module 'react' {
     '--warning-text'?: string | number;
     /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Re-derived on every theme root. */
     '--warning-wash'?: string | number;
-    /** `--danger-lift`. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
+    /** `--danger-lift` - Danger carries the destructive button's ladder too: fill is the resting face, one step lighter than the --danger ink so white text sits on it; lift is the hover face above that. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
     '--danger-lift'?: string | number;
     /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Re-derived on every theme root. */
     '--danger-fill'?: string | number;
@@ -884,7 +894,7 @@ declare module 'react' {
     '--danger-disabled'?: string | number;
     /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Re-derived on every theme root. */
     '--danger-wash'?: string | number;
-    /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
+    /** `--glass-tint-info` - Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-info'?: string | number;
     /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-success'?: string | number;
@@ -894,10 +904,6 @@ declare module 'react' {
     '--glass-tint-danger'?: string | number;
     /** `--focus-ring`. Default: `var(--ring-accent)`. Re-derived on every theme root. */
     '--focus-ring'?: string | number;
-    /** `--font-sans`. Default: `'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif`. */
-    '--font-sans'?: string | number;
-    /** `--font-mono`. Default: `'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace`. */
-    '--font-mono'?: string | number;
     /** `--weight-regular`. Default: `400`. */
     '--weight-regular'?: string | number;
     /** `--weight-medium`. Default: `500`. */
@@ -940,7 +946,7 @@ declare module 'react' {
     '--leading-display'?: string | number;
     /** `--leading-display-lg`. Default: `2.875rem`. */
     '--leading-display-lg'?: string | number;
-    /** `--measure-floating`. Default: `36ch`. */
+    /** `--measure-floating` - Measure - line-length cap for floating text (tooltip, toast, popover hints) so it never runs a long ribbon. Default: `36ch`. */
     '--measure-floating'?: string | number;
     /** `--tracking-caps`. Default: `0.04em`. */
     '--tracking-caps'?: string | number;
@@ -950,7 +956,7 @@ declare module 'react' {
     '--tracking-tight'?: string | number;
     /** `--tracking-display`. Default: `-0.021em`. */
     '--tracking-display'?: string | number;
-    /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
+    /** `--type-display-lg` - Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. On every theme root so a subtree that swaps --font-sans gets the bundles in that face. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
     '--type-display-lg'?: string | number;
     /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. Re-derived on every theme root. */
     '--type-display'?: string | number;
@@ -1006,8 +1012,6 @@ declare module 'react' {
     '--control-box'?: string | number;
     /** `--control-switch` - switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4. Default: `1.25rem`. */
     '--control-switch'?: string | number;
-    /** `--radius`. Default: `0.5rem`. */
-    '--radius'?: string | number;
     /** `--radius-full`. Default: `624.9375rem`. */
     '--radius-full'?: string | number;
     /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
@@ -1020,7 +1024,7 @@ declare module 'react' {
     '--radius-xl'?: string | number;
     /** `--radius-2xl`. Default: `calc(var(--radius) * 2)`. Re-derived on every theme root. */
     '--radius-2xl'?: string | number;
-    /** `--border-hairline`. Default: `1px`. */
+    /** `--border-hairline` - Borders - one hairline (1px); weight comes from the border color, not thickness; 2px for focus/selected. Default: `1px`. */
     '--border-hairline'?: string | number;
     /** `--border-emphasis`. Default: `1.5px`. */
     '--border-emphasis'?: string | number;
@@ -1034,7 +1038,7 @@ declare module 'react' {
     '--shadow-lg'?: string | number;
     /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. Re-derived on every theme root. */
     '--shadow-xl'?: string | number;
-    /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
+    /** `--ring-accent` - Focus & selection rings - box-shadows (not outlines) so they follow border-radius. Each tracks its role's hue; danger rings on its fill tone, the lighter face the destructive button rests on. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
     '--ring-accent'?: string | number;
     /** `--ring-danger`. Default: `0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
     '--ring-danger'?: string | number;
@@ -1138,7 +1142,7 @@ declare module 'react' {
     '--avatar-6-bg'?: string | number;
     /** `--avatar-6-fg`. Default: `oklch(0.45 0.08 125)`. */
     '--avatar-6-fg'?: string | number;
-    /** `--avatar-sheen`. Default: `oklch(1 0 0 / 0.35)`. */
+    /** `--avatar-sheen` - Surface finish - white sheen from top, cool near-black shade from bottom (never pure black). Default: `oklch(1 0 0 / 0.35)`. */
     '--avatar-sheen'?: string | number;
     /** `--avatar-shade`. Default: `oklch(0.225 0.012 264 / 0.05)`. */
     '--avatar-shade'?: string | number;

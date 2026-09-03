@@ -1,12 +1,10 @@
-/* Type system - two families, three weights, a 9-step ramp with matched leading + tracking. */
+/* Type system - three weights and a 9-step ramp with matched leading + tracking; the two
+   families are decisions (decisions.css). */
 
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.tokens {
   :root {
-    --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
-
     --weight-regular: 400;
     --weight-medium: 500;
     --weight-semibold: 600;

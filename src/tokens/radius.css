@@ -1,4 +1,4 @@
-/* Corner radii - one decision, --radius (8px), and steps derived from it at fixed ratios.
+/* Corner radii - fixed ratios of the --radius decision (decisions.css, 8px by default).
    --radius-md (6px) is the control default. --radius: 0 squares every corner; --radius-full is
    the pill, a shape rather than a step, so it stays literal. */
 
@@ -6,8 +6,6 @@
 
 @layer zyncat.tokens {
   :root {
-    /* The roundness decision - every --radius-<step> is a fixed ratio of it. */
-    --radius: 0.5rem;
     --radius-full: 624.9375rem;
   }
 

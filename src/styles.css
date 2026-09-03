@@ -7,10 +7,11 @@
    Per-component CSS is NOT here on purpose: every component imports its own
    stylesheet, so the consumer's bundler code-splits and lazy-loads it with the
    component. This file is only the always-needed global layer.
-   Order matters: fonts - primitives - semantics - shared utilities. */
+   Order matters: decisions - fonts - primitives - semantics - shared utilities. */
 
 @layer zyncat.tokens, zyncat.components;
 
+@import './tokens/decisions.css';
 @import './tokens/fonts.css';
 
 @import './tokens/color.css';

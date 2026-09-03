@@ -67,10 +67,12 @@
 - Tokens are custom properties on `:root` in `src/tokens/*.css`, served verbatim by `get_tokens`.
 - The `.css` file is the source of truth and the documentation.
 - A token file starts with the layer order statement and wraps its rules in `@layer zyncat.tokens`.
-- Four colours are decisions: `--accent`, `--success`, `--warning`, `--danger`. Every other colour derives
-  from them with relative colour syntax. A new colour token derives; it never pins a hue.
-- Roundness is one decision: `--radius`. The `--radius-*` steps are fixed ratios of it. `--radius-full`
-  is a shape, not a step, and stays literal.
+- Eight values are decisions, in `decisions.css`: `--accent`, `--success`, `--warning`, `--danger`,
+  `--neutral`, `--radius`, `--font-sans`, `--font-mono`. Everything else derives from them: colour with
+  relative colour syntax, the `--radius-*` steps as fixed ratios, the `--type-*` bundles from the faces.
+  A new colour token derives; it never pins a hue. `--radius-full` is a shape, not a step, and stays literal.
+- A decision sits on `:root` alone, never on the theme-root block; `gen-theme` fails on one there. `init`
+  copies the `:root` block of `decisions.css` into the consumer's `zyncat.theme.css`.
 - Two blocks per file. Literal values and the neutral roles a theme sets directly sit on `:root`.
   Tokens that derive from another token sit on `:root, [data-theme]`, so an element carrying a theme
   attribute re-derives them from its own decisions. A custom property is substituted where it is
@@ -78,9 +80,9 @@
 - Never put a literal on the theme-root block: it resets the consumer's `:root` decision inside every
   themed subtree. `gen-theme` fails the build on one.
 - Never `@import` with `layer()`. Bundler css-loaders rewrite it into a dead `@media`. Files wrap their own rules.
-- `color.css`: the four hue decisions, the neutral ramp, the shadow ink. `semantic.css`: the roles, derived.
+- `decisions.css`: the eight decisions. `color.css`: the neutral ramp, the shadow ink. `semantic.css`: the roles, derived.
 - `spacing.css`: one 4px base, a short scale.
-- `typography.css`, `fonts.css`: type scale and families.
+- `typography.css`, `fonts.css`: the type scale and the font faces.
 - `radius.css`, `elevation.css`: radii and shadows.
 - `motion.css`: durations, easings, distances, rest scales.
 - `layers.css`: `z-index` bands.
@@ -121,8 +123,8 @@
 ## Overrides
 
 - Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
-- Level 1: retheme by overriding tokens on `:root`. JS follows via the DOM readers.
-- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, the consumer default.
+- Level 1: retheme in `zyncat.theme.css`, the decisions `init` writes into the project; any token on `:root` works. JS follows via the DOM readers.
+- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Decisions at the top level, the groups under them.
 - `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
 - Token names are derived, never tabulated: the generator fails if a name stops round-tripping.
 - Level 2: retune one component through its scoped custom properties.

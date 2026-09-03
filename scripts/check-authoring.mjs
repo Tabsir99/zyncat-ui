@@ -51,6 +51,7 @@ const NOT_EXPECTED_TO_RESOLVE = new Set([
   'use-thing.ts',
   'Thing.tsx',
   'Thing.usage.md',
+  'zyncat.theme.css',
   '@zyncat/ui/thing',
   '@zyncat/ui/text-field',
   'Thing',

@@ -14,11 +14,12 @@ const fail = (message) => {
 };
 
 const GROUP_BY_FILE = {
+  'decisions.css': 'decisions',
   'color.css': 'color',
   'semantic.css': 'color',
   'typography.css': 'type',
   'spacing.css': 'space',
-  'radius.css': 'radius',
+  'radius.css': 'radii',
   'elevation.css': 'elevation',
   'motion.css': 'motion',
   'glass.css': 'glass',
@@ -28,11 +29,17 @@ const GROUP_BY_FILE = {
   'fonts.css': null,
 };
 
-const GROUP_ORDER = ['color', 'type', 'space', 'radius', 'elevation', 'motion', 'glass', 'icon', 'layer', 'avatar'];
+const DECISIONS = 'decisions';
+const GROUP_ORDER = ['color', 'type', 'space', 'radii', 'elevation', 'motion', 'glass', 'icon', 'layer', 'avatar'];
 
 const KNOB_TIERS = ['expressive', 'compound'];
 
-const DECL_RE = /(--[\w-]+)\s*:\s*([^;]+);[ \t]*(?:\/\*([^]*?)\*\/)?/g;
+const DECL_RE = /(?:\/\*((?:(?!\*\/)[^])*?)\*\/[ \t]*\n[ \t]*)?(--[\w-]+)\s*:\s*([^;]+);[ \t]*(?:\/\*([^]*?)\*\/)?/g;
+
+const declOf = (match) => {
+  const [, above, cssName, value, trailing] = match;
+  return { cssName, value, comment: trailing ?? above };
+};
 
 const oneLine = (text) => text.replace(/\s+/g, ' ').trim();
 
@@ -102,7 +109,7 @@ const importedTokenFiles = () =>
 const files = importedTokenFiles();
 if (!files.length) fail('src/styles.css imports no token files - the generator has nothing to read.');
 
-const groups = new Map(GROUP_ORDER.map((group) => [group, []]));
+const groups = new Map([DECISIONS, ...GROUP_ORDER].map((group) => [group, []]));
 const reduced = {};
 const byCssName = new Map();
 
@@ -115,11 +122,15 @@ for (const file of files) {
   if (group) {
     for (const block of tokenBlocks(css)) {
       for (const match of block.inner.matchAll(DECL_RE)) {
-        const [, cssName, value, comment] = match;
+        const { cssName, value, comment } = declOf(match);
         if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
         if (block.themed && !value.includes('var('))
           fail(
             `${cssName} in ${file} sits on the theme-root block with a literal value - a literal there resets the consumer's :root decision inside every [data-theme] subtree. Only tokens that derive from another token belong on ":root, [data-theme]".`,
+          );
+        if (group === DECISIONS && block.themed)
+          fail(
+            `${cssName} is a decision and sits on the theme-root block - decisions are set, never derived, so they live on :root alone.`,
           );
         const key = camelize(cssName.slice(2));
         if (`--${kebabize(key)}` !== cssName)
@@ -143,7 +154,10 @@ for (const file of files) {
   const media = blockInner(css, mediaIndex);
   const mediaRootIndex = media.indexOf(':root');
   if (mediaRootIndex === -1) continue;
-  for (const match of blockInner(media, mediaRootIndex).matchAll(DECL_RE)) reduced[match[1]] = oneLine(match[2]);
+  for (const match of blockInner(media, mediaRootIndex).matchAll(DECL_RE)) {
+    const { cssName, value } = declOf(match);
+    reduced[cssName] = oneLine(value);
+  }
 }
 
 for (const cssName of Object.keys(reduced))
@@ -182,7 +196,7 @@ for (const tier of KNOB_TIERS) {
     for (const file of dirFiles) {
       if (!file.endsWith('.css')) continue;
       for (const match of firstRuleInner(readFileSync(join(dirPath, file), 'utf8')).matchAll(DECL_RE)) {
-        const [, cssName, value, comment] = match;
+        const { cssName, value, comment } = declOf(match);
         if (written.has(cssName)) continue;
         if (!cssName.startsWith(`--${dir}-`))
           fail(
@@ -213,9 +227,10 @@ const GENERATED_BY =
 
 const tokensLines = [];
 tokensLines.push('/**');
-tokensLines.push(' * The themeable vocabulary, grouped the way the tokens are organised. Each key is one');
-tokensLines.push(' * design token in camelCase - `accent` is `--accent`, `radiusMd` is `--radius-md` - and');
-tokensLines.push(' * takes any CSS the property accepts, including `var()` references to other tokens.');
+tokensLines.push(' * The themeable vocabulary. The eight decisions sit at the top level of a theme and every');
+tokensLines.push(' * other token is grouped the way the files are organised. Each key is one design token in');
+tokensLines.push(' * camelCase - `accent` is `--accent`, `radiusMd` is `--radius-md` - and takes any CSS the');
+tokensLines.push(' * property accepts, including `var()` references to other tokens.');
 tokensLines.push(' *');
 tokensLines.push(GENERATED_BY);
 tokensLines.push(' */');
@@ -243,8 +258,12 @@ for (const component of components) {
 tokensLines.push('}');
 tokensLines.push('');
 
-tokensLines.push('/** One theme: the tokens it repoints, grouped. Every group is optional. */');
+tokensLines.push('/**');
+tokensLines.push(' * One theme: the tokens it repoints. The decisions come first - set one and every token that');
+tokensLines.push(' * derives from it follows - then the groups. Everything is optional.');
+tokensLines.push(' */');
 tokensLines.push('export interface ThemeTokens {');
+tokensLines.push(...members(groups.get(DECISIONS), ''));
 for (const group of GROUP_ORDER) {
   tokensLines.push(`  /** ${pascal(group)} tokens. */`);
   tokensLines.push(`  ${group}?: ${pascal(group)}Tokens;`);
@@ -274,7 +293,7 @@ tokensLines.push('');
 
 tokensLines.push("declare module 'react' {");
 tokensLines.push('  export interface CSSProperties {');
-for (const group of GROUP_ORDER)
+for (const group of [DECISIONS, ...GROUP_ORDER])
   for (const token of groups.get(group)) {
     tokensLines.push(`    ${docFor(token)}`);
     tokensLines.push(`    '${token.cssName}'?: string | number;`);
@@ -311,7 +330,7 @@ const knobCount = components.reduce((total, component) => total + component.knob
 const tokenCount = GROUP_ORDER.reduce((total, group) => total + groups.get(group).length, 0);
 const themedCount = [...byCssName.values()].filter((token) => token.themed).length;
 const summary =
-  `${tokenCount} tokens in ${GROUP_ORDER.length} groups (${themedCount} on every theme root), ` +
+  `${groups.get(DECISIONS).length} decisions, ${tokenCount} tokens in ${GROUP_ORDER.length} groups (${themedCount} on every theme root), ` +
   `${knobCount} knobs across ${components.length} components, ` +
   `${Object.keys(reduced).length} reduced-motion overrides`;
 

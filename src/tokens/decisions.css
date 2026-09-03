@@ -1,0 +1,27 @@
+/* The decisions - the eight values the rest of the vocabulary derives from. Set one and its family
+   follows; set a derived role only to break it away from its decision. `zyncat-ui init` copies the
+   :root block below into the project as zyncat.theme.css - the whole retheme surface, in the project. */
+
+@layer zyncat.tokens, zyncat.components;
+
+@layer zyncat.tokens {
+  :root {
+    /* The brand hue - hover, active, lift, subtle, border, wash, the focus ring and info follow. */
+    --accent: oklch(0.63 0.118 198);
+    /* Positive status - its subtle, text and wash follow. */
+    --success: oklch(0.548 0.122 152);
+    /* Caution - its subtle, text and wash follow. */
+    --warning: oklch(0.7 0.142 75);
+    /* Destructive actions and errors - the danger button ladder, ring, subtle, text and wash follow. */
+    --danger: oklch(0.545 0.196 27);
+    /* The gray ramp's hue - the accent by default, so chrome shares its temperature. A fixed colour
+       cuts the grays loose. Read on :root only: a themed subtree inherits the ramp. */
+    --neutral: var(--accent);
+    /* Roundness - every --radius-<step> is a fixed ratio of it; 0 squares every corner. */
+    --radius: 0.5rem;
+    /* The body face - every --type-* bundle follows. */
+    --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* The code face - --type-mono follows. */
+    --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+  }
+}

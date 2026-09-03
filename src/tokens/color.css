@@ -1,7 +1,7 @@
-/* Colour decisions and the neutral ramp.
-   Four hues are decided here - accent and the three status roles - and every other colour in the
-   system derives from them (semantic.css), so repointing --accent moves the whole accent family:
-   hover, active, lift, subtle, border, disabled, wash, the focus ring and info.
+/* The neutral ramp and the shadow ink.
+   The four hue decisions live in decisions.css and every other colour derives from them
+   (semantic.css), so repointing --accent moves the whole accent family: hover, active, lift,
+   subtle, border, disabled, wash, the focus ring and info.
    The neutral ramp is a cool ink gray: --neutral's hue at whisper chroma throughout, arced to peak
    at the mid steps (500-700) and fall away at both ends - chrome, fills and text share one temperature
    with the accent instead of fighting it. The canvas is pure white, so the ramp reads as ink on paper
@@ -13,15 +13,6 @@
 
 @layer zyncat.tokens {
   :root {
-    --accent: oklch(0.63 0.118 198);
-    --success: oklch(0.548 0.122 152);
-    --warning: oklch(0.7 0.142 75);
-    --danger: oklch(0.545 0.196 27);
-
-    /* The hue the neutral ramp takes; the accent by default, so chrome shares its temperature.
-       Point it at any colour to cut the grays loose from the brand. */
-    --neutral: var(--accent);
-
     --gray-0: oklch(1 0 0);
     --gray-50: oklch(from var(--neutral) 0.984 0.003 h);
     --gray-100: oklch(from var(--neutral) 0.97 0.004 h);

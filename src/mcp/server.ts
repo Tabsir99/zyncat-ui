@@ -131,11 +131,13 @@ function getComponent(raw: unknown): string {
   return modules.map((m) => renderModule(d, m)).join('\n\n');
 }
 
+const DECISIONS_FILE = 'decisions.css';
+
 const tokenFiles = (root: string): string[] =>
   existsSync(join(root, 'src/tokens'))
     ? readdirSync(join(root, 'src/tokens'))
         .filter((f) => f.endsWith('.css'))
-        .sort()
+        .sort((a, b) => Number(b === DECISIONS_FILE) - Number(a === DECISIONS_FILE) || a.localeCompare(b))
     : [];
 
 interface Hit {

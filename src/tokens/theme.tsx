@@ -29,16 +29,18 @@ const pushDeclarations = (into: [string, string][], group: TokenGroup, prefix: s
 
 const resolveDeclarations = (tokens?: ThemeTokens): [string, string][] => {
   const declarations: [string, string][] = [];
-  for (const [group, values] of Object.entries(tokens ?? {})) {
-    if (!values) continue;
-    if (group === 'custom') {
+  for (const [key, values] of Object.entries(tokens ?? {})) {
+    if (values == null) continue;
+    if (key === 'custom') {
       for (const [property, value] of Object.entries(values as TokenGroup))
         if (value != null) declarations.push([property, String(value)]);
-    } else if (group === 'components') {
+    } else if (key === 'components') {
       for (const [component, knobs] of Object.entries(values as Record<string, TokenGroup>))
         if (knobs) pushDeclarations(declarations, knobs, `${kebabize(component)}-`);
-    } else {
+    } else if (typeof values === 'object') {
       pushDeclarations(declarations, values as TokenGroup, '');
+    } else {
+      declarations.push([`--${kebabize(key)}`, String(values)]);
     }
   }
   return declarations;
