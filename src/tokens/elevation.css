@@ -9,6 +9,10 @@
     /* Border widths - weight comes from the colour, not the thickness. */
     --border-hairline: 1px;
     --border-emphasis: 1.5px;
+
+    --layer-overlay: 1000; /* a band - each overlay adds its stack depth, so a later one paints above an earlier one */
+    --layer-toast: 1050;
+    --layer-tooltip: 1100;
   }
 
   :root,

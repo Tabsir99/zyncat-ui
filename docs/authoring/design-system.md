@@ -71,11 +71,15 @@
   `--neutral`, `--radius`, `--font-body`, `--font-code`. Everything else derives from them: colour with
   relative colour syntax, the `--radius-*` steps as fixed ratios, the `--type-*` bundles from the faces.
   A new colour token derives; it never pins a hue. `--radius-full` is a shape, not a step, and stays literal.
+- The `--duration-*` tokens stay literal: `UIMotion` and the slow-mo devtool read them off the DOM as
+  numbers, and an unregistered `calc()` never resolves in a computed value. `UIMotion` reads them at
+  `<body>` once at load and again, in place, when `data-theme` changes on any element,
+  `prefers-reduced-motion` flips or `ZyncatTheme` renders; a theme on a subtree retimes CSS only.
 - A decision sits on `:root` alone, never on the theme-root block; `gen-theme` fails on one there. `init`
   copies the `:root` block of `decisions.css` into the consumer's `zyncat.theme.css`.
 - Three blocks per file, by how a theme reaches a token. Literal, polarity-free values sit on `:root`.
-  A polarity - a value the dark theme changes: the neutral roles, the shadow ink, the three strengths,
-  the avatar palette - sits on `:root, [data-theme='light']`, and `dark.css` sets the same name on
+  A polarity - a value the dark theme changes: the neutral roles, the shadow ink, the three
+  strengths - sits on `:root, [data-theme='light']`, and `dark.css` sets the same name on
   `[data-theme='dark']`, so either attribute works on `<html>` or on any subtree root. Tokens that
   derive from another token sit on `:root, [data-theme]`, so an element carrying a theme attribute
   re-derives them from its own decisions. A custom property is substituted where it is declared, so a
@@ -96,12 +100,15 @@
 - `decisions.css`: the eight decisions. `color.css`: the neutral ramp, the shadow ink. `semantic.css`: the roles, derived.
 - `dark.css`: the dark polarity. `base.css`: the `zyncat.base` layer that paints `body` in the app
   surface, the body ink and the body type - after the other layers, under any unlayered body rule.
-- `spacing.css`: one 4px base, a short scale.
+- `spacing.css`: one 4px base, a short scale, the control and icon sizes.
 - `typography.css`, `fonts.css`: the type scale and the font faces.
-- `radius.css`, `elevation.css`: radii and shadows.
+- `radius.css`, `elevation.css`: radii; shadows, rings, the lighting strengths and the `z-index` bands.
 - `motion.css`: durations, easings, distances, rest scales.
-- `layers.css`: `z-index` bands.
-- `glass.css`, `avatar.css`, `icons.css`: glass utility, avatar and icon sizing.
+- `glass.css`: the frosted-surface pieces.
+- A component-owned palette - the avatar's six identity hues - is declared on the component's root
+  class and flips polarity with `light-dark()`, keyed on the `color-scheme` the polarity blocks set;
+  the token layer holds no per-component values. `light-dark()` sets the browser floor: Chrome 123,
+  Safari 17.5, Firefox 120.
 - TypeScript reads tokens off the DOM: `UIMotion`, `tokenPx`.
 - Never duplicate a token value as a TypeScript literal.
 

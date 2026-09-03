@@ -1,3 +1,4 @@
+import { motionDefaults } from './motion-defaults.generated';
 import type { DistanceToken, DurationToken, EaseToken, ScaleToken } from './motion-scale';
 
 export interface MotionTransition {
@@ -44,16 +45,20 @@ export interface MotionTokens {
 
 type MotionScales = Pick<MotionTokens, 'dur' | 'ease' | 'dist' | 'scale'>;
 
-const DEFAULT_DUR: MotionTokens['dur'] = { fast: 0.14, base: 0.2, slow: 0.3, slower: 0.45, slowest: 0.9 };
-const DEFAULT_EASE: MotionTokens['ease'] = {
-  standard: [0.2, 0, 0, 1],
-  entrance: [0.25, 1, 0.4, 1],
-  exit: [0.4, 0, 1, 1],
-  spring: [0.34, 1.4, 0.5, 1],
-  glide: [0.32, 0.55, 0, 1],
+const DURATION_TOKENS: DurationToken[] = ['fast', 'base', 'slow', 'slower', 'slowest'];
+const EASE_TOKENS: EaseToken[] = ['standard', 'entrance', 'exit', 'spring', 'glide'];
+const DISTANCE_TOKENS: DistanceToken[] = ['sm', 'md', 'lg'];
+const SCALE_TOKENS: ScaleToken[] = ['panel', 'floating', 'chip'];
+
+const table = <K extends string, V>(keys: readonly K[], read: (key: K) => V): Record<K, V> =>
+  Object.fromEntries(keys.map((key) => [key, read(key)])) as Record<K, V>;
+
+const DEFAULTS: MotionScales = {
+  dur: table(DURATION_TOKENS, (key) => motionDefaults.duration[key] / 1000),
+  ease: table(EASE_TOKENS, (key) => motionDefaults.ease[key]),
+  dist: table(DISTANCE_TOKENS, (key) => motionDefaults.distance[key]),
+  scale: table(SCALE_TOKENS, (key) => motionDefaults.scale[key]),
 };
-const DEFAULT_DIST: MotionTokens['dist'] = { sm: 8, md: 16, lg: 24 };
-const DEFAULT_SCALE: MotionTokens['scale'] = { panel: 0.98, floating: 0.96, chip: 0.9 };
 
 function build(scales: MotionScales): MotionTokens {
   const { dur, ease } = scales;
@@ -72,8 +77,8 @@ function build(scales: MotionScales): MotionTokens {
 }
 
 function readFromDom(): MotionTokens {
-  const cs = getComputedStyle(document.documentElement);
-  const rootFontSize = parseFloat(cs.fontSize) || 16;
+  const cs = getComputedStyle(document.body ?? document.documentElement);
+  const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
   const seconds = (name: string, fallback: number): number => {
     const v = cs.getPropertyValue(name).trim();
     const n = v.slice(-2) === 'ms' ? parseFloat(v) / 1000 : parseFloat(v);
@@ -94,36 +99,49 @@ function readFromDom(): MotionTokens {
     return m && m.length === 4 ? (m.map(Number) as Bezier) : fallback;
   };
   return build({
-    dur: {
-      fast: seconds('--duration-fast', DEFAULT_DUR.fast),
-      base: seconds('--duration-base', DEFAULT_DUR.base),
-      slow: seconds('--duration-slow', DEFAULT_DUR.slow),
-      slower: seconds('--duration-slower', DEFAULT_DUR.slower),
-      slowest: seconds('--duration-slowest', DEFAULT_DUR.slowest),
-    },
-    ease: {
-      standard: bezier('--ease-standard', DEFAULT_EASE.standard),
-      entrance: bezier('--ease-entrance', DEFAULT_EASE.entrance),
-      exit: bezier('--ease-exit', DEFAULT_EASE.exit),
-      spring: bezier('--ease-spring', DEFAULT_EASE.spring),
-      glide: bezier('--ease-glide', DEFAULT_EASE.glide),
-    },
-    dist: {
-      sm: pixels('--distance-sm', DEFAULT_DIST.sm),
-      md: pixels('--distance-md', DEFAULT_DIST.md),
-      lg: pixels('--distance-lg', DEFAULT_DIST.lg),
-    },
-    scale: {
-      panel: ratio('--scale-panel', DEFAULT_SCALE.panel),
-      floating: ratio('--scale-floating', DEFAULT_SCALE.floating),
-      chip: ratio('--scale-chip', DEFAULT_SCALE.chip),
-    },
+    dur: table(DURATION_TOKENS, (key) => seconds(`--duration-${key}`, DEFAULTS.dur[key])),
+    ease: table(EASE_TOKENS, (key) => bezier(`--ease-${key}`, DEFAULTS.ease[key])),
+    dist: table(DISTANCE_TOKENS, (key) => pixels(`--distance-${key}`, DEFAULTS.dist[key])),
+    scale: table(SCALE_TOKENS, (key) => ratio(`--scale-${key}`, DEFAULTS.scale[key])),
   });
 }
 
-export const UIMotion: MotionTokens =
-  typeof document !== 'undefined'
-    ? readFromDom()
-    : build({ dur: DEFAULT_DUR, ease: DEFAULT_EASE, dist: DEFAULT_DIST, scale: DEFAULT_SCALE });
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+function replaceInto(target: Record<string, unknown>, next: Record<string, unknown>): void {
+  for (const key of Object.keys(target)) if (!(key in next)) delete target[key];
+  for (const [key, value] of Object.entries(next)) {
+    const current = target[key];
+    if (isRecord(current) && isRecord(value)) replaceInto(current, value);
+    else target[key] = value;
+  }
+}
+
+const hasDom = typeof document !== 'undefined';
+
+export const UIMotion: MotionTokens = hasDom ? readFromDom() : build(DEFAULTS);
+
+/**
+ * Re-reads the motion tokens into `UIMotion` in place, so every held reference sees the new values. Runs on
+ * a `data-theme` change, a `prefers-reduced-motion` flip and after `ZyncatTheme` renders; call it yourself
+ * after injecting a stylesheet that retimes the `--duration-*` tokens.
+ */
+export function refreshMotionTokens(): MotionTokens {
+  if (hasDom)
+    replaceInto(UIMotion as unknown as Record<string, unknown>, readFromDom() as unknown as Record<string, unknown>);
+  return UIMotion;
+}
+
+if (hasDom) {
+  if (typeof matchMedia === 'function')
+    matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => refreshMotionTokens());
+  if (typeof MutationObserver === 'function')
+    new MutationObserver(() => refreshMotionTokens()).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+      subtree: true,
+    });
+}
 
 export default UIMotion;

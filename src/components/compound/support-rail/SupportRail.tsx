@@ -43,11 +43,11 @@ const INDEX_PROPERTY = '--_support-rail-index';
 const DRAGGING_ATTRIBUTE = 'data-dragging';
 const NO_DRAG = '0px';
 
-const CONTENT_FADE_IN: Layer = {
+const contentFadeIn = (): Layer => ({
   opacity: [0, 1],
   timing: { duration: UIMotion.dur.slow, ease: 'linear', delay: UIMotion.dur.base * CONTENT_FADE_IN_DELAY_RATIO },
-};
-const CONTENT_FADE_OUT: Layer = { opacity: [0], timing: { duration: UIMotion.dur.fast, ease: 'linear' } };
+});
+const contentFadeOut = (): Layer => ({ opacity: [0], timing: { duration: UIMotion.dur.fast, ease: 'linear' } });
 
 type GrabHandler = (event: ReactPointerEvent<HTMLElement>) => void;
 
@@ -116,8 +116,8 @@ function SupportRailBody({
     <Motion
       as="div"
       ref={bodyRef}
-      animate={CONTENT_FADE_IN}
-      exit={CONTENT_FADE_OUT}
+      animate={contentFadeIn()}
+      exit={contentFadeOut()}
       className="support-rail__body"
       id={panelId}
       role="dialog"

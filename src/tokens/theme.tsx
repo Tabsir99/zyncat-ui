@@ -1,3 +1,4 @@
+import { ThemeSync } from './theme-sync';
 import { reducedMotionTokens, type ThemeSet, type ThemeTokens } from './theme-tokens.generated';
 
 export type * from './theme-tokens.generated';
@@ -79,5 +80,10 @@ export function defineTheme(tokens: ThemeTokens): ThemeTokens {
 export function ZyncatTheme({ theme }: ZyncatThemeProps) {
   const css = renderThemeCss(theme);
   if (!css) return null;
-  return <style data-zyncat-theme="">{css}</style>;
+  return (
+    <>
+      <style data-zyncat-theme="">{css}</style>
+      <ThemeSync css={css} />
+    </>
+  );
 }

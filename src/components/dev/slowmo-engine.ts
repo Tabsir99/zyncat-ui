@@ -1,4 +1,5 @@
 import { clock } from '../../engine';
+import { motionDefaults } from '../../tokens/motion-defaults.generated';
 
 export interface SlowmoState {
   /** 1 = real time. >1 = that many times slower (4 = quarter speed). */
@@ -13,15 +14,9 @@ export interface SlowmoOptions {
   scaleTimers: boolean;
 }
 
-const CANONICAL: Record<string, number> = {
-  '--duration-fast': 140,
-  '--duration-base': 200,
-  '--duration-slow': 300,
-  '--duration-slower': 450,
-  '--duration-slowest': 900,
-  '--duration-spin': 600,
-  '--duration-pulse': 1600,
-};
+const CANONICAL: Record<string, number> = Object.fromEntries(
+  Object.entries(motionDefaults.duration).map(([step, ms]) => [`--duration-${step}`, ms]),
+);
 const DURATION_TOKENS = Object.keys(CANONICAL);
 const COLLAPSED_MS = 4;
 const FROZEN_MS = 600_000;
@@ -36,6 +31,7 @@ const listeners = new Set<(s: SlowmoState) => void>();
 
 let active = false;
 let baseMs: Record<string, number> = {};
+let overrideSheet: HTMLStyleElement | null = null;
 
 type SetTimer = (handler: TimerHandler, timeout?: number, ...args: unknown[]) => number;
 let origSetTimeout: SetTimer | null = null;
@@ -53,16 +49,21 @@ function readBaseMs(token: string): number {
 }
 
 function applyCssTokens() {
-  const root = document.documentElement.style;
-  for (const token of DURATION_TOKENS) {
-    const ms = state.paused ? FROZEN_MS : baseMs[token] * state.factor;
-    root.setProperty(token, `${ms}ms`);
+  if (!overrideSheet) {
+    overrideSheet = document.createElement('style');
+    overrideSheet.dataset.zyncatSlowmo = '';
+    document.head.append(overrideSheet);
   }
+  const declarations = DURATION_TOKENS.map((token) => {
+    const ms = state.paused ? FROZEN_MS : baseMs[token] * state.factor;
+    return `${token}: ${ms}ms !important;`;
+  });
+  overrideSheet.textContent = `:root, [data-theme] { ${declarations.join(' ')} }`;
 }
 
 function clearCssTokens() {
-  const root = document.documentElement.style;
-  for (const token of DURATION_TOKENS) root.removeProperty(token);
+  overrideSheet?.remove();
+  overrideSheet = null;
 }
 
 function scaleDelay(delay?: number): number | undefined {

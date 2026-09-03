@@ -21,5 +21,9 @@
     --control-height-lg: 2.3rem;
     --control-box: 1.125rem;
     --control-switch: 1.25rem; /* the switch track - the one control size off the scale */
+
+    --icon-sm: 17px;
+    --icon-md: 20px;
+    --icon-lg: 26px;
   }
 }

@@ -2,9 +2,9 @@
 
 @layer zyncat.tokens {
   :root {
-    --duration-fast: 140ms;
-    --duration-base: 200ms;
-    --duration-slow: 300ms;
+    --duration-fast: 140ms; /* micro feedback - hover washes, presses, control tint */
+    --duration-base: 200ms; /* standard element transitions - fades, toggles, badge morphs */
+    --duration-slow: 300ms; /* layout-scale movement - Collapse, panel resizes, reordering */
     --duration-slower: 450ms; /* large-surface movement - dialog, sheet, page-scale reveals */
     --duration-slowest: 900ms; /* hero-scale movement - card expansion, container transforms; the scale's ceiling */
     --duration-spin: 600ms; /* continuous loaders only; deliberately outside the UI-transition scale */

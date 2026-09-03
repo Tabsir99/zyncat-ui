@@ -9,7 +9,7 @@ import { activationProps, type ActivateOn } from '../../../internal/utils/activa
 import { CATEGORY_ICON_ATTRS, CATEGORY_ICONS } from '../category-icons';
 import { useCategories, useIsActiveCategory, type EmojiPickerStore } from './useEmojiPicker';
 
-const RAIL_GLIDE = { timing: { duration: SM.dur.base, ease: SM.ease.standard } };
+const railGlide = () => ({ timing: { duration: SM.dur.base, ease: SM.ease.standard } });
 
 interface CategoryProps {
   store: EmojiPickerStore;
@@ -42,7 +42,7 @@ function Category({ store, categoryKey, railId, glide, activateOn }: CategoryPro
         <Motion
           as="span"
           layoutId={railId}
-          layoutTransition={RAIL_GLIDE}
+          layoutTransition={railGlide()}
           className="on-emoji-cat-rail"
           aria-hidden="true"
         />

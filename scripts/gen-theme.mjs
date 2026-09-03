@@ -6,6 +6,7 @@ import { ROOT } from './lib/entries.mjs';
 
 const TOKENS_OUT = 'src/tokens/theme-tokens.generated.ts';
 const STYLES_OUT = 'src/tokens/component-styles.generated.ts';
+const MOTION_OUT = 'src/tokens/motion-defaults.generated.ts';
 const check = process.argv.includes('--check');
 
 const fail = (message) => {
@@ -541,9 +542,74 @@ const summary =
   `${knobCount} knobs across ${components.length} components, ` +
   `${Object.keys(reduced).length} reduced-motion overrides`;
 
+const MOTION_FILE = 'motion.css';
+const ROOT_FONT_PX = 16;
+
+const numberOf = (text) => {
+  const n = Number(text.trim());
+  if (Number.isNaN(n)) fail(`"${text}" in ${MOTION_FILE} is not a number the generator can read.`);
+  return n;
+};
+const resolveMs = (value, depth = 0) => {
+  if (depth > 8) fail(`${value} in ${MOTION_FILE} nests var() too deep to resolve.`);
+  const text = value.trim();
+  const reference = text.match(/^var\(\s*(--[\w-]+)\s*\)$/);
+  if (reference) {
+    const token = byCssName.get(reference[1]);
+    if (!token) fail(`${text} in ${MOTION_FILE} points at ${reference[1]}, which no token file declares.`);
+    return resolveMs(token.value, depth + 1);
+  }
+  const product = text.match(/^calc\(\s*(.+?)\s*\*\s*([\d.]+)\s*\)$/);
+  if (product) return resolveMs(product[1], depth + 1) * numberOf(product[2]);
+  const time = text.match(/^([\d.]+)(ms|s)$/);
+  if (time) return numberOf(time[1]) * (time[2] === 's' ? 1000 : 1);
+  return fail(
+    `${text} in ${MOTION_FILE} is not a time the generator can resolve - write <time>, var(--x) or calc(var(--x) * <number>).`,
+  );
+};
+const resolvePx = (value) => {
+  const length = value.trim().match(/^([\d.]+)(rem|px)$/);
+  if (!length) fail(`${value} in ${MOTION_FILE} is not a rem or px length.`);
+  return numberOf(length[1]) * (length[2] === 'rem' ? ROOT_FONT_PX : 1);
+};
+const resolveBezier = (value) => {
+  const bezier = value.trim().match(/^cubic-bezier\(([^)]+)\)$/);
+  if (!bezier) fail(`${value} in ${MOTION_FILE} is not a cubic-bezier().`);
+  const points = bezier[1].split(',').map(numberOf);
+  if (points.length !== 4) fail(`${value} in ${MOTION_FILE} does not have four control points.`);
+  return points;
+};
+const motionTable = (prefix, resolve) =>
+  tokens
+    .filter((token) => token.file === MOTION_FILE && token.cssName.startsWith(prefix))
+    .map((token) => `  ${camelize(token.cssName.slice(prefix.length))}: ${JSON.stringify(resolve(token.value))},`);
+
+const motionLines = [];
+motionLines.push('/**');
+motionLines.push(' * The motion tokens as numbers, for the readers that need a value before a stylesheet answers:');
+motionLines.push(' * durations in milliseconds, distances in pixels at a 16px root, easings as cubic-bezier points.');
+motionLines.push(' *');
+motionLines.push(GENERATED_BY);
+motionLines.push(' */');
+motionLines.push('export const motionDefaults = {');
+motionLines.push('  duration: {');
+motionLines.push(...motionTable('--duration-', resolveMs));
+motionLines.push('  } satisfies Record<string, number>,');
+motionLines.push('  ease: {');
+motionLines.push(...motionTable('--ease-', resolveBezier));
+motionLines.push('  } satisfies Record<string, [number, number, number, number]>,');
+motionLines.push('  distance: {');
+motionLines.push(...motionTable('--distance-', resolvePx));
+motionLines.push('  } satisfies Record<string, number>,');
+motionLines.push('  scale: {');
+motionLines.push(...motionTable('--scale-', numberOf));
+motionLines.push('  } satisfies Record<string, number>,');
+motionLines.push('};');
+
 const outputs = [
   { rel: TOKENS_OUT, lines: tokensLines },
   { rel: STYLES_OUT, lines: stylesLines },
+  { rel: MOTION_OUT, lines: motionLines },
 ];
 
 for (const output of outputs) {

@@ -40,8 +40,9 @@ left out keeps the shipped dark value. The derived tokens are declared on every 
 and any element with `data-theme`), so a subtree theme that repoints `--accent` re-derives all of
 them; the neutral roles cascade like any property, so a theme of your own that sets `--bg-app` and
 `--text-body` keeps them without restating the rest.
-Components read the tokens live and the WAAPI engine reads the same DOM values, so motion retimes
-with the CSS. Reduced motion is handled here - every `--duration-*` collapses to 1ms under
+Components read the tokens live, and the WAAPI engine reads the same values at `<body>` - again
+whenever `data-theme` changes or `prefers-reduced-motion` flips - so motion retimes with the CSS.
+Reduced motion is handled here - every `--duration-*` collapses to 1ms under
 `prefers-reduced-motion`, so derive your own delays from a duration token, and repoint durations on
 `:root` rather than a nested scope or the collapse cannot reach them.
 

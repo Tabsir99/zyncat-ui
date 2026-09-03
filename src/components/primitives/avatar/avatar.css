@@ -6,6 +6,21 @@
     --avatar-bg: var(--bg-muted);
     --avatar-fg: var(--text-muted);
     --avatar-edge: oklch(1 0 0 / calc(0.5 * var(--sheen-strength)));
+    --avatar-shade: oklch(0.225 0.012 264 / 0.05);
+    --avatar-sheen: oklch(1 0 0 / calc(0.35 * var(--sheen-strength)));
+    /* The identity palette is the component's own, so it flips with the color-scheme the polarity blocks set instead of living in dark.css. */
+    --avatar-1-bg: light-dark(oklch(0.945 0.04 250), oklch(0.31 0.055 250));
+    --avatar-1-fg: light-dark(oklch(0.45 0.08 250), oklch(0.87 0.07 250));
+    --avatar-2-bg: light-dark(oklch(0.945 0.04 292), oklch(0.31 0.055 292));
+    --avatar-2-fg: light-dark(oklch(0.45 0.08 292), oklch(0.87 0.07 292));
+    --avatar-3-bg: light-dark(oklch(0.945 0.04 334), oklch(0.31 0.055 334));
+    --avatar-3-fg: light-dark(oklch(0.45 0.08 334), oklch(0.87 0.07 334));
+    --avatar-4-bg: light-dark(oklch(0.945 0.04 5), oklch(0.31 0.055 5));
+    --avatar-4-fg: light-dark(oklch(0.45 0.08 5), oklch(0.87 0.07 5));
+    --avatar-5-bg: light-dark(oklch(0.945 0.04 55), oklch(0.31 0.055 55));
+    --avatar-5-fg: light-dark(oklch(0.45 0.08 55), oklch(0.87 0.07 55));
+    --avatar-6-bg: light-dark(oklch(0.945 0.04 125), oklch(0.31 0.055 125));
+    --avatar-6-fg: light-dark(oklch(0.45 0.08 125), oklch(0.87 0.07 125));
 
     position: relative;
     display: inline-flex;

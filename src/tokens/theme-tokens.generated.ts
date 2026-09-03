@@ -98,11 +98,11 @@ export interface ShapeTokens {
 
 /** The time bands. */
 export interface MotionDurationTokens {
-  /** `--duration-fast`. Default: `140ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-fast` - micro feedback - hover washes, presses, control tint. Default: `140ms`. Collapses to `1ms` under reduced motion. */
   fast?: string | number;
-  /** `--duration-base`. Default: `200ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-base` - standard element transitions - fades, toggles, badge morphs. Default: `200ms`. Collapses to `1ms` under reduced motion. */
   base?: string | number;
-  /** `--duration-slow`. Default: `300ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-slow` - layout-scale movement - Collapse, panel resizes, reordering. Default: `300ms`. Collapses to `1ms` under reduced motion. */
   slow?: string | number;
   /** `--duration-slower` - large-surface movement - dialog, sheet, page-scale reveals. Default: `450ms`. Collapses to `1ms` under reduced motion. */
   slower?: string | number;
@@ -563,6 +563,12 @@ export interface TokenProperties {
   '--control-box'?: string | number;
   /** `--control-switch` - the switch track - the one control size off the scale. Default: `1.25rem`. */
   '--control-switch'?: string | number;
+  /** `--icon-sm`. Default: `17px`. */
+  '--icon-sm'?: string | number;
+  /** `--icon-md`. Default: `20px`. */
+  '--icon-md'?: string | number;
+  /** `--icon-lg`. Default: `26px`. */
+  '--icon-lg'?: string | number;
   /** `--radius-full` - the pill - a shape, not a step of --radius, so it stays literal. Default: `624.9375rem`. */
   '--radius-full'?: string | number;
   /** `--radius-sm`. Default: `calc(var(--radius) * 0.5)`. Re-derived on every theme root. */
@@ -579,6 +585,12 @@ export interface TokenProperties {
   '--border-hairline'?: string | number;
   /** `--border-emphasis`. Default: `1.5px`. */
   '--border-emphasis'?: string | number;
+  /** `--layer-overlay` - a band - each overlay adds its stack depth, so a later one paints above an earlier one. Default: `1000`. */
+  '--layer-overlay'?: string | number;
+  /** `--layer-toast`. Default: `1050`. */
+  '--layer-toast'?: string | number;
+  /** `--layer-tooltip`. Default: `1100`. */
+  '--layer-tooltip'?: string | number;
   /** `--shadow-strength` - Multiplies every shadow alpha - 1 on the white canvas; black on dark needs 3-4x to read. Default: `1`. Dark: `3.5`. */
   '--shadow-strength'?: string | number;
   /** `--sheen-strength` - Multiplies every white top-light highlight - 1 on the white canvas, a fifth on dark. Default: `1`. Dark: `0.2`. */
@@ -607,11 +619,11 @@ export interface TokenProperties {
   '--glow-accent'?: string | number;
   /** `--glow-danger`. Default: `0 4px 16px oklch(from var(--danger) 0.602 0.196 h / calc(0.4 * var(--glow-strength)))`. Re-derived on every theme root. */
   '--glow-danger'?: string | number;
-  /** `--duration-fast`. Default: `140ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-fast` - micro feedback - hover washes, presses, control tint. Default: `140ms`. Collapses to `1ms` under reduced motion. */
   '--duration-fast'?: string | number;
-  /** `--duration-base`. Default: `200ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-base` - standard element transitions - fades, toggles, badge morphs. Default: `200ms`. Collapses to `1ms` under reduced motion. */
   '--duration-base'?: string | number;
-  /** `--duration-slow`. Default: `300ms`. Collapses to `1ms` under reduced motion. */
+  /** `--duration-slow` - layout-scale movement - Collapse, panel resizes, reordering. Default: `300ms`. Collapses to `1ms` under reduced motion. */
   '--duration-slow'?: string | number;
   /** `--duration-slower` - large-surface movement - dialog, sheet, page-scale reveals. Default: `450ms`. Collapses to `1ms` under reduced motion. */
   '--duration-slower'?: string | number;
@@ -667,46 +679,6 @@ export interface TokenProperties {
   '--glass-shadow'?: string | number;
   /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 8px 18px rgb(var(--shadow-rgb) / calc(0.1 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--glass-shadow-hover'?: string | number;
-  /** `--icon-sm`. Default: `17px`. */
-  '--icon-sm'?: string | number;
-  /** `--icon-md`. Default: `20px`. */
-  '--icon-md'?: string | number;
-  /** `--icon-lg`. Default: `26px`. */
-  '--icon-lg'?: string | number;
-  /** `--layer-overlay` - a band - each overlay adds its stack depth, so a later one paints above an earlier one. Default: `1000`. */
-  '--layer-overlay'?: string | number;
-  /** `--layer-toast`. Default: `1050`. */
-  '--layer-toast'?: string | number;
-  /** `--layer-tooltip`. Default: `1100`. */
-  '--layer-tooltip'?: string | number;
-  /** `--avatar-shade` - The face's bottom shade - a cool near-black, never pure black. Default: `oklch(0.225 0.012 264 / 0.05)`. */
-  '--avatar-shade'?: string | number;
-  /** `--avatar-1-bg`. Default: `oklch(0.945 0.04 250)`. Dark: `oklch(0.31 0.055 250)`. */
-  '--avatar-1-bg'?: string | number;
-  /** `--avatar-1-fg`. Default: `oklch(0.45 0.08 250)`. Dark: `oklch(0.87 0.07 250)`. */
-  '--avatar-1-fg'?: string | number;
-  /** `--avatar-2-bg`. Default: `oklch(0.945 0.04 292)`. Dark: `oklch(0.31 0.055 292)`. */
-  '--avatar-2-bg'?: string | number;
-  /** `--avatar-2-fg`. Default: `oklch(0.45 0.08 292)`. Dark: `oklch(0.87 0.07 292)`. */
-  '--avatar-2-fg'?: string | number;
-  /** `--avatar-3-bg`. Default: `oklch(0.945 0.04 334)`. Dark: `oklch(0.31 0.055 334)`. */
-  '--avatar-3-bg'?: string | number;
-  /** `--avatar-3-fg`. Default: `oklch(0.45 0.08 334)`. Dark: `oklch(0.87 0.07 334)`. */
-  '--avatar-3-fg'?: string | number;
-  /** `--avatar-4-bg`. Default: `oklch(0.945 0.04 5)`. Dark: `oklch(0.31 0.055 5)`. */
-  '--avatar-4-bg'?: string | number;
-  /** `--avatar-4-fg`. Default: `oklch(0.45 0.08 5)`. Dark: `oklch(0.87 0.07 5)`. */
-  '--avatar-4-fg'?: string | number;
-  /** `--avatar-5-bg`. Default: `oklch(0.945 0.04 55)`. Dark: `oklch(0.31 0.055 55)`. */
-  '--avatar-5-bg'?: string | number;
-  /** `--avatar-5-fg`. Default: `oklch(0.45 0.08 55)`. Dark: `oklch(0.87 0.07 55)`. */
-  '--avatar-5-fg'?: string | number;
-  /** `--avatar-6-bg`. Default: `oklch(0.945 0.04 125)`. Dark: `oklch(0.31 0.055 125)`. */
-  '--avatar-6-bg'?: string | number;
-  /** `--avatar-6-fg`. Default: `oklch(0.45 0.08 125)`. Dark: `oklch(0.87 0.07 125)`. */
-  '--avatar-6-fg'?: string | number;
-  /** `--avatar-sheen` - White sheen from the top of the face. Default: `oklch(1 0 0 / calc(0.35 * var(--sheen-strength)))`. Re-derived on every theme root. */
-  '--avatar-sheen'?: string | number;
   /** `--text-on-accent` - The ink on a hue fill - white in either polarity, since the fills stay mid-lightness on dark. Default: `var(--gray-0)`. */
   '--text-on-accent'?: string | number;
   /** `--bg-app` - The canvas is pure white and cards and panels share it, separated by hairlines and shadow the way print separates with rules rather than tint; subtle < muted < inset step one ramp stop apart. Default: `var(--gray-0)`. Dark: `oklch(from var(--neutral) 0.165 0.006 h)`. */

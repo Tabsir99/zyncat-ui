@@ -14,9 +14,6 @@
 @import './tokens/elevation.css';
 @import './tokens/motion.css';
 @import './tokens/glass.css';
-@import './tokens/icons.css';
-@import './tokens/layers.css';
-@import './tokens/avatar.css';
 
 @import './tokens/semantic.css';
 @import './tokens/dark.css';

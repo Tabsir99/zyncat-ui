@@ -217,8 +217,8 @@ export default withZyncat({
             <strong>Node.js 18+</strong> for the CLI and the MCP server.
           </li>
           <li>
-            <strong>Modern browsers</strong> - Chrome 105+, Safari 16.4+, Firefox 121+, Edge 105+ (modern CSS nesting
-            and WAAPI).
+            <strong>Modern browsers</strong> - Chrome 123+, Safari 17.5+, Firefox 128+, Edge 123+ (relative colour
+            syntax, light-dark() and WAAPI).
           </li>
           <li>
             <strong>Icons are bundled.</strong> There is no icon peer to install - components render their own glyphs,

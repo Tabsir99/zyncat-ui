@@ -240,7 +240,8 @@ dist/               compiled ESM + .d.ts - what you import
   full vocabulary, and `get_tokens` prints it with live values.
 - **Reduced motion is handled at the token layer.** Every `--duration-*` collapses to 1ms under
   `prefers-reduced-motion`, so components need no per-component media query - but that collapse
-  targets `:root`, so repoint durations there and not on a nested scope.
+  targets `:root`, so repoint durations there and not on a nested scope. The engine re-reads the
+  tokens when the theme attribute or the media query changes.
 
 ## Develop
 

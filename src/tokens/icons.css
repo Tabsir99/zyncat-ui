@@ -1,9 +1,0 @@
-@layer zyncat.tokens, zyncat.components;
-
-@layer zyncat.tokens {
-  :root {
-    --icon-sm: 17px;
-    --icon-md: 20px;
-    --icon-lg: 26px;
-  }
-}

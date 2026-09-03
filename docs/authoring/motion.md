@@ -69,6 +69,7 @@
 - Springs: `type: 'spring'` with `visualDuration` and `bounce`.
 - `fill` defaults to `'both'`. `release` defaults to `false`.
 - Prefer `UIMotion.t`: `t.enter`, `t.exit`, `t.layout`, `t.settle`, `t.glide`.
+- Read `UIMotion` at call time, never into a module constant. It re-reads in place when `data-theme` changes, when `prefers-reduced-motion` flips and after `ZyncatTheme` renders; a subtree theme retimes CSS only, and a stylesheet injected by hand needs `refreshMotionTokens()`.
 - A component with an `animation` prop never reads `UIMotion` directly.
 - Declare defaults and resolve them: `resolveMotionTiming(animation, defaults)`.
 
