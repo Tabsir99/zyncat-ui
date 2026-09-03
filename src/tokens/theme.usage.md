@@ -19,7 +19,7 @@ re-render, and duration overrides re-collapse under prefers-reduced-motion. Each
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)', accentHover: 'oklch(0.52 0.19 292)' },
+  color: { accent: 'oklch(0.58 0.19 292)' },
   radius: { radiusMd: '0.5rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });

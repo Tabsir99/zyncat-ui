@@ -1,4 +1,10 @@
-/* Semantic layer - the intent-named aliases components consume; repoint these to re-theme. */
+/* Semantic layer - the intent-named roles components consume.
+   Two blocks, by how a theme reaches them. The neutral roles are what a light or dark theme sets
+   directly, so they sit on :root alone and cascade like any property. The hue roles derive from the
+   four decisions in color.css and are declared on every theme root - :root and any element carrying
+   data-theme - because a custom property is substituted where it is declared: without the second
+   selector a subtree that repoints --accent would inherit hover, wash and focus ring already resolved
+   to the root accent. */
 
 @layer zyncat.tokens, zyncat.components;
 
@@ -22,7 +28,6 @@
     --text-muted: var(--gray-600);
     --text-subtle: var(--gray-500);
     --text-disabled: var(--gray-400);
-    --text-accent: var(--teal-700);
     --text-on-accent: var(--gray-0);
     --text-inverse: var(--gray-0);
 
@@ -30,39 +35,53 @@
     --border-default: var(--gray-200);
     --border-strong: var(--gray-300);
 
-    --accent-lift: var(--teal-400);
-    --accent: var(--teal-500);
-    --accent-hover: var(--teal-600);
-    --accent-active: var(--teal-700);
-    --accent-subtle: var(--teal-50);
-    --accent-border: var(--teal-200);
-    --accent-disabled: var(--teal-300);
-
-    --success-subtle: var(--green-50);
-    --success: var(--green-600);
-    --success-text: var(--green-700);
-    --warning-subtle: var(--amber-50);
-    --warning: var(--amber-600);
-    --warning-text: var(--amber-700);
-    --danger-subtle: var(--red-50);
-    --danger: var(--red-600);
-    --danger-text: var(--red-700);
-    --info-subtle: var(--teal-50);
-    --info: var(--teal-600);
-    --info-text: var(--teal-700);
-    --danger-disabled: var(--red-300);
-
     /* State layer: interactive hover/press fills are translucent washes, never opaque
      near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. */
-    --neutral-wash: var(--gray-wash);
-    --neutral-wash-press: var(--gray-wash-strong);
-    --accent-wash: var(--teal-wash);
-    --success-wash: var(--green-wash);
-    --warning-wash: var(--amber-wash);
-    --danger-wash: var(--red-wash);
+    --neutral-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
+    --neutral-wash-press: color-mix(in oklab, var(--gray-700) 10%, transparent);
 
-    /* Glass tints - per-tone translucent fills derived from the status hues; alpha kept low so the frost reads through. */
     --glass-tint-neutral: color-mix(in oklab, var(--gray-600) 13%, transparent);
+  }
+
+  :root,
+  [data-theme] {
+    /* Accent family. Hover, active and lift step lightness relative to the accent so a dark or
+     pale accent keeps its own contrast ladder; subtle, border and disabled pin lightness and
+     chroma and take only the hue, so they stay tints on the white canvas whatever the accent. */
+    --accent-lift: oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h);
+    --accent-hover: oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h);
+    --accent-active: oklch(from var(--accent) calc(l - 0.152) calc(c - 0.018) h);
+    --accent-subtle: oklch(from var(--accent) 0.972 0.02 h);
+    --accent-border: oklch(from var(--accent) 0.88 0.066 h);
+    --accent-disabled: oklch(from var(--accent) 0.795 0.092 h);
+    --accent-wash: oklch(from var(--accent) l c h / 0.08);
+    --text-accent: var(--accent-active);
+
+    /* Info reads as the accent's own hue one step down; repoint --info to give it a hue of its own. */
+    --info: var(--accent-hover);
+    --info-subtle: oklch(from var(--info) 0.972 0.02 h);
+    --info-text: oklch(from var(--info) calc(l - 0.082) calc(c - 0.014) h);
+    --info-wash: oklch(from var(--info) 0.63 0.118 h / 0.08);
+
+    --success-subtle: oklch(from var(--success) 0.965 0.028 h);
+    --success-text: oklch(from var(--success) calc(l - 0.086) calc(c - 0.022) h);
+    --success-wash: oklch(from var(--success) 0.62 0.13 h / 0.1);
+
+    --warning-subtle: oklch(from var(--warning) 0.972 0.034 h);
+    --warning-text: oklch(from var(--warning) calc(l - 0.14) calc(c - 0.024) h);
+    --warning-wash: oklch(from var(--warning) 0.76 0.14 h / 0.12);
+
+    /* Danger carries the destructive button's ladder too: fill is the resting face, one step
+     lighter than the --danger ink so white text sits on it; lift is the hover face above that. */
+    --danger-lift: oklch(from var(--danger) 0.64 0.2 h);
+    --danger-fill: oklch(from var(--danger) 0.602 0.196 h);
+    --danger-active: oklch(from var(--danger) calc(l - 0.067) calc(c - 0.024) h);
+    --danger-subtle: oklch(from var(--danger) 0.968 0.02 h);
+    --danger-text: var(--danger-active);
+    --danger-disabled: oklch(from var(--danger) 0.8 0.09 h);
+    --danger-wash: oklch(from var(--danger) 0.602 0.196 h / 0.1);
+
+    /* Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. */
     --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
     --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);
     --glass-tint-warning: color-mix(in oklab, var(--warning) 21%, transparent);

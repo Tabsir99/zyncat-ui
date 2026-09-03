@@ -71,6 +71,19 @@ const blockInner = (text, selectorIndex) => {
   return text.slice(open + 1, close);
 };
 
+const ROOT_SELECTOR_RE = /(:root(?:\s*,\s*\[data-theme\])?)\s*\{/g;
+
+const tokenBlocks = (css) => {
+  const mediaIndex = css.indexOf('@media (prefers-reduced-motion: reduce)');
+  const mediaEnd = mediaIndex === -1 ? -1 : matchBraces(css, css.indexOf('{', mediaIndex));
+  const blocks = [];
+  for (const match of css.matchAll(ROOT_SELECTOR_RE)) {
+    if (mediaIndex !== -1 && match.index > mediaIndex && match.index < mediaEnd) continue;
+    blocks.push({ inner: blockInner(css, match.index), themed: match[1].includes('[data-theme]') });
+  }
+  return blocks;
+};
+
 const firstRuleInner = (css) => {
   const layerIndex = css.indexOf('@layer zyncat.components');
   if (layerIndex === -1) return '';
@@ -98,18 +111,30 @@ for (const file of files) {
     fail(`src/tokens/${file} has no group in GROUP_BY_FILE - add it to scripts/gen-theme.mjs, or map it to null.`);
   const group = GROUP_BY_FILE[file];
   const css = readFileSync(join(ROOT, 'src/tokens', file), 'utf8');
-  const rootIndex = css.indexOf(':root');
 
-  if (rootIndex !== -1 && group) {
-    for (const match of blockInner(css, rootIndex).matchAll(DECL_RE)) {
-      const [, cssName, value, comment] = match;
-      if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
-      const key = camelize(cssName.slice(2));
-      if (`--${kebabize(key)}` !== cssName)
-        fail(`${cssName} does not round-trip through the name derivation (got --${kebabize(key)}).`);
-      const token = { cssName, key, value: oneLine(value), doc: comment ? oneLine(comment) : '', file };
-      byCssName.set(cssName, token);
-      groups.get(group).push(token);
+  if (group) {
+    for (const block of tokenBlocks(css)) {
+      for (const match of block.inner.matchAll(DECL_RE)) {
+        const [, cssName, value, comment] = match;
+        if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
+        if (block.themed && !value.includes('var('))
+          fail(
+            `${cssName} in ${file} sits on the theme-root block with a literal value - a literal there resets the consumer's :root decision inside every [data-theme] subtree. Only tokens that derive from another token belong on ":root, [data-theme]".`,
+          );
+        const key = camelize(cssName.slice(2));
+        if (`--${kebabize(key)}` !== cssName)
+          fail(`${cssName} does not round-trip through the name derivation (got --${kebabize(key)}).`);
+        const token = {
+          cssName,
+          key,
+          value: oneLine(value),
+          doc: comment ? oneLine(comment) : '',
+          file,
+          themed: block.themed,
+        };
+        byCssName.set(cssName, token);
+        groups.get(group).push(token);
+      }
     }
   }
 
@@ -176,7 +201,8 @@ for (const tier of KNOB_TIERS) {
 const docFor = (token, origin = '') => {
   const description = token.doc ? ` - ${token.doc.replace(/\.\s*$/, '')}` : '';
   const collapse = reduced[token.cssName] ? ` Collapses to \`${reduced[token.cssName]}\` under reduced motion.` : '';
-  return `/** \`${token.cssName}\`${origin}${description}. Default: \`${token.value}\`.${collapse} */`;
+  const themed = token.themed ? ' Re-derived on every theme root.' : '';
+  return `/** \`${token.cssName}\`${origin}${description}. Default: \`${token.value}\`.${collapse}${themed} */`;
 };
 
 const members = (tokens, origin) =>
@@ -283,8 +309,9 @@ for (const [index, component] of components.entries()) {
 
 const knobCount = components.reduce((total, component) => total + component.knobs.length, 0);
 const tokenCount = GROUP_ORDER.reduce((total, group) => total + groups.get(group).length, 0);
+const themedCount = [...byCssName.values()].filter((token) => token.themed).length;
 const summary =
-  `${tokenCount} tokens in ${GROUP_ORDER.length} groups, ` +
+  `${tokenCount} tokens in ${GROUP_ORDER.length} groups (${themedCount} on every theme root), ` +
   `${knobCount} knobs across ${components.length} components, ` +
   `${Object.keys(reduced).length} reduced-motion overrides`;
 

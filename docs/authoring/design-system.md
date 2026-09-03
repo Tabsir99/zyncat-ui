@@ -67,8 +67,16 @@
 - Tokens are custom properties on `:root` in `src/tokens/*.css`, served verbatim by `get_tokens`.
 - The `.css` file is the source of truth and the documentation.
 - A token file starts with the layer order statement and wraps its rules in `@layer zyncat.tokens`.
+- Four colours are decisions: `--accent`, `--success`, `--warning`, `--danger`. Every other colour derives
+  from them with relative colour syntax. A new colour token derives; it never pins a hue.
+- Two blocks per file. Literal values and the neutral roles a theme sets directly sit on `:root`.
+  Tokens that derive from another token sit on `:root, [data-theme]`, so an element carrying a theme
+  attribute re-derives them from its own decisions. A custom property is substituted where it is
+  declared, so a derived token on `:root` alone inherits already resolved to the root's decision.
+- Never put a literal on the theme-root block: it resets the consumer's `:root` decision inside every
+  themed subtree. `gen-theme` fails the build on one.
 - Never `@import` with `layer()`. Bundler css-loaders rewrite it into a dead `@media`. Files wrap their own rules.
-- `color.css`, `semantic.css`: neutral ramp, brand and status hues, semantic names.
+- `color.css`: the four hue decisions, the neutral ramp, the shadow ink. `semantic.css`: the roles, derived.
 - `spacing.css`: one 4px base, a short scale.
 - `typography.css`, `fonts.css`: type scale and families.
 - `radius.css`, `elevation.css`: radii and shadows.

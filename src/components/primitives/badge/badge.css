@@ -88,7 +88,7 @@
   .badge--neutral {
     --badge-fg: var(--text-muted);
     --badge-tint: var(--glass-tint-neutral);
-    --badge-dot: var(--gray-500);
+    --badge-dot: var(--text-subtle);
   }
   .badge--info {
     --badge-fg: var(--info-text);

@@ -6,94 +6,42 @@
  * Generated from the token and component CSS by `scripts/gen-theme.mjs` - `pnpm sync` rebuilds it.
  */
 export interface ColorTokens {
+  /** `--accent`. Default: `oklch(0.63 0.118 198)`. */
+  accent?: string | number;
+  /** `--success`. Default: `oklch(0.548 0.122 152)`. */
+  success?: string | number;
+  /** `--warning`. Default: `oklch(0.7 0.142 75)`. */
+  warning?: string | number;
+  /** `--danger`. Default: `oklch(0.545 0.196 27)`. */
+  danger?: string | number;
+  /** `--neutral`. Default: `var(--accent)`. */
+  neutral?: string | number;
   /** `--gray-0`. Default: `oklch(1 0 0)`. */
   gray0?: string | number;
-  /** `--gray-25`. Default: `oklch(0.992 0.002 198)`. */
-  gray25?: string | number;
-  /** `--gray-50`. Default: `oklch(0.984 0.003 198)`. */
+  /** `--gray-50`. Default: `oklch(from var(--neutral) 0.984 0.003 h)`. */
   gray50?: string | number;
-  /** `--gray-100`. Default: `oklch(0.97 0.004 198)`. */
+  /** `--gray-100`. Default: `oklch(from var(--neutral) 0.97 0.004 h)`. */
   gray100?: string | number;
-  /** `--gray-150`. Default: `oklch(0.954 0.005 198)`. */
+  /** `--gray-150`. Default: `oklch(from var(--neutral) 0.954 0.005 h)`. */
   gray150?: string | number;
-  /** `--gray-200`. Default: `oklch(0.924 0.006 198)`. */
+  /** `--gray-200`. Default: `oklch(from var(--neutral) 0.924 0.006 h)`. */
   gray200?: string | number;
-  /** `--gray-300`. Default: `oklch(0.874 0.007 198)`. */
+  /** `--gray-300`. Default: `oklch(from var(--neutral) 0.874 0.007 h)`. */
   gray300?: string | number;
-  /** `--gray-400`. Default: `oklch(0.765 0.009 198)`. */
+  /** `--gray-400`. Default: `oklch(from var(--neutral) 0.765 0.009 h)`. */
   gray400?: string | number;
-  /** `--gray-500`. Default: `oklch(0.642 0.011 198)`. */
+  /** `--gray-500`. Default: `oklch(from var(--neutral) 0.642 0.011 h)`. */
   gray500?: string | number;
-  /** `--gray-600`. Default: `oklch(0.532 0.012 198)`. */
+  /** `--gray-600`. Default: `oklch(from var(--neutral) 0.532 0.012 h)`. */
   gray600?: string | number;
-  /** `--gray-700`. Default: `oklch(0.422 0.012 198)`. */
+  /** `--gray-700`. Default: `oklch(from var(--neutral) 0.422 0.012 h)`. */
   gray700?: string | number;
-  /** `--gray-800`. Default: `oklch(0.305 0.01 198)`. */
+  /** `--gray-800`. Default: `oklch(from var(--neutral) 0.305 0.01 h)`. */
   gray800?: string | number;
-  /** `--gray-900`. Default: `oklch(0.225 0.008 198)`. */
+  /** `--gray-900`. Default: `oklch(from var(--neutral) 0.225 0.008 h)`. */
   gray900?: string | number;
-  /** `--gray-950`. Default: `oklch(0.165 0.007 198)`. */
+  /** `--gray-950`. Default: `oklch(from var(--neutral) 0.165 0.007 h)`. */
   gray950?: string | number;
-  /** `--teal-50`. Default: `oklch(0.972 0.02 198)`. */
-  teal50?: string | number;
-  /** `--teal-100`. Default: `oklch(0.935 0.04 198)`. */
-  teal100?: string | number;
-  /** `--teal-200`. Default: `oklch(0.88 0.066 198)`. */
-  teal200?: string | number;
-  /** `--teal-300`. Default: `oklch(0.795 0.092 198)`. */
-  teal300?: string | number;
-  /** `--teal-400`. Default: `oklch(0.705 0.112 198)`. */
-  teal400?: string | number;
-  /** `--teal-500`. Default: `oklch(0.63 0.118 198)`. */
-  teal500?: string | number;
-  /** `--teal-600`. Default: `oklch(0.56 0.114 198)`. */
-  teal600?: string | number;
-  /** `--teal-700`. Default: `oklch(0.478 0.1 198)`. */
-  teal700?: string | number;
-  /** `--teal-800`. Default: `oklch(0.4 0.082 198)`. */
-  teal800?: string | number;
-  /** `--teal-900`. Default: `oklch(0.32 0.062 198)`. */
-  teal900?: string | number;
-  /** `--green-50`. Default: `oklch(0.965 0.028 152)`. */
-  green50?: string | number;
-  /** `--green-500`. Default: `oklch(0.62 0.13 152)`. */
-  green500?: string | number;
-  /** `--green-600`. Default: `oklch(0.548 0.122 152)`. */
-  green600?: string | number;
-  /** `--green-700`. Default: `oklch(0.462 0.1 152)`. */
-  green700?: string | number;
-  /** `--amber-50`. Default: `oklch(0.972 0.034 75)`. */
-  amber50?: string | number;
-  /** `--amber-500`. Default: `oklch(0.76 0.14 75)`. */
-  amber500?: string | number;
-  /** `--amber-600`. Default: `oklch(0.7 0.142 75)`. */
-  amber600?: string | number;
-  /** `--amber-700`. Default: `oklch(0.56 0.118 75)`. */
-  amber700?: string | number;
-  /** `--red-50`. Default: `oklch(0.968 0.02 27)`. */
-  red50?: string | number;
-  /** `--red-300`. Default: `oklch(0.8 0.09 27)`. */
-  red300?: string | number;
-  /** `--red-400`. Default: `oklch(0.64 0.2 27)`. */
-  red400?: string | number;
-  /** `--red-500`. Default: `oklch(0.602 0.196 27)`. */
-  red500?: string | number;
-  /** `--red-600`. Default: `oklch(0.545 0.196 27)`. */
-  red600?: string | number;
-  /** `--red-700`. Default: `oklch(0.478 0.172 27)`. */
-  red700?: string | number;
-  /** `--gray-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
-  grayWash?: string | number;
-  /** `--gray-wash-strong`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
-  grayWashStrong?: string | number;
-  /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.08)`. */
-  tealWash?: string | number;
-  /** `--green-wash`. Default: `oklch(0.62 0.13 152 / 0.1)`. */
-  greenWash?: string | number;
-  /** `--amber-wash`. Default: `oklch(0.76 0.14 75 / 0.12)`. */
-  amberWash?: string | number;
-  /** `--red-wash`. Default: `oklch(0.602 0.196 27 / 0.1)`. */
-  redWash?: string | number;
   /** `--shadow-rgb`. Default: `15 22 25`. */
   shadowRgb?: string | number;
   /** `--bg-app`. Default: `var(--gray-0)`. */
@@ -122,8 +70,6 @@ export interface ColorTokens {
   textSubtle?: string | number;
   /** `--text-disabled`. Default: `var(--gray-400)`. */
   textDisabled?: string | number;
-  /** `--text-accent`. Default: `var(--teal-700)`. */
-  textAccent?: string | number;
   /** `--text-on-accent`. Default: `var(--gray-0)`. */
   textOnAccent?: string | number;
   /** `--text-inverse`. Default: `var(--gray-0)`. */
@@ -134,69 +80,71 @@ export interface ColorTokens {
   borderDefault?: string | number;
   /** `--border-strong`. Default: `var(--gray-300)`. */
   borderStrong?: string | number;
-  /** `--accent-lift`. Default: `var(--teal-400)`. */
-  accentLift?: string | number;
-  /** `--accent`. Default: `var(--teal-500)`. */
-  accent?: string | number;
-  /** `--accent-hover`. Default: `var(--teal-600)`. */
-  accentHover?: string | number;
-  /** `--accent-active`. Default: `var(--teal-700)`. */
-  accentActive?: string | number;
-  /** `--accent-subtle`. Default: `var(--teal-50)`. */
-  accentSubtle?: string | number;
-  /** `--accent-border`. Default: `var(--teal-200)`. */
-  accentBorder?: string | number;
-  /** `--accent-disabled`. Default: `var(--teal-300)`. */
-  accentDisabled?: string | number;
-  /** `--success-subtle`. Default: `var(--green-50)`. */
-  successSubtle?: string | number;
-  /** `--success`. Default: `var(--green-600)`. */
-  success?: string | number;
-  /** `--success-text`. Default: `var(--green-700)`. */
-  successText?: string | number;
-  /** `--warning-subtle`. Default: `var(--amber-50)`. */
-  warningSubtle?: string | number;
-  /** `--warning`. Default: `var(--amber-600)`. */
-  warning?: string | number;
-  /** `--warning-text`. Default: `var(--amber-700)`. */
-  warningText?: string | number;
-  /** `--danger-subtle`. Default: `var(--red-50)`. */
-  dangerSubtle?: string | number;
-  /** `--danger`. Default: `var(--red-600)`. */
-  danger?: string | number;
-  /** `--danger-text`. Default: `var(--red-700)`. */
-  dangerText?: string | number;
-  /** `--info-subtle`. Default: `var(--teal-50)`. */
-  infoSubtle?: string | number;
-  /** `--info`. Default: `var(--teal-600)`. */
-  info?: string | number;
-  /** `--info-text`. Default: `var(--teal-700)`. */
-  infoText?: string | number;
-  /** `--danger-disabled`. Default: `var(--red-300)`. */
-  dangerDisabled?: string | number;
-  /** `--neutral-wash`. Default: `var(--gray-wash)`. */
+  /** `--neutral-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
   neutralWash?: string | number;
-  /** `--neutral-wash-press`. Default: `var(--gray-wash-strong)`. */
+  /** `--neutral-wash-press`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
   neutralWashPress?: string | number;
-  /** `--accent-wash`. Default: `var(--teal-wash)`. */
-  accentWash?: string | number;
-  /** `--success-wash`. Default: `var(--green-wash)`. */
-  successWash?: string | number;
-  /** `--warning-wash`. Default: `var(--amber-wash)`. */
-  warningWash?: string | number;
-  /** `--danger-wash`. Default: `var(--red-wash)`. */
-  dangerWash?: string | number;
   /** `--glass-tint-neutral`. Default: `color-mix(in oklab, var(--gray-600) 13%, transparent)`. */
   glassTintNeutral?: string | number;
-  /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. */
+  /** `--accent-lift`. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
+  accentLift?: string | number;
+  /** `--accent-hover`. Default: `oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h)`. Re-derived on every theme root. */
+  accentHover?: string | number;
+  /** `--accent-active`. Default: `oklch(from var(--accent) calc(l - 0.152) calc(c - 0.018) h)`. Re-derived on every theme root. */
+  accentActive?: string | number;
+  /** `--accent-subtle`. Default: `oklch(from var(--accent) 0.972 0.02 h)`. Re-derived on every theme root. */
+  accentSubtle?: string | number;
+  /** `--accent-border`. Default: `oklch(from var(--accent) 0.88 0.066 h)`. Re-derived on every theme root. */
+  accentBorder?: string | number;
+  /** `--accent-disabled`. Default: `oklch(from var(--accent) 0.795 0.092 h)`. Re-derived on every theme root. */
+  accentDisabled?: string | number;
+  /** `--accent-wash`. Default: `oklch(from var(--accent) l c h / 0.08)`. Re-derived on every theme root. */
+  accentWash?: string | number;
+  /** `--text-accent`. Default: `var(--accent-active)`. Re-derived on every theme root. */
+  textAccent?: string | number;
+  /** `--info`. Default: `var(--accent-hover)`. Re-derived on every theme root. */
+  info?: string | number;
+  /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Re-derived on every theme root. */
+  infoSubtle?: string | number;
+  /** `--info-text`. Default: `oklch(from var(--info) calc(l - 0.082) calc(c - 0.014) h)`. Re-derived on every theme root. */
+  infoText?: string | number;
+  /** `--info-wash`. Default: `oklch(from var(--info) 0.63 0.118 h / 0.08)`. Re-derived on every theme root. */
+  infoWash?: string | number;
+  /** `--success-subtle`. Default: `oklch(from var(--success) 0.965 0.028 h)`. Re-derived on every theme root. */
+  successSubtle?: string | number;
+  /** `--success-text`. Default: `oklch(from var(--success) calc(l - 0.086) calc(c - 0.022) h)`. Re-derived on every theme root. */
+  successText?: string | number;
+  /** `--success-wash`. Default: `oklch(from var(--success) 0.62 0.13 h / 0.1)`. Re-derived on every theme root. */
+  successWash?: string | number;
+  /** `--warning-subtle`. Default: `oklch(from var(--warning) 0.972 0.034 h)`. Re-derived on every theme root. */
+  warningSubtle?: string | number;
+  /** `--warning-text`. Default: `oklch(from var(--warning) calc(l - 0.14) calc(c - 0.024) h)`. Re-derived on every theme root. */
+  warningText?: string | number;
+  /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Re-derived on every theme root. */
+  warningWash?: string | number;
+  /** `--danger-lift`. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
+  dangerLift?: string | number;
+  /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Re-derived on every theme root. */
+  dangerFill?: string | number;
+  /** `--danger-active`. Default: `oklch(from var(--danger) calc(l - 0.067) calc(c - 0.024) h)`. Re-derived on every theme root. */
+  dangerActive?: string | number;
+  /** `--danger-subtle`. Default: `oklch(from var(--danger) 0.968 0.02 h)`. Re-derived on every theme root. */
+  dangerSubtle?: string | number;
+  /** `--danger-text`. Default: `var(--danger-active)`. Re-derived on every theme root. */
+  dangerText?: string | number;
+  /** `--danger-disabled`. Default: `oklch(from var(--danger) 0.8 0.09 h)`. Re-derived on every theme root. */
+  dangerDisabled?: string | number;
+  /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Re-derived on every theme root. */
+  dangerWash?: string | number;
+  /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
   glassTintInfo?: string | number;
-  /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. */
+  /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. Re-derived on every theme root. */
   glassTintSuccess?: string | number;
-  /** `--glass-tint-warning`. Default: `color-mix(in oklab, var(--warning) 21%, transparent)`. */
+  /** `--glass-tint-warning`. Default: `color-mix(in oklab, var(--warning) 21%, transparent)`. Re-derived on every theme root. */
   glassTintWarning?: string | number;
-  /** `--glass-tint-danger`. Default: `color-mix(in oklab, var(--danger) 17%, transparent)`. */
+  /** `--glass-tint-danger`. Default: `color-mix(in oklab, var(--danger) 17%, transparent)`. Re-derived on every theme root. */
   glassTintDanger?: string | number;
-  /** `--focus-ring`. Default: `var(--ring-accent)`. */
+  /** `--focus-ring`. Default: `var(--ring-accent)`. Re-derived on every theme root. */
   focusRing?: string | number;
 }
 
@@ -255,39 +203,35 @@ export interface TypeTokens {
   trackingNormal?: string | number;
   /** `--tracking-tight`. Default: `-0.011em`. */
   trackingTight?: string | number;
-  /** `--tracking-tighter`. Default: `-0.016em`. */
-  trackingTighter?: string | number;
   /** `--tracking-display`. Default: `-0.021em`. */
   trackingDisplay?: string | number;
-  /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. */
+  /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
   typeDisplayLg?: string | number;
-  /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. */
+  /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. Re-derived on every theme root. */
   typeDisplay?: string | number;
-  /** `--type-title-lg`. Default: `var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans)`. */
+  /** `--type-title-lg`. Default: `var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans)`. Re-derived on every theme root. */
   typeTitleLg?: string | number;
-  /** `--type-title`. Default: `var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans)`. */
+  /** `--type-title`. Default: `var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans)`. Re-derived on every theme root. */
   typeTitle?: string | number;
-  /** `--type-heading`. Default: `var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans)`. */
+  /** `--type-heading`. Default: `var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans)`. Re-derived on every theme root. */
   typeHeading?: string | number;
-  /** `--type-body-lg`. Default: `var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans)`. */
+  /** `--type-body-lg`. Default: `var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans)`. Re-derived on every theme root. */
   typeBodyLg?: string | number;
-  /** `--type-body`. Default: `var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-sans)`. */
+  /** `--type-body`. Default: `var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-sans)`. Re-derived on every theme root. */
   typeBody?: string | number;
-  /** `--type-label`. Default: `var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-sans)`. */
+  /** `--type-label`. Default: `var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-sans)`. Re-derived on every theme root. */
   typeLabel?: string | number;
-  /** `--type-caption`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-sans)`. */
+  /** `--type-caption`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-sans)`. Re-derived on every theme root. */
   typeCaption?: string | number;
-  /** `--type-micro`. Default: `var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-sans)`. */
+  /** `--type-micro`. Default: `var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-sans)`. Re-derived on every theme root. */
   typeMicro?: string | number;
-  /** `--type-mono`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-mono)`. */
+  /** `--type-mono`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-mono)`. Re-derived on every theme root. */
   typeMono?: string | number;
 }
 
 export interface SpaceTokens {
   /** `--space-px`. Default: `1px`. */
   spacePx?: string | number;
-  /** `--space-0`. Default: `0`. */
-  space0?: string | number;
   /** `--space-1`. Default: `0.25rem`. */
   space1?: string | number;
   /** `--space-2`. Default: `0.5rem`. */
@@ -308,12 +252,8 @@ export interface SpaceTokens {
   space9?: string | number;
   /** `--space-10`. Default: `8rem`. */
   space10?: string | number;
-  /** `--container-max`. Default: `72rem`. */
-  containerMax?: string | number;
   /** `--measure-prose`. Default: `38rem`. */
   measureProse?: string | number;
-  /** `--sidebar-width`. Default: `16rem`. */
-  sidebarWidth?: string | number;
   /** `--control-height-sm`. Default: `1.75rem`. */
   controlHeightSm?: string | number;
   /** `--control-height`. Default: `2rem`. */
@@ -327,8 +267,6 @@ export interface SpaceTokens {
 }
 
 export interface RadiusTokens {
-  /** `--radius-0`. Default: `0`. */
-  radius0?: string | number;
   /** `--radius-sm`. Default: `0.25rem`. */
   radiusSm?: string | number;
   /** `--radius-md`. Default: `0.375rem`. */
@@ -344,30 +282,28 @@ export interface RadiusTokens {
 }
 
 export interface ElevationTokens {
-  /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. */
-  shadowXs?: string | number;
-  /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. */
-  shadowSm?: string | number;
-  /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07)`. */
-  shadowMd?: string | number;
-  /** `--shadow-lg`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1)`. */
-  shadowLg?: string | number;
-  /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. */
-  shadowXl?: string | number;
   /** `--border-hairline`. Default: `1px`. */
   borderHairline?: string | number;
   /** `--border-emphasis`. Default: `1.5px`. */
   borderEmphasis?: string | number;
-  /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. */
+  /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+  shadowXs?: string | number;
+  /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+  shadowSm?: string | number;
+  /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07)`. Re-derived on every theme root. */
+  shadowMd?: string | number;
+  /** `--shadow-lg`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
+  shadowLg?: string | number;
+  /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. Re-derived on every theme root. */
+  shadowXl?: string | number;
+  /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
   ringAccent?: string | number;
-  /** `--ring-danger`. Default: `0 0 0 3px oklch(0.602 0.196 27 / 0.3)`. */
+  /** `--ring-danger`. Default: `0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
   ringDanger?: string | number;
-  /** `--ring-warning`. Default: `0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent)`. */
+  /** `--ring-warning`. Default: `0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent)`. Re-derived on every theme root. */
   ringWarning?: string | number;
-  /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. */
+  /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. Re-derived on every theme root. */
   ringSuccess?: string | number;
-  /** `--ring-offset`. Default: `0 0 0 2px var(--bg-surface), 0 0 0 4px color-mix(in oklab, var(--accent) 40%, transparent)`. */
-  ringOffset?: string | number;
 }
 
 export interface MotionTokens {
@@ -407,16 +343,12 @@ export interface MotionTokens {
   scaleFloating?: string | number;
   /** `--scale-chip` - small inline elements - tag, badge, count. Default: `0.9`. */
   scaleChip?: string | number;
-  /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)`. */
+  /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
   transitionControl?: string | number;
-  /** `--transition-colors`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard)`. */
+  /** `--transition-colors`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
   transitionColors?: string | number;
-  /** `--transition-opacity`. Default: `opacity var(--duration-base) var(--ease-standard)`. */
+  /** `--transition-opacity`. Default: `opacity var(--duration-base) var(--ease-standard)`. Re-derived on every theme root. */
   transitionOpacity?: string | number;
-  /** `--transition-transform`. Default: `transform var(--duration-base) var(--ease-standard)`. */
-  transitionTransform?: string | number;
-  /** `--transition-layout`. Default: `grid-template-rows var(--duration-slow) var(--ease-entrance), grid-template-columns var(--duration-slow) var(--ease-entrance), max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance)`. */
-  transitionLayout?: string | number;
 }
 
 export interface GlassTokens {
@@ -434,9 +366,9 @@ export interface GlassTokens {
   glassSheenHover?: string | number;
   /** `--glass-highlight`. Default: `inset 0 1px 0 0 rgb(255 255 255 / 0.55)`. */
   glassHighlight?: string | number;
-  /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05)`. */
+  /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05)`. Re-derived on every theme root. */
   glassShadow?: string | number;
-  /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 8px 18px rgb(var(--shadow-rgb) / 0.1)`. */
+  /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 8px 18px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
   glassShadowHover?: string | number;
 }
 
@@ -820,94 +752,42 @@ export const reducedMotionTokens: Readonly<Record<string, string>> = {
 
 declare module 'react' {
   export interface CSSProperties {
+    /** `--accent`. Default: `oklch(0.63 0.118 198)`. */
+    '--accent'?: string | number;
+    /** `--success`. Default: `oklch(0.548 0.122 152)`. */
+    '--success'?: string | number;
+    /** `--warning`. Default: `oklch(0.7 0.142 75)`. */
+    '--warning'?: string | number;
+    /** `--danger`. Default: `oklch(0.545 0.196 27)`. */
+    '--danger'?: string | number;
+    /** `--neutral`. Default: `var(--accent)`. */
+    '--neutral'?: string | number;
     /** `--gray-0`. Default: `oklch(1 0 0)`. */
     '--gray-0'?: string | number;
-    /** `--gray-25`. Default: `oklch(0.992 0.002 198)`. */
-    '--gray-25'?: string | number;
-    /** `--gray-50`. Default: `oklch(0.984 0.003 198)`. */
+    /** `--gray-50`. Default: `oklch(from var(--neutral) 0.984 0.003 h)`. */
     '--gray-50'?: string | number;
-    /** `--gray-100`. Default: `oklch(0.97 0.004 198)`. */
+    /** `--gray-100`. Default: `oklch(from var(--neutral) 0.97 0.004 h)`. */
     '--gray-100'?: string | number;
-    /** `--gray-150`. Default: `oklch(0.954 0.005 198)`. */
+    /** `--gray-150`. Default: `oklch(from var(--neutral) 0.954 0.005 h)`. */
     '--gray-150'?: string | number;
-    /** `--gray-200`. Default: `oklch(0.924 0.006 198)`. */
+    /** `--gray-200`. Default: `oklch(from var(--neutral) 0.924 0.006 h)`. */
     '--gray-200'?: string | number;
-    /** `--gray-300`. Default: `oklch(0.874 0.007 198)`. */
+    /** `--gray-300`. Default: `oklch(from var(--neutral) 0.874 0.007 h)`. */
     '--gray-300'?: string | number;
-    /** `--gray-400`. Default: `oklch(0.765 0.009 198)`. */
+    /** `--gray-400`. Default: `oklch(from var(--neutral) 0.765 0.009 h)`. */
     '--gray-400'?: string | number;
-    /** `--gray-500`. Default: `oklch(0.642 0.011 198)`. */
+    /** `--gray-500`. Default: `oklch(from var(--neutral) 0.642 0.011 h)`. */
     '--gray-500'?: string | number;
-    /** `--gray-600`. Default: `oklch(0.532 0.012 198)`. */
+    /** `--gray-600`. Default: `oklch(from var(--neutral) 0.532 0.012 h)`. */
     '--gray-600'?: string | number;
-    /** `--gray-700`. Default: `oklch(0.422 0.012 198)`. */
+    /** `--gray-700`. Default: `oklch(from var(--neutral) 0.422 0.012 h)`. */
     '--gray-700'?: string | number;
-    /** `--gray-800`. Default: `oklch(0.305 0.01 198)`. */
+    /** `--gray-800`. Default: `oklch(from var(--neutral) 0.305 0.01 h)`. */
     '--gray-800'?: string | number;
-    /** `--gray-900`. Default: `oklch(0.225 0.008 198)`. */
+    /** `--gray-900`. Default: `oklch(from var(--neutral) 0.225 0.008 h)`. */
     '--gray-900'?: string | number;
-    /** `--gray-950`. Default: `oklch(0.165 0.007 198)`. */
+    /** `--gray-950`. Default: `oklch(from var(--neutral) 0.165 0.007 h)`. */
     '--gray-950'?: string | number;
-    /** `--teal-50`. Default: `oklch(0.972 0.02 198)`. */
-    '--teal-50'?: string | number;
-    /** `--teal-100`. Default: `oklch(0.935 0.04 198)`. */
-    '--teal-100'?: string | number;
-    /** `--teal-200`. Default: `oklch(0.88 0.066 198)`. */
-    '--teal-200'?: string | number;
-    /** `--teal-300`. Default: `oklch(0.795 0.092 198)`. */
-    '--teal-300'?: string | number;
-    /** `--teal-400`. Default: `oklch(0.705 0.112 198)`. */
-    '--teal-400'?: string | number;
-    /** `--teal-500`. Default: `oklch(0.63 0.118 198)`. */
-    '--teal-500'?: string | number;
-    /** `--teal-600`. Default: `oklch(0.56 0.114 198)`. */
-    '--teal-600'?: string | number;
-    /** `--teal-700`. Default: `oklch(0.478 0.1 198)`. */
-    '--teal-700'?: string | number;
-    /** `--teal-800`. Default: `oklch(0.4 0.082 198)`. */
-    '--teal-800'?: string | number;
-    /** `--teal-900`. Default: `oklch(0.32 0.062 198)`. */
-    '--teal-900'?: string | number;
-    /** `--green-50`. Default: `oklch(0.965 0.028 152)`. */
-    '--green-50'?: string | number;
-    /** `--green-500`. Default: `oklch(0.62 0.13 152)`. */
-    '--green-500'?: string | number;
-    /** `--green-600`. Default: `oklch(0.548 0.122 152)`. */
-    '--green-600'?: string | number;
-    /** `--green-700`. Default: `oklch(0.462 0.1 152)`. */
-    '--green-700'?: string | number;
-    /** `--amber-50`. Default: `oklch(0.972 0.034 75)`. */
-    '--amber-50'?: string | number;
-    /** `--amber-500`. Default: `oklch(0.76 0.14 75)`. */
-    '--amber-500'?: string | number;
-    /** `--amber-600`. Default: `oklch(0.7 0.142 75)`. */
-    '--amber-600'?: string | number;
-    /** `--amber-700`. Default: `oklch(0.56 0.118 75)`. */
-    '--amber-700'?: string | number;
-    /** `--red-50`. Default: `oklch(0.968 0.02 27)`. */
-    '--red-50'?: string | number;
-    /** `--red-300`. Default: `oklch(0.8 0.09 27)`. */
-    '--red-300'?: string | number;
-    /** `--red-400`. Default: `oklch(0.64 0.2 27)`. */
-    '--red-400'?: string | number;
-    /** `--red-500`. Default: `oklch(0.602 0.196 27)`. */
-    '--red-500'?: string | number;
-    /** `--red-600`. Default: `oklch(0.545 0.196 27)`. */
-    '--red-600'?: string | number;
-    /** `--red-700`. Default: `oklch(0.478 0.172 27)`. */
-    '--red-700'?: string | number;
-    /** `--gray-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
-    '--gray-wash'?: string | number;
-    /** `--gray-wash-strong`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
-    '--gray-wash-strong'?: string | number;
-    /** `--teal-wash`. Default: `oklch(0.63 0.118 198 / 0.08)`. */
-    '--teal-wash'?: string | number;
-    /** `--green-wash`. Default: `oklch(0.62 0.13 152 / 0.1)`. */
-    '--green-wash'?: string | number;
-    /** `--amber-wash`. Default: `oklch(0.76 0.14 75 / 0.12)`. */
-    '--amber-wash'?: string | number;
-    /** `--red-wash`. Default: `oklch(0.602 0.196 27 / 0.1)`. */
-    '--red-wash'?: string | number;
     /** `--shadow-rgb`. Default: `15 22 25`. */
     '--shadow-rgb'?: string | number;
     /** `--bg-app`. Default: `var(--gray-0)`. */
@@ -936,8 +816,6 @@ declare module 'react' {
     '--text-subtle'?: string | number;
     /** `--text-disabled`. Default: `var(--gray-400)`. */
     '--text-disabled'?: string | number;
-    /** `--text-accent`. Default: `var(--teal-700)`. */
-    '--text-accent'?: string | number;
     /** `--text-on-accent`. Default: `var(--gray-0)`. */
     '--text-on-accent'?: string | number;
     /** `--text-inverse`. Default: `var(--gray-0)`. */
@@ -948,69 +826,71 @@ declare module 'react' {
     '--border-default'?: string | number;
     /** `--border-strong`. Default: `var(--gray-300)`. */
     '--border-strong'?: string | number;
-    /** `--accent-lift`. Default: `var(--teal-400)`. */
-    '--accent-lift'?: string | number;
-    /** `--accent`. Default: `var(--teal-500)`. */
-    '--accent'?: string | number;
-    /** `--accent-hover`. Default: `var(--teal-600)`. */
-    '--accent-hover'?: string | number;
-    /** `--accent-active`. Default: `var(--teal-700)`. */
-    '--accent-active'?: string | number;
-    /** `--accent-subtle`. Default: `var(--teal-50)`. */
-    '--accent-subtle'?: string | number;
-    /** `--accent-border`. Default: `var(--teal-200)`. */
-    '--accent-border'?: string | number;
-    /** `--accent-disabled`. Default: `var(--teal-300)`. */
-    '--accent-disabled'?: string | number;
-    /** `--success-subtle`. Default: `var(--green-50)`. */
-    '--success-subtle'?: string | number;
-    /** `--success`. Default: `var(--green-600)`. */
-    '--success'?: string | number;
-    /** `--success-text`. Default: `var(--green-700)`. */
-    '--success-text'?: string | number;
-    /** `--warning-subtle`. Default: `var(--amber-50)`. */
-    '--warning-subtle'?: string | number;
-    /** `--warning`. Default: `var(--amber-600)`. */
-    '--warning'?: string | number;
-    /** `--warning-text`. Default: `var(--amber-700)`. */
-    '--warning-text'?: string | number;
-    /** `--danger-subtle`. Default: `var(--red-50)`. */
-    '--danger-subtle'?: string | number;
-    /** `--danger`. Default: `var(--red-600)`. */
-    '--danger'?: string | number;
-    /** `--danger-text`. Default: `var(--red-700)`. */
-    '--danger-text'?: string | number;
-    /** `--info-subtle`. Default: `var(--teal-50)`. */
-    '--info-subtle'?: string | number;
-    /** `--info`. Default: `var(--teal-600)`. */
-    '--info'?: string | number;
-    /** `--info-text`. Default: `var(--teal-700)`. */
-    '--info-text'?: string | number;
-    /** `--danger-disabled`. Default: `var(--red-300)`. */
-    '--danger-disabled'?: string | number;
-    /** `--neutral-wash`. Default: `var(--gray-wash)`. */
+    /** `--neutral-wash`. Default: `color-mix(in oklab, var(--gray-700) 6%, transparent)`. */
     '--neutral-wash'?: string | number;
-    /** `--neutral-wash-press`. Default: `var(--gray-wash-strong)`. */
+    /** `--neutral-wash-press`. Default: `color-mix(in oklab, var(--gray-700) 10%, transparent)`. */
     '--neutral-wash-press'?: string | number;
-    /** `--accent-wash`. Default: `var(--teal-wash)`. */
-    '--accent-wash'?: string | number;
-    /** `--success-wash`. Default: `var(--green-wash)`. */
-    '--success-wash'?: string | number;
-    /** `--warning-wash`. Default: `var(--amber-wash)`. */
-    '--warning-wash'?: string | number;
-    /** `--danger-wash`. Default: `var(--red-wash)`. */
-    '--danger-wash'?: string | number;
     /** `--glass-tint-neutral`. Default: `color-mix(in oklab, var(--gray-600) 13%, transparent)`. */
     '--glass-tint-neutral'?: string | number;
-    /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. */
+    /** `--accent-lift`. Default: `oklch(from var(--accent) calc(l + 0.075) calc(c - 0.006) h)`. Re-derived on every theme root. */
+    '--accent-lift'?: string | number;
+    /** `--accent-hover`. Default: `oklch(from var(--accent) calc(l - 0.07) calc(c - 0.004) h)`. Re-derived on every theme root. */
+    '--accent-hover'?: string | number;
+    /** `--accent-active`. Default: `oklch(from var(--accent) calc(l - 0.152) calc(c - 0.018) h)`. Re-derived on every theme root. */
+    '--accent-active'?: string | number;
+    /** `--accent-subtle`. Default: `oklch(from var(--accent) 0.972 0.02 h)`. Re-derived on every theme root. */
+    '--accent-subtle'?: string | number;
+    /** `--accent-border`. Default: `oklch(from var(--accent) 0.88 0.066 h)`. Re-derived on every theme root. */
+    '--accent-border'?: string | number;
+    /** `--accent-disabled`. Default: `oklch(from var(--accent) 0.795 0.092 h)`. Re-derived on every theme root. */
+    '--accent-disabled'?: string | number;
+    /** `--accent-wash`. Default: `oklch(from var(--accent) l c h / 0.08)`. Re-derived on every theme root. */
+    '--accent-wash'?: string | number;
+    /** `--text-accent`. Default: `var(--accent-active)`. Re-derived on every theme root. */
+    '--text-accent'?: string | number;
+    /** `--info`. Default: `var(--accent-hover)`. Re-derived on every theme root. */
+    '--info'?: string | number;
+    /** `--info-subtle`. Default: `oklch(from var(--info) 0.972 0.02 h)`. Re-derived on every theme root. */
+    '--info-subtle'?: string | number;
+    /** `--info-text`. Default: `oklch(from var(--info) calc(l - 0.082) calc(c - 0.014) h)`. Re-derived on every theme root. */
+    '--info-text'?: string | number;
+    /** `--info-wash`. Default: `oklch(from var(--info) 0.63 0.118 h / 0.08)`. Re-derived on every theme root. */
+    '--info-wash'?: string | number;
+    /** `--success-subtle`. Default: `oklch(from var(--success) 0.965 0.028 h)`. Re-derived on every theme root. */
+    '--success-subtle'?: string | number;
+    /** `--success-text`. Default: `oklch(from var(--success) calc(l - 0.086) calc(c - 0.022) h)`. Re-derived on every theme root. */
+    '--success-text'?: string | number;
+    /** `--success-wash`. Default: `oklch(from var(--success) 0.62 0.13 h / 0.1)`. Re-derived on every theme root. */
+    '--success-wash'?: string | number;
+    /** `--warning-subtle`. Default: `oklch(from var(--warning) 0.972 0.034 h)`. Re-derived on every theme root. */
+    '--warning-subtle'?: string | number;
+    /** `--warning-text`. Default: `oklch(from var(--warning) calc(l - 0.14) calc(c - 0.024) h)`. Re-derived on every theme root. */
+    '--warning-text'?: string | number;
+    /** `--warning-wash`. Default: `oklch(from var(--warning) 0.76 0.14 h / 0.12)`. Re-derived on every theme root. */
+    '--warning-wash'?: string | number;
+    /** `--danger-lift`. Default: `oklch(from var(--danger) 0.64 0.2 h)`. Re-derived on every theme root. */
+    '--danger-lift'?: string | number;
+    /** `--danger-fill`. Default: `oklch(from var(--danger) 0.602 0.196 h)`. Re-derived on every theme root. */
+    '--danger-fill'?: string | number;
+    /** `--danger-active`. Default: `oklch(from var(--danger) calc(l - 0.067) calc(c - 0.024) h)`. Re-derived on every theme root. */
+    '--danger-active'?: string | number;
+    /** `--danger-subtle`. Default: `oklch(from var(--danger) 0.968 0.02 h)`. Re-derived on every theme root. */
+    '--danger-subtle'?: string | number;
+    /** `--danger-text`. Default: `var(--danger-active)`. Re-derived on every theme root. */
+    '--danger-text'?: string | number;
+    /** `--danger-disabled`. Default: `oklch(from var(--danger) 0.8 0.09 h)`. Re-derived on every theme root. */
+    '--danger-disabled'?: string | number;
+    /** `--danger-wash`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.1)`. Re-derived on every theme root. */
+    '--danger-wash'?: string | number;
+    /** `--glass-tint-info`. Default: `color-mix(in oklab, var(--info) 17%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-info'?: string | number;
-    /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. */
+    /** `--glass-tint-success`. Default: `color-mix(in oklab, var(--success) 17%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-success'?: string | number;
-    /** `--glass-tint-warning`. Default: `color-mix(in oklab, var(--warning) 21%, transparent)`. */
+    /** `--glass-tint-warning`. Default: `color-mix(in oklab, var(--warning) 21%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-warning'?: string | number;
-    /** `--glass-tint-danger`. Default: `color-mix(in oklab, var(--danger) 17%, transparent)`. */
+    /** `--glass-tint-danger`. Default: `color-mix(in oklab, var(--danger) 17%, transparent)`. Re-derived on every theme root. */
     '--glass-tint-danger'?: string | number;
-    /** `--focus-ring`. Default: `var(--ring-accent)`. */
+    /** `--focus-ring`. Default: `var(--ring-accent)`. Re-derived on every theme root. */
     '--focus-ring'?: string | number;
     /** `--font-sans`. Default: `'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif`. */
     '--font-sans'?: string | number;
@@ -1066,36 +946,32 @@ declare module 'react' {
     '--tracking-normal'?: string | number;
     /** `--tracking-tight`. Default: `-0.011em`. */
     '--tracking-tight'?: string | number;
-    /** `--tracking-tighter`. Default: `-0.016em`. */
-    '--tracking-tighter'?: string | number;
     /** `--tracking-display`. Default: `-0.021em`. */
     '--tracking-display'?: string | number;
-    /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. */
+    /** `--type-display-lg`. Default: `var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans)`. Re-derived on every theme root. */
     '--type-display-lg'?: string | number;
-    /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. */
+    /** `--type-display`. Default: `var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans)`. Re-derived on every theme root. */
     '--type-display'?: string | number;
-    /** `--type-title-lg`. Default: `var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans)`. */
+    /** `--type-title-lg`. Default: `var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans)`. Re-derived on every theme root. */
     '--type-title-lg'?: string | number;
-    /** `--type-title`. Default: `var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans)`. */
+    /** `--type-title`. Default: `var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans)`. Re-derived on every theme root. */
     '--type-title'?: string | number;
-    /** `--type-heading`. Default: `var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans)`. */
+    /** `--type-heading`. Default: `var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans)`. Re-derived on every theme root. */
     '--type-heading'?: string | number;
-    /** `--type-body-lg`. Default: `var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans)`. */
+    /** `--type-body-lg`. Default: `var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans)`. Re-derived on every theme root. */
     '--type-body-lg'?: string | number;
-    /** `--type-body`. Default: `var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-sans)`. */
+    /** `--type-body`. Default: `var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-sans)`. Re-derived on every theme root. */
     '--type-body'?: string | number;
-    /** `--type-label`. Default: `var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-sans)`. */
+    /** `--type-label`. Default: `var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-sans)`. Re-derived on every theme root. */
     '--type-label'?: string | number;
-    /** `--type-caption`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-sans)`. */
+    /** `--type-caption`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-sans)`. Re-derived on every theme root. */
     '--type-caption'?: string | number;
-    /** `--type-micro`. Default: `var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-sans)`. */
+    /** `--type-micro`. Default: `var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-sans)`. Re-derived on every theme root. */
     '--type-micro'?: string | number;
-    /** `--type-mono`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-mono)`. */
+    /** `--type-mono`. Default: `var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-mono)`. Re-derived on every theme root. */
     '--type-mono'?: string | number;
     /** `--space-px`. Default: `1px`. */
     '--space-px'?: string | number;
-    /** `--space-0`. Default: `0`. */
-    '--space-0'?: string | number;
     /** `--space-1`. Default: `0.25rem`. */
     '--space-1'?: string | number;
     /** `--space-2`. Default: `0.5rem`. */
@@ -1116,12 +992,8 @@ declare module 'react' {
     '--space-9'?: string | number;
     /** `--space-10`. Default: `8rem`. */
     '--space-10'?: string | number;
-    /** `--container-max`. Default: `72rem`. */
-    '--container-max'?: string | number;
     /** `--measure-prose`. Default: `38rem`. */
     '--measure-prose'?: string | number;
-    /** `--sidebar-width`. Default: `16rem`. */
-    '--sidebar-width'?: string | number;
     /** `--control-height-sm`. Default: `1.75rem`. */
     '--control-height-sm'?: string | number;
     /** `--control-height`. Default: `2rem`. */
@@ -1132,8 +1004,6 @@ declare module 'react' {
     '--control-box'?: string | number;
     /** `--control-switch` - switch track (md); the one control size off the scale - width reuses --control-height(-sm), sm height reuses --space-4. Default: `1.25rem`. */
     '--control-switch'?: string | number;
-    /** `--radius-0`. Default: `0`. */
-    '--radius-0'?: string | number;
     /** `--radius-sm`. Default: `0.25rem`. */
     '--radius-sm'?: string | number;
     /** `--radius-md`. Default: `0.375rem`. */
@@ -1146,30 +1016,28 @@ declare module 'react' {
     '--radius-2xl'?: string | number;
     /** `--radius-full`. Default: `624.9375rem`. */
     '--radius-full'?: string | number;
-    /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. */
-    '--shadow-xs'?: string | number;
-    /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. */
-    '--shadow-sm'?: string | number;
-    /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07)`. */
-    '--shadow-md'?: string | number;
-    /** `--shadow-lg`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1)`. */
-    '--shadow-lg'?: string | number;
-    /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. */
-    '--shadow-xl'?: string | number;
     /** `--border-hairline`. Default: `1px`. */
     '--border-hairline'?: string | number;
     /** `--border-emphasis`. Default: `1.5px`. */
     '--border-emphasis'?: string | number;
-    /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. */
+    /** `--shadow-xs`. Default: `0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+    '--shadow-xs'?: string | number;
+    /** `--shadow-sm`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 1px 1px rgb(var(--shadow-rgb) / 0.04)`. Re-derived on every theme root. */
+    '--shadow-sm'?: string | number;
+    /** `--shadow-md`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.04), 0 6px 12px rgb(var(--shadow-rgb) / 0.07)`. Re-derived on every theme root. */
+    '--shadow-md'?: string | number;
+    /** `--shadow-lg`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 4px 8px rgb(var(--shadow-rgb) / 0.04), 0 12px 28px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
+    '--shadow-lg'?: string | number;
+    /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.06), 0 8px 16px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px rgb(var(--shadow-rgb) / 0.14)`. Re-derived on every theme root. */
+    '--shadow-xl'?: string | number;
+    /** `--ring-accent`. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
     '--ring-accent'?: string | number;
-    /** `--ring-danger`. Default: `0 0 0 3px oklch(0.602 0.196 27 / 0.3)`. */
+    /** `--ring-danger`. Default: `0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
     '--ring-danger'?: string | number;
-    /** `--ring-warning`. Default: `0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent)`. */
+    /** `--ring-warning`. Default: `0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent)`. Re-derived on every theme root. */
     '--ring-warning'?: string | number;
-    /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. */
+    /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. Re-derived on every theme root. */
     '--ring-success'?: string | number;
-    /** `--ring-offset`. Default: `0 0 0 2px var(--bg-surface), 0 0 0 4px color-mix(in oklab, var(--accent) 40%, transparent)`. */
-    '--ring-offset'?: string | number;
     /** `--duration-fast`. Default: `140ms`. Collapses to `1ms` under reduced motion. */
     '--duration-fast'?: string | number;
     /** `--duration-base`. Default: `200ms`. Collapses to `1ms` under reduced motion. */
@@ -1206,16 +1074,12 @@ declare module 'react' {
     '--scale-floating'?: string | number;
     /** `--scale-chip` - small inline elements - tag, badge, count. Default: `0.9`. */
     '--scale-chip'?: string | number;
-    /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)`. */
+    /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
     '--transition-control'?: string | number;
-    /** `--transition-colors`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard)`. */
+    /** `--transition-colors`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
     '--transition-colors'?: string | number;
-    /** `--transition-opacity`. Default: `opacity var(--duration-base) var(--ease-standard)`. */
+    /** `--transition-opacity`. Default: `opacity var(--duration-base) var(--ease-standard)`. Re-derived on every theme root. */
     '--transition-opacity'?: string | number;
-    /** `--transition-transform`. Default: `transform var(--duration-base) var(--ease-standard)`. */
-    '--transition-transform'?: string | number;
-    /** `--transition-layout`. Default: `grid-template-rows var(--duration-slow) var(--ease-entrance), grid-template-columns var(--duration-slow) var(--ease-entrance), max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance)`. */
-    '--transition-layout'?: string | number;
     /** `--glass-blur`. Default: `9px`. */
     '--glass-blur'?: string | number;
     /** `--glass-blur-strong`. Default: `16px`. */
@@ -1230,9 +1094,9 @@ declare module 'react' {
     '--glass-sheen-hover'?: string | number;
     /** `--glass-highlight`. Default: `inset 0 1px 0 0 rgb(255 255 255 / 0.55)`. */
     '--glass-highlight'?: string | number;
-    /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05)`. */
+    /** `--glass-shadow`. Default: `0 1px 2px rgb(var(--shadow-rgb) / 0.05), 0 2px 5px rgb(var(--shadow-rgb) / 0.05)`. Re-derived on every theme root. */
     '--glass-shadow'?: string | number;
-    /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 8px 18px rgb(var(--shadow-rgb) / 0.1)`. */
+    /** `--glass-shadow-hover`. Default: `0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 8px 18px rgb(var(--shadow-rgb) / 0.1)`. Re-derived on every theme root. */
     '--glass-shadow-hover'?: string | number;
     /** `--icon-sm`. Default: `17px`. */
     '--icon-sm'?: string | number;

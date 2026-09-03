@@ -1,5 +1,4 @@
-/* Motion system - durations, brand curves, travel distances, rest scales, and pre-composed transitions;
-   smooths every layout shift by default. */
+/* Motion system - durations, brand curves, travel distances, rest scales, and pre-composed transitions. */
 
 @layer zyncat.tokens, zyncat.components;
 
@@ -36,7 +35,10 @@
     --scale-panel: 0.98; /* full-width surfaces - dialog, modal, sheet */
     --scale-floating: 0.96; /* floating surfaces - popover, tooltip, menu, toast, alert */
     --scale-chip: 0.9; /* small inline elements - tag, badge, count */
+  }
 
+  :root,
+  [data-theme] {
     --transition-control:
       color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
@@ -44,13 +46,6 @@
       color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard);
     --transition-opacity: opacity var(--duration-base) var(--ease-standard);
-    --transition-transform: transform var(--duration-base) var(--ease-standard);
-
-    /* Layout transition - animatable stand-ins for width/height; apply wherever size may change. */
-    --transition-layout:
-      grid-template-rows var(--duration-slow) var(--ease-entrance),
-      grid-template-columns var(--duration-slow) var(--ease-entrance),
-      max-height var(--duration-slow) var(--ease-entrance), max-width var(--duration-slow) var(--ease-entrance);
   }
 
   /* Accessibility: honor reduced-motion globally - every consumer gets it free. */

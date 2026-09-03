@@ -5,7 +5,6 @@
 @layer zyncat.tokens {
   :root {
     --space-px: 1px;
-    --space-0: 0;
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;
@@ -17,9 +16,7 @@
     --space-9: 6rem;
     --space-10: 8rem;
 
-    --container-max: 72rem;
     --measure-prose: 38rem;
-    --sidebar-width: 16rem;
 
     --control-height-sm: 1.75rem;
     --control-height: 2rem;

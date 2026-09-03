@@ -37,10 +37,13 @@
     --tracking-caps: 0.04em;
     --tracking-normal: 0em;
     --tracking-tight: -0.011em;
-    --tracking-tighter: -0.016em;
     --tracking-display: -0.021em;
+  }
 
-    /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first. */
+  :root,
+  [data-theme] {
+    /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first.
+     On every theme root so a subtree that swaps --font-sans gets the bundles in that face. */
     --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans);
     --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans);
     --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans);

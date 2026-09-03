@@ -25,7 +25,7 @@ is a plain component with no hooks, so it server-renders and needs no build conf
 import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)', accentHover: 'oklch(0.5 0.19 292)' },
+  color: { accent: 'oklch(0.58 0.19 292)' },
   radius: { radiusMd: '0.5rem' },
   components: { odometer: { accent: 'var(--warning)' } },
 });
@@ -39,9 +39,17 @@ globally or for one subtree - is setting that attribute. Durations you repoint k
 reduced-motion collapse automatically.
 
 The same tokens are writable as plain CSS: repoint them on `:root` in your own stylesheet -
-`--accent` and its ramp, `--bg-*`, `--text-*`, `--border-*`, `--radius-*`, `--shadow-*`,
-`--space-*`, `--size-*`, `--type-*`, `--duration-*`, `--ease-*`, `--focus-ring`. Components read
-them live and the WAAPI engine reads the same DOM values, so motion retimes with the CSS. Reduced
+`--accent`, `--success`, `--warning`, `--danger`, `--bg-*`, `--text-*`, `--border-*`, `--radius-*`,
+`--shadow-*`, `--space-*`, `--size-*`, `--type-*`, `--duration-*`, `--ease-*`, `--focus-ring`.
+Four colours are decisions and every other colour derives from them: setting `--accent` moves
+`--accent-hover/-active/-lift/-subtle/-border/-disabled/-wash`, `--text-accent`, `--ring-accent`,
+`--focus-ring` and `--info` with it; `--success`, `--warning` and `--danger` each carry their own
+`-subtle`, `-text` and `-wash`; the gray ramp takes its hue from `--neutral`, which defaults to the
+accent. Set a derived token only to break it away from its decision. The hue roles are declared on
+every theme root (`:root` and any element with `data-theme`), so a subtree theme that repoints
+`--accent` re-derives all of them; the neutral roles cascade like any property, so a subtree that
+sets `--bg-app` and `--text-body` keeps them without restating the rest. Components read the tokens
+live and the WAAPI engine reads the same DOM values, so motion retimes with the CSS. Reduced
 motion is handled here - every `--duration-*` collapses to 1ms under `prefers-reduced-motion`, so
 derive your own delays from a duration token, and repoint durations on `:root` rather than a
 nested scope or the collapse cannot reach them.

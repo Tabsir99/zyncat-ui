@@ -282,7 +282,7 @@
     bottom: calc(-1 * var(--border-hairline));
     left: 100%;
     width: var(--space-3);
-    background: linear-gradient(to right, var(--gray-wash), transparent);
+    background: linear-gradient(to right, var(--neutral-wash), transparent);
     opacity: 0;
     transition: var(--transition-opacity);
     pointer-events: none;

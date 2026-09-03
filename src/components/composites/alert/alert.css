@@ -12,7 +12,7 @@
     --alert-hue: var(--info);
     --alert-fg: var(--info-text);
     --alert-bg: var(--info-subtle);
-    --alert-wash: var(--accent-wash); /* info's wash = accent (teal) */
+    --alert-wash: var(--info-wash);
     --alert-sheen: rgb(255 255 255 / 0.55);
 
     box-sizing: border-box;
