@@ -26,10 +26,10 @@ export function useFlip<T extends HTMLElement>(
   enabled = true,
 ): RefObject<T | null> {
   const ref = useRef<T | null>(null);
-  const privateBox = useRef<Box | null>(null);
   const playing = useRef<{ play: Playback; el: T } | null>(null);
   const interrupted = useRef<Box | null>(null);
   const { size, timing } = tuning;
+  const lastCommitted = enabled && sharedId === null && ref.current ? measure(ref.current) : null;
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -38,13 +38,11 @@ export function useFlip<T extends HTMLElement>(
     let from: Box | null;
     if (live && live.el === el) from = measure(el);
     else if (interrupted.current) from = interrupted.current;
-    else if (sharedId === null) from = privateBox.current;
+    else if (sharedId === null) from = lastCommitted;
     else from = sharedOwner.get(sharedId) === el ? null : readShared(sharedId);
     live?.play.stop();
-    const settled = measure(el);
-    if (sharedId === null) privateBox.current = settled;
-    else {
-      keepShared(sharedId, settled);
+    if (sharedId !== null) {
+      keepShared(sharedId, measure(el));
       sharedOwner.set(sharedId, el);
     }
     const next = usable(from) && !UIMotion.reduced ? flip(el, from, { size, timing }) : null;

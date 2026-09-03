@@ -104,7 +104,7 @@
 
 ## Layout animation
 
-- `<Motion layout>` FLIPs from the previous box on every render.
+- `<Motion layout>` FLIPs from the previous box on every render. That box is read as the render begins, so a box an effect moved after the last commit (an overlay placing itself) starts the next FLIP where it truly is.
 - `<Motion layoutId="x">` FLIPs from wherever any element last held the id.
 - Tune with `layoutTransition`: `size` is `'scale'`, `'morph'` or `'none'`, plus a `timing`.
 - `'scale'` is cheap but distorts borders and radii.
