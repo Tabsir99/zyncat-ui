@@ -136,12 +136,9 @@ const LEVEL_0_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
 
 const LEVEL_1_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
 :root {
+  /* hover, active, lift, subtle, border, disabled, wash, text-accent,
+     the focus ring and info all derive from this one decision */
   --accent: oklch(0.58 0.19 292);
-  --accent-hover: oklch(0.5 0.19 292);
-  --accent-active: oklch(0.43 0.17 292);
-  --accent-subtle: oklch(0.96 0.03 292);
-  --accent-border: oklch(0.86 0.07 292);
-  --text-accent: oklch(0.43 0.17 292);
 
   --radius-md: var(--radius-full);
   --radius-lg: var(--radius-full);
@@ -229,15 +226,7 @@ const DARK_SURFACES: ThemeTokens['color'] = {
   borderStrong: 'oklch(0.44 0.01 198)',
 };
 
-const accentRamp = (hue: number): ThemeTokens['color'] => ({
-  accent: `oklch(0.63 0.118 ${hue})`,
-  accentHover: `oklch(0.56 0.114 ${hue})`,
-  accentActive: `oklch(0.478 0.1 ${hue})`,
-  accentSubtle: `oklch(0.972 0.02 ${hue})`,
-  accentBorder: `oklch(0.88 0.066 ${hue})`,
-  accentLift: `oklch(0.705 0.112 ${hue})`,
-  textAccent: `oklch(0.478 0.1 ${hue})`,
-});
+const accentAt = (hue: number): ThemeTokens['color'] => ({ accent: `oklch(0.63 0.118 ${hue})` });
 
 const playgroundCode = (
   hue: number,
@@ -246,14 +235,7 @@ const playgroundCode = (
 ) => `import { defineTheme, ZyncatTheme } from '@zyncat/ui/theme';
 
 const base = defineTheme({
-  color: {
-    accent: 'oklch(0.63 0.118 ${hue})',
-    accentHover: 'oklch(0.56 0.114 ${hue})',
-    accentActive: 'oklch(0.478 0.1 ${hue})',
-    accentSubtle: 'oklch(0.972 0.02 ${hue})',
-    accentBorder: 'oklch(0.88 0.066 ${hue})',
-    textAccent: 'oklch(0.478 0.1 ${hue})',
-  },
+  color: { accent: 'oklch(0.63 0.118 ${hue})' },
   radius: { radiusSm: '${CORNERS[corner].radiusSm}', radiusMd: '${CORNERS[corner].radiusMd}', radiusLg: '${CORNERS[corner].radiusLg}' },
   components: { odometer: { accent: 'var(--${ink})' } },
 });
@@ -273,7 +255,7 @@ export function ThemingPlayground() {
   const [total, setTotal] = useState(4820);
 
   const base = defineTheme({
-    color: accentRamp(hue),
+    color: accentAt(hue),
     radius: CORNERS[corner],
     components: { odometer: { accent: `var(--${ink})` } },
   });
@@ -282,7 +264,7 @@ export function ThemingPlayground() {
   return (
     <Playground
       code={playgroundCode(hue, corner, ink)}
-      note="Every control writes one typed token. The preview scopes the same theme to this panel with a named theme, so the rest of the page keeps its own."
+      note="Every control writes one typed token; the accent's hover, active, wash and focus ring derive from it. The preview scopes the theme to this panel with a named theme, so the rest of the page keeps its own."
       rail={
         <>
           <KnobRange label="accent hue" value={hue} onChange={setHue} min={0} max={360} format={(v) => `${v}°`} />
@@ -317,7 +299,7 @@ const THEME_FILE_CODE = `// zyncat.theme.ts
 import { defineTheme } from '@zyncat/ui/theme';
 
 export const base = defineTheme({
-  color: { accent: 'oklch(0.58 0.19 292)', accentHover: 'oklch(0.5 0.19 292)' },
+  color: { accent: 'oklch(0.58 0.19 292)' },
   radius: { radiusMd: '0.5rem' },
   type: { fontSans: "'Inter', system-ui, sans-serif" },
   motion: { durationBase: '180ms' },
@@ -442,9 +424,12 @@ export function ThemingDoc() {
       <section className="guide-section" id="level-1">
         <h2 className="guide-section__title">Level 1 — retheme with tokens</h2>
         <p className="guide-section__p">
-          Repoint the semantic tokens and the whole system moves at once. Components read them live, and the WAAPI
-          motion engine reads the same DOM values, so animation retimes with the CSS rather than drifting out of sync
-          with it.
+          Repoint the semantic tokens and the whole system moves at once. Four colours are decisions —{' '}
+          <code className="doc-inline-code">--accent</code>, <code className="doc-inline-code">--success</code>,{' '}
+          <code className="doc-inline-code">--warning</code>, <code className="doc-inline-code">--danger</code> — and
+          every other colour derives from them: the accent&rsquo;s hover, active, subtle, border, wash and focus ring
+          follow one line. Components read them live, and the WAAPI motion engine reads the same DOM values, so
+          animation retimes with the CSS rather than drifting out of sync with it.
         </p>
 
         <div className="theming-pair">
@@ -457,8 +442,8 @@ export function ThemingDoc() {
             </div>
             <TextField label="Workspace" placeholder="Acme Marketing" />
           </div>
-          <div className="theming-cell theming-retheme">
-            <span className="theming-cell__label">Six tokens repointed</span>
+          <div className="theming-cell theming-retheme" data-theme="retheme">
+            <span className="theming-cell__label">One token repointed</span>
             <div className="theming-cell__row">
               <Button variant="primary">Publish</Button>
               <Badge tone="info">Draft</Badge>
