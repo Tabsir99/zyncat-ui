@@ -1,10 +1,10 @@
 /* Semantic layer - the intent-named roles components consume.
-   Two blocks, by how a theme reaches them. The neutral roles are what a light or dark theme sets
-   directly, so they sit on :root alone and cascade like any property. The hue roles derive from the
-   four decisions in color.css and are declared on every theme root - :root and any element carrying
-   data-theme - because a custom property is substituted where it is declared: without the second
-   selector a subtree that repoints --accent would inherit hover, wash and focus ring already resolved
-   to the root accent. */
+   Two blocks, by how a theme reaches them. The neutral roles - surfaces, ink, borders - are what a
+   light or dark theme sets directly, so they sit on :root alone and cascade like any property. The
+   hue roles derive from the decisions in decisions.css, the neutral state layer from the ink, and all
+   of those are declared on every theme root - :root and any element carrying data-theme - because a
+   custom property is substituted where it is declared: without the second selector a subtree that
+   repoints --accent would inherit hover, wash and focus ring already resolved to the root accent. */
 
 @layer zyncat.tokens, zyncat.components;
 
@@ -34,13 +34,6 @@
     --border-subtle: var(--gray-150);
     --border-default: var(--gray-200);
     --border-strong: var(--gray-300);
-
-    /* State layer: interactive hover/press fills are translucent washes, never opaque
-     near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces. Press > hover. */
-    --neutral-wash: color-mix(in oklab, var(--gray-700) 6%, transparent);
-    --neutral-wash-press: color-mix(in oklab, var(--gray-700) 10%, transparent);
-
-    --glass-tint-neutral: color-mix(in oklab, var(--gray-600) 13%, transparent);
   }
 
   :root,
@@ -56,6 +49,12 @@
     --accent-disabled: oklch(from var(--accent) 0.795 0.092 h);
     --accent-wash: oklch(from var(--accent) l c h / 0.08);
     --text-accent: var(--accent-active);
+
+    /* State layer: interactive hover/press fills are translucent washes of the ink, never opaque
+     near-whites - opaque --bg-subtle patches vanish on tinted/app surfaces - so a dark theme's light
+     ink washes light without setting them. Press > hover. */
+    --neutral-wash: color-mix(in oklab, var(--text-secondary) 6%, transparent);
+    --neutral-wash-press: color-mix(in oklab, var(--text-secondary) 10%, transparent);
 
     /* Info reads as the accent's own hue one step down; repoint --info to give it a hue of its own. */
     --info: var(--accent-hover);
@@ -82,6 +81,7 @@
     --danger-wash: oklch(from var(--danger) 0.602 0.196 h / 0.1);
 
     /* Glass tints - per-tone translucent fills; alpha kept low so the frost reads through. */
+    --glass-tint-neutral: color-mix(in oklab, var(--text-muted) 13%, transparent);
     --glass-tint-info: color-mix(in oklab, var(--info) 17%, transparent);
     --glass-tint-success: color-mix(in oklab, var(--success) 17%, transparent);
     --glass-tint-warning: color-mix(in oklab, var(--warning) 21%, transparent);

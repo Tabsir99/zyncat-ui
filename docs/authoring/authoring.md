@@ -35,9 +35,9 @@ src/components/<tier>/<component>/<component>.css
 - Classes under `src/tokens` are always satisfied. They ship in `styles.css`.
 - System contract: tokens, not literals.
 - Expressive contract: name every value.
-- A named value is a module constant or a `--<component>-<name>` property on the root class.
+- A named value is a module constant, a public `--<component>-<name>` knob with a doc line, or a private `--_<component>-<name>` property on the root class.
 - Nothing on `:root`.
-- No `font-family` stacks. Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
+- No `font-family` stacks. Type reads `--font-body` / `--font-code` and the `--size-*` scale.
 - A property animated from JS never appears in a CSS `transition` (motion.md).
 - Start the stylesheet with the layer order statement and wrap its rules in the components layer.
 - Hoist `@property` registrations above the layer block.

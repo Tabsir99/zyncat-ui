@@ -40,7 +40,7 @@
   .facebook-feed-post,
   .facebook-feed-reel,
   .facebook-feed-story {
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
 

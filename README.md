@@ -98,14 +98,19 @@ const base = defineTheme({
   radius: '0.75rem',
   components: { odometer: { accent: 'var(--warning)' } },
 });
-const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
+const dark = defineTheme({
+  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  custom: { '--shadow-rgb': '0 0 0' },
+});
 
 // once, at the app root
 <ZyncatTheme theme={{ base, dark }} />;
 ```
 
-The decisions are the top-level keys; every other token is a typed key grouped by what it does:
-hover shows the default, a typo is a compile error, and values take any CSS. `base` lands on
+The type is the shape of a theme, not a list of every token: the decisions at the top level, the
+neutral roles under `color`, the motion bands under `motion`, the scoped knobs under `components`,
+and any other token by its CSS name under `custom`. Every name completes, hover shows the default,
+a typo is a compile error, and values take any CSS. `base` lands on
 `:root` and every other key becomes a `[data-theme='<key>']` block, so switching themes - globally
 or for one subtree - is setting that attribute. The types are generated from the token stylesheets,
 so upgrading the package surfaces new tokens rather than drifting from them.

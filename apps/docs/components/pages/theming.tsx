@@ -159,7 +159,7 @@ const VOCABULARY_ROWS: VocabularyRow[] = [
   },
   {
     family: 'Type',
-    tokens: '--type-display-lg … --type-micro, --type-mono, --font-sans, --font-mono',
+    tokens: '--type-display-lg … --type-micro, --type-code, --font-body, --font-code',
     pick: 'One font: shorthand per role with size and leading matched; eleven of them.',
   },
   {
@@ -268,20 +268,22 @@ const PREVIEW_DARK = 'zyncat-preview-dark';
 const CORNERS: Record<Corner, string> = { sharp: '0', default: '0.5rem', round: '1rem' };
 
 const DARK_SURFACES: ThemeTokens['color'] = {
-  bgApp: 'oklch(0.19 0.008 198)',
-  bgSurface: 'oklch(0.225 0.008 198)',
-  bgSurfaceRaised: 'oklch(0.265 0.008 198)',
-  bgSubtle: 'oklch(0.245 0.008 198)',
-  bgMuted: 'oklch(0.28 0.008 198)',
-  bgInset: 'oklch(0.235 0.008 198)',
-  textStrong: 'oklch(0.97 0.003 198)',
-  textBody: 'oklch(0.92 0.004 198)',
-  textSecondary: 'oklch(0.84 0.005 198)',
-  textMuted: 'oklch(0.72 0.008 198)',
-  textSubtle: 'oklch(0.64 0.01 198)',
-  borderSubtle: 'oklch(0.3 0.008 198)',
-  borderDefault: 'oklch(0.36 0.009 198)',
-  borderStrong: 'oklch(0.44 0.01 198)',
+  bg: {
+    app: 'oklch(0.19 0.008 198)',
+    surface: 'oklch(0.225 0.008 198)',
+    surfaceRaised: 'oklch(0.265 0.008 198)',
+    subtle: 'oklch(0.245 0.008 198)',
+    muted: 'oklch(0.28 0.008 198)',
+    inset: 'oklch(0.235 0.008 198)',
+  },
+  text: {
+    strong: 'oklch(0.97 0.003 198)',
+    body: 'oklch(0.92 0.004 198)',
+    secondary: 'oklch(0.84 0.005 198)',
+    muted: 'oklch(0.72 0.008 198)',
+    subtle: 'oklch(0.64 0.01 198)',
+  },
+  border: { subtle: 'oklch(0.3 0.008 198)', default: 'oklch(0.36 0.009 198)', strong: 'oklch(0.44 0.01 198)' },
 };
 
 const playgroundCode = (
@@ -311,11 +313,11 @@ export function ThemingPlayground() {
   const [total, setTotal] = useState(4820);
 
   const base = defineTheme({
-    accent: `oklch(0.63 0.118 ${hue})`,
-    radius: CORNERS[corner],
+    color: { accent: `oklch(0.63 0.118 ${hue})` },
+    shape: { radius: CORNERS[corner] },
     components: { odometer: { accent: `var(--${ink})` } },
   });
-  const dark = defineTheme({ ...base, color: DARK_SURFACES });
+  const dark = defineTheme({ ...base, color: { ...base.color, ...DARK_SURFACES } });
 
   return (
     <Playground
@@ -359,11 +361,12 @@ export const base = defineTheme({
   radius: '0.75rem',
   fontSans: "'Inter', system-ui, sans-serif",
   motion: { durationBase: '180ms' },
-  components: { odometer: { accent: 'var(--warning)' }, supportFan: { inset: 'var(--space-6)' } },
+  components: { odometer: { accent: 'var(--warning)' }, supportRail: { width: '22rem' } },
 });
 
 export const dark = defineTheme({
   color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  custom: { '--shadow-rgb': '0 0 0' },
 });`;
 
 const THEME_MOUNT_CODE = `// app/layout.tsx
@@ -568,9 +571,13 @@ export function ThemingDoc() {
         <p className="guide-section__p">
           <code className="doc-inline-code">@zyncat/ui/theme</code> is the same level 1 retheme with a type behind it,
           for a theme that is data: several named themes, values computed at build time, a design tool&rsquo;s export.
-          The eight decisions are the top-level keys; every other token is a key on a group named the way the files are,
-          so the editor completes the names, hovering one shows what it does and what it currently is, and a typo is a
-          compile error instead of a property that silently does nothing.
+          The type is the shape of a theme, not a list of every token: the eight decisions at the top level, the neutral
+          roles under <code className="doc-inline-code">color</code>, the motion bands under{' '}
+          <code className="doc-inline-code">motion</code>, the scoped knobs under{' '}
+          <code className="doc-inline-code">components</code>. Everything else — ramp stops, the type scale, spacing, a
+          derived hover or wash — is reachable by its CSS name under <code className="doc-inline-code">custom</code>.
+          Every name completes wherever it is typed, hovering one shows what it does and what it currently is, and a
+          typo is a compile error instead of a property that silently does nothing.
         </p>
 
         <ThemingPlayground />
@@ -608,8 +615,8 @@ export function ThemingDoc() {
         <FeatureGrid>
           <FeatureCard
             icon="sparkle"
-            title="Decisions first, then groups"
-            description="Eight decisions at the top level; under them color, type, space, radii, elevation, motion, glass, icon, layer, avatar — plus components for the scoped knobs, and custom for anything else."
+            title="The shape of a theme, not a list"
+            description="Eight decisions at the top level; color for the neutral roles a dark theme sets, motion for the bands, components for the scoped knobs — and custom, where every other token goes by its CSS name."
           />
           <FeatureCard
             icon="shield-check"
@@ -767,7 +774,7 @@ export function ThemingDoc() {
           <code className="doc-inline-code">TikTok</code> and <code className="doc-inline-code">YouTube</code> reproduce
           a real platform surface, and fidelity is their contract. Their metrics are pinned as constants rather than
           tokens, so a level 1 retheme cannot move them and there are no scoped properties to set at level 2. Only{' '}
-          <code className="doc-inline-code">--font-sans</code>, <code className="doc-inline-code">--focus-ring</code>{' '}
+          <code className="doc-inline-code">--font-body</code>, <code className="doc-inline-code">--focus-ring</code>{' '}
           and the duration tokens reach inside.
         </p>
         <Callout tone="warning" title="That immunity is the feature">

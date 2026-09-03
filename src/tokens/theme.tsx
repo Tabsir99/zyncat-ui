@@ -11,7 +11,7 @@ export interface ZyncatThemeProps {
   theme?: ThemeSet;
 }
 
-type TokenGroup = Record<string, string | number | undefined>;
+type TokenTree = { [key: string]: string | number | TokenTree | undefined };
 
 const BASE = 'base';
 
@@ -22,25 +22,23 @@ const kebabize = (key: string) =>
     .replace(/([0-9])([A-Z])/g, '$1-$2')
     .toLowerCase();
 
-const pushDeclarations = (into: [string, string][], group: TokenGroup, prefix: string) => {
-  for (const [key, value] of Object.entries(group ?? {}))
-    if (value != null) into.push([`--${prefix}${kebabize(key)}`, String(value)]);
-};
-
 const resolveDeclarations = (tokens?: ThemeTokens): [string, string][] => {
   const declarations: [string, string][] = [];
-  for (const [key, values] of Object.entries(tokens ?? {})) {
-    if (values == null) continue;
-    if (key === 'custom') {
-      for (const [property, value] of Object.entries(values as TokenGroup))
-        if (value != null) declarations.push([property, String(value)]);
-    } else if (key === 'components') {
-      for (const [component, knobs] of Object.entries(values as Record<string, TokenGroup>))
-        if (knobs) pushDeclarations(declarations, knobs, `${kebabize(component)}-`);
-    } else if (typeof values === 'object') {
-      pushDeclarations(declarations, values as TokenGroup, '');
+  const walk = (value: TokenTree[string], path: string[]) => {
+    if (value == null) return;
+    if (typeof value === 'object') {
+      for (const [key, child] of Object.entries(value)) walk(child, [...path, kebabize(key)]);
     } else {
-      declarations.push([`--${kebabize(key)}`, String(values)]);
+      declarations.push([`--${path.join('-')}`, String(value)]);
+    }
+  };
+  for (const [category, value] of Object.entries(tokens ?? {})) {
+    if (value == null) continue;
+    if (category === 'custom') {
+      for (const [property, custom] of Object.entries(value as TokenTree))
+        if (custom != null) declarations.push([property, String(custom)]);
+    } else {
+      walk(value as TokenTree, []);
     }
   }
   return declarations;

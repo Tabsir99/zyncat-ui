@@ -43,7 +43,7 @@ const seo: PageSeo = {
     },
     {
       q: 'Can I use this YouTube UI clone in Next.js?',
-      a: "Yes. @zyncat/ui/youtube ships compiled ESM with its 'use client' directive intact, so it drops into the Next.js App Router with no transpilePackages config and zero runtime dependencies. Being a replica, its metrics are pinned constants your theme cannot move - only the type reads --font-sans - and under prefers-reduced-motion the carousel and the Shorts progress bar snap into place instead of easing.",
+      a: "Yes. @zyncat/ui/youtube ships compiled ESM with its 'use client' directive intact, so it drops into the Next.js App Router with no transpilePackages config and zero runtime dependencies. Being a replica, its metrics are pinned constants your theme cannot move - only the type reads --font-body - and under prefers-reduced-motion the carousel and the Shorts progress bar snap into place instead of easing.",
     },
   ],
 };

@@ -133,9 +133,9 @@ function paint(parts: Parts, optics: Optics, radius: number, chromatic: boolean)
 
   const lift = SHADOW_LIFT_BASE + speed * SHADOW_LIFT_SPEED - press * SHADOW_LIFT_PRESS;
   const blur = SHADOW_BLUR_BASE + speed * SHADOW_BLUR_SPEED - press * SHADOW_BLUR_PRESS;
-  parts.ring.style.setProperty('--lens-lift', lift.toFixed(2));
-  parts.ring.style.setProperty('--lens-blur', blur.toFixed(2));
-  parts.ring.style.setProperty('--lens-shadow-alpha', (SHADOW_ALPHA_BASE + press * SHADOW_ALPHA_PRESS).toFixed(3));
+  parts.ring.style.setProperty('--_lens-lift', lift.toFixed(2));
+  parts.ring.style.setProperty('--_lens-blur', blur.toFixed(2));
+  parts.ring.style.setProperty('--_lens-shadow-alpha', (SHADOW_ALPHA_BASE + press * SHADOW_ALPHA_PRESS).toFixed(3));
 
   const trailing = optics.angle + Math.PI;
   const orbit = radius * (SPECULAR_ORBIT_BASE + speed * SPECULAR_ORBIT_SPEED);

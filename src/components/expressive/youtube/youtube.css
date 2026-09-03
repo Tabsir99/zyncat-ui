@@ -3,7 +3,7 @@
 @layer zyncat.components {
   .youtube {
     box-sizing: border-box;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     color: #0f0f0f;
     text-align: start;
     -webkit-font-smoothing: antialiased;

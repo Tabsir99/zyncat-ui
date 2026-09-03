@@ -45,7 +45,7 @@ const seo: PageSeo = {
     },
     {
       q: 'How is this different from the native <input type="time">?',
-      a: "The native time input's look and interaction vary by browser and OS, and it can't be themed. TimeField is a styled, segmented HH:mm control built from ordinary system tokens - --accent, --danger, --font-mono, --ring-accent - so it matches the rest of a Zyncat UI form and behaves identically everywhere, with zero runtime dependencies beyond React 19 as a peer.",
+      a: "The native time input's look and interaction vary by browser and OS, and it can't be themed. TimeField is a styled, segmented HH:mm control built from ordinary system tokens - --accent, --danger, --font-code, --ring-accent - so it matches the rest of a Zyncat UI form and behaves identically everywhere, with zero runtime dependencies beyond React 19 as a peer.",
     },
   ],
 };

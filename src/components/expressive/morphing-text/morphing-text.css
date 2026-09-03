@@ -2,22 +2,32 @@
 
 @layer zyncat.components {
   .morphing-text {
+    /* Letter ink. */
     --morphing-text-ink: var(--text-strong);
+    /* Letter size. */
     --morphing-text-size: var(--size-display-lg);
+    /* Letter weight. */
     --morphing-text-weight: var(--weight-medium);
+    /* Line height, unitless. */
     --morphing-text-leading: 1.2;
+    /* Letter spacing. */
     --morphing-text-tracking: var(--tracking-display);
+    /* How much letters blur on the way between words; 0 cuts clean. */
     --morphing-text-smear: 1;
+    /* The rule at rest. */
     --morphing-text-rule-ink: var(--text-strong);
+    /* The rule while a morph heats it. */
     --morphing-text-rule-accent: var(--accent);
+    /* The rule's thickness. */
     --morphing-text-rule-height: 1px;
+    /* Space between the word and the rule. */
     --morphing-text-rule-gap: var(--space-3);
-    --morphing-text-rule-rest: 0.1;
-    --morphing-text-rule-lift: 0.3;
+    --_morphing-text-rule-rest: 0.1;
+    --_morphing-text-rule-lift: 0.3;
 
     position: relative;
     display: block;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--morphing-text-size);
     font-weight: var(--morphing-text-weight);
     line-height: var(--morphing-text-leading);
@@ -50,26 +60,26 @@
   }
 
   .morphing-text__letter {
-    --morphing-text-letter-blur: 0;
+    --_morphing-text-letter-blur: 0;
 
     display: inline-block;
   }
 
   .morphing-text__stage--fused .morphing-text__letter {
-    filter: blur(calc(var(--morphing-text-letter-blur) * var(--morphing-text-smear) * 1em));
+    filter: blur(calc(var(--_morphing-text-letter-blur) * var(--morphing-text-smear) * 1em));
   }
 
   .morphing-text__rule {
-    --morphing-text-heat: 0;
+    --_morphing-text-heat: 0;
 
     display: block;
     height: var(--morphing-text-rule-height);
     margin-block-start: var(--morphing-text-rule-gap);
     margin-inline: auto;
-    opacity: calc(var(--morphing-text-rule-rest) + var(--morphing-text-rule-lift) * var(--morphing-text-heat));
+    opacity: calc(var(--_morphing-text-rule-rest) + var(--_morphing-text-rule-lift) * var(--_morphing-text-heat));
     background: color-mix(
       in oklab,
-      var(--morphing-text-rule-accent) calc(var(--morphing-text-heat) * 100%),
+      var(--morphing-text-rule-accent) calc(var(--_morphing-text-heat) * 100%),
       var(--morphing-text-rule-ink)
     );
   }

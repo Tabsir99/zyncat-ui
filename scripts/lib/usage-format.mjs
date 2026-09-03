@@ -36,7 +36,7 @@ export const GROUPS = [
     title: 'Replicas',
     note:
       'Each reproduces an external platform surface; fidelity is the contract. Platform metrics are pinned constants - ' +
-      'only --font-sans, --focus-ring and the duration tokens are read, so your theme cannot move them. None ever ' +
+      'only --font-body, --focus-ring and the duration tokens are read, so your theme cannot move them. None ever ' +
       'fetches media or autoplays: media and avatar take a URL string or your own node, with CSS-only placeholders.',
   },
   { id: 'dev', title: 'Dev tools', note: '' },

@@ -99,7 +99,7 @@ Only the `llms.txt` entries stay batched — one file, shared format, generated 
   - ✓ **Flow Field** (05 — needle field)
   - ✓ **Confetti** (particle burst)
 - Scoped custom props `--<component>-<name>`, defaulted from semantic tokens
-- Type from `--font-sans` / `--font-mono` and the `--size-*` scale; weights from `--weight-*`
+- Type from `--font-body` / `--font-code` and the `--size-*` scale; weights from `--weight-*`
 - Accent defaults from `var(--accent)`; no hex literals anywhere in the tier
 - `llms.txt` entries for all 7, then full verify
 

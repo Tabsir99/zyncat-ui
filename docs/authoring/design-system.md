@@ -29,7 +29,7 @@
 - Freedom props are allowed: accent, speed, intensity.
 - Name every arbitrary value.
 - A value used once becomes a named module constant.
-- A tunable value becomes a `--<component>-<name>` custom property on the root class.
+- A value a consumer may tune is a `--<component>-<name>` property on the root class with a doc line above it; a constant, a derivation or per-frame state is `--_<component>-<name>`, private and untyped.
 - Scoped custom properties are the component's public theming contract.
 - Default scoped properties from semantic tokens where a semantic exists.
 - Never declare anything on `:root`.
@@ -39,7 +39,7 @@
 - Snapping a material to the nearest token is a system-tier habit and it deletes the component.
 - A material is still named: module constants, or scoped properties a theme opts into.
 - A freedom prop defaults from a token, never a hex.
-- Type reads `--font-sans` / `--font-mono` and the `--size-*` scale.
+- Type reads `--font-body` / `--font-code` and the `--size-*` scale.
 - No bundled font faces. No local font stacks.
 - Run simulations only on the engine `loop` primitive (motion.md).
 - A compound component declares its contract in its registry row. Undeclared means system.
@@ -68,7 +68,7 @@
 - The `.css` file is the source of truth and the documentation.
 - A token file starts with the layer order statement and wraps its rules in `@layer zyncat.tokens`.
 - Eight values are decisions, in `decisions.css`: `--accent`, `--success`, `--warning`, `--danger`,
-  `--neutral`, `--radius`, `--font-sans`, `--font-mono`. Everything else derives from them: colour with
+  `--neutral`, `--radius`, `--font-body`, `--font-code`. Everything else derives from them: colour with
   relative colour syntax, the `--radius-*` steps as fixed ratios, the `--type-*` bundles from the faces.
   A new colour token derives; it never pins a hue. `--radius-full` is a shape, not a step, and stays literal.
 - A decision sits on `:root` alone, never on the theme-root block; `gen-theme` fails on one there. `init`
@@ -118,13 +118,13 @@
 
 - CSS spells the concept out. TypeScript abbreviates it: `--duration-fast` is `dur.fast`.
 - Name a scale by magnitude or by target, never both.
-- Scoped properties: `--<component>-<name>`, kebab-case, root class only.
+- Scoped properties: `--<component>-<name>` public, `--_<component>-<name>` private; kebab-case, root class only.
 
 ## Overrides
 
 - Level 0: all shipped CSS sits in the `zyncat` cascade layers, so plain consumer CSS wins.
 - Level 1: retheme in `zyncat.theme.css`, the decisions `init` writes into the project; any token on `:root` works. JS follows via the DOM readers.
-- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Decisions at the top level, the groups under them.
+- Level 1, typed: `defineTheme` + `ZyncatTheme` from `src/tokens/theme.tsx`, for a theme that is data. Decisions at the top level, `color` and `motion` for the roles a theme sets, `components` for the knobs, every other token by CSS name under `custom`.
 - `scripts/gen-theme.mjs` generates the token types and the per-component `style` types from the CSS.
 - Token names are derived, never tabulated: the generator fails if a name stops round-tripping.
 - Level 2: retune one component through its scoped custom properties.

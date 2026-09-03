@@ -70,7 +70,7 @@ Whole assembled patterns on the expressive contract - scoped --support-rail-* pr
 SupportRail - @zyncat/ui/support-rail - An edge tab that grows a support panel out of its own measured box.
 
 == Replicas ==
-Each reproduces an external platform surface; fidelity is the contract. Platform metrics are pinned constants - only --font-sans, --focus-ring and the duration tokens are read, so your theme cannot move them. None ever fetches media or autoplays: media and avatar take a URL string or your own node, with CSS-only placeholders.
+Each reproduces an external platform surface; fidelity is the contract. Platform metrics are pinned constants - only --font-body, --focus-ring and the duration tokens are read, so your theme cannot move them. None ever fetches media or autoplays: media and avatar take a URL string or your own node, with CSS-only placeholders.
 FacebookFeed - @zyncat/ui/facebook-feed - Replica of Facebook's three post surfaces, pinned to the platform's real metrics: the feed card, the reels stage and the story stage.
 InstagramFeed - @zyncat/ui/instagram-feed - A replica of one Instagram feed post, pixel-pinned to the platform and immune to your theme.
 TikTok - @zyncat/ui/tiktok - A replica of TikTok's post surface: pick surface="desktop" for the 1584x912 web player with the photo carousel, or surface="mobile" for the 452x822 mobile-web viewport.
@@ -79,7 +79,7 @@ YouTube - @zyncat/ui/youtube - Replica of three YouTube surfaces, picked with su
 == Dev tools ==
 motion-tokens - @zyncat/ui/motion-tokens - TypeScript readers for the motion token vocabulary - duration/ease/distance/scale token names resolved to the live CSS values.
 MotionDevtools - @zyncat/ui/motion-devtools - Dev-only floating panel that slows or freezes EVERY animation at once (CSS and WAAPI) for motion debugging.
-Theme - @zyncat/ui/theme - Typed theming - defineTheme takes the decisions at the top level and every other token in a typed group; ZyncatTheme renders the set as unlayered CSS with no build step.
+Theme - @zyncat/ui/theme - Typed theming - defineTheme is the shape of a theme, not a list of every token; ZyncatTheme renders the set as unlayered CSS with no build step.
 
 == Types-only modules (documented by their .d.ts alone) ==
 @zyncat/ui/next - get_component("next")

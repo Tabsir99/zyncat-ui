@@ -240,7 +240,7 @@ Every FAQ claim is read off the source, not inferred:
 - Zero dependencies - root `package.json` has no `dependencies` key, only `react`/`react-dom` `^19`
   peers (`peerDependencies`), confirmed identically to the sibling record.
 - Tokens, no component-scoped property - `date-picker.css` lines ~535-598: `.tsg`/`.tsg__seg`/
-  `.tfd__box` read `--font-mono`, `--size-caption`, `--text-strong`, `--accent-subtle`,
+  `.tfd__box` read `--font-code`, `--size-caption`, `--text-strong`, `--accent-subtle`,
   `--text-accent`, `--text-disabled`, `--text-subtle`, `--accent`, `--bg-surface`, `--ring-accent`,
   `--danger`, `--danger-text`, `--bg-muted`, `--radius-sm` - all system tokens. Unlike `DateField`'s
   `--dtp-cell`, `TimeField` defines no `--tfd-*`/`--tsg-*` custom property of its own.

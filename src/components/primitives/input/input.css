@@ -259,7 +259,7 @@
     width: 44px;
     height: 52px;
     text-align: center;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-title);
     font-weight: var(--weight-medium);
     color: var(--text-strong);

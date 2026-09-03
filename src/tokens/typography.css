@@ -41,17 +41,17 @@
   :root,
   [data-theme] {
     /* Role bundles - size + leading + weight + tracking, pre-composed; reach for these first.
-     On every theme root so a subtree that swaps --font-sans gets the bundles in that face. */
-    --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-sans);
-    --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-sans);
-    --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-sans);
-    --type-title: var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-sans);
-    --type-heading: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-sans);
-    --type-body-lg: var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-sans);
-    --type-body: var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-sans);
-    --type-label: var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-sans);
-    --type-caption: var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-sans);
-    --type-micro: var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-sans);
-    --type-mono: var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-mono);
+     On every theme root so a subtree that swaps --font-body gets the bundles in that face. */
+    --type-display-lg: var(--weight-semibold) var(--size-display-lg)/var(--leading-display-lg) var(--font-body);
+    --type-display: var(--weight-semibold) var(--size-display)/var(--leading-display) var(--font-body);
+    --type-title-lg: var(--weight-semibold) var(--size-title-lg)/var(--leading-title-lg) var(--font-body);
+    --type-title: var(--weight-semibold) var(--size-title)/var(--leading-title) var(--font-body);
+    --type-heading: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-body);
+    --type-body-lg: var(--weight-regular) var(--size-body-lg)/var(--leading-body-lg) var(--font-body);
+    --type-body: var(--weight-regular) var(--size-body)/var(--leading-body) var(--font-body);
+    --type-label: var(--weight-medium) var(--size-body)/var(--leading-body) var(--font-body);
+    --type-caption: var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-body);
+    --type-micro: var(--weight-medium) var(--size-micro)/var(--leading-micro) var(--font-body);
+    --type-code: var(--weight-regular) var(--size-caption)/var(--leading-caption) var(--font-code);
   }
 }

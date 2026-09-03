@@ -149,9 +149,13 @@ for (const tier of ['primitives', 'composites', 'compound', 'expressive', 'inter
 }
 registeredPrefixes.add('avatar').add('collapse');
 
-const hasRegisteredPrefix = (name) => [...registeredPrefixes].some((prefix) => name.startsWith(`--${prefix}-`));
+const hasRegisteredPrefix = (name) =>
+  [...registeredPrefixes].some((prefix) => name.startsWith(`--${prefix}-`) || name.startsWith(`--_${prefix}-`));
 
 const ORDER_STATEMENT = '@layer zyncat.tokens, zyncat.components;';
+
+const KNOB_DOC_ABOVE = /^[ \t]*\n[ \t]*--[a-z][\w-]*\s*:/;
+const KNOB_DOC_TRAILING = /--[a-z][\w-]*\s*:[^;]*;[ \t]*$/;
 
 for (const file of cssFiles) {
   const raw = readFileSync(file, 'utf8');
@@ -161,7 +165,13 @@ for (const file of cssFiles) {
   const inComponents = under(file, 'src/components/') || under(file, 'src/motion/');
   const systemTier = under(file, 'src/components/primitives/') || under(file, 'src/components/composites/');
 
-  if (!inTokens) for (const _ of raw.matchAll(/\/\*/g)) debt('comments-css', file);
+  if (!inTokens)
+    for (const match of raw.matchAll(/\/\*[^]*?\*\//g)) {
+      const after = raw.slice(match.index + match[0].length);
+      const lineBefore = raw.slice(raw.lastIndexOf('\n', match.index) + 1, match.index);
+      if (KNOB_DOC_ABOVE.test(after) || KNOB_DOC_TRAILING.test(lineBefore)) continue;
+      debt('comments-css', file);
+    }
 
   for (const match of stripped.matchAll(/@import[^;]*\blayer\(/g))
     fail(
@@ -206,7 +216,10 @@ for (const file of cssFiles) {
     for (const match of stripped.matchAll(/(^|[{;\s])(--[\w-]+)\s*:/gm)) {
       const name = match[2];
       if (hasRegisteredPrefix(name)) continue;
-      fail(file, `declares ${name} - custom properties carry a registered component prefix (--<component>-<name>)`);
+      fail(
+        file,
+        `declares ${name} - custom properties carry a registered component prefix (--<component>-<name>, or --_<component>-<name> when private)`,
+      );
     }
   }
 

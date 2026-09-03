@@ -44,7 +44,7 @@
     border: var(--border-hairline) solid transparent;
     border-radius: var(--radius-md);
 
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--size-body);
     font-weight: var(--weight-medium);
     line-height: 1;

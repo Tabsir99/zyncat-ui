@@ -25,8 +25,8 @@ const PIXEL_RATIO_CAP = 2;
 const PAPER_SLOTS = 5;
 const DEFAULT_WEIGHT = 1;
 const PAPER_KEYS = Array.from({ length: PAPER_SLOTS }, (_, i) => `--confetti-paper-${i + 1}`);
-const REVERSE_KEYS = Array.from({ length: PAPER_SLOTS }, (_, i) => `--confetti-reverse-${i + 1}`);
-const SHEEN_KEYS = Array.from({ length: PAPER_SLOTS }, (_, i) => `--confetti-sheen-${i + 1}`);
+const REVERSE_KEYS = Array.from({ length: PAPER_SLOTS }, (_, i) => `--_confetti-reverse-${i + 1}`);
+const SHEEN_KEYS = Array.from({ length: PAPER_SLOTS }, (_, i) => `--_confetti-sheen-${i + 1}`);
 const WEIGHTS_KEY = '--confetti-weights';
 
 const SCALE_REFERENCE = 700;

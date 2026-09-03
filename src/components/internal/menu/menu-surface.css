@@ -21,7 +21,7 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     outline: none;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     --menu-rail-width: 2px;
     --menu-rail-length: var(--icon-sm);
   }

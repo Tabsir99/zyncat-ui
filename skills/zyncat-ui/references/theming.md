@@ -16,7 +16,7 @@ specificity (0,0,0) wins. Class names are BEM off a short base - `.btn`, `.btn--
 
 Eight values are decisions and everything else derives from them: `--accent`, `--success`,
 `--warning`, `--danger`, `--neutral` (the gray ramp's hue, the accent by default, read on `:root` only), `--radius`,
-`--font-sans`, `--font-mono`. `zyncat-ui init` writes them at their defaults into `zyncat.theme.css`
+`--font-body`, `--font-code`. `zyncat-ui init` writes them at their defaults into `zyncat.theme.css`
 beside the app entry, imported right after `@zyncat/ui/styles.css`; a retheme is editing a value
 there. VS Code's built-in CSS completion only sees variables declared in the file being edited; a
 workspace-indexing extension such as CSS Variable Autocomplete picks this file up. Setting
@@ -37,12 +37,15 @@ with the CSS. Reduced motion is handled here - every `--duration-*` collapses to
 `:root` rather than a nested scope or the collapse cannot reach them.
 
 `@zyncat/ui/theme` is the same level with a type on it, for a theme that is data - several named
-themes, or values computed at build time. `defineTheme` takes one object: the eight decisions at the
-top level (`accent`, `radius`, `fontSans`, ...), then the groups the tokens are organised in - `color`,
-`type`, `space`, `radii`, `elevation`, `motion`, `glass`, `icon`, `layer`, `avatar` - plus `components`
-for scoped knobs and `custom` for anything else. Keys are the token in camelCase (`accent`, `bgApp`,
-`durationBase`), values are any CSS including `var()` references, and a typo is a compile error.
-`ZyncatTheme` renders the set once at the app root; it is a plain component with no hooks, so it
+themes, or values computed at build time. `defineTheme` takes one object shaped like a theme, not like
+the token list: the eight decisions at the top level (`accent`, `radius`, `fontSans`, ...), `color` for
+the neutral roles a light or dark theme sets directly (`bgApp`, `textBody`, `borderDefault`, ...),
+`motion` for the durations, curves, distances and rest scales, `components` for the scoped knobs, and
+`custom` for any other token by its CSS name - a ramp stop, a size, a spacing step, a derived hover -
+or a property of your own. Keys are the token in camelCase (`accent`, `bgApp`, `durationBase`) or the
+CSS name under `custom` (`'--space-4'`), values are any CSS including `var()` references, every name
+completes with its default on hover, and a typo is a compile error. `ZyncatTheme` renders the set once
+at the app root; it is a plain component with no hooks, so it
 server-renders and needs no build configuration. Keep one writer per decision: a project on
 `defineTheme` drops those lines from `zyncat.theme.css`.
 
@@ -54,7 +57,10 @@ const base = defineTheme({
   radius: '0.75rem',
   components: { odometer: { accent: 'var(--warning)' } },
 });
-const dark = defineTheme({ color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' } });
+const dark = defineTheme({
+  color: { bgApp: 'oklch(0.19 0.008 198)', textBody: 'oklch(0.92 0.004 198)' },
+  custom: { '--shadow-rgb': '0 0 0' },
+});
 
 <ZyncatTheme theme={{ base, dark }} />;
 ```
@@ -102,6 +108,6 @@ itself. Importing `@zyncat/ui/theme` anywhere in the app types every design toke
 ## Replicas answer to none of this, on purpose
 
 FacebookFeed, InstagramFeed, TikTok and YouTube pin platform metrics as constants; only
-`--font-sans`, `--focus-ring` and the duration tokens reach them, and there are no scoped
+`--font-body`, `--focus-ring` and the duration tokens reach them, and there are no scoped
 properties to set. Fidelity is the contract. If you want a card that follows your theme, build one
 from primitives instead.

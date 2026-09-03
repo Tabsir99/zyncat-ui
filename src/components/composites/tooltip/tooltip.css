@@ -63,7 +63,7 @@
   }
   .tooltip__shortcut {
     flex: 0 0 auto;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);

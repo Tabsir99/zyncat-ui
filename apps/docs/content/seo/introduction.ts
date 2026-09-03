@@ -35,7 +35,7 @@ const seo: PageSeo = {
     },
     {
       q: 'What are design tokens, and how do I retheme the components?',
-      a: "Design tokens are named CSS custom properties - every colour, radius, font and duration resolves to one, so there are no magic numbers to hunt down. Retheme by repointing them: defineTheme({ color: { accent: 'oklch(0.58 0.19 292)' } }) passed to <ZyncatTheme theme={{ base, dark }} /> at the root, where every key but base becomes a [data-theme='<key>'] block. The motion engine reads the same tokens, so animation retimes with the theme.",
+      a: "Design tokens are named CSS custom properties - every colour, radius, font and duration resolves to one, so there are no magic numbers to hunt down. Retheme by repointing them: defineTheme({ accent: 'oklch(0.58 0.19 292)' }) passed to <ZyncatTheme theme={{ base, dark }} /> at the root, where every key but base becomes a [data-theme='<key>'] block. The motion engine reads the same tokens, so animation retimes with the theme.",
     },
     {
       q: 'Does this React UI library have any dependencies?',

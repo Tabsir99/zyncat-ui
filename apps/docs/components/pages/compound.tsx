@@ -39,7 +39,7 @@ const SEAT: CSSProperties = {
   borderRadius: 'var(--radius-full)',
   border: 'var(--border-hairline) solid var(--bg-surface)',
   background: 'var(--bg-muted)',
-  font: 'var(--type-mono)',
+  font: 'var(--type-code)',
   fontSize: 'var(--size-micro)',
   color: 'var(--text-secondary)',
 };

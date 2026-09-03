@@ -277,5 +277,5 @@ Not reproduced - claimed nowhere:
 - `#tags` and `@mentions` are coloured spans, not anchors.
 - The mute chip toggles its own glyph only; the component never touches a media element you supplied.
 - No dark mode. The card is pinned to `#ffffff` / `#262626` / `#dbdbdb`.
-- `font-family` is `var(--font-sans)` - it inherits your sans stack, it does not pin Instagram's font.
+- `font-family` is `var(--font-body)` - it inherits your sans stack, it does not pin Instagram's font.
   So "pinned to Instagram's metrics" is said about the colours and geometry, never about the typeface.

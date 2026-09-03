@@ -2,40 +2,52 @@
 
 @layer zyncat.components {
   .support-rail {
+    /* Panel width; the rail never exceeds its container. */
     --support-rail-width: 318px;
-    --support-rail-needle-width: 42px;
-    --support-rail-needle-height: 150px;
-    --support-rail-needle-duck: 0.55;
-    --support-rail-needle-tracking: 0.22em;
-    --support-rail-caps-tracking: 0.13em;
-    --support-rail-grabber-width: 13px;
-    --support-rail-grabber-pill: 34px;
-    --support-rail-live-size: 6px;
-    --support-rail-live-reach: 2.6;
-    --support-rail-rule-width: 1.5px;
-    --support-rail-rule-height: 20px;
+    --_support-rail-needle-width: 42px;
+    --_support-rail-needle-height: 150px;
+    --_support-rail-needle-duck: 0.55;
+    --_support-rail-needle-tracking: 0.22em;
+    --_support-rail-caps-tracking: 0.13em;
+    --_support-rail-grabber-width: 13px;
+    --_support-rail-grabber-pill: 34px;
+    --_support-rail-live-size: 6px;
+    --_support-rail-live-reach: 2.6;
+    --_support-rail-rule-width: 1.5px;
+    --_support-rail-rule-height: 20px;
 
+    /* Row padding on the block axis - the density knob. */
     --support-rail-row-pad-block: var(--space-4);
+    /* Row padding on the inline axis - the density knob. */
     --support-rail-row-pad-inline: var(--space-4);
-    --support-rail-row-nudge: 5px;
+    --_support-rail-row-nudge: 5px;
 
+    /* The panel and the needle. */
     --support-rail-surface: var(--bg-subtle);
+    /* The needle while hovered. */
     --support-rail-surface-raised: var(--bg-surface);
+    /* The panel's edge and the needle's border. */
     --support-rail-line: var(--border-default);
+    /* Row dividers and the grabber's edge. */
     --support-rail-line-soft: var(--border-subtle);
+    /* The needle's rule. */
     --support-rail-accent: var(--accent);
+    /* The live dot and its pulse. */
     --support-rail-live-color: var(--success);
+    /* The needle's outer corners. */
     --support-rail-radius: var(--radius-2xl);
 
+    /* How long the panel takes to open. */
     --support-rail-open-duration: calc(var(--duration-slower) * 1.4);
+    /* How long the panel takes to close. */
     --support-rail-close-duration: var(--duration-slower);
-    --support-rail-needle-delay: calc(var(--duration-slow) * 0.5);
-    --support-rail-stagger: calc(var(--duration-fast) * 0.3);
+    --_support-rail-needle-delay: calc(var(--duration-slow) * 0.5);
+    --_support-rail-stagger: calc(var(--duration-fast) * 0.3);
 
-    --support-rail-collapse-x: 1;
-    --support-rail-collapse-y: 1;
-    --support-rail-drag: 0px;
-    --support-rail-index: 0;
+    --_support-rail-collapse-x: 1;
+    --_support-rail-collapse-y: 1;
+    --_support-rail-drag: 0px;
+    --_support-rail-index: 0;
 
     position: absolute;
     top: 0;
@@ -43,7 +55,7 @@
     width: min(var(--support-rail-width), 100%);
     isolation: isolate;
     pointer-events: none;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     color: var(--text-strong);
   }
 
@@ -57,8 +69,8 @@
   .support-rail__needle {
     position: absolute;
     top: 50%;
-    width: var(--support-rail-needle-width);
-    height: var(--support-rail-needle-height);
+    width: var(--_support-rail-needle-width);
+    height: var(--_support-rail-needle-height);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -78,8 +90,8 @@
     translate: 0 -50%;
     scale: 1;
     transition:
-      scale var(--support-rail-open-duration) var(--ease-spring) var(--support-rail-needle-delay),
-      opacity var(--duration-base) linear var(--support-rail-needle-delay),
+      scale var(--support-rail-open-duration) var(--ease-spring) var(--_support-rail-needle-delay),
+      opacity var(--duration-base) linear var(--_support-rail-needle-delay),
       background-color var(--duration-fast) var(--ease-standard);
   }
 
@@ -106,7 +118,7 @@
 
   .support-rail[data-open='true'] .support-rail__needle {
     opacity: 0;
-    scale: var(--support-rail-needle-duck);
+    scale: var(--_support-rail-needle-duck);
     pointer-events: none;
     transition:
       scale var(--duration-base) var(--ease-exit),
@@ -116,8 +128,8 @@
   .support-rail__live {
     position: relative;
     display: block;
-    width: var(--support-rail-live-size);
-    height: var(--support-rail-live-size);
+    width: var(--_support-rail-live-size);
+    height: var(--_support-rail-live-size);
     border-radius: var(--radius-full);
     background: var(--support-rail-live-color);
   }
@@ -132,10 +144,10 @@
 
   .support-rail__needle-label {
     writing-mode: vertical-rl;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
-    letter-spacing: var(--support-rail-needle-tracking);
+    letter-spacing: var(--_support-rail-needle-tracking);
     text-transform: uppercase;
     color: var(--text-secondary);
   }
@@ -146,8 +158,8 @@
 
   .support-rail__needle-rule {
     display: block;
-    width: var(--support-rail-rule-width);
-    height: var(--support-rail-rule-height);
+    width: var(--_support-rail-rule-width);
+    height: var(--_support-rail-rule-height);
     border-radius: var(--radius-full);
     background: var(--support-rail-accent);
   }
@@ -162,8 +174,8 @@
     box-shadow: var(--shadow-lg);
     pointer-events: none;
     opacity: 0;
-    translate: var(--support-rail-drag) 0;
-    scale: var(--support-rail-collapse-x) var(--support-rail-collapse-y);
+    translate: var(--_support-rail-drag) 0;
+    scale: var(--_support-rail-collapse-x) var(--_support-rail-collapse-y);
     will-change: scale, translate;
     transition:
       scale var(--support-rail-close-duration) var(--ease-exit),
@@ -214,7 +226,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--support-rail-grabber-width);
+    width: var(--_support-rail-grabber-width);
     border-right: var(--border-hairline) solid var(--support-rail-line-soft);
     cursor: grab;
     touch-action: none;
@@ -229,7 +241,7 @@
   .support-rail__grabber-pill {
     display: block;
     width: var(--border-emphasis);
-    height: var(--support-rail-grabber-pill);
+    height: var(--_support-rail-grabber-pill);
     border-radius: var(--radius-full);
     background: var(--text-subtle);
   }
@@ -258,10 +270,10 @@
   }
   .support-rail__status {
     margin-top: var(--space-2);
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: var(--leading-micro);
-    letter-spacing: var(--support-rail-caps-tracking);
+    letter-spacing: var(--_support-rail-caps-tracking);
     text-transform: uppercase;
     color: var(--text-subtle);
   }
@@ -319,11 +331,11 @@
   }
   .support-rail__row:hover {
     background: var(--neutral-wash);
-    padding-left: calc(var(--support-rail-row-pad-inline) + var(--support-rail-row-nudge));
+    padding-left: calc(var(--support-rail-row-pad-inline) + var(--_support-rail-row-nudge));
   }
   .support-rail[data-side='left'] .support-rail__row:hover {
     padding-left: var(--support-rail-row-pad-inline);
-    padding-right: calc(var(--support-rail-row-pad-inline) + var(--support-rail-row-nudge));
+    padding-right: calc(var(--support-rail-row-pad-inline) + var(--_support-rail-row-nudge));
   }
   .support-rail__row:active {
     background: var(--neutral-wash-press);
@@ -358,7 +370,7 @@
     color: var(--text-secondary);
   }
   .support-rail__row-meta {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     letter-spacing: var(--tracking-caps);
     color: var(--text-subtle);
@@ -389,7 +401,7 @@
   .support-rail__extra,
   .support-rail__footer {
     animation: support-rail-row-in var(--duration-slower) var(--ease-spring) backwards;
-    animation-delay: calc((var(--support-rail-index) + 1) * var(--support-rail-stagger));
+    animation-delay: calc((var(--_support-rail-index) + 1) * var(--_support-rail-stagger));
   }
 
   @keyframes support-rail-row-in {
@@ -406,7 +418,7 @@
     }
     70%,
     100% {
-      scale: var(--support-rail-live-reach);
+      scale: var(--_support-rail-live-reach);
       opacity: 0;
     }
   }

@@ -36,10 +36,10 @@ const CONTENT_FADE_IN_DELAY_RATIO = 0.55;
 const NEUTRAL_RATIO = 1;
 const STAGGER_STEPS_MAX = 8;
 
-const DRAG_PROPERTY = '--support-rail-drag';
-const COLLAPSE_X_PROPERTY = '--support-rail-collapse-x';
-const COLLAPSE_Y_PROPERTY = '--support-rail-collapse-y';
-const INDEX_PROPERTY = '--support-rail-index';
+const DRAG_PROPERTY = '--_support-rail-drag';
+const COLLAPSE_X_PROPERTY = '--_support-rail-collapse-x';
+const COLLAPSE_Y_PROPERTY = '--_support-rail-collapse-y';
+const INDEX_PROPERTY = '--_support-rail-index';
 const DRAGGING_ATTRIBUTE = 'data-dragging';
 const NO_DRAG = '0px';
 

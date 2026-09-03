@@ -11,7 +11,7 @@
     gap: var(--space-2);
   }
   .dtf__value {
-    font: var(--type-mono);
+    font: var(--type-code);
     font-variant-numeric: tabular-nums;
     color: var(--text-strong);
   }
@@ -71,7 +71,7 @@
     color: var(--text-strong);
   }
   .dtp__year {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
     font-weight: var(--weight-regular);
@@ -148,7 +148,7 @@
     padding: 0;
     background: transparent;
     border-radius: var(--radius-md);
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-body);
@@ -257,7 +257,7 @@
       transform var(--duration-base) var(--ease-entrance);
   }
   .dtp__timeHint kbd {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
     color: var(--text-subtle);
@@ -276,7 +276,7 @@
     border-top: var(--border-hairline) solid var(--border-subtle);
   }
   .dtp__tz {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);
@@ -475,7 +475,7 @@
     border-top: var(--border-hairline) solid var(--border-subtle);
   }
   .drp__readout {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-body);
@@ -488,7 +488,7 @@
     color: var(--text-disabled);
   }
   .drp__tz {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);
@@ -535,7 +535,7 @@
   .tsg {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-strong);

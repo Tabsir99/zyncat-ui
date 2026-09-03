@@ -83,7 +83,7 @@
     padding: 0 0 calc(var(--tabs-ink-h) + var(--space-px));
     flex: none;
     display: block;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -138,7 +138,7 @@
 
   /* -- Count - always mono, always tabular -----------------------------------*/
   .tab__count {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
     font-variant-numeric: tabular-nums;

@@ -117,7 +117,7 @@
   }
 
   .tbl__table td.tbl__cell--mono {
-    font: var(--type-mono);
+    font: var(--type-code);
     font-variant-numeric: tabular-nums;
   }
   .tbl__table td.tbl__cell--strong {
@@ -250,7 +250,7 @@
   .tbl__bulkCount {
     display: inline-flex;
     align-items: baseline;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-caption);
     line-height: var(--leading-caption);
     font-weight: var(--weight-medium);

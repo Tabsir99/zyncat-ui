@@ -7,7 +7,7 @@
     position: relative;
     display: inline-block;
     width: 100%;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
   }
 
   .select__trigger {
@@ -118,7 +118,7 @@
   }
   .select__count {
     flex: 0 0 auto;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
     font-variant-numeric: tabular-nums;
@@ -154,7 +154,7 @@
     background: transparent;
     width: 100%;
     padding: 0;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--size-body);
     line-height: var(--leading-body);
     color: var(--text-body);

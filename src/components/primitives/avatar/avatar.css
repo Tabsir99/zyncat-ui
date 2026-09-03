@@ -57,7 +57,7 @@
 
   /* lettermark, ratio-sized (section A7 exception); text-box trim = true optical centering; negative margin returns the trailing --tracking-caps so the pair stays centered */
   .avatar__initials {
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-weight: var(--weight-semibold);
     font-size: calc(var(--avatar-size) * 0.42);
     line-height: 1;
@@ -184,7 +184,7 @@
 
   /* "+N" chip - mono numerals, tracking off (mono is already spaced), smaller ratio to fit "+12" */
   .avatar--overflow .avatar__initials {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-variant-numeric: tabular-nums;
     font-size: calc(var(--avatar-size) * 0.36);
     letter-spacing: var(--tracking-normal);

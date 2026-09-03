@@ -2311,33 +2311,35 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
     {
       name: 'OdometerStyle',
       rows: [
-        { name: '--odometer-cell', type: 'string | number', description: '`--odometer-cell`. Default: `1em`.' },
-        { name: '--odometer-digit', type: 'string | number', description: '`--odometer-digit`. Default: `1ch`.' },
-        { name: '--odometer-gap', type: 'string | number', description: '`--odometer-gap`. Default: `0.02em`.' },
+        {
+          name: '--odometer-gap',
+          type: 'string | number',
+          description: '`--odometer-gap` - Space between digit columns. Default: `0.02em`.',
+        },
         {
           name: '--odometer-ink',
           type: 'string | number',
-          description: '`--odometer-ink`. Default: `var(--text-strong)`.',
+          description: '`--odometer-ink` - Digit ink. Default: `var(--text-strong)`.',
         },
         {
           name: '--odometer-accent',
           type: 'string | number',
-          description: '`--odometer-accent`. Default: `var(--accent)`.',
+          description: '`--odometer-accent` - The tint digits take while they roll fast. Default: `var(--accent)`.',
         },
         {
           name: '--odometer-separator-ink',
           type: 'string | number',
-          description: '`--odometer-separator-ink`. Default: `var(--text-muted)`.',
+          description: '`--odometer-separator-ink` - The thousands separator. Default: `var(--text-muted)`.',
         },
         {
           name: '--odometer-size',
           type: 'string | number',
-          description: '`--odometer-size`. Default: `var(--size-display)`.',
+          description: '`--odometer-size` - Digit size. Default: `var(--size-display)`.',
         },
         {
           name: '--odometer-weight',
           type: 'string | number',
-          description: '`--odometer-weight`. Default: `var(--weight-medium)`.',
+          description: '`--odometer-weight` - Digit weight. Default: `var(--weight-medium)`.',
         },
       ],
     },
@@ -2349,37 +2351,37 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--typing-lines-ink',
           type: 'string | number',
-          description: '`--typing-lines-ink`. Default: `var(--text-strong)`.',
+          description: '`--typing-lines-ink` - Letter ink. Default: `var(--text-strong)`.',
         },
         {
           name: '--typing-lines-caret-ink',
           type: 'string | number',
-          description: '`--typing-lines-caret-ink`. Default: `var(--accent)`.',
+          description: '`--typing-lines-caret-ink` - The caret. Default: `var(--accent)`.',
         },
         {
           name: '--typing-lines-size',
           type: 'string | number',
-          description: '`--typing-lines-size`. Default: `var(--size-title)`.',
+          description: '`--typing-lines-size` - Letter size. Default: `var(--size-title)`.',
         },
         {
           name: '--typing-lines-weight',
           type: 'string | number',
-          description: '`--typing-lines-weight`. Default: `var(--weight-regular)`.',
+          description: '`--typing-lines-weight` - Letter weight. Default: `var(--weight-regular)`.',
         },
         {
           name: '--typing-lines-leading',
           type: 'string | number',
-          description: '`--typing-lines-leading`. Default: `1.4`.',
+          description: '`--typing-lines-leading` - Line height, unitless. Default: `1.4`.',
         },
         {
           name: '--typing-lines-blink',
           type: 'string | number',
-          description: '`--typing-lines-blink`. Default: `1080ms`.',
+          description: "`--typing-lines-blink` - The caret's blink period. Default: `1080ms`.",
         },
         {
           name: '--typing-lines-caret-gap',
           type: 'string | number',
-          description: '`--typing-lines-caret-gap`. Default: `0.12em`.',
+          description: '`--typing-lines-caret-gap` - Space between the last glyph and the caret. Default: `0.12em`.',
         },
       ],
     },
@@ -2388,40 +2390,29 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
     {
       name: 'LensStyle',
       rows: [
-        { name: '--lens-ink', type: 'string | number', description: '`--lens-ink`. Default: `var(--text-strong)`.' },
+        {
+          name: '--lens-ink',
+          type: 'string | number',
+          description:
+            "`--lens-ink` - The ink of the glass's edge, vignette and shadow. Default: `var(--text-strong)`.",
+        },
         {
           name: '--lens-surface',
           type: 'string | number',
-          description: '`--lens-surface`. Default: `var(--bg-surface)`.',
-        },
-        {
-          name: '--lens-edge',
-          type: 'string | number',
-          description: '`--lens-edge`. Default: `color-mix(in oklab, var(--lens-ink) 16%, transparent)`.',
-        },
-        {
-          name: '--lens-highlight',
-          type: 'string | number',
-          description: '`--lens-highlight`. Default: `color-mix(in oklab, var(--bg-surface) 90%, transparent)`.',
-        },
-        { name: '--lens-vignette-mid', type: 'string | number', description: '`--lens-vignette-mid`. Default: `5%`.' },
-        {
-          name: '--lens-vignette-edge',
-          type: 'string | number',
-          description: '`--lens-vignette-edge`. Default: `15%`.',
+          description: '`--lens-surface` - The surface behind the glass. Default: `var(--bg-surface)`.',
         },
         {
           name: '--lens-fringe-warm',
           type: 'string | number',
-          description: '`--lens-fringe-warm`. Default: `oklch(0.72 0.16 12 / 0.3)`.',
+          description:
+            '`--lens-fringe-warm` - The chromatic fringe on the warm edge of the glass. Default: `oklch(0.72 0.16 12 / 0.3)`.',
         },
         {
           name: '--lens-fringe-cool',
           type: 'string | number',
-          description: '`--lens-fringe-cool`. Default: `oklch(0.7 0.15 265 / 0.34)`.',
+          description:
+            '`--lens-fringe-cool` - The chromatic fringe on the cool edge of the glass. Default: `oklch(0.7 0.15 265 / 0.34)`.',
         },
-        { name: '--lens-rim-start', type: 'string | number', description: '`--lens-rim-start`. Default: `79%`.' },
-        { name: '--lens-rim-end', type: 'string | number', description: '`--lens-rim-end`. Default: `87%`.' },
       ],
     },
   ],
@@ -2432,83 +2423,69 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--weight-field-ink',
           type: 'string | number',
-          description: '`--weight-field-ink`. Default: `var(--text-strong)`.',
+          description: '`--weight-field-ink` - Letter ink. Default: `var(--text-strong)`.',
         },
         {
           name: '--weight-field-size',
           type: 'string | number',
-          description: '`--weight-field-size`. Default: `6rem`.',
+          description: '`--weight-field-size` - Letter size. Default: `6rem`.',
         },
         {
           name: '--weight-field-leading',
           type: 'string | number',
-          description: '`--weight-field-leading`. Default: `1`.',
+          description: '`--weight-field-leading` - Line height, unitless. Default: `1`.',
         },
         {
           name: '--weight-field-align',
           type: 'string | number',
-          description: '`--weight-field-align`. Default: `center`.',
+          description:
+            '`--weight-field-align` - Where the units sit on the line - center, start or end. Default: `center`.',
         },
         {
           name: '--weight-field-pad',
           type: 'string | number',
-          description: '`--weight-field-pad`. Default: `var(--space-6) var(--space-4)`.',
+          description: '`--weight-field-pad` - Padding around the field. Default: `var(--space-6) var(--space-4)`.',
         },
         {
           name: '--weight-field-tracking',
           type: 'string | number',
-          description: '`--weight-field-tracking`. Default: `-0.05em`.',
+          description: '`--weight-field-tracking` - Letter spacing. Default: `-0.05em`.',
         },
         {
           name: '--weight-field-rest-weight',
           type: 'string | number',
-          description: '`--weight-field-rest-weight`. Default: `300`.',
+          description: "`--weight-field-rest-weight` - A unit's weight at rest. Default: `300`.",
         },
         {
           name: '--weight-field-far-weight',
           type: 'string | number',
-          description: '`--weight-field-far-weight`. Default: `400`.',
+          description: '`--weight-field-far-weight` - The weight two units from the pointer. Default: `400`.',
         },
         {
           name: '--weight-field-near-weight',
           type: 'string | number',
-          description: '`--weight-field-near-weight`. Default: `600`.',
+          description: '`--weight-field-near-weight` - The weight next to the pointer. Default: `600`.',
         },
         {
           name: '--weight-field-peak-weight',
           type: 'string | number',
-          description: '`--weight-field-peak-weight`. Default: `900`.',
+          description: '`--weight-field-peak-weight` - The weight under the pointer. Default: `900`.',
         },
         {
           name: '--weight-field-hover-padding',
           type: 'string | number',
-          description: '`--weight-field-hover-padding`. Default: `calc(1em / 12)`.',
-        },
-        {
-          name: '--weight-field-stroke',
-          type: 'string | number',
-          description: '`--weight-field-stroke`. Default: `calc(1em * 125 / 6000)`.',
-        },
-        {
-          name: '--weight-field-stroke-peak',
-          type: 'string | number',
-          description: '`--weight-field-stroke-peak`. Default: `calc(var(--weight-field-stroke) * 2)`.',
+          description:
+            '`--weight-field-hover-padding` - How much a unit widens under the pointer. Default: `calc(1em / 12)`.',
         },
         {
           name: '--weight-field-duration',
           type: 'string | number',
-          description: '`--weight-field-duration`. Default: `400ms`.',
+          description: '`--weight-field-duration` - How long a unit takes to settle at a new weight. Default: `400ms`.',
         },
         {
           name: '--weight-field-ease',
           type: 'string | number',
-          description: '`--weight-field-ease`. Default: `ease`.',
-        },
-        {
-          name: '--weight-field-ramp',
-          type: 'string | number',
-          description:
-            '`--weight-field-ramp`. Default: `calc(var(--weight-field-duration) / var(--weight-field-speed))`.',
+          description: '`--weight-field-ease` - The settle curve. Default: `ease`.',
         },
       ],
     },
@@ -2520,62 +2497,53 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--morphing-text-ink',
           type: 'string | number',
-          description: '`--morphing-text-ink`. Default: `var(--text-strong)`.',
+          description: '`--morphing-text-ink` - Letter ink. Default: `var(--text-strong)`.',
         },
         {
           name: '--morphing-text-size',
           type: 'string | number',
-          description: '`--morphing-text-size`. Default: `var(--size-display-lg)`.',
+          description: '`--morphing-text-size` - Letter size. Default: `var(--size-display-lg)`.',
         },
         {
           name: '--morphing-text-weight',
           type: 'string | number',
-          description: '`--morphing-text-weight`. Default: `var(--weight-medium)`.',
+          description: '`--morphing-text-weight` - Letter weight. Default: `var(--weight-medium)`.',
         },
         {
           name: '--morphing-text-leading',
           type: 'string | number',
-          description: '`--morphing-text-leading`. Default: `1.2`.',
+          description: '`--morphing-text-leading` - Line height, unitless. Default: `1.2`.',
         },
         {
           name: '--morphing-text-tracking',
           type: 'string | number',
-          description: '`--morphing-text-tracking`. Default: `var(--tracking-display)`.',
+          description: '`--morphing-text-tracking` - Letter spacing. Default: `var(--tracking-display)`.',
         },
         {
           name: '--morphing-text-smear',
           type: 'string | number',
-          description: '`--morphing-text-smear`. Default: `1`.',
+          description:
+            '`--morphing-text-smear` - How much letters blur on the way between words; 0 cuts clean. Default: `1`.',
         },
         {
           name: '--morphing-text-rule-ink',
           type: 'string | number',
-          description: '`--morphing-text-rule-ink`. Default: `var(--text-strong)`.',
+          description: '`--morphing-text-rule-ink` - The rule at rest. Default: `var(--text-strong)`.',
         },
         {
           name: '--morphing-text-rule-accent',
           type: 'string | number',
-          description: '`--morphing-text-rule-accent`. Default: `var(--accent)`.',
+          description: '`--morphing-text-rule-accent` - The rule while a morph heats it. Default: `var(--accent)`.',
         },
         {
           name: '--morphing-text-rule-height',
           type: 'string | number',
-          description: '`--morphing-text-rule-height`. Default: `1px`.',
+          description: "`--morphing-text-rule-height` - The rule's thickness. Default: `1px`.",
         },
         {
           name: '--morphing-text-rule-gap',
           type: 'string | number',
-          description: '`--morphing-text-rule-gap`. Default: `var(--space-3)`.',
-        },
-        {
-          name: '--morphing-text-rule-rest',
-          type: 'string | number',
-          description: '`--morphing-text-rule-rest`. Default: `0.1`.',
-        },
-        {
-          name: '--morphing-text-rule-lift',
-          type: 'string | number',
-          description: '`--morphing-text-rule-lift`. Default: `0.3`.',
+          description: '`--morphing-text-rule-gap` - Space between the word and the rule. Default: `var(--space-3)`.',
         },
       ],
     },
@@ -2587,87 +2555,92 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--flow-field-ink',
           type: 'string | number',
-          description: '`--flow-field-ink`. Default: `var(--text-subtle)`.',
+          description:
+            "`--flow-field-ink` - The particle colour at rest - the ramp's cold end. Default: `var(--text-subtle)`.",
         },
         {
           name: '--flow-field-accent',
           type: 'string | number',
-          description: '`--flow-field-accent`. Default: `var(--accent)`.',
+          description:
+            "`--flow-field-accent` - The particle colour at full speed - the ramp's hot end. Default: `var(--accent)`.",
         },
         {
           name: '--flow-field-min-height',
           type: 'string | number',
-          description: '`--flow-field-min-height`. Default: `var(--space-10)`.',
+          description:
+            "`--flow-field-min-height` - The field's minimum height before content sizes it. Default: `var(--space-10)`.",
         },
         {
           name: '--flow-field-ramp-0',
           type: 'string | number',
-          description: '`--flow-field-ramp-0`. Default: `var(--flow-field-ink)`.',
+          description:
+            '`--flow-field-ramp-0` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `var(--flow-field-ink)`.',
         },
         {
           name: '--flow-field-ramp-1',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-1`. Default: `color-mix(in oklab, var(--flow-field-accent) 9%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-1` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 9%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-2',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-2`. Default: `color-mix(in oklab, var(--flow-field-accent) 18%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-2` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 18%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-3',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-3`. Default: `color-mix(in oklab, var(--flow-field-accent) 27%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-3` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 27%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-4',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-4`. Default: `color-mix(in oklab, var(--flow-field-accent) 36%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-4` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 36%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-5',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-5`. Default: `color-mix(in oklab, var(--flow-field-accent) 45%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-5` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 45%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-6',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-6`. Default: `color-mix(in oklab, var(--flow-field-accent) 55%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-6` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 55%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-7',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-7`. Default: `color-mix(in oklab, var(--flow-field-accent) 64%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-7` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 64%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-8',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-8`. Default: `color-mix(in oklab, var(--flow-field-accent) 73%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-8` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 73%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-9',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-9`. Default: `color-mix(in oklab, var(--flow-field-accent) 82%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-9` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 82%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-10',
           type: 'string | number',
           description:
-            '`--flow-field-ramp-10`. Default: `color-mix(in oklab, var(--flow-field-accent) 91%, var(--flow-field-ink))`.',
+            '`--flow-field-ramp-10` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `color-mix(in oklab, var(--flow-field-accent) 91%, var(--flow-field-ink))`.',
         },
         {
           name: '--flow-field-ramp-11',
           type: 'string | number',
-          description: '`--flow-field-ramp-11`. Default: `var(--flow-field-accent)`.',
+          description:
+            '`--flow-field-ramp-11` - The twelve stops from ink to accent, sampled at the next measure; set all twelve for a ramp of your own. Default: `var(--flow-field-accent)`.',
         },
       ],
     },
@@ -2717,109 +2690,65 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--confetti-paper-1',
           type: 'string | number',
-          description: '`--confetti-paper-1`. Default: `oklch(0.53 0.2 288)`.',
+          description:
+            '`--confetti-paper-1` - The five papers a burst draws from; a slot set to a role follows the theme. Default: `oklch(0.53 0.2 288)`.',
         },
         {
           name: '--confetti-paper-2',
           type: 'string | number',
-          description: '`--confetti-paper-2`. Default: `var(--accent)`.',
+          description:
+            '`--confetti-paper-2` - The five papers a burst draws from; a slot set to a role follows the theme. Default: `var(--accent)`.',
         },
         {
           name: '--confetti-paper-3',
           type: 'string | number',
-          description: '`--confetti-paper-3`. Default: `oklch(0.78 0.115 62)`.',
+          description:
+            '`--confetti-paper-3` - The five papers a burst draws from; a slot set to a role follows the theme. Default: `oklch(0.78 0.115 62)`.',
         },
         {
           name: '--confetti-paper-4',
           type: 'string | number',
-          description: '`--confetti-paper-4`. Default: `oklch(0.67 0.18 12)`.',
+          description:
+            '`--confetti-paper-4` - The five papers a burst draws from; a slot set to a role follows the theme. Default: `oklch(0.67 0.18 12)`.',
         },
         {
           name: '--confetti-paper-5',
           type: 'string | number',
-          description: '`--confetti-paper-5`. Default: `var(--text-strong)`.',
+          description:
+            '`--confetti-paper-5` - The five papers a burst draws from; a slot set to a role follows the theme. Default: `var(--text-strong)`.',
         },
         {
           name: '--confetti-weights',
           type: 'string | number',
-          description: '`--confetti-weights`. Default: `1 1 1 1 0.45`.',
+          description:
+            '`--confetti-weights` - How often each paper appears - five weights, in slot order. Default: `1 1 1 1 0.45`.',
         },
         {
           name: '--confetti-ink',
           type: 'string | number',
-          description: '`--confetti-ink`. Default: `var(--text-strong)`.',
+          description:
+            '`--confetti-ink` - What the reverse side of a piece darkens toward. Default: `var(--text-strong)`.',
         },
         {
           name: '--confetti-light',
           type: 'string | number',
-          description: '`--confetti-light`. Default: `var(--bg-surface)`.',
+          description:
+            '`--confetti-light` - What the glossy face of a piece brightens toward. Default: `var(--bg-surface)`.',
         },
-        { name: '--confetti-shade', type: 'string | number', description: '`--confetti-shade`. Default: `42%`.' },
-        { name: '--confetti-gloss', type: 'string | number', description: '`--confetti-gloss`. Default: `66%`.' },
+        {
+          name: '--confetti-shade',
+          type: 'string | number',
+          description: '`--confetti-shade` - How far the reverse side leans toward the ink. Default: `42%`.',
+        },
+        {
+          name: '--confetti-gloss',
+          type: 'string | number',
+          description: '`--confetti-gloss` - How far the glossy face leans toward the light. Default: `66%`.',
+        },
         {
           name: '--confetti-layer',
           type: 'string | number',
-          description: '`--confetti-layer`. Default: `var(--layer-toast)`.',
-        },
-        {
-          name: '--confetti-reverse-1',
-          type: 'string | number',
-          description:
-            '`--confetti-reverse-1`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-1))`.',
-        },
-        {
-          name: '--confetti-reverse-2',
-          type: 'string | number',
-          description:
-            '`--confetti-reverse-2`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-2))`.',
-        },
-        {
-          name: '--confetti-reverse-3',
-          type: 'string | number',
-          description:
-            '`--confetti-reverse-3`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-3))`.',
-        },
-        {
-          name: '--confetti-reverse-4',
-          type: 'string | number',
-          description:
-            '`--confetti-reverse-4`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-4))`.',
-        },
-        {
-          name: '--confetti-reverse-5',
-          type: 'string | number',
-          description:
-            '`--confetti-reverse-5`. Default: `color-mix(in oklab, var(--confetti-ink) var(--confetti-shade), var(--confetti-paper-5))`.',
-        },
-        {
-          name: '--confetti-sheen-1',
-          type: 'string | number',
-          description:
-            '`--confetti-sheen-1`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-1))`.',
-        },
-        {
-          name: '--confetti-sheen-2',
-          type: 'string | number',
-          description:
-            '`--confetti-sheen-2`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-2))`.',
-        },
-        {
-          name: '--confetti-sheen-3',
-          type: 'string | number',
-          description:
-            '`--confetti-sheen-3`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-3))`.',
-        },
-        {
-          name: '--confetti-sheen-4',
-          type: 'string | number',
-          description:
-            '`--confetti-sheen-4`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-4))`.',
-        },
-        {
-          name: '--confetti-sheen-5',
-          type: 'string | number',
-          description:
-            '`--confetti-sheen-5`. Default: `color-mix(in oklab, var(--confetti-light) var(--confetti-gloss), var(--confetti-paper-5))`.',
+          description: '`--confetti-layer` - The z-index of a viewport-field burst. Default: `var(--layer-toast)`.',
         },
       ],
     },
@@ -2868,132 +2797,68 @@ export const GENERATED_TYPES: Record<string, NestedType[]> = {
         {
           name: '--support-rail-width',
           type: 'string | number',
-          description: '`--support-rail-width`. Default: `318px`.',
-        },
-        {
-          name: '--support-rail-needle-width',
-          type: 'string | number',
-          description: '`--support-rail-needle-width`. Default: `42px`.',
-        },
-        {
-          name: '--support-rail-needle-height',
-          type: 'string | number',
-          description: '`--support-rail-needle-height`. Default: `150px`.',
-        },
-        {
-          name: '--support-rail-needle-duck',
-          type: 'string | number',
-          description: '`--support-rail-needle-duck`. Default: `0.55`.',
-        },
-        {
-          name: '--support-rail-needle-tracking',
-          type: 'string | number',
-          description: '`--support-rail-needle-tracking`. Default: `0.22em`.',
-        },
-        {
-          name: '--support-rail-caps-tracking',
-          type: 'string | number',
-          description: '`--support-rail-caps-tracking`. Default: `0.13em`.',
-        },
-        {
-          name: '--support-rail-grabber-width',
-          type: 'string | number',
-          description: '`--support-rail-grabber-width`. Default: `13px`.',
-        },
-        {
-          name: '--support-rail-grabber-pill',
-          type: 'string | number',
-          description: '`--support-rail-grabber-pill`. Default: `34px`.',
-        },
-        {
-          name: '--support-rail-live-size',
-          type: 'string | number',
-          description: '`--support-rail-live-size`. Default: `6px`.',
-        },
-        {
-          name: '--support-rail-live-reach',
-          type: 'string | number',
-          description: '`--support-rail-live-reach`. Default: `2.6`.',
-        },
-        {
-          name: '--support-rail-rule-width',
-          type: 'string | number',
-          description: '`--support-rail-rule-width`. Default: `1.5px`.',
-        },
-        {
-          name: '--support-rail-rule-height',
-          type: 'string | number',
-          description: '`--support-rail-rule-height`. Default: `20px`.',
+          description: '`--support-rail-width` - Panel width; the rail never exceeds its container. Default: `318px`.',
         },
         {
           name: '--support-rail-row-pad-block',
           type: 'string | number',
-          description: '`--support-rail-row-pad-block`. Default: `var(--space-4)`.',
+          description:
+            '`--support-rail-row-pad-block` - Row padding on the block axis - the density knob. Default: `var(--space-4)`.',
         },
         {
           name: '--support-rail-row-pad-inline',
           type: 'string | number',
-          description: '`--support-rail-row-pad-inline`. Default: `var(--space-4)`.',
-        },
-        {
-          name: '--support-rail-row-nudge',
-          type: 'string | number',
-          description: '`--support-rail-row-nudge`. Default: `5px`.',
+          description:
+            '`--support-rail-row-pad-inline` - Row padding on the inline axis - the density knob. Default: `var(--space-4)`.',
         },
         {
           name: '--support-rail-surface',
           type: 'string | number',
-          description: '`--support-rail-surface`. Default: `var(--bg-subtle)`.',
+          description: '`--support-rail-surface` - The panel and the needle. Default: `var(--bg-subtle)`.',
         },
         {
           name: '--support-rail-surface-raised',
           type: 'string | number',
-          description: '`--support-rail-surface-raised`. Default: `var(--bg-surface)`.',
+          description: '`--support-rail-surface-raised` - The needle while hovered. Default: `var(--bg-surface)`.',
         },
         {
           name: '--support-rail-line',
           type: 'string | number',
-          description: '`--support-rail-line`. Default: `var(--border-default)`.',
+          description:
+            "`--support-rail-line` - The panel's edge and the needle's border. Default: `var(--border-default)`.",
         },
         {
           name: '--support-rail-line-soft',
           type: 'string | number',
-          description: '`--support-rail-line-soft`. Default: `var(--border-subtle)`.',
+          description:
+            "`--support-rail-line-soft` - Row dividers and the grabber's edge. Default: `var(--border-subtle)`.",
         },
         {
           name: '--support-rail-accent',
           type: 'string | number',
-          description: '`--support-rail-accent`. Default: `var(--accent)`.',
+          description: "`--support-rail-accent` - The needle's rule. Default: `var(--accent)`.",
         },
         {
           name: '--support-rail-live-color',
           type: 'string | number',
-          description: '`--support-rail-live-color`. Default: `var(--success)`.',
+          description: '`--support-rail-live-color` - The live dot and its pulse. Default: `var(--success)`.',
         },
         {
           name: '--support-rail-radius',
           type: 'string | number',
-          description: '`--support-rail-radius`. Default: `var(--radius-2xl)`.',
+          description: "`--support-rail-radius` - The needle's outer corners. Default: `var(--radius-2xl)`.",
         },
         {
           name: '--support-rail-open-duration',
           type: 'string | number',
-          description: '`--support-rail-open-duration`. Default: `calc(var(--duration-slower) * 1.4)`.',
+          description:
+            '`--support-rail-open-duration` - How long the panel takes to open. Default: `calc(var(--duration-slower) * 1.4)`.',
         },
         {
           name: '--support-rail-close-duration',
           type: 'string | number',
-          description: '`--support-rail-close-duration`. Default: `var(--duration-slower)`.',
-        },
-        {
-          name: '--support-rail-needle-delay',
-          type: 'string | number',
-          description: '`--support-rail-needle-delay`. Default: `calc(var(--duration-slow) * 0.5)`.',
-        },
-        {
-          name: '--support-rail-stagger',
-          type: 'string | number',
-          description: '`--support-rail-stagger`. Default: `calc(var(--duration-fast) * 0.3)`.',
+          description:
+            '`--support-rail-close-duration` - How long the panel takes to close. Default: `var(--duration-slower)`.',
         },
       ],
     },

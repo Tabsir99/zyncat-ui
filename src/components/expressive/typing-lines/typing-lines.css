@@ -2,18 +2,25 @@
 
 @layer zyncat.components {
   .typing-lines {
+    /* Letter ink. */
     --typing-lines-ink: var(--text-strong);
+    /* The caret. */
     --typing-lines-caret-ink: var(--accent);
+    /* Letter size. */
     --typing-lines-size: var(--size-title);
+    /* Letter weight. */
     --typing-lines-weight: var(--weight-regular);
+    /* Line height, unitless. */
     --typing-lines-leading: 1.4;
+    /* The caret's blink period. */
     --typing-lines-blink: 1080ms;
+    /* Space between the last glyph and the caret. */
     --typing-lines-caret-gap: 0.12em;
 
     position: relative;
     display: block;
     min-height: calc(var(--typing-lines-size) * var(--typing-lines-leading));
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--typing-lines-size);
     font-weight: var(--typing-lines-weight);
     line-height: var(--typing-lines-leading);

@@ -2,19 +2,23 @@
 
 @layer zyncat.components {
   .lens {
+    /* The ink of the glass's edge, vignette and shadow. */
     --lens-ink: var(--text-strong);
+    /* The surface behind the glass. */
     --lens-surface: var(--bg-surface);
-    --lens-edge: color-mix(in oklab, var(--lens-ink) 16%, transparent);
-    --lens-highlight: color-mix(in oklab, var(--bg-surface) 90%, transparent);
-    --lens-shadow-alpha: 0.26;
-    --lens-lift: 10;
-    --lens-blur: 26;
-    --lens-vignette-mid: 5%;
-    --lens-vignette-edge: 15%;
+    --_lens-edge: color-mix(in oklab, var(--lens-ink) 16%, transparent);
+    --_lens-highlight: color-mix(in oklab, var(--bg-surface) 90%, transparent);
+    --_lens-shadow-alpha: 0.26;
+    --_lens-lift: 10;
+    --_lens-blur: 26;
+    --_lens-vignette-mid: 5%;
+    --_lens-vignette-edge: 15%;
+    /* The chromatic fringe on the warm edge of the glass. */
     --lens-fringe-warm: oklch(0.72 0.16 12 / 0.3);
+    /* The chromatic fringe on the cool edge of the glass. */
     --lens-fringe-cool: oklch(0.7 0.15 265 / 0.34);
-    --lens-rim-start: 79%;
-    --lens-rim-end: 87%;
+    --_lens-rim-start: 79%;
+    --_lens-rim-end: 87%;
 
     position: relative;
     display: block;
@@ -71,8 +75,8 @@
     overflow: hidden;
     mask-image: radial-gradient(
       circle at 50% 50%,
-      transparent 0 var(--lens-rim-start),
-      #000 var(--lens-rim-end),
+      transparent 0 var(--_lens-rim-start),
+      #000 var(--_lens-rim-end),
       #000 100%
     );
   }
@@ -93,8 +97,8 @@
     background: radial-gradient(
       circle at 50% 50%,
       transparent 58%,
-      color-mix(in oklab, var(--lens-ink) var(--lens-vignette-mid), transparent) 84%,
-      color-mix(in oklab, var(--lens-ink) var(--lens-vignette-edge), transparent) 100%
+      color-mix(in oklab, var(--lens-ink) var(--_lens-vignette-mid), transparent) 84%,
+      color-mix(in oklab, var(--lens-ink) var(--_lens-vignette-edge), transparent) 100%
     );
   }
 
@@ -105,15 +109,15 @@
     border-radius: var(--radius-full);
     opacity: 0;
     filter: blur(11px);
-    background: radial-gradient(closest-side, var(--lens-highlight), transparent);
+    background: radial-gradient(closest-side, var(--_lens-highlight), transparent);
   }
 
   .lens__ring {
     box-shadow:
-      0 calc(var(--lens-lift) * 1px) calc(var(--lens-blur) * 1px) calc(var(--lens-blur) * -0.42px)
-        color-mix(in oklab, var(--lens-ink) calc(var(--lens-shadow-alpha) * 100%), transparent),
-      inset 0 0 0 1px var(--lens-edge),
-      inset 0 1px 1px var(--lens-highlight),
-      inset 0 0 calc(var(--lens-blur) * 0.5px) color-mix(in oklab, var(--lens-ink) 7%, transparent);
+      0 calc(var(--_lens-lift) * 1px) calc(var(--_lens-blur) * 1px) calc(var(--_lens-blur) * -0.42px)
+        color-mix(in oklab, var(--lens-ink) calc(var(--_lens-shadow-alpha) * 100%), transparent),
+      inset 0 0 0 1px var(--_lens-edge),
+      inset 0 1px 1px var(--_lens-highlight),
+      inset 0 0 calc(var(--_lens-blur) * 0.5px) color-mix(in oklab, var(--lens-ink) 7%, transparent);
   }
 }

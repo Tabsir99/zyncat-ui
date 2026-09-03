@@ -257,7 +257,7 @@ Every FAQ answer is grounded in `README.md`, `CLAUDE.md`, `package.json`,
   `introduction.tsx`.
 - "`ZyncatTheme` is a plain component that emits a `<style>` element, no theme flash" -
   README "Theme it": it server-renders, needs no PostCSS or bundler plugin, adds ~1KB.
-- "`defineTheme({ color: { accent: 'oklch(0.58 0.19 292)' } })`" is README's own example
+- "`defineTheme({ accent: 'oklch(0.58 0.19 292)' })`" is README's own example
   value; "every key but `base` becomes a `[data-theme='<key>']` block" is README's wording.
 - "Design tokens are named CSS custom properties, no magic numbers" - the "Closed token
   vocabulary" pillar in `introduction.tsx` and `src/tokens/`.

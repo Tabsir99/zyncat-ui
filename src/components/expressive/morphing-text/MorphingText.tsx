@@ -38,8 +38,8 @@ const SETTLED = 0.001;
 const FALLBACK_FONT_SIZE = 48;
 const LETTER_CLASS = 'morphing-text__letter';
 const FUSED_CLASS = 'morphing-text__stage--fused';
-const BLUR_PROPERTY = '--morphing-text-letter-blur';
-const HEAT_PROPERTY = '--morphing-text-heat';
+const BLUR_PROPERTY = '--_morphing-text-letter-blur';
+const HEAT_PROPERTY = '--_morphing-text-heat';
 
 const THRESHOLD_MATRIX = `1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${ALPHA_GAIN} ${ALPHA_BIAS}`;
 

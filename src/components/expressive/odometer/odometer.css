@@ -2,20 +2,26 @@
 
 @layer zyncat.components {
   .odometer {
-    --odometer-cell: 1em;
-    --odometer-digit: 1ch;
+    --_odometer-cell: 1em;
+    --_odometer-digit: 1ch;
+    /* Space between digit columns. */
     --odometer-gap: 0.02em;
+    /* Digit ink. */
     --odometer-ink: var(--text-strong);
+    /* The tint digits take while they roll fast. */
     --odometer-accent: var(--accent);
+    /* The thousands separator. */
     --odometer-separator-ink: var(--text-muted);
+    /* Digit size. */
     --odometer-size: var(--size-display);
+    /* Digit weight. */
     --odometer-weight: var(--weight-medium);
 
     position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--odometer-gap);
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--odometer-size);
     font-weight: var(--odometer-weight);
     font-variant-numeric: tabular-nums;
@@ -34,25 +40,25 @@
 
   .odometer__col {
     display: block;
-    width: var(--odometer-digit);
-    height: var(--odometer-cell);
+    width: var(--_odometer-digit);
+    height: var(--_odometer-cell);
     overflow: hidden;
   }
 
   .odometer__strip {
-    --odometer-velocity: 0;
-    --odometer-blur: 0;
+    --_odometer-velocity: 0;
+    --_odometer-blur: 0;
 
     display: block;
     will-change: translate, filter;
-    filter: blur(calc(var(--odometer-blur) * 1px));
-    color: color-mix(in oklab, var(--odometer-accent) calc(var(--odometer-velocity) * 100%), var(--odometer-ink));
+    filter: blur(calc(var(--_odometer-blur) * 1px));
+    color: color-mix(in oklab, var(--odometer-accent) calc(var(--_odometer-velocity) * 100%), var(--odometer-ink));
   }
 
   .odometer__cell {
     display: grid;
     place-items: center;
-    height: var(--odometer-cell);
+    height: var(--_odometer-cell);
   }
 
   .odometer__separator {

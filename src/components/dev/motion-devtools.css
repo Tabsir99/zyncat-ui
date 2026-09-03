@@ -32,7 +32,7 @@
     z-index: 2147483000; /* above every app layer, including tooltips */
     display: flex;
     color: var(--text-body, oklch(0.35 0.01 264));
-    font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+    font-family: var(--font-body, ui-sans-serif, system-ui, sans-serif);
     -webkit-font-smoothing: antialiased;
   }
 

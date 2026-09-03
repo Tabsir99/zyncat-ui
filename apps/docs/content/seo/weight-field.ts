@@ -29,7 +29,7 @@ const seo: PageSeo = {
     },
     {
       q: 'What is a variable font, and do I need one for this?',
-      a: 'A variable font ships one file whose weight is a continuous wght axis rather than a handful of separate files, so a browser can render 437 as readily as 400. You do need one here: the ramp animates font-weight through 300, 400, 600 and 900, and on a static family the browser jumps between the installed cuts instead of gliding. The headline inherits --font-sans, so setting that to a variable face - a next/font/google or next/font/local one included - is all the setup there is.',
+      a: 'A variable font ships one file whose weight is a continuous wght axis rather than a handful of separate files, so a browser can render 437 as readily as 400. You do need one here: the ramp animates font-weight through 300, 400, 600 and 900, and on a static family the browser jumps between the installed cuts instead of gliding. The headline inherits --font-body, so setting that to a variable face - a next/font/google or next/font/local one included - is all the setup there is.',
     },
     {
       q: 'Can I make a font weight animation with CSS alone?',

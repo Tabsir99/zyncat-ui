@@ -20,8 +20,8 @@
     /* Roundness - every --radius-<step> is a fixed ratio of it; 0 squares every corner. */
     --radius: 0.5rem;
     /* The body face - every --type-* bundle follows. */
-    --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    /* The code face - --type-mono follows. */
-    --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+    --font-body: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* The code face - --type-code follows. */
+    --font-code: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
   }
 }

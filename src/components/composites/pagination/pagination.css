@@ -11,7 +11,7 @@
 
   /* mono tabular readout; .pgn__range is the node Motion slides - keep it transformable (inline-block) */
   .pgn__readout {
-    font: var(--type-mono);
+    font: var(--type-code);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);
     white-space: nowrap;

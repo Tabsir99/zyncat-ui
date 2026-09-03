@@ -29,7 +29,7 @@ const seo: PageSeo = {
     },
     {
       q: 'Can I use this Facebook UI clone in Next.js?',
-      a: "Yes. @zyncat/ui/facebook-feed ships compiled ESM with its 'use client' directive intact, so it drops into the Next.js App Router with no transpilePackages config and zero runtime dependencies. media and avatar take a URL string or your own node, so next/image, a plain <img> or a <video> all work - nothing autoplays and no request is made for you. Being a replica, its metrics are pinned constants your theme cannot move; only the type reads --font-sans.",
+      a: "Yes. @zyncat/ui/facebook-feed ships compiled ESM with its 'use client' directive intact, so it drops into the Next.js App Router with no transpilePackages config and zero runtime dependencies. media and avatar take a URL string or your own node, so next/image, a plain <img> or a <video> all work - nothing autoplays and no request is made for you. Being a replica, its metrics are pinned constants your theme cannot move; only the type reads --font-body.",
     },
   ],
 };

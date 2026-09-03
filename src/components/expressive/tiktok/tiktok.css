@@ -3,7 +3,7 @@
 @layer zyncat.components {
   .tiktok {
     display: block;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     color: #ffffff;
     -webkit-font-smoothing: antialiased;
   }

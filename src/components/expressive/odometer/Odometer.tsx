@@ -36,9 +36,9 @@ function writeColumn(el: HTMLElement, column: Column) {
   const rate = Math.abs(column.velocity);
   const tint = clampUnit(rate * TINT_GAIN) * TINT_CEILING;
   const blur = Math.min(BLUR_CEILING, rate * BLUR_GAIN);
-  el.style.translate = `0 calc(var(--odometer-cell) * ${-column.position})`;
-  el.style.setProperty('--odometer-velocity', tint > TINT_FLOOR ? tint.toFixed(3) : '0');
-  el.style.setProperty('--odometer-blur', blur > BLUR_FLOOR ? blur.toFixed(2) : '0');
+  el.style.translate = `0 calc(var(--_odometer-cell) * ${-column.position})`;
+  el.style.setProperty('--_odometer-velocity', tint > TINT_FLOOR ? tint.toFixed(3) : '0');
+  el.style.setProperty('--_odometer-blur', blur > BLUR_FLOOR ? blur.toFixed(2) : '0');
 }
 
 function stepColumns(columns: Column[], strips: (HTMLElement | null)[], k: number) {

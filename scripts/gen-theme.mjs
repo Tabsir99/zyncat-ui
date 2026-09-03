@@ -13,24 +13,40 @@ const fail = (message) => {
   process.exit(1);
 };
 
-const GROUP_BY_FILE = {
-  'decisions.css': 'decisions',
-  'color.css': 'color',
-  'semantic.css': 'color',
-  'typography.css': 'type',
-  'spacing.css': 'space',
-  'radius.css': 'radii',
-  'elevation.css': 'elevation',
-  'motion.css': 'motion',
-  'glass.css': 'glass',
-  'icons.css': 'icon',
-  'layers.css': 'layer',
-  'avatar.css': 'avatar',
-  'fonts.css': null,
-};
+const DECISIONS_FILE = 'decisions.css';
 
-const DECISIONS = 'decisions';
-const GROUP_ORDER = ['color', 'type', 'space', 'radii', 'elevation', 'motion', 'glass', 'icon', 'layer', 'avatar'];
+const THEME_TREE = [
+  {
+    key: 'color',
+    doc: 'The hues, and the neutral roles a light or dark theme sets directly.',
+    scalars: ['--accent', '--neutral', '--success', '--warning', '--danger'],
+    groups: [
+      { key: 'bg', file: 'semantic.css', doc: 'Surfaces - the canvas, cards, fills and the overlay scrim.' },
+      { key: 'text', file: 'semantic.css', doc: 'Ink, from strong to disabled, and the faces on a fill.' },
+      { key: 'border', file: 'semantic.css', doc: 'Hairlines, from subtle to strong.' },
+    ],
+  },
+  {
+    key: 'type',
+    doc: 'The faces.',
+    scalars: [],
+    groups: [
+      { key: 'font', file: DECISIONS_FILE, doc: 'The body face and the code face - every type bundle follows.' },
+    ],
+  },
+  { key: 'shape', doc: 'Roundness.', scalars: ['--radius'], groups: [] },
+  {
+    key: 'motion',
+    doc: 'How surfaces move.',
+    scalars: [],
+    groups: [
+      { key: 'duration', file: 'motion.css', doc: 'The time bands.' },
+      { key: 'ease', file: 'motion.css', doc: 'The brand curves.' },
+      { key: 'distance', file: 'motion.css', doc: 'How far a surface travels on the way in or out.' },
+      { key: 'scale', file: 'motion.css', doc: 'What a surface scales from on the way in, and to on the way out.' },
+    ],
+  },
+];
 
 const KNOB_TIERS = ['expressive', 'compound'];
 
@@ -108,44 +124,46 @@ const importedTokenFiles = () =>
 
 const files = importedTokenFiles();
 if (!files.length) fail('src/styles.css imports no token files - the generator has nothing to read.');
+if (!files.includes(DECISIONS_FILE)) fail(`src/styles.css does not import ${DECISIONS_FILE} - the top of every theme.`);
+for (const category of THEME_TREE)
+  for (const group of category.groups)
+    if (!files.includes(group.file))
+      fail(
+        `src/styles.css does not import ${group.file}, the source of \`${category.key}.${group.key}\` in the theme tree.`,
+      );
 
-const groups = new Map([DECISIONS, ...GROUP_ORDER].map((group) => [group, []]));
+const tokens = [];
 const reduced = {};
 const byCssName = new Map();
 
 for (const file of files) {
-  if (!(file in GROUP_BY_FILE))
-    fail(`src/tokens/${file} has no group in GROUP_BY_FILE - add it to scripts/gen-theme.mjs, or map it to null.`);
-  const group = GROUP_BY_FILE[file];
   const css = readFileSync(join(ROOT, 'src/tokens', file), 'utf8');
 
-  if (group) {
-    for (const block of tokenBlocks(css)) {
-      for (const match of block.inner.matchAll(DECL_RE)) {
-        const { cssName, value, comment } = declOf(match);
-        if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
-        if (block.themed && !value.includes('var('))
-          fail(
-            `${cssName} in ${file} sits on the theme-root block with a literal value - a literal there resets the consumer's :root decision inside every [data-theme] subtree. Only tokens that derive from another token belong on ":root, [data-theme]".`,
-          );
-        if (group === DECISIONS && block.themed)
-          fail(
-            `${cssName} is a decision and sits on the theme-root block - decisions are set, never derived, so they live on :root alone.`,
-          );
-        const key = camelize(cssName.slice(2));
-        if (`--${kebabize(key)}` !== cssName)
-          fail(`${cssName} does not round-trip through the name derivation (got --${kebabize(key)}).`);
-        const token = {
-          cssName,
-          key,
-          value: oneLine(value),
-          doc: comment ? oneLine(comment) : '',
-          file,
-          themed: block.themed,
-        };
-        byCssName.set(cssName, token);
-        groups.get(group).push(token);
-      }
+  for (const block of tokenBlocks(css)) {
+    for (const match of block.inner.matchAll(DECL_RE)) {
+      const { cssName, value, comment } = declOf(match);
+      if (byCssName.has(cssName)) fail(`${cssName} is declared in both ${byCssName.get(cssName).file} and ${file}.`);
+      if (block.themed && !value.includes('var('))
+        fail(
+          `${cssName} in ${file} sits on the theme-root block with a literal value - a literal there resets the consumer's :root decision inside every [data-theme] subtree. Only tokens that derive from another token belong on ":root, [data-theme]".`,
+        );
+      if (file === DECISIONS_FILE && block.themed)
+        fail(
+          `${cssName} is a decision and sits on the theme-root block - decisions are set, never derived, so they live on :root alone.`,
+        );
+      const key = camelize(cssName.slice(2));
+      if (`--${kebabize(key)}` !== cssName)
+        fail(`${cssName} does not round-trip through the name derivation (got --${kebabize(key)}).`);
+      const token = {
+        cssName,
+        key,
+        value: oneLine(value),
+        doc: comment ? oneLine(comment) : '',
+        file,
+        themed: block.themed,
+      };
+      byCssName.set(cssName, token);
+      tokens.push(token);
     }
   }
 
@@ -162,6 +180,49 @@ for (const file of files) {
 
 for (const cssName of Object.keys(reduced))
   if (!byCssName.has(cssName)) fail(`the reduced-motion block overrides ${cssName}, which no :root block declares.`);
+
+const decisions = tokens.filter((token) => token.file === DECISIONS_FILE);
+if (!decisions.length) fail(`${DECISIONS_FILE} declares no tokens.`);
+
+const placed = new Set();
+const categories = THEME_TREE.map((category) => {
+  const scalars = category.scalars.map((cssName) => {
+    const token = byCssName.get(cssName);
+    if (!token) fail(`the theme tree names ${cssName} under \`${category.key}\`, which no token file declares.`);
+    if (token.file !== DECISIONS_FILE)
+      fail(
+        `${cssName} sits directly under \`${category.key}\` in the theme tree but is not a decision - only ${DECISIONS_FILE} tokens go there.`,
+      );
+    placed.add(cssName);
+    return token;
+  });
+  const groups = category.groups.map((group) => {
+    const prefix = `--${group.key}-`;
+    const members = tokens
+      .filter((token) => token.file === group.file && !token.themed && token.cssName.startsWith(prefix))
+      .map((token) => ({ ...token, key: camelize(token.cssName.slice(prefix.length)) }));
+    if (!members.length)
+      fail(`\`${category.key}.${group.key}\` in the theme tree matches no :root-only token in ${group.file}.`);
+    for (const member of members) {
+      if (`${prefix}${kebabize(member.key)}` !== member.cssName)
+        fail(`${member.cssName} does not round-trip through \`${category.key}.${group.key}.${member.key}\`.`);
+      placed.add(member.cssName);
+    }
+    return { ...group, label: `${pascal(category.key)}${pascal(group.key)}Tokens`, members };
+  });
+  return { ...category, label: `${pascal(category.key)}Tokens`, scalars, groups };
+});
+
+for (const token of decisions)
+  if (!placed.has(token.cssName)) fail(`${token.cssName} is a decision with no place in the theme tree.`);
+
+const roleFiles = new Set(THEME_TREE.flatMap((category) => category.groups.map((group) => group.file)));
+roleFiles.delete(DECISIONS_FILE);
+for (const token of tokens)
+  if (roleFiles.has(token.file) && !token.themed && !placed.has(token.cssName))
+    fail(
+      `${token.cssName} sits on the :root block of ${token.file}, the block a theme sets, but has no place in the theme tree - derive it on the theme-root block, or give its prefix a group in the tree.`,
+    );
 
 const writtenNames = (dirPath, dirFiles) => {
   const written = new Set();
@@ -183,6 +244,41 @@ const isReplicaDir = (dirPath, dirFiles) =>
     (file) => file.endsWith('.usage.md') && /^Group: replicas\s*$/m.test(readFileSync(join(dirPath, file), 'utf8')),
   );
 
+const PRIVATE_PREFIX = '--_';
+
+const groupKnobs = (dir, knobs) => {
+  const byHead = new Map();
+  for (const knob of knobs) {
+    const head = knob.rest.split('-')[0];
+    if (!byHead.has(head)) byHead.set(head, []);
+    byHead.get(head).push(knob);
+  }
+  const entries = [];
+  for (const [head, members] of byHead) {
+    const collides = members.some((knob) => knob.rest === head);
+    if (members.length < 2 || collides) {
+      for (const knob of members) {
+        knob.key = camelize(knob.rest);
+        if (`--${dir}-${kebabize(knob.key)}` !== knob.cssName)
+          fail(`${knob.cssName} does not round-trip through the name derivation (got --${dir}-${kebabize(knob.key)}).`);
+        entries.push({ key: knob.key, knob });
+      }
+      continue;
+    }
+    for (const knob of members) {
+      knob.key = camelize(knob.rest.slice(head.length + 1));
+      if (`--${dir}-${head}-${kebabize(knob.key)}` !== knob.cssName)
+        fail(
+          `${knob.cssName} does not round-trip through the name derivation (got --${dir}-${head}-${kebabize(knob.key)}).`,
+        );
+    }
+    const series = members.every((knob) => /^\d+$/.test(knob.key));
+    if (series) for (const knob of members) if (!knob.doc) knob.doc = members[0].doc;
+    entries.push({ key: camelize(head), head, label: `${pascal(dir)}${pascal(head)}Tokens`, members, series });
+  }
+  return entries;
+};
+
 const components = [];
 for (const tier of KNOB_TIERS) {
   const tierDir = join(ROOT, 'src/components', tier);
@@ -197,18 +293,32 @@ for (const tier of KNOB_TIERS) {
       if (!file.endsWith('.css')) continue;
       for (const match of firstRuleInner(readFileSync(join(dirPath, file), 'utf8')).matchAll(DECL_RE)) {
         const { cssName, value, comment } = declOf(match);
-        if (written.has(cssName)) continue;
+        if (cssName.startsWith(PRIVATE_PREFIX)) continue;
         if (!cssName.startsWith(`--${dir}-`))
           fail(
             `${cssName} in ${tier}/${dir}/${file} does not carry the --${dir}- prefix its scoped contract requires.`,
           );
-        const key = camelize(cssName.slice(dir.length + 3));
-        if (`--${dir}-${kebabize(key)}` !== cssName)
-          fail(`${cssName} does not round-trip through the name derivation (got --${dir}-${kebabize(key)}).`);
-        knobs.push({ cssName, key, value: oneLine(value), doc: comment ? oneLine(comment) : '' });
+        if (written.has(cssName))
+          fail(
+            `${cssName} in ${tier}/${dir} is written by the component's own JS - per-frame state is private, name it ${PRIVATE_PREFIX}${dir}-....`,
+          );
+        knobs.push({
+          cssName,
+          rest: cssName.slice(dir.length + 3),
+          value: oneLine(value),
+          doc: comment ? oneLine(comment) : '',
+          file: `${tier}/${dir}/${file}`,
+        });
       }
     }
-    if (knobs.length) components.push({ dir, key: camelize(dir), label: pascal(dir), knobs });
+    if (!knobs.length) continue;
+    const entries = groupKnobs(dir, knobs);
+    for (const knob of knobs)
+      if (!knob.doc)
+        fail(
+          `${knob.cssName} in ${knob.file} is a public knob without a doc line - say what it does in a comment above the declaration, or make it private (${PRIVATE_PREFIX}${dir}-...).`,
+        );
+    components.push({ dir, key: camelize(dir), label: pascal(dir), knobs, entries });
   }
 }
 
@@ -227,24 +337,58 @@ const GENERATED_BY =
 
 const tokensLines = [];
 tokensLines.push('/**');
-tokensLines.push(' * The themeable vocabulary. The eight decisions sit at the top level of a theme and every');
-tokensLines.push(' * other token is grouped the way the files are organised. Each key is one design token in');
-tokensLines.push(' * camelCase - `accent` is `--accent`, `radiusMd` is `--radius-md` - and takes any CSS the');
-tokensLines.push(' * property accepts, including `var()` references to other tokens.');
+tokensLines.push(' * The themeable vocabulary. A theme is four categories - `color`, `type`, `shape`, `motion` -');
+tokensLines.push(' * each holding the decisions and the roles a theme sets, grouped by what they are; then the');
+tokensLines.push(' * scoped knobs under `components`. Every other token derives from those or is a scale a page');
+tokensLines.push(' * reads, and goes by its CSS name under `custom`. A path is the CSS name: `color.bg.app` is');
+tokensLines.push(' * `--bg-app`, `type.font.body` is `--font-body`, `shape.radius` is `--radius`. Values take any');
+tokensLines.push(' * CSS the property accepts, including `var()` references.');
 tokensLines.push(' *');
 tokensLines.push(GENERATED_BY);
 tokensLines.push(' */');
-for (const group of GROUP_ORDER) {
-  tokensLines.push(`export interface ${pascal(group)}Tokens {`);
-  tokensLines.push(...members(groups.get(group), ''));
+for (const category of categories) {
+  for (const group of category.groups) {
+    tokensLines.push(`/** ${group.doc} */`);
+    tokensLines.push(`export interface ${group.label} {`);
+    tokensLines.push(...members(group.members, ''));
+    tokensLines.push('}');
+    tokensLines.push('');
+  }
+  tokensLines.push(`/** ${category.doc} */`);
+  tokensLines.push(`export interface ${category.label} {`);
+  tokensLines.push(...members(category.scalars, ''));
+  for (const group of category.groups) {
+    tokensLines.push(`  /** ${group.doc} */`);
+    tokensLines.push(`  ${group.key}?: ${group.label};`);
+  }
   tokensLines.push('}');
   tokensLines.push('');
 }
 
+const groupDoc = (component, entry) =>
+  entry.series
+    ? `\`${entry.members[0].cssName}\` to \`${entry.members.at(-1).cssName}\` - ${entry.members[0].doc.replace(/\.\s*$/, '')}.`
+    : `The \`--${component.dir}-${entry.head}-*\` knobs.`;
+
 for (const component of components) {
+  for (const entry of component.entries) {
+    if (!entry.members) continue;
+    tokensLines.push(`/** ${groupDoc(component, entry)} */`);
+    tokensLines.push(`export interface ${entry.label} {`);
+    tokensLines.push(...members(entry.members, ''));
+    tokensLines.push('}');
+    tokensLines.push('');
+  }
   tokensLines.push(`/** The scoped properties ${component.label} publishes as its theming contract. */`);
   tokensLines.push(`export interface ${component.label}Tokens {`);
-  tokensLines.push(...members(component.knobs, ''));
+  for (const entry of component.entries) {
+    if (entry.members) {
+      tokensLines.push(`  /** ${groupDoc(component, entry)} */`);
+      tokensLines.push(`  ${entry.key}?: ${entry.label};`);
+    } else {
+      tokensLines.push(...members([entry.knob], ''));
+    }
+  }
   tokensLines.push('}');
   tokensLines.push('');
 }
@@ -259,19 +403,36 @@ tokensLines.push('}');
 tokensLines.push('');
 
 tokensLines.push('/**');
-tokensLines.push(' * One theme: the tokens it repoints. The decisions come first - set one and every token that');
-tokensLines.push(' * derives from it follows - then the groups. Everything is optional.');
+tokensLines.push(' * Every design token by its CSS name, with what it does and its default. The type behind');
+tokensLines.push(' * `custom` in a theme and behind the `style` prop of every component.');
+tokensLines.push(' */');
+tokensLines.push('export interface TokenProperties {');
+for (const token of tokens) {
+  tokensLines.push(`  ${docFor(token)}`);
+  tokensLines.push(`  '${token.cssName}'?: string | number;`);
+}
+tokensLines.push('}');
+tokensLines.push('');
+
+tokensLines.push('/** The CSS name of every design token. */');
+tokensLines.push('export type TokenName = keyof TokenProperties;');
+tokensLines.push('');
+
+tokensLines.push('/**');
+tokensLines.push(' * One theme: the tokens it repoints, by category. Set a decision and every token that derives');
+tokensLines.push(' * from it follows; set a role to break it away. Everything is optional.');
 tokensLines.push(' */');
 tokensLines.push('export interface ThemeTokens {');
-tokensLines.push(...members(groups.get(DECISIONS), ''));
-for (const group of GROUP_ORDER) {
-  tokensLines.push(`  /** ${pascal(group)} tokens. */`);
-  tokensLines.push(`  ${group}?: ${pascal(group)}Tokens;`);
+for (const category of categories) {
+  tokensLines.push(`  /** ${category.doc} */`);
+  tokensLines.push(`  ${category.key}?: ${category.label};`);
 }
 tokensLines.push('  /** Scoped knobs, per component. */');
 tokensLines.push('  components?: ComponentTokens;');
-tokensLines.push('  /** Any other custom property, written out in full. */');
-tokensLines.push('  custom?: Record<`--${string}`, string | number>;');
+tokensLines.push(
+  '  /** Any token by its CSS name - the ones the categories leave out - or a custom property of your own. */',
+);
+tokensLines.push('  custom?: TokenProperties & Record<`--${string}`, string | number>;');
 tokensLines.push('}');
 tokensLines.push('');
 
@@ -292,13 +453,7 @@ tokensLines.push('};');
 tokensLines.push('');
 
 tokensLines.push("declare module 'react' {");
-tokensLines.push('  export interface CSSProperties {');
-for (const group of [DECISIONS, ...GROUP_ORDER])
-  for (const token of groups.get(group)) {
-    tokensLines.push(`    ${docFor(token)}`);
-    tokensLines.push(`    '${token.cssName}'?: string | number;`);
-  }
-tokensLines.push('  }');
+tokensLines.push('  export interface CSSProperties extends TokenProperties {}');
 tokensLines.push('}');
 
 const stylesLines = [];
@@ -327,10 +482,12 @@ for (const [index, component] of components.entries()) {
 }
 
 const knobCount = components.reduce((total, component) => total + component.knobs.length, 0);
-const tokenCount = GROUP_ORDER.reduce((total, group) => total + groups.get(group).length, 0);
-const themedCount = [...byCssName.values()].filter((token) => token.themed).length;
+const roleCount = placed.size - decisions.length;
+const plumbingCount = tokens.length - decisions.length - roleCount;
+const themedCount = tokens.filter((token) => token.themed).length;
 const summary =
-  `${groups.get(DECISIONS).length} decisions, ${tokenCount} tokens in ${GROUP_ORDER.length} groups (${themedCount} on every theme root), ` +
+  `${decisions.length} decisions and ${roleCount} roles in ${categories.length} categories, ` +
+  `${plumbingCount} plumbing tokens by name (${themedCount} on every theme root), ` +
   `${knobCount} knobs across ${components.length} components, ` +
   `${Object.keys(reduced).length} reduced-motion overrides`;
 

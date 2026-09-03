@@ -2,30 +2,43 @@
 
 @layer zyncat.components {
   .weight-field {
+    /* Letter ink. */
     --weight-field-ink: var(--text-strong);
+    /* Letter size. */
     --weight-field-size: 6rem;
+    /* Line height, unitless. */
     --weight-field-leading: 1;
+    /* Where the units sit on the line - center, start or end. */
     --weight-field-align: center;
+    /* Padding around the field. */
     --weight-field-pad: var(--space-6) var(--space-4);
+    /* Letter spacing. */
     --weight-field-tracking: -0.05em;
+    /* A unit's weight at rest. */
     --weight-field-rest-weight: 300;
+    /* The weight two units from the pointer. */
     --weight-field-far-weight: 400;
+    /* The weight next to the pointer. */
     --weight-field-near-weight: 600;
+    /* The weight under the pointer. */
     --weight-field-peak-weight: 900;
+    /* How much a unit widens under the pointer. */
     --weight-field-hover-padding: calc(1em / 12);
-    --weight-field-stroke: calc(1em * 125 / 6000);
-    --weight-field-stroke-peak: calc(var(--weight-field-stroke) * 2);
+    --_weight-field-stroke: calc(1em * 125 / 6000);
+    --_weight-field-stroke-peak: calc(var(--_weight-field-stroke) * 2);
+    /* How long a unit takes to settle at a new weight. */
     --weight-field-duration: 400ms;
+    /* The settle curve. */
     --weight-field-ease: ease;
-    --weight-field-speed: 1;
-    --weight-field-ramp: calc(var(--weight-field-duration) / var(--weight-field-speed));
+    --_weight-field-speed: 1;
+    --_weight-field-ramp: calc(var(--weight-field-duration) / var(--_weight-field-speed));
 
     position: relative;
     display: flex;
     flex-wrap: wrap;
     justify-content: var(--weight-field-align);
     padding: var(--weight-field-pad);
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--weight-field-size);
     font-weight: var(--weight-field-rest-weight);
     font-optical-sizing: auto;
@@ -47,15 +60,15 @@
     padding-inline: 0;
     font-weight: var(--weight-field-rest-weight);
     -webkit-text-stroke-color: transparent;
-    -webkit-text-stroke-width: var(--weight-field-stroke);
+    -webkit-text-stroke-width: var(--_weight-field-stroke);
     will-change:
       font-weight,
       -webkit-text-stroke-width,
       padding;
     transition:
-      font-weight var(--weight-field-ramp) var(--weight-field-ease),
-      padding var(--weight-field-ramp) var(--weight-field-ease),
-      -webkit-text-stroke-color var(--weight-field-ramp) var(--weight-field-ease);
+      font-weight var(--_weight-field-ramp) var(--weight-field-ease),
+      padding var(--_weight-field-ramp) var(--weight-field-ease),
+      -webkit-text-stroke-color var(--_weight-field-ramp) var(--weight-field-ease);
   }
 
   .weight-field__unit:has(+ .weight-field__unit + .weight-field__unit:hover),
@@ -73,7 +86,7 @@
     padding-inline: var(--weight-field-hover-padding);
     font-weight: var(--weight-field-peak-weight);
     -webkit-text-stroke-color: currentcolor;
-    -webkit-text-stroke-width: var(--weight-field-stroke-peak);
+    -webkit-text-stroke-width: var(--_weight-field-stroke-peak);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -26,7 +26,7 @@ export interface WeightFieldProps extends WeightFieldOwnProps {
 }
 
 export function WeightField({ text, speed = 1, className = '', style, htmlProps }: WeightFieldProps) {
-  const ramp = { ...style, '--weight-field-speed': speed } as CSSProperties;
+  const ramp = { ...style, '--_weight-field-speed': speed } as CSSProperties;
 
   return (
     <span className={cx('weight-field', className)} style={ramp} {...htmlProps}>

@@ -174,7 +174,7 @@
   /* coalesce counter - same toast refired becomes a xN counter (mono) */
   .toast__count {
     flex: none;
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: var(--leading-micro);
     font-variant-numeric: tabular-nums;

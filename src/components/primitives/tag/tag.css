@@ -21,7 +21,7 @@
     background: var(--bg-surface);
     color: var(--text-body);
 
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: var(--size-caption);
     line-height: 1;
     font-weight: var(--weight-medium);
@@ -57,7 +57,7 @@
   }
 
   .tag__count {
-    font-family: var(--font-mono);
+    font-family: var(--font-code);
     font-size: var(--size-micro);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);
