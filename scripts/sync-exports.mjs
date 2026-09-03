@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { distTypesPath, publicEntries, ROOT } from './lib/entries.mjs';
 
 const PKG_PATH = join(ROOT, 'package.json');
-const TAIL_KEYS = ['./styles.css', './next', './package.json'];
+const TAIL_KEYS = ['./styles.css', './tailwind.css', './next', './package.json'];
 
 const write = process.argv.includes('--write');
 const raw = readFileSync(PKG_PATH, 'utf8');

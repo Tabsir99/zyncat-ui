@@ -535,7 +535,7 @@ const knobCount = components.reduce((total, component) => total + component.knob
 const roleCount = placed.size - decisions.length;
 const plumbingCount = tokens.length - decisions.length - roleCount;
 const themedCount = tokens.filter((token) => token.kind === 'themed').length;
-const summary =
+const tokenSummary =
   `${decisions.length} decisions and ${roleCount} roles in ${categories.length} categories, ` +
   `${plumbingCount} plumbing tokens by name (${themedCount} on every theme root), ` +
   `${Object.keys(dark).length} values on the dark theme, ` +
@@ -606,10 +606,160 @@ motionLines.push(...motionTable('--scale-', numberOf));
 motionLines.push('  } satisfies Record<string, number>,');
 motionLines.push('};');
 
+const TAILWIND_OUT = 'tailwind.css';
+const SEMANTIC_FILE = 'semantic.css';
+const TYPOGRAPHY_FILE = 'typography.css';
+const RADIUS_FILE = 'radius.css';
+const ELEVATION_FILE = 'elevation.css';
+const HUE_FAMILIES = ['accent', 'success', 'warning', 'danger', 'info', 'neutral'];
+const NEUTRAL_DECISION = '--neutral';
+const INK_UTILITY_RENAMES = { body: 'default' };
+const STRENGTH_SUFFIX = '-strength';
+const TYPE_BUNDLE_RE =
+  /^var\((--weight-[\w-]+)\) var\((--size-[\w-]+)\)\/var\((--leading-[\w-]+)\) var\((--font-[\w-]+)\)$/;
+const TAILWIND_LAYER_ORDER =
+  '@layer theme, base, zyncat.tokens, zyncat.components, zyncat.base, components, utilities;';
+const DARK_VARIANT = "@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));";
+
+const inFile = (file, prefix) => tokens.filter((token) => token.file === file && token.cssName.startsWith(prefix));
+const after = (token, prefix) => token.cssName.slice(prefix.length);
+const bridge = (name, token) => `  ${name}: var(${token.cssName});`;
+const hueOf = (cssName) => HUE_FAMILIES.find((hue) => cssName === `--${hue}` || cssName.startsWith(`--${hue}-`));
+
+const bridgeSections = [];
+const bridgeSection = (title, lines) => {
+  if (!lines.length) fail(`the Tailwind bridge section "${title}" matches no token.`);
+  bridgeSections.push([`  /* ${title} */`, ...lines]);
+};
+
+bridgeSection(
+  'Surfaces - bg-<role>',
+  inFile(SEMANTIC_FILE, '--bg-').map((token) => bridge(`--background-color-${after(token, '--bg-')}`, token)),
+);
+
+const inkLines = inFile(SEMANTIC_FILE, '--text-').map((token) => {
+  const role = after(token, '--text-');
+  return bridge(`--text-color-${INK_UTILITY_RENAMES[role] ?? role}`, token);
+});
+for (const hue of HUE_FAMILIES) {
+  const legible = byCssName.get(`--${hue}-text`);
+  if (legible) inkLines.push(bridge(`--text-color-${hue}`, legible));
+}
+bridgeSection('Ink - text-<role>; the body ink is text-default because text-body is the type role', inkLines);
+
+bridgeSection(
+  'Hairlines - border-<role>',
+  inFile(SEMANTIC_FILE, '--border-').map((token) => bridge(`--border-color-${after(token, '--border-')}`, token)),
+);
+
+bridgeSection(
+  'Hues - every colour utility (bg-, text-, border-, ring-, from-, ...) with /<opacity>',
+  tokens
+    .filter(
+      (token) =>
+        (token.file === DECISIONS_FILE || token.file === SEMANTIC_FILE) &&
+        hueOf(token.cssName) &&
+        token.cssName !== NEUTRAL_DECISION,
+    )
+    .map((token) => bridge(`--color-${token.cssName.slice(2)}`, token)),
+);
+
+const typeLines = [];
+for (const token of inFile(TYPOGRAPHY_FILE, '--type-')) {
+  const bundle = TYPE_BUNDLE_RE.exec(token.value);
+  if (!bundle)
+    fail(`${token.cssName} is not a "var(weight) var(size)/var(leading) var(face)" bundle the Tailwind bridge reads.`);
+  const [, weight, size, leading] = bundle;
+  for (const part of [weight, size, leading])
+    if (!byCssName.has(part)) fail(`${token.cssName} reads ${part}, which no token file declares.`);
+  const role = after(token, '--type-');
+  typeLines.push(
+    `  --text-${role}: var(${size});`,
+    `  --text-${role}--line-height: var(${leading});`,
+    `  --text-${role}--font-weight: var(${weight});`,
+  );
+}
+bridgeSection('Type roles - text-<role> sets size, leading and weight; text-code wants font-code beside it', typeLines);
+
+bridgeSection(
+  'Faces - font-body, font-code',
+  inFile(DECISIONS_FILE, '--font-').map((token) => bridge(token.cssName, token)),
+);
+bridgeSection(
+  'Leading and tracking - leading-<role>, tracking-<name>',
+  [...inFile(TYPOGRAPHY_FILE, '--leading-'), ...inFile(TYPOGRAPHY_FILE, '--tracking-')].map((token) =>
+    bridge(token.cssName, token),
+  ),
+);
+bridgeSection(
+  'Measures - max-w-prose, max-w-floating',
+  tokens
+    .filter((token) => token.cssName.startsWith('--measure-'))
+    .map((token) => bridge(`--max-width-${after(token, '--measure-')}`, token)),
+);
+bridgeSection(
+  'Corners - rounded-<step>',
+  inFile(RADIUS_FILE, '--radius-').map((token) => bridge(token.cssName, token)),
+);
+bridgeSection('Elevation - shadow-<step>, shadow-focus, shadow-ring-<hue>, shadow-glow-<hue>', [
+  ...inFile(ELEVATION_FILE, '--shadow-')
+    .filter((token) => !token.cssName.endsWith(STRENGTH_SUFFIX))
+    .map((token) => bridge(token.cssName, token)),
+  bridge('--shadow-focus', byCssName.get('--focus-ring') ?? fail('--focus-ring is not declared.')),
+  ...inFile(ELEVATION_FILE, '--ring-').map((token) => bridge(`--shadow-ring-${after(token, '--ring-')}`, token)),
+  ...inFile(ELEVATION_FILE, '--glow-')
+    .filter((token) => !token.cssName.endsWith(STRENGTH_SUFFIX))
+    .map((token) => bridge(`--shadow-glow-${after(token, '--glow-')}`, token)),
+]);
+bridgeSection(
+  'Motion - ease-<curve>',
+  inFile(MOTION_FILE, '--ease-').map((token) => bridge(token.cssName, token)),
+);
+
+const durationUtilities = inFile(MOTION_FILE, '--duration-').flatMap((token) => [
+  `@utility duration-${after(token, '--duration-')} {`,
+  `  transition-duration: var(${token.cssName});`,
+  '}',
+]);
+if (!durationUtilities.length) fail('the Tailwind bridge finds no --duration-* token for its duration utilities.');
+
+const bridgeCount = bridgeSections.reduce((total, lines) => total + lines.length - 1, 0) + durationUtilities.length / 3;
+
+const tailwindLines = [
+  '/* @zyncat/ui/tailwind.css - the token vocabulary as Tailwind v4 utilities, with IntelliSense.',
+  '   Import it on the first line of the stylesheet Tailwind compiles, above `@import "tailwindcss"`,',
+  '   and keep `@zyncat/ui/styles.css` on its JS import at the app root.',
+  '',
+  '   Every entry is `inline reference`. `inline` makes the utility read the zyncat token itself,',
+  '   so a `data-theme` subtree re-derives it; `reference` keeps Tailwind from writing the entry',
+  '   onto `:root`, where the names Tailwind also ships - `--radius-*`, `--shadow-*`,',
+  '   `--tracking-*` - would overwrite the token the components read, and where the entries',
+  '   that carry the same name on both sides would be a cycle.',
+  '',
+  '   The layer statement pins the Tailwind layers around the zyncat ones - utilities above',
+  '   component rules, the base layer above preflight - and holds only while this file precedes',
+  '   the Tailwind import, because the first statement fixes the order.',
+  '',
+  '   Generated from the token CSS by `scripts/gen-theme.mjs` - `pnpm sync` rebuilds it. */',
+  '',
+  TAILWIND_LAYER_ORDER,
+  '',
+  DARK_VARIANT,
+  '',
+  '@theme inline reference {',
+  ...bridgeSections.flatMap((lines, index) => (index ? ['', ...lines] : lines)),
+  '}',
+  '',
+  ...durationUtilities,
+];
+
+const summary = `${tokenSummary}, ${bridgeCount} Tailwind utilities`;
+
 const outputs = [
   { rel: TOKENS_OUT, lines: tokensLines },
   { rel: STYLES_OUT, lines: stylesLines },
   { rel: MOTION_OUT, lines: motionLines },
+  { rel: TAILWIND_OUT, lines: tailwindLines },
 ];
 
 for (const output of outputs) {

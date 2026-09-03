@@ -299,6 +299,7 @@
       "import": "./dist/theme.js"
     },
     "./styles.css": "./src/styles.css",
+    "./tailwind.css": "./tailwind.css",
     "./next": {
       "types": "./next.d.mts",
       "default": "./next.mjs"
@@ -308,6 +309,7 @@
   "files": [
     "dist",
     "src",
+    "tailwind.css",
     "skills",
     "next.mjs",
     "next.d.mts"
