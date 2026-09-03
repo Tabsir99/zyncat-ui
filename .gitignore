@@ -6,6 +6,7 @@ dist
 apps/docs/out
 next-env.d.ts
 temp
+notes
 *.log
 *.tsbuildinfo
 .DS_Store
