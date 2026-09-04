@@ -36,9 +36,9 @@ export function useFlip<T extends HTMLElement>(
     if (!el || !enabled) return;
     const live = playing.current;
     let from: Box | null;
-    if (live && live.el === el) from = measure(el);
+    if (sharedId === null) from = lastCommitted;
+    else if (live && live.el === el) from = measure(el);
     else if (interrupted.current) from = interrupted.current;
-    else if (sharedId === null) from = lastCommitted;
     else from = sharedOwner.get(sharedId) === el ? null : readShared(sharedId);
     live?.play.stop();
     if (sharedId !== null) {
