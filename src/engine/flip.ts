@@ -1,3 +1,4 @@
+import { sharedSlot } from '../shared-slot';
 import { animate, type Layer, type Playback } from './animate';
 import type { Timing } from './ease';
 
@@ -22,7 +23,7 @@ export function measure(el: HTMLElement): Box {
   return { left: rect.left + window.scrollX, top: rect.top + window.scrollY, width: rect.width, height: rect.height };
 }
 
-const shared = new Map<string, Box>();
+const shared = sharedSlot('engine.flip-shared@1', () => new Map<string, Box>());
 
 export function keepShared(key: string, box: Box): void {
   shared.set(key, box);

@@ -1,3 +1,5 @@
+import { sharedSlot } from '../../../shared-slot';
+
 export type ToastTone = 'default' | 'success' | 'danger' | 'warning' | 'info' | 'loading' | 'custom';
 
 export interface ToastAction {
@@ -62,8 +64,8 @@ const DURATION: Record<string, number> = {
   loading: Infinity,
 };
 
-let uid = 0;
-const timers = new Map<string, ReturnType<typeof setTimeout>>();
+const ids = sharedSlot('toast.ids@1', () => ({ n: 0 }));
+const timers = sharedSlot('toast.timers@1', () => new Map<string, ReturnType<typeof setTimeout>>());
 
 interface ToastStore {
   toasts: ToastRecord[];
@@ -85,7 +87,7 @@ interface ToastStore {
   setExpanded(v: boolean): void;
 }
 
-const store: ToastStore = {
+const store: ToastStore = sharedSlot('toast.store@1', (): ToastStore => ({
   toasts: [],
   paused: false,
   expanded: false,
@@ -174,7 +176,7 @@ const store: ToastStore = {
     store.expanded = v;
     store.emit();
   },
-};
+}));
 
 let warned = false;
 let warnScheduled = false;
@@ -201,7 +203,7 @@ function resolveDuration(tone: ToastTone, opt?: number): number {
 
 function make(tone: ToastTone, message: string | null, opts: ToastOptions = {}): string {
   warnIfDetached();
-  const id = opts.id != null ? String(opts.id) : 'toast-' + ++uid;
+  const id = opts.id != null ? String(opts.id) : 'toast-' + ++ids.n;
   const duration = resolveDuration(tone, opts.duration);
   if (store.toasts.some((t) => t.id === id)) {
     return store.update(id, {
@@ -273,7 +275,7 @@ toast.promise = function <T>(promise: Promise<T>, msgs: ToastPromiseMsgs<T> = {}
 
 toast.custom = (node, opts = {}) => {
   warnIfDetached();
-  const id = opts.id != null ? String(opts.id) : 'toast-' + ++uid;
+  const id = opts.id != null ? String(opts.id) : 'toast-' + ++ids.n;
   const duration = opts.duration != null ? opts.duration : Infinity;
   if (store.toasts.some((t) => t.id === id)) return store.update(id, { node });
   return store.add({

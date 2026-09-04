@@ -26,6 +26,7 @@ import { Presence } from '../../../motion/presence';
 import { popOut } from '../../../motion/presets';
 import { UIMotion } from '../../../tokens/motion-tokens';
 import { fireGlint } from '../../internal/glass/glint';
+import { hostRegistry, useElectedHost } from '../../internal/hooks/use-host-election';
 import { Icon, type IconName } from '../../internal/icon/Icon';
 import { cx } from '../../internal/utils/cx';
 import { tokenPx } from '../../internal/utils/token-px';
@@ -34,6 +35,7 @@ import { DEFAULT_TOASTER_CONFIG, UIToast, type ToasterConfig, type ToastRecord, 
 
 const SM = UIMotion;
 const store = UIToast;
+const toasterReg = hostRegistry('toast.host@1');
 
 const COLLAPSE_GRACE = 140;
 const SWIPE_X = 64;
@@ -359,18 +361,21 @@ export interface ToasterProps extends Partial<ToasterConfig> {
   htmlProps?: HTMLAttributes<HTMLOListElement> & DataAttributes;
 }
 
-export function Toaster({ htmlProps, ...props }: ToasterProps): ReactElement {
+export function Toaster({ htmlProps, ...props }: ToasterProps): ReactElement | null {
   const config: ToasterConfig = { ...DEFAULT_TOASTER_CONFIG, ...stripUndefined(props) };
+  const isHost = useElectedHost(toasterReg, 'toaster');
 
   useEffect(() => {
+    if (!isHost) return undefined;
     store.config = config;
     store.mounted = true;
     if (config.expand) store.setExpanded(true);
     return () => {
       store.mounted = false;
     };
-  }, [config.position, config.duration, config.visibleToasts, config.gap, config.offset, config.expand]);
+  }, [isHost, config.position, config.duration, config.visibleToasts, config.gap, config.offset, config.expand]);
 
+  if (!isHost) return null;
   return <ToastHost config={config} htmlProps={htmlProps} />;
 }
 

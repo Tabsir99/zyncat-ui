@@ -1,3 +1,4 @@
+import { sharedSlot } from '../shared-slot';
 import { resolveTiming, type Timing } from './ease';
 
 export const clock = { scale: 1 };
@@ -85,7 +86,7 @@ export interface PropertyHolder {
   cancel(): void;
 }
 
-const owned = new WeakMap<HTMLElement, Map<string, PropertyHolder>>();
+const owned = sharedSlot('engine.owned@1', () => new WeakMap<HTMLElement, Map<string, PropertyHolder>>());
 
 export function claim(el: HTMLElement, keys: string[], holder: PropertyHolder | null): void {
   const map = owned.get(el) ?? new Map<string, PropertyHolder>();

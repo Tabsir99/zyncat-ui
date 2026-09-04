@@ -7,6 +7,7 @@ import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { animate, type Layer, type Playback } from '../../../engine';
 import type { MotionTimingDefaults, MotionTimings } from '../../../motion/motion-timing';
 import { run, useMotion, type MotionSpec, type MotionSpecs } from '../../../motion/use-motion';
+import { sharedSlot } from '../../../shared-slot';
 import { cx } from '../utils/cx';
 import { useFocusTrap, useReturnFocus } from './focus';
 import { useOverlayEntry } from './layer';
@@ -23,7 +24,7 @@ interface OvScopeLock {
   inerted: HTMLElement[];
 }
 
-const ovScopeLocks = new Map<HTMLElement, OvScopeLock>();
+const ovScopeLocks = sharedSlot('overlay.scope-locks@1', () => new Map<HTMLElement, OvScopeLock>());
 
 function ovGutter(scope: HTMLElement, cs: CSSStyleDeclaration): number {
   if (scope === document.body) return window.innerWidth - document.documentElement.clientWidth;

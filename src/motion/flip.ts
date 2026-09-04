@@ -12,11 +12,12 @@ import {
   type FlipOptions,
   type Playback,
 } from '../engine';
+import { sharedSlot } from '../shared-slot';
 import { UIMotion } from '../tokens/motion-tokens';
 
 export type FlipTuning = FlipOptions;
 
-const sharedOwner = new Map<string, HTMLElement>();
+const sharedOwner = sharedSlot('motion.flip-owner@1', () => new Map<string, HTMLElement>());
 
 const usable = (box: Box | null): box is Box => !!box && box.width > 0 && box.height > 0;
 

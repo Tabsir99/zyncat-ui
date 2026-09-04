@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
+
+import { sharedSlot } from '../../../shared-slot';
+import { hostRegistry, useElectedHost } from '../../internal/hooks/use-host-election';
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -18,7 +21,7 @@ export const CLOSE_GRACE = 140;
 export const TOOLTIP_DOM_ID = 'pds-tooltip';
 const WARM_WINDOW = 300;
 
-export const store = {
+export const store = sharedSlot('tooltip.store@1', () => ({
   stack: [] as ActivePayload[],
   described: null as HTMLElement | null,
   timers: new Map<string, ReturnType<typeof setTimeout>>(),
@@ -62,33 +65,10 @@ export const store = {
   dismiss() {
     for (const entry of store.stack.slice()) entry.dismiss();
   },
-};
+}));
 
-const hostReg = {
-  keys: [] as symbol[],
-  listeners: new Set<() => void>(),
-  subscribe(l: () => void) {
-    hostReg.listeners.add(l);
-    return () => hostReg.listeners.delete(l);
-  },
-  register(k: symbol) {
-    hostReg.keys.push(k);
-    hostReg.listeners.forEach((l) => l());
-    return () => {
-      const i = hostReg.keys.indexOf(k);
-      if (i >= 0) hostReg.keys.splice(i, 1);
-      hostReg.listeners.forEach((l) => l());
-    };
-  },
-};
+const hostReg = hostRegistry('tooltip.host@1');
 
 export function useHostElection(): boolean {
-  const keyRef = useRef<symbol | null>(null);
-  if (!keyRef.current) keyRef.current = Symbol('tip-host');
-  useEffect(() => hostReg.register(keyRef.current!), []);
-  return useSyncExternalStore(
-    hostReg.subscribe,
-    () => hostReg.keys[0] === keyRef.current,
-    () => false,
-  );
+  return useElectedHost(hostReg, 'tip-host');
 }

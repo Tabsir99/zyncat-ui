@@ -18,6 +18,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+import { sharedSlot } from '../../../shared-slot';
 import { activationProps, type ActivateOn } from '../utils/activation';
 
 interface OverlayEntry {
@@ -28,7 +29,7 @@ interface OverlayEntry {
   _close?: () => void;
 }
 
-const ovStack: OverlayEntry[] = [];
+const ovStack = sharedSlot('overlay.stack@1', () => [] as OverlayEntry[]);
 
 function ovOnDocKeyDown(e: KeyboardEvent) {
   if (e.key !== 'Escape' || e.defaultPrevented || ovStack.length === 0) return;
