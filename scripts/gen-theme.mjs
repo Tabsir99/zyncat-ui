@@ -104,12 +104,17 @@ const blockKind = (selector) => {
   return selector.includes('[data-theme]') ? 'themed' : 'root';
 };
 
+/* A token is declared by an unconditional :root block; a @media block only overrides one. */
+const mediaSpans = (css) =>
+  [...css.matchAll(/@media[^{]*\{/g)]
+    .map((match) => [match.index, matchBraces(css, css.indexOf('{', match.index))])
+    .filter(([, end]) => end !== -1);
+
 const tokenBlocks = (css) => {
-  const mediaIndex = css.indexOf('@media (prefers-reduced-motion: reduce)');
-  const mediaEnd = mediaIndex === -1 ? -1 : matchBraces(css, css.indexOf('{', mediaIndex));
+  const spans = mediaSpans(css);
   const blocks = [];
   for (const match of css.matchAll(ROOT_SELECTOR_RE)) {
-    if (mediaIndex !== -1 && match.index > mediaIndex && match.index < mediaEnd) continue;
+    if (spans.some(([start, end]) => match.index > start && match.index < end)) continue;
     blocks.push({ inner: blockInner(css, match.index), kind: blockKind(match[1]) });
   }
   return blocks;
@@ -701,16 +706,20 @@ bridgeSection(
   'Corners - rounded-<step>',
   inFile(RADIUS_FILE, '--radius-').map((token) => bridge(token.cssName, token)),
 );
-bridgeSection('Elevation - shadow-<step>, shadow-focus, shadow-ring-<hue>, shadow-glow-<hue>', [
+bridgeSection('Elevation - shadow-<step>, shadow-glow-<hue>', [
   ...inFile(ELEVATION_FILE, '--shadow-')
     .filter((token) => !token.cssName.endsWith(STRENGTH_SUFFIX))
     .map((token) => bridge(token.cssName, token)),
-  bridge('--shadow-focus', byCssName.get('--focus-ring') ?? fail('--focus-ring is not declared.')),
-  ...inFile(ELEVATION_FILE, '--ring-').map((token) => bridge(`--shadow-ring-${after(token, '--ring-')}`, token)),
   ...inFile(ELEVATION_FILE, '--glow-')
     .filter((token) => !token.cssName.endsWith(STRENGTH_SUFFIX))
     .map((token) => bridge(`--shadow-glow-${after(token, '--glow-')}`, token)),
 ]);
+bridgeSection(
+  'Focus rings - outline-ring-<hue>, ring-ring-<hue>, and every other colour utility',
+  inFile(ELEVATION_FILE, '--ring-color-').map((token) =>
+    bridge(`--color-ring-${after(token, '--ring-color-')}`, token),
+  ),
+);
 bridgeSection(
   'Motion - ease-<curve>',
   inFile(MOTION_FILE, '--ease-').map((token) => bridge(token.cssName, token)),

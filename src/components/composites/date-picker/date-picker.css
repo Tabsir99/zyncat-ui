@@ -27,7 +27,7 @@
   .zc-dtf__trigger[aria-expanded='true']:not(:disabled) {
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
 
   .zc-dtp {
@@ -98,8 +98,7 @@
     background: var(--bg-muted);
   }
   .zc-dtp__nav:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
   .zc-dtp__nav:disabled {
     color: var(--text-disabled);
@@ -150,8 +149,7 @@
     color: var(--text-strong);
   }
   .zc-dtp__day:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
   .zc-dtp__day.zc-is-out {
     color: var(--text-subtle);
@@ -316,8 +314,7 @@
     color: var(--text-strong);
   }
   .zc-drp__preset:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-drp__preset.zc-is-active {
     background: var(--accent-subtle);
@@ -561,7 +558,7 @@
   .zc-tfd .zc-tfd__box:focus-within {
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-tfd.zc-is-error .zc-tfd__box {
     border-color: var(--danger);
@@ -570,7 +567,7 @@
     border-color: var(--danger-text);
   }
   .zc-tfd.zc-is-error .zc-tfd__box:focus-within {
-    box-shadow: var(--ring-danger);
+    outline: var(--ring-danger);
   }
   .zc-tfd .zc-tfd__box.zc-is-disabled {
     background: var(--bg-muted);

@@ -52,6 +52,26 @@
 - Replicas live in the expressive tier, marked as replicas in their docs.
 - A11y, focus, reduced motion and zero dependencies still bind.
 
+### The focus ring
+
+- A ring is an `outline`, never a `box-shadow`: `outline: var(--ring-accent)` (or `--ring-danger`,
+  `--ring-warning`, `--ring-success`, `--focus-ring`). Never re-list elevation in a focus rule -
+  `box-shadow` stays the base rule's, and the two never share a property.
+- A control whose base rule transitions with `var(--transition-control)` adds
+  `outline: var(--ring-rest)` so the ring fades in instead of snapping.
+- A ring reaches `--ring-width` past the border box. Any container in the component that clips -
+  `overflow` other than `visible`, or a mask - has to leave that room, or the ring is cut:
+  - a scroller adds `scroll-padding: var(--ring-width)` so sequential focus never lands flush;
+  - a scroller whose children sit flush to its content edge also adds `padding` of
+    `var(--ring-width)` with a matching negative `margin`, but only when no clipping ancestor
+    would swallow it again;
+  - `overflow: clip` plus `overflow-clip-margin: var(--ring-width)` works only where the clip is
+    not decorative - it defeats a rounded corner, and it needs `clip` on both axes.
+- A control that is flush with a clipping edge by design - a full-bleed panel, region or row -
+  turns its ring inward with `outline-offset: var(--ring-inset)` instead of reserving room.
+- Collapse is the one place a ring can still be cut: clipping the collapsing axis is how it
+  collapses, so content flush to its edge loses the outer part of its ring.
+
 ### Invariants
 
 - Focus-visible treatment is the system's, everywhere.

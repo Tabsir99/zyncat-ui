@@ -26,6 +26,9 @@
     scrollbar-width: none;
     margin-inline: calc(var(--space-2) * -1);
     padding-inline: var(--space-2);
+    margin-block: calc(var(--ring-width) * -1);
+    padding-block: var(--ring-width);
+    scroll-padding: var(--ring-width);
 
     --tabs-fade-start: 0px;
     --tabs-fade-end: 0px;
@@ -78,6 +81,7 @@
     transition:
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
+    outline: var(--ring-rest);
   }
   .zc-tab__pad .zc-icon {
     display: inline-flex;
@@ -94,7 +98,7 @@
     color: var(--text-strong);
   }
   .zc-tab:focus-visible .zc-tab__pad {
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-tab:disabled {
     cursor: not-allowed;
@@ -138,7 +142,7 @@
   .zc-tabs__ink {
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: var(--ring-width);
     height: var(--tabs-ink-h);
     border-radius: var(--radius-full);
     background: var(--accent);
@@ -193,7 +197,8 @@
     overflow: hidden;
   }
   .zc-tab-panel:focus-visible {
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
+    outline-offset: var(--ring-inset);
     border-radius: var(--radius-md);
   }
   .zc-tab-panel__inner {

@@ -372,7 +372,6 @@
   .zc-instagram-feed__menu:focus-visible,
   .zc-instagram-feed__glyph-button:focus-visible,
   .zc-instagram-feed__mute:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 }

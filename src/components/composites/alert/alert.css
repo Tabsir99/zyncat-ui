@@ -115,6 +115,7 @@
     color: color-mix(in oklab, var(--alert-fg) 64%, transparent);
     cursor: pointer;
     transition: var(--transition-control);
+    outline: var(--ring-rest);
   }
   .zc-alert__close:hover {
     background: color-mix(in oklab, var(--alert-fg) 9%, transparent);
@@ -124,7 +125,6 @@
     background: color-mix(in oklab, var(--alert-fg) 14%, transparent);
   }
   .zc-alert__close:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 }

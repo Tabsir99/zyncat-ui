@@ -112,8 +112,8 @@
     background: var(--support-rail-surface-raised);
   }
   .zc-support-rail__needle:focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-md), var(--focus-ring);
+    outline: var(--focus-ring);
+    outline-offset: var(--ring-inset);
   }
 
   .zc-support-rail[data-open='true'] .zc-support-rail__needle {
@@ -298,8 +298,7 @@
     color: var(--text-inverse);
   }
   .zc-support-rail__close:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-support-rail__list {
@@ -341,9 +340,9 @@
     background: var(--neutral-wash-press);
   }
   .zc-support-rail__row:focus-visible {
-    outline: none;
     z-index: 1;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
+    outline-offset: var(--ring-inset);
   }
 
   .zc-support-rail__row-icon {
@@ -381,6 +380,11 @@
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    scroll-padding: var(--ring-width);
+  }
+  .zc-support-rail__extra:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--ring-inset);
   }
   .zc-support-rail__extra:not(:empty) {
     padding: var(--space-4) var(--space-5) var(--space-5);

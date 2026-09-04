@@ -32,6 +32,7 @@
     box-shadow: var(--tag-shadow);
 
     transition: var(--transition-control);
+    outline: var(--ring-rest);
   }
 
   .zc-tag__label {
@@ -100,8 +101,7 @@
     transform: scale(0.9);
   }
   .zc-tag__remove:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tag:has(.zc-tag__remove:hover):not([data-disabled]),
@@ -129,8 +129,7 @@
     --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
   }
   .zc-tag--toggle:focus-visible {
-    outline: none;
-    box-shadow: var(--tag-shadow), var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tag--toggle[aria-pressed='true'] {

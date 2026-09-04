@@ -9,6 +9,7 @@
     width: max-content;
     max-width: var(--menu-max-width, min(22rem, 92vw));
     padding: var(--space-1);
+    padding-block-end: 0;
     background: var(--bg-surface-raised);
     border: var(--border-hairline) solid var(--border-default);
     border-radius: var(--radius-lg);
@@ -46,6 +47,15 @@
   }
   .zc-menu-surface[data-side='left'] {
     transform-origin: right var(--menu-origin);
+  }
+
+  .zc-menu-surface[data-content='true'] {
+    padding-block-end: var(--space-1);
+  }
+
+  .zc-menu-surface > .zc-menu-scroller {
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
   }
 
   .zc-menu-scroller {

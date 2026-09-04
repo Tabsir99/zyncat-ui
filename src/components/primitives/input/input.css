@@ -40,6 +40,7 @@
     transition: var(--transition-control);
     appearance: none;
     -webkit-appearance: none;
+    outline: var(--ring-rest);
   }
   .zc-fld__input::placeholder {
     color: var(--text-disabled);
@@ -48,10 +49,9 @@
     border-color: var(--border-strong);
   }
   .zc-fld__input:focus {
-    outline: none;
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-fld__input:disabled {
     background: var(--bg-muted);
@@ -126,15 +126,15 @@
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: var(--transition-control);
+    outline: var(--ring-rest);
   }
   .zc-fld__action:hover {
     color: var(--text-strong);
     background: var(--bg-muted);
   }
   .zc-fld__action:focus-visible {
-    outline: none;
     color: var(--text-strong);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-fld--has-action .zc-fld__input {
     padding-right: calc(var(--space-2) + var(--control-height-sm) + var(--space-1));
@@ -147,7 +147,7 @@
     border-color: var(--danger-text);
   }
   .zc-fld.zc-is-error .zc-fld__input:focus {
-    box-shadow: var(--ring-danger);
+    outline: var(--ring-danger);
   }
   .zc-fld.zc-is-error .zc-fld__msg,
   .zc-fld.zc-is-error .zc-fld__icon {
@@ -160,7 +160,7 @@
     border-color: var(--warning-text);
   }
   .zc-fld.zc-is-warning .zc-fld__input:focus {
-    box-shadow: var(--ring-warning);
+    outline: var(--ring-warning);
   }
   .zc-fld.zc-is-warning .zc-fld__msg {
     color: var(--warning-text);
@@ -172,7 +172,7 @@
     border-color: var(--success-text);
   }
   .zc-fld.zc-is-success .zc-fld__input:focus {
-    box-shadow: var(--ring-success);
+    outline: var(--ring-success);
   }
   .zc-fld.zc-is-success .zc-fld__msg {
     color: var(--success-text);
@@ -230,6 +230,10 @@
     cursor: not-allowed;
     background: var(--bg-surface);
   }
+  .zc-numf__step:focus-visible {
+    outline: var(--ring-accent);
+    outline-offset: var(--ring-inset);
+  }
   .zc-numf__step + .zc-numf__step {
     border-top: var(--border-hairline) solid var(--border-default);
   }
@@ -257,15 +261,15 @@
     transition: var(--transition-control);
     caret-color: var(--accent);
     appearance: none;
+    outline: var(--ring-rest);
   }
   .zc-otp__slot:hover:not(:disabled):not(:focus) {
     border-color: var(--border-strong);
   }
   .zc-otp__slot:focus {
-    outline: none;
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-otp__slot[data-filled='true'] {
     border-color: var(--border-strong);
@@ -294,6 +298,6 @@
     border-color: var(--danger-text);
   }
   .zc-otp.zc-is-error .zc-otp__slot:focus {
-    box-shadow: var(--ring-danger);
+    outline: var(--ring-danger);
   }
 }

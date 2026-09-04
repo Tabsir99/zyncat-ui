@@ -26,8 +26,7 @@
   }
 
   .zc-facebook-feed-button:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-facebook-feed-post__more,
@@ -410,8 +409,7 @@
   }
 
   .zc-facebook-feed-reel__mute:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__mute {
@@ -840,8 +838,7 @@
   }
 
   .zc-facebook-feed-story__mute:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-facebook-feed-story__mute-glyph {

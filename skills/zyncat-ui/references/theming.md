@@ -84,6 +84,13 @@ The vocabulary a page reads is the roles, never the plumbing:
 `--radius-sm..2xl/-full`, `--shadow-xs..xl`, `--focus-ring`, `--duration-*`, `--ease-*`,
 `--transition-control/-colors/-opacity`. `get_tokens` prints all of it with real values.
 
+`--focus-ring` and `--ring-accent/-danger/-warning/-success` are `outline` values, so they go on
+`outline`, not `box-shadow`: `outline: var(--focus-ring)`. `--ring-color-*` is the hue alone,
+`--ring-width` the reach past the border box. A ring is an outline so it never collides with a
+component's elevation, and a container that clips can reserve exactly `--ring-width` for it - give
+your own scrollers `scroll-padding: var(--ring-width)` and anything flush with a clipping edge
+`outline-offset: var(--ring-inset)`.
+
 ## Level 2 - retune one component
 
 Expressive and compound components publish scoped `--<component>-<name>` properties as their public
@@ -136,7 +143,8 @@ Every role is a utility named after its token: surfaces `bg-app`, `bg-surface`, 
 `hover:bg-accent-hover`, `bg-accent-wash`, `ring-accent`, `bg-danger/10`; the type roles
 `text-micro` … `text-display-lg`, `text-label`, `text-code` (size and leading - add `font-code` for
 the face), with `font-body`, `leading-<role>`, `tracking-caps`, `tracking-display`; `rounded-sm` …
-`rounded-2xl`, `shadow-xs` … `shadow-xl`, `shadow-focus`, `shadow-ring-<hue>`, `shadow-glow-<hue>`;
+`rounded-2xl`, `shadow-xs` … `shadow-xl`, `shadow-glow-<hue>`, `outline-ring-<hue>` (and every other
+colour utility on `ring-<hue>`);
 `duration-fast` … `duration-slowest`, `ease-standard`, `ease-entrance`, `ease-exit`, `ease-spring`,
 `ease-glide`; `max-w-prose`, `max-w-floating`. Each utility reads the token itself, so a themed
 subtree and the dark theme reach it, and `dark:` follows `data-theme` rather than the OS. The names

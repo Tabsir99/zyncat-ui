@@ -151,7 +151,7 @@ it - `dark:` follows `data-theme`:
 
 Surfaces `bg-*`, ink `text-*` (the body ink is `text-default`), hairlines `border-*`, the hues on
 every colour utility with `/opacity`, the type roles as `text-<role>` with their leading and weight,
-`rounded-*`, `shadow-*`, `shadow-focus`, `duration-*`, `ease-*`, `max-w-prose`. The names Tailwind
+`rounded-*`, `shadow-*`, `outline-ring-<hue>`, `duration-*`, `ease-*`, `max-w-prose`. The names Tailwind
 also ships, `rounded-md`, `shadow-md`, `tracking-tight`, read the zyncat token of the same name, so
 `--radius` in your theme file moves your utilities and the components together. Spacing stays
 Tailwind's own scale.

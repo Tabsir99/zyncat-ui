@@ -487,6 +487,7 @@ body {
 
 .plate-tabs {
   align-self: flex-end;
+  margin-bottom: calc(var(--border-hairline) * -1);
 }
 
 .plate-tabs::after {

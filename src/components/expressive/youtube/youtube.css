@@ -39,8 +39,7 @@
   }
 
   .zc-youtube-button:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-youtube__glyph {
@@ -281,8 +280,7 @@
   }
 
   .zc-youtube-short__control:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-youtube-short__pill {
@@ -468,8 +466,7 @@
   }
 
   .zc-youtube-post__viewport:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-youtube-post__strip {
@@ -539,10 +536,7 @@
   }
 
   .zc-youtube-post__arrow:focus-visible {
-    outline: none;
-    box-shadow:
-      var(--focus-ring),
-      0 1px 6px rgb(0 0 0 / 0.28);
+    outline: var(--focus-ring);
   }
 
   .zc-youtube-post__actions {

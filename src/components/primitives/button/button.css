@@ -51,12 +51,13 @@
       border-color var(--duration-fast) var(--ease-standard),
       color var(--duration-fast) var(--ease-standard),
       box-shadow var(--duration-fast) var(--ease-standard),
+      outline-color var(--duration-fast) var(--ease-standard),
       transform var(--duration-fast) var(--ease-standard);
+    outline: var(--ring-rest);
   }
 
   .zc-btn:focus-visible {
-    outline: none;
-    box-shadow: var(--btn-shadow), var(--btn-ring);
+    outline: var(--btn-ring);
   }
 
   .zc-btn--sm {
@@ -226,7 +227,7 @@
   }
   .zc-btn--link:focus-visible {
     border-radius: var(--radius-sm);
-    box-shadow: var(--btn-ring);
+    outline: var(--btn-ring);
   }
 
   .zc-btn:disabled,

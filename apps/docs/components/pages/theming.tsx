@@ -64,9 +64,8 @@ const TAILWIND_ROWS: TailwindRow[] = [
   },
   {
     family: 'Corners, elevation',
-    utilities:
-      'rounded-sm … rounded-2xl, rounded-full, shadow-xs … shadow-xl, shadow-focus, shadow-ring-<hue>, shadow-glow-<hue>',
-    tokens: '--radius-*, --shadow-*, --focus-ring, --ring-*, --glow-*',
+    utilities: 'rounded-sm … rounded-2xl, rounded-full, shadow-xs … shadow-xl, shadow-glow-<hue>, outline-ring-<hue>',
+    tokens: '--radius-*, --shadow-*, --focus-ring, --ring-*, --ring-color-*, --glow-*',
   },
   {
     family: 'Motion',

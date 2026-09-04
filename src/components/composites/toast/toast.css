@@ -207,8 +207,7 @@
     background: color-mix(in oklab, var(--glass-fg) 14%, transparent);
   }
   .zc-toast__close:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
     opacity: 1;
   }
 

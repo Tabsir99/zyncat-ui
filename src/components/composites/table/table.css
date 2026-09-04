@@ -41,6 +41,7 @@
     min-height: 0;
     overflow: auto;
     overscroll-behavior-x: contain;
+    scroll-padding: var(--ring-width);
   }
   .zc-tbl[data-y-scroll] .zc-tbl__scroll {
     overscroll-behavior-y: contain;
@@ -168,8 +169,7 @@
     background: var(--neutral-wash);
   }
   .zc-tbl__sort:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
   .zc-tbl__table th[aria-sort] .zc-tbl__sort {
     color: var(--text-strong);

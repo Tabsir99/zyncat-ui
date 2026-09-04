@@ -172,7 +172,7 @@
 
   .zc-rg-opt__input:focus-visible ~ .zc-rg-opt__control .zc-rg-opt__dot {
     border-color: var(--accent);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
 
   .zc-rg-opt.zc-is-disabled {
@@ -251,7 +251,7 @@
     color: var(--text-accent);
   }
   .zc-rg--cards .zc-rg-opt:has(.zc-rg-opt__input:focus-visible) {
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
 
   .zc-rg--cards .zc-rg-opt.zc-is-disabled {

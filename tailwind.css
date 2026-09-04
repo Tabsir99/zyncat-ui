@@ -147,19 +147,20 @@
   --radius-xl: var(--radius-xl);
   --radius-2xl: var(--radius-2xl);
 
-  /* Elevation - shadow-<step>, shadow-focus, shadow-ring-<hue>, shadow-glow-<hue> */
+  /* Elevation - shadow-<step>, shadow-glow-<hue> */
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
-  --shadow-focus: var(--focus-ring);
-  --shadow-ring-accent: var(--ring-accent);
-  --shadow-ring-danger: var(--ring-danger);
-  --shadow-ring-warning: var(--ring-warning);
-  --shadow-ring-success: var(--ring-success);
   --shadow-glow-accent: var(--glow-accent);
   --shadow-glow-danger: var(--glow-danger);
+
+  /* Focus rings - outline-ring-<hue>, ring-ring-<hue>, and every other colour utility */
+  --color-ring-accent: var(--ring-color-accent);
+  --color-ring-danger: var(--ring-color-danger);
+  --color-ring-warning: var(--ring-color-warning);
+  --color-ring-success: var(--ring-color-success);
 
   /* Motion - ease-<curve> */
   --ease-standard: var(--ease-standard);

@@ -107,6 +107,7 @@
     cursor: pointer;
     font-size: var(--icon-sm);
     transition: var(--transition-control);
+    outline: var(--ring-rest);
   }
   .zc-dialog__close:hover {
     background: var(--neutral-wash);
@@ -116,9 +117,8 @@
     background: var(--bg-muted);
   }
   .zc-dialog__close:focus-visible {
-    outline: none;
     color: var(--text-strong);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
 
   .zc-dialog__body {

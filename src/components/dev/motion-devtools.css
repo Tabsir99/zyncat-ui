@@ -86,8 +86,7 @@
     background: var(--neutral-wash, oklch(0.5 0.01 264 / 0.07));
   }
   .zc-mdt__head:focus-visible {
-    outline: none;
-    box-shadow: var(--ring-accent, 0 0 0 3px oklch(0.7 0.12 185 / 0.35));
+    outline: var(--ring-accent, 3px solid oklch(0.7 0.12 185 / 0.35));
   }
 
   .zc-mdt__glyph {
@@ -205,10 +204,10 @@
     outline: none;
   }
   .zc-mdt__slider:focus-visible::-webkit-slider-thumb {
-    box-shadow: var(--ring-accent, 0 0 0 3px oklch(0.7 0.12 185 / 0.35));
+    outline: var(--ring-accent, 3px solid oklch(0.7 0.12 185 / 0.35));
   }
   .zc-mdt__slider:focus-visible::-moz-range-thumb {
-    box-shadow: var(--ring-accent, 0 0 0 3px oklch(0.7 0.12 185 / 0.35));
+    outline: var(--ring-accent, 3px solid oklch(0.7 0.12 185 / 0.35));
   }
 
   .zc-mdt__chips {

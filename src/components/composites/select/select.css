@@ -31,22 +31,23 @@
       color var(--duration-base) var(--ease-standard),
       background-color var(--duration-base) var(--ease-standard),
       border-color var(--duration-base) var(--ease-standard),
-      box-shadow var(--duration-base) var(--ease-standard);
+      box-shadow var(--duration-base) var(--ease-standard),
+      outline-color var(--duration-base) var(--ease-standard);
+    outline: var(--ring-rest);
   }
   .zc-select__trigger:hover {
     border-color: var(--border-strong);
     background-color: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
   }
   .zc-select__trigger:focus-visible {
-    outline: none;
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-select[data-open='true'] .zc-select__trigger {
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
 
   .zc-select[data-size='sm'] .zc-select__trigger {
@@ -67,7 +68,7 @@
   .zc-select[data-invalid='true'] .zc-select__trigger:focus-visible,
   .zc-select[data-invalid='true'][data-open='true'] .zc-select__trigger {
     border-color: var(--danger);
-    box-shadow: var(--ring-danger);
+    outline: var(--ring-danger);
   }
 
   .zc-select[data-disabled='true'] .zc-select__trigger {

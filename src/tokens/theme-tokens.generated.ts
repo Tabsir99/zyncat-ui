@@ -585,6 +585,8 @@ export interface TokenProperties {
   '--border-hairline'?: string | number;
   /** `--border-emphasis`. Default: `1.5px`. */
   '--border-emphasis'?: string | number;
+  /** `--ring-width` - How far every focus ring reaches past the border box - the exact room a clipping ancestor reserves so a ring is never cut. Default: `3px`. */
+  '--ring-width'?: string | number;
   /** `--layer-overlay` - a band - each overlay adds its stack depth, so a later one paints above an earlier one. Default: `1000`. */
   '--layer-overlay'?: string | number;
   /** `--layer-toast`. Default: `1050`. */
@@ -607,13 +609,25 @@ export interface TokenProperties {
   '--shadow-lg'?: string | number;
   /** `--shadow-xl`. Default: `0 1px 2px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 8px 16px rgb(var(--shadow-rgb) / calc(0.06 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-rgb) / calc(0.14 * var(--shadow-strength)))`. Re-derived on every theme root. */
   '--shadow-xl'?: string | number;
-  /** `--ring-accent` - Focus & selection rings - box-shadows (not outlines) so they follow border-radius. Each tracks its role's hue; danger rings on its fill tone, the lighter face the destructive button rests on. Default: `0 0 0 3px color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
+  /** `--ring-color-accent` - Focus & selection ring hues - each tracks its role; danger rings on its fill tone, the lighter face the destructive button rests on. Default: `color-mix(in oklab, var(--accent) 32%, transparent)`. Re-derived on every theme root. */
+  '--ring-color-accent'?: string | number;
+  /** `--ring-color-danger`. Default: `oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
+  '--ring-color-danger'?: string | number;
+  /** `--ring-color-warning`. Default: `color-mix(in oklab, var(--warning) 30%, transparent)`. Re-derived on every theme root. */
+  '--ring-color-warning'?: string | number;
+  /** `--ring-color-success`. Default: `color-mix(in oklab, var(--success) 30%, transparent)`. Re-derived on every theme root. */
+  '--ring-color-success'?: string | number;
+  /** `--ring-rest` - The rings themselves - outline values, so a ring never shares box-shadow with elevation and a clipping ancestor can reserve exactly --ring-width. Outlines follow border-radius everywhere this library supports. --ring-rest is the resting ring a control fades in from; --ring-inset is the offset that turns a ring inward, for a control flush with a clipping edge. Default: `var(--ring-width) solid transparent`. Re-derived on every theme root. */
+  '--ring-rest'?: string | number;
+  /** `--ring-inset`. Default: `calc(var(--ring-width) * -1)`. Re-derived on every theme root. */
+  '--ring-inset'?: string | number;
+  /** `--ring-accent`. Default: `var(--ring-width) solid var(--ring-color-accent)`. Re-derived on every theme root. */
   '--ring-accent'?: string | number;
-  /** `--ring-danger`. Default: `0 0 0 3px oklch(from var(--danger) 0.602 0.196 h / 0.3)`. Re-derived on every theme root. */
+  /** `--ring-danger`. Default: `var(--ring-width) solid var(--ring-color-danger)`. Re-derived on every theme root. */
   '--ring-danger'?: string | number;
-  /** `--ring-warning`. Default: `0 0 0 3px color-mix(in oklab, var(--warning) 30%, transparent)`. Re-derived on every theme root. */
+  /** `--ring-warning`. Default: `var(--ring-width) solid var(--ring-color-warning)`. Re-derived on every theme root. */
   '--ring-warning'?: string | number;
-  /** `--ring-success`. Default: `0 0 0 3px color-mix(in oklab, var(--success) 30%, transparent)`. Re-derived on every theme root. */
+  /** `--ring-success`. Default: `var(--ring-width) solid var(--ring-color-success)`. Re-derived on every theme root. */
   '--ring-success'?: string | number;
   /** `--glow-accent` - Cast light - the hover of the primary and destructive buttons; each tracks its ring's hue. Default: `0 4px 16px oklch(from var(--accent) l c h / calc(0.4 * var(--glow-strength)))`. Re-derived on every theme root. */
   '--glow-accent'?: string | number;
@@ -655,7 +669,7 @@ export interface TokenProperties {
   '--scale-floating'?: string | number;
   /** `--scale-chip` - small inline elements - tag, badge, count. Default: `0.9`. */
   '--scale-chip'?: string | number;
-  /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
+  /** `--transition-control`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard), outline-color var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
   '--transition-control'?: string | number;
   /** `--transition-colors`. Default: `color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard)`. Re-derived on every theme root. */
   '--transition-colors'?: string | number;

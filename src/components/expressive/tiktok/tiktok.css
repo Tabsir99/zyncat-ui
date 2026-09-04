@@ -30,8 +30,7 @@
   }
 
   .zc-tiktok__button:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tiktok__stage {
@@ -74,8 +73,8 @@
   }
 
   .zc-tiktok__viewport:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
+    outline-offset: var(--ring-inset);
   }
 
   .zc-tiktok__track {
@@ -254,8 +253,7 @@
   }
 
   .zc-tiktok__mute:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tiktok__pager {
@@ -289,8 +287,7 @@
   }
 
   .zc-tiktok__arrow:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tiktok__dots {
@@ -442,8 +439,7 @@
   }
 
   .zc-tiktok__more:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
+    outline: var(--focus-ring);
   }
 
   .zc-tiktok__translate {

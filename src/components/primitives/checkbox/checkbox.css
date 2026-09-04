@@ -43,7 +43,7 @@
       --cbx-press: 0.88;
     }
     &:has(:focus-visible) .zc-cbx__box {
-      box-shadow: var(--cbx-ring);
+      outline: var(--cbx-ring);
     }
   }
 
@@ -77,6 +77,7 @@
       border-color var(--duration-fast) var(--ease-standard),
       background-color var(--duration-fast) var(--ease-standard),
       box-shadow var(--duration-fast) var(--ease-standard),
+      outline-color var(--duration-fast) var(--ease-standard),
       transform var(--duration-base) var(--ease-spring);
 
     &::before {
@@ -92,6 +93,7 @@
         transform var(--duration-base) var(--ease-spring),
         opacity var(--duration-fast) var(--ease-standard);
     }
+    outline: var(--ring-rest);
   }
 
   .zc-cbx__mark {

@@ -14,6 +14,7 @@
     border: var(--border-hairline) solid var(--border-default);
     border-radius: var(--radius-lg);
     transition: var(--transition-control);
+    outline: var(--ring-rest);
   }
   .zc-txa:hover:not(.zc-is-disabled):not(.zc-is-readonly):not(:focus-within) {
     border-color: var(--border-strong);
@@ -21,7 +22,7 @@
   .zc-txa:focus-within {
     border-color: var(--accent);
     background: var(--bg-surface);
-    box-shadow: var(--ring-accent);
+    outline: var(--ring-accent);
   }
   .zc-txa.zc-is-disabled {
     background: var(--bg-muted);
@@ -177,7 +178,7 @@
     border-color: var(--danger-text);
   }
   .zc-fld.zc-is-error .zc-txa:focus-within {
-    box-shadow: var(--ring-danger);
+    outline: var(--ring-danger);
   }
   .zc-fld.zc-is-warning .zc-txa {
     border-color: var(--warning);
@@ -186,7 +187,7 @@
     border-color: var(--warning-text);
   }
   .zc-fld.zc-is-warning .zc-txa:focus-within {
-    box-shadow: var(--ring-warning);
+    outline: var(--ring-warning);
   }
   .zc-fld.zc-is-success .zc-txa {
     border-color: var(--success);
@@ -195,7 +196,7 @@
     border-color: var(--success-text);
   }
   .zc-fld.zc-is-success .zc-txa:focus-within {
-    box-shadow: var(--ring-success);
+    outline: var(--ring-success);
   }
 
   .zc-fld--txa.zc-fld--lg .zc-txa {
