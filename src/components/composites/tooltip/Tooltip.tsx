@@ -67,7 +67,8 @@ export function Tooltip({
 }: TooltipProps) {
   const wrapRef = useRef<HTMLSpanElement | null>(null);
   const openTimer = useRef<ReturnType<typeof setTimeout> | 0>(0);
-  const myId = id || 'tip-' + useId();
+  const autoId = useId();
+  const myId = id || 'tip-' + autoId;
   const isHost = useHostElection();
   const { isPresent } = usePresence();
   const [open, setOpen] = useControllable(controlledOpen, defaultOpen, onOpenChange);
