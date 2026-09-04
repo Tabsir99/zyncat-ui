@@ -394,7 +394,7 @@ ui`, `tiktok short video feed`. Not rejected on intent - rejected on ownership. 
 
 - Every FAQ claim was read out of the source, not the usage doc: the three surfaces and the
   full prop set (`YouTube.tsx`), `Media` rendering an `<img>` for a string and wrapping your
-  node otherwise with `.youtube__media > *` at `width/height: 100%` (`media.tsx`,
+  node otherwise with `.zc-youtube__media > *` at `width/height: 100%` (`media.tsx`,
   `youtube.css`), the 533px card / 16:9 thumbnail / 36px avatar / two-line `-webkit-line-clamp`
   title (`youtube.css`), the 477px 9:16 Shorts stage and its `--youtube-progress` track
   (`short.tsx`, `youtube.css`), and the 638px post card around a 508px 1:1 carousel viewport

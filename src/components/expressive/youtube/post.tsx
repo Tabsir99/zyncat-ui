@@ -150,21 +150,21 @@ export function PostSurface({
 
   return (
     <>
-      <div className="youtube-post__avatar">
-        <Media source={avatar} className="youtube__avatar-media" />
+      <div className="zc-youtube-post__avatar">
+        <Media source={avatar} className="zc-youtube__avatar-media" />
       </div>
 
-      <div className="youtube-post__body">
-        <p className="youtube-post__head">
-          <span className="youtube-post__name">{channel}</span>
-          <span className="youtube-post__time">{age}</span>
+      <div className="zc-youtube-post__body">
+        <p className="zc-youtube-post__head">
+          <span className="zc-youtube-post__name">{channel}</span>
+          <span className="zc-youtube-post__time">{age}</span>
         </p>
 
-        <p className="youtube-post__text">{text}</p>
+        <p className="zc-youtube-post__text">{text}</p>
 
-        <div className="youtube-post__carousel" ref={carouselRef} style={pageStyle(page)}>
+        <div className="zc-youtube-post__carousel" ref={carouselRef} style={pageStyle(page)}>
           <div
-            className="youtube-post__viewport"
+            className="zc-youtube-post__viewport"
             ref={viewportRef}
             role="group"
             aria-roledescription={paged ? CAROUSEL_ROLE_DESCRIPTION : undefined}
@@ -173,10 +173,10 @@ export function PostSurface({
             onPointerDown={onGrab}
             onKeyDown={onKeyDown}
           >
-            <div className="youtube-post__strip">
+            <div className="zc-youtube-post__strip">
               {slides.map((slide, index) => (
                 <div
-                  className="youtube-post__slide"
+                  className="zc-youtube-post__slide"
                   key={index}
                   role={paged ? 'group' : undefined}
                   aria-roledescription={paged ? SLIDE_ROLE_DESCRIPTION : undefined}
@@ -187,7 +187,7 @@ export function PostSurface({
               ))}
             </div>
             {paged && (
-              <span className="youtube-post__stack" aria-hidden="true">
+              <span className="zc-youtube-post__stack" aria-hidden="true">
                 <StackGlyph />
               </span>
             )}
@@ -196,7 +196,7 @@ export function PostSurface({
           {paged && page > FIRST_PAGE && (
             <button
               type="button"
-              className="youtube-post__arrow youtube-post__arrow--prev"
+              className="zc-youtube-post__arrow zc-youtube-post__arrow--prev"
               aria-label={PREVIOUS_LABEL}
               onClick={() => goTo(page - ONE_PAGE)}
             >
@@ -206,7 +206,7 @@ export function PostSurface({
           {paged && page < lastPage && (
             <button
               type="button"
-              className="youtube-post__arrow youtube-post__arrow--next"
+              className="zc-youtube-post__arrow zc-youtube-post__arrow--next"
               aria-label={NEXT_LABEL}
               onClick={() => goTo(page + ONE_PAGE)}
             >
@@ -215,26 +215,26 @@ export function PostSurface({
           )}
         </div>
 
-        <p className="youtube-post__actions">
-          <span className="youtube-post__action">
+        <p className="zc-youtube-post__actions">
+          <span className="zc-youtube-post__action">
             <button
               type="button"
-              className="youtube-button youtube-post__action-glyph youtube-post__action-glyph--thumb"
+              className="zc-youtube-button zc-youtube-post__action-glyph zc-youtube-post__action-glyph--thumb"
               aria-label={LIKE_LABEL}
               aria-pressed={liked}
               onClick={() => onLikedChange(!liked)}
             >
               <ThumbUpGlyph />
             </button>
-            <span className="youtube-post__action-count">
-              <span className="youtube__sr">{LIKES_LABEL} </span>
+            <span className="zc-youtube-post__action-count">
+              <span className="zc-youtube__sr">{LIKES_LABEL} </span>
               {compactCount(likes + (liked ? 1 : 0))}
             </span>
           </span>
-          <span className="youtube-post__action youtube-post__action--dislike">
+          <span className="zc-youtube-post__action zc-youtube-post__action--dislike">
             <button
               type="button"
-              className="youtube-button youtube-post__action-glyph youtube-post__action-glyph--thumb"
+              className="zc-youtube-button zc-youtube-post__action-glyph zc-youtube-post__action-glyph--thumb"
               aria-label={DISLIKE_LABEL}
               aria-pressed={disliked}
               onClick={() => onDislikedChange(!disliked)}
@@ -242,27 +242,27 @@ export function PostSurface({
               <ThumbDownGlyph />
             </button>
           </span>
-          <span className="youtube-post__action youtube-post__action--share">
+          <span className="zc-youtube-post__action zc-youtube-post__action--share">
             <button
               type="button"
-              className="youtube-button youtube-post__action-glyph youtube-post__action-glyph--share"
+              className="zc-youtube-button zc-youtube-post__action-glyph zc-youtube-post__action-glyph--share"
               aria-label={SHARE_LABEL}
               onClick={() => onAction?.('share')}
             >
               <ShareGlyph />
             </button>
           </span>
-          <span className="youtube-post__action youtube-post__action--comment">
+          <span className="zc-youtube-post__action zc-youtube-post__action--comment">
             <button
               type="button"
-              className="youtube-button youtube-post__action-glyph youtube-post__action-glyph--bubble"
+              className="zc-youtube-button zc-youtube-post__action-glyph zc-youtube-post__action-glyph--bubble"
               aria-label={COMMENT_LABEL}
               onClick={() => onAction?.('comment')}
             >
               <BubbleGlyph />
             </button>
-            <span className="youtube-post__action-count">
-              <span className="youtube__sr">{COMMENTS_LABEL} </span>
+            <span className="zc-youtube-post__action-count">
+              <span className="zc-youtube__sr">{COMMENTS_LABEL} </span>
               {groupedCount(comments)}
             </span>
           </span>
@@ -271,7 +271,7 @@ export function PostSurface({
 
       <button
         type="button"
-        className="youtube-button youtube-post__more"
+        className="zc-youtube-button zc-youtube-post__more"
         aria-label={MENU_LABEL}
         onClick={() => onAction?.('menu')}
       >

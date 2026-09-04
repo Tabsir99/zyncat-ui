@@ -212,17 +212,17 @@ export function DrpPanel({
     const loCap = isLo && capHere;
     const hiCap = isHi && !single && capHere;
 
-    const cls = ['dtp__day'];
-    if (out) cls.push('is-out');
-    if (inRange) cls.push('is-in-range');
-    if ((loGhost || hiGhost) && capHere) cls.push('is-cap-ghost');
-    else if (loCap || hiCap) cls.push('is-cap');
+    const cls = ['zc-dtp__day'];
+    if (out) cls.push('zc-is-out');
+    if (inRange) cls.push('zc-is-in-range');
+    if ((loGhost || hiGhost) && capHere) cls.push('zc-is-cap-ghost');
+    else if (loCap || hiCap) cls.push('zc-is-cap');
 
-    const bandCls = ['drp__band'];
-    if (extL) bandCls.push('drp__band--extL');
-    if (extR) bandCls.push('drp__band--extR');
-    if (!extL) bandCls.push('drp__band--roundL');
-    if (!extR) bandCls.push('drp__band--roundR');
+    const bandCls = ['zc-drp__band'];
+    if (extL) bandCls.push('zc-drp__band--extL');
+    if (extR) bandCls.push('zc-drp__band--extR');
+    if (!extL) bandCls.push('zc-drp__band--roundL');
+    if (!extR) bandCls.push('zc-drp__band--roundR');
 
     return (
       <button
@@ -248,7 +248,7 @@ export function DrpPanel({
             as="span"
             layoutId={capLoId}
             layoutTransition={CAP_FLIP}
-            className={'drp__cap' + (loGhost ? ' drp__cap--ghost' : '')}
+            className={'zc-drp__cap' + (loGhost ? ' zc-drp__cap--ghost' : '')}
             aria-hidden="true"
           />
         ) : null}
@@ -257,12 +257,12 @@ export function DrpPanel({
             as="span"
             layoutId={capHiId}
             layoutTransition={CAP_FLIP}
-            className={'drp__cap' + (hiGhost ? ' drp__cap--ghost' : '')}
+            className={'zc-drp__cap' + (hiGhost ? ' zc-drp__cap--ghost' : '')}
             aria-hidden="true"
           />
         ) : null}
-        <span className="dtp__num">{d.getDate()}</span>
-        {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
+        <span className="zc-dtp__num">{d.getDate()}</span>
+        {key === todayKey ? <span className="zc-dtp__dot" aria-hidden="true"></span> : null}
       </button>
     );
   }
@@ -275,12 +275,12 @@ export function DrpPanel({
     const prevEnd = toKey(new Date(y, m, 0));
     const nextStart = toKey(new Date(y, m + 1, 1));
     return (
-      <div className="dtp__cal" key={offset}>
-        <div className={'drp__mhead' + (withNext && !withPrev ? ' drp__mhead--right' : '')}>
+      <div className="zc-dtp__cal" key={offset}>
+        <div className={'zc-drp__mhead' + (withNext && !withPrev ? ' zc-drp__mhead--right' : '')}>
           {withPrev ? (
             <button
               type="button"
-              className="dtp__nav"
+              className="zc-dtp__nav"
               aria-label="Previous month"
               disabled={min && prevEnd < min}
               {...activationProps<HTMLButtonElement>(() => nav(-1), { on: activateOn })}
@@ -288,13 +288,13 @@ export function DrpPanel({
               <Icon name="caret-left" size="sm" />
             </button>
           ) : null}
-          <span className="dtp__month">
-            {MONTHS[m]} <span className="dtp__year">{y}</span>
+          <span className="zc-dtp__month">
+            {MONTHS[m]} <span className="zc-dtp__year">{y}</span>
           </span>
           {withNext ? (
             <button
               type="button"
-              className="dtp__nav"
+              className="zc-dtp__nav"
               aria-label="Next month"
               disabled={max && nextStart > max}
               {...activationProps<HTMLButtonElement>(() => nav(1), { on: activateOn })}
@@ -303,13 +303,13 @@ export function DrpPanel({
             </button>
           ) : null}
         </div>
-        <div className="dtp__dow" aria-hidden="true">
+        <div className="zc-dtp__dow" aria-hidden="true">
           {DOW.map((d) => (
             <span key={d}>{d}</span>
           ))}
         </div>
         <div
-          className="dtp__days"
+          className="zc-dtp__days"
           role="grid"
           aria-label={MONTHS[m] + ' ' + y}
           key={'days-' + viewIdx + '-' + offset}
@@ -328,13 +328,13 @@ export function DrpPanel({
 
   return (
     <div
-      className={'drp' + (layout === 'sheet' ? ' drp--sheet' : '')}
+      className={'zc-drp' + (layout === 'sheet' ? ' zc-drp--sheet' : '')}
       role="dialog"
       aria-label={label || 'Pick a date range'}
     >
-      <div className="drp__body">
+      <div className="zc-drp__body">
         <div
-          className="drp__presets"
+          className="zc-drp__presets"
           role="group"
           aria-label="Quick ranges"
           ref={presetsRef}
@@ -344,17 +344,17 @@ export function DrpPanel({
             <button
               key={p.id}
               type="button"
-              className={'drp__preset' + (presetActive(p) ? ' is-active' : '')}
+              className={'zc-drp__preset' + (presetActive(p) ? ' zc-is-active' : '')}
               onPointerEnter={(e) => presetGlide.enter(e.currentTarget)}
               {...activationProps<HTMLButtonElement>(() => applyPreset(p), { on: activateOn })}
             >
               {p.label}
             </button>
           ))}
-          <GlidePill className="drp__presetGlide" glide={presetGlide} />
+          <GlidePill className="zc-drp__presetGlide" glide={presetGlide} />
         </div>
         <div
-          className="drp__months"
+          className="zc-drp__months"
           ref={daysRef}
           onKeyDown={onGridKeyDown}
           onPointerLeave={() => {
@@ -363,15 +363,15 @@ export function DrpPanel({
           }}
         >
           {months === 2 ? [renderMonth(0, true, false), renderMonth(1, false, true)] : renderMonth(0, true, true)}
-          <GlidePill className="dtp__hover" glide={gridGlide} />
+          <GlidePill className="zc-dtp__hover" glide={gridGlide} />
         </div>
       </div>
-      <div className="drp__foot">
-        <span className={'drp__readout' + (lo && hi ? '' : ' is-empty')}>
+      <div className="zc-drp__foot">
+        <span className={'zc-drp__readout' + (lo && hi ? '' : ' zc-is-empty')}>
           {lo && hi ? (
             <Fragment>
               {drpRangeText(lo, hi)}{' '}
-              <span className="drp__count">
+              <span className="zc-drp__count">
                 - {drpDays(lo, hi)} {drpDays(lo, hi) === 1 ? 'day' : 'days'}
               </span>
             </Fragment>
@@ -381,8 +381,8 @@ export function DrpPanel({
             'Pick a start date'
           )}
         </span>
-        {timezone ? <span className="drp__tz">{tzLabel(timezone)}</span> : null}
-        <span className="drp__footSpacer"></span>
+        {timezone ? <span className="zc-drp__tz">{tzLabel(timezone)}</span> : null}
+        <span className="zc-drp__footSpacer"></span>
         <Button variant="primary" size="sm" onClick={close}>
           Done
         </Button>

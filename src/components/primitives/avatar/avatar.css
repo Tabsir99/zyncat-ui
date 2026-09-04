@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .avatar {
+  .zc-avatar {
     --avatar-size: 2rem;
     --avatar-bg: var(--bg-muted);
     --avatar-fg: var(--text-muted);
@@ -30,7 +30,7 @@
     height: var(--avatar-size);
   }
 
-  .avatar__face {
+  .zc-avatar__face {
     width: 100%;
     height: 100%;
     border-radius: var(--radius-full);
@@ -57,14 +57,14 @@
     transition: box-shadow var(--duration-fast) var(--ease-standard);
   }
 
-  .avatar__img {
+  .zc-avatar__img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .avatar__initials {
+  .zc-avatar__initials {
     font-family: var(--font-body);
     font-weight: var(--weight-semibold);
     font-size: calc(var(--avatar-size) * 0.42);
@@ -77,7 +77,7 @@
     -webkit-user-select: none;
   }
 
-  .avatar__icon {
+  .zc-avatar__icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,60 +85,60 @@
     height: 56%;
     opacity: 0.5;
   }
-  .avatar__icon svg {
+  .zc-avatar__icon svg {
     display: block;
     width: 100%;
     height: 100%;
   }
 
-  .avatar--xs {
+  .zc-avatar--xs {
     --avatar-size: 1.25rem;
   }
-  .avatar--sm {
+  .zc-avatar--sm {
     --avatar-size: 1.5rem;
   }
-  .avatar--lg {
+  .zc-avatar--lg {
     --avatar-size: 2.5rem;
   }
-  .avatar--xl {
+  .zc-avatar--xl {
     --avatar-size: 3rem;
   }
 
-  .avatar--square .avatar__face {
+  .zc-avatar--square .zc-avatar__face {
     border-radius: var(--radius-md);
   }
 
-  .avatar--square.avatar--lg .avatar__face,
-  .avatar--square.avatar--xl .avatar__face {
+  .zc-avatar--square.zc-avatar--lg .zc-avatar__face,
+  .zc-avatar--square.zc-avatar--xl .zc-avatar__face {
     border-radius: var(--radius-lg);
   }
 
-  .avatar[data-palette='1'] {
+  .zc-avatar[data-palette='1'] {
     --avatar-bg: var(--avatar-1-bg);
     --avatar-fg: var(--avatar-1-fg);
   }
-  .avatar[data-palette='2'] {
+  .zc-avatar[data-palette='2'] {
     --avatar-bg: var(--avatar-2-bg);
     --avatar-fg: var(--avatar-2-fg);
   }
-  .avatar[data-palette='3'] {
+  .zc-avatar[data-palette='3'] {
     --avatar-bg: var(--avatar-3-bg);
     --avatar-fg: var(--avatar-3-fg);
   }
-  .avatar[data-palette='4'] {
+  .zc-avatar[data-palette='4'] {
     --avatar-bg: var(--avatar-4-bg);
     --avatar-fg: var(--avatar-4-fg);
   }
-  .avatar[data-palette='5'] {
+  .zc-avatar[data-palette='5'] {
     --avatar-bg: var(--avatar-5-bg);
     --avatar-fg: var(--avatar-5-fg);
   }
-  .avatar[data-palette='6'] {
+  .zc-avatar[data-palette='6'] {
     --avatar-bg: var(--avatar-6-bg);
     --avatar-fg: var(--avatar-6-fg);
   }
 
-  .avatar__status {
+  .zc-avatar__status {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -153,38 +153,38 @@
     transition: background-color var(--duration-fast) var(--ease-standard);
   }
 
-  .avatar__status--online {
+  .zc-avatar__status--online {
     background: var(--success);
   }
-  .avatar__status--away {
+  .zc-avatar__status--away {
     background: var(--warning);
   }
-  .avatar__status--busy {
+  .zc-avatar__status--busy {
     background: var(--danger);
   }
-  .avatar__status--offline {
+  .zc-avatar__status--offline {
     background: var(--border-strong);
   }
 
-  .avatar-group {
+  .zc-avatar-group {
     display: inline-flex;
     align-items: center;
   }
 
-  .avatar-group > .avatar {
+  .zc-avatar-group > .zc-avatar {
     --avatar-ring: 0 0 0 2px var(--bg-surface);
   }
 
-  .avatar-group > .avatar + .avatar {
+  .zc-avatar-group > .zc-avatar + .zc-avatar {
     margin-left: calc(var(--avatar-size) * -0.3);
     transition: margin-left var(--duration-base) var(--ease-entrance);
   }
 
-  .avatar-group:hover > .avatar + .avatar {
+  .zc-avatar-group:hover > .zc-avatar + .zc-avatar {
     margin-left: var(--space-1);
   }
 
-  .avatar--overflow .avatar__initials {
+  .zc-avatar--overflow .zc-avatar__initials {
     font-family: var(--font-code);
     font-variant-numeric: tabular-nums;
     font-size: calc(var(--avatar-size) * 0.36);
@@ -193,13 +193,13 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .avatar__face {
+    .zc-avatar__face {
       transition: none;
     }
-    .avatar__status {
+    .zc-avatar__status {
       transition: none;
     }
-    .avatar-group > .avatar + .avatar {
+    .zc-avatar-group > .zc-avatar + .zc-avatar {
       transition: none;
     }
   }

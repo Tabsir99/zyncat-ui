@@ -16,7 +16,7 @@ export interface DateFieldBaseProps {
   label?: string;
   /** Asterisk on the label. @default false */
   required?: boolean;
-  /** Danger border + message color (.fld is-error). @default false */
+  /** Danger border + message color (.zc-fld.zc-is-error). @default false */
   invalid?: boolean;
   /** Helper / error text under the field. */
   message?: string;
@@ -56,13 +56,13 @@ export function FieldShell({
   htmlProps,
   children,
 }: FieldShellProps) {
-  const cls = cx('fld', variant, 'fld--has-lead', invalid && 'is-error', className, htmlProps?.className);
+  const cls = cx('zc-fld', variant, 'zc-fld--has-lead', invalid && 'zc-is-error', className, htmlProps?.className);
   return (
     <div {...htmlProps} className={cls}>
       <FieldLabel label={label} required={required} />
-      <div className="fld__control">
+      <div className="zc-fld__control">
         {children}
-        <span className="fld__icon fld__icon--lead" aria-hidden="true">
+        <span className="zc-fld__icon zc-fld__icon--lead" aria-hidden="true">
           <Icon name={icon} size="md" />
         </span>
       </div>
@@ -80,11 +80,11 @@ export function FieldTrigger({
     ref?: Ref<HTMLButtonElement>;
   }) {
   return (
-    <button type="button" className="fld__input dtf__trigger" disabled={disabled} {...rest}>
+    <button type="button" className="zc-fld__input zc-dtf__trigger" disabled={disabled} {...rest}>
       {display ? (
-        <span className="dtf__value">{display}</span>
+        <span className="zc-dtf__value">{display}</span>
       ) : (
-        <span className="dtf__placeholder">{placeholder}</span>
+        <span className="zc-dtf__placeholder">{placeholder}</span>
       )}
     </button>
   );

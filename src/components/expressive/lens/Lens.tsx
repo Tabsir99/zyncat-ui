@@ -41,7 +41,7 @@ const SPECULAR_OPACITY_BASE = 0.16;
 const SPECULAR_OPACITY_SPEED = 0.44;
 const RECLONE_INTERVAL_MS = 90;
 const KEYBOARD_STEP = 24;
-const ACTIVE_CLASS = 'lens--active';
+const ACTIVE_CLASS = 'zc-lens--active';
 
 const clamp = (v: number, min: number, max: number) => (v < min ? min : v > max ? max : v);
 
@@ -81,7 +81,7 @@ function cloneInto(host: HTMLElement, content: HTMLElement, width: number, heigh
   host.textContent = '';
   const copy = content.cloneNode(true) as HTMLElement;
   copy.setAttribute('aria-hidden', 'true');
-  copy.classList.add('lens__copy');
+  copy.classList.add('zc-lens__copy');
   if (width && height) {
     copy.style.width = `${width}px`;
     copy.style.height = `${height}px`;
@@ -398,17 +398,17 @@ export function Lens({
   }, []);
 
   return (
-    <div ref={stageRef} className={cx('lens', className)} style={style} tabIndex={0} {...htmlProps}>
-      <div ref={contentRef} className="lens__content">
+    <div ref={stageRef} className={cx('zc-lens', className)} style={style} tabIndex={0} {...htmlProps}>
+      <div ref={contentRef} className="zc-lens__content">
         {children}
       </div>
-      <div ref={glassRef} className="lens__glass" aria-hidden="true">
-        <div ref={coreRef} className="lens__core" />
-        <div ref={rimRef} className="lens__rim" />
-        <div ref={fringeRef} className="lens__fringe" />
-        <div className="lens__vignette" />
-        <div ref={specularRef} className="lens__specular" />
-        <div ref={ringRef} className="lens__ring" />
+      <div ref={glassRef} className="zc-lens__glass" aria-hidden="true">
+        <div ref={coreRef} className="zc-lens__core" />
+        <div ref={rimRef} className="zc-lens__rim" />
+        <div ref={fringeRef} className="zc-lens__fringe" />
+        <div className="zc-lens__vignette" />
+        <div ref={specularRef} className="zc-lens__specular" />
+        <div ref={ringRef} className="zc-lens__ring" />
       </div>
     </div>
   );

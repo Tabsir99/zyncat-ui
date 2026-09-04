@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .odometer {
+  .zc-odometer {
     --_odometer-cell: 1em;
     --_odometer-digit: 1ch;
     /* Space between digit columns. */
@@ -29,7 +29,7 @@
     color: var(--odometer-ink);
   }
 
-  .odometer__label {
+  .zc-odometer__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -38,14 +38,14 @@
     white-space: nowrap;
   }
 
-  .odometer__col {
+  .zc-odometer__col {
     display: block;
     width: var(--_odometer-digit);
     height: var(--_odometer-cell);
     overflow: hidden;
   }
 
-  .odometer__strip {
+  .zc-odometer__strip {
     --_odometer-velocity: 0;
     --_odometer-blur: 0;
 
@@ -55,13 +55,13 @@
     color: color-mix(in oklab, var(--odometer-accent) calc(var(--_odometer-velocity) * 100%), var(--odometer-ink));
   }
 
-  .odometer__cell {
+  .zc-odometer__cell {
     display: grid;
     place-items: center;
     height: var(--_odometer-cell);
   }
 
-  .odometer__separator {
+  .zc-odometer__separator {
     color: var(--odometer-separator-ink);
   }
 }

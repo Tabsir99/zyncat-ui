@@ -189,16 +189,16 @@ export function Tabs({
     : (items.find((i) => !i.disabled) || ({} as Partial<TabItem>)).value;
 
   return (
-    <div className={cx('tabs', pill && 'tabs--pill', className)} style={style} {...htmlProps}>
+    <div className={cx('zc-tabs', pill && 'zc-tabs--pill', className)} style={style} {...htmlProps}>
       <div
-        className="tabs__list"
+        className="zc-tabs__list"
         role="tablist"
         aria-label={ariaLabel}
         ref={listRef}
         onKeyDown={onKeyDown}
         onPointerLeave={pill ? undefined : glide.leave}
       >
-        {!pill && <GlidePill className="tab__hover" glide={glide} />}
+        {!pill && <GlidePill className="zc-tab__hover" glide={glide} />}
         {items.map((it) => {
           const selected = it.value === value;
           return (
@@ -211,7 +211,7 @@ export function Tabs({
               aria-controls={name ? name + '-panel-' + it.value : undefined}
               tabIndex={it.value === focusValue ? 0 : -1}
               disabled={it.disabled}
-              className={'tab' + (selected ? ' is-selected' : '')}
+              className={'zc-tab' + (selected ? ' zc-is-selected' : '')}
               ref={(el) => {
                 tabRefs.current[it.value] = el;
               }}
@@ -220,15 +220,15 @@ export function Tabs({
                 it.disabled || pill ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
               }
             >
-              <span className="tab__pad">
+              <span className="zc-tab__pad">
                 {it.icon && <IconSlot size="sm">{it.icon}</IconSlot>}
-                <span className="tab__label">{it.label}</span>
-                {it.count != null && <span className="tab__count">{it.count}</span>}
+                <span className="zc-tab__label">{it.label}</span>
+                {it.count != null && <span className="zc-tab__count">{it.count}</span>}
               </span>
             </button>
           );
         })}
-        <span className="tabs__ink" key="ink" ref={inkRef} aria-hidden="true"></span>
+        <span className="zc-tabs__ink" key="ink" ref={inkRef} aria-hidden="true"></span>
       </div>
     </div>
   );
@@ -273,11 +273,11 @@ export function TabPanel({ tab, name, dir = 0, className = '', style, children, 
       tabIndex={0}
       id={name ? `${name}-panel-${tab}` : undefined}
       aria-labelledby={name ? `${name}-tab-${tab}` : undefined}
-      className={cx('tab-panel', className)}
+      className={cx('zc-tab-panel', className)}
       style={style}
       {...htmlProps}
     >
-      <Motion className="tab-panel__inner" animate={{ x: [dir * TABS_ENTER_X, 0], timing: enter }} deps={[tab]}>
+      <Motion className="zc-tab-panel__inner" animate={{ x: [dir * TABS_ENTER_X, 0], timing: enter }} deps={[tab]}>
         {children}
       </Motion>
     </Motion>

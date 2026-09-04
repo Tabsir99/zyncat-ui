@@ -206,21 +206,21 @@ the component source, then checked against the angle coverage the brief asked fo
 business-hours/booking framing of FAQ 3, F via FAQ 2 and FAQ 6, the accessibility invariant via
 FAQ 4):
 
-| shipped question                                                             | grounding                                                                                                                                 | angle                                                                                                                                         |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| How do I add a time picker to a React form?                                  | authored from `TimeField.tsx` - no popover, inline segments, live commit                                                                  | D / A                                                                                                                                         |
-| Does the value change between 12-hour and 24-hour format?                    | authored from the `format` prop JSDoc + Playground's own note                                                                             | F (proven: `input type time 24 hour format` 70/mo, `12-hour time format hh:mm am/pm example` >1K but format-reference, not component, intent) |
-| Can I restrict the time to a range, like business hours or a booking window? | authored from `min`/`max` JSDoc + `tryCommit`'s saturating clamp                                                                          | E (the angle that failed as a keyword source still earns its place in prose)                                                                  |
-| Can you type or use the keyboard to set the time?                            | authored from `onHKey`/`onMKey`/`onPaste` in `time-core.tsx`                                                                              | invariant (a11y/keyboard)                                                                                                                     |
-| Can I limit the minute options to something like every 15 minutes?           | authored from the `minuteStep` JSDoc + arrow-key rounding in `onMKey`                                                                     | D (differentiator)                                                                                                                            |
-| How is this different from the native `<input type="time">`?                 | authored from `date-picker.css`'s `.tsg`/`.tfd` rules (system tokens only, no component-scoped custom property) + zero-dependencies claim | F (proven: `html time picker` 250/mo, `html time input` 250/mo, `input type time` 150/mo - the page's strongest genuine cluster)              |
+| shipped question                                                             | grounding                                                                                                                                       | angle                                                                                                                                         |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| How do I add a time picker to a React form?                                  | authored from `TimeField.tsx` - no popover, inline segments, live commit                                                                        | D / A                                                                                                                                         |
+| Does the value change between 12-hour and 24-hour format?                    | authored from the `format` prop JSDoc + Playground's own note                                                                                   | F (proven: `input type time 24 hour format` 70/mo, `12-hour time format hh:mm am/pm example` >1K but format-reference, not component, intent) |
+| Can I restrict the time to a range, like business hours or a booking window? | authored from `min`/`max` JSDoc + `tryCommit`'s saturating clamp                                                                                | E (the angle that failed as a keyword source still earns its place in prose)                                                                  |
+| Can you type or use the keyboard to set the time?                            | authored from `onHKey`/`onMKey`/`onPaste` in `time-core.tsx`                                                                                    | invariant (a11y/keyboard)                                                                                                                     |
+| Can I limit the minute options to something like every 15 minutes?           | authored from the `minuteStep` JSDoc + arrow-key rounding in `onMKey`                                                                           | D (differentiator)                                                                                                                            |
+| How is this different from the native `<input type="time">`?                 | authored from `date-picker.css`'s `.zc-tsg`/`.zc-tfd` rules (system tokens only, no component-scoped custom property) + zero-dependencies claim | F (proven: `html time picker` 250/mo, `html time input` 250/mo, `input type time` 150/mo - the page's strongest genuine cluster)              |
 
 ## Claim provenance
 
 Every FAQ claim is read off the source, not inferred:
 
 - No popover, inline segments, live commit - `TimeField.tsx` renders `TimeSegments` directly inside
-  `.tfd__box` (no `Popover` import, unlike `DateField.tsx`); `tryCommit` in `time-core.tsx` calls
+  `.zc-tfd__box` (no `Popover` import, unlike `DateField.tsx`); `tryCommit` in `time-core.tsx` calls
   `onCommit` as soon as both `nh` and `nm` are non-null.
 - Canonical `'HH:mm'`, 24h always - `TimeFieldProps.value/defaultValue` JSDoc: "canonical 'HH:mm'
   (24h)"; `format` JSDoc: "Display only; storage stays 24h"; confirmed independently by the
@@ -239,8 +239,8 @@ Every FAQ claim is read off the source, not inferred:
   branch (`tsgFeed`) does not use `minuteStep` at all.
 - Zero dependencies - root `package.json` has no `dependencies` key, only `react`/`react-dom` `^19`
   peers (`peerDependencies`), confirmed identically to the sibling record.
-- Tokens, no component-scoped property - `date-picker.css` lines ~535-598: `.tsg`/`.tsg__seg`/
-  `.tfd__box` read `--font-code`, `--size-caption`, `--text-strong`, `--accent-subtle`,
+- Tokens, no component-scoped property - `date-picker.css` lines ~535-598: `.zc-tsg`/`.zc-tsg__seg`/
+  `.zc-tfd__box` read `--font-code`, `--size-caption`, `--text-strong`, `--accent-subtle`,
   `--text-accent`, `--text-disabled`, `--text-subtle`, `--accent`, `--bg-surface`, `--ring-accent`,
   `--danger`, `--danger-text`, `--bg-muted`, `--radius-sm` - all system tokens. Unlike `DateField`'s
   `--dtp-cell`, `TimeField` defines no `--tfd-*`/`--tsg-*` custom property of its own.

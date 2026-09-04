@@ -51,10 +51,6 @@ for (const m of readFileSync(join(ROOT, 'src/styles.css'), 'utf8').matchAll(MANI
   for (const mm of css.matchAll(/\.([a-zA-Z][\w-]*)/g)) globalClasses.add(mm[1]);
 }
 
-/* Aria, role and mode values that are also block classes; the class's real renderer imports its
-   stylesheet directly, and Button's size="icon" builds btn--icon, never a bare .icon. */
-const AMBIGUOUS = new Set(['dialog', 'alert', 'icon']);
-
 const resolveImport = (from, spec) => {
   if (!spec.startsWith('.')) return null;
   const base = resolve(dirname(from), spec);
@@ -88,7 +84,6 @@ function renderedClasses(src) {
     const toks = lit.split(/\s+/).filter(Boolean);
     if (!isClassList(toks)) continue;
     for (const tok of toks) {
-      if (AMBIGUOUS.has(tok)) continue;
       if (classOwners.has(tok) && !globalClasses.has(tok)) found.add(tok);
       else if (isBemStub(tok)) {
         for (const cls of classOwners.keys()) if (cls.startsWith(tok) && !globalClasses.has(cls)) found.add(cls);
@@ -145,7 +140,7 @@ const definedAt = (file, cls) => {
 
 let dead = 0;
 for (const [cls, owners] of classOwners) {
-  if (globalClasses.has(cls) || AMBIGUOUS.has(cls) || renderedAnywhere.has(cls)) continue;
+  if (globalClasses.has(cls) || renderedAnywhere.has(cls)) continue;
   dead++;
   console.error(
     `✗ .${cls} is defined but no module renders it - ${[...owners].map((o) => definedAt(o, cls)).join(' | ')}`,

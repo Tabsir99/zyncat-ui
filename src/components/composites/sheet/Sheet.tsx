@@ -83,8 +83,8 @@ function SheetShell({
       timings={timings}
       animate={animate}
       exit={exit}
-      layerClass={'overlay-layer--sheet-' + side}
-      panelClass={'overlay-panel--sheet-' + side}
+      layerClass={'zc-overlay-layer--sheet-' + side}
+      panelClass={'zc-overlay-panel--sheet-' + side}
       panelId={panelId}
       dismissible={dismissible}
       container={container}

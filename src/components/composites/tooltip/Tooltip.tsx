@@ -121,7 +121,7 @@ export function Tooltip({
       <span
         {...htmlProps}
         ref={wrapRef}
-        className={cx('tooltip-anchor', htmlProps?.className)}
+        className={cx('zc-tooltip-anchor', htmlProps?.className)}
         onPointerEnter={onEnter}
         onPointerLeave={hide}
         onPointerDown={hide}

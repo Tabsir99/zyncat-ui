@@ -40,16 +40,16 @@ export function AvatarGroup({ children, max = 5, size = 'md', className = '', st
   const overflow = items.length - visible.length;
 
   return (
-    <span className={cx('avatar-group', className)} style={style} {...htmlProps}>
+    <span className={cx('zc-avatar-group', className)} style={style} {...htmlProps}>
       {visible.map((child, i) =>
         isValidElement(child)
           ? cloneElement(child as ReactElement<{ size?: AvatarSize }>, { size, key: child.key ?? i })
           : child,
       )}
       {overflow > 0 && (
-        <span className={`avatar avatar--${size} avatar--overflow`} role="img" aria-label={`${overflow} more`}>
-          <span className="avatar__face">
-            <span className="avatar__initials">+{overflow}</span>
+        <span className={`zc-avatar zc-avatar--${size} zc-avatar--overflow`} role="img" aria-label={`${overflow} more`}>
+          <span className="zc-avatar__face">
+            <span className="zc-avatar__initials">+{overflow}</span>
           </span>
         </span>
       )}

@@ -78,18 +78,18 @@ export function OtpField({
     }
   };
 
-  const cls = cx('otp', size === 'sm' && 'otp--sm', error && 'is-error', className);
+  const cls = cx('zc-otp', size === 'sm' && 'zc-otp--sm', error && 'zc-is-error', className);
 
   const cells: ReactNode[] = [];
   for (let i = 0; i < length; i++) {
-    if (group && i > 0 && i % group === 0) cells.push(<span key={`sep${i}`} className="otp__sep" />);
+    if (group && i > 0 && i % group === 0) cells.push(<span key={`sep${i}`} className="zc-otp__sep" />);
     cells.push(
       <input
         key={i}
         ref={(el) => {
           refs.current[i] = el;
         }}
-        className="otp__slot"
+        className="zc-otp__slot"
         inputMode="numeric"
         autoComplete="one-time-code"
         disabled={disabled}

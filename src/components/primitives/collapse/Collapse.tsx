@@ -68,7 +68,7 @@ export function Collapse({
   as: As = 'div',
   htmlProps,
 }: CollapseProps) {
-  const cls = cx('collapse', fade && 'collapse--fade', className);
+  const cls = cx('zc-collapse', fade && 'zc-collapse--fade', className);
 
   const vars = timingVars('collapse', animation);
 
@@ -80,7 +80,7 @@ export function Collapse({
       style={vars || style ? ({ ...style, ...vars } as CSSProperties) : undefined}
       {...htmlProps}
     >
-      <As className={cx('collapse__inner', innerClassName)} style={vars}>
+      <As className={cx('zc-collapse__inner', innerClassName)} style={vars}>
         {children}
       </As>
     </div>

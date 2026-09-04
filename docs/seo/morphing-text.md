@@ -207,7 +207,7 @@ Read from `src/components/expressive/morphing-text/MorphingText.tsx`, its CSS, `
 - Hover: `pointerenter`/`pointerleave` set `cycle.held`; listeners are only attached when motion is not reduced. A morph already past the hold point still finishes.
 - The hairline rule interpolates between the two measured word widths and heats toward `--accent`.
 - Retunable properties: `--morphing-text-ink | size | weight | leading | tracking | smear | rule-ink | rule-accent | rule-height | rule-gap | rule-rest | rule-lift`.
-- a11y: the current word is written to a visually hidden `.morphing-text__label`; the animated stage and the rule are `aria-hidden`.
+- a11y: the current word is written to a visually hidden `.zc-morphing-text__label`; the animated stage and the rule are `aria-hidden`.
 - Reduced motion: `loop()` returns immediately after calling `snap()`, which is `settle()` — index 0, progress 0, filter off. Still, unblurred type.
 - `'use client'`, zero runtime dependencies, React 19 peer, MIT.
 - The docs playground has a Code tab rendering the JSX for the current knob values, so "the playground is the generator" is literally true.

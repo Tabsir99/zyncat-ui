@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .sw {
+  .zc-sw {
     --sw-on-fill: linear-gradient(180deg, var(--accent-fill), var(--accent-hover));
     --sw-off-fill: var(--bg-muted);
     --sw-on-border: var(--accent-fill);
@@ -26,18 +26,18 @@
       --sw-checked: 1;
     }
 
-    &:not(.sw--disabled):hover {
+    &:not(.zc-sw--disabled):hover {
       background: var(--bg-muted);
     }
-    &:not(.sw--disabled):hover:not(:has(:checked)) {
+    &:not(.zc-sw--disabled):hover:not(:has(:checked)) {
       --sw-off-border: var(--text-subtle);
     }
-    &:has(:focus-visible) .sw__track {
+    &:has(:focus-visible) .zc-sw__track {
       box-shadow: var(--sw-ring);
     }
   }
 
-  .sw__input {
+  .zc-sw__input {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -50,7 +50,7 @@
     overflow: hidden;
   }
 
-  .sw__track {
+  .zc-sw__track {
     position: relative;
     flex: none;
     display: flex;
@@ -81,7 +81,7 @@
       transition: opacity var(--duration-base) var(--ease-standard);
     }
   }
-  .sw__thumb {
+  .zc-sw__thumb {
     --sw-tx: 0px;
     --sw-sx: 1;
     position: relative;
@@ -96,53 +96,53 @@
     transition: transform var(--duration-base) var(--ease-spring);
   }
   /* React-set, not :has(:checked): a :has() twin would move the thumb out from under the spring and snap it. */
-  .sw__track[data-on='true'] .sw__thumb {
+  .zc-sw__track[data-on='true'] .zc-sw__thumb {
     --sw-tx: calc(var(--sw-w) - var(--sw-h));
   }
-  .sw__track[data-pressed='true'] {
+  .zc-sw__track[data-pressed='true'] {
     transform: scale(0.96);
   }
-  .sw__track[data-pressed='true'] .sw__thumb {
+  .zc-sw__track[data-pressed='true'] .zc-sw__thumb {
     --sw-sx: 1.16;
   }
 
-  .sw__text {
+  .zc-sw__text {
     display: grid;
     gap: var(--space-1);
   }
-  .sw__label {
+  .zc-sw__label {
     font: var(--type-label);
     color: var(--text-strong);
   }
-  .sw__desc {
+  .zc-sw__desc {
     font: var(--type-caption);
     color: var(--text-muted);
   }
 
-  .sw--sm {
+  .zc-sw--sm {
     --sw-w: var(--control-height-sm);
     --sw-h: var(--space-4);
-    & .sw__label {
+    & .zc-sw__label {
       font: var(--type-caption);
       font-weight: var(--weight-medium);
       color: var(--text-strong);
     }
-    & .sw__track {
+    & .zc-sw__track {
       margin-top: calc((var(--leading-caption) - var(--sw-h)) / 2);
     }
   }
 
-  .sw--disabled {
+  .zc-sw--disabled {
     cursor: not-allowed;
     --sw-on-fill: var(--accent-disabled);
     --sw-off-fill: var(--bg-muted);
     --sw-on-border: var(--accent-disabled);
     --sw-off-border: var(--border-default);
-    & .sw__thumb {
+    & .zc-sw__thumb {
       box-shadow: var(--shadow-xs);
     }
-    & .sw__label,
-    & .sw__desc {
+    & .zc-sw__label,
+    & .zc-sw__desc {
       color: var(--text-disabled);
     }
   }

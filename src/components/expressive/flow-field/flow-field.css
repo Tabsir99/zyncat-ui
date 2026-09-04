@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .flow-field {
+  .zc-flow-field {
     /* The particle colour at rest - the ramp's cold end. */
     --flow-field-ink: var(--text-subtle);
     /* The particle colour at full speed - the ramp's hot end. */
@@ -28,7 +28,7 @@
     min-height: var(--flow-field-min-height);
   }
 
-  .flow-field__canvas {
+  .zc-flow-field__canvas {
     position: absolute;
     inset: 0;
     display: block;
@@ -38,7 +38,7 @@
     pointer-events: none;
   }
 
-  .flow-field__probe {
+  .zc-flow-field__probe {
     position: absolute;
     width: 0;
     height: 0;
@@ -47,7 +47,7 @@
     pointer-events: none;
   }
 
-  .flow-field__content {
+  .zc-flow-field__content {
     position: relative;
   }
 }

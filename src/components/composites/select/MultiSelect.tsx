@@ -59,7 +59,7 @@ export interface MultiSelectProps {
 
 function CheckboxTick({ checked }: { checked: boolean }) {
   return (
-    <span className="cbx" aria-hidden="true">
+    <span className="zc-cbx" aria-hidden="true">
       <CheckGlyph checked={checked} readOnly tabIndex={-1} />
     </span>
   );
@@ -113,7 +113,7 @@ export function MultiSelect({
   return (
     <div
       {...htmlProps}
-      className={cx('select', htmlProps?.className)}
+      className={cx('zc-select', htmlProps?.className)}
       data-multiple="true"
       data-size={size}
       data-open={lb.open ? 'true' : undefined}

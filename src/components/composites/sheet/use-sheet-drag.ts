@@ -28,7 +28,7 @@ function findScrollable(node: EventTarget | null, stop: HTMLElement | null): HTM
 }
 
 function sheetScrim(panel: HTMLElement | null): HTMLElement | null {
-  return panel?.parentElement?.querySelector<HTMLElement>('.overlay-scrim') ?? null;
+  return panel?.parentElement?.querySelector<HTMLElement>('.zc-overlay-scrim') ?? null;
 }
 
 function sheetSpan(panel: HTMLElement, side: 'right' | 'bottom'): number {

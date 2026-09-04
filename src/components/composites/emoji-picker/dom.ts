@@ -25,26 +25,26 @@ export function createEmojiGrid(scroll: HTMLDivElement, getEmojiUrl: GetEmojiUrl
 
   const swapInNativeGlyph = (e: Event) => {
     const img = e.target as HTMLImageElement;
-    if (img.matches?.('.on-emoji-btn-img')) img.parentElement!.textContent = img.alt;
+    if (img.matches?.('.zc-on-emoji-btn-img')) img.parentElement!.textContent = img.alt;
   };
   scroll.addEventListener('error', swapInNativeGlyph, true);
 
   const tile = (emoji: Emoji, idx: number, order: number) =>
-    `<button type="button" role="option" tabindex="-1" class="on-emoji-btn" id="${attr(tileIdPrefix + idx)}" aria-label="${attr(emoji.name)}" data-id="${emoji.id}" data-idx="${idx}" style="--i:${order}">` +
-    `<img class="on-emoji-btn-img" src="${attr(getEmojiUrl(emoji.id, 'picker-grid'))}" loading="lazy" draggable="false" alt="${attr(emoji.unicode)}"></button>`;
+    `<button type="button" role="option" tabindex="-1" class="zc-on-emoji-btn" id="${attr(tileIdPrefix + idx)}" aria-label="${attr(emoji.name)}" data-id="${emoji.id}" data-idx="${idx}" style="--i:${order}">` +
+    `<img class="zc-on-emoji-btn-img" src="${attr(getEmojiUrl(emoji.id, 'picker-grid'))}" loading="lazy" draggable="false" alt="${attr(emoji.unicode)}"></button>`;
 
   const addCategory = (title: string, key: string, ids: string[]) => {
     const data = getEmojiData();
     if (!data) return;
 
-    const header = el('div', 'on-emoji-header');
+    const header = el('div', 'zc-on-emoji-header');
     header.textContent = title;
     header.setAttribute('aria-hidden', 'true');
     scroll.appendChild(header);
 
     const start = buttons.length;
     const emojis = ids.map((id) => data.emojis[id]).filter(Boolean);
-    const grid = el('div', 'on-emoji-grid');
+    const grid = el('div', 'zc-on-emoji-grid');
     grid.setAttribute('role', 'group');
     grid.setAttribute('aria-label', title);
     grid.style.setProperty('--cols', String(COLUMN_COUNT));
@@ -59,7 +59,7 @@ export function createEmojiGrid(scroll: HTMLDivElement, getEmojiUrl: GetEmojiUrl
   const indexOfKey = (key: string) => sections.findIndex((s) => s.key === key);
 
   const showEmpty = (message: string) => {
-    scroll.insertAdjacentHTML('beforeend', `<div class="on-emoji-empty">${attr(message)}</div>`);
+    scroll.insertAdjacentHTML('beforeend', `<div class="zc-on-emoji-empty">${attr(message)}</div>`);
   };
 
   const clear = () => {

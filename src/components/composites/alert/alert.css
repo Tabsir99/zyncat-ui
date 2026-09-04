@@ -1,11 +1,11 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .alert-shell {
+  .zc-alert-shell {
     overflow: hidden;
   }
 
-  .alert {
+  .zc-alert {
     --alert-hue: var(--info);
     --alert-fg: var(--info-text);
     --alert-bg: var(--info-subtle);
@@ -24,41 +24,41 @@
     box-shadow: inset 0 1px 0 0 var(--alert-sheen);
   }
 
-  .alert[data-tone='success'] {
+  .zc-alert[data-tone='success'] {
     --alert-hue: var(--success);
     --alert-fg: var(--success-text);
     --alert-bg: var(--success-subtle);
     --alert-wash: var(--success-wash);
   }
-  .alert[data-tone='warning'] {
+  .zc-alert[data-tone='warning'] {
     --alert-hue: var(--warning);
     --alert-fg: var(--warning-text);
     --alert-bg: var(--warning-subtle);
     --alert-wash: var(--warning-wash);
   }
-  .alert[data-tone='danger'] {
+  .zc-alert[data-tone='danger'] {
     --alert-hue: var(--danger);
     --alert-fg: var(--danger-text);
     --alert-bg: var(--danger-subtle);
     --alert-wash: var(--danger-wash);
   }
 
-  .alert:has(.alert__desc) {
+  .zc-alert:has(.zc-alert__desc) {
     align-items: flex-start;
   }
-  .alert:has(.alert__desc) .alert__action,
-  .alert:has(.alert__desc) .alert__close {
+  .zc-alert:has(.zc-alert__desc) .zc-alert__action,
+  .zc-alert:has(.zc-alert__desc) .zc-alert__close {
     align-self: center;
   }
 
-  .alert--banner {
+  .zc-alert--banner {
     border-radius: 0;
     border-block-start: 0;
     border-inline: 0;
     padding-inline: var(--space-6);
   }
 
-  .alert__icon {
+  .zc-alert__icon {
     flex: none;
     display: grid;
     place-items: center;
@@ -66,41 +66,41 @@
     color: var(--alert-hue);
   }
 
-  .alert__body {
+  .zc-alert__body {
     flex: 1 1 auto;
     min-width: 0;
   }
-  .alert__title {
+  .zc-alert__title {
     margin: 0;
     font: var(--type-label);
     color: var(--alert-fg);
     text-wrap: pretty;
   }
-  .alert__desc {
+  .zc-alert__desc {
     margin: var(--space-1) 0 0;
     font: var(--type-caption);
     color: color-mix(in oklab, var(--alert-fg) 56%, var(--text-body));
     text-wrap: pretty;
   }
 
-  .alert__action {
+  .zc-alert__action {
     flex: none;
     color: var(--alert-fg);
     background: transparent;
   }
-  .alert__action:hover:not(:disabled) {
+  .zc-alert__action:hover:not(:disabled) {
     color: var(--alert-fg);
     background: var(--alert-wash);
   }
-  .alert__action:active:not(:disabled) {
+  .zc-alert__action:active:not(:disabled) {
     background: color-mix(in oklab, var(--alert-hue) 16%, transparent);
     transform: translateY(var(--space-px));
   }
-  .alert[data-tone='danger'] .alert__action {
+  .zc-alert[data-tone='danger'] .zc-alert__action {
     --btn-ring: var(--ring-danger);
   }
 
-  .alert__close {
+  .zc-alert__close {
     flex: none;
     appearance: none;
     display: grid;
@@ -116,14 +116,14 @@
     cursor: pointer;
     transition: var(--transition-control);
   }
-  .alert__close:hover {
+  .zc-alert__close:hover {
     background: color-mix(in oklab, var(--alert-fg) 9%, transparent);
     color: var(--alert-fg);
   }
-  .alert__close:active {
+  .zc-alert__close:active {
     background: color-mix(in oklab, var(--alert-fg) 14%, transparent);
   }
-  .alert__close:focus-visible {
+  .zc-alert__close:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }

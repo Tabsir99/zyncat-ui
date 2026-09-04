@@ -112,7 +112,7 @@ export function Select({
   return (
     <div
       {...htmlProps}
-      className={cx('select', htmlProps?.className)}
+      className={cx('zc-select', htmlProps?.className)}
       data-size={size}
       data-open={lb.open ? 'true' : undefined}
       data-disabled={disabled ? 'true' : undefined}

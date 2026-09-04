@@ -1,36 +1,36 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .dtf__trigger {
+  .zc-dtf__trigger {
     display: flex;
     align-items: center;
     text-align: left;
     cursor: pointer;
     gap: var(--space-2);
   }
-  .dtf__value {
+  .zc-dtf__value {
     font: var(--type-code);
     font-variant-numeric: tabular-nums;
     color: var(--text-strong);
   }
-  .dtf__placeholder {
+  .zc-dtf__placeholder {
     color: var(--text-disabled);
   }
-  .dtf__trigger:disabled .dtf__value {
+  .zc-dtf__trigger:disabled .zc-dtf__value {
     color: var(--text-disabled);
   }
 
-  .dtf__trigger:hover:not(:disabled):not(:focus):not([aria-expanded='true']) {
+  .zc-dtf__trigger:hover:not(:disabled):not(:focus):not([aria-expanded='true']) {
     background-color: color-mix(in oklab, var(--bg-surface) 55%, var(--bg-muted));
   }
 
-  .dtf__trigger[aria-expanded='true']:not(:disabled) {
+  .zc-dtf__trigger[aria-expanded='true']:not(:disabled) {
     border-color: var(--accent);
     background: var(--bg-surface);
     box-shadow: var(--ring-accent);
   }
 
-  .dtp {
+  .zc-dtp {
     --dtp-cell: var(--control-height);
     background: var(--bg-surface-raised);
     border: var(--border-hairline) solid var(--border-default);
@@ -39,11 +39,11 @@
     overflow: hidden;
   }
 
-  .dtp__cal {
+  .zc-dtp__cal {
     padding: var(--space-3) var(--space-3) var(--space-2);
   }
 
-  .dtp__head {
+  .zc-dtp__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -54,7 +54,7 @@
     border-bottom: var(--border-hairline) solid var(--border-subtle);
     margin-bottom: var(--space-3);
   }
-  .dtp__month {
+  .zc-dtp__month {
     padding-inline-start: var(--space-2);
     display: inline-flex;
     align-items: center;
@@ -63,7 +63,7 @@
     font-weight: var(--weight-semibold);
     color: var(--text-strong);
   }
-  .dtp__year {
+  .zc-dtp__year {
     font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
@@ -74,11 +74,11 @@
     padding: var(--space-1);
     border-radius: var(--radius-sm);
   }
-  .dtp__navs {
+  .zc-dtp__navs {
     display: flex;
     gap: var(--space-1);
   }
-  .dtp__nav {
+  .zc-dtp__nav {
     width: var(--control-height-sm);
     height: var(--control-height-sm);
     display: grid;
@@ -90,46 +90,46 @@
     cursor: pointer;
     transition: var(--transition-colors);
   }
-  .dtp__nav:hover:not(:disabled) {
+  .zc-dtp__nav:hover:not(:disabled) {
     background: var(--neutral-wash);
     color: var(--text-strong);
   }
-  .dtp__nav:active:not(:disabled) {
+  .zc-dtp__nav:active:not(:disabled) {
     background: var(--bg-muted);
   }
-  .dtp__nav:focus-visible {
+  .zc-dtp__nav:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  .dtp__nav:disabled {
+  .zc-dtp__nav:disabled {
     color: var(--text-disabled);
     cursor: default;
   }
 
-  .dtp__dow {
+  .zc-dtp__dow {
     display: grid;
     grid-template-columns: repeat(7, var(--dtp-cell));
     gap: var(--space-1);
     padding-bottom: var(--space-3);
   }
-  .dtp__dow span {
+  .zc-dtp__dow span {
     font: var(--type-micro);
     color: var(--text-subtle);
     text-align: center;
   }
 
-  .dtp__days {
+  .zc-dtp__days {
     position: relative;
     display: grid;
     grid-template-columns: repeat(7, var(--dtp-cell));
     gap: var(--space-1);
     isolation: isolate;
   }
-  .dtp__row {
+  .zc-dtp__row {
     display: contents;
   }
 
-  .dtp__day {
+  .zc-dtp__day {
     position: relative;
     width: var(--dtp-cell);
     height: var(--dtp-cell);
@@ -146,22 +146,22 @@
     cursor: pointer;
     transition: var(--transition-colors);
   }
-  .dtp__day:hover:not(:disabled) {
+  .zc-dtp__day:hover:not(:disabled) {
     color: var(--text-strong);
   }
-  .dtp__day:focus-visible {
+  .zc-dtp__day:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  .dtp__day.is-out {
+  .zc-dtp__day.zc-is-out {
     color: var(--text-subtle);
   }
-  .dtp__day:disabled {
+  .zc-dtp__day:disabled {
     color: var(--text-disabled);
     cursor: default;
   }
 
-  .dtp__hover {
+  .zc-dtp__hover {
     opacity: 0;
     position: absolute;
     top: 0;
@@ -172,7 +172,7 @@
     will-change: transform, opacity;
   }
 
-  .dtp__pill {
+  .zc-dtp__pill {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -180,20 +180,20 @@
     background: var(--accent-subtle);
     border: var(--border-hairline) solid var(--accent-border);
   }
-  .dtp__num {
+  .zc-dtp__num {
     position: relative;
     z-index: 1;
   }
-  .dtp__day.is-selected .dtp__num {
+  .zc-dtp__day.zc-is-selected .zc-dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
 
-  .dtp__day.is-today .dtp__num {
+  .zc-dtp__day.zc-is-today .zc-dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
-  .dtp__dot {
+  .zc-dtp__dot {
     position: absolute;
     bottom: var(--space-1);
     left: 50%;
@@ -204,28 +204,28 @@
     background: var(--accent);
     z-index: 1;
   }
-  .dtp__day:disabled .dtp__num {
+  .zc-dtp__day:disabled .zc-dtp__num {
     color: var(--text-disabled);
   }
-  .dtp__day:disabled .dtp__dot {
+  .zc-dtp__day:disabled .zc-dtp__dot {
     background: var(--text-disabled);
   }
 
-  .dtp__time {
+  .zc-dtp__time {
     display: flex;
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
     border-top: var(--border-hairline) solid var(--border-subtle);
   }
-  .dtp__timeLabel {
+  .zc-dtp__timeLabel {
     font: var(--type-caption);
     font-weight: var(--weight-medium);
     color: var(--text-muted);
     margin-right: auto;
   }
 
-  .dtp__timeHint {
+  .zc-dtp__timeHint {
     display: inline-flex;
     gap: var(--space-1);
     opacity: 0;
@@ -235,14 +235,14 @@
       opacity var(--duration-fast) var(--ease-exit),
       transform var(--duration-fast) var(--ease-exit);
   }
-  .dtp__time:focus-within .dtp__timeHint {
+  .zc-dtp__time:focus-within .zc-dtp__timeHint {
     opacity: 1;
     transform: none;
     transition:
       opacity var(--duration-base) var(--ease-entrance),
       transform var(--duration-base) var(--ease-entrance);
   }
-  .dtp__timeHint kbd {
+  .zc-dtp__timeHint kbd {
     font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
@@ -253,7 +253,7 @@
     padding: var(--space-1);
   }
 
-  .dtp__foot {
+  .zc-dtp__foot {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -261,7 +261,7 @@
     background: var(--bg-subtle);
     border-top: var(--border-hairline) solid var(--border-subtle);
   }
-  .dtp__tz {
+  .zc-dtp__tz {
     font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
@@ -270,11 +270,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .dtp__footSpacer {
+  .zc-dtp__footSpacer {
     flex: 1 1 auto;
   }
 
-  .drp {
+  .zc-drp {
     --dtp-cell: var(--control-height);
     background: var(--bg-surface-raised);
     border: var(--border-hairline) solid var(--border-default);
@@ -282,12 +282,12 @@
     box-shadow: var(--shadow-lg);
     overflow: hidden;
   }
-  .drp__body {
+  .zc-drp__body {
     display: flex;
     align-items: stretch;
   }
 
-  .drp__presets {
+  .zc-drp__presets {
     flex: none;
     width: max-content;
     display: flex;
@@ -298,7 +298,7 @@
     background: var(--bg-subtle);
     isolation: isolate;
   }
-  .drp__preset {
+  .zc-drp__preset {
     position: relative;
     appearance: none;
     text-align: left;
@@ -312,19 +312,19 @@
     transition: var(--transition-colors);
     white-space: nowrap;
   }
-  .drp__preset:hover {
+  .zc-drp__preset:hover {
     color: var(--text-strong);
   }
-  .drp__preset:focus-visible {
+  .zc-drp__preset:focus-visible {
     outline: none;
     box-shadow: var(--ring-accent);
   }
-  .drp__preset.is-active {
+  .zc-drp__preset.zc-is-active {
     background: var(--accent-subtle);
     color: var(--text-accent);
     font-weight: var(--weight-medium);
   }
-  .drp__presetGlide {
+  .zc-drp__presetGlide {
     position: absolute;
     top: 0;
     left: 0;
@@ -334,25 +334,25 @@
     will-change: transform, opacity;
   }
 
-  .drp__months {
+  .zc-drp__months {
     position: relative;
     isolation: isolate;
     display: flex;
   }
-  .drp__months .dtp__cal {
+  .zc-drp__months .zc-dtp__cal {
     padding: var(--space-3);
   }
-  .drp__months .dtp__cal + .dtp__cal {
+  .zc-drp__months .zc-dtp__cal + .zc-dtp__cal {
     border-left: var(--border-hairline) solid var(--border-subtle);
   }
 
   /* The slide is a CSS keyframe rather than Motion: the layoutId caps FLIP inside this grid on the same remount
    and cannot share it with a Motion slide. */
   @media (prefers-reduced-motion: no-preference) {
-    .drp .dtp__days[data-enter='1'] {
+    .zc-drp .zc-dtp__days[data-enter='1'] {
       animation: drp-month-in-l var(--duration-base) var(--ease-entrance);
     }
-    .drp .dtp__days[data-enter='-1'] {
+    .zc-drp .zc-dtp__days[data-enter='-1'] {
       animation: drp-month-in-r var(--duration-base) var(--ease-entrance);
     }
   }
@@ -377,7 +377,7 @@
     }
   }
 
-  .drp__mhead {
+  .zc-drp__mhead {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -387,16 +387,16 @@
     margin-inline: calc(-1 * var(--space-3));
     padding-inline: var(--space-3);
   }
-  .drp__mhead .dtp__month {
+  .zc-drp__mhead .zc-dtp__month {
     flex: 1 1 auto;
     text-align: center;
     padding-inline-start: 0;
   }
-  .drp__mhead--right {
+  .zc-drp__mhead--right {
     justify-content: space-between;
   }
 
-  .drp__band {
+  .zc-drp__band {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -404,51 +404,51 @@
   }
   /* Overshoots the gap by 1px so neighbouring bands overlap instead of leaving a subpixel seam; the fill is
    opaque so the overlap does not darken. */
-  .drp__band--extL {
+  .zc-drp__band--extL {
     left: calc(-1 * var(--space-1) - 1px);
   }
-  .drp__band--extR {
+  .zc-drp__band--extR {
     right: calc(-1 * var(--space-1) - 1px);
   }
-  .drp__band--roundL {
+  .zc-drp__band--roundL {
     border-top-left-radius: var(--radius-md);
     border-bottom-left-radius: var(--radius-md);
   }
-  .drp__band--roundR {
+  .zc-drp__band--roundR {
     border-top-right-radius: var(--radius-md);
     border-bottom-right-radius: var(--radius-md);
   }
 
-  .drp__cap {
+  .zc-drp__cap {
     position: absolute;
     inset: 0;
     z-index: 1;
     border-radius: var(--radius-md);
     background: var(--accent-border);
   }
-  .drp__cap--ghost {
+  .zc-drp__cap--ghost {
     background: transparent;
     border: var(--border-hairline) solid var(--accent);
   }
 
-  .drp .dtp__num {
+  .zc-drp .zc-dtp__num {
     z-index: 2;
   }
-  .drp .dtp__day.is-in-range .dtp__num {
+  .zc-drp .zc-dtp__day.zc-is-in-range .zc-dtp__num {
     color: var(--text-accent);
   }
-  .drp .dtp__day.is-cap .dtp__num,
-  .drp .dtp__day.is-cap-ghost .dtp__num {
+  .zc-drp .zc-dtp__day.zc-is-cap .zc-dtp__num,
+  .zc-drp .zc-dtp__day.zc-is-cap-ghost .zc-dtp__num {
     color: var(--text-accent);
     font-weight: var(--weight-semibold);
   }
 
-  .drp .dtp__day.is-cap .dtp__dot,
-  .drp .dtp__day.is-cap-ghost .dtp__dot {
+  .zc-drp .zc-dtp__day.zc-is-cap .zc-dtp__dot,
+  .zc-drp .zc-dtp__day.zc-is-cap-ghost .zc-dtp__dot {
     background: var(--accent);
   }
 
-  .drp__foot {
+  .zc-drp__foot {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -456,31 +456,31 @@
     background: var(--bg-subtle);
     border-top: var(--border-hairline) solid var(--border-subtle);
   }
-  .drp__readout {
+  .zc-drp__readout {
     font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-body);
     white-space: nowrap;
   }
-  .drp__readout .drp__count {
+  .zc-drp__readout .zc-drp__count {
     color: var(--text-subtle);
   }
-  .drp__readout.is-empty {
+  .zc-drp__readout.zc-is-empty {
     color: var(--text-disabled);
   }
-  .drp__tz {
+  .zc-drp__tz {
     font-family: var(--font-code);
     font-size: var(--size-caption);
     font-variant-numeric: tabular-nums;
     color: var(--text-subtle);
     white-space: nowrap;
   }
-  .drp__footSpacer {
+  .zc-drp__footSpacer {
     flex: 1 1 auto;
   }
 
-  .drp--sheet {
+  .zc-drp--sheet {
     --dtp-cell: var(--control-height-lg);
     width: 100vw;
     max-width: 100%;
@@ -488,10 +488,10 @@
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     box-shadow: none;
   }
-  .drp--sheet .drp__body {
+  .zc-drp--sheet .zc-drp__body {
     flex-direction: column;
   }
-  .drp--sheet .drp__presets {
+  .zc-drp--sheet .zc-drp__presets {
     width: auto;
     flex-direction: row;
     overflow-x: auto;
@@ -500,18 +500,18 @@
     border-bottom: var(--border-hairline) solid var(--border-subtle);
     scrollbar-width: none;
   }
-  .drp--sheet .drp__presets::-webkit-scrollbar {
+  .zc-drp--sheet .zc-drp__presets::-webkit-scrollbar {
     display: none;
   }
-  .drp--sheet .drp__preset {
+  .zc-drp--sheet .zc-drp__preset {
     flex: none;
   }
-  .drp--sheet .drp__months {
+  .zc-drp--sheet .zc-drp__months {
     justify-content: center;
     padding-block: var(--space-2);
   }
 
-  .tsg {
+  .zc-tsg {
     display: inline-flex;
     align-items: center;
     font-family: var(--font-code);
@@ -519,7 +519,7 @@
     font-variant-numeric: tabular-nums;
     color: var(--text-strong);
   }
-  .tsg__seg {
+  .zc-tsg__seg {
     padding: var(--space-1);
     border-radius: var(--radius-sm);
     outline: none;
@@ -528,51 +528,51 @@
     transition: var(--transition-colors);
   }
   /* :focus, not :focus-visible: a clicked segment has to read selected, the same as keyboard entry. */
-  .tsg__seg:focus {
+  .zc-tsg__seg:focus {
     background: var(--accent-subtle);
     color: var(--text-accent);
   }
-  .tsg__seg.is-empty {
+  .zc-tsg__seg.zc-is-empty {
     color: var(--text-disabled);
   }
-  .tsg__seg.is-empty:focus {
+  .zc-tsg__seg.zc-is-empty:focus {
     color: var(--text-accent);
   }
-  .tsg__sep {
+  .zc-tsg__sep {
     color: var(--text-subtle);
   }
-  .tsg__seg--mer {
+  .zc-tsg__seg--mer {
     margin-left: var(--space-1);
   }
 
-  .tsg.is-disabled,
-  .tsg.is-disabled .tsg__seg {
+  .zc-tsg.zc-is-disabled,
+  .zc-tsg.zc-is-disabled .zc-tsg__seg {
     color: var(--text-disabled);
     cursor: not-allowed;
   }
 
-  /* The box is a div in .fld__input chrome, so the input focus rules never reach it; these restate them, scoped
-   under .tfd to outrank .fld__input. */
-  .tfd__box {
+  /* The box is a div in .zc-fld__input chrome, so the input focus rules never reach it; these restate them, scoped
+   under .zc-tfd to outrank .zc-fld__input. */
+  .zc-tfd__box {
     display: inline-flex;
     align-items: center;
     cursor: text;
   }
-  .tfd .tfd__box:focus-within {
+  .zc-tfd .zc-tfd__box:focus-within {
     border-color: var(--accent);
     background: var(--bg-surface);
     box-shadow: var(--ring-accent);
   }
-  .tfd.is-error .tfd__box {
+  .zc-tfd.zc-is-error .zc-tfd__box {
     border-color: var(--danger);
   }
-  .tfd.is-error .tfd__box:hover:not(.is-disabled):not(:focus-within) {
+  .zc-tfd.zc-is-error .zc-tfd__box:hover:not(.zc-is-disabled):not(:focus-within) {
     border-color: var(--danger-text);
   }
-  .tfd.is-error .tfd__box:focus-within {
+  .zc-tfd.zc-is-error .zc-tfd__box:focus-within {
     box-shadow: var(--ring-danger);
   }
-  .tfd .tfd__box.is-disabled {
+  .zc-tfd .zc-tfd__box.zc-is-disabled {
     background: var(--bg-muted);
     cursor: not-allowed;
   }

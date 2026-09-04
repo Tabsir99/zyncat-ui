@@ -87,8 +87,8 @@ export function Modal({
               timings={timings}
               animate={popIn(UIMotion.scale.panel, timings.open)}
               exit={popOut(UIMotion.scale.panel, timings.close)}
-              layerClass="overlay-layer--modal"
-              panelClass="overlay-panel--modal"
+              layerClass="zc-overlay-layer--modal"
+              panelClass="zc-overlay-panel--modal"
               panelId={panelId}
               dismissible={dismissible}
               container={container}

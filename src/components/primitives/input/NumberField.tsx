@@ -84,21 +84,21 @@ export function NumberField({
     setNum(clamp(n));
   };
   const cls = cx(
-    'fld',
-    'numf',
-    unit && 'numf--unit',
-    size === 'sm' ? 'fld--sm' : size === 'lg' ? 'fld--lg' : '',
-    error && 'is-error',
+    'zc-fld',
+    'zc-numf',
+    unit && 'zc-numf--unit',
+    size === 'sm' ? 'zc-fld--sm' : size === 'lg' ? 'zc-fld--lg' : '',
+    error && 'zc-is-error',
     className,
   );
 
   return (
     <div className={cls} style={style}>
       <FieldLabel id={id} label={label} />
-      <div className="fld__control">
+      <div className="zc-fld__control">
         <input
           id={id}
-          className="fld__input"
+          className="zc-fld__input"
           type="text"
           inputMode="decimal"
           disabled={disabled}
@@ -124,11 +124,11 @@ export function NumberField({
           {...htmlProps}
           aria-describedby={joinIds(msgId, htmlProps?.['aria-describedby'])}
         />
-        {unit && <span className="numf__unit">{unit}</span>}
-        <div className="numf__steppers">
+        {unit && <span className="zc-numf__unit">{unit}</span>}
+        <div className="zc-numf__steppers">
           <button
             type="button"
-            className="numf__step"
+            className="zc-numf__step"
             aria-label="Increase"
             disabled={disabled || v >= max}
             onClick={() => commit(v + step)}
@@ -137,7 +137,7 @@ export function NumberField({
           </button>
           <button
             type="button"
-            className="numf__step"
+            className="zc-numf__step"
             aria-label="Decrease"
             disabled={disabled || v <= min}
             onClick={() => commit(v - step)}

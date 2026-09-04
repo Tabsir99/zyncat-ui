@@ -215,12 +215,12 @@ surfaces where a menu, a panel or a reorder follows the press and the wait is fe
 prop is there to opt in, not opted in.
 
 A cloned trigger that opens on pointerdown loses its press transform and takes the expanded treatment
-`.select__trigger` and `.dtf__trigger` already carry - `trigger.css`, keyed on the `data-activate` mark
+`.zc-select__trigger` and `.zc-dtf__trigger` already carry - `trigger.css`, keyed on the `data-activate` mark
 `ovCloneTrigger` sets. Those rules out-specify the primitive's own press rule on purpose; they never
 touch another component's scoped custom properties, so a consumer's trigger keeps its own resting look.
 
 A library-owned trigger keeps whatever press state it already had. A dip that lands after the surface
-has already opened is a judgement call per component, not a rule - `.tab` keeps its.
+has already opened is a judgement call per component, not a rule - `.zc-tab` keeps its.
 
 Out of scope by design: `Button` and anything rendered as one, native form controls, content surfaces
 where a press-drag means selection or reordering, and dismiss buttons - a surface leaving the screen

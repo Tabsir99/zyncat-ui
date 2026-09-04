@@ -29,13 +29,13 @@ export function WeightField({ text, speed = 1, className = '', style, htmlProps 
   const ramp = { ...style, '--_weight-field-speed': speed } as CSSProperties;
 
   return (
-    <span className={cx('weight-field', className)} style={ramp} {...htmlProps}>
+    <span className={cx('zc-weight-field', className)} style={ramp} {...htmlProps}>
       {[...text].map((glyph, index) => (
-        <span key={index} className="weight-field__unit" aria-hidden="true">
+        <span key={index} className="zc-weight-field__unit" aria-hidden="true">
           {glyph === SPACE ? NO_BREAK_SPACE : glyph}
         </span>
       ))}
-      <span className="weight-field__label">{text}</span>
+      <span className="zc-weight-field__label">{text}</span>
     </span>
   );
 }

@@ -33,7 +33,7 @@ export function ButtonPlayground() {
 
   const code =
     size === 'icon'
-      ? `<Button variant="${variant}" size="icon" aria-label="Schedule post">\n  <span className="btn__icon">\n    <PlusIcon />\n  </span>\n</Button>`
+      ? `<Button variant="${variant}" size="icon" aria-label="Schedule post">\n  <span className="zc-btn__icon">\n    <PlusIcon />\n  </span>\n</Button>`
       : `<Button variant="${variant}" size="${size}">Schedule post</Button>`;
 
   return (
@@ -49,7 +49,7 @@ export function ButtonPlayground() {
     >
       <Button variant={variant} size={size} aria-label={size === 'icon' ? 'Schedule post' : undefined}>
         {size === 'icon' ? (
-          <span className="btn__icon">
+          <span className="zc-btn__icon">
             <Icon name="plus" size="sm" />
           </span>
         ) : (

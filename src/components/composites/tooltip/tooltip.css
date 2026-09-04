@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .tooltip {
+  .zc-tooltip {
     position: fixed;
     left: 0;
     top: 0;
@@ -20,42 +20,42 @@
     letter-spacing: var(--tracking-normal);
   }
 
-  .tooltip--measure {
+  .zc-tooltip--measure {
     visibility: hidden;
     left: -9999px;
     top: 0;
   }
 
-  .tooltip-anchor {
+  .zc-tooltip-anchor {
     display: contents;
   }
 
-  .tooltip__body {
+  .zc-tooltip__body {
     display: block;
     width: max-content;
     max-inline-size: var(--measure-floating);
     text-wrap: pretty;
   }
 
-  .tooltip[data-placement='top'] {
+  .zc-tooltip[data-placement='top'] {
     transform-origin: center bottom;
   }
-  .tooltip[data-placement='bottom'] {
+  .zc-tooltip[data-placement='bottom'] {
     transform-origin: center top;
   }
-  .tooltip[data-placement='left'] {
+  .zc-tooltip[data-placement='left'] {
     transform-origin: right center;
   }
-  .tooltip[data-placement='right'] {
+  .zc-tooltip[data-placement='right'] {
     transform-origin: left center;
   }
 
-  .tooltip__row {
+  .zc-tooltip__row {
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
   }
-  .tooltip__shortcut {
+  .zc-tooltip__shortcut {
     flex: 0 0 auto;
     font-family: var(--font-code);
     font-size: var(--size-micro);
@@ -67,14 +67,14 @@
     white-space: nowrap;
   }
 
-  .tooltip strong {
+  .zc-tooltip strong {
     font-weight: var(--weight-medium);
     color: var(--text-strong);
   }
-  .tooltip p {
+  .zc-tooltip p {
     margin: 0;
   }
-  .tooltip p + p {
+  .zc-tooltip p + p {
     margin-top: var(--space-1);
   }
 }

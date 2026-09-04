@@ -40,7 +40,7 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 
 function GaugeGlyph() {
   return (
-    <svg className="mdt__glyph" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+    <svg className="zc-mdt__glyph" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
       <path
         d="M12 4a8 8 0 0 1 8 8 8 8 0 0 1-.6 3"
         fill="none"
@@ -108,7 +108,13 @@ export function MotionDevtools({
   if (!mounted) return null;
 
   const active = shouldBeActive(snap.factor, snap.paused);
-  const rootClass = cx('mdt', `mdt--${placement}`, active && 'mdt--active', snap.paused && 'mdt--paused', className);
+  const rootClass = cx(
+    'zc-mdt',
+    `zc-mdt--${placement}`,
+    active && 'zc-mdt--active',
+    snap.paused && 'zc-mdt--paused',
+    className,
+  );
 
   const setFactor = (factor: number) => motionSlowmo.set({ factor, paused: false });
   const fill = `${((Math.min(snap.factor, maxFactor) - 1) / Math.max(1, maxFactor - 1)) * 100}%`;
@@ -116,19 +122,19 @@ export function MotionDevtools({
 
   return createPortal(
     <div className={rootClass} style={{ '--mdt-offset': `${offset}px` } as CSSProperties}>
-      <div className={'mdt__panel' + (open ? ' is-open' : '')} role="group" aria-label="Motion devtools">
+      <div className={'zc-mdt__panel' + (open ? ' zc-is-open' : '')} role="group" aria-label="Motion devtools">
         <button
-          className="mdt__head"
+          className="zc-mdt__head"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           title="Motion devtools"
           aria-label={open ? 'Collapse motion devtools' : 'Expand motion devtools'}
         >
           <GaugeGlyph />
-          <span className="mdt__spacer" />
-          <span className="mdt__badge">{pillBadge}</span>
+          <span className="zc-mdt__spacer" />
+          <span className="zc-mdt__badge">{pillBadge}</span>
           <svg
-            className={'mdt__chevron' + (open ? ' mdt__chevron--open' : '')}
+            className={'zc-mdt__chevron' + (open ? ' zc-mdt__chevron--open' : '')}
             width="12"
             height="12"
             viewBox="0 0 12 12"
@@ -139,17 +145,19 @@ export function MotionDevtools({
         </button>
 
         <Collapse open={open} fade>
-          <div className="mdt__body">
-            <span className="mdt__title">Motion</span>
-            <div className="mdt__readout">
-              <span className="mdt__value">
+          <div className="zc-mdt__body">
+            <span className="zc-mdt__title">Motion</span>
+            <div className="zc-mdt__readout">
+              <span className="zc-mdt__value">
                 {snap.paused ? 'Paused' : snap.factor === 1 ? 'Normal' : `${fmt(snap.factor)}×`}
               </span>
-              <span className="mdt__unit">{snap.paused ? 'frozen' : snap.factor === 1 ? 'real-time' : 'slower'}</span>
+              <span className="zc-mdt__unit">
+                {snap.paused ? 'frozen' : snap.factor === 1 ? 'real-time' : 'slower'}
+              </span>
             </div>
 
             <input
-              className="mdt__slider"
+              className="zc-mdt__slider"
               type="range"
               min={1}
               max={maxFactor}
@@ -160,7 +168,7 @@ export function MotionDevtools({
               aria-label="Slow-down factor"
             />
 
-            <div className="mdt__chips">
+            <div className="zc-mdt__chips">
               {presets.map((p) => (
                 <Button
                   key={p}
@@ -173,7 +181,7 @@ export function MotionDevtools({
               ))}
             </div>
 
-            <div className="mdt__row">
+            <div className="zc-mdt__row">
               <Button
                 size="sm"
                 variant={snap.paused ? 'primary' : 'secondary'}
@@ -186,9 +194,9 @@ export function MotionDevtools({
               </Button>
             </div>
 
-            <div className="mdt__opt">
+            <div className="zc-mdt__opt">
               <Checkbox size="sm" checked={timers} onChange={(e) => setTimers(e.target.checked)} label="Scale timers" />
-              <p className="mdt__hint">
+              <p className="zc-mdt__hint">
                 Slows CSS, Motion &amp; WAAPI together. Timer scaling keeps duration-based cleanups from cutting
                 animations short.
               </p>

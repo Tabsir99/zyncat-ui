@@ -1,10 +1,10 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .overlay-layer--modal {
+  .zc-overlay-layer--modal {
     place-items: center;
   }
-  .overlay-panel--modal {
+  .zc-overlay-panel--modal {
     max-width: 100%;
     max-height: 100%;
   }

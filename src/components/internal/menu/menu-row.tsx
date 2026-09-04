@@ -18,15 +18,15 @@ export interface MenuRowProps extends HTMLAttributes<HTMLDivElement>, DataAttrib
 
 export function MenuRow({ ref, icon, label, description, trailing, className, ...rest }: MenuRowProps) {
   return (
-    <div ref={ref} className={cx('menu-row', className)} {...rest}>
+    <div ref={ref} className={cx('zc-menu-row', className)} {...rest}>
       {icon && (
-        <span className="menu-row__icon">
+        <span className="zc-menu-row__icon">
           <IconSlot size="sm">{icon}</IconSlot>
         </span>
       )}
-      <span className="menu-row__text">
-        <span className="menu-row__label">{label}</span>
-        {description && <span className="menu-row__desc">{description}</span>}
+      <span className="zc-menu-row__text">
+        <span className="zc-menu-row__label">{label}</span>
+        {description && <span className="zc-menu-row__desc">{description}</span>}
       </span>
       {trailing}
     </div>

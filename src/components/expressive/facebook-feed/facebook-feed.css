@@ -1,16 +1,16 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .facebook-feed-post,
-  .facebook-feed-post *,
-  .facebook-feed-reel,
-  .facebook-feed-reel *,
-  .facebook-feed-story,
-  .facebook-feed-story * {
+  .zc-facebook-feed-post,
+  .zc-facebook-feed-post *,
+  .zc-facebook-feed-reel,
+  .zc-facebook-feed-reel *,
+  .zc-facebook-feed-story,
+  .zc-facebook-feed-story * {
     box-sizing: border-box;
   }
 
-  .facebook-feed-button {
+  .zc-facebook-feed-button {
     appearance: none;
     display: inline-flex;
     align-items: center;
@@ -25,52 +25,52 @@
     cursor: pointer;
   }
 
-  .facebook-feed-button:focus-visible {
+  .zc-facebook-feed-button:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
 
-  .facebook-feed-post__more,
-  .facebook-feed-post__follow-link,
-  .facebook-feed-reel__more,
-  .facebook-feed-reel__follow-label {
+  .zc-facebook-feed-post__more,
+  .zc-facebook-feed-post__follow-link,
+  .zc-facebook-feed-reel__more,
+  .zc-facebook-feed-reel__follow-label {
     display: inline;
   }
 
-  .facebook-feed-post,
-  .facebook-feed-reel,
-  .facebook-feed-story {
+  .zc-facebook-feed-post,
+  .zc-facebook-feed-reel,
+  .zc-facebook-feed-story {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
 
-  .facebook-feed-media {
+  .zc-facebook-feed-media {
     position: relative;
     overflow: hidden;
     background: #000000;
   }
 
-  .facebook-feed-ratio[data-ratio='4:5'] {
+  .zc-facebook-feed-ratio[data-ratio='4:5'] {
     aspect-ratio: 4 / 5;
   }
 
-  .facebook-feed-ratio[data-ratio='1.1:1'] {
+  .zc-facebook-feed-ratio[data-ratio='1.1:1'] {
     aspect-ratio: 1.1 / 1;
   }
 
-  .facebook-feed-ratio[data-ratio='1:1'] {
+  .zc-facebook-feed-ratio[data-ratio='1:1'] {
     aspect-ratio: 1 / 1;
   }
 
-  .facebook-feed-ratio[data-ratio='3:4'] {
+  .zc-facebook-feed-ratio[data-ratio='3:4'] {
     aspect-ratio: 3 / 4;
   }
 
-  .facebook-feed-ratio[data-ratio='16:9'] {
+  .zc-facebook-feed-ratio[data-ratio='16:9'] {
     aspect-ratio: 16 / 9;
   }
 
-  .facebook-feed-media__back {
+  .zc-facebook-feed-media__back {
     position: absolute;
     inset: 0;
     overflow: hidden;
@@ -80,7 +80,7 @@
     transform: scale(1.14);
   }
 
-  .facebook-feed-media__front {
+  .zc-facebook-feed-media__front {
     position: absolute;
     inset: 0;
     background-position: center;
@@ -88,24 +88,24 @@
     background-size: contain;
   }
 
-  .facebook-feed-media__front--cover {
+  .zc-facebook-feed-media__front--cover {
     background-size: cover;
   }
 
-  .facebook-feed-media__back > *,
-  .facebook-feed-media__front > * {
+  .zc-facebook-feed-media__back > *,
+  .zc-facebook-feed-media__front > * {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
 
-  .facebook-feed-media__back > *,
-  .facebook-feed-media__front--cover > * {
+  .zc-facebook-feed-media__back > *,
+  .zc-facebook-feed-media__front--cover > * {
     object-fit: cover;
   }
 
-  .facebook-feed-media__fill {
+  .zc-facebook-feed-media__fill {
     position: absolute;
     inset: 0;
     background-color: #1c1d1e;
@@ -114,30 +114,30 @@
       linear-gradient(148deg, #35363a 0%, #1c1d1e 100%);
   }
 
-  .facebook-feed-post {
+  .zc-facebook-feed-post {
     border: 1px solid #dddfe2;
     background: #ffffff;
     color: #080809;
   }
 
-  .facebook-feed-post--mobile {
+  .zc-facebook-feed-post--mobile {
     width: 390px;
   }
 
-  .facebook-feed-post--web {
+  .zc-facebook-feed-post--web {
     width: 680px;
     overflow: hidden;
     border-radius: 8px;
   }
 
-  .facebook-feed-post__header {
+  .zc-facebook-feed-post__header {
     display: flex;
     align-items: center;
     gap: 9px;
     padding: 12px 17px 0 12px;
   }
 
-  .facebook-feed-post__avatar {
+  .zc-facebook-feed-post__avatar {
     flex: 0 0 auto;
     width: 40px;
     height: 40px;
@@ -146,12 +146,12 @@
     background: #0866ff;
   }
 
-  .facebook-feed-post__avatar--plain {
+  .zc-facebook-feed-post__avatar--plain {
     padding: 0;
     background: transparent;
   }
 
-  .facebook-feed-post__portrait {
+  .zc-facebook-feed-post__portrait {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -162,25 +162,25 @@
     background-size: cover;
   }
 
-  .facebook-feed-post__avatar--plain .facebook-feed-post__portrait {
+  .zc-facebook-feed-post__avatar--plain .zc-facebook-feed-post__portrait {
     border-width: 0;
   }
 
-  .facebook-feed-post__portrait > * {
+  .zc-facebook-feed-post__portrait > * {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .facebook-feed-post__identity {
+  .zc-facebook-feed-post__identity {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-width: 0;
   }
 
-  .facebook-feed-post__name-row {
+  .zc-facebook-feed-post__name-row {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -189,7 +189,7 @@
     line-height: 20px;
   }
 
-  .facebook-feed-post__name {
+  .zc-facebook-feed-post__name {
     overflow: hidden;
     font-weight: 600;
     color: #080809;
@@ -197,23 +197,23 @@
     white-space: nowrap;
   }
 
-  .facebook-feed-post__follow {
+  .zc-facebook-feed-post__follow {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     gap: 5px;
   }
 
-  .facebook-feed-post__separator {
+  .zc-facebook-feed-post__separator {
     color: #65676b;
   }
 
-  .facebook-feed-post__follow-link {
+  .zc-facebook-feed-post__follow-link {
     font-weight: 600;
     color: #0064d1;
   }
 
-  .facebook-feed-post__meta {
+  .zc-facebook-feed-post__meta {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -222,23 +222,23 @@
     color: #65676b;
   }
 
-  .facebook-feed-post__globe {
+  .zc-facebook-feed-post__globe {
     flex: 0 0 auto;
     width: 13px;
     height: 13px;
   }
 
-  .facebook-feed-post__globe circle {
+  .zc-facebook-feed-post__globe circle {
     fill: none;
     stroke: currentcolor;
     stroke-width: 1.7;
   }
 
-  .facebook-feed-post__globe path {
+  .zc-facebook-feed-post__globe path {
     fill: currentcolor;
   }
 
-  .facebook-feed-post__controls {
+  .zc-facebook-feed-post__controls {
     display: flex;
     flex: 0 0 auto;
     align-self: flex-start;
@@ -248,13 +248,13 @@
     color: #65676b;
   }
 
-  .facebook-feed-post__kebab {
+  .zc-facebook-feed-post__kebab {
     display: flex;
     gap: 2px;
     padding: 10px 6px;
   }
 
-  .facebook-feed-post__pip {
+  .zc-facebook-feed-post__pip {
     display: block;
     width: 4px;
     height: 4px;
@@ -262,7 +262,7 @@
     background: currentcolor;
   }
 
-  .facebook-feed-post__close {
+  .zc-facebook-feed-post__close {
     width: 24px;
     height: 24px;
     fill: none;
@@ -271,7 +271,7 @@
     stroke-linecap: round;
   }
 
-  .facebook-feed-post__caption {
+  .zc-facebook-feed-post__caption {
     padding: 8px 12px 11px;
     font-size: 15px;
     line-height: 20px;
@@ -279,20 +279,20 @@
     text-wrap: pretty;
   }
 
-  .facebook-feed-post__link {
+  .zc-facebook-feed-post__link {
     color: #0064d1;
   }
 
-  .facebook-feed-post__ellipsis {
+  .zc-facebook-feed-post__ellipsis {
     color: #65676b;
   }
 
-  .facebook-feed-post__more {
+  .zc-facebook-feed-post__more {
     font-weight: 600;
     color: #65676b;
   }
 
-  .facebook-feed-post__actions {
+  .zc-facebook-feed-post__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -301,13 +301,13 @@
     color: #65676b;
   }
 
-  .facebook-feed-post__stats {
+  .zc-facebook-feed-post__stats {
     display: flex;
     align-items: center;
     gap: 25px;
   }
 
-  .facebook-feed-post__stat {
+  .zc-facebook-feed-post__stat {
     display: flex;
     align-items: center;
     gap: 9px;
@@ -315,7 +315,7 @@
     line-height: 20px;
   }
 
-  .facebook-feed-post__glyph {
+  .zc-facebook-feed-post__glyph {
     flex: 0 0 auto;
     width: 20px;
     height: 20px;
@@ -325,12 +325,12 @@
     stroke-linejoin: round;
   }
 
-  .facebook-feed-post__reactions {
+  .zc-facebook-feed-post__reactions {
     display: flex;
     align-items: center;
   }
 
-  .facebook-feed-post__reaction {
+  .zc-facebook-feed-post__reaction {
     display: grid;
     place-items: center;
     width: 18px;
@@ -339,22 +339,22 @@
     box-shadow: 0 0 0 1.5px #ffffff;
   }
 
-  .facebook-feed-post__reaction--like {
+  .zc-facebook-feed-post__reaction--like {
     background: #0c76fe;
   }
 
-  .facebook-feed-post__reaction--love {
+  .zc-facebook-feed-post__reaction--love {
     margin-left: -5px;
     background: #f3425f;
   }
 
-  .facebook-feed-post__reaction svg {
+  .zc-facebook-feed-post__reaction svg {
     width: 11px;
     height: 11px;
     fill: #ffffff;
   }
 
-  .facebook-feed-reel {
+  .zc-facebook-feed-reel {
     position: relative;
     flex: 0 0 auto;
     overflow: hidden;
@@ -362,35 +362,35 @@
     color: #ffffff;
   }
 
-  .facebook-feed-reel--narrow {
+  .zc-facebook-feed-reel--narrow {
     width: 557px;
     height: 878px;
   }
 
-  .facebook-feed-reel--wide {
+  .zc-facebook-feed-reel--wide {
     width: 1601px;
     height: 886px;
   }
 
-  .facebook-feed-reel__video {
+  .zc-facebook-feed-reel__video {
     position: absolute;
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__video {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__video {
     top: 13px;
     left: 2px;
     width: 482px;
     height: 857px;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__video {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__video {
     top: 13px;
     left: 1px;
     width: 1522px;
     height: 856px;
   }
 
-  .facebook-feed-reel__mute {
+  .zc-facebook-feed-reel__mute {
     position: absolute;
     display: grid;
     place-items: center;
@@ -405,26 +405,26 @@
     transition: background-color var(--duration-fast) var(--ease-standard);
   }
 
-  .facebook-feed-reel__mute:hover {
+  .zc-facebook-feed-reel__mute:hover {
     background: rgba(255, 255, 255, 0.28);
   }
 
-  .facebook-feed-reel__mute:focus-visible {
+  .zc-facebook-feed-reel__mute:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__mute {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__mute {
     top: 26px;
     left: 14px;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__mute {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__mute {
     top: 25px;
     left: 12px;
   }
 
-  .facebook-feed-reel__mute-glyph {
+  .zc-facebook-feed-reel__mute-glyph {
     width: 24px;
     height: 24px;
     fill: none;
@@ -434,7 +434,7 @@
     stroke-linejoin: round;
   }
 
-  .facebook-feed-reel__search {
+  .zc-facebook-feed-reel__search {
     position: absolute;
     top: 34px;
     right: 100px;
@@ -442,7 +442,7 @@
     height: 20px;
   }
 
-  .facebook-feed-reel__search-glyph {
+  .zc-facebook-feed-reel__search-glyph {
     width: 20px;
     height: 20px;
     fill: none;
@@ -451,7 +451,7 @@
     stroke-linecap: round;
   }
 
-  .facebook-feed-reel__rail {
+  .zc-facebook-feed-reel__rail {
     position: absolute;
     bottom: 38px;
     display: flex;
@@ -460,15 +460,15 @@
     width: 0;
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__rail {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__rail {
     right: 49px;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__rail {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__rail {
     right: 55px;
   }
 
-  .facebook-feed-reel__stat {
+  .zc-facebook-feed-reel__stat {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -476,11 +476,11 @@
     gap: 4px;
   }
 
-  .facebook-feed-reel__stat + .facebook-feed-reel__stat {
+  .zc-facebook-feed-reel__stat + .zc-facebook-feed-reel__stat {
     margin-top: 17px;
   }
 
-  .facebook-feed-reel__stat-glyph {
+  .zc-facebook-feed-reel__stat-glyph {
     width: 26px;
     height: 26px;
     fill: none;
@@ -489,21 +489,21 @@
     stroke-linejoin: round;
   }
 
-  .facebook-feed-reel__count {
+  .zc-facebook-feed-reel__count {
     font-size: 14px;
     font-weight: 600;
     line-height: 18px;
     white-space: nowrap;
   }
 
-  .facebook-feed-reel__kebab {
+  .zc-facebook-feed-reel__kebab {
     display: flex;
     flex: 0 0 auto;
     gap: 4px;
     margin-top: 13px;
   }
 
-  .facebook-feed-reel__pip {
+  .zc-facebook-feed-reel__pip {
     display: block;
     width: 4px;
     height: 4px;
@@ -511,42 +511,42 @@
     background: #ffffff;
   }
 
-  .facebook-feed-reel__overlay {
+  .zc-facebook-feed-reel__overlay {
     position: absolute;
     display: flex;
     flex-direction: column;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__overlay {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__overlay {
     right: 96px;
     bottom: 26px;
     left: 18px;
     gap: 0;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__overlay {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__overlay {
     right: 110px;
     bottom: 35px;
     left: 22px;
     gap: 12px;
   }
 
-  .facebook-feed-reel__byline {
+  .zc-facebook-feed-reel__byline {
     display: flex;
     align-items: center;
     min-width: 0;
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__byline {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__byline {
     gap: 8px;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__byline {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__byline {
     gap: 9px;
   }
 
-  .facebook-feed-reel__avatar {
+  .zc-facebook-feed-reel__avatar {
     flex: 0 0 auto;
     overflow: hidden;
     border-radius: 50%;
@@ -556,24 +556,24 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__avatar {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__avatar {
     width: 28px;
     height: 28px;
   }
 
-  .facebook-feed-reel--wide .facebook-feed-reel__avatar {
+  .zc-facebook-feed-reel--wide .zc-facebook-feed-reel__avatar {
     width: 32px;
     height: 32px;
   }
 
-  .facebook-feed-reel__avatar > * {
+  .zc-facebook-feed-reel__avatar > * {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .facebook-feed-reel__name {
+  .zc-facebook-feed-reel__name {
     overflow: hidden;
     font-size: 17px;
     font-weight: 600;
@@ -582,17 +582,17 @@
     white-space: nowrap;
   }
 
-  .facebook-feed-reel__badge {
+  .zc-facebook-feed-reel__badge {
     flex: 0 0 auto;
     width: 14px;
     height: 14px;
   }
 
-  .facebook-feed-reel__badge circle {
+  .zc-facebook-feed-reel__badge circle {
     fill: #1b74e4;
   }
 
-  .facebook-feed-reel__badge path {
+  .zc-facebook-feed-reel__badge path {
     fill: none;
     stroke: #ffffff;
     stroke-width: 2.6;
@@ -600,7 +600,7 @@
     stroke-linejoin: round;
   }
 
-  .facebook-feed-reel__follow {
+  .zc-facebook-feed-reel__follow {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -610,15 +610,15 @@
     color: #ffffff;
   }
 
-  .facebook-feed-reel__follow-dot {
+  .zc-facebook-feed-reel__follow-dot {
     opacity: 0.85;
   }
 
-  .facebook-feed-reel__follow-label {
+  .zc-facebook-feed-reel__follow-label {
     font-weight: 600;
   }
 
-  .facebook-feed-reel__audio {
+  .zc-facebook-feed-reel__audio {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -627,19 +627,19 @@
     line-height: 18px;
   }
 
-  .facebook-feed-reel__note {
+  .zc-facebook-feed-reel__note {
     flex: 0 0 auto;
     font-size: 15px;
     line-height: 18px;
   }
 
-  .facebook-feed-reel__audio-text {
+  .zc-facebook-feed-reel__audio-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .facebook-feed-reel__caption {
+  .zc-facebook-feed-reel__caption {
     display: flex;
     align-items: flex-end;
     gap: 6px;
@@ -648,22 +648,22 @@
     line-height: 20px;
   }
 
-  .facebook-feed-reel--narrow .facebook-feed-reel__caption {
+  .zc-facebook-feed-reel--narrow .zc-facebook-feed-reel__caption {
     margin-top: 8px;
   }
 
-  .facebook-feed-reel__caption-text {
+  .zc-facebook-feed-reel__caption-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .facebook-feed-reel__more {
+  .zc-facebook-feed-reel__more {
     flex: 0 0 auto;
     font-weight: 600;
   }
 
-  .facebook-feed-story {
+  .zc-facebook-feed-story {
     position: relative;
     flex: 0 0 auto;
     width: 486px;
@@ -673,17 +673,17 @@
     color: #ffffff;
   }
 
-  .facebook-feed-story__stage {
+  .zc-facebook-feed-story__stage {
     position: absolute;
     inset: 0;
   }
 
-  .facebook-feed-story__back {
+  .zc-facebook-feed-story__back {
     filter: blur(40px) brightness(0.24) saturate(1.15);
     transform: scale(1.3);
   }
 
-  .facebook-feed-story__card {
+  .zc-facebook-feed-story__card {
     top: 50%;
     right: 0;
     bottom: auto;
@@ -692,7 +692,7 @@
     transform: translateY(-50%);
   }
 
-  .facebook-feed-story__segments {
+  .zc-facebook-feed-story__segments {
     position: absolute;
     top: 12px;
     right: 13px;
@@ -701,18 +701,18 @@
     gap: 5px;
   }
 
-  .facebook-feed-story__segment {
+  .zc-facebook-feed-story__segment {
     flex: 1;
     height: 4px;
     border-radius: 2px;
     background: rgba(255, 255, 255, 0.3);
   }
 
-  .facebook-feed-story__segment--filled {
+  .zc-facebook-feed-story__segment--filled {
     background: #ffffff;
   }
 
-  .facebook-feed-story__header {
+  .zc-facebook-feed-story__header {
     position: absolute;
     top: 28px;
     right: 10px;
@@ -723,7 +723,7 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   }
 
-  .facebook-feed-story__avatar {
+  .zc-facebook-feed-story__avatar {
     flex: 0 0 auto;
     width: 38px;
     height: 38px;
@@ -735,21 +735,21 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   }
 
-  .facebook-feed-story__avatar > * {
+  .zc-facebook-feed-story__avatar > * {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .facebook-feed-story__identity {
+  .zc-facebook-feed-story__identity {
     display: flex;
     flex: 1;
     flex-direction: column;
     min-width: 0;
   }
 
-  .facebook-feed-story__name-row {
+  .zc-facebook-feed-story__name-row {
     display: flex;
     align-items: center;
     gap: 7px;
@@ -758,25 +758,25 @@
     line-height: 18px;
   }
 
-  .facebook-feed-story__name {
+  .zc-facebook-feed-story__name {
     overflow: hidden;
     font-weight: 600;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .facebook-feed-story__stamp {
+  .zc-facebook-feed-story__stamp {
     flex: 0 0 auto;
   }
 
-  .facebook-feed-story__audience {
+  .zc-facebook-feed-story__audience {
     flex: 0 0 auto;
     width: 12px;
     height: 12px;
     fill: currentcolor;
   }
 
-  .facebook-feed-story__audio {
+  .zc-facebook-feed-story__audio {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -785,18 +785,18 @@
     line-height: 17px;
   }
 
-  .facebook-feed-story__note {
+  .zc-facebook-feed-story__note {
     flex: 0 0 auto;
     font-size: 13px;
   }
 
-  .facebook-feed-story__audio-text {
+  .zc-facebook-feed-story__audio-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .facebook-feed-story__chevron {
+  .zc-facebook-feed-story__chevron {
     flex: 0 0 auto;
     width: 10px;
     height: 10px;
@@ -807,14 +807,14 @@
     stroke-linejoin: round;
   }
 
-  .facebook-feed-story__controls {
+  .zc-facebook-feed-story__controls {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
     gap: 14px;
   }
 
-  .facebook-feed-story__mute {
+  .zc-facebook-feed-story__mute {
     position: relative;
     display: grid;
     place-items: center;
@@ -829,48 +829,48 @@
     transition: opacity var(--duration-fast) var(--ease-standard);
   }
 
-  .facebook-feed-story__mute::after {
+  .zc-facebook-feed-story__mute::after {
     position: absolute;
     inset: -6px;
     content: '';
   }
 
-  .facebook-feed-story__mute:hover {
+  .zc-facebook-feed-story__mute:hover {
     opacity: 0.7;
   }
 
-  .facebook-feed-story__mute:focus-visible {
+  .zc-facebook-feed-story__mute:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
 
-  .facebook-feed-story__mute-glyph {
+  .zc-facebook-feed-story__mute-glyph {
     width: 20px;
     height: 20px;
     fill: currentcolor;
   }
 
-  .facebook-feed-story__mute-cross {
+  .zc-facebook-feed-story__mute-cross {
     fill: none;
     stroke: currentcolor;
     stroke-width: 2.2;
     stroke-linecap: round;
   }
 
-  .facebook-feed-story__play {
+  .zc-facebook-feed-story__play {
     flex: 0 0 auto;
     width: 15px;
     height: 15px;
     fill: currentcolor;
   }
 
-  .facebook-feed-story__kebab {
+  .zc-facebook-feed-story__kebab {
     display: flex;
     flex: 0 0 auto;
     gap: 3px;
   }
 
-  .facebook-feed-story__pip {
+  .zc-facebook-feed-story__pip {
     display: block;
     width: 5px;
     height: 5px;

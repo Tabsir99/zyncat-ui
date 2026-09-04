@@ -59,18 +59,18 @@ function RailAction({
   onClick: () => void;
 }): ReactElement {
   return (
-    <li className="youtube-short__action">
+    <li className="zc-youtube-short__action">
       <button
         type="button"
-        className="youtube-button youtube-short__action-face"
+        className="zc-youtube-button zc-youtube-short__action-face"
         aria-label={action}
         aria-pressed={pressed}
         onClick={onClick}
       >
         {glyph}
       </button>
-      <span className="youtube-short__action-label">
-        {count !== undefined && <span className="youtube__sr">{name} </span>}
+      <span className="zc-youtube-short__action-label">
+        {count !== undefined && <span className="zc-youtube__sr">{name} </span>}
         {count ?? name}
       </span>
     </li>
@@ -110,43 +110,43 @@ export function ShortSurface({
 }: ShortSurfaceProps): ReactElement {
   return (
     <>
-      <div className="youtube-short__meta">
-        <div className="youtube-short__account">
-          <div className="youtube-short__account-avatar">
-            <Media source={avatar} className="youtube__avatar-media" />
+      <div className="zc-youtube-short__meta">
+        <div className="zc-youtube-short__account">
+          <div className="zc-youtube-short__account-avatar">
+            <Media source={avatar} className="zc-youtube__avatar-media" />
           </div>
-          <span className="youtube-short__handle">{channel}</span>
+          <span className="zc-youtube-short__handle">{channel}</span>
         </div>
-        <p className="youtube-short__title">{title}</p>
+        <p className="zc-youtube-short__title">{title}</p>
       </div>
 
-      <div className="youtube-short__stage">
-        <div className="youtube-short__frame">
+      <div className="zc-youtube-short__stage">
+        <div className="zc-youtube-short__frame">
           <Media source={media} />
         </div>
 
-        <div className="youtube-short__controls">
+        <div className="zc-youtube-short__controls">
           <button
             type="button"
-            className="youtube-short__control"
+            className="zc-youtube-short__control"
             aria-pressed={paused}
             aria-label={paused ? PLAY_LABEL : PAUSE_LABEL}
             onClick={onTogglePaused}
           >
             {paused ? <PlayGlyph /> : <PauseGlyph />}
           </button>
-          <span className="youtube-short__control youtube-short__control--static" aria-hidden="true">
+          <span className="zc-youtube-short__control zc-youtube-short__control--static" aria-hidden="true">
             <SpeakerGlyph />
           </span>
         </div>
 
-        <div className="youtube-short__pill">
-          <span className="youtube-short__pill-cell" aria-hidden="true">
-            <span className="youtube-short__captions">{CAPTIONS_LABEL}</span>
+        <div className="zc-youtube-short__pill">
+          <span className="zc-youtube-short__pill-cell" aria-hidden="true">
+            <span className="zc-youtube-short__captions">{CAPTIONS_LABEL}</span>
           </span>
           <button
             type="button"
-            className="youtube-button youtube-short__pill-cell"
+            className="zc-youtube-button zc-youtube-short__pill-cell"
             aria-label={MENU_LABEL}
             onClick={() => onAction?.('menu')}
           >
@@ -154,7 +154,7 @@ export function ShortSurface({
           </button>
           <button
             type="button"
-            className="youtube-button youtube-short__pill-cell"
+            className="zc-youtube-button zc-youtube-short__pill-cell"
             aria-label={EXPAND_LABEL}
             onClick={() => onAction?.('expand')}
           >
@@ -163,18 +163,18 @@ export function ShortSurface({
         </div>
 
         <div
-          className="youtube-short__progress"
+          className="zc-youtube-short__progress"
           role="progressbar"
           aria-label={PROGRESS_LABEL}
           aria-valuemin={PROGRESS_MIN}
           aria-valuemax={PROGRESS_MAX}
           aria-valuenow={progressValue(progress)}
         >
-          <div className="youtube-short__progress-fill" style={progressStyle(progress)} />
+          <div className="zc-youtube-short__progress-fill" style={progressStyle(progress)} />
         </div>
       </div>
 
-      <ul className="youtube-short__rail">
+      <ul className="zc-youtube-short__rail">
         <RailAction
           glyph={<HeartGlyph />}
           action={LIKE_ACTION}
@@ -203,8 +203,8 @@ export function ShortSurface({
           count={groupedCount(remixes)}
           onClick={() => onAction?.('remix')}
         />
-        <li className="youtube-short__rail-avatar" aria-hidden="true">
-          <Media source={avatar} className="youtube__avatar-media" />
+        <li className="zc-youtube-short__rail-avatar" aria-hidden="true">
+          <Media source={avatar} className="zc-youtube__avatar-media" />
         </li>
       </ul>
     </>

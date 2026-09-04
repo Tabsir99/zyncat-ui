@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .glass {
+  .zc-glass {
     --glass-fg: var(--text-body);
     --glass-tint: var(--glass-tint-neutral);
 
@@ -23,7 +23,7 @@
       background-color var(--duration-base) var(--ease-standard);
   }
 
-  .glass::before {
+  .zc-glass::before {
     content: '';
     position: absolute;
     inset: 0;
@@ -36,24 +36,24 @@
       opacity var(--duration-base) var(--ease-standard),
       transform var(--duration-slow) var(--ease-entrance);
   }
-  .glass > * {
+  .zc-glass > * {
     position: relative;
     z-index: 1;
   }
 
-  .glass--interactive:hover {
+  .zc-glass--interactive:hover {
     transform: translateY(calc(var(--space-px) * -1));
     box-shadow:
       var(--glass-highlight),
       inset 0 0 0 var(--border-hairline) color-mix(in oklab, var(--glass-fg) 26%, transparent),
       var(--glass-shadow-hover);
   }
-  .glass--interactive:hover::before {
+  .zc-glass--interactive:hover::before {
     opacity: var(--glass-sheen-hover);
     transform: translateY(-8%);
   }
 
-  .glass-glint::after {
+  .zc-glass-glint::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -84,17 +84,17 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .glass,
-    .glass::before {
+    .zc-glass,
+    .zc-glass::before {
       transition: none;
     }
-    .glass--interactive:hover {
+    .zc-glass--interactive:hover {
       transform: none;
     }
-    .glass--interactive:hover::before {
+    .zc-glass--interactive:hover::before {
       transform: none;
     }
-    .glass-glint::after {
+    .zc-glass-glint::after {
       animation: none;
     }
   }

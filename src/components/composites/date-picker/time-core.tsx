@@ -228,12 +228,12 @@ export function TimeSegments({
   const hText = pend && pend.seg === 'h' ? pad(pend.d) : h == null ? '--' : pad(is12 ? disp12(h) : h);
   const mText = pend && pend.seg === 'm' ? pad(pend.d) : m == null ? '--' : pad(m);
 
-  const segCls = (empty: boolean): string => 'tsg__seg' + (empty ? ' is-empty' : '');
+  const segCls = (empty: boolean): string => 'zc-tsg__seg' + (empty ? ' zc-is-empty' : '');
   const tab = disabled ? -1 : 0;
 
   return (
     <div
-      className={cx('tsg', disabled && 'is-disabled')}
+      className={cx('zc-tsg', disabled && 'zc-is-disabled')}
       role="group"
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}
@@ -254,7 +254,7 @@ export function TimeSegments({
       >
         {hText}
       </span>
-      <span className="tsg__sep" aria-hidden="true">
+      <span className="zc-tsg__sep" aria-hidden="true">
         :
       </span>
       <span
@@ -275,7 +275,7 @@ export function TimeSegments({
       {is12 ? (
         <span
           ref={merRef}
-          className="tsg__seg tsg__seg--mer"
+          className="zc-tsg__seg zc-tsg__seg--mer"
           role="spinbutton"
           tabIndex={tab}
           aria-label="AM or PM"

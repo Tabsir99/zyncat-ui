@@ -46,15 +46,15 @@ export function TimeField({
   const [val, commit] = useControllable(value, defaultValue, onChange);
 
   function onBoxPointerDown(e: PointerEvent<HTMLDivElement>) {
-    if (disabled || (e.target as HTMLElement).closest('.tsg__seg')) return;
+    if (disabled || (e.target as HTMLElement).closest('.zc-tsg__seg')) return;
     e.preventDefault();
-    const seg = e.currentTarget.querySelector('.tsg__seg') as HTMLElement | null;
+    const seg = e.currentTarget.querySelector('.zc-tsg__seg') as HTMLElement | null;
     if (seg) seg.focus();
   }
 
   return (
     <FieldShell
-      variant="tfd"
+      variant="zc-tfd"
       label={label}
       required={required}
       invalid={invalid}
@@ -63,7 +63,10 @@ export function TimeField({
       className={className}
       htmlProps={htmlProps}
     >
-      <div className={'fld__input tfd__box' + (disabled ? ' is-disabled' : '')} onPointerDown={onBoxPointerDown}>
+      <div
+        className={'zc-fld__input zc-tfd__box' + (disabled ? ' zc-is-disabled' : '')}
+        onPointerDown={onBoxPointerDown}
+      >
         <TimeSegments
           value={val}
           onCommit={commit}

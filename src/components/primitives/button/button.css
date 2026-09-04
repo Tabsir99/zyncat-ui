@@ -12,7 +12,7 @@
 }
 
 @layer zyncat.components {
-  .btn {
+  .zc-btn {
     --btn-shadow: none;
     --btn-ring: var(--ring-accent);
     --btn-gap: var(--space-2);
@@ -54,58 +54,58 @@
       transform var(--duration-fast) var(--ease-standard);
   }
 
-  .btn:focus-visible {
+  .zc-btn:focus-visible {
     outline: none;
     box-shadow: var(--btn-shadow), var(--btn-ring);
   }
 
-  .btn--sm {
+  .zc-btn--sm {
     height: var(--control-height-sm);
     padding: 0 var(--space-3);
     font-size: var(--size-caption);
     border-radius: var(--radius-sm);
     --btn-gap: var(--space-1);
   }
-  .btn--lg {
+  .zc-btn--lg {
     height: var(--control-height-lg);
     padding: 0 var(--space-5);
     border-radius: var(--radius-md);
   }
-  .btn--block {
+  .zc-btn--block {
     width: 100%;
   }
-  .btn--icon {
+  .zc-btn--icon {
     width: var(--control-height-sm);
     height: var(--control-height-sm);
     padding: 0;
     border-radius: var(--radius-sm);
   }
 
-  .btn__label {
+  .zc-btn__label {
     display: inline-flex;
     align-items: center;
     gap: var(--btn-gap);
   }
 
-  .btn__icon {
+  .zc-btn__icon {
     display: inline-flex;
     flex: none;
     width: 1em;
     height: 1em;
   }
-  .btn__icon svg {
+  .zc-btn__icon svg {
     display: block;
     width: 100%;
     height: 100%;
   }
-  .btn__icon:first-child {
+  .zc-btn__icon:first-child {
     margin-left: calc(var(--space-1) * -1);
   }
-  .btn__icon:last-child {
+  .zc-btn__icon:last-child {
     margin-right: calc(var(--space-1) * -1);
   }
 
-  .btn--primary {
+  .zc-btn--primary {
     color: var(--text-on-accent);
     --btn-grad-a: var(--accent-fill);
     --btn-grad-b: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
@@ -114,21 +114,21 @@
       inset 0 1px 0 0 rgb(255 255 255 / calc(0.28 * var(--sheen-strength))),
       inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
   }
-  .btn--primary:hover:not(:disabled):not(.is-loading) {
+  .zc-btn--primary:hover:not(:disabled):not(.zc-is-loading) {
     --btn-grad-a: var(--accent-lift);
     --btn-grad-b: var(--accent-hover);
     --btn-shadow:
       inset 0 1px 0 0 rgb(255 255 255 / calc(0.36 * var(--sheen-strength))),
       inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md), var(--glow-accent);
   }
-  .btn--primary:active:not(:disabled):not(.is-loading) {
+  .zc-btn--primary:active:not(:disabled):not(.zc-is-loading) {
     --btn-grad-a: color-mix(in oklab, var(--accent-hover) 70%, var(--accent-active));
     --btn-grad-b: var(--accent-fill);
     transform: translateY(var(--space-px));
     --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
   }
 
-  .btn--secondary {
+  .zc-btn--secondary {
     color: var(--text-body);
     --btn-face-lit: color-mix(in oklab, rgb(255 255 255) 2%, var(--bg-surface));
     --btn-face-shade: color-mix(in oklab, rgb(var(--shadow-rgb)) 1.5%, var(--bg-surface));
@@ -140,27 +140,27 @@
       inset 0 1px 0 0 rgb(255 255 255 / calc(0.2 * var(--sheen-strength))),
       inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.015);
   }
-  .btn--secondary:hover:not(:disabled):not(.is-loading) {
+  .zc-btn--secondary:hover:not(:disabled):not(.zc-is-loading) {
     color: var(--text-strong);
     --btn-grad-a: color-mix(in oklab, var(--text-secondary) 3%, var(--btn-face-lit));
     --btn-grad-b: color-mix(in oklab, var(--text-secondary) 3%, var(--btn-face-shade));
   }
-  .btn--secondary:active:not(:disabled):not(.is-loading) {
+  .zc-btn--secondary:active:not(:disabled):not(.zc-is-loading) {
     --btn-grad-a: color-mix(in oklab, var(--text-secondary) 5%, var(--btn-face-lit));
     --btn-grad-b: color-mix(in oklab, var(--text-secondary) 5%, var(--btn-face-shade));
     transform: translateY(var(--space-px));
     --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.06);
   }
 
-  .btn--ghost {
+  .zc-btn--ghost {
     color: var(--text-body);
     background: transparent;
   }
-  .btn--ghost::before {
+  .zc-btn--ghost::before {
     content: '';
     position: absolute;
     inset: 0;
-    z-index: -1; /* .btn isolates, so this stays inside the button, under the label */
+    z-index: -1; /* .zc-btn isolates, so this stays inside the button, under the label */
     border-radius: inherit;
     background: var(--neutral-wash);
     opacity: 0;
@@ -169,21 +169,21 @@
       transform var(--duration-fast) var(--ease-standard),
       opacity var(--duration-fast) var(--ease-standard);
   }
-  .btn--ghost:hover:not(:disabled):not(.is-loading) {
+  .zc-btn--ghost:hover:not(:disabled):not(.zc-is-loading) {
     color: var(--text-strong);
   }
-  .btn--ghost:hover:not(:disabled):not(.is-loading)::before {
+  .zc-btn--ghost:hover:not(:disabled):not(.zc-is-loading)::before {
     opacity: 1;
     transform: scale(1);
   }
-  .btn--ghost:active:not(:disabled):not(.is-loading) {
+  .zc-btn--ghost:active:not(:disabled):not(.zc-is-loading) {
     transform: translateY(var(--space-px));
   }
-  .btn--ghost:active:not(:disabled):not(.is-loading)::before {
+  .zc-btn--ghost:active:not(:disabled):not(.zc-is-loading)::before {
     background: var(--neutral-wash-press);
   }
 
-  .btn--danger {
+  .zc-btn--danger {
     color: var(--text-on-accent);
     --btn-grad-a: var(--danger-fill);
     --btn-grad-b: color-mix(in oklab, var(--danger) 70%, var(--danger-active));
@@ -193,21 +193,21 @@
       inset 0 1px 0 0 rgb(255 255 255 / calc(0.28 * var(--sheen-strength))),
       inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.22), var(--shadow-sm);
   }
-  .btn--danger:hover:not(:disabled):not(.is-loading) {
+  .zc-btn--danger:hover:not(:disabled):not(.zc-is-loading) {
     --btn-grad-a: var(--danger-lift);
     --btn-grad-b: var(--danger);
     --btn-shadow:
       inset 0 1px 0 0 rgb(255 255 255 / calc(0.36 * var(--sheen-strength))),
       inset 0 -1px 0 0 rgb(var(--shadow-rgb) / 0.18), var(--shadow-md), var(--glow-danger);
   }
-  .btn--danger:active:not(:disabled):not(.is-loading) {
+  .zc-btn--danger:active:not(:disabled):not(.zc-is-loading) {
     --btn-grad-a: color-mix(in oklab, var(--danger) 70%, var(--danger-active));
     --btn-grad-b: var(--danger-fill);
     transform: translateY(var(--space-px));
     --btn-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.16), 0 1px 1px 0 rgb(var(--shadow-rgb) / 0.08);
   }
 
-  .btn--link {
+  .zc-btn--link {
     height: auto;
     padding: 0;
     border-radius: var(--radius-sm);
@@ -216,56 +216,56 @@
     --btn-shadow: none;
     font-weight: var(--weight-medium);
   }
-  .btn--link:hover:not(:disabled):not(.is-loading) {
+  .zc-btn--link:hover:not(:disabled):not(.zc-is-loading) {
     color: var(--accent-active);
     text-decoration: underline;
     text-underline-offset: var(--space-px);
   }
-  .btn--link:active:not(:disabled):not(.is-loading) {
+  .zc-btn--link:active:not(:disabled):not(.zc-is-loading) {
     color: var(--accent-active);
   }
-  .btn--link:focus-visible {
+  .zc-btn--link:focus-visible {
     border-radius: var(--radius-sm);
     box-shadow: var(--btn-ring);
   }
 
-  .btn:disabled,
-  .btn.is-loading {
+  .zc-btn:disabled,
+  .zc-btn.zc-is-loading {
     cursor: default;
   }
-  .btn:disabled {
+  .zc-btn:disabled {
     transform: none;
   }
-  .btn--primary:disabled {
+  .zc-btn--primary:disabled {
     background: var(--accent-disabled);
     color: var(--text-on-accent);
     --btn-shadow: none;
   }
-  .btn--danger:disabled {
+  .zc-btn--danger:disabled {
     background: var(--danger-disabled);
     color: var(--text-on-accent);
     --btn-shadow: none;
   }
-  .btn--secondary:disabled {
+  .zc-btn--secondary:disabled {
     color: var(--text-disabled);
     background: var(--bg-subtle);
     border-color: var(--border-subtle);
     --btn-shadow: none;
   }
-  .btn--ghost:disabled {
+  .zc-btn--ghost:disabled {
     color: var(--text-disabled);
     background: transparent;
   }
-  .btn--link:disabled {
+  .zc-btn--link:disabled {
     color: var(--text-disabled);
     text-decoration: none;
   }
 
-  .btn.is-loading .btn__label,
-  .btn.is-loading .btn__icon {
+  .zc-btn.zc-is-loading .zc-btn__label,
+  .zc-btn.zc-is-loading .zc-btn__icon {
     opacity: 0;
   }
-  .btn__spinner {
+  .zc-btn__spinner {
     position: absolute;
     top: 50%;
     left: 50%;

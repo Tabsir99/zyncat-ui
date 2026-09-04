@@ -83,10 +83,10 @@ export function TextField({
     el.focus();
   }
   const cls = cx(
-    'fld',
-    size === 'sm' ? 'fld--sm' : size === 'lg' ? 'fld--lg' : '',
-    leadingIcon && 'fld--has-lead',
-    showClear && 'fld--has-action',
+    'zc-fld',
+    size === 'sm' ? 'zc-fld--sm' : size === 'lg' ? 'zc-fld--lg' : '',
+    leadingIcon && 'zc-fld--has-lead',
+    showClear && 'zc-fld--has-action',
     state,
     className,
   );
@@ -94,15 +94,15 @@ export function TextField({
   return (
     <div className={cls} style={style}>
       <FieldLabel id={rest.id} label={label} required={rest.required} optional={optional} />
-      <div className="fld__control">
+      <div className="zc-fld__control">
         {leadingIcon && (
-          <span className="fld__icon fld__icon--lead">
+          <span className="zc-fld__icon zc-fld__icon--lead">
             <IconSlot size={size}>{leadingIcon}</IconSlot>
           </span>
         )}
         <input
           ref={inputRef}
-          className="fld__input"
+          className="zc-fld__input"
           value={value}
           aria-invalid={error ? true : undefined}
           {...rest}
@@ -110,7 +110,7 @@ export function TextField({
           aria-describedby={joinIds(msgId, htmlProps?.['aria-describedby'])}
         />
         {showClear && (
-          <button type="button" className="fld__action" aria-label="Clear" onClick={clear}>
+          <button type="button" className="zc-fld__action" aria-label="Clear" onClick={clear}>
             <Icon name="close" size={size} />
           </button>
         )}

@@ -17,9 +17,9 @@ export type { YouTubeAction, YouTubeMedia } from './media';
 export type YouTubeSurface = 'video' | 'short' | 'post';
 
 const SURFACE_CLASS: Record<YouTubeSurface, string> = {
-  video: 'youtube--video',
-  short: 'youtube--short',
-  post: 'youtube--post',
+  video: 'zc-youtube--video',
+  short: 'zc-youtube--short',
+  post: 'zc-youtube--post',
 };
 
 const EMPTY_TEXT = '';
@@ -136,7 +136,7 @@ export function YouTube({
   const slides = carousel && carousel.length ? carousel : [media];
 
   return (
-    <article className={cx('youtube', SURFACE_CLASS[surface], className)} style={style} {...htmlProps}>
+    <article className={cx('zc-youtube', SURFACE_CLASS[surface], className)} style={style} {...htmlProps}>
       {surface === 'video' && (
         <VideoSurface
           title={title}

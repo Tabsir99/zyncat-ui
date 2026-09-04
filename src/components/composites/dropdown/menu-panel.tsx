@@ -203,7 +203,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
         key={item.id}
         ref={rowFor(i)}
         id={menuId + '-item-' + i}
-        className="dropdown__item"
+        className="zc-dropdown__item"
         role={radio ? 'menuitemradio' : 'menuitem'}
         tabIndex={i === activeIdx ? 0 : -1}
         aria-checked={radio ? item.selected : undefined}
@@ -227,13 +227,13 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
         description={item.description}
         trailing={
           <>
-            {item.selected && <Icon name="check" size="sm" weight="bold" className="dropdown__item-check" />}
+            {item.selected && <Icon name="check" size="sm" weight="bold" className="zc-dropdown__item-check" />}
             {item.shortcut && (
-              <span className="dropdown__item-shortcut" aria-hidden="true">
+              <span className="zc-dropdown__item-shortcut" aria-hidden="true">
                 {item.shortcut}
               </span>
             )}
-            {popup && <Icon name="caret-right" size="sm" className="dropdown__item-caret" />}
+            {popup && <Icon name="caret-right" size="sm" className="zc-dropdown__item-caret" />}
           </>
         }
       />
@@ -243,11 +243,11 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
   function renderRows() {
     return (
       <>
-        <GlidePill className="menu-glide" glide={glide} />
+        <GlidePill className="zc-menu-glide" glide={glide} />
         {groups.length > 1 || groups[0]?.label
           ? groups.map((group, gi) => (
-              <div className="dropdown__group" role="group" aria-label={group.label || undefined} key={gi}>
-                {group.label && <div className="menu-group-label">{group.label}</div>}
+              <div className="zc-dropdown__group" role="group" aria-label={group.label || undefined} key={gi}>
+                {group.label && <div className="zc-menu-group-label">{group.label}</div>}
                 {group.items.map(renderRow)}
               </div>
             ))
@@ -262,7 +262,7 @@ export function MenuPanel({ chain, depth, ...motion }: { chain: MenuChain; depth
       {...menuHighlightAttrs(chain)}
       ref={panelRef as unknown as RefObject<HTMLDivElement>}
       id={menuId}
-      className={cx('menu-surface menu-scroller dropdown__menu', !nested && chain.htmlProps?.className)}
+      className={cx('zc-menu-surface zc-menu-scroller zc-dropdown__menu', !nested && chain.htmlProps?.className)}
       role={contentLevel ? 'dialog' : 'menu'}
       tabIndex={-1}
       aria-label={nested ? undefined : chain.ariaLabel}

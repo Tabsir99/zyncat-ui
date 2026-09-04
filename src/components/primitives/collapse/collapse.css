@@ -20,7 +20,7 @@
 }
 
 @layer zyncat.components {
-  .collapse {
+  .zc-collapse {
     --collapse-fade-stagger: 60ms;
 
     display: grid;
@@ -32,12 +32,12 @@
         var(--collapse-ease-close, var(--ease-entrance)),
       visibility 0s linear var(--collapse-dur-close, var(--duration-slow));
   }
-  .collapse[data-open='false'] {
+  .zc-collapse[data-open='false'] {
     visibility: hidden;
   }
   /* No visibility: visible here - open flips it the same frame, and inheriting it keeps a Collapse
    nested under a closed ancestor hidden. */
-  .collapse[data-open='true'] {
+  .zc-collapse[data-open='true'] {
     grid-template-rows: 1fr;
     transition:
       grid-template-rows var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance)),
@@ -45,37 +45,37 @@
         var(--collapse-ease-open, var(--ease-entrance));
   }
 
-  .collapse[data-axis='width'] {
+  .zc-collapse[data-axis='width'] {
     grid-template-rows: 1fr;
     grid-template-columns: 0fr;
   }
-  .collapse[data-axis='width'][data-open='true'] {
+  .zc-collapse[data-axis='width'][data-open='true'] {
     grid-template-columns: 1fr;
   }
 
   /* min-size:0 is what lets the grid track collapse to 0. */
-  .collapse__inner {
+  .zc-collapse__inner {
     overflow: hidden;
     min-height: 0;
     min-width: 0;
   }
 
-  .collapse--fade .collapse__inner {
+  .zc-collapse--fade .zc-collapse__inner {
     opacity: 0;
     transition: opacity var(--collapse-dur-close, var(--duration-base)) var(--collapse-ease-close, var(--ease-standard));
   }
-  .collapse--fade[data-open='true'] .collapse__inner {
+  .zc-collapse--fade[data-open='true'] .zc-collapse__inner {
     opacity: 1;
     transition: opacity var(--collapse-dur-open, var(--duration-slow)) var(--collapse-ease-open, var(--ease-entrance))
       var(--collapse-fade-stagger);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .collapse,
-    .collapse--fade .collapse__inner {
+    .zc-collapse,
+    .zc-collapse--fade .zc-collapse__inner {
       transition-duration: 1ms;
     }
-    .collapse--fade .collapse__inner {
+    .zc-collapse--fade .zc-collapse__inner {
       transition-delay: 0ms;
     }
   }

@@ -68,11 +68,11 @@ const fromEdge = (p: Placement) => ({
 
 function Body({ a, width }: { a: ActivePayload; width?: number }) {
   return (
-    <span className="tooltip__body" style={width ? { width } : undefined}>
+    <span className="zc-tooltip__body" style={width ? { width } : undefined}>
       {a.shortcut ? (
-        <span className="tooltip__row">
+        <span className="zc-tooltip__row">
           <span>{a.content}</span>
-          <kbd className="tooltip__shortcut">{a.shortcut}</kbd>
+          <kbd className="zc-tooltip__shortcut">{a.shortcut}</kbd>
         </span>
       ) : (
         a.content
@@ -87,7 +87,7 @@ function TipSurface({ a, box }: { a: ActivePayload; box: RenderedBox }) {
     <Motion
       layout
       layoutTransition={TIP_LAYOUT}
-      className="tooltip"
+      className="zc-tooltip"
       id={TOOLTIP_DOM_ID}
       role="tooltip"
       data-placement={box.placement}
@@ -173,7 +173,7 @@ export function TooltipHost() {
   return createPortal(
     <Fragment>
       {active && (
-        <div className="tooltip tooltip--measure" ref={measureRef} aria-hidden="true">
+        <div className="zc-tooltip zc-tooltip--measure" ref={measureRef} aria-hidden="true">
           <Body a={active} />
         </div>
       )}

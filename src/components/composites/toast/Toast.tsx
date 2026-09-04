@@ -164,7 +164,7 @@ function ToastItem({
       as="li"
       ref={ref}
       exit={popOut(SM.scale.floating, SM.t.exit)}
-      className="toast glass"
+      className="zc-toast zc-glass"
       data-tone={t.tone}
       data-behind={behind ? '' : undefined}
       role={t.tone === 'danger' ? 'alert' : 'status'}
@@ -174,30 +174,30 @@ function ToastItem({
         if (e.key === 'Escape' && t.dismissible) store.dismiss(t.id);
       }}
     >
-      {t.node ? <div className="toast__custom">{t.node as ReactNode}</div> : <ToastBody t={t} />}
+      {t.node ? <div className="zc-toast__custom">{t.node as ReactNode}</div> : <ToastBody t={t} />}
     </Motion>
   );
 }
 
 function ToastBody({ t }: { t: ToastRecord }) {
   return (
-    <div className="toast__inner">
+    <div className="zc-toast__inner">
       {(t.tone !== 'default' || isFinite(t.duration)) && (
-        <span className="toast__icon">
+        <span className="zc-toast__icon">
           {t.tone !== 'default' && (
-            <Motion as="span" className="toast__icon-glyph" animate={GLYPH_POP} deps={[t.tone]}>
+            <Motion as="span" className="zc-toast__icon-glyph" animate={GLYPH_POP} deps={[t.tone]}>
               {t.tone === 'loading' ? (
-                <span className="toast__spinner" aria-hidden="true"></span>
+                <span className="zc-toast__spinner" aria-hidden="true"></span>
               ) : (
                 <Icon name={TONE_ICON[t.tone] || 'info'} weight="fill" />
               )}
             </Motion>
           )}
           {isFinite(t.duration) && (
-            <svg key={'ring-' + t.timerKey} className="toast__ring" viewBox="0 0 36 36" aria-hidden="true">
-              <circle className="toast__ring-track" cx="18" cy="18" r="16.5"></circle>
+            <svg key={'ring-' + t.timerKey} className="zc-toast__ring" viewBox="0 0 36 36" aria-hidden="true">
+              <circle className="zc-toast__ring-track" cx="18" cy="18" r="16.5"></circle>
               <circle
-                className="toast__ring-arc"
+                className="zc-toast__ring-arc"
                 cx="18"
                 cy="18"
                 r="16.5"
@@ -208,12 +208,12 @@ function ToastBody({ t }: { t: ToastRecord }) {
           )}
         </span>
       )}
-      <Motion className="toast__text" animate={TEXT_FADE} deps={[String(t.message) + '-' + String(t.description)]}>
-        <p className="toast__message">{t.message}</p>
-        {t.description != null && <p className="toast__desc">{t.description}</p>}
+      <Motion className="zc-toast__text" animate={TEXT_FADE} deps={[String(t.message) + '-' + String(t.description)]}>
+        <p className="zc-toast__message">{t.message}</p>
+        {t.description != null && <p className="zc-toast__desc">{t.description}</p>}
       </Motion>
       {t.count > 1 && (
-        <Motion as="span" className="toast__count" animate={COUNT_POP} deps={[t.count]}>
+        <Motion as="span" className="zc-toast__count" animate={COUNT_POP} deps={[t.count]}>
           ×{t.count}
         </Motion>
       )}
@@ -221,7 +221,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
         <Button
           variant="secondary"
           size="sm"
-          className="toast__action"
+          className="zc-toast__action"
           onClick={() => {
             if (t.action.onClick) t.action.onClick();
             store.dismiss(t.id);
@@ -231,7 +231,7 @@ function ToastBody({ t }: { t: ToastRecord }) {
         </Button>
       )}
       {t.dismissible && (
-        <button type="button" className="toast__close" aria-label="Dismiss" onClick={() => store.dismiss(t.id)}>
+        <button type="button" className="zc-toast__close" aria-label="Dismiss" onClick={() => store.dismiss(t.id)}>
           <Icon name="close" size="sm" />
         </button>
       )}
@@ -301,7 +301,7 @@ function ToastHost({ config, htmlProps }: { config: ToasterConfig; htmlProps?: H
   return createPortal(
     <ol
       {...htmlProps}
-      className={cx('toast-viewport', paused && 'is-paused', htmlProps?.className)}
+      className={cx('zc-toast-viewport', paused && 'zc-is-paused', htmlProps?.className)}
       data-position={config.position}
       style={
         config.offset

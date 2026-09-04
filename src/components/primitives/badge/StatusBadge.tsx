@@ -73,10 +73,10 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
     const nk = keyRef.current++;
     const nextW = ghostRef.current?.offsetWidth;
 
-    setWords((ws) => ws.concat({ key: nk, label: next.label, cls: 'badge__word--in' }));
+    setWords((ws) => ws.concat({ key: nk, label: next.label, cls: 'zc-badge__word--in' }));
     const raf = requestAnimationFrame(() =>
       requestAnimationFrame(() => {
-        setWords((ws) => ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'badge__word--out' })));
+        setWords((ws) => ws.map((w) => (w.key === nk ? { ...w, cls: '' } : { ...w, cls: 'zc-badge__word--out' })));
         if (nextW) setBoxW(nextW);
       }),
     );
@@ -86,7 +86,7 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
     );
     let stopGlint: (() => void) | undefined;
     if (TERMINAL[status] && labelRef.current) {
-      const chip = labelRef.current.closest('.badge') as HTMLElement | null;
+      const chip = labelRef.current.closest('.zc-badge') as HTMLElement | null;
       if (chip) stopGlint = fireGlint(chip);
     }
     return () => {
@@ -97,13 +97,13 @@ function StatusMorph({ status, className = '', ...rest }: StatusMorphProps) {
   }, [status]);
 
   return (
-    <Badge tone={s.tone} dot live={!!s.live} className={cx('badge--morph', className)} {...rest}>
-      <span className="badge__morph" ref={labelRef} style={boxW ? { width: boxW } : undefined}>
-        <span className="badge__ghost" ref={ghostRef} aria-hidden="true">
+    <Badge tone={s.tone} dot live={!!s.live} className={cx('zc-badge--morph', className)} {...rest}>
+      <span className="zc-badge__morph" ref={labelRef} style={boxW ? { width: boxW } : undefined}>
+        <span className="zc-badge__ghost" ref={ghostRef} aria-hidden="true">
           {s.label}
         </span>
         {words.map((w) => (
-          <span key={w.key} className={cx('badge__word', w.cls)}>
+          <span key={w.key} className={cx('zc-badge__word', w.cls)}>
             {w.label}
           </span>
         ))}

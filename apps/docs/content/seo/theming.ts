@@ -33,7 +33,7 @@ const seo: PageSeo = {
     },
     {
       q: 'How do I override the default CSS of a component?',
-      a: 'Load your stylesheet after @zyncat/ui/styles.css and write a normal rule - .btn { border-radius: 0 } just lands. Every shipped rule sits inside @layer zyncat.components, and unlayered CSS beats every layer at any specificity, so there is no !important, no specificity ladder and no parent selector to lean on. Class names are BEM off a short base - .btn, .btn--primary, .btn__label, .fld__input - so they are stable to target.',
+      a: 'Load your stylesheet after @zyncat/ui/styles.css and write a normal rule - .zc-btn { border-radius: 0 } just lands. Every shipped rule sits inside @layer zyncat.components, and unlayered CSS beats every layer at any specificity, so there is no !important, no specificity ladder and no parent selector to lean on. Every class is BEM off a short base behind the zc- namespace, so nothing in your own sheet can collide with one - .zc-btn, .zc-btn--primary, .zc-btn__label, .zc-fld__input - and the names are stable to target.',
     },
     {
       q: 'How do I add a dark mode toggle?',

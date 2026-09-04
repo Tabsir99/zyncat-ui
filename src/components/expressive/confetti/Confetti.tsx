@@ -142,7 +142,7 @@ const CORNER_JITTER = 14;
 const CORNER_LAUNCH = 14;
 const CORNER_LAUNCH_JITTER = 12;
 
-const VIEWPORT_CLASS = 'confetti--viewport';
+const VIEWPORT_CLASS = 'zc-confetti--viewport';
 
 export type ConfettiEmitter = 'sides' | 'top' | 'corners';
 export type ConfettiField = 'container' | 'viewport';
@@ -714,7 +714,7 @@ export function Confetti({
   const canvas = (
     <canvas
       ref={canvasRef}
-      className={cx('confetti', field === 'viewport' && VIEWPORT_CLASS, className)}
+      className={cx('zc-confetti', field === 'viewport' && VIEWPORT_CLASS, className)}
       style={style}
       aria-hidden="true"
       {...htmlProps}

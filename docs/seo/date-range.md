@@ -211,7 +211,7 @@ key : anchor` before calling `commit({ start, end })` - order of clicking never 
   `defaultValue` on `DateRangeFieldProps` are typed `DateRange | null`.
 - Hover preview before commit - while `anchor` is set and no second pick has happened, `lo`/`hi` are
   derived from `hoverKey || anchor` with `provisional = true`, rendering the ghost-capped band
-  (`is-cap-ghost`) live as the pointer or keyboard focus moves.
+  (`zc-is-cap-ghost`) live as the pointer or keyboard focus moves.
 - Popover / Sheet responsive switch at 640px - `DateRangeField.tsx`: `useMediaQuery('(max-width:
 640px)')` drives `narrow`, which picks `<Sheet side="bottom">` over `<Popover side="bottom"
 align="start">` and drops `months` from 2 to 1.
@@ -230,7 +230,7 @@ prevEnd < min}` / `disabled={max && nextStart > max}`.
   comparison and built-in `Date`; `Intl.DateTimeFormat` appears once, inside `tzLabel`.
 - Keyboard + a11y - `onGridKeyDown` in `range-panel.tsx` handles Arrow/PageUp/PageDown/Enter
   (`pickDay(focusKey)`)/Space/Escape (clears `anchor`/`hoverKey` only, does not call `close()`);
-  `role="grid"` on `.dtp__days`, `role="gridcell"` with a full-date `aria-label` on each day button,
+  `role="grid"` on `.zc-dtp__days`, `role="gridcell"` with a full-date `aria-label` on each day button,
   `role="dialog"` labelled by `label` (falls back to `'Pick a date range'`); roving focus via the
   shared `useDayFocus` hook.
 - Reduced motion - the month-slide keyframe (`drp-month-in-l` / `drp-month-in-r`) in

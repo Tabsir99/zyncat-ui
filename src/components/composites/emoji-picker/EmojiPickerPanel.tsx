@@ -94,9 +94,9 @@ export function EmojiPickerPanel({
   const positioned = useMemo(() => inflate(anchor, offset), [anchor, offset]);
 
   const frame = (
-    <div className={['on-emoji', asSheet && 'on-emoji--sheet', className].filter(Boolean).join(' ')}>
+    <div className={['zc-on-emoji', asSheet && 'zc-on-emoji--sheet', className].filter(Boolean).join(' ')}>
       {asSheet || search ? (
-        <div className="on-emoji-search" ref={searchRef}>
+        <div className="zc-on-emoji-search" ref={searchRef}>
           <TextField
             size="sm"
             type="search"

@@ -60,11 +60,11 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const cls = cx(
-    'btn',
-    variant !== 'unstyled' && `btn--${variant}`,
-    size !== 'md' && `btn--${size}`,
-    fullWidth && 'btn--block',
-    loading && 'is-loading',
+    'zc-btn',
+    variant !== 'unstyled' && `zc-btn--${variant}`,
+    size !== 'md' && `zc-btn--${size}`,
+    fullWidth && 'zc-btn--block',
+    loading && 'zc-is-loading',
     className,
   );
 
@@ -81,8 +81,8 @@ export function Button({
       {...rest}
       {...htmlProps}
     >
-      <span className="btn__label">{children}</span>
-      {loading ? <span className="btn__spinner" aria-hidden="true" /> : null}
+      <span className="zc-btn__label">{children}</span>
+      {loading ? <span className="zc-btn__spinner" aria-hidden="true" /> : null}
     </button>
   );
 }

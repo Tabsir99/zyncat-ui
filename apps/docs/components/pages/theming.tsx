@@ -259,7 +259,7 @@ const LEVEL_0_CODE = `/* your-app.css - loaded after @zyncat/ui/styles.css */
    is inside @layer zyncat.components, and unlayered CSS
    outranks every layer no matter how specific the layered
    rule is. No !important. No parent selector. */
-:where(.btn) {
+:where(.zc-btn) {
   border-radius: 0;
   text-transform: uppercase;
 }`;
@@ -309,7 +309,7 @@ const LEVEL_3_PRIMITIVE = `<Button className="checkout-cta" style={{ minWidth: '
   Place order
 </Button>
 
-/* .btn is still there; your class rides alongside it */
+/* .zc-btn is still there; your class rides alongside it */
 .checkout-cta {
   width: 100%;
 }`;
@@ -528,10 +528,13 @@ export function ThemingDoc() {
         </Callout>
 
         <p className="guide-section__p">
-          Class names are BEM off a short base, so they are stable to target:{' '}
-          <code className="doc-inline-code">.btn</code>, <code className="doc-inline-code">.btn--primary</code>,{' '}
-          <code className="doc-inline-code">.btn__label</code>; <code className="doc-inline-code">.fld</code>,{' '}
-          <code className="doc-inline-code">.fld__input</code>; <code className="doc-inline-code">.dialog__body</code>.
+          Every class the library renders is BEM off a short base behind one{' '}
+          <code className="doc-inline-code">zc-</code> namespace, so nothing in your own sheet can collide with it and
+          every name is stable to target: <code className="doc-inline-code">.zc-btn</code>,{' '}
+          <code className="doc-inline-code">.zc-btn--primary</code>,{' '}
+          <code className="doc-inline-code">.zc-btn__label</code>; <code className="doc-inline-code">.zc-fld</code>,{' '}
+          <code className="doc-inline-code">.zc-fld__input</code>;{' '}
+          <code className="doc-inline-code">.zc-dialog__body</code>.
         </p>
       </section>
 

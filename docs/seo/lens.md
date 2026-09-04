@@ -337,7 +337,7 @@ Every FAQ answer is grounded in `src/components/expressive/lens/Lens.tsx`,
   clamped 60-260 px (`RADIUS_MIN`/`RADIUS_MAX`), both quoted exactly. `radius` is the glass
   radius, not its diameter - the FAQ says so.
 - "Clones its children into the glass" is `cloneInto`, called for both `parts.core` and
-  `parts.rim`; the clone gets `aria-hidden="true"` and `.lens__copy`.
+  `parts.rim`; the clone gets `aria-hidden="true"` and `.zc-lens__copy`.
 - "A MutationObserver re-clones" is the `MutationObserver` on `parts.content` with
   `childList`, `subtree`, `characterData` and `attributes`, throttled by
   `RECLONE_INTERVAL_MS = 90`.
@@ -354,7 +354,7 @@ Every FAQ answer is grounded in `src/components/expressive/lens/Lens.tsx`,
   easing on position - only `magnification`, `opacity` and `press` are eased.
 - Arrow keys (`KEYBOARD_STEP = 24`) and `Escape` are the `keydown` handler; the stage is
   `tabIndex={0}` and `blur` disengages.
-- Accessibility: `{children}` render inside `.lens__content` in the normal tree; only the
+- Accessibility: `{children}` render inside `.zc-lens__content` in the normal tree; only the
   magnified copies carry `aria-hidden`.
 - SSR: `{children}` are in the server-rendered HTML; the glass layers are empty
   `aria-hidden` divs until the effect runs, so the "server-rendered, glass built after

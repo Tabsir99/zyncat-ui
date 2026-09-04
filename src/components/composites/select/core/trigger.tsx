@@ -43,7 +43,7 @@ export function SelectTrigger({
       type="button"
       ref={triggerRef}
       id={baseId + '-trigger'}
-      className={cx('select__trigger', className)}
+      className={cx('zc-select__trigger', className)}
       role="combobox"
       aria-haspopup="listbox"
       aria-expanded={open}
@@ -66,15 +66,15 @@ export function SelectTrigger({
       {...rest}
     >
       {leading && (
-        <span className="select__leading">
+        <span className="zc-select__leading">
           <IconSlot size="sm">{leading}</IconSlot>
         </span>
       )}
-      <span className="select__value" data-placeholder={isPlaceholder ? 'true' : undefined}>
+      <span className="zc-select__value" data-placeholder={isPlaceholder ? 'true' : undefined}>
         {text}
       </span>
-      {count != null && count > 0 && <span className="select__count">+{count}</span>}
-      <span className="select__caret">
+      {count != null && count > 0 && <span className="zc-select__count">+{count}</span>}
+      <span className="zc-select__caret">
         <Icon name="caret-down" size="sm" />
       </span>
     </button>

@@ -97,9 +97,9 @@ function PopoverPanel({
       {...htmlProps}
       id={panelId}
       ref={panelRef as RefObject<HTMLDivElement>}
-      className={cx('overlay-popover', htmlProps?.className)}
+      className={cx('zc-overlay-popover', htmlProps?.className)}
     >
-      {arrow && <span className="overlay-popover__arrow" aria-hidden="true"></span>}
+      {arrow && <span className="zc-overlay-popover__arrow" aria-hidden="true"></span>}
       {children}
     </div>
   );

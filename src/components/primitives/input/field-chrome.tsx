@@ -43,14 +43,14 @@ export interface FieldLabelProps extends FieldIdProps, FieldRequirementProps {
 export function FieldLabel({ id, label, required, optional }: FieldLabelProps) {
   if (!label) return null;
   return (
-    <label className="fld__label" htmlFor={id}>
+    <label className="zc-fld__label" htmlFor={id}>
       {label}
       {required && (
-        <span className="fld__req" aria-hidden="true">
+        <span className="zc-fld__req" aria-hidden="true">
           *
         </span>
       )}
-      {optional && <span className="fld__optional">(optional)</span>}
+      {optional && <span className="zc-fld__optional">(optional)</span>}
     </label>
   );
 }
@@ -63,8 +63,8 @@ export interface FieldMessageProps {
 
 export function FieldMessage({ id, message, icon }: FieldMessageProps) {
   return (
-    <Collapse open={!!message} className="fld__msg-wrap">
-      <div className="fld__msg" id={id}>
+    <Collapse open={!!message} className="zc-fld__msg-wrap">
+      <div className="zc-fld__msg" id={id}>
         {icon && <Icon name={icon} size="sm" weight="fill" />}
         {message}
       </div>
@@ -85,7 +85,7 @@ export function resolveFieldMessage(
   helper: ReactNode,
 ): { state: string; msg: ReactNode; msgIcon: IconName | null } {
   return {
-    state: error ? 'is-error' : warning ? 'is-warning' : success ? 'is-success' : '',
+    state: error ? 'zc-is-error' : warning ? 'zc-is-warning' : success ? 'zc-is-success' : '',
     msg: error || warning || success || helper,
     msgIcon: error ? 'warning-circle' : warning ? 'warning' : success ? 'check-circle' : null,
   };

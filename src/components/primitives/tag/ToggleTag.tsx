@@ -41,8 +41,13 @@ export interface ToggleTagProps extends ToggleTagOwnProps {
 
 function ToggleTagTick({ selected }: { selected: boolean }) {
   return (
-    <span className="tag__check collapse" data-axis="width" data-open={selected ? 'true' : 'false'} aria-hidden="true">
-      <span className="collapse__inner">
+    <span
+      className="zc-tag__check zc-collapse"
+      data-axis="width"
+      data-open={selected ? 'true' : 'false'}
+      aria-hidden="true"
+    >
+      <span className="zc-collapse__inner">
         <svg viewBox="0 0 12 12" fill="none">
           <path
             d="M2.5 6.5 L5 9 L9.5 3.5"
@@ -73,7 +78,7 @@ export function ToggleTag({
   const [selected, setSelected] = useControllable(selectedProp, defaultSelected, onChange);
   const toggle = () => setSelected(!selected);
 
-  const cls = cx('tag', 'tag--toggle', size === 'sm' && 'tag--sm', className);
+  const cls = cx('zc-tag', 'zc-tag--toggle', size === 'sm' && 'zc-tag--sm', className);
 
   return (
     <button
@@ -86,14 +91,14 @@ export function ToggleTag({
       {...htmlProps}
     >
       {icon ? (
-        <span className="tag__icon">
+        <span className="zc-tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>
         </span>
       ) : (
         <ToggleTagTick selected={selected} />
       )}
-      <span className="tag__label">{children}</span>
-      {count != null && <span className="tag__count">{count}</span>}
+      <span className="zc-tag__label">{children}</span>
+      {count != null && <span className="zc-tag__count">{count}</span>}
     </button>
   );
 }

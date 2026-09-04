@@ -16,7 +16,7 @@ export function useDayFocus(
     const btn =
       (seedSelector && el.querySelector(seedSelector)) ||
       el.querySelector('[data-key="' + focusKey + '"]:not(:disabled)') ||
-      el.querySelector('.dtp__day:not(:disabled)');
+      el.querySelector('.zc-dtp__day:not(:disabled)');
     if (btn) (btn as HTMLElement).focus({ preventScroll: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .weight-field {
+  .zc-weight-field {
     /* Letter ink. */
     --weight-field-ink: var(--text-strong);
     /* Letter size. */
@@ -48,7 +48,7 @@
     color: var(--weight-field-ink);
   }
 
-  .weight-field__label {
+  .zc-weight-field__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -57,7 +57,7 @@
     white-space: nowrap;
   }
 
-  .weight-field__unit {
+  .zc-weight-field__unit {
     padding-inline: 0;
     font-weight: var(--weight-field-rest-weight);
     -webkit-text-stroke-color: transparent;
@@ -72,18 +72,18 @@
       -webkit-text-stroke-color var(--_weight-field-ramp) var(--weight-field-ease);
   }
 
-  .weight-field__unit:has(+ .weight-field__unit + .weight-field__unit:hover),
-  .weight-field__unit:hover + .weight-field__unit + .weight-field__unit {
+  .zc-weight-field__unit:has(+ .zc-weight-field__unit + .zc-weight-field__unit:hover),
+  .zc-weight-field__unit:hover + .zc-weight-field__unit + .zc-weight-field__unit {
     font-weight: var(--weight-field-far-weight);
   }
 
-  .weight-field__unit:has(+ .weight-field__unit:hover),
-  .weight-field__unit:hover + .weight-field__unit {
+  .zc-weight-field__unit:has(+ .zc-weight-field__unit:hover),
+  .zc-weight-field__unit:hover + .zc-weight-field__unit {
     padding-inline: var(--weight-field-hover-padding);
     font-weight: var(--weight-field-near-weight);
   }
 
-  .weight-field__unit:hover {
+  .zc-weight-field__unit:hover {
     padding-inline: var(--weight-field-hover-padding);
     font-weight: var(--weight-field-peak-weight);
     -webkit-text-stroke-color: currentcolor;
@@ -91,7 +91,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .weight-field {
+    .zc-weight-field {
       --weight-field-duration: 1ms;
     }
   }

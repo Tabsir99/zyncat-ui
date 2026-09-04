@@ -1,16 +1,16 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .overlay-layer--dialog {
+  .zc-overlay-layer--dialog {
     place-items: center;
     padding: var(--space-6);
   }
-  .overlay-panel--dialog {
+  .zc-overlay-panel--dialog {
     max-width: 100%;
     max-height: 100%;
   }
 
-  .dialog {
+  .zc-dialog {
     --dialog-w: 32rem;
     position: relative;
     margin: 0;
@@ -30,14 +30,14 @@
     font-family: var(--font-body);
   }
 
-  .dialog[data-size='sm'] {
+  .zc-dialog[data-size='sm'] {
     --dialog-w: 25rem;
   }
-  .dialog[data-size='lg'] {
+  .zc-dialog[data-size='lg'] {
     --dialog-w: 40rem;
   }
 
-  .dialog__header {
+  .zc-dialog__header {
     flex: 0 0 auto;
     display: flex;
     align-items: flex-start;
@@ -48,12 +48,12 @@
       box-shadow var(--duration-base) var(--ease-standard);
     border-bottom: var(--border-hairline) solid transparent;
   }
-  .dialog:has(.dialog__body[data-scroll-top]) .dialog__header {
+  .zc-dialog:has(.zc-dialog__body[data-scroll-top]) .zc-dialog__header {
     border-bottom-color: var(--border-subtle);
     box-shadow: var(--shadow-xs);
   }
 
-  .dialog__icon {
+  .zc-dialog__icon {
     flex: 0 0 auto;
     display: grid;
     place-items: center;
@@ -64,12 +64,12 @@
     color: var(--text-accent);
     font-size: var(--icon-md);
   }
-  .dialog[data-tone='danger'] .dialog__icon {
+  .zc-dialog[data-tone='danger'] .zc-dialog__icon {
     background: var(--danger-subtle);
     color: var(--danger-text);
   }
 
-  .dialog__heading {
+  .zc-dialog__heading {
     flex: 1 1 auto;
     min-width: 0;
     display: flex;
@@ -77,21 +77,21 @@
     gap: var(--space-1);
     padding-top: var(--space-px);
   }
-  .dialog__title {
+  .zc-dialog__title {
     margin: 0;
     color: var(--text-strong);
     font: var(--weight-semibold) var(--size-heading)/var(--leading-heading) var(--font-body);
     letter-spacing: var(--tracking-tight);
     text-wrap: pretty;
   }
-  .dialog__desc {
+  .zc-dialog__desc {
     margin: 0;
     color: var(--text-muted);
     font: var(--type-body);
     text-wrap: pretty;
   }
 
-  .dialog__close {
+  .zc-dialog__close {
     flex: 0 0 auto;
     appearance: none;
     margin: calc(var(--space-1) * -1) calc(var(--space-1) * -1) 0 0;
@@ -108,20 +108,20 @@
     font-size: var(--icon-sm);
     transition: var(--transition-control);
   }
-  .dialog__close:hover {
+  .zc-dialog__close:hover {
     background: var(--neutral-wash);
     color: var(--text-strong);
   }
-  .dialog__close:active {
+  .zc-dialog__close:active {
     background: var(--bg-muted);
   }
-  .dialog__close:focus-visible {
+  .zc-dialog__close:focus-visible {
     outline: none;
     color: var(--text-strong);
     box-shadow: var(--ring-accent);
   }
 
-  .dialog__body {
+  .zc-dialog__body {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
@@ -130,37 +130,37 @@
     color: var(--text-body);
     font: var(--type-body);
   }
-  .dialog__body:first-child {
+  .zc-dialog__body:first-child {
     padding-top: var(--space-5);
   }
-  .dialog:has(.dialog__icon) .dialog__body {
+  .zc-dialog:has(.zc-dialog__icon) .zc-dialog__body {
     padding-left: calc(var(--space-5) + 2.25rem + var(--space-3));
   }
-  .dialog:has(.dialog__footer) .dialog__body {
+  .zc-dialog:has(.zc-dialog__footer) .zc-dialog__body {
     padding-bottom: var(--space-4);
   }
-  .dialog__body > :first-child {
+  .zc-dialog__body > :first-child {
     margin-top: 0;
   }
-  .dialog__body > :last-child {
+  .zc-dialog__body > :last-child {
     margin-bottom: 0;
   }
 
-  .dialog__body {
+  .zc-dialog__body {
     scrollbar-width: thin;
     scrollbar-color: var(--border-strong) transparent;
   }
-  .dialog__body::-webkit-scrollbar {
+  .zc-dialog__body::-webkit-scrollbar {
     width: 10px;
   }
-  .dialog__body::-webkit-scrollbar-thumb {
+  .zc-dialog__body::-webkit-scrollbar-thumb {
     background: var(--border-strong);
     border-radius: var(--radius-full);
     border: 3px solid var(--bg-surface);
     background-clip: padding-box;
   }
 
-  .dialog__footer {
+  .zc-dialog__footer {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
@@ -171,7 +171,7 @@
     border-top: var(--border-hairline) solid transparent;
     transition: border-color var(--duration-base) var(--ease-standard);
   }
-  .dialog:has(.dialog__body[data-scroll-bottom]) .dialog__footer {
+  .zc-dialog:has(.zc-dialog__body[data-scroll-bottom]) .zc-dialog__footer {
     border-top-color: var(--border-subtle);
   }
 }

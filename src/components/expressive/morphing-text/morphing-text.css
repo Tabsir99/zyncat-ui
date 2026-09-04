@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .morphing-text {
+  .zc-morphing-text {
     /* Letter ink. */
     --morphing-text-ink: var(--text-strong);
     /* Letter size. */
@@ -35,7 +35,7 @@
     color: var(--morphing-text-ink);
   }
 
-  .morphing-text__label {
+  .zc-morphing-text__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -44,14 +44,14 @@
     white-space: nowrap;
   }
 
-  .morphing-text__stage {
+  .zc-morphing-text__stage {
     position: relative;
     display: block;
     width: 100%;
     height: calc(1em * var(--morphing-text-leading));
   }
 
-  .morphing-text__word {
+  .zc-morphing-text__word {
     position: absolute;
     top: 0;
     left: 50%;
@@ -59,17 +59,17 @@
     white-space: pre;
   }
 
-  .morphing-text__letter {
+  .zc-morphing-text__letter {
     --_morphing-text-letter-blur: 0;
 
     display: inline-block;
   }
 
-  .morphing-text__stage--fused .morphing-text__letter {
+  .zc-morphing-text__stage--fused .zc-morphing-text__letter {
     filter: blur(calc(var(--_morphing-text-letter-blur) * var(--morphing-text-smear) * 1em));
   }
 
-  .morphing-text__rule {
+  .zc-morphing-text__rule {
     --_morphing-text-heat: 0;
 
     display: block;
@@ -84,7 +84,7 @@
     );
   }
 
-  .morphing-text__defs {
+  .zc-morphing-text__defs {
     position: absolute;
     width: 0;
     height: 0;

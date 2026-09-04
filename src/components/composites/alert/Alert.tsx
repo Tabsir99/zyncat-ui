@@ -96,14 +96,14 @@ export function Alert({
   const h = resolveMotionTiming(animation, ALERT_HEIGHT_TIMING);
   const o = resolveMotionTiming(animation, ALERT_OPACITY_TIMING);
 
-  const cls = cx('alert', banner && 'alert--banner', className);
+  const cls = cx('zc-alert', banner && 'zc-alert--banner', className);
 
   return (
     <Presence initial={false}>
       {isOpen && (
         <Motion
           key="alert-shell"
-          className="alert-shell"
+          className="zc-alert-shell"
           animate={[
             { height: [0, 'auto'], timing: h.open },
             { opacity: [0, 1], timing: o.open },
@@ -112,7 +112,7 @@ export function Alert({
         >
           <div className={cls} style={style} data-tone={tone} role={TONE_ROLE[tone] || 'status'} {...htmlProps}>
             {icon === null ? null : (
-              <span className="alert__icon" aria-hidden="true">
+              <span className="zc-alert__icon" aria-hidden="true">
                 {icon !== undefined ? (
                   <IconSlot size="md">{icon}</IconSlot>
                 ) : (
@@ -120,17 +120,17 @@ export function Alert({
                 )}
               </span>
             )}
-            <div className="alert__body">
-              <p className="alert__title">{title}</p>
-              {children != null && <p className="alert__desc">{children}</p>}
+            <div className="zc-alert__body">
+              <p className="zc-alert__title">{title}</p>
+              {children != null && <p className="zc-alert__desc">{children}</p>}
             </div>
             {action && (
-              <Button variant="unstyled" size="sm" className="alert__action" onClick={action.onClick}>
+              <Button variant="unstyled" size="sm" className="zc-alert__action" onClick={action.onClick}>
                 {action.label}
               </Button>
             )}
             {dismissible && (
-              <button type="button" className="alert__close" aria-label="Dismiss" onClick={dismiss}>
+              <button type="button" className="zc-alert__close" aria-label="Dismiss" onClick={dismiss}>
                 <Icon name="close" size="sm" />
               </button>
             )}

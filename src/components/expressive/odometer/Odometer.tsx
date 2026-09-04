@@ -126,26 +126,26 @@ export function Odometer({ value, format, speed = 1, className = '', style, html
   let digitIndex = -1;
 
   return (
-    <span ref={rootRef} className={cx('odometer', className)} style={style} {...htmlProps}>
-      <span className="odometer__label">{text}</span>
+    <span ref={rootRef} className={cx('zc-odometer', className)} style={style} {...htmlProps}>
+      <span className="zc-odometer__label">{text}</span>
       {Array.from(text, (char, i) => {
         if (!/\d/.test(char))
           return (
-            <span key={i} className="odometer__separator" aria-hidden="true">
+            <span key={i} className="zc-odometer__separator" aria-hidden="true">
               {char}
             </span>
           );
         const slot = ++digitIndex;
         return (
-          <span key={i} className="odometer__col" aria-hidden="true">
+          <span key={i} className="zc-odometer__col" aria-hidden="true">
             <span
-              className="odometer__strip"
+              className="zc-odometer__strip"
               ref={(el) => {
                 stripsRef.current[slot] = el;
               }}
             >
               {STRIP_CELLS.map((cell, c) => (
-                <span key={c} className="odometer__cell">
+                <span key={c} className="zc-odometer__cell">
                   {cell}
                 </span>
               ))}

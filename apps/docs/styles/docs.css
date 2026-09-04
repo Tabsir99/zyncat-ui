@@ -587,7 +587,7 @@ body {
   border-bottom: var(--border-hairline) solid var(--border-default);
 }
 
-.example-card__header .btn {
+.example-card__header .zc-btn {
   margin-bottom: 3px;
 }
 
@@ -722,12 +722,12 @@ body {
   margin: 0 0 var(--space-2);
 }
 
-.page .tbl__table td {
+.page .zc-tbl__table td {
   white-space: normal;
   vertical-align: baseline;
 }
 
-.page .tbl__cell--grow {
+.page .zc-tbl__cell--grow {
   width: 40%;
 }
 
@@ -1826,7 +1826,7 @@ body {
   flex-wrap: wrap;
 }
 
-:where(.theming-unlayered) :where(.btn) {
+:where(.theming-unlayered) :where(.zc-btn) {
   border-radius: 0;
   background: var(--text-strong);
   border-color: var(--text-strong);
@@ -1849,7 +1849,7 @@ body {
   transition: var(--transition-colors);
 }
 
-.theming-stage .fld {
+.theming-stage .zc-fld {
   width: 100%;
   max-width: 18rem;
 }

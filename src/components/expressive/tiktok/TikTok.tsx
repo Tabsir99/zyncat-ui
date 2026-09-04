@@ -90,7 +90,7 @@ function slideMedia(media: ReactNode, at: number): ReactNode {
 }
 
 function renderMedia(media: ReactNode): ReactNode {
-  if (media === undefined || media === null || media === false) return <span className="tiktok__blank" />;
+  if (media === undefined || media === null || media === false) return <span className="zc-tiktok__blank" />;
   if (typeof media === 'string') return <img src={media} alt="" />;
   return media;
 }
@@ -307,19 +307,19 @@ export function TikTok({
   const positions = Array.from({ length: count }, (_, at) => at);
 
   const rail = (
-    <ul className="tiktok__rail">
-      <li className="tiktok__creator">
-        <span className="tiktok__avatar" aria-hidden="true">
+    <ul className="zc-tiktok__rail">
+      <li className="zc-tiktok__creator">
+        <span className="zc-tiktok__avatar" aria-hidden="true">
           {renderMedia(avatar)}
         </span>
         <button
           type="button"
-          className="tiktok__button tiktok__follow"
+          className="zc-tiktok__button zc-tiktok__follow"
           aria-label={FOLLOW_LABEL}
           aria-pressed={following}
           onClick={() => setFollowing(!following)}
         >
-          <PlusGlyph className="tiktok__plus" />
+          <PlusGlyph className="zc-tiktok__plus" />
         </button>
       </li>
       <RailAction
@@ -329,10 +329,10 @@ export function TikTok({
         pressed={hearted}
         onClick={() => setHearted(!hearted)}
       >
-        <HeartGlyph className="tiktok__glyph" />
+        <HeartGlyph className="zc-tiktok__glyph" />
       </RailAction>
       <RailAction surface={surface} label={COMMENTS_LABEL} count={comments} onClick={() => onAction?.('comment')}>
-        <CommentGlyph className="tiktok__glyph" holeClassName="tiktok__hole" />
+        <CommentGlyph className="zc-tiktok__glyph" holeClassName="zc-tiktok__hole" />
       </RailAction>
       {desktop ? (
         <RailAction
@@ -342,23 +342,23 @@ export function TikTok({
           pressed={bookmarked}
           onClick={() => setBookmarked(!bookmarked)}
         >
-          <BookmarkGlyph className="tiktok__glyph" />
+          <BookmarkGlyph className="zc-tiktok__glyph" />
         </RailAction>
       ) : null}
       <RailAction surface={surface} label={SHARES_LABEL} count={shares} onClick={() => onAction?.('share')}>
-        <ShareGlyph className="tiktok__glyph" />
+        <ShareGlyph className="zc-tiktok__glyph" />
       </RailAction>
-      <li className="tiktok__disc" aria-hidden="true">
+      <li className="zc-tiktok__disc" aria-hidden="true">
         {renderMedia(sticker)}
       </li>
     </ul>
   );
 
   const captionRow = caption ? (
-    <p className="tiktok__captionrow">
-      <span className={cx('tiktok__caption', open && 'tiktok__caption--open')}>{caption}</span>
+    <p className="zc-tiktok__captionrow">
+      <span className={cx('zc-tiktok__caption', open && 'zc-tiktok__caption--open')}>{caption}</span>
       {open ? null : (
-        <button type="button" className="tiktok__more" onClick={() => setOpen(true)}>
+        <button type="button" className="zc-tiktok__more" onClick={() => setOpen(true)}>
           {MORE_LABEL}
         </button>
       )}
@@ -366,9 +366,9 @@ export function TikTok({
   ) : null;
 
   const frame = (
-    <div className="tiktok__frame">
+    <div className="zc-tiktok__frame">
       <div
-        className="tiktok__viewport"
+        className="zc-tiktok__viewport"
         ref={viewportRef}
         role={count > 1 ? 'group' : undefined}
         aria-roledescription={count > 1 ? CAROUSEL_ROLE_DESCRIPTION : undefined}
@@ -377,21 +377,21 @@ export function TikTok({
         onKeyDown={count > 1 ? onKeyDown : undefined}
         onPointerDown={count > 1 ? onPointerDown : undefined}
       >
-        <div className="tiktok__track" ref={trackRef}>
+        <div className="zc-tiktok__track" ref={trackRef}>
           {positions.map((at) => (
             <div
               key={at}
-              className="tiktok__slide"
+              className="zc-tiktok__slide"
               role={count > 1 ? 'group' : undefined}
               aria-roledescription={count > 1 ? SLIDE_ROLE_DESCRIPTION : undefined}
               aria-label={count > 1 ? `${at + FIRST_SLIDE} of ${count}` : undefined}
               aria-hidden={count > 1 && at !== index ? true : undefined}
             >
-              <div className="tiktok__fill" aria-hidden="true">
+              <div className="zc-tiktok__fill" aria-hidden="true">
                 {renderMedia(slideMedia(media, at))}
               </div>
-              <div className="tiktok__stack">
-                <div className="tiktok__fit" data-ratio={frameRatio}>
+              <div className="zc-tiktok__stack">
+                <div className="zc-tiktok__fit" data-ratio={frameRatio}>
                   {renderMedia(slideMedia(media, at))}
                 </div>
               </div>
@@ -401,44 +401,44 @@ export function TikTok({
       </div>
 
       {desktop && count > 1 ? (
-        <div className="tiktok__pager">
+        <div className="zc-tiktok__pager">
           <button
             type="button"
-            className="tiktok__arrow"
+            className="zc-tiktok__arrow"
             aria-label={PREVIOUS_LABEL}
             disabled={index === 0}
             onClick={() => goTo(index + PREVIOUS_STEP)}
           >
-            <PreviousGlyph className="tiktok__chevron" />
+            <PreviousGlyph className="zc-tiktok__chevron" />
           </button>
-          <span className="tiktok__dots" aria-hidden="true">
+          <span className="zc-tiktok__dots" aria-hidden="true">
             {positions.map((at) => (
-              <span key={at} className={cx('tiktok__dot', at === index && 'tiktok__dot--on')} />
+              <span key={at} className={cx('zc-tiktok__dot', at === index && 'zc-tiktok__dot--on')} />
             ))}
           </span>
           <button
             type="button"
-            className="tiktok__arrow"
+            className="zc-tiktok__arrow"
             aria-label={NEXT_LABEL}
             disabled={index === count - 1}
             onClick={() => goTo(index + NEXT_STEP)}
           >
-            <NextGlyph className="tiktok__chevron" />
+            <NextGlyph className="zc-tiktok__chevron" />
           </button>
         </div>
       ) : null}
 
       {desktop ? (
-        <div className="tiktok__meta">
+        <div className="zc-tiktok__meta">
           {location ? (
-            <p className="tiktok__place">
-              <span className="tiktok__pin">
-                <PinGlyph className="tiktok__pinmark" />
+            <p className="zc-tiktok__place">
+              <span className="zc-tiktok__pin">
+                <PinGlyph className="zc-tiktok__pinmark" />
               </span>
               {location}
             </p>
           ) : null}
-          {name ? <p className="tiktok__name">{name}</p> : null}
+          {name ? <p className="zc-tiktok__name">{name}</p> : null}
           {captionRow}
         </div>
       ) : null}
@@ -446,14 +446,14 @@ export function TikTok({
   );
 
   const mobileMeta = (
-    <div className="tiktok__meta">
-      {name ? <p className="tiktok__name">{name}</p> : null}
+    <div className="zc-tiktok__meta">
+      {name ? <p className="zc-tiktok__name">{name}</p> : null}
       {captionRow}
       {music || sound ? (
-        <p className="tiktok__music">
-          <NoteGlyph className="tiktok__note" />
+        <p className="zc-tiktok__music">
+          <NoteGlyph className="zc-tiktok__note" />
           {music ? <span>{music}</span> : null}
-          {sound ? <span className="tiktok__sound">{sound}</span> : null}
+          {sound ? <span className="zc-tiktok__sound">{sound}</span> : null}
         </p>
       ) : null}
     </div>
@@ -461,43 +461,43 @@ export function TikTok({
 
   return (
     <div
-      className={cx('tiktok', desktop ? 'tiktok--desktop' : 'tiktok--mobile', className)}
+      className={cx('zc-tiktok', desktop ? 'zc-tiktok--desktop' : 'zc-tiktok--mobile', className)}
       style={style}
       {...htmlProps}
     >
-      <div className="tiktok__stage">
+      <div className="zc-tiktok__stage">
         {desktop ? (
           <button
             type="button"
-            className="tiktok__mute"
+            className="zc-tiktok__mute"
             aria-label={MUTE_LABEL}
             aria-pressed={quiet}
             onClick={() => setQuiet(!quiet)}
           >
-            {quiet ? <MutedGlyph className="tiktok__speaker" /> : <AudibleGlyph className="tiktok__speaker" />}
+            {quiet ? <MutedGlyph className="zc-tiktok__speaker" /> : <AudibleGlyph className="zc-tiktok__speaker" />}
           </button>
         ) : null}
         {frame}
         {desktop ? null : (
           <>
-            <span className="tiktok__scrim-top" aria-hidden="true" />
-            <span className="tiktok__scrim-bottom" aria-hidden="true" />
-            <div className="tiktok__header">
+            <span className="zc-tiktok__scrim-top" aria-hidden="true" />
+            <span className="zc-tiktok__scrim-bottom" aria-hidden="true" />
+            <div className="zc-tiktok__header">
               <button
                 type="button"
-                className="tiktok__button"
+                className="zc-tiktok__button"
                 aria-label={MENU_LABEL}
                 onClick={() => onAction?.('menu')}
               >
-                <MenuGlyph className="tiktok__nav" />
+                <MenuGlyph className="zc-tiktok__nav" />
               </button>
               <button
                 type="button"
-                className="tiktok__button"
+                className="zc-tiktok__button"
                 aria-label={SEARCH_LABEL}
                 onClick={() => onAction?.('search')}
               >
-                <SearchGlyph className="tiktok__nav" />
+                <SearchGlyph className="zc-tiktok__nav" />
               </button>
             </div>
           </>
@@ -505,7 +505,7 @@ export function TikTok({
         {rail}
         {desktop ? null : mobileMeta}
         {desktop && translation ? (
-          <p className="tiktok__translate" aria-hidden="true">
+          <p className="zc-tiktok__translate" aria-hidden="true">
             {TRANSLATION_LABEL}
           </p>
         ) : null}
@@ -530,11 +530,11 @@ function RailAction({
   children: ReactNode;
 }) {
   return (
-    <li className="tiktok__action">
-      <button type="button" className="tiktok__button" aria-label={label} aria-pressed={pressed} onClick={onClick}>
-        {surface === 'desktop' ? <span className="tiktok__puck">{children}</span> : children}
+    <li className="zc-tiktok__action">
+      <button type="button" className="zc-tiktok__button" aria-label={label} aria-pressed={pressed} onClick={onClick}>
+        {surface === 'desktop' ? <span className="zc-tiktok__puck">{children}</span> : children}
       </button>
-      <span className="tiktok__count">{abbreviate(count)}</span>
+      <span className="zc-tiktok__count">{abbreviate(count)}</span>
     </li>
   );
 }

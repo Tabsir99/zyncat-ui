@@ -8,29 +8,29 @@ const IDLE_CAPTION = 'Pick an emoji…';
 const MARKER_OPACITY = 0.6;
 
 export function createScaffold(root: HTMLElement, emojiData: EmojiData, getEmojiUrl: GetEmojiUrl, listboxId: string) {
-  const scroll = el('div', 'on-emoji-scroll');
-  const marker = el('span', 'on-emoji-marker');
-  const caption = el('div', 'on-emoji-caption');
+  const scroll = el('div', 'zc-on-emoji-scroll');
+  const marker = el('span', 'zc-on-emoji-marker');
+  const caption = el('div', 'zc-on-emoji-caption');
 
   scroll.id = listboxId;
   scroll.setAttribute('role', 'listbox');
   scroll.setAttribute('aria-label', 'Emoji');
 
   caption.innerHTML =
-    '<img class="on-emoji-caption-img" alt="" draggable="false" hidden>' +
-    '<span class="on-emoji-caption-name"></span><span class="on-emoji-caption-code"></span>';
+    '<img class="zc-on-emoji-caption-img" alt="" draggable="false" hidden>' +
+    '<span class="zc-on-emoji-caption-name"></span><span class="zc-on-emoji-caption-code"></span>';
   const [captionImg, captionName, captionCode] = caption.children as unknown as [
     HTMLImageElement,
     HTMLElement,
     HTMLElement,
   ];
 
-  root.className = 'on-emoji-body';
+  root.className = 'zc-on-emoji-body';
   root.append(scroll, caption);
 
   const setCaption = (btn: HTMLButtonElement | null) => {
     const emoji = btn?.dataset.id ? emojiData.emojis[btn.dataset.id] : null;
-    caption.classList.toggle('is-idle', !emoji);
+    caption.classList.toggle('zc-is-idle', !emoji);
     captionImg.hidden = !emoji;
     captionName.textContent = emoji ? emoji.name : IDLE_CAPTION;
     captionCode.textContent = emoji ? `:${emoji.shortcodes[0] ?? emoji.id}:` : '';

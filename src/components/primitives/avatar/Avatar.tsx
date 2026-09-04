@@ -82,7 +82,12 @@ export function Avatar({
   const inits = initialsOf(name, maxInits);
   const slot = paletteIndex ?? (name ? hashName(name) : null);
 
-  const cls = cx('avatar', size !== 'md' && `avatar--${size}`, shape === 'square' && 'avatar--square', className);
+  const cls = cx(
+    'zc-avatar',
+    size !== 'md' && `zc-avatar--${size}`,
+    shape === 'square' && 'zc-avatar--square',
+    className,
+  );
 
   return (
     <span
@@ -93,29 +98,40 @@ export function Avatar({
       style={style}
       {...htmlProps}
     >
-      <span className="avatar__face">
+      <span className="zc-avatar__face">
         {showImg && (
-          <img className="avatar__img" src={src} alt={name || ''} onError={() => setImgError(true)} draggable={false} />
+          <img
+            className="zc-avatar__img"
+            src={src}
+            alt={name || ''}
+            onError={() => setImgError(true)}
+            draggable={false}
+          />
         )}
         {!showImg && icon && (
-          <span className="avatar__icon" aria-hidden="true">
+          <span className="zc-avatar__icon" aria-hidden="true">
             {icon}
           </span>
         )}
         {!showImg && !icon && inits && (
-          <span className="avatar__initials" aria-hidden="true">
+          <span className="zc-avatar__initials" aria-hidden="true">
             {inits}
           </span>
         )}
         {!showImg && !icon && !inits && (
-          <span className="avatar__icon" aria-hidden="true">
+          <span className="zc-avatar__icon" aria-hidden="true">
             <Silhouette />
           </span>
         )}
       </span>
 
       {status && (
-        <span className={`avatar__status avatar__status--${status}`} role="img" aria-label={status} title={status} />
+        <span
+          className={`zc-avatar__status zc-avatar__status--${status}`}
+          role="img"
+          aria-label={status}
+          title={status}
+        />
       )}
     </span>
   );

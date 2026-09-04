@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .confetti {
+  .zc-confetti {
     /* The five papers a burst draws from; a slot set to a role follows the theme. */
     --confetti-paper-1: oklch(0.53 0.2 288);
     --confetti-paper-2: var(--accent);
@@ -45,7 +45,7 @@
     background: none;
   }
 
-  .confetti--viewport {
+  .zc-confetti--viewport {
     position: fixed;
     z-index: var(--confetti-layer);
   }

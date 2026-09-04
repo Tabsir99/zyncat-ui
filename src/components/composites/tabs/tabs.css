@@ -1,14 +1,14 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .tabs {
+  .zc-tabs {
     /* 2px, not --border-emphasis: 1.5px renders as sub-pixel fuzz on 1x screens. */
     --tabs-ink-h: 2px;
     /* The pill variant's segment radius. The track rounds one pad wider, staying concentric. */
     --tabs-pill-radius: var(--radius-md);
     position: relative;
   }
-  .tabs::after {
+  .zc-tabs::after {
     content: '';
     position: absolute;
     inset-inline: 0;
@@ -17,7 +17,7 @@
     background: var(--border-default);
   }
 
-  .tabs__list {
+  .zc-tabs__list {
     position: relative;
     z-index: 1;
     display: flex;
@@ -37,17 +37,17 @@
       transparent
     );
   }
-  .tabs__list::-webkit-scrollbar {
+  .zc-tabs__list::-webkit-scrollbar {
     display: none;
   }
-  .tabs__list[data-fade~='start'] {
+  .zc-tabs__list[data-fade~='start'] {
     --tabs-fade-start: var(--space-8);
   }
-  .tabs__list[data-fade~='end'] {
+  .zc-tabs__list[data-fade~='end'] {
     --tabs-fade-end: var(--space-8);
   }
 
-  .tab {
+  .zc-tab {
     appearance: none;
     border: 0;
     background: none;
@@ -59,11 +59,11 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
-  .tab:focus-visible {
+  .zc-tab:focus-visible {
     outline: none;
   }
 
-  .tab__pad {
+  .zc-tab__pad {
     position: relative; /* paints above the glide pill, the list's absolute z-index 0 first child */
     display: flex;
     align-items: center;
@@ -79,31 +79,31 @@
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
   }
-  .tab__pad .icon {
+  .zc-tab__pad .zc-icon {
     display: inline-flex;
   }
 
-  .tab:hover:not(:disabled) .tab__pad {
+  .zc-tab:hover:not(:disabled) .zc-tab__pad {
     color: var(--text-body);
   }
-  .tab:active:not(:disabled) .tab__pad {
+  .zc-tab:active:not(:disabled) .zc-tab__pad {
     transform: translateY(var(--space-px));
   }
-  .tab.is-selected .tab__pad,
-  .tab.is-selected:hover:not(:disabled) .tab__pad {
+  .zc-tab.zc-is-selected .zc-tab__pad,
+  .zc-tab.zc-is-selected:hover:not(:disabled) .zc-tab__pad {
     color: var(--text-strong);
   }
-  .tab:focus-visible .tab__pad {
+  .zc-tab:focus-visible .zc-tab__pad {
     box-shadow: var(--ring-accent);
   }
-  .tab:disabled {
+  .zc-tab:disabled {
     cursor: not-allowed;
   }
-  .tab:disabled .tab__pad {
+  .zc-tab:disabled .zc-tab__pad {
     color: var(--text-disabled);
   }
 
-  .tab__count {
+  .zc-tab__count {
     font-family: var(--font-code);
     font-size: var(--size-micro);
     line-height: 1;
@@ -114,16 +114,16 @@
     border-radius: var(--radius-sm);
     transition: var(--transition-colors);
   }
-  .tab.is-selected .tab__count {
+  .zc-tab.zc-is-selected .zc-tab__count {
     color: var(--text-accent);
     background: var(--accent-wash);
   }
-  .tab:disabled .tab__count {
+  .zc-tab:disabled .zc-tab__count {
     color: var(--text-disabled);
     background: var(--bg-subtle);
   }
 
-  .tab__hover {
+  .zc-tab__hover {
     opacity: 0;
     position: absolute;
     top: 0;
@@ -135,7 +135,7 @@
     will-change: transform, opacity;
   }
 
-  .tabs__ink {
+  .zc-tabs__ink {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -146,7 +146,7 @@
     will-change: transform, width;
   }
 
-  .tabs--pill {
+  .zc-tabs--pill {
     display: flex;
     width: fit-content;
     max-width: 100%;
@@ -154,32 +154,32 @@
     border-radius: calc(var(--tabs-pill-radius) + var(--space-1));
     background: var(--bg-inset);
   }
-  .tabs--pill::after {
+  .zc-tabs--pill::after {
     content: none;
   }
 
-  .tabs--pill .tabs__list {
+  .zc-tabs--pill .zc-tabs__list {
     min-width: 0;
     margin: calc(var(--space-1) * -1);
     padding: var(--space-1);
     border-radius: calc(var(--tabs-pill-radius) + var(--space-1));
   }
 
-  .tabs--pill .tab {
+  .zc-tabs--pill .zc-tab {
     padding: 0;
   }
-  .tabs--pill .tab__pad {
+  .zc-tabs--pill .zc-tab__pad {
     z-index: 1;
     border-radius: var(--tabs-pill-radius);
   }
-  .tabs--pill .tab:active:not(:disabled) .tab__pad {
+  .zc-tabs--pill .zc-tab:active:not(:disabled) .zc-tab__pad {
     transform: none;
   }
-  .tabs--pill .tab__count {
+  .zc-tabs--pill .zc-tab__count {
     background: var(--bg-subtle);
   }
 
-  .tabs--pill .tabs__ink {
+  .zc-tabs--pill .zc-tabs__ink {
     top: var(--space-1);
     bottom: auto;
     height: var(--control-height-sm);
@@ -188,15 +188,15 @@
     box-shadow: var(--shadow-xs);
   }
 
-  .tab-panel {
+  .zc-tab-panel {
     outline: none;
     overflow: hidden;
   }
-  .tab-panel:focus-visible {
+  .zc-tab-panel:focus-visible {
     box-shadow: var(--ring-accent);
     border-radius: var(--radius-md);
   }
-  .tab-panel__inner {
+  .zc-tab-panel__inner {
     will-change: transform, opacity;
   }
 }

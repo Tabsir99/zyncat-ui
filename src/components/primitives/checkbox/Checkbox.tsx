@@ -52,7 +52,13 @@ export function Checkbox({
   onChange,
   htmlProps,
 }: CheckboxProps) {
-  const cls = cx('cbx', size === 'sm' && 'cbx--sm', error && 'cbx--error', disabled && 'cbx--disabled', className);
+  const cls = cx(
+    'zc-cbx',
+    size === 'sm' && 'zc-cbx--sm',
+    error && 'zc-cbx--error',
+    disabled && 'zc-cbx--disabled',
+    className,
+  );
 
   const controlled = checked !== undefined;
   const checkedProps = controlled ? { checked } : { defaultChecked };
@@ -68,9 +74,9 @@ export function Checkbox({
         {...htmlProps}
       />
       {label || description ? (
-        <span className="cbx__text">
-          {label ? <span className="cbx__label">{label}</span> : null}
-          {description ? <span className="cbx__desc">{description}</span> : null}
+        <span className="zc-cbx__text">
+          {label ? <span className="zc-cbx__label">{label}</span> : null}
+          {description ? <span className="zc-cbx__desc">{description}</span> : null}
         </span>
       ) : null}
     </label>

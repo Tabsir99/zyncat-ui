@@ -74,7 +74,7 @@ export function DateRangeField({
 
   return (
     <FieldShell
-      variant="dtf"
+      variant="zc-dtf"
       label={label}
       required={required}
       invalid={invalid}

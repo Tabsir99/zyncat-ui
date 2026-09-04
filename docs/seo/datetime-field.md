@@ -191,7 +191,7 @@ Every FAQ claim is read off the source, not inferred:
 - Popover + segmented time slot -
   `src/components/composites/date-picker/DateTimeField.tsx` wraps `DtpPanel` in
   `<Popover side="bottom" align="start">` and passes a `slot` containing `<TimeSegments>`
-  (`time-core.tsx`) inside a `.dtp__time` wrapper.
+  (`time-core.tsx`) inside a `.zc-dtp__time` wrapper.
 - `'YYYY-MM-DDTHH:mm'` value, commit only when both halves exist - `DateTimeFieldProps.value` /
   `defaultValue` JSDoc; `commitIf(d, t)` returns early `if (!d || !t)`, confirmed by reading the
   full function (lines 95-103 of `DateTimeField.tsx`).

@@ -17,12 +17,12 @@ export function CheckGlyph({ indeterminate = false, ...inputProps }: CheckGlyphP
 
   return (
     <Fragment>
-      <input ref={ref} type="checkbox" className="cbx__input" {...inputProps} />
-      <span className="cbx__box" aria-hidden="true">
-        <svg className="cbx__mark" viewBox="0 0 16 16" fill="none">
-          <path className="cbx__tick" d="M3.5 8.5 L6.75 11.5 L12.5 4.75" />
+      <input ref={ref} type="checkbox" className="zc-cbx__input" {...inputProps} />
+      <span className="zc-cbx__box" aria-hidden="true">
+        <svg className="zc-cbx__mark" viewBox="0 0 16 16" fill="none">
+          <path className="zc-cbx__tick" d="M3.5 8.5 L6.75 11.5 L12.5 4.75" />
         </svg>
-        <span className="cbx__dash" />
+        <span className="zc-cbx__dash" />
       </span>
     </Fragment>
   );

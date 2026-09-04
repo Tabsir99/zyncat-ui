@@ -52,12 +52,12 @@ export function Badge({
 }: BadgeProps) {
   const isGlass = variant !== 'outline';
   const cls = cx(
-    isGlass && 'glass glass--interactive',
-    'badge',
-    `badge--${tone}`,
-    variant === 'outline' && 'badge--outline',
-    size !== 'md' && `badge--${size}`,
-    pill && 'badge--pill',
+    isGlass && 'zc-glass zc-glass--interactive',
+    'zc-badge',
+    `zc-badge--${tone}`,
+    variant === 'outline' && 'zc-badge--outline',
+    size !== 'md' && `zc-badge--${size}`,
+    pill && 'zc-badge--pill',
     className,
   );
 
@@ -65,13 +65,13 @@ export function Badge({
 
   return (
     <span className={cls} style={style} {...htmlProps}>
-      {showDot ? <span className={`badge__dot${live ? ' badge__dot--live' : ''}`} aria-hidden="true" /> : null}
+      {showDot ? <span className={`zc-badge__dot${live ? ' zc-badge__dot--live' : ''}`} aria-hidden="true" /> : null}
       {icon ? (
-        <span className="badge__icon" aria-hidden="true">
+        <span className="zc-badge__icon" aria-hidden="true">
           {icon}
         </span>
       ) : null}
-      <span className="badge__label">{children}</span>
+      <span className="zc-badge__label">{children}</span>
     </span>
   );
 }

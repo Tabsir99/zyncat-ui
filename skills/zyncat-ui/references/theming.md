@@ -7,10 +7,11 @@ values.
 ## Level 0 - your plain CSS already wins
 
 Every shipped rule lives inside `@layer zyncat.tokens` or `@layer zyncat.components`, and unlayered
-CSS beats every layer however specific the layered rule is. `.btn { border-radius: 0 }` in your
-sheet lands: no `!important`, no specificity ladder, no parent selector. Even `:where(.btn)` at
-specificity (0,0,0) wins. Class names are BEM off a short base - `.btn`, `.btn--primary`,
-`.btn__label`; `.fld`, `.fld__input`; `.dialog__body`.
+CSS beats every layer however specific the layered rule is. `.zc-btn { border-radius: 0 }` in your
+sheet lands: no `!important`, no specificity ladder, no parent selector. Even `:where(.zc-btn)` at
+specificity (0,0,0) wins. Every class is BEM off a short base behind the `zc-` namespace, so nothing
+in your sheet collides with one - `.zc-btn`, `.zc-btn--primary`,
+`.zc-btn__label`; `.zc-fld`, `.zc-fld__input`; `.zc-dialog__body`.
 
 ## Level 1 - retheme the whole system
 

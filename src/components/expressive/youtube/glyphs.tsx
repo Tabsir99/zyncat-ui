@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 
 export function KebabGlyph(): ReactElement {
   return (
-    <svg className="youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <svg className="zc-youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
       <circle cx="12" cy="6" r="2" />
       <circle cx="12" cy="12" r="2" />
       <circle cx="12" cy="18" r="2" />
@@ -12,16 +12,16 @@ export function KebabGlyph(): ReactElement {
 
 export function VerifiedGlyph(): ReactElement {
   return (
-    <svg className="youtube__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg className="zc-youtube__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <circle cx="12" cy="12" r="12" fill="currentColor" />
-      <path className="youtube__glyph-knockout" d="M10.3 16.7 5.9 12.3l1.6-1.6 2.8 2.8 6.2-6.2 1.6 1.6z" />
+      <path className="zc-youtube__glyph-knockout" d="M10.3 16.7 5.9 12.3l1.6-1.6 2.8 2.8 6.2-6.2 1.6 1.6z" />
     </svg>
   );
 }
 
 export function PlayGlyph(): ReactElement {
   return (
-    <svg className="youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <svg className="zc-youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
       <path d="M7.4 4.5 19.6 12 7.4 19.5z" />
     </svg>
   );
@@ -29,7 +29,7 @@ export function PlayGlyph(): ReactElement {
 
 export function PauseGlyph(): ReactElement {
   return (
-    <svg className="youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+    <svg className="zc-youtube__glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
       <rect x="6.4" y="4.4" width="4" height="15.2" rx="0.5" />
       <rect x="13.6" y="4.4" width="4" height="15.2" rx="0.5" />
     </svg>
@@ -38,7 +38,7 @@ export function PauseGlyph(): ReactElement {
 
 export function SpeakerGlyph(): ReactElement {
   return (
-    <svg className="youtube__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <svg className="zc-youtube__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M3.4 9h3.4l4.8-4.2v14.4L6.8 15H3.4z" fill="currentColor" />
       <path
         d="M14.6 9.3a3.6 3.6 0 0 1 0 5.4M17.2 6.9a7.1 7.1 0 0 1 0 10.2"
@@ -54,7 +54,7 @@ export function SpeakerGlyph(): ReactElement {
 export function ExpandGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -73,7 +73,7 @@ export function ExpandGlyph(): ReactElement {
 export function HeartGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 22 22"
       fill="none"
       stroke="currentColor"
@@ -90,7 +90,7 @@ export function HeartGlyph(): ReactElement {
 export function BubbleGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 22 21"
       fill="none"
       stroke="currentColor"
@@ -109,7 +109,7 @@ export function BubbleGlyph(): ReactElement {
 export function ShareGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 22 20"
       fill="none"
       stroke="currentColor"
@@ -126,7 +126,7 @@ export function ShareGlyph(): ReactElement {
 export function RemixGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 22 22"
       fill="none"
       stroke="currentColor"
@@ -147,7 +147,7 @@ export function RemixGlyph(): ReactElement {
 export function ThumbUpGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 21 21"
       fill="none"
       stroke="currentColor"
@@ -165,7 +165,7 @@ export function ThumbUpGlyph(): ReactElement {
 export function ThumbDownGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 21 21"
       fill="none"
       stroke="currentColor"
@@ -183,7 +183,7 @@ export function ThumbDownGlyph(): ReactElement {
 export function ChevronLeftGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -201,7 +201,7 @@ export function ChevronLeftGlyph(): ReactElement {
 export function ChevronRightGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -219,7 +219,7 @@ export function ChevronRightGlyph(): ReactElement {
 export function StackGlyph(): ReactElement {
   return (
     <svg
-      className="youtube__glyph"
+      className="zc-youtube__glyph"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

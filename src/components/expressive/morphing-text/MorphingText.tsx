@@ -36,8 +36,8 @@ const FILTER_REGION_HEIGHT = '220%';
 const RULE_MIN_WIDTH = 2;
 const SETTLED = 0.001;
 const FALLBACK_FONT_SIZE = 48;
-const LETTER_CLASS = 'morphing-text__letter';
-const FUSED_CLASS = 'morphing-text__stage--fused';
+const LETTER_CLASS = 'zc-morphing-text__letter';
+const FUSED_CLASS = 'zc-morphing-text__stage--fused';
 const BLUR_PROPERTY = '--_morphing-text-letter-blur';
 const HEAT_PROPERTY = '--_morphing-text-heat';
 
@@ -300,14 +300,14 @@ export function MorphingText({
   }, [key, filterId]);
 
   return (
-    <span ref={rootRef} className={cx('morphing-text', className)} style={style} {...htmlProps}>
-      <span ref={labelRef} className="morphing-text__label" />
-      <span ref={stageRef} className="morphing-text__stage" aria-hidden="true">
-        <span ref={outgoingRef} className="morphing-text__word" />
-        <span ref={incomingRef} className="morphing-text__word" />
+    <span ref={rootRef} className={cx('zc-morphing-text', className)} style={style} {...htmlProps}>
+      <span ref={labelRef} className="zc-morphing-text__label" />
+      <span ref={stageRef} className="zc-morphing-text__stage" aria-hidden="true">
+        <span ref={outgoingRef} className="zc-morphing-text__word" />
+        <span ref={incomingRef} className="zc-morphing-text__word" />
       </span>
-      <span ref={ruleRef} className="morphing-text__rule" aria-hidden="true" />
-      <svg className="morphing-text__defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <span ref={ruleRef} className="zc-morphing-text__rule" aria-hidden="true" />
+      <svg className="zc-morphing-text__defs" width="0" height="0" aria-hidden="true" focusable="false">
         <defs>
           <filter
             id={filterId}

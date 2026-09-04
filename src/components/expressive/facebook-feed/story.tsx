@@ -51,78 +51,78 @@ export function FacebookStory({
   const track = Array.from({ length: Math.max(1, Math.round(segments)) }, (_, index) => index);
 
   return (
-    <article className={cx('facebook-feed-story', className)} style={style} {...htmlProps}>
-      <div className="facebook-feed-story__stage">
+    <article className={cx('zc-facebook-feed-story', className)} style={style} {...htmlProps}>
+      <div className="zc-facebook-feed-story__stage">
         <MediaSurface
           media={media}
           type={type}
-          backClassName="facebook-feed-media__back facebook-feed-story__back"
-          frontClassName="facebook-feed-media__front facebook-feed-media__front--cover facebook-feed-story__card facebook-feed-ratio"
+          backClassName="zc-facebook-feed-media__back zc-facebook-feed-story__back"
+          frontClassName="zc-facebook-feed-media__front zc-facebook-feed-media__front--cover zc-facebook-feed-story__card zc-facebook-feed-ratio"
           frontRatio={ratio}
         />
       </div>
 
-      <div className="facebook-feed-story__segments" aria-hidden="true">
+      <div className="zc-facebook-feed-story__segments" aria-hidden="true">
         {track.map((index) => (
           <span
             key={index}
             className={cx(
-              'facebook-feed-story__segment',
-              index <= segment ? 'facebook-feed-story__segment--filled' : undefined,
+              'zc-facebook-feed-story__segment',
+              index <= segment ? 'zc-facebook-feed-story__segment--filled' : undefined,
             )}
           />
         ))}
       </div>
 
-      <div className="facebook-feed-story__header">
-        <Portrait avatar={avatar} className="facebook-feed-story__avatar" />
-        <div className="facebook-feed-story__identity">
-          <div className="facebook-feed-story__name-row">
-            <span className="facebook-feed-story__name">{name}</span>
-            <span className="facebook-feed-story__stamp">{stamp}</span>
-            <AudienceFriends className="facebook-feed-story__audience" />
+      <div className="zc-facebook-feed-story__header">
+        <Portrait avatar={avatar} className="zc-facebook-feed-story__avatar" />
+        <div className="zc-facebook-feed-story__identity">
+          <div className="zc-facebook-feed-story__name-row">
+            <span className="zc-facebook-feed-story__name">{name}</span>
+            <span className="zc-facebook-feed-story__stamp">{stamp}</span>
+            <AudienceFriends className="zc-facebook-feed-story__audience" />
           </div>
-          <div className="facebook-feed-story__audio">
-            <span className="facebook-feed-story__note" aria-hidden="true">
+          <div className="zc-facebook-feed-story__audio">
+            <span className="zc-facebook-feed-story__note" aria-hidden="true">
               {NOTE}
             </span>
-            <span className="facebook-feed-story__audio-text">{`${name} ${MIDDOT} ${audio}`}</span>
-            <ChevronRight className="facebook-feed-story__chevron" />
+            <span className="zc-facebook-feed-story__audio-text">{`${name} ${MIDDOT} ${audio}`}</span>
+            <ChevronRight className="zc-facebook-feed-story__chevron" />
           </div>
         </div>
-        <div className="facebook-feed-story__controls">
+        <div className="zc-facebook-feed-story__controls">
           <button
             type="button"
-            className="facebook-feed-story__mute"
+            className="zc-facebook-feed-story__mute"
             aria-label={MUTE_LABEL}
             aria-pressed={muted}
             onClick={() => onMutedChange(!muted)}
           >
             {muted ? (
               <SpeakerSolidOff
-                className="facebook-feed-story__mute-glyph"
-                crossClassName="facebook-feed-story__mute-cross"
+                className="zc-facebook-feed-story__mute-glyph"
+                crossClassName="zc-facebook-feed-story__mute-cross"
               />
             ) : (
-              <SpeakerSolidOn className="facebook-feed-story__mute-glyph" />
+              <SpeakerSolidOn className="zc-facebook-feed-story__mute-glyph" />
             )}
           </button>
           <button
             type="button"
-            className="facebook-feed-button"
+            className="zc-facebook-feed-button"
             aria-label={PLAY_LABEL}
             onClick={() => onAction?.('play')}
           >
-            <PlaySolid className="facebook-feed-story__play" />
+            <PlaySolid className="zc-facebook-feed-story__play" />
           </button>
           <button
             type="button"
-            className="facebook-feed-button facebook-feed-story__kebab"
+            className="zc-facebook-feed-button zc-facebook-feed-story__kebab"
             aria-label={MENU_LABEL}
             onClick={() => onAction?.('menu')}
           >
             {KEBAB_PIPS.map((pip) => (
-              <span key={pip} className="facebook-feed-story__pip" />
+              <span key={pip} className="zc-facebook-feed-story__pip" />
             ))}
           </button>
         </div>

@@ -71,7 +71,7 @@ function MenuSurface({
   return (
     <div
       ref={menuRef}
-      className="menu-surface select__menu"
+      className="zc-menu-surface zc-select__menu"
       id={menuId}
       role="presentation"
       data-multiple={multiple ? 'true' : undefined}

@@ -96,7 +96,7 @@ function DialogSurface({
   return (
     <section
       {...htmlProps}
-      className={cx('dialog', htmlProps?.className)}
+      className={cx('zc-dialog', htmlProps?.className)}
       role="dialog"
       aria-modal="true"
       data-size={size === 'md' ? undefined : size}
@@ -105,37 +105,37 @@ function DialogSurface({
       aria-describedby={description ? descId : undefined}
     >
       {(icon || title || description || dismissible) && (
-        <header className="dialog__header">
+        <header className="zc-dialog__header">
           {icon && (
-            <span className="dialog__icon">
+            <span className="zc-dialog__icon">
               <IconSlot size="md">{icon}</IconSlot>
             </span>
           )}
-          <div className="dialog__heading">
+          <div className="zc-dialog__heading">
             {title && (
-              <h2 className="dialog__title" id={titleId}>
+              <h2 className="zc-dialog__title" id={titleId}>
                 {title}
               </h2>
             )}
             {description && (
-              <p className="dialog__desc" id={descId}>
+              <p className="zc-dialog__desc" id={descId}>
                 {description}
               </p>
             )}
           </div>
           {dismissible && (
-            <button type="button" className="dialog__close" aria-label="Close dialog" onClick={requestClose}>
+            <button type="button" className="zc-dialog__close" aria-label="Close dialog" onClick={requestClose}>
               <Icon name="x" size="sm" weight="bold" />
             </button>
           )}
         </header>
       )}
 
-      <div className="dialog__body" ref={bodyRef}>
+      <div className="zc-dialog__body" ref={bodyRef}>
         {children}
       </div>
 
-      {footerContent && <footer className="dialog__footer">{footerContent}</footer>}
+      {footerContent && <footer className="zc-dialog__footer">{footerContent}</footer>}
     </section>
   );
 }
@@ -190,8 +190,8 @@ export function Dialog({
                 timing: timings.open,
               }}
               exit={{ y: [UIMotion.dist.sm], scale: [UIMotion.scale.panel], opacity: [0], timing: timings.close }}
-              layerClass="overlay-layer--dialog"
-              panelClass="overlay-panel--dialog"
+              layerClass="zc-overlay-layer--dialog"
+              panelClass="zc-overlay-panel--dialog"
               panelId={panelId}
               dismissible={dismissible}
               container={container}

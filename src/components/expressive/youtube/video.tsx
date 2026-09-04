@@ -32,29 +32,29 @@ export function VideoSurface({
 }: VideoSurfaceProps): ReactElement {
   return (
     <>
-      <div className="youtube-video__frame">
+      <div className="zc-youtube-video__frame">
         <Media source={media} />
-        {duration && <span className="youtube-video__duration">{duration}</span>}
+        {duration && <span className="zc-youtube-video__duration">{duration}</span>}
       </div>
 
-      <div className="youtube-video__meta">
-        <div className="youtube-video__avatar">
-          <Media source={avatar} className="youtube__avatar-media" />
+      <div className="zc-youtube-video__meta">
+        <div className="zc-youtube-video__avatar">
+          <Media source={avatar} className="zc-youtube__avatar-media" />
         </div>
 
-        <div className="youtube-video__text">
-          <h3 className="youtube-video__title">{title}</h3>
-          <p className="youtube-video__byline">
-            <span className="youtube-video__channel">{channel}</span>
+        <div className="zc-youtube-video__text">
+          <h3 className="zc-youtube-video__title">{title}</h3>
+          <p className="zc-youtube-video__byline">
+            <span className="zc-youtube-video__channel">{channel}</span>
             {verified && (
-              <span className="youtube-video__verified">
+              <span className="zc-youtube-video__verified">
                 <VerifiedGlyph />
               </span>
             )}
           </p>
-          <p className="youtube-video__stats">
+          <p className="zc-youtube-video__stats">
             {views}
-            <span className="youtube-video__dot" aria-hidden="true">
+            <span className="zc-youtube-video__dot" aria-hidden="true">
               •
             </span>
             {age}
@@ -63,7 +63,7 @@ export function VideoSurface({
 
         <button
           type="button"
-          className="youtube-button youtube-video__more"
+          className="zc-youtube-button zc-youtube-video__more"
           aria-label={MENU_LABEL}
           onClick={() => onAction?.('menu')}
         >

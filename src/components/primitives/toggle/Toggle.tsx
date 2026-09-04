@@ -55,7 +55,7 @@ export function Toggle({
 }: ToggleProps) {
   const [isOn, setOn] = useControllable(checked, !!defaultChecked);
 
-  const cls = cx('sw', size === 'sm' && 'sw--sm', disabled && 'sw--disabled', className);
+  const cls = cx('zc-sw', size === 'sm' && 'zc-sw--sm', disabled && 'zc-sw--disabled', className);
 
   const [pressed, setPressed] = useState(false);
   function press(on: boolean) {
@@ -81,7 +81,7 @@ export function Toggle({
       <input
         type="checkbox"
         role="switch"
-        className="sw__input"
+        className="zc-sw__input"
         disabled={disabled}
         checked={isOn}
         onChange={handleChange}
@@ -89,17 +89,17 @@ export function Toggle({
         defaultChecked={undefined}
       />
       <span
-        className="sw__track"
+        className="zc-sw__track"
         data-on={isOn ? 'true' : undefined}
         data-pressed={pressed ? 'true' : undefined}
         aria-hidden="true"
       >
-        <span className="sw__thumb"></span>
+        <span className="zc-sw__thumb"></span>
       </span>
       {label || description ? (
-        <span className="sw__text">
-          {label ? <span className="sw__label">{label}</span> : null}
-          {description ? <span className="sw__desc">{description}</span> : null}
+        <span className="zc-sw__text">
+          {label ? <span className="zc-sw__label">{label}</span> : null}
+          {description ? <span className="zc-sw__desc">{description}</span> : null}
         </span>
       ) : null}
     </label>

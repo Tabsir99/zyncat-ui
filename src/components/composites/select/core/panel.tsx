@@ -30,11 +30,11 @@ const defaultCheck = (selected: boolean) => (selected ? <Icon key="on" name="che
 
 function LoadingRows() {
   return (
-    <div className="select__loading" aria-busy="true" aria-live="polite">
+    <div className="zc-select__loading" aria-busy="true" aria-live="polite">
       {[0, 1, 2].map((i) => (
-        <div className="select__skeleton" key={i}>
-          <span className="select__skeleton-dot" data-pulse></span>
-          <span className="select__skeleton-bar" data-pulse></span>
+        <div className="zc-select__skeleton" key={i}>
+          <span className="zc-select__skeleton-dot" data-pulse></span>
+          <span className="zc-select__skeleton-bar" data-pulse></span>
         </div>
       ))}
     </div>
@@ -42,7 +42,7 @@ function LoadingRows() {
 }
 
 function EmptyRow({ query }: { query: string }) {
-  return <div className="select__empty">{query ? 'No matches for "' + query + '"' : 'No options available'}</div>;
+  return <div className="zc-select__empty">{query ? 'No matches for "' + query + '"' : 'No options available'}</div>;
 }
 
 export function ListboxPanel({
@@ -71,11 +71,11 @@ export function ListboxPanel({
       animation={animation}
     >
       {searchable && !loading && (
-        <div className="select__search">
+        <div className="zc-select__search">
           <Icon name="magnifying-glass" size="sm" />
           <input
             ref={lb.searchRef}
-            className="select__search-input"
+            className="zc-select__search-input"
             type="text"
             value={lb.query}
             placeholder={searchPlaceholder}
@@ -89,7 +89,7 @@ export function ListboxPanel({
       )}
 
       <div
-        className="menu-scroller select__list"
+        className="zc-menu-scroller zc-select__list"
         ref={lb.listRef}
         id={lb.listId}
         role="listbox"
@@ -99,15 +99,15 @@ export function ListboxPanel({
         aria-activedescendant={searchable ? undefined : lb.adId}
         onKeyDown={searchable ? undefined : lb.onMenuKeyDown}
       >
-        <GlidePill className="menu-glide select__glide" glide={lb.glide} />
+        <GlidePill className="zc-menu-glide zc-select__glide" glide={lb.glide} />
         {loading ? (
           <LoadingRows />
         ) : (
           <Fragment>
             {lb.groups.map((g, gi) => (
-              <div className="select__group" role="group" aria-label={g.label || undefined} key={gi}>
+              <div className="zc-select__group" role="group" aria-label={g.label || undefined} key={gi}>
                 {g.label && g.items.some((o) => navIndex.has(o.value)) && (
-                  <div className="menu-group-label select__group-label">{g.label}</div>
+                  <div className="zc-menu-group-label zc-select__group-label">{g.label}</div>
                 )}
                 {g.items.map((opt) => {
                   const i = navIndex.get(opt.value) ?? -1;
@@ -118,7 +118,7 @@ export function ListboxPanel({
                       key={opt.value}
                       id={visible ? lb.optId(opt.value) : undefined}
                       data-idx={visible ? i : undefined}
-                      className="select__option"
+                      className="zc-select__option"
                       role="option"
                       aria-selected={isSel}
                       aria-hidden={!visible || undefined}
@@ -135,7 +135,7 @@ export function ListboxPanel({
                       icon={opt.icon}
                       label={opt.label}
                       description={opt.description}
-                      trailing={check(isSel) ? <span className="select__option-check">{check(isSel)}</span> : null}
+                      trailing={check(isSel) ? <span className="zc-select__option-check">{check(isSel)}</span> : null}
                     />
                   );
                   return searchable ? (

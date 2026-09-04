@@ -80,21 +80,21 @@ export function Pagination({
   const nextBusy = loading && lastDirRef.current === 1;
 
   return (
-    <nav className={cx('pgn', className)} aria-label={ariaLabel} aria-busy={loading || undefined} {...htmlProps}>
-      <span className="pgn__readout" aria-live="polite">
-        <span className="pgn__range" ref={rangeRef}>
+    <nav className={cx('zc-pgn', className)} aria-label={ariaLabel} aria-busy={loading || undefined} {...htmlProps}>
+      <span className="zc-pgn__readout" aria-live="polite">
+        <span className="zc-pgn__range" ref={rangeRef}>
           <b>
             {pgnFormat(from)}-{pgnFormat(to)}
           </b>
-          {total != null ? <span className="pgn__total"> of {pgnFormat(total)}</span> : null}
+          {total != null ? <span className="zc-pgn__total"> of {pgnFormat(total)}</span> : null}
         </span>
       </span>
-      <div className="pgn__nav">
+      <div className="zc-pgn__nav">
         <Button
           variant="ghost"
           size="sm"
           ref={prevBtnRef}
-          className="pgn__btn pgn__btn--prev"
+          className="zc-pgn__btn zc-pgn__btn--prev"
           loading={prevBusy}
           disabled={!hasPrev || loading}
           htmlProps={{ 'aria-label': 'Previous page' }}
@@ -109,7 +109,7 @@ export function Pagination({
           variant="ghost"
           size="sm"
           ref={nextBtnRef}
-          className="pgn__btn pgn__btn--next"
+          className="zc-pgn__btn zc-pgn__btn--next"
           loading={nextBusy}
           disabled={!hasNext || loading}
           htmlProps={{ 'aria-label': 'Next page' }}

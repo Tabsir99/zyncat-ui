@@ -257,7 +257,7 @@ based selection state, `onSelectionChange`, `bulkActions(keys, clear)`, and the 
 `lastIdxRef` range-select logic in `toggleRow` for selection; `hideBelow` plus `container-type:
 inline-size` and the `@container (max-width: 42rem / 30rem)` rules in `table.css` for responsive
 columns (a container query, not a viewport media query - verified in source, not assumed);
-`pinFirst`, the sticky `thead th` and `.tbl__cell--pin` rules, and the `data-x-more`/`data-x-back`
+`pinFirst`, the sticky `thead th` and `.zc-tbl__cell--pin` rules, and the `data-x-more`/`data-x-back`
 edge-fade driven by `useScrollEdges` for the overflow behaviour; `columns[].render`, `mono`,
 `strong`, `align`, `grow` for cell rendering; `loading` (0.45 opacity, `aria-busy`) and `empty` for
 the two non-happy-path states; `'use client'` (line 1), `scope="col"`, and `aria-sort` for platform/

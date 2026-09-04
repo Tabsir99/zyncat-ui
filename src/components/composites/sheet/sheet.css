@@ -1,48 +1,48 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .overlay-layer--sheet-right {
+  .zc-overlay-layer--sheet-right {
     align-items: stretch;
     justify-items: end;
   }
-  .overlay-panel--sheet-right {
+  .zc-overlay-panel--sheet-right {
     height: 100%;
     max-width: 100%;
   }
 
-  .overlay-layer--sheet-bottom {
+  .zc-overlay-layer--sheet-bottom {
     align-items: end;
     justify-items: stretch;
   }
-  .overlay-panel--sheet-bottom {
+  .zc-overlay-panel--sheet-bottom {
     width: 100%;
     max-height: 100%;
   }
 
-  .overlay-panel--sheet-right {
+  .zc-overlay-panel--sheet-right {
     transform-origin: 100% 50%;
   }
-  .overlay-panel--sheet-bottom {
+  .zc-overlay-panel--sheet-bottom {
     transform-origin: 50% 100%;
   }
 
-  .overlay-panel--sheet-right[data-drag] {
+  .zc-overlay-panel--sheet-right[data-drag] {
     touch-action: pan-y;
   }
-  .overlay-panel--sheet-bottom[data-drag] {
+  .zc-overlay-panel--sheet-bottom[data-drag] {
     touch-action: none;
   }
 
-  .overlay-panel--sheet-right,
-  .overlay-panel--sheet-bottom {
+  .zc-overlay-panel--sheet-right,
+  .zc-overlay-panel--sheet-bottom {
     background: var(--bg-surface);
     color: var(--text-body);
     box-shadow: var(--shadow-xl);
   }
-  .overlay-panel--sheet-right {
+  .zc-overlay-panel--sheet-right {
     border-inline-start: var(--border-hairline) solid var(--border-default);
   }
-  .overlay-panel--sheet-bottom {
+  .zc-overlay-panel--sheet-bottom {
     border-block-start: var(--border-hairline) solid var(--border-default);
   }
 }

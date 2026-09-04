@@ -77,7 +77,7 @@ function OverlayScrim({
   return (
     <div
       ref={scrimRef}
-      className="overlay-scrim"
+      className="zc-overlay-scrim"
       aria-hidden="true"
       onPointerDown={(e) => {
         down.current = e.target === e.currentTarget;
@@ -136,7 +136,7 @@ export function ModalShell({
     <div
       {...layerProps}
       ref={layerRef}
-      className={cx('overlay-layer', container && 'overlay-layer--scoped', layerClass, layerProps.className)}
+      className={cx('zc-overlay-layer', container && 'zc-overlay-layer--scoped', layerClass, layerProps.className)}
     >
       <OverlayScrim dismissible={dismissible} onPress={requestClose} scrimRef={scrimRef} />
       <div
@@ -144,7 +144,7 @@ export function ModalShell({
         tabIndex={-1}
         {...panelProps}
         ref={panelRef as RefObject<HTMLDivElement>}
-        className={cx('overlay-panel', panelClass, panelProps.className)}
+        className={cx('zc-overlay-panel', panelClass, panelProps.className)}
       >
         {children}
       </div>

@@ -115,7 +115,7 @@ export function DateTimeField({
 
   return (
     <FieldShell
-      variant="dtf"
+      variant="zc-dtf"
       label={label}
       required={required}
       invalid={invalid}
@@ -143,9 +143,9 @@ export function DateTimeField({
           label={label}
           activateOn={activateOn}
           slot={
-            <div className="dtp__time">
-              <span className="dtp__timeLabel">Time</span>
-              <span className="dtp__timeHint" aria-hidden="true">
+            <div className="zc-dtp__time">
+              <span className="zc-dtp__timeLabel">Time</span>
+              <span className="zc-dtp__timeHint" aria-hidden="true">
                 <kbd>↑</kbd>
                 <kbd>↓</kbd>
               </span>

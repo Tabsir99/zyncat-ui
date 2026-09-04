@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .tag {
+  .zc-tag {
     --tag-check-delay: 60ms;
 
     --tag-h: var(--control-height-sm);
@@ -34,27 +34,27 @@
     transition: var(--transition-control);
   }
 
-  .tag__label {
+  .zc-tag__label {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .tag--sm {
+  .zc-tag--sm {
     --tag-h: var(--space-5);
     font-size: var(--size-micro);
   }
 
-  .tag__icon {
+  .zc-tag__icon {
     display: inline-flex;
     flex: none;
   }
-  .tag__icon svg,
-  .tag__icon i {
+  .zc-tag__icon svg,
+  .zc-tag__icon i {
     display: block;
   }
 
-  .tag__count {
+  .zc-tag__count {
     font-family: var(--font-code);
     font-size: var(--size-micro);
     font-variant-numeric: tabular-nums;
@@ -62,7 +62,7 @@
     transition: color var(--duration-fast) var(--ease-standard);
   }
 
-  .tag__remove {
+  .zc-tag__remove {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -83,34 +83,34 @@
       background-color var(--duration-fast) var(--ease-standard),
       transform var(--duration-fast) var(--ease-standard);
   }
-  .tag__remove svg {
+  .zc-tag__remove svg {
     display: block;
     width: var(--space-3);
     height: var(--space-3);
     transition: transform var(--duration-base) var(--ease-standard);
   }
-  .tag__remove:hover {
+  .zc-tag__remove:hover {
     color: var(--text-strong);
     background: var(--bg-muted);
   }
-  .tag__remove:hover svg {
+  .zc-tag__remove:hover svg {
     transform: rotate(30deg);
   }
-  .tag__remove:active {
+  .zc-tag__remove:active {
     transform: scale(0.9);
   }
-  .tag__remove:focus-visible {
+  .zc-tag__remove:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
 
-  .tag:has(.tag__remove:hover):not([data-disabled]),
-  .tag:has(.tag__remove:focus-visible) {
+  .zc-tag:has(.zc-tag__remove:hover):not([data-disabled]),
+  .zc-tag:has(.zc-tag__remove:focus-visible) {
     color: var(--text-muted);
     border-color: var(--border-strong);
   }
 
-  .tag--toggle {
+  .zc-tag--toggle {
     cursor: pointer;
     appearance: none;
     -webkit-tap-highlight-color: transparent;
@@ -118,87 +118,87 @@
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
   }
-  .tag--toggle:hover:not(:disabled) {
+  .zc-tag--toggle:hover:not(:disabled) {
     color: var(--text-strong);
     border-color: var(--border-strong);
     background: var(--neutral-wash);
   }
-  .tag--toggle:active:not(:disabled) {
+  .zc-tag--toggle:active:not(:disabled) {
     transform: translateY(var(--space-px));
     background: var(--bg-muted);
     --tag-shadow: inset 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.07);
   }
-  .tag--toggle:focus-visible {
+  .zc-tag--toggle:focus-visible {
     outline: none;
     box-shadow: var(--tag-shadow), var(--focus-ring);
   }
 
-  .tag--toggle[aria-pressed='true'] {
+  .zc-tag--toggle[aria-pressed='true'] {
     color: var(--text-accent);
     border-color: var(--accent-border);
     background: var(--accent-wash);
     --tag-shadow: 0 1px 2px 0 rgb(var(--shadow-rgb) / 0.05);
   }
-  .tag--toggle[aria-pressed='true']:hover:not(:disabled) {
+  .zc-tag--toggle[aria-pressed='true']:hover:not(:disabled) {
     color: var(--accent-active);
     border-color: var(--accent-border);
     background: var(--accent-wash);
   }
-  .tag--toggle[aria-pressed='true']:active:not(:disabled) {
+  .zc-tag--toggle[aria-pressed='true']:active:not(:disabled) {
     background: var(--accent-subtle);
   }
-  .tag--toggle[aria-pressed='true'] .tag__count {
+  .zc-tag--toggle[aria-pressed='true'] .zc-tag__count {
     color: inherit;
   }
 
-  .tag__check {
+  .zc-tag__check {
     /* cancels the flex gap while the slot is collapsed; the inner margin restores it */
     margin-right: calc(var(--space-1) * -1);
   }
-  .tag__check svg {
+  .zc-tag__check svg {
     display: block;
     width: var(--space-3);
     height: var(--space-3);
     margin-right: var(--space-1);
   }
-  .tag__check path {
+  .zc-tag__check path {
     stroke: currentColor;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     transition: stroke-dashoffset var(--duration-base) var(--ease-standard);
   }
-  .tag--toggle[aria-pressed='true'] .tag__check path {
+  .zc-tag--toggle[aria-pressed='true'] .zc-tag__check path {
     stroke-dashoffset: 0;
     transition: stroke-dashoffset var(--duration-slow) var(--ease-entrance) var(--tag-check-delay);
   }
 
-  .tag[data-disabled],
-  .tag--toggle:disabled {
+  .zc-tag[data-disabled],
+  .zc-tag--toggle:disabled {
     color: var(--text-disabled);
     border-color: var(--border-subtle);
     background: var(--bg-surface);
     cursor: default;
     --tag-shadow: none;
   }
-  .tag[data-disabled] .tag__count,
-  .tag--toggle:disabled .tag__count {
+  .zc-tag[data-disabled] .zc-tag__count,
+  .zc-tag--toggle:disabled .zc-tag__count {
     color: var(--text-disabled);
   }
-  .tag[data-disabled] .tag__remove {
+  .zc-tag[data-disabled] .zc-tag__remove {
     color: var(--text-disabled);
     background: transparent;
     cursor: default;
     pointer-events: none;
   }
-  .tag--toggle:disabled {
+  .zc-tag--toggle:disabled {
     transform: none;
   }
-  .tag--toggle:disabled[aria-pressed='true'] {
+  .zc-tag--toggle:disabled[aria-pressed='true'] {
     background: var(--bg-muted);
     border-color: var(--border-subtle);
   }
 
-  .tag-group {
+  .zc-tag-group {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -206,16 +206,16 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tag__remove svg {
+    .zc-tag__remove svg {
       transition: none;
     }
-    .tag__remove:hover svg {
+    .zc-tag__remove:hover svg {
       transform: none;
     }
-    .tag__remove:active {
+    .zc-tag__remove:active {
       transform: none;
     }
-    .tag--toggle:active:not(:disabled) {
+    .zc-tag--toggle:active:not(:disabled) {
       transform: none;
     }
   }

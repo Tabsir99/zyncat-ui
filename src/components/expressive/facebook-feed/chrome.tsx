@@ -95,12 +95,12 @@ export function MediaSurface({ media, type, frontClassName, backClassName, front
       {backClassName ? (
         <div className={backClassName} style={style} aria-hidden="true">
           {echo}
-          {filled ? null : <span className="facebook-feed-media__fill" />}
+          {filled ? null : <span className="zc-facebook-feed-media__fill" />}
         </div>
       ) : null}
       <div className={frontClassName} style={style} data-ratio={frontRatio}>
         {node}
-        {filled ? null : <span className="facebook-feed-media__fill" />}
+        {filled ? null : <span className="zc-facebook-feed-media__fill" />}
       </div>
     </>
   );

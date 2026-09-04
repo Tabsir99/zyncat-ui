@@ -358,7 +358,7 @@ target += DIGITS_PER_RUN` - the target is advanced until it is ahead, so a decre
   `visibilitychange` listener; `Odometer` passes `el`, so both apply.
 - Reduced motion is `UIMotion.reduced` in both `Odometer` and `loop`: `snapColumns` runs and
   the loop never starts.
-- SSR: the formatted string is server-rendered inside `.odometer__label`, which is visually
+- SSR: the formatted string is server-rendered inside `.zc-odometer__label`, which is visually
   hidden but present in the HTML; the digit columns are `aria-hidden` and are positioned by
   JS after hydration. The FAQ is worded to match that exactly.
 - React 19, compiled ESM with `'use client'` intact, no `transpilePackages`, zero runtime

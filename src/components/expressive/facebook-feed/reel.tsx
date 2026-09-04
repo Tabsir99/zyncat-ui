@@ -77,97 +77,101 @@ export function FacebookReel({
 
   return (
     <article
-      className={cx('facebook-feed-reel', wide ? 'facebook-feed-reel--wide' : 'facebook-feed-reel--narrow', className)}
+      className={cx(
+        'zc-facebook-feed-reel',
+        wide ? 'zc-facebook-feed-reel--wide' : 'zc-facebook-feed-reel--narrow',
+        className,
+      )}
       style={style}
       {...htmlProps}
     >
-      <div className="facebook-feed-media facebook-feed-reel__video">
-        <MediaSurface media={media} type={type} frontClassName="facebook-feed-media__front" />
+      <div className="zc-facebook-feed-media zc-facebook-feed-reel__video">
+        <MediaSurface media={media} type={type} frontClassName="zc-facebook-feed-media__front" />
       </div>
 
       <button
         type="button"
-        className="facebook-feed-reel__mute"
+        className="zc-facebook-feed-reel__mute"
         aria-label={MUTE_LABEL}
         aria-pressed={muted}
         onClick={() => onMutedChange(!muted)}
       >
         {muted ? (
-          <SpeakerOutlineOff className="facebook-feed-reel__mute-glyph" />
+          <SpeakerOutlineOff className="zc-facebook-feed-reel__mute-glyph" />
         ) : (
-          <SpeakerOutlineOn className="facebook-feed-reel__mute-glyph" />
+          <SpeakerOutlineOn className="zc-facebook-feed-reel__mute-glyph" />
         )}
       </button>
 
       {wide ? (
         <button
           type="button"
-          className="facebook-feed-button facebook-feed-reel__search"
+          className="zc-facebook-feed-button zc-facebook-feed-reel__search"
           aria-label={SEARCH_LABEL}
           onClick={() => onAction?.('search')}
         >
-          <Magnifier className="facebook-feed-reel__search-glyph" />
+          <Magnifier className="zc-facebook-feed-reel__search-glyph" />
         </button>
       ) : null}
 
-      <div className="facebook-feed-reel__rail">
-        <span className="facebook-feed-reel__stat">
+      <div className="zc-facebook-feed-reel__rail">
+        <span className="zc-facebook-feed-reel__stat">
           <button
             type="button"
-            className="facebook-feed-button"
+            className="zc-facebook-feed-button"
             aria-label={LIKE_LABEL}
             aria-pressed={liked}
             onClick={() => onLikedChange(!liked)}
           >
-            <ThumbOutline className="facebook-feed-reel__stat-glyph" />
+            <ThumbOutline className="zc-facebook-feed-reel__stat-glyph" />
           </button>
-          <span className="facebook-feed-reel__count">{compactCount(likes + (liked ? 1 : 0))}</span>
+          <span className="zc-facebook-feed-reel__count">{compactCount(likes + (liked ? 1 : 0))}</span>
         </span>
-        <span className="facebook-feed-reel__stat">
+        <span className="zc-facebook-feed-reel__stat">
           <button
             type="button"
-            className="facebook-feed-button"
+            className="zc-facebook-feed-button"
             aria-label={COMMENT_LABEL}
             onClick={() => onAction?.('comment')}
           >
-            <CommentOutline className="facebook-feed-reel__stat-glyph" />
+            <CommentOutline className="zc-facebook-feed-reel__stat-glyph" />
           </button>
-          <span className="facebook-feed-reel__count">{compactCount(comments)}</span>
+          <span className="zc-facebook-feed-reel__count">{compactCount(comments)}</span>
         </span>
-        <span className="facebook-feed-reel__stat">
+        <span className="zc-facebook-feed-reel__stat">
           <button
             type="button"
-            className="facebook-feed-button"
+            className="zc-facebook-feed-button"
             aria-label={SHARE_LABEL}
             onClick={() => onAction?.('share')}
           >
-            <ShareOutline className="facebook-feed-reel__stat-glyph" />
+            <ShareOutline className="zc-facebook-feed-reel__stat-glyph" />
           </button>
-          <span className="facebook-feed-reel__count">{compactCount(shares)}</span>
+          <span className="zc-facebook-feed-reel__count">{compactCount(shares)}</span>
         </span>
         <button
           type="button"
-          className="facebook-feed-button facebook-feed-reel__kebab"
+          className="zc-facebook-feed-button zc-facebook-feed-reel__kebab"
           aria-label={MENU_LABEL}
           onClick={() => onAction?.('menu')}
         >
           {KEBAB_PIPS.map((pip) => (
-            <span key={pip} className="facebook-feed-reel__pip" />
+            <span key={pip} className="zc-facebook-feed-reel__pip" />
           ))}
         </button>
       </div>
 
-      <div className="facebook-feed-reel__overlay">
-        <div className="facebook-feed-reel__byline">
-          <Portrait avatar={avatar} className="facebook-feed-reel__avatar" />
-          <span className="facebook-feed-reel__name">{name}</span>
-          {verified ? <VerifiedBadge className="facebook-feed-reel__badge" /> : null}
+      <div className="zc-facebook-feed-reel__overlay">
+        <div className="zc-facebook-feed-reel__byline">
+          <Portrait avatar={avatar} className="zc-facebook-feed-reel__avatar" />
+          <span className="zc-facebook-feed-reel__name">{name}</span>
+          {verified ? <VerifiedBadge className="zc-facebook-feed-reel__badge" /> : null}
           {follow ? (
-            <span className="facebook-feed-reel__follow">
-              <span className="facebook-feed-reel__follow-dot">{MIDDOT}</span>
+            <span className="zc-facebook-feed-reel__follow">
+              <span className="zc-facebook-feed-reel__follow-dot">{MIDDOT}</span>
               <button
                 type="button"
-                className="facebook-feed-button facebook-feed-reel__follow-label"
+                className="zc-facebook-feed-button zc-facebook-feed-reel__follow-label"
                 onClick={() => onAction?.('follow')}
               >
                 {FOLLOW_LABEL}
@@ -176,18 +180,18 @@ export function FacebookReel({
           ) : null}
         </div>
         {wide ? null : (
-          <div className="facebook-feed-reel__audio">
-            <span className="facebook-feed-reel__note" aria-hidden="true">
+          <div className="zc-facebook-feed-reel__audio">
+            <span className="zc-facebook-feed-reel__note" aria-hidden="true">
               {NOTE}
             </span>
-            <span className="facebook-feed-reel__audio-text">{`${name} ${MIDDOT} ${audio}`}</span>
+            <span className="zc-facebook-feed-reel__audio-text">{`${name} ${MIDDOT} ${audio}`}</span>
           </div>
         )}
-        <div className="facebook-feed-reel__caption">
-          <span className="facebook-feed-reel__caption-text">{caption}</span>
+        <div className="zc-facebook-feed-reel__caption">
+          <span className="zc-facebook-feed-reel__caption-text">{caption}</span>
           <button
             type="button"
-            className="facebook-feed-button facebook-feed-reel__more"
+            className="zc-facebook-feed-button zc-facebook-feed-reel__more"
             onClick={() => onAction?.('more')}
           >
             {MORE_LABEL}

@@ -258,7 +258,7 @@ dist/               compiled ESM + .d.ts - what you import
 - **Four ways to override, and you never fork the source.** Load your stylesheet after
   `@zyncat/ui/styles.css`, then take the lowest level that works. **0** - every shipped rule
   sits in `@layer zyncat.components`, and unlayered CSS beats every layer at any specificity,
-  so `.btn { border-radius: 0 }` just lands. **1** - repoint the tokens to retheme the system,
+  so `.zc-btn { border-radius: 0 }` just lands. **1** - repoint the tokens to retheme the system,
   in TypeScript with `defineTheme` (below) or on `:root` in your own CSS; the motion engine
   reads the same values, so animation retimes with them.
   **2** - retune one expressive or compound component through its `--<component>-*` properties.

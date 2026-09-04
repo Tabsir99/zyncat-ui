@@ -96,7 +96,7 @@ export function Tag({
   htmlProps,
   ref,
 }: TagProps) {
-  const cls = cx('tag', size === 'sm' && 'tag--sm', className);
+  const cls = cx('zc-tag', size === 'sm' && 'zc-tag--sm', className);
   const xLabel = removeLabel || (typeof children === 'string' ? 'Remove ' + children : 'Remove');
   const group = useContext(TagGroupContext);
 
@@ -114,13 +114,13 @@ export function Tag({
       {...htmlProps}
     >
       {icon && (
-        <span className="tag__icon">
+        <span className="zc-tag__icon">
           <IconSlot size="sm">{icon}</IconSlot>
         </span>
       )}
-      <span className="tag__label">{children}</span>
+      <span className="zc-tag__label">{children}</span>
       {onRemove && (
-        <button type="button" className="tag__remove" aria-label={xLabel} disabled={disabled} onClick={onRemove}>
+        <button type="button" className="zc-tag__remove" aria-label={xLabel} disabled={disabled} onClick={onRemove}>
           <TagRemoveGlyph />
         </button>
       )}
@@ -139,7 +139,7 @@ export function TagGroup({ ariaLabel, className = '', style, children, htmlProps
   };
 
   return (
-    <div className={cx('tag-group', className)} style={style} role="group" aria-label={ariaLabel} {...htmlProps}>
+    <div className={cx('zc-tag-group', className)} style={style} role="group" aria-label={ariaLabel} {...htmlProps}>
       <TagGroupContext.Provider value={motion}>
         <Presence initial={false}>{children}</Presence>
       </TagGroupContext.Provider>

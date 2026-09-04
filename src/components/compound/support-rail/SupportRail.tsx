@@ -118,60 +118,60 @@ function SupportRailBody({
       ref={bodyRef}
       animate={contentFadeIn()}
       exit={contentFadeOut()}
-      className="support-rail__body"
+      className="zc-support-rail__body"
       id={panelId}
       role="dialog"
       aria-modal="false"
       aria-labelledby={titleId}
       tabIndex={-1}
     >
-      <span className="support-rail__grabber" aria-hidden="true" onPointerDown={onGrab}>
-        <span className="support-rail__grabber-pill" />
+      <span className="zc-support-rail__grabber" aria-hidden="true" onPointerDown={onGrab}>
+        <span className="zc-support-rail__grabber-pill" />
       </span>
 
-      <div className="support-rail__stack">
-        <div className="support-rail__header">
-          <div className="support-rail__heading">
-            <div className="support-rail__title" id={titleId}>
+      <div className="zc-support-rail__stack">
+        <div className="zc-support-rail__header">
+          <div className="zc-support-rail__heading">
+            <div className="zc-support-rail__title" id={titleId}>
               {title}
             </div>
-            {status && <div className="support-rail__status">{status}</div>}
+            {status && <div className="zc-support-rail__status">{status}</div>}
           </div>
-          <button type="button" className="support-rail__close" aria-label="Close" onClick={requestClose}>
+          <button type="button" className="zc-support-rail__close" aria-label="Close" onClick={requestClose}>
             <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.3">
               <path d="M1 1l7 7M8 1l-7 7" />
             </svg>
           </button>
         </div>
 
-        <ul className="support-rail__list">
+        <ul className="zc-support-rail__list">
           {actions.map((action, index) => (
             <li key={action.id}>
               <button
                 type="button"
-                className="support-rail__row"
+                className="zc-support-rail__row"
                 style={indexStyle(index)}
                 onClick={() => commit(action)}
               >
-                <span className="support-rail__row-icon" aria-hidden="true">
+                <span className="zc-support-rail__row-icon" aria-hidden="true">
                   {action.icon}
                 </span>
-                <span className="support-rail__row-text">
-                  <span className="support-rail__row-label">{action.label}</span>
-                  {action.description && <span className="support-rail__row-note">{action.description}</span>}
+                <span className="zc-support-rail__row-text">
+                  <span className="zc-support-rail__row-label">{action.label}</span>
+                  {action.description && <span className="zc-support-rail__row-note">{action.description}</span>}
                 </span>
-                {action.meta && <span className="support-rail__row-meta">{action.meta}</span>}
+                {action.meta && <span className="zc-support-rail__row-meta">{action.meta}</span>}
               </button>
             </li>
           ))}
         </ul>
 
-        <div className="support-rail__extra" style={indexStyle(actions.length)}>
+        <div className="zc-support-rail__extra" style={indexStyle(actions.length)}>
           {children}
         </div>
 
         {footer && (
-          <div className="support-rail__footer" style={indexStyle(actions.length + 1)}>
+          <div className="zc-support-rail__footer" style={indexStyle(actions.length + 1)}>
             {footer}
           </div>
         )}
@@ -296,7 +296,7 @@ export function SupportRail({
   return (
     <div
       ref={rootRef}
-      className={cx('support-rail', className)}
+      className={cx('zc-support-rail', className)}
       style={style}
       data-side={side}
       data-open={open}
@@ -305,18 +305,18 @@ export function SupportRail({
       <button
         type="button"
         ref={needleRef as RefObject<HTMLButtonElement>}
-        className="support-rail__needle"
+        className="zc-support-rail__needle"
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? panelId : undefined}
         onClick={() => setOpen(!open)}
       >
-        {live && <span className="support-rail__live" aria-hidden="true" />}
-        <span className="support-rail__needle-label">{needleLabel}</span>
-        <span className="support-rail__needle-rule" aria-hidden="true" />
+        {live && <span className="zc-support-rail__live" aria-hidden="true" />}
+        <span className="zc-support-rail__needle-label">{needleLabel}</span>
+        <span className="zc-support-rail__needle-rule" aria-hidden="true" />
       </button>
 
-      <div ref={panelRef as RefObject<HTMLDivElement>} className="support-rail__panel">
+      <div ref={panelRef as RefObject<HTMLDivElement>} className="zc-support-rail__panel">
         <Presence>
           {open && (
             <SupportRailBody

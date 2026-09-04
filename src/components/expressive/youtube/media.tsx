@@ -12,7 +12,7 @@ function isEmpty(source: YouTubeMedia): boolean {
 }
 
 export function Media({ source, className }: { source?: YouTubeMedia; className?: string }): ReactElement {
-  if (typeof source === 'string') return <img className={cx('youtube__media', className)} src={source} alt="" />;
-  if (!isEmpty(source)) return <div className={cx('youtube__media', className)}>{source}</div>;
-  return <div className={cx('youtube__media', 'youtube__placeholder', className)} />;
+  if (typeof source === 'string') return <img className={cx('zc-youtube__media', className)} src={source} alt="" />;
+  if (!isEmpty(source)) return <div className={cx('zc-youtube__media', className)}>{source}</div>;
+  return <div className={cx('zc-youtube__media', 'zc-youtube__placeholder', className)} />;
 }

@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .typing-lines {
+  .zc-typing-lines {
     /* Letter ink. */
     --typing-lines-ink: var(--text-strong);
     /* The caret. */
@@ -28,7 +28,7 @@
     text-wrap: pretty;
   }
 
-  .typing-lines__label {
+  .zc-typing-lines__label {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -37,36 +37,36 @@
     white-space: nowrap;
   }
 
-  .typing-lines__caret {
+  .zc-typing-lines__caret {
     display: inline-block;
     margin-left: var(--typing-lines-caret-gap);
     background: var(--typing-lines-caret-ink);
     vertical-align: -0.16em;
   }
 
-  .typing-lines__caret--line {
+  .zc-typing-lines__caret--line {
     width: 2px;
     height: 1.1em;
   }
 
-  .typing-lines__caret--block {
+  .zc-typing-lines__caret--block {
     width: 0.52em;
     height: 1.05em;
     border-radius: 1px;
     vertical-align: -0.14em;
   }
 
-  .typing-lines__caret--underscore {
+  .zc-typing-lines__caret--underscore {
     width: 0.55em;
     height: 2px;
     vertical-align: -0.08em;
   }
 
-  .typing-lines__caret--blinking {
+  .zc-typing-lines__caret--blinking {
     animation: typing-lines-blink var(--typing-lines-blink) step-end infinite;
   }
 
-  .typing-lines__word {
+  .zc-typing-lines__word {
     display: inline-block;
     animation: typing-lines-word var(--duration-base) var(--ease-entrance) both;
   }
@@ -92,7 +92,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .typing-lines__caret--blinking {
+    .zc-typing-lines__caret--blinking {
       animation: none;
     }
   }

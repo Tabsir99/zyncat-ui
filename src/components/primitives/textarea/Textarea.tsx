@@ -95,7 +95,7 @@ export function Textarea({
   const count = text.length;
   const over = max ? Math.max(count - max, 0) : 0;
   const remaining = max ? max - count : 0;
-  const meterState = over ? 'is-over' : max && remaining <= warnAt ? 'is-near' : '';
+  const meterState = over ? 'zc-is-over' : max && remaining <= warnAt ? 'zc-is-near' : '';
 
   const { state, msg, msgIcon } = resolveFieldMessage(error, warning, success, helper);
   const autoId = useId();
@@ -140,22 +140,22 @@ export function Textarea({
     onKeyDown?.(e);
   };
 
-  const cls = cx('fld', 'fld--txa', size === 'lg' && 'fld--lg', state, className);
-  const boxCls = cx('txa', disabled && 'is-disabled', readOnly && 'is-readonly');
+  const cls = cx('zc-fld', 'zc-fld--txa', size === 'lg' && 'zc-fld--lg', state, className);
+  const boxCls = cx('zc-txa', disabled && 'zc-is-disabled', readOnly && 'zc-is-readonly');
 
   return (
     <div className={cls} style={style}>
       <FieldLabel id={id} label={label} required={required} optional={optional} />
       <div className={boxCls} style={{ '--txa-min-rows': minRows, '--txa-max-rows': maxRows } as CSSProperties}>
-        <div className="txa__stack" ref={stackRef}>
-          <div className="txa__mirror" ref={mirrorRef} aria-hidden="true">
+        <div className="zc-txa__stack" ref={stackRef}>
+          <div className="zc-txa__mirror" ref={mirrorRef} aria-hidden="true">
             {over ? text.slice(0, max) : text}
             {over ? <mark>{text.slice(max)}</mark> : null}
             {'\n'}
           </div>
           <textarea
             id={id}
-            className="txa__input"
+            className="zc-txa__input"
             ref={taRef}
             rows={minRows}
             value={text}
@@ -174,19 +174,19 @@ export function Textarea({
           />
         </div>
         {(max || hint) && (
-          <div className="txa__bar">
-            {hint && <span className="txa__hint">{hint}</span>}
+          <div className="zc-txa__bar">
+            {hint && <span className="zc-txa__hint">{hint}</span>}
             {max && (
-              <span className={cx('txa__meter', meterState)}>
-                <span className="txa__count">{over || remaining <= warnAt ? remaining : `${count} / ${max}`}</span>
+              <span className={cx('zc-txa__meter', meterState)}>
+                <span className="zc-txa__count">{over || remaining <= warnAt ? remaining : `${count} / ${max}`}</span>
                 <svg
-                  className="txa__ring"
+                  className="zc-txa__ring"
                   viewBox="0 0 16 16"
                   aria-hidden="true"
                   style={{ '--txa-ring-c': RING_C, '--txa-ring-p': Math.min(count / max, 1) } as CSSProperties}
                 >
-                  <circle className="txa__ring-trk" cx="8" cy="8" r="7" />
-                  <circle className="txa__ring-prg" cx="8" cy="8" r="7" />
+                  <circle className="zc-txa__ring-trk" cx="8" cy="8" r="7" />
+                  <circle className="zc-txa__ring-prg" cx="8" cy="8" r="7" />
                 </svg>
               </span>
             )}

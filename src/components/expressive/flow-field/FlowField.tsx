@@ -339,10 +339,10 @@ export function FlowField({
   }, [spacing]);
 
   return (
-    <div ref={rootRef} className={cx('flow-field', className)} style={style} {...htmlProps}>
-      <canvas ref={canvasRef} className="flow-field__canvas" aria-hidden="true" />
-      <span ref={probeRef} className="flow-field__probe" aria-hidden="true" />
-      {children ? <div className="flow-field__content">{children}</div> : null}
+    <div ref={rootRef} className={cx('zc-flow-field', className)} style={style} {...htmlProps}>
+      <canvas ref={canvasRef} className="zc-flow-field__canvas" aria-hidden="true" />
+      <span ref={probeRef} className="zc-flow-field__probe" aria-hidden="true" />
+      {children ? <div className="zc-flow-field__content">{children}</div> : null}
     </div>
   );
 }

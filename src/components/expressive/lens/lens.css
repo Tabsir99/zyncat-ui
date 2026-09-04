@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .lens {
+  .zc-lens {
     /* The ink of the glass's edge, vignette and shadow. */
     --lens-ink: var(--text-strong);
     /* The surface behind the glass. */
@@ -26,27 +26,27 @@
     touch-action: none;
   }
 
-  .lens:focus-visible {
+  .zc-lens:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
 
-  .lens--active {
+  .zc-lens--active {
     cursor: none;
   }
 
-  .lens__content {
+  .zc-lens__content {
     position: relative;
   }
 
-  .lens__copy {
+  .zc-lens__copy {
     position: absolute;
     margin: 0;
     max-width: none;
     will-change: scale;
   }
 
-  .lens__glass {
+  .zc-lens__glass {
     position: absolute;
     left: 0;
     top: 0;
@@ -56,22 +56,22 @@
     will-change: translate, opacity;
   }
 
-  .lens__core,
-  .lens__rim,
-  .lens__fringe,
-  .lens__vignette,
-  .lens__ring {
+  .zc-lens__core,
+  .zc-lens__rim,
+  .zc-lens__fringe,
+  .zc-lens__vignette,
+  .zc-lens__ring {
     position: absolute;
     inset: 0;
     border-radius: var(--radius-full);
   }
 
-  .lens__core {
+  .zc-lens__core {
     overflow: hidden;
     background: var(--lens-surface);
   }
 
-  .lens__rim {
+  .zc-lens__rim {
     overflow: hidden;
     mask-image: radial-gradient(
       circle at 50% 50%,
@@ -81,7 +81,7 @@
     );
   }
 
-  .lens__fringe {
+  .zc-lens__fringe {
     opacity: 0;
     mix-blend-mode: multiply;
     background: radial-gradient(
@@ -93,7 +93,7 @@
     );
   }
 
-  .lens__vignette {
+  .zc-lens__vignette {
     background: radial-gradient(
       circle at 50% 50%,
       transparent 58%,
@@ -102,7 +102,7 @@
     );
   }
 
-  .lens__specular {
+  .zc-lens__specular {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -112,7 +112,7 @@
     background: radial-gradient(closest-side, var(--_lens-highlight), transparent);
   }
 
-  .lens__ring {
+  .zc-lens__ring {
     box-shadow:
       0 calc(var(--_lens-lift) * 1px) calc(var(--_lens-blur) * 1px) calc(var(--_lens-blur) * -0.42px)
         color-mix(in oklab, var(--lens-ink) calc(var(--_lens-shadow-alpha) * 100%), transparent),

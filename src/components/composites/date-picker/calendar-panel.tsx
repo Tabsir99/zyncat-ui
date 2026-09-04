@@ -126,16 +126,16 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
   for (let w = 0; w < 6; w++) weeks.push(days.slice(w * 7, w * 7 + 7));
 
   return (
-    <div className="dtp" role="dialog" aria-label={label || 'Pick a date'}>
-      <div className="dtp__cal">
-        <div className="dtp__head">
-          <span className="dtp__month" aria-live="polite">
-            {MONTHS[view.m]} <span className="dtp__year">{view.y}</span>
+    <div className="zc-dtp" role="dialog" aria-label={label || 'Pick a date'}>
+      <div className="zc-dtp__cal">
+        <div className="zc-dtp__head">
+          <span className="zc-dtp__month" aria-live="polite">
+            {MONTHS[view.m]} <span className="zc-dtp__year">{view.y}</span>
           </span>
-          <div className="dtp__navs">
+          <div className="zc-dtp__navs">
             <button
               type="button"
-              className="dtp__nav"
+              className="zc-dtp__nav"
               aria-label="Previous month"
               disabled={!canPrev}
               {...activationProps<HTMLButtonElement>(() => nav(-1), { on: activateOn })}
@@ -144,7 +144,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
             </button>
             <button
               type="button"
-              className="dtp__nav"
+              className="zc-dtp__nav"
               aria-label="Go to today"
               disabled={viewIsCurrent}
               {...activationProps<HTMLButtonElement>(goToToday, { on: activateOn })}
@@ -153,7 +153,7 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
             </button>
             <button
               type="button"
-              className="dtp__nav"
+              className="zc-dtp__nav"
               aria-label="Next month"
               disabled={!canNext}
               {...activationProps<HTMLButtonElement>(() => nav(1), { on: activateOn })}
@@ -162,13 +162,13 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
             </button>
           </div>
         </div>
-        <div className="dtp__dow" aria-hidden="true">
+        <div className="zc-dtp__dow" aria-hidden="true">
           {DOW.map((d) => (
             <span key={d}>{d}</span>
           ))}
         </div>
         <div
-          className="dtp__days"
+          className="zc-dtp__days"
           ref={daysRef}
           role="grid"
           aria-label="Calendar"
@@ -176,12 +176,17 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
           onPointerLeave={glide.leave}
         >
           {weeks.map((week, wi) => (
-            <div key={wi} role="row" className="dtp__row">
+            <div key={wi} role="row" className="zc-dtp__row">
               {week.map((d) => {
                 const key = toKey(d);
                 const out = d.getMonth() !== view.m;
                 const sel = key === selKey;
-                const cls = cx('dtp__day', out && 'is-out', sel && 'is-selected', key === todayKey && 'is-today');
+                const cls = cx(
+                  'zc-dtp__day',
+                  out && 'zc-is-out',
+                  sel && 'zc-is-selected',
+                  key === todayKey && 'zc-is-today',
+                );
                 return (
                   <button
                     key={key}
@@ -201,26 +206,26 @@ export function DtpPanel({ val, commit, min, max, timezone, label, close, slot, 
                         as="span"
                         layoutId={pillId}
                         layoutTransition={PILL_FLIP}
-                        className="dtp__pill"
+                        className="zc-dtp__pill"
                         aria-hidden="true"
                       />
                     ) : null}
-                    <span className="dtp__num">{d.getDate()}</span>
-                    {key === todayKey ? <span className="dtp__dot" aria-hidden="true"></span> : null}
+                    <span className="zc-dtp__num">{d.getDate()}</span>
+                    {key === todayKey ? <span className="zc-dtp__dot" aria-hidden="true"></span> : null}
                   </button>
                 );
               })}
             </div>
           ))}
-          <GlidePill className="dtp__hover" glide={glide} />
+          <GlidePill className="zc-dtp__hover" glide={glide} />
         </div>
       </div>
 
       {slot || null}
 
-      <div className="dtp__foot">
-        {timezone ? <span className="dtp__tz">{tzLabel(timezone, selKey)}</span> : null}
-        <span className="dtp__footSpacer"></span>
+      <div className="zc-dtp__foot">
+        {timezone ? <span className="zc-dtp__tz">{tzLabel(timezone, selKey)}</span> : null}
+        <span className="zc-dtp__footSpacer"></span>
         <Button variant="primary" size="sm" onClick={close}>
           Done
         </Button>

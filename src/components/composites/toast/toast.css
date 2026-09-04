@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .toast-viewport {
+  .zc-toast-viewport {
     position: fixed;
     width: min(22.5rem, calc(100vw - 2 * var(--toast-offset, var(--space-6))));
     z-index: var(--layer-toast);
@@ -11,24 +11,24 @@
     pointer-events: none;
   }
 
-  .toast-viewport[data-position^='top'] {
+  .zc-toast-viewport[data-position^='top'] {
     top: var(--toast-offset, var(--space-6));
   }
-  .toast-viewport[data-position^='bottom'] {
+  .zc-toast-viewport[data-position^='bottom'] {
     bottom: var(--toast-offset, var(--space-6));
   }
-  .toast-viewport[data-position$='right'] {
+  .zc-toast-viewport[data-position$='right'] {
     right: var(--toast-offset, var(--space-6));
   }
-  .toast-viewport[data-position$='left'] {
+  .zc-toast-viewport[data-position$='left'] {
     left: var(--toast-offset, var(--space-6));
   }
-  .toast-viewport[data-position$='center'] {
+  .zc-toast-viewport[data-position$='center'] {
     left: 50%;
     transform: translateX(-50%);
   }
 
-  .toast {
+  .zc-toast {
     --toast-hue: var(--text-subtle);
     --glass-fg: var(--text-strong);
     --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
@@ -47,46 +47,46 @@
       box-shadow var(--duration-base) var(--ease-standard);
   }
 
-  .toast-viewport[data-position^='bottom'] .toast {
+  .zc-toast-viewport[data-position^='bottom'] .zc-toast {
     bottom: 0;
     transform-origin: center bottom;
   }
-  .toast-viewport[data-position^='top'] .toast {
+  .zc-toast-viewport[data-position^='top'] .zc-toast {
     top: 0;
     transform-origin: center top;
   }
 
-  .toast[data-tone='success'] {
+  .zc-toast[data-tone='success'] {
     --toast-hue: var(--success);
     --glass-fg: var(--success-text);
     --glass-tint: color-mix(in oklab, var(--glass-tint-success) 70%, transparent);
   }
-  .toast[data-tone='danger'] {
+  .zc-toast[data-tone='danger'] {
     --toast-hue: var(--danger);
     --glass-fg: var(--danger-text);
     --glass-tint: color-mix(in oklab, var(--glass-tint-danger) 70%, transparent);
   }
-  .toast[data-tone='warning'] {
+  .zc-toast[data-tone='warning'] {
     --toast-hue: var(--warning);
     --glass-fg: var(--warning-text);
     --glass-tint: color-mix(in oklab, var(--glass-tint-warning) 70%, transparent);
   }
-  .toast[data-tone='info'] {
+  .zc-toast[data-tone='info'] {
     --toast-hue: var(--info);
     --glass-fg: var(--info-text);
     --glass-tint: color-mix(in oklab, var(--glass-tint-info) 70%, transparent);
   }
 
-  .toast[data-behind] {
+  .zc-toast[data-behind] {
     --glass-tint: color-mix(in oklab, var(--glass-tint-neutral) 75%, transparent);
     --glass-sheen-rest: 0.3;
   }
-  .toast[data-behind] .toast__inner,
-  .toast[data-behind] .toast__custom {
+  .zc-toast[data-behind] .zc-toast__inner,
+  .zc-toast[data-behind] .zc-toast__custom {
     opacity: 0;
   }
 
-  .toast__inner {
+  .zc-toast__inner {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -94,7 +94,7 @@
     transition: var(--transition-opacity);
   }
 
-  .toast__icon {
+  .zc-toast__icon {
     position: relative;
     flex: none;
     display: grid;
@@ -103,12 +103,12 @@
     height: calc(var(--icon-md) + 2 * var(--space-2));
     color: var(--toast-hue);
   }
-  .toast__icon-glyph {
+  .zc-toast__icon-glyph {
     display: grid;
     place-items: center;
   }
 
-  .toast__ring {
+  .zc-toast__ring {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -116,14 +116,14 @@
     transform: rotate(-90deg);
     pointer-events: none;
   }
-  .toast__ring circle {
+  .zc-toast__ring circle {
     fill: none;
     stroke-width: var(--border-emphasis);
   }
-  .toast__ring-track {
+  .zc-toast__ring-track {
     stroke: color-mix(in oklab, var(--toast-hue) 16%, transparent);
   }
-  .toast__ring-arc {
+  .zc-toast__ring-arc {
     stroke: var(--toast-hue);
     stroke-linecap: round;
     stroke-dasharray: 1; /* the circle sets pathLength=1 */
@@ -131,7 +131,7 @@
     animation-timing-function: linear;
     animation-fill-mode: both;
   }
-  .toast-viewport.is-paused .toast__ring-arc {
+  .zc-toast-viewport.zc-is-paused .zc-toast__ring-arc {
     animation-play-state: paused;
   }
   @keyframes toast-ring {
@@ -143,24 +143,24 @@
     }
   }
 
-  .toast__text {
+  .zc-toast__text {
     flex: 1 1 auto;
     min-width: 0;
   }
-  .toast__message {
+  .zc-toast__message {
     margin: 0;
     font: var(--type-label);
     color: var(--glass-fg);
     text-wrap: pretty;
   }
-  .toast__desc {
+  .zc-toast__desc {
     margin: var(--space-1) 0 0;
     font: var(--type-caption);
     color: color-mix(in oklab, var(--glass-fg) 76%, transparent);
     text-wrap: pretty;
   }
 
-  .toast__count {
+  .zc-toast__count {
     flex: none;
     font-family: var(--font-code);
     font-size: var(--size-micro);
@@ -172,11 +172,11 @@
     padding: 0 var(--space-1);
   }
 
-  .toast__action {
+  .zc-toast__action {
     flex: none;
   }
 
-  .toast__close {
+  .zc-toast__close {
     flex: none;
     appearance: none;
     display: grid;
@@ -195,24 +195,24 @@
       var(--transition-control),
       opacity var(--duration-fast) var(--ease-standard);
   }
-  .toast:hover .toast__close,
-  .toast:focus-within .toast__close {
+  .zc-toast:hover .zc-toast__close,
+  .zc-toast:focus-within .zc-toast__close {
     opacity: 1;
   }
-  .toast__close:hover {
+  .zc-toast__close:hover {
     background: color-mix(in oklab, var(--glass-fg) 9%, transparent);
     color: var(--glass-fg);
   }
-  .toast__close:active {
+  .zc-toast__close:active {
     background: color-mix(in oklab, var(--glass-fg) 14%, transparent);
   }
-  .toast__close:focus-visible {
+  .zc-toast__close:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
     opacity: 1;
   }
 
-  .toast__spinner {
+  .zc-toast__spinner {
     display: block;
     box-sizing: border-box;
     width: var(--icon-sm);
@@ -229,17 +229,17 @@
     }
   }
 
-  .toast__custom {
+  .zc-toast__custom {
     padding: var(--space-3) var(--space-4);
     transition: var(--transition-opacity);
   }
 
   @media (prefers-reduced-motion: reduce) {
     /* the ring keeps running: it is a clock, not decoration */
-    .toast,
-    .toast__close,
-    .toast__inner,
-    .toast__custom {
+    .zc-toast,
+    .zc-toast__close,
+    .zc-toast__inner,
+    .zc-toast__custom {
       transition: none;
     }
   }

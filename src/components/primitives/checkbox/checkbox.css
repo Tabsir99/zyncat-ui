@@ -1,7 +1,7 @@
 @layer zyncat.tokens, zyncat.components;
 
 @layer zyncat.components {
-  .cbx {
+  .zc-cbx {
     --cbx-fill: linear-gradient(180deg, var(--accent-fill), var(--accent-hover));
     --cbx-on: var(--accent-fill);
     --cbx-off: var(--border-strong);
@@ -33,21 +33,21 @@
       --cbx-dash: 1;
     }
 
-    &:not(.cbx--disabled):hover {
+    &:not(.zc-cbx--disabled):hover {
       background: var(--neutral-wash);
     }
-    &:not(.cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
+    &:not(.zc-cbx--disabled):hover:not(:has(:checked, :indeterminate)) {
       --cbx-off: var(--cbx-on);
     }
-    &:not(.cbx--disabled):active {
+    &:not(.zc-cbx--disabled):active {
       --cbx-press: 0.88;
     }
-    &:has(:focus-visible) .cbx__box {
+    &:has(:focus-visible) .zc-cbx__box {
       box-shadow: var(--cbx-ring);
     }
   }
 
-  .cbx__input {
+  .zc-cbx__input {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -60,7 +60,7 @@
     overflow: hidden;
   }
 
-  .cbx__box {
+  .zc-cbx__box {
     position: relative;
     flex: none;
     display: grid;
@@ -94,7 +94,7 @@
     }
   }
 
-  .cbx__mark {
+  .zc-cbx__mark {
     position: relative;
     display: block;
     width: 100%;
@@ -102,7 +102,7 @@
     color: var(--text-on-accent);
     pointer-events: none;
   }
-  .cbx__tick {
+  .zc-cbx__tick {
     fill: none;
     stroke: currentColor;
     stroke-width: 2;
@@ -113,7 +113,7 @@
     transition: stroke-dashoffset var(--duration-base) var(--ease-entrance) calc(var(--cbx-tick) * var(--duration-fast));
   }
 
-  .cbx__dash {
+  .zc-cbx__dash {
     position: absolute;
     width: 56%;
     height: 2px;
@@ -127,48 +127,48 @@
       opacity var(--duration-fast) var(--ease-standard);
   }
 
-  .cbx__text {
+  .zc-cbx__text {
     display: grid;
     gap: var(--space-1);
   }
-  .cbx__label {
+  .zc-cbx__label {
     font: var(--type-label);
     color: var(--text-strong);
   }
-  .cbx__desc {
+  .zc-cbx__desc {
     font: var(--type-caption);
     color: var(--text-muted);
   }
 
-  .cbx--sm {
+  .zc-cbx--sm {
     --cbx-size: var(--space-4);
-    & .cbx__label {
+    & .zc-cbx__label {
       font: var(--type-caption);
       font-weight: var(--weight-medium);
       color: var(--text-strong);
     }
-    & .cbx__box {
+    & .zc-cbx__box {
       margin-top: calc((var(--leading-caption) - var(--cbx-size)) / 2);
     }
   }
 
-  .cbx--error {
+  .zc-cbx--error {
     --cbx-fill: linear-gradient(180deg, var(--danger), var(--danger));
     --cbx-on: var(--danger);
     --cbx-off: var(--danger);
     --cbx-ring: var(--ring-danger);
   }
 
-  .cbx--disabled {
+  .zc-cbx--disabled {
     cursor: not-allowed;
     --cbx-fill: var(--border-strong);
     --cbx-on: var(--border-default);
     --cbx-off: var(--border-subtle);
-    & .cbx__box {
+    & .zc-cbx__box {
       background: var(--bg-muted);
     }
-    & .cbx__label,
-    & .cbx__desc {
+    & .zc-cbx__label,
+    & .zc-cbx__desc {
       color: var(--text-disabled);
     }
   }

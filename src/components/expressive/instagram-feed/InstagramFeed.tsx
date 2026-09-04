@@ -219,66 +219,66 @@ export function InstagramFeed({
   return (
     <article
       {...htmlProps}
-      className={cx('instagram-feed', className)}
+      className={cx('zc-instagram-feed', className)}
       style={style}
       aria-labelledby={handleId}
       data-type={type}
       data-width={width}
       data-ratio={ratio}
     >
-      <div className="instagram-feed__frame">
-        <div className="instagram-feed__header">
-          <span className="instagram-feed__ring">
-            <span className="instagram-feed__avatar">{slotted(avatar)}</span>
+      <div className="zc-instagram-feed__frame">
+        <div className="zc-instagram-feed__header">
+          <span className="zc-instagram-feed__ring">
+            <span className="zc-instagram-feed__avatar">{slotted(avatar)}</span>
           </span>
-          <div className="instagram-feed__identity">
-            <div className="instagram-feed__line">
-              <span className="instagram-feed__handle" id={handleId}>
+          <div className="zc-instagram-feed__identity">
+            <div className="zc-instagram-feed__line">
+              <span className="zc-instagram-feed__handle" id={handleId}>
                 {handle}
               </span>
               {stamp ? (
                 <>
-                  <span className="instagram-feed__sep" aria-hidden="true">
+                  <span className="zc-instagram-feed__sep" aria-hidden="true">
                     {SEPARATOR}
                   </span>
-                  <span className="instagram-feed__stamp">{stamp}</span>
+                  <span className="zc-instagram-feed__stamp">{stamp}</span>
                 </>
               ) : null}
             </div>
-            {isVideo ? <div className="instagram-feed__audio">{audio}</div> : null}
+            {isVideo ? <div className="zc-instagram-feed__audio">{audio}</div> : null}
           </div>
           {width === 'web' ? (
-            <button type="button" className="instagram-feed__follow" onClick={() => onAction?.('follow')}>
+            <button type="button" className="zc-instagram-feed__follow" onClick={() => onAction?.('follow')}>
               Follow
             </button>
           ) : null}
           <button
             type="button"
-            className="instagram-feed__menu"
+            className="zc-instagram-feed__menu"
             aria-label="More options"
             onClick={() => onAction?.('menu')}
           >
-            <span className="instagram-feed__pip" />
-            <span className="instagram-feed__pip" />
-            <span className="instagram-feed__pip" />
+            <span className="zc-instagram-feed__pip" />
+            <span className="zc-instagram-feed__pip" />
+            <span className="zc-instagram-feed__pip" />
           </button>
         </div>
-        <div className="instagram-feed__media" onDoubleClick={burstLike}>
-          <span className="instagram-feed__slot">{slotted(media)}</span>
-          <span ref={burstRef} className="instagram-feed__burst" aria-hidden="true">
-            <svg className="instagram-feed__burst-glyph" viewBox="0 0 24 24">
+        <div className="zc-instagram-feed__media" onDoubleClick={burstLike}>
+          <span className="zc-instagram-feed__slot">{slotted(media)}</span>
+          <span ref={burstRef} className="zc-instagram-feed__burst" aria-hidden="true">
+            <svg className="zc-instagram-feed__burst-glyph" viewBox="0 0 24 24">
               {paths(HEART)}
             </svg>
           </span>
           {isVideo ? (
             <button
               type="button"
-              className="instagram-feed__mute"
+              className="zc-instagram-feed__mute"
               aria-pressed={isMuted}
               aria-label="Mute"
               onClick={() => setMuted(!isMuted)}
             >
-              <svg className="instagram-feed__mute-glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="zc-instagram-feed__mute-glyph" viewBox="0 0 24 24" aria-hidden="true">
                 {paths(isMuted ? SPEAKER_MUTED : SPEAKER_LOUD)}
               </svg>
             </button>
@@ -286,56 +286,60 @@ export function InstagramFeed({
         </div>
       </div>
 
-      <div className="instagram-feed__actions">
-        <div className="instagram-feed__group">
-          <span className="instagram-feed__action">
+      <div className="zc-instagram-feed__actions">
+        <div className="zc-instagram-feed__group">
+          <span className="zc-instagram-feed__action">
             <button
               ref={likeRef}
               type="button"
-              className="instagram-feed__glyph-button"
+              className="zc-instagram-feed__glyph-button"
               aria-pressed={isLiked}
               aria-label="Like"
               onClick={toggleLike}
             >
-              <svg className="instagram-feed__glyph instagram-feed__glyph--like" viewBox="0 0 24 24" aria-hidden="true">
+              <svg
+                className="zc-instagram-feed__glyph zc-instagram-feed__glyph--like"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
                 {paths(HEART)}
               </svg>
             </button>
-            <span className="instagram-feed__count">{compact(likes + (isLiked ? 1 : 0))}</span>
+            <span className="zc-instagram-feed__count">{compact(likes + (isLiked ? 1 : 0))}</span>
           </span>
-          <span className="instagram-feed__action">
+          <span className="zc-instagram-feed__action">
             <button
               type="button"
-              className="instagram-feed__glyph-button"
+              className="zc-instagram-feed__glyph-button"
               aria-label="Comment"
               onClick={() => onAction?.('comment')}
             >
-              <svg className="instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="zc-instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
                 {paths(SPEECH)}
               </svg>
             </button>
-            <span className="instagram-feed__count">{compact(comments)}</span>
+            <span className="zc-instagram-feed__count">{compact(comments)}</span>
           </span>
-          <span className="instagram-feed__action">
+          <span className="zc-instagram-feed__action">
             <button
               type="button"
-              className="instagram-feed__glyph-button"
+              className="zc-instagram-feed__glyph-button"
               aria-label="Repost"
               onClick={() => onAction?.('repost')}
             >
-              <svg className="instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="zc-instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
                 {paths(REPOST)}
               </svg>
             </button>
-            <span className="instagram-feed__count">{compact(reposts)}</span>
+            <span className="zc-instagram-feed__count">{compact(reposts)}</span>
           </span>
           <button
             type="button"
-            className="instagram-feed__glyph-button"
+            className="zc-instagram-feed__glyph-button"
             aria-label="Share"
             onClick={() => onAction?.('send')}
           >
-            <svg className="instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="zc-instagram-feed__glyph" viewBox="0 0 24 24" aria-hidden="true">
               {paths(PAPER_PLANE)}
             </svg>
           </button>
@@ -343,30 +347,34 @@ export function InstagramFeed({
         <button
           ref={saveRef}
           type="button"
-          className="instagram-feed__glyph-button"
+          className="zc-instagram-feed__glyph-button"
           aria-pressed={isSaved}
           aria-label="Save"
           onClick={toggleSave}
         >
-          <svg className="instagram-feed__glyph instagram-feed__glyph--save" viewBox="0 0 24 24" aria-hidden="true">
+          <svg
+            className="zc-instagram-feed__glyph zc-instagram-feed__glyph--save"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             {paths(BOOKMARK)}
           </svg>
         </button>
       </div>
 
       {caption ? (
-        <p className="instagram-feed__caption">
-          <span className="instagram-feed__author">{handle}</span>{' '}
+        <p className="zc-instagram-feed__caption">
+          <span className="zc-instagram-feed__author">{handle}</span>{' '}
           {segments.map((segment) =>
             segment.link ? (
-              <span key={segment.key} className="instagram-feed__link">
+              <span key={segment.key} className="zc-instagram-feed__link">
                 {segment.text}
               </span>
             ) : (
               <span key={segment.key}>{segment.text}</span>
             ),
           )}
-          {clipped.clipped ? <span className="instagram-feed__more">{ELLIPSIS_MORE}</span> : null}
+          {clipped.clipped ? <span className="zc-instagram-feed__more">{ELLIPSIS_MORE}</span> : null}
         </p>
       ) : null}
     </article>

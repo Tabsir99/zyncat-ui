@@ -25,7 +25,7 @@ function Category({ store, categoryKey, railId, glide, activateOn }: CategoryPro
   return (
     <button
       type="button"
-      className={isActive ? 'on-emoji-cat on-emoji-cat--active' : 'on-emoji-cat'}
+      className={isActive ? 'zc-on-emoji-cat zc-on-emoji-cat--active' : 'zc-on-emoji-cat'}
       aria-label={categoryKey.replace(/-/g, ' ')}
       aria-current={isActive ? true : undefined}
       onPointerEnter={(e) => glide.enter(e.currentTarget)}
@@ -43,7 +43,7 @@ function Category({ store, categoryKey, railId, glide, activateOn }: CategoryPro
           as="span"
           layoutId={railId}
           layoutTransition={railGlide()}
-          className="on-emoji-cat-rail"
+          className="zc-on-emoji-cat-rail"
           aria-hidden="true"
         />
       )}
@@ -62,13 +62,13 @@ export function CategoryBar({ store, activateOn }: { store: EmojiPickerStore; ac
   return (
     <div
       ref={barRef}
-      className="on-emoji-bar"
+      className="zc-on-emoji-bar"
       onPointerLeave={glide.leave}
       onMouseDown={(e) => e.preventDefault()}
       role="group"
       aria-label="Emoji categories"
     >
-      <GlidePill className="on-emoji-bar-marker" glide={glide} />
+      <GlidePill className="zc-on-emoji-bar-marker" glide={glide} />
       {categories.map((key) => (
         <Category key={key} store={store} categoryKey={key} railId={railId} glide={glide} activateOn={activateOn} />
       ))}

@@ -214,31 +214,31 @@ export function Table<Row = any>({
 
   function cellMods(col: TableColumn<Row>, i: number) {
     const a: string[] = [];
-    if (col.align === 'end') a.push('tbl__cell--end');
-    if (col.align === 'center') a.push('tbl__cell--center');
-    if (col.grow) a.push('tbl__cell--grow');
-    if (col.hideBelow) a.push('tbl__cell--hide-' + col.hideBelow);
+    if (col.align === 'end') a.push('zc-tbl__cell--end');
+    if (col.align === 'center') a.push('zc-tbl__cell--center');
+    if (col.grow) a.push('zc-tbl__cell--grow');
+    if (col.hideBelow) a.push('zc-tbl__cell--hide-' + col.hideBelow);
     if (pinFirst && i === 0) {
-      a.push('tbl__cell--pin', 'tbl__cell--pinEdge');
-      if (selectable) a.push('tbl__cell--pinOff');
+      a.push('zc-tbl__cell--pin', 'zc-tbl__cell--pinEdge');
+      if (selectable) a.push('zc-tbl__cell--pinOff');
     }
     return a;
   }
 
   const colCount = columns.length + (selectable ? 1 : 0);
   const showEmpty = !loading && sortedRows.length === 0;
-  const checkCellCls = 'tbl__cell--check' + (pinFirst ? ' tbl__cell--pin' : '');
+  const checkCellCls = 'zc-tbl__cell--check' + (pinFirst ? ' zc-tbl__cell--pin' : '');
 
   const checkSize = density === 'compact' ? 'sm' : 'md';
   const bulkOpen = selectable && selected.size > 0;
   if (selected.size > 0) lastCountRef.current = selected.size;
 
   const rootCls = cx(
-    'tbl',
-    density === 'compact' && 'tbl--compact',
-    pinFirst && 'tbl--pin',
-    loading && 'tbl--loading',
-    onRowClick && 'tbl--clickable',
+    'zc-tbl',
+    density === 'compact' && 'zc-tbl--compact',
+    pinFirst && 'zc-tbl--pin',
+    loading && 'zc-tbl--loading',
+    onRowClick && 'zc-tbl--clickable',
     className,
   );
 
@@ -246,25 +246,25 @@ export function Table<Row = any>({
     <div ref={wrapRef} className={rootCls} {...htmlProps}>
       {selectable ? (
         <div
-          className="tbl__bulk"
+          className="zc-tbl__bulk"
           data-open={bulkOpen ? '' : undefined}
           aria-hidden={bulkOpen ? undefined : true}
           role="toolbar"
           aria-label="Selection actions"
         >
           <Checkbox
-            className="tbl__cbx"
+            className="zc-tbl__cbx"
             size={checkSize}
             checked={allSelected}
             indeterminate={someSelected}
             htmlProps={{ 'aria-label': 'Select all rows' }}
             onChange={toggleAll}
           />
-          <span className="tbl__bulkCount" aria-live="polite" aria-atomic="true">
+          <span className="zc-tbl__bulkCount" aria-live="polite" aria-atomic="true">
             <DigitStrip value={bulkOpen ? selected.size : lastCountRef.current} />
             <span> selected</span>
           </span>
-          <span className="tbl__bulkSpacer"></span>
+          <span className="zc-tbl__bulkSpacer"></span>
           {bulkActions ? bulkActions(Array.from(selected), clearSelection) : null}
           <Button variant="ghost" size="sm" onClick={clearSelection}>
             Clear
@@ -272,15 +272,15 @@ export function Table<Row = any>({
         </div>
       ) : null}
 
-      <div className="tbl__viewport">
-        <div className="tbl__scroll" ref={scrollRef}>
-          <table className="tbl__table" aria-label={ariaLabel} aria-busy={loading || undefined}>
+      <div className="zc-tbl__viewport">
+        <div className="zc-tbl__scroll" ref={scrollRef}>
+          <table className="zc-tbl__table" aria-label={ariaLabel} aria-busy={loading || undefined}>
             <thead>
               <tr>
                 {selectable ? (
                   <th scope="col" className={checkCellCls}>
                     <Checkbox
-                      className="tbl__cbx"
+                      className="zc-tbl__cbx"
                       size={checkSize}
                       checked={allSelected}
                       indeterminate={someSelected}
@@ -291,7 +291,7 @@ export function Table<Row = any>({
                 ) : null}
                 {columns.map((c, i) => {
                   const active = sort && sort.key === c.key;
-                  const cls = (c.sortable ? ['tbl__cell--sortable'] : []).concat(cellMods(c, i));
+                  const cls = (c.sortable ? ['zc-tbl__cell--sortable'] : []).concat(cellMods(c, i));
                   return (
                     <th
                       key={c.key}
@@ -302,15 +302,15 @@ export function Table<Row = any>({
                       {c.sortable ? (
                         <button
                           type="button"
-                          className="tbl__sort"
+                          className="zc-tbl__sort"
                           {...activationProps<HTMLButtonElement>(() => cycleSort(c), { on: activateOn })}
                         >
-                          <span className="tbl__sortLbl">{c.label}</span>
+                          <span className="zc-tbl__sortLbl">{c.label}</span>
                           <span
                             className={
-                              'tbl__sortIcon' +
-                              (active ? ' is-on' : '') +
-                              (active && sort.dir === 'desc' ? ' is-desc' : '')
+                              'zc-tbl__sortIcon' +
+                              (active ? ' zc-is-on' : '') +
+                              (active && sort.dir === 'desc' ? ' zc-is-desc' : '')
                             }
                             aria-hidden="true"
                           >
@@ -318,7 +318,7 @@ export function Table<Row = any>({
                           </span>
                         </button>
                       ) : c.label != null ? (
-                        <span className="tbl__hLbl">{c.label}</span>
+                        <span className="zc-tbl__hLbl">{c.label}</span>
                       ) : null}
                     </th>
                   );
@@ -328,7 +328,7 @@ export function Table<Row = any>({
             <tbody>
               {showEmpty ? (
                 <tr>
-                  <td colSpan={colCount} className="tbl__emptyCell">
+                  <td colSpan={colCount} className="zc-tbl__emptyCell">
                     {empty != null ? empty : 'Nothing to show'}
                   </td>
                 </tr>
@@ -342,14 +342,14 @@ export function Table<Row = any>({
                       key={k}
                       layout
                       layoutTransition={ROW_FLIP}
-                      className="tbl__row"
+                      className="zc-tbl__row"
                       data-selected={isSel ? '' : undefined}
                       onClick={onRowClick ? () => onRowClick(row) : undefined}
                     >
                       {selectable ? (
                         <td className={checkCellCls} onClick={(e) => e.stopPropagation()}>
                           <Checkbox
-                            className="tbl__cbx"
+                            className="zc-tbl__cbx"
                             size={checkSize}
                             checked={isSel}
                             htmlProps={{
@@ -366,8 +366,8 @@ export function Table<Row = any>({
                         <td
                           key={c.key}
                           className={cellMods(c, i)
-                            .concat(c.mono ? ['tbl__cell--mono'] : [])
-                            .concat(c.strong ? ['tbl__cell--strong'] : [])
+                            .concat(c.mono ? ['zc-tbl__cell--mono'] : [])
+                            .concat(c.strong ? ['zc-tbl__cell--strong'] : [])
                             .join(' ')}
                         >
                           {c.render ? c.render(row) : (row as Record<string, ReactNode>)[c.key]}
@@ -380,11 +380,11 @@ export function Table<Row = any>({
             </tbody>
           </table>
         </div>
-        <div className="tbl__edge tbl__edge--l" aria-hidden="true"></div>
-        <div className="tbl__edge tbl__edge--r" aria-hidden="true"></div>
+        <div className="zc-tbl__edge zc-tbl__edge--l" aria-hidden="true"></div>
+        <div className="zc-tbl__edge zc-tbl__edge--r" aria-hidden="true"></div>
       </div>
 
-      {footer ? <div className="tbl__foot">{footer}</div> : null}
+      {footer ? <div className="zc-tbl__foot">{footer}</div> : null}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 @layer zyncat.components {
   /* Bespoke px: the dot sizes sit off the token ramp on purpose. */
-  .rg {
+  .zc-rg {
     --radio-group-dot: 18px;
     --radio-group-dot-inner: 8px;
 
@@ -12,12 +12,12 @@
     padding: 0;
     min-width: 0;
   }
-  .rg--sm {
+  .zc-rg--sm {
     --radio-group-dot: 16px;
     --radio-group-dot-inner: 7px;
   }
 
-  .rg__label {
+  .zc-rg__label {
     font: var(--type-caption);
     font-weight: var(--weight-medium);
     color: var(--text-body);
@@ -27,49 +27,49 @@
     line-height: 1;
     padding: 0;
   }
-  .rg__req {
+  .zc-rg__req {
     color: var(--danger);
   }
-  .rg__optional {
+  .zc-rg__optional {
     color: var(--text-subtle);
     font-weight: var(--weight-regular);
   }
-  .rg__helper {
+  .zc-rg__helper {
     font: var(--type-caption);
     color: var(--text-muted);
     margin-top: var(--space-1);
     max-width: var(--measure-prose);
   }
 
-  .rg__options {
+  .zc-rg__options {
     position: relative;
     isolation: isolate;
     display: grid;
     gap: var(--space-1);
   }
-  .rg__label + .rg__options,
-  .rg__helper + .rg__options {
+  .zc-rg__label + .zc-rg__options,
+  .zc-rg__helper + .zc-rg__options {
     margin-top: var(--space-4);
   }
-  .rg--horizontal .rg__options {
+  .zc-rg--horizontal .zc-rg__options {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2) var(--space-5);
   }
-  .rg--cards .rg__options {
+  .zc-rg--cards .zc-rg__options {
     gap: var(--space-3);
   }
-  .rg--cards.rg--horizontal .rg__options {
+  .zc-rg--cards.zc-rg--horizontal .zc-rg__options {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
   }
-  .rg--cards.rg--horizontal .rg-opt {
+  .zc-rg--cards.zc-rg--horizontal .zc-rg-opt {
     flex: 1 1 0;
     min-width: 12rem;
   }
 
-  .rg-opt {
+  .zc-rg-opt {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -80,7 +80,7 @@
     transition: var(--transition-colors);
     -webkit-tap-highlight-color: transparent;
   }
-  .rg__hover {
+  .zc-rg__hover {
     opacity: 0;
     position: absolute;
     top: 0;
@@ -90,13 +90,13 @@
     background: var(--neutral-wash);
     pointer-events: none;
   }
-  .rg-opt__control,
-  .rg-opt__body {
+  .zc-rg-opt__control,
+  .zc-rg-opt__body {
     position: relative;
     z-index: 1;
   }
 
-  .rg-opt__input {
+  .zc-rg-opt__input {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -106,17 +106,17 @@
     pointer-events: none;
   }
 
-  .rg-opt__control {
+  .zc-rg-opt__control {
     flex: none;
     height: var(--leading-body);
     display: grid;
     place-items: center;
   }
-  .rg--sm .rg-opt__control {
+  .zc-rg--sm .zc-rg-opt__control {
     height: var(--leading-caption);
   }
 
-  .rg-opt__dot {
+  .zc-rg-opt__dot {
     position: relative;
     width: var(--radio-group-dot);
     height: var(--radio-group-dot);
@@ -127,7 +127,7 @@
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
   }
-  .rg__marker {
+  .zc-rg__marker {
     position: absolute;
     inset: 0;
     margin: auto;
@@ -139,63 +139,63 @@
     will-change: transform;
   }
 
-  .rg-opt__body {
+  .zc-rg-opt__body {
     display: grid;
     gap: var(--space-px);
     padding-top: 0;
   }
-  .rg-opt__label {
+  .zc-rg-opt__label {
     font: var(--type-body);
     color: var(--text-strong);
   }
-  .rg--sm .rg-opt__label {
+  .zc-rg--sm .zc-rg-opt__label {
     font: var(--type-caption);
     font-weight: var(--weight-medium);
   }
-  .rg-opt__desc {
+  .zc-rg-opt__desc {
     font: var(--type-caption);
     color: var(--text-muted);
     text-wrap: pretty;
   }
 
-  .rg-opt:hover:not(.is-disabled):not(.is-selected) .rg-opt__dot {
+  .zc-rg-opt:hover:not(.zc-is-disabled):not(.zc-is-selected) .zc-rg-opt__dot {
     border-color: var(--text-muted);
   }
-  .rg-opt:active:not(.is-disabled) .rg-opt__dot {
+  .zc-rg-opt:active:not(.zc-is-disabled) .zc-rg-opt__dot {
     transform: scale(0.92);
   }
 
   /* A React class, not :checked - Chromium does not reliably restyle :has() on a radio's implicit sibling uncheck. */
-  .rg-opt.is-selected .rg-opt__dot {
+  .zc-rg-opt.zc-is-selected .zc-rg-opt__dot {
     border-color: var(--accent);
   }
 
-  .rg-opt__input:focus-visible ~ .rg-opt__control .rg-opt__dot {
+  .zc-rg-opt__input:focus-visible ~ .zc-rg-opt__control .zc-rg-opt__dot {
     border-color: var(--accent);
     box-shadow: var(--ring-accent);
   }
 
-  .rg-opt.is-disabled {
+  .zc-rg-opt.zc-is-disabled {
     cursor: not-allowed;
   }
-  .rg-opt.is-disabled .rg-opt__label {
+  .zc-rg-opt.zc-is-disabled .zc-rg-opt__label {
     color: var(--text-disabled);
   }
-  .rg-opt.is-disabled .rg-opt__desc {
+  .zc-rg-opt.zc-is-disabled .zc-rg-opt__desc {
     color: var(--text-disabled);
   }
-  .rg-opt.is-disabled .rg-opt__dot {
+  .zc-rg-opt.zc-is-disabled .zc-rg-opt__dot {
     background: var(--bg-muted);
     border-color: var(--border-default);
   }
-  .rg-opt.is-disabled.is-selected .rg-opt__dot {
+  .zc-rg-opt.zc-is-disabled.zc-is-selected .zc-rg-opt__dot {
     border-color: var(--border-strong);
   }
-  .rg-opt.is-disabled.is-selected .rg__marker {
+  .zc-rg-opt.zc-is-disabled.zc-is-selected .zc-rg__marker {
     background: var(--text-disabled);
   }
 
-  .rg--cards .rg-opt {
+  .zc-rg--cards .zc-rg-opt {
     position: relative;
     align-items: center;
     padding: var(--space-4);
@@ -207,26 +207,26 @@
       var(--transition-control),
       transform var(--duration-fast) var(--ease-standard);
   }
-  .rg--cards .rg-opt:active:not(.is-disabled) {
+  .zc-rg--cards .zc-rg-opt:active:not(.zc-is-disabled) {
     transform: translateY(var(--space-px));
     box-shadow: var(--shadow-xs);
   }
 
-  .rg--cards .rg-opt__control {
+  .zc-rg--cards .zc-rg-opt__control {
     order: 3;
     margin-left: auto;
   }
-  .rg-opt__icon {
+  .zc-rg-opt__icon {
     flex: none;
     display: inline-flex;
     color: var(--text-muted);
     transition: color var(--duration-fast) var(--ease-standard);
   }
-  .rg-opt__icon svg {
+  .zc-rg-opt__icon svg {
     display: block;
   }
 
-  .rg__card-fill {
+  .zc-rg__card-fill {
     position: absolute;
 
     inset: calc(-1 * var(--border-hairline));
@@ -237,33 +237,33 @@
     pointer-events: none;
   }
 
-  .rg--cards .rg-opt:hover:not(.is-disabled):not(.is-selected) {
+  .zc-rg--cards .zc-rg-opt:hover:not(.zc-is-disabled):not(.zc-is-selected) {
     border-color: var(--border-strong);
     background: var(--neutral-wash);
   }
-  .rg--cards .rg-opt > .rg-opt__icon,
-  .rg--cards .rg-opt > .rg-opt__control,
-  .rg--cards .rg-opt > .rg-opt__body {
+  .zc-rg--cards .zc-rg-opt > .zc-rg-opt__icon,
+  .zc-rg--cards .zc-rg-opt > .zc-rg-opt__control,
+  .zc-rg--cards .zc-rg-opt > .zc-rg-opt__body {
     position: relative;
     z-index: 2;
   }
-  .rg--cards .rg-opt.is-selected .rg-opt__icon {
+  .zc-rg--cards .zc-rg-opt.zc-is-selected .zc-rg-opt__icon {
     color: var(--text-accent);
   }
-  .rg--cards .rg-opt:has(.rg-opt__input:focus-visible) {
+  .zc-rg--cards .zc-rg-opt:has(.zc-rg-opt__input:focus-visible) {
     box-shadow: var(--ring-accent);
   }
 
-  .rg--cards .rg-opt.is-disabled {
+  .zc-rg--cards .zc-rg-opt.zc-is-disabled {
     background: var(--bg-subtle);
     border-color: var(--border-subtle);
     box-shadow: none;
   }
-  .rg--cards .rg-opt.is-disabled .rg-opt__icon {
+  .zc-rg--cards .zc-rg-opt.zc-is-disabled .zc-rg-opt__icon {
     color: var(--text-disabled);
   }
 
-  .rg__msg {
+  .zc-rg__msg {
     font: var(--type-caption);
     color: var(--danger-text);
     display: flex;
@@ -272,15 +272,15 @@
     min-height: 1em;
     padding-top: var(--space-3);
   }
-  .rg__msg i,
-  .rg__msg svg {
+  .zc-rg__msg i,
+  .zc-rg__msg svg {
     flex: none;
   }
 
-  .rg.is-error .rg-opt:not(.is-selected) .rg-opt__dot {
+  .zc-rg.zc-is-error .zc-rg-opt:not(.zc-is-selected) .zc-rg-opt__dot {
     border-color: var(--danger);
   }
-  .rg.is-error.rg--cards .rg-opt:not(.is-selected) {
+  .zc-rg.zc-is-error.zc-rg--cards .zc-rg-opt:not(.zc-is-selected) {
     border-color: var(--danger);
   }
 }
