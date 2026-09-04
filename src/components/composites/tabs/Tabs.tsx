@@ -55,6 +55,8 @@ interface TabsOwnProps {
   ariaLabel?: string;
   /** Whether a tab switches on `pointerdown` (snappier) or waits for `click`. @default 'pointerdown' */
   activateOn?: ActivateOn;
+  /** Skin: an underline that reaches across (default), or a segmented pill riding an inset track. */
+  variant?: 'underline' | 'pill';
   /** Extra class(es) merged onto the root. */
   className?: string;
   /** Inline styles merged onto the root. */
@@ -76,12 +78,14 @@ export function Tabs({
   name,
   ariaLabel,
   activateOn = 'pointerdown',
+  variant = 'underline',
   className = '',
   style,
   htmlProps,
 }: TabsProps) {
   const autoId = useId();
   const base = name || autoId;
+  const pill = variant === 'pill';
 
   const listRef = useRef<HTMLDivElement>(null);
   const inkRef = useRef<HTMLSpanElement>(null);
@@ -185,16 +189,16 @@ export function Tabs({
     : (items.find((i) => !i.disabled) || ({} as Partial<TabItem>)).value;
 
   return (
-    <div className={cx('tabs', className)} style={style} {...htmlProps}>
+    <div className={cx('tabs', pill && 'tabs--pill', className)} style={style} {...htmlProps}>
       <div
         className="tabs__list"
         role="tablist"
         aria-label={ariaLabel}
         ref={listRef}
         onKeyDown={onKeyDown}
-        onPointerLeave={glide.leave}
+        onPointerLeave={pill ? undefined : glide.leave}
       >
-        <GlidePill className="tab__hover" glide={glide} />
+        {!pill && <GlidePill className="tab__hover" glide={glide} />}
         {items.map((it) => {
           const selected = it.value === value;
           return (
@@ -213,7 +217,7 @@ export function Tabs({
               }}
               {...activationProps<HTMLButtonElement>(() => select(it.value), { on: activateOn })}
               onPointerEnter={
-                it.disabled ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
+                it.disabled || pill ? undefined : (e) => glide.enter(e.currentTarget.firstElementChild as HTMLElement)
               }
             >
               <span className="tab__pad">

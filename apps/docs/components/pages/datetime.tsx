@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { DateField } from '@zyncat/ui/date-field';
 import { DateRangeField } from '@zyncat/ui/date-range-field';
 import { DateTimeField, type DateTimeFieldProps } from '@zyncat/ui/datetime-field';
-import { TabPanel, Tabs } from '@zyncat/ui/tabs';
+import { TabPanel, Tabs, type TabsProps } from '@zyncat/ui/tabs';
 import { TimeField } from '@zyncat/ui/time-field';
 
 import { KnobSegment, Playground } from '../playground';
@@ -102,26 +102,49 @@ const TAB_COPY: Record<string, string> = {
   settings: 'Workspace defaults: UTC schedule display, auto-retry on failed publishes, weekly digest on.',
 };
 
-export function TabsHero() {
+type TabsVariant = NonNullable<TabsProps['variant']>;
+
+export function TabsPlayground() {
+  const [variant, setVariant] = useState<TabsVariant>('underline');
   const [active, setActive] = useState('overview');
   const [dir, setDir] = useState<1 | -1 | 0>(0);
+
+  const code = `<Tabs
+  items={items}
+  value={active}
+  variant="${variant}"
+  onChange={(next, d) => { setActive(next); setDir(d); }}
+  name="views"
+  ariaLabel="Workspace sections"
+/>
+<TabPanel name="views" tab={active} dir={dir}>
+  {panels[active]}
+</TabPanel>`;
+
   return (
-    <div style={{ width: '100%', maxWidth: 440, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-      <Tabs
-        items={TAB_ITEMS}
-        value={active}
-        onChange={(v, d) => {
-          setActive(v);
-          setDir(d);
-        }}
-        name="tabs-hero"
-        ariaLabel="Workspace sections"
-      />
-      <TabPanel name="tabs-hero" tab={active} dir={dir}>
-        <p style={{ margin: 0, font: 'var(--type-body)', color: 'var(--text-muted)', minHeight: 'var(--space-8)' }}>
-          {TAB_COPY[active]}
-        </p>
-      </TabPanel>
-    </div>
+    <Playground
+      code={code}
+      note="The ink reaches then releases either way - an underline that spans the tab, or a pill riding an inset track."
+      rail={<KnobSegment label="variant" value={variant} onChange={setVariant} options={['underline', 'pill']} />}
+    >
+      <div style={{ width: '100%', maxWidth: 440, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+        <Tabs
+          items={TAB_ITEMS}
+          value={active}
+          variant={variant}
+          onChange={(v, d) => {
+            setActive(v);
+            setDir(d);
+          }}
+          name="tabs-playground"
+          ariaLabel="Workspace sections"
+        />
+        <TabPanel name="tabs-playground" tab={active} dir={dir}>
+          <p style={{ margin: 0, font: 'var(--type-body)', color: 'var(--text-muted)', minHeight: 'var(--space-8)' }}>
+            {TAB_COPY[active]}
+          </p>
+        </TabPanel>
+      </div>
+    </Playground>
   );
 }

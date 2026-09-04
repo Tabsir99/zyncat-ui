@@ -1864,6 +1864,11 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       default: "'pointerdown'",
       description: 'Whether a tab switches on `pointerdown` (snappier) or waits for `click`.',
     },
+    {
+      name: 'variant',
+      type: "'underline' | 'pill'",
+      description: 'Skin: an underline that reaches across (default), or a segmented pill riding an inset track.',
+    },
     { name: 'className', type: 'string', description: 'Extra class(es) merged onto the root.' },
     { name: 'style', type: 'CSSProperties', description: 'Inline styles merged onto the root.' },
   ],

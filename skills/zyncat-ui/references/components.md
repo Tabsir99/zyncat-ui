@@ -41,7 +41,7 @@ DateField - @zyncat/ui/date-field - Month calendar in a popover; value 'YYYY-MM-
 DateTimeField - @zyncat/ui/datetime-field - Calendar + segmented HH:MM; value 'YYYY-MM-DDTHH:mm'.
 DateRangeField - @zyncat/ui/date-range-field - Two-tap auto-ordering window; value DateRange { start, end } | null; commits when both ends exist.
 TimeField - @zyncat/ui/time-field - Standalone segmented time; value 'HH:mm'; bounds saturate.
-Tabs / TabPanel - @zyncat/ui/tabs - Line tabs; the ink reaches then releases; panels enter from the side you moved toward.
+Tabs / TabPanel - @zyncat/ui/tabs - Underline tabs or a segmented pill; the ink reaches then releases; panels enter from the side you moved toward.
 
 == Overlays & feedback ==
 Dropdown - @zyncat/ui/dropdown - Menu button - a list of ACTIONS the trigger commits, with submenus.

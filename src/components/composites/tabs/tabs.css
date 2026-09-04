@@ -4,6 +4,8 @@
   .tabs {
     /* 2px, not --border-emphasis: 1.5px renders as sub-pixel fuzz on 1x screens. */
     --tabs-ink-h: 2px;
+    /* The pill variant's segment radius. The track rounds one pad wider, staying concentric. */
+    --tabs-pill-radius: var(--radius-md);
     position: relative;
   }
   .tabs::after {
@@ -85,7 +87,6 @@
     color: var(--text-body);
   }
   .tab:active:not(:disabled) .tab__pad {
-    background: var(--neutral-wash-press);
     transform: translateY(var(--space-px));
   }
   .tab.is-selected .tab__pad,
@@ -143,6 +144,48 @@
     background: var(--accent);
     pointer-events: none;
     will-change: transform, width;
+  }
+
+  .tabs--pill {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    padding: var(--space-1);
+    border-radius: calc(var(--tabs-pill-radius) + var(--space-1));
+    background: var(--bg-inset);
+  }
+  .tabs--pill::after {
+    content: none;
+  }
+
+  .tabs--pill .tabs__list {
+    min-width: 0;
+    margin: calc(var(--space-1) * -1);
+    padding: var(--space-1);
+    border-radius: calc(var(--tabs-pill-radius) + var(--space-1));
+  }
+
+  .tabs--pill .tab {
+    padding: 0;
+  }
+  .tabs--pill .tab__pad {
+    z-index: 1;
+    border-radius: var(--tabs-pill-radius);
+  }
+  .tabs--pill .tab:active:not(:disabled) .tab__pad {
+    transform: none;
+  }
+  .tabs--pill .tab__count {
+    background: var(--bg-subtle);
+  }
+
+  .tabs--pill .tabs__ink {
+    top: var(--space-1);
+    bottom: auto;
+    height: var(--control-height-sm);
+    border-radius: var(--tabs-pill-radius);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-xs);
   }
 
   .tab-panel {

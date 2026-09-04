@@ -403,8 +403,8 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'tabs',
         label: 'Tabs',
-        blurb: 'Line tabs - the ink reaches then releases; panels enter from the side you moved toward.',
-        HeroComponent: T.TabsHero,
+        blurb: 'Underline or segmented pill - ink reaches then releases; panels enter from the side you moved toward.',
+        Playground: T.TabsPlayground,
         heroCode: `import { Tabs, TabPanel } from '@zyncat/ui/tabs';\n\n<Tabs\n  items={items}\n  value={active}\n  onChange={(next, d) => { setActive(next); setDir(d); }}\n  name="views"\n  ariaLabel="Workspace sections"\n/>\n<TabPanel name="views" tab={active} dir={dir}>\n  {panels[active]}\n</TabPanel>`,
       },
     ],

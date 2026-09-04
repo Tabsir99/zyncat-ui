@@ -62,13 +62,14 @@ const items = [
 
 <Tabs
   name="batch"
-  label="Batch status"
+  ariaLabel="Batch status"
+  variant="pill"
   items={items}
   value={view}
   onChange={(v, d) => { setView(v); setDir(d); }}
 />
 <TabPanel name="batch" tab={view} dir={dir}>
-  {/* active panel content */}
+  {panels[view]}
 </TabPanel>`,
   },
 };
