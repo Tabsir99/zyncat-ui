@@ -23,7 +23,6 @@ export interface TimeSegmentsProps {
   max?: string | null;
   disabled?: boolean;
   ariaLabel?: string;
-  className?: string;
 }
 
 export const disp12 = (h24: number): number => ((h24 + 11) % 12) + 1;
@@ -46,7 +45,6 @@ export function TimeSegments({
   max = null,
   disabled = false,
   ariaLabel = 'Time',
-  className = '',
 }: TimeSegmentsProps) {
   const is12 = format === '12h';
   const seed = value ? value.split(':').map(Number) : [null, null];
@@ -235,7 +233,7 @@ export function TimeSegments({
 
   return (
     <div
-      className={cx('tsg', disabled && 'is-disabled', className)}
+      className={cx('tsg', disabled && 'is-disabled')}
       role="group"
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}

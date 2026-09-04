@@ -17,7 +17,7 @@ interface AvatarOwnProps {
   src?: string | null;
   /** Display name - drives initials generation, palette hash, and aria-label. */
   name?: string | null;
-  /** Content override - any React node (e.g. <Icon name="globe" />). */
+  /** Content override - any React node (e.g. <Icon name="check-circle" />). */
   icon?: ReactNode | null;
   /** 'circle' for people; 'square' for channels / brand pages. Default 'circle'. */
   shape?: AvatarShape;

@@ -10,16 +10,6 @@
   inherits: false;
   initial-value: transparent;
 }
-@property --btn-wash-a {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: transparent;
-}
-@property --btn-wash-b {
-  syntax: '<color>';
-  inherits: false;
-  initial-value: transparent;
-}
 
 @layer zyncat.components {
   .btn {
@@ -177,9 +167,7 @@
     transform: scale(0.75);
     transition:
       transform var(--duration-fast) var(--ease-standard),
-      opacity var(--duration-fast) var(--ease-standard),
-      --btn-wash-a var(--duration-fast) var(--ease-standard),
-      --btn-wash-b var(--duration-fast) var(--ease-standard);
+      opacity var(--duration-fast) var(--ease-standard);
   }
   .btn--ghost:hover:not(:disabled):not(.is-loading) {
     color: var(--text-strong);

@@ -31,7 +31,7 @@ export const teal = { 200: '#a4e5e7', 300: '#6dcfd1', 400: '#28b5b9', 500: '#009
 export const accent = fg(teal[400]);
 export const accentDeep = fg(teal[500]);
 export const accentBright = fg(teal[300]);
-export const { dim, bold, red, yellow } = pc;
+export const { dim, bold, red } = pc;
 
 export function gradientText(text: string, from: string, to: string): string {
   if (!truecolor) return pc.isColorSupported ? pc.cyan(text) : text;

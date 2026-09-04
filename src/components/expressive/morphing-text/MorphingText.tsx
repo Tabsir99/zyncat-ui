@@ -50,7 +50,6 @@ const letterProgress = (progress: number, lead: number, stagger: number, span: n
   clampUnit((progress - (lead + stagger * (count > 1 ? index / (count - 1) : 0))) / span);
 
 interface Parts {
-  root: HTMLElement;
   stage: HTMLElement;
   outgoing: HTMLElement;
   incoming: HTMLElement;
@@ -222,7 +221,7 @@ export function MorphingText({
     const threshold = thresholdRef.current;
     if (!root || !stage || !outgoing || !incoming || !rule || !label || !threshold) return;
 
-    const parts: Parts = { root, stage, outgoing, incoming, rule, label, threshold, filterId };
+    const parts: Parts = { stage, outgoing, incoming, rule, label, threshold, filterId };
     const cycle: Cycle = {
       index: 0,
       elapsed: 0,

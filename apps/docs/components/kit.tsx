@@ -1,110 +1,13 @@
 'use client';
 
-import { useId, useState, type ComponentType, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 
 import { Alert, type AlertTone } from '@zyncat/ui/alert';
 import { Button } from '@zyncat/ui/button';
 import { TabPanel, Tabs } from '@zyncat/ui/tabs';
-import { Tooltip } from '@zyncat/ui/tooltip';
 
 import { Icon } from './icon';
-
-export interface ExampleCardProps {
-  Component?: ComponentType;
-  children?: ReactNode;
-  code?: string;
-  fill?: boolean;
-}
-
-export function ExampleCard({ Component, children, code, fill }: ExampleCardProps) {
-  const name = useId();
-  const [tab, setTab] = useState('preview');
-  const [dir, setDir] = useState<1 | -1 | 0>(0);
-  const [replayKey, setReplayKey] = useState(0);
-
-  const items = [{ value: 'preview', label: 'Preview' }];
-  if (code) items.push({ value: 'code', label: 'Code' });
-
-  return (
-    <div className="example-card">
-      <div className="example-card__header">
-        <Tabs
-          items={items}
-          value={tab}
-          onChange={(v, d) => {
-            setTab(v);
-            setDir(d);
-          }}
-          name={name}
-          ariaLabel="Example view"
-          className="plate-tabs"
-        />
-        <Tooltip content="Replay the demo" placement="bottom">
-          <Button variant="ghost" size="icon" onClick={() => setReplayKey((k) => k + 1)} aria-label="Restart animation">
-            <Icon name="arrow-counter-clockwise" size="sm" />
-          </Button>
-        </Tooltip>
-      </div>
-
-      <TabPanel name={name} tab={tab} dir={dir}>
-        {tab === 'preview' ? (
-          <div
-            className={fill ? 'example-card__canvas example-card__canvas--fill' : 'example-card__canvas'}
-            key={replayKey}
-          >
-            <div className="example-card__inner">{Component ? <Component /> : children}</div>
-          </div>
-        ) : code ? (
-          <div className="example-card__code">
-            <CodeBlock code={code} language="tsx" />
-          </div>
-        ) : null}
-      </TabPanel>
-    </div>
-  );
-}
-
-export function Demo({
-  label,
-  description,
-  fill,
-  code,
-  children,
-}: {
-  label?: string;
-  description?: string;
-  fill?: boolean;
-  code?: string;
-  children: ReactNode;
-}) {
-  const id = label
-    ? label
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    : undefined;
-
-  const body = (
-    <>
-      {description ? <p className="example-block__desc">{description}</p> : null}
-      <ExampleCard code={code} fill={fill}>
-        {children}
-      </ExampleCard>
-    </>
-  );
-
-  if (!label || !id) return <div className="example-block">{body}</div>;
-
-  return (
-    <section className="example-block" id={`example-${id}`} aria-labelledby={`example-${id}-heading`}>
-      <h3 className="example-block__title" id={`example-${id}-heading`}>
-        {label}
-      </h3>
-      {body}
-    </section>
-  );
-}
 
 function tokenizeLine(line: string): ReactNode {
   if (!line.trim()) {
@@ -385,8 +288,7 @@ export function FeatureCard({
   title,
   description,
 }: {
-  icon:
-    'package' | 'rocket' | 'browsers' | 'cpu' | 'shield-check' | 'lightning' | 'gear' | 'terminal' | 'code' | 'sparkle';
+  icon: 'package' | 'rocket' | 'browsers' | 'cpu' | 'shield-check' | 'lightning' | 'terminal' | 'code' | 'sparkle';
   title: string;
   description: string;
 }) {

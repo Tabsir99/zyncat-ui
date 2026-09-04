@@ -1431,7 +1431,7 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
     {
       name: 'icon',
       type: 'ReactNode | null',
-      description: 'Content override - any React node (e.g. <Icon name="globe" />).',
+      description: 'Content override - any React node (e.g. <Icon name="check-circle" />).',
     },
     {
       name: 'shape',

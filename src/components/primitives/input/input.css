@@ -127,9 +127,6 @@
     cursor: pointer;
     transition: var(--transition-control);
   }
-  .fld__action i {
-    font-size: var(--icon-sm);
-  }
   .fld__action:hover {
     color: var(--text-strong);
     background: var(--bg-muted);
@@ -220,9 +217,6 @@
     cursor: pointer;
     transition: var(--transition-control);
     padding: 0;
-  }
-  .numf__step i {
-    font-size: var(--size-caption);
   }
   .numf__step:hover {
     background: var(--neutral-wash);

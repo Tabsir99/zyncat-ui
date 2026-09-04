@@ -1,6 +1,6 @@
 'use client';
 
-import { Callout, CodeBlock, Step, Steps, TabGroup } from '../kit';
+import { Callout, CodeBlock, TabGroup } from '../kit';
 
 export function McpDoc() {
   const initCommand = `npx zyncat-ui init`;

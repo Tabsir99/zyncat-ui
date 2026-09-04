@@ -41,10 +41,6 @@
     z-index: 1;
   }
 
-  .glass--strong {
-    --glass-blur: var(--glass-blur-strong);
-  }
-
   .glass--interactive:hover {
     transform: translateY(calc(var(--space-px) * -1));
     box-shadow:

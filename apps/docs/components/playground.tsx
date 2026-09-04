@@ -13,7 +13,6 @@ import {
 
 import { Button } from '@zyncat/ui/button';
 import { Modal } from '@zyncat/ui/modal';
-import { Select, type SelectOption } from '@zyncat/ui/select';
 import { TabPanel, Tabs } from '@zyncat/ui/tabs';
 import { TextField } from '@zyncat/ui/text-field';
 import { Toggle } from '@zyncat/ui/toggle';
@@ -240,24 +239,6 @@ export function KnobSwitch({
         htmlProps={{ 'aria-label': label }}
       />
     </div>
-  );
-}
-
-export function KnobSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: SelectOption[];
-}) {
-  return (
-    <Knob label={label}>
-      <Select size="sm" ariaLabel={label} value={value} onChange={(v) => onChange(v)} options={options} />
-    </Knob>
   );
 }
 

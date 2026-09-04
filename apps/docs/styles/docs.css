@@ -578,14 +578,6 @@ body {
   max-width: 68ch;
 }
 
-.example-card {
-  border: var(--docs-card-border);
-  border-radius: var(--radius-lg);
-  background: var(--bg-app);
-  overflow: clip;
-  margin-top: 6px;
-}
-
 .example-card__header {
   display: flex;
   align-items: center;
@@ -597,29 +589,6 @@ body {
 
 .example-card__header .btn {
   margin-bottom: 3px;
-}
-
-.example-card__canvas {
-  padding: 40px 24px;
-  min-height: 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-app);
-}
-
-.example-card__inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-4);
-  width: 100%;
-}
-
-.example-card__canvas--fill .example-card__inner {
-  flex-direction: column;
-  align-items: stretch;
 }
 
 .example-card__code .code-block {
@@ -716,10 +685,6 @@ body {
 }
 
 .tok-attr {
-  color: var(--warning-text);
-}
-
-.tok-number {
   color: var(--warning-text);
 }
 
@@ -1645,11 +1610,6 @@ body {
   background: var(--bg-app);
 }
 
-.playground__rail-rule {
-  height: var(--border-hairline);
-  background: var(--border-subtle);
-}
-
 .knob {
   display: flex;
   flex-direction: column;
@@ -1830,9 +1790,6 @@ body {
   }
   .playground__rail > * {
     flex: 1 1 10rem;
-  }
-  .playground__rail-rule {
-    display: none;
   }
 }
 

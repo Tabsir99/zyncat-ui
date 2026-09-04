@@ -13,7 +13,6 @@ import {
   Check,
   CheckCircle,
   Clock,
-  Globe,
   Info,
   MagnifyingGlass,
   Warning,
@@ -39,7 +38,6 @@ const REGISTRY = {
   calendar: Calendar,
   'calendar-dot': CalendarDot,
   clock: Clock,
-  globe: Globe,
   info: Info,
   warning: Warning,
   'warning-circle': WarningCircle,
@@ -48,7 +46,6 @@ const REGISTRY = {
 
 export type IconName = keyof typeof REGISTRY;
 export type IconSize = 'sm' | 'md' | 'lg';
-export type { IconWeight };
 
 export interface IconProps {
   name: IconName;
