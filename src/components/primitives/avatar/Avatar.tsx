@@ -103,7 +103,7 @@ export function Avatar({
           </span>
         )}
         {!showImg && !icon && inits && (
-          <span className="avatar_initialsOf" aria-hidden="true">
+          <span className="avatar__initials" aria-hidden="true">
             {inits}
           </span>
         )}
