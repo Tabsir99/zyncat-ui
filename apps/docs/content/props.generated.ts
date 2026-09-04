@@ -1942,6 +1942,18 @@ export const GENERATED_PROPS: Record<string, PropRow[]> = {
       type: 'Placement',
       description: 'Preferred side; flips automatically when out of viewport room.',
     },
+    {
+      name: 'open',
+      type: 'boolean',
+      description:
+        'Controlled visibility - shows with no hover or focus, and stays until you clear it. Omit to stay uncontrolled. One bubble shows at a time: the newest wins, and the ones under it come back when it leaves.',
+    },
+    { name: 'defaultOpen', type: 'boolean', description: 'Initial state when uncontrolled. Default false.' },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      description: 'Fires whenever hover, focus, or Escape asks for a new state. Pair with `open` for controlled use.',
+    },
     { name: 'disabled', type: 'boolean', description: 'Suppress the tooltip entirely (trigger renders untouched).' },
     {
       name: 'openDelay',

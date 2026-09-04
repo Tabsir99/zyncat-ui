@@ -10,7 +10,7 @@ export interface ActivePayload {
   shortcut?: string | null;
   placement: Placement;
   anchor: () => HTMLElement | null;
-  rect: () => DOMRect;
+  dismiss: () => void;
 }
 
 export const OPEN_DELAY = 350;
@@ -19,45 +19,48 @@ export const TOOLTIP_DOM_ID = 'pds-tooltip';
 const WARM_WINDOW = 300;
 
 export const store = {
-  active: null as ActivePayload | null,
+  stack: [] as ActivePayload[],
   described: null as HTMLElement | null,
-  closeTimer: 0 as ReturnType<typeof setTimeout> | 0,
+  timers: new Map<string, ReturnType<typeof setTimeout>>(),
   warmUntil: 0,
   listeners: new Set<() => void>(),
-  get: () => store.active,
+  get: (): ActivePayload | null => store.stack[store.stack.length - 1] ?? null,
   subscribe(l: () => void) {
     store.listeners.add(l);
     return () => store.listeners.delete(l);
   },
   emit() {
+    const el = store.get()?.anchor() ?? null;
+    if (el !== store.described) {
+      store.described?.removeAttribute('aria-describedby');
+      store.described = el;
+      el?.setAttribute('aria-describedby', TOOLTIP_DOM_ID);
+    }
     store.listeners.forEach((l) => l());
   },
-  isWarm: () => store.active !== null || performance.now() < store.warmUntil,
-  describe(el: HTMLElement | null) {
-    if (store.described === el) return;
-    store.described?.removeAttribute('aria-describedby');
-    store.described = el;
-    el?.setAttribute('aria-describedby', TOOLTIP_DOM_ID);
-  },
+  isWarm: () => store.stack.length > 0 || performance.now() < store.warmUntil,
   open(payload: ActivePayload) {
-    clearTimeout(store.closeTimer);
-    store.active = payload;
-    store.describe(payload.anchor());
+    clearTimeout(store.timers.get(payload.id));
+    const at = store.stack.findIndex((entry) => entry.id === payload.id);
+    if (at < 0) store.stack.push(payload);
+    else store.stack[at] = payload;
     store.emit();
   },
   close(id: string, grace = CLOSE_GRACE) {
-    clearTimeout(store.closeTimer);
-    store.closeTimer = setTimeout(() => {
-      if (store.active && store.active.id === id) store.closeNow();
-    }, grace);
+    clearTimeout(store.timers.get(id));
+    const drop = () => {
+      store.timers.delete(id);
+      const at = store.stack.findIndex((entry) => entry.id === id);
+      if (at < 0) return;
+      store.stack.splice(at, 1);
+      if (!store.stack.length) store.warmUntil = performance.now() + WARM_WINDOW;
+      store.emit();
+    };
+    if (grace > 0) store.timers.set(id, setTimeout(drop, grace));
+    else drop();
   },
-  closeNow() {
-    clearTimeout(store.closeTimer);
-    store.describe(null);
-    if (!store.active) return;
-    store.warmUntil = performance.now() + WARM_WINDOW;
-    store.active = null;
-    store.emit();
+  dismiss() {
+    for (const entry of store.stack.slice()) entry.dismiss();
   },
 };
 

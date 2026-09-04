@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Motion } from '../../../motion/element';
@@ -59,6 +59,8 @@ function targetBox(size: Size, t: DOMRect, want: Placement): TargetBox {
   };
 }
 
+const surface = () => document.getElementById(TOOLTIP_DOM_ID);
+
 const fromEdge = (p: Placement) => ({
   x: p === 'left' ? SM.dist.sm : p === 'right' ? -SM.dist.sm : 0,
   y: p === 'top' ? SM.dist.sm : p === 'bottom' ? -SM.dist.sm : 0,
@@ -109,34 +111,64 @@ function TipSurface({ a, box }: { a: ActivePayload; box: RenderedBox }) {
 export function TooltipHost() {
   const active = useSyncExternalStore(store.subscribe, store.get);
   const measureRef = useRef<HTMLDivElement>(null);
-  const [box, setBox] = useState<RenderedBox | null>(null);
+  const drift = useRef({ x: 0, y: 0 });
+  const anchored = useRef({ x: 0, y: 0 });
+  const [shown, setShown] = useState<{ a: ActivePayload; box: RenderedBox } | null>(null);
 
   useLayoutEffect(() => {
     if (!active) {
-      setBox(null);
-      return;
+      setShown(null);
+      return undefined;
     }
-    const r = measureRef.current.getBoundingClientRect();
-    const b = (measureRef.current.firstChild as HTMLElement).getBoundingClientRect();
-    setBox({
-      ...targetBox({ w: Math.ceil(r.width), h: Math.ceil(r.height) }, active.rect(), active.placement),
-      bodyW: Math.ceil(b.width),
-    });
-  }, [active]);
 
-  useEffect(() => {
-    if (!active) return undefined;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') store.closeNow();
+    const place = () => {
+      const anchor = active.anchor();
+      const measure = measureRef.current;
+      if (!anchor || !measure) return;
+      const bubble = measure.getBoundingClientRect();
+      const body = (measure.firstChild as HTMLElement).getBoundingClientRect();
+      const from = anchor.getBoundingClientRect();
+      if (!from.width && !from.height) return;
+      if (!surface()) drift.current = { x: 0, y: 0 };
+      anchored.current = { x: from.left, y: from.top };
+      const to = targetBox({ w: Math.ceil(bubble.width), h: Math.ceil(bubble.height) }, from, active.placement);
+      setShown({
+        a: active,
+        box: { ...to, x: to.x - drift.current.x, y: to.y - drift.current.y, bodyW: Math.ceil(body.width) },
+      });
     };
-    const onScroll = () => store.closeNow();
+
+    const track = () => {
+      const el = surface();
+      const anchor = active.anchor();
+      if (!el || !anchor) return;
+      const now = anchor.getBoundingClientRect();
+      if (!now.width && !now.height) return;
+      const at = {
+        x: drift.current.x + now.left - anchored.current.x,
+        y: drift.current.y + now.top - anchored.current.y,
+      };
+      drift.current = at;
+      anchored.current = { x: now.left, y: now.top };
+      el.style.transform = at.x || at.y ? `translate(${at.x}px, ${at.y}px)` : '';
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') store.dismiss();
+    };
+
+    place();
     document.addEventListener('keydown', onKey);
-    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('scroll', track, true);
+    window.addEventListener('resize', place);
     return () => {
       document.removeEventListener('keydown', onKey);
-      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('scroll', track, true);
+      window.removeEventListener('resize', place);
     };
   }, [active]);
+
+  const orphaned = !!shown && !shown.a.anchor();
 
   return createPortal(
     <Fragment>
@@ -145,7 +177,7 @@ export function TooltipHost() {
           <Body a={active} />
         </div>
       )}
-      <Presence>{active && box && <TipSurface key="tip" a={active} box={box} />}</Presence>
+      <Presence>{active && shown && !orphaned && <TipSurface key="tip" a={shown.a} box={shown.box} />}</Presence>
     </Fragment>,
     document.body,
   );

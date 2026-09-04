@@ -142,6 +142,15 @@ toast.promise(publishBatch(), {
 
 <Tooltip content="Schedule to queue" shortcut="S">
   <button type="button">Schedule</button>
+</Tooltip>
+
+<Tooltip
+  content="Your drafts land here"
+  placement="right"
+  open={tour === 'drafts'}
+  onOpenChange={(next) => !next && advanceTour()}
+>
+  <button type="button">Drafts</button>
 </Tooltip>`,
   },
 

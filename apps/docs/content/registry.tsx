@@ -430,7 +430,8 @@ export const GROUPS: DocGroup[] = [
       {
         slug: 'tooltip',
         label: 'Tooltip',
-        blurb: 'Transient hint on hover/focus. One bubble travels between triggers.',
+        blurb:
+          'Transient hint on hover/focus. One bubble travels between triggers and sticks to its anchor through scroll.',
         Playground: O.TooltipPlayground,
         heroCode: `import { Tooltip } from '@zyncat/ui/tooltip';\n\n<Tooltip content="Schedule post to queue" shortcut="⌘S">\n  <Button variant="secondary">Schedule</Button>\n</Tooltip>`,
       },

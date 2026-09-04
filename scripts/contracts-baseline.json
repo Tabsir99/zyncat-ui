@@ -26,7 +26,6 @@
     "src/components/composites/select/core/use-listbox.ts": 3,
     "src/components/composites/sheet/use-sheet-drag.ts": 1,
     "src/components/composites/tabs/Tabs.tsx": 17,
-    "src/components/composites/tooltip/Tooltip.tsx": 1,
     "src/components/dev/slowmo-engine.ts": 6,
     "src/components/internal/overlay/focus.ts": 1,
     "src/components/internal/overlay/layer.tsx": 2,

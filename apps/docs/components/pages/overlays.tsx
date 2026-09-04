@@ -181,15 +181,16 @@ export function ToastPlayground() {
 export function TooltipPlayground() {
   const [placement, setPlacement] = useState<TooltipPlacement>('top');
   const [shortcut, setShortcut] = useState(true);
+  const [pinned, setPinned] = useState(false);
 
-  const code = `<Tooltip content="Schedule post to queue"${shortcut ? ' shortcut="⌘S"' : ''} placement="${placement}">
+  const code = `<Tooltip content="Schedule post to queue"${shortcut ? ' shortcut="⌘S"' : ''} placement="${placement}"${pinned ? ' open' : ''}>
   <Button variant="secondary">Schedule</Button>
 </Tooltip>`;
 
   return (
     <Playground
       code={code}
-      note="One bubble travels between triggers - hover the pair and watch it glide."
+      note="One bubble travels between triggers - hover the pair and watch it glide. Pin the first one and it holds with no pointer on it."
       rail={
         <>
           <KnobSegment
@@ -199,11 +200,17 @@ export function TooltipPlayground() {
             options={['top', 'bottom', 'left', 'right']}
           />
           <KnobSwitch label="shortcut" checked={shortcut} onChange={setShortcut} />
+          <KnobSwitch label="pinned" checked={pinned} onChange={setPinned} />
         </>
       }
     >
       <div style={{ display: 'flex', gap: '14px', alignItems: 'center', padding: 'var(--space-7) 0' }}>
-        <Tooltip content="Schedule post to queue" shortcut={shortcut ? '⌘S' : undefined} placement={placement}>
+        <Tooltip
+          content="Schedule post to queue"
+          shortcut={shortcut ? '⌘S' : undefined}
+          placement={placement}
+          open={pinned || undefined}
+        >
           <Button variant="secondary">Schedule</Button>
         </Tooltip>
         <Tooltip content="Delete permanently" shortcut={shortcut ? '⌫' : undefined} placement={placement}>
